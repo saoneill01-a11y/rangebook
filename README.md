@@ -96,6 +96,17 @@ docker run -d --name rangebook --restart unless-stopped -p 9090:9090 -e TZ=Ameri
 
 There's no build step and no npm packages. To run it without Docker, install Node.js 22 or newer and run `DATA_DIR=./data node server.js`.
 
+### No server? Here's how
+
+Range Book needs a computer that's always on, to keep your database and target photos and to answer your phone. You don't need to buy one to start. From easiest to most work:
+
+1. **Ask someone who already runs Range Book for an account.** One Range Book holds many people, and each person's data is private. The admin adds you under **Admin → Add a user**. It costs you nothing and there's nothing to set up.
+2. **A computer you already own (free).** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) on a Windows PC or Mac, run the [`docker run` command](#docker-any-server) above, and open `http://localhost:9090`. To use it from your phone away from home, add [Tailscale](https://tailscale.com/) or a Cloudflare Tunnel (see [Using it away from home](#using-it-away-from-home)). The computer has to stay on and not go to sleep.
+3. **A Raspberry Pi 5 (a one-time cost, roughly $100 for the board, power supply and storage).** It sits on a shelf, uses very little power, and runs Range Book easily. Install Raspberry Pi OS (64-bit) and Docker, then use the same `docker run` command and a tunnel. This is the best "set it and forget it" choice.
+4. **A small rented server in the cloud (about $5–8 a month as of 2026).** Any provider that rents a small Linux server with Docker works; 1 GB of memory and 10 GB of disk is plenty for one family. Choose a provider with a disk that keeps your files (services like Netlify or Vercel won't work: Range Book has to keep files and run all the time). Some providers have free tiers, but their limits change often, so check before you rely on one.
+
+Whichever you choose, turn on an https address (a tunnel or a reverse proxy, below) so the app works offline on your phone and the camera works for Live target, and keep a copy of your backups somewhere else.
+
 ---
 
 ## Using it away from home
