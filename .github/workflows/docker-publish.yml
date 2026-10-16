@@ -89,9 +89,10 @@ jobs:
           node -e '
             const all = require("./public/changelog.json").releases, r = all[0];
             const ser = v => String(v).split(".").slice(0, 2).map(Number);
-            const newer = (a, b) => a[0] !== b[0] ? a[0] > b[0] : a[1] >= b[1];
+            const gt = (a, b) => a[0] !== b[0] ? a[0] > b[0] : a[1] > b[1], eq = (a, b) => a[0] === b[0] && a[1] === b[1];
             const prev = process.argv[2] ? ser(process.argv[2]) : null;
-            const entries = prev ? all.filter(e => newer(ser(e.version), prev)) : [r];
+            // every series newer than the last release, plus the current series when it's the same one (a patch release)
+            const entries = prev ? all.filter(e => gt(ser(e.version), prev) || (e === r && eq(ser(e.version), prev))) : [r];
             const img = "ghcr.io/" + process.argv[1] + "/rangebook:" + r.version;
             const body = entries.length > 1
               ? entries.flatMap(e => ["### " + ser(e.version).join(".") + ": " + e.title, "", ...e.items.map(i => "- " + i), ""])
