@@ -305,9 +305,14 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .samplebanner b{color:var(--warn)}
 /* Tools: one calculator at a time under the menu bar */
 @media (max-width:760px){#tab-tools{display:none!important}}
-@media (max-width:760px){.areatabs.toolbar{gap:14px}.areatabs.toolbar button{font-size:14px;padding-left:0;padding-right:0}}
-@media (max-width:370px){.areatabs.toolbar{gap:10px}}
-.toolsroot{margin-top:14px}
+.tooltiles{display:grid;grid-template-columns:1fr;gap:12px;margin-top:6px}
+@media(min-width:700px){.tooltiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1100px){.tooltiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tooltile{gap:4px;padding:14px 16px 15px;cursor:pointer;font:inherit;color:var(--fg)}
+.tooltile .ti svg{width:28px;height:28px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:4px}
+.tooltile .t{font-size:17px}
+.tooltile .d{font-size:14px;line-height:1.4}
+.toolsroot{margin-top:6px}
 .tool .toolnote{margin-top:0}
 .toolgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(min-width:900px){.toolgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.toolgrid.t4{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -996,7 +1001,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To use metric, go to <b>More → Account → Units</b> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>Pick a color theme under <b>More → Account → Theme</b>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
-      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> has its own bar for picking a calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same.</p>
+      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <b>Shooting → Range log</b>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting loads, or ammunition from your inventory (it makes the Shooting load for that gun the first time). It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
       <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
@@ -1163,7 +1168,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
     </section>
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
-      <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators. Pick one from the bar across the top; Range Book remembers which one you used last. Nothing in Tools is saved: change a number and the answer updates.</p>
+      <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. Nothing in Tools is saved: change a number and the answer updates.</p>
       <ul>
         <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a Shooting load, a bullet from Components or a gun (for its twist) under <b>Fill in from</b>, or type the numbers in. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
         <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
@@ -1210,32 +1215,32 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div id="rnRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-targets" role="tabpanel" aria-labelledby="tab-tools" hidden>
-    <header class="phead"><h1>Tools</h1><p class="sub">Quick calculators. Nothing here is saved: change a number and the answer updates.</p></header>
-    <div class="areatabs toolbar" role="tablist" aria-label="Tools"><button type="button" role="tab" data-tool="twist" aria-selected="false">Stability</button><button type="button" role="tab" data-tool="moa" aria-selected="false">MOA/MIL</button><button type="button" role="tab" data-tool="powder" aria-selected="false">Powder</button><button type="button" role="tab" data-tool="conv" aria-selected="false">Convert</button><button type="button" role="tab" data-area="targets" aria-selected="true">Targets</button></div>
+    <header class="phead"><button class="backbtn" id="targetsBack" type="button" aria-label="Back to Tools">‹ Tools</button><h1>Printable targets</h1><p class="sub">Targets to print that Range Book reads by itself when you measure a photo.</p></header>
+    
     <div id="targetsRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
-    <header class="phead"><h1>Tools</h1><p class="sub">Quick calculators. Nothing here is saved: change a number and the answer updates.</p></header>
-    <div class="areatabs toolbar" role="tablist" aria-label="Tools"><button type="button" role="tab" data-tool="twist" aria-selected="false">Stability</button><button type="button" role="tab" data-tool="moa" aria-selected="false">MOA/MIL</button><button type="button" role="tab" data-tool="powder" aria-selected="false">Powder</button><button type="button" role="tab" data-tool="conv" aria-selected="false">Convert</button><button type="button" role="tab" data-area="targets" aria-selected="false">Targets</button></div>
+    <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators. Nothing here is saved: change a number and the answer updates.</p></header>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <div class="col toolsroot">
-    <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden><h2>Twist &amp; stability</h2>
+    <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden>
       <p class="note toolnote">Will this bullet be stable in your barrel? This uses the Miller formula, corrected for velocity, temperature and altitude, the same one Shooting uses for spin drift.</p>
       <div class="toolfill"><label for="tw_from">Fill in from</label><select id="tw_from" class="fieldselect"></select></div>
       <div class="grid toolgrid t4"><div class="field"><label for="tw_w">Bullet weight (gr)</label><input id="tw_w" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_d">Diameter (<span data-unit="dim">in</span>)</label><input id="tw_d" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_l">Bullet length (<span data-unit="dim">in</span>)</label><input id="tw_l" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_t">Barrel twist, 1 in (<span data-unit="dim">in</span>)</label><input id="tw_t" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_v">Muzzle velocity (<span data-unit="fps">fps</span>)</label><input id="tw_v" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_tf">Temperature (<span data-unit="F">°F</span>)</label><input id="tw_tf" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_a">Altitude (<span data-unit="ft">ft</span>)</label><input id="tw_a" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="tw_res" aria-live="polite"></div>
     </section>
-    <section class="card tool" data-toolsec="moa" aria-label="MOA, MIL and inches" hidden><h2>MOA · MIL · <span data-unit="in">inches</span></h2>
+    <section class="card tool" data-toolsec="moa" aria-label="MOA, MIL and inches" hidden>
       <p class="note toolnote">Turn a group size or a hold into angles, or an angle back into a size, at any distance.</p>
       <div class="grid toolgrid"><div class="field"><label for="mm_s">Size or angle</label><input id="mm_s" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="mm_u">In</label><select id="mm_u" class="fieldselect"><option value="in" id="mm_uin">inches</option><option value="moa">MOA</option><option value="mil">MIL</option></select></div><div class="field"><label for="mm_r">Distance (<span data-unit="yd">yd</span>)</label><input id="mm_r" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="mm_res" aria-live="polite"></div>
     </section>
-    <section class="card tool" data-toolsec="powder" aria-label="Powder per container" hidden><h2>Powder per container</h2>
+    <section class="card tool" data-toolsec="powder" aria-label="Powder per container" hidden>
       <p class="note toolnote">How many rounds a jug of powder makes at your charge, and what the powder costs per round.</p>
       <div class="toolfill"><label for="pw_from">Fill in from</label><select id="pw_from" class="fieldselect"></select></div>
       <div class="grid toolgrid t4"><div class="field"><label for="pw_c">Charge (gr)</label><input id="pw_c" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_j">Container</label><select id="pw_j" class="fieldselect"><option value="7000">1 lb</option><option value="56000">8 lb</option><option value="3500">½ lb</option><option value="28000">4 lb</option><option value="15432.36">1 kg</option><option value="7716.18">500 g</option></select></div><div class="field"><label for="pw_p">Price of the container ($)</label><input id="pw_p" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_n">Rounds you want to load</label><input id="pw_n" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="pw_res" aria-live="polite"></div>
     </section>
-    <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden><h2>Convert</h2>
+    <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden>
       <p class="note toolnote">Type in either box.</p>
       <div id="cv_rows"></div>
     </section>
@@ -5595,7 +5600,7 @@ function upTarget(){
   if(vis($("vClose")))return $("vClose");
   if(vis($("fieldClose")))return $("fieldClose");
   const m=$("moreSheet");if(m&&!m.hidden)return $("moreBack");
-  for(const id of ["tripBack","trajBack","relHeadBack","compHeadBack","rifHeadBack","rnBack"]){const b=$(id);if(vis(b))return b;}
+  for(const id of ["tripBack","trajBack","relHeadBack","compHeadBack","rifHeadBack","rnBack","toolsBack","targetsBack"]){const b=$(id);if(vis(b))return b;}
   return null;
 }
 function goUp(){const t=upTarget();if(!t)return false;const n=Date.now();if(n-upAt<500)return true;upAt=n;t.click();return true;}
@@ -5900,26 +5905,27 @@ API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)l
 })();
 </script>
 <script>
-/* ---------- Tools: quick calculators, one at a time under the menu bar. Nothing here is saved. ----------
+/* ---------- Tools: a tile for each quick calculator; tap one to open it, ‹ Tools to go back. Nothing here is saved. ----------
    Numbers are kept in imperial (like the rest of Range Book) and shown in the person's units. */
 window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
-  const KEY="rb.tool", TOOLS=["twist","moa","powder","conv"];
-  let tool="twist", rel=null, ready=false;
-  try{const t=localStorage.getItem(KEY);if(t&&(TOOLS.includes(t)||t==="targets"))tool=t;}catch(e){}
+  const TOOLS=["twist","moa","powder","conv"];
+  const TITLES={twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert"};
+  let tool=null, pending=null, rel=null, ready=false;      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   // a box in the person's units <-> the imperial value behind it
   const put=(id,kind,v,dec)=>{const e=$(id);if(e)e.value=v==null?"":String(kind?U.n(kind,v,dec):v);};
   const get=(id,kind)=>{const n=num($(id).value);return n==null?null:kind?U.from(kind,n):n;};
   const DEC={dim:U.metric?2:3,fps:0,F:0,ft:0};
 
-  function bars(){document.querySelectorAll(".toolbar").forEach(b=>b.querySelectorAll("button").forEach(x=>x.setAttribute("aria-selected",(x.dataset.tool||x.dataset.area)===tool?"true":"false")));}
-  function pick(t,silent){
-    tool=t;try{localStorage.setItem(KEY,t);}catch(e){}
-    if(t==="targets"){if(!silent&&window.APP_showTab)APP_showTab("targets");bars();return;}
-    document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==t);bars();
-    if(!silent&&window.APP_showTab&&$("panel-tools").hidden)APP_showTab("tools");
+  // show the tiles (t = null) or one tool
+  function view(t){
+    tool=TOOLS.includes(t)?t:null;
+    $("toolTiles").hidden=!!tool;
+    document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
+    $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
+    if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();
   }
 
   /* ----- twist & stability (Miller), the same formula Shooting uses for spin drift ----- */
@@ -6008,8 +6014,10 @@ window.RB_TOOLS=(function(){
     ["mm_s","mm_r"].forEach(id=>$(id).addEventListener("input",moaCalc));$("mm_u").addEventListener("change",moaCalc);
     ["pw_c","pw_p","pw_n"].forEach(id=>$(id).addEventListener("input",()=>{if(id!=="pw_n")$("pw_from").value="";powderCalc();}));
     $("pw_j").addEventListener("change",powderCalc);$("pw_from").addEventListener("change",e=>powderFill(e.target.value));
-    document.querySelectorAll(".toolbar [data-tool]").forEach(b=>b.addEventListener("click",()=>pick(b.dataset.tool)));
-    document.querySelectorAll(".toolbar [data-area='targets']").forEach(b=>b.addEventListener("click",()=>{tool="targets";try{localStorage.setItem(KEY,"targets");}catch(e){}}));
+    document.querySelectorAll("[data-tooltile]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tooltile;
+      if(t==="targets"){if(window.APP_showTab)APP_showTab("targets");return;}view(t);window.scrollTo(0,0);}));
+    $("toolsBack").addEventListener("click",()=>{view(null);window.scrollTo(0,0);});
+    $("targetsBack").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("tools");});
     convBuild();
     // starting values: the Shooting load you're on (or the first one), 1.5 in at 100, and the first reloading load
     const T=(window.RB_TRAJ&&RB_TRAJ.forTools())||[],here=window.RB_TRAJ&&RB_TRAJ.where&&RB_TRAJ.where();
@@ -6019,13 +6027,10 @@ window.RB_TOOLS=(function(){
     if(!num($("pw_n").value))put("pw_n",null,500);powderCalc();
   }
   return {
-    // showTab tells us Tools (or its Targets page) is on screen
-    shown(t,R){rel=R||rel;setup();
-      if(t==="targets"){tool="targets";try{localStorage.setItem(KEY,"targets");}catch(e){}bars();return;}
-      if(tool==="targets"){tool="twist";}            // opening the Tools tab itself shows a calculator
-      twistFrom();powderFrom();pick(tool,true);},
+    // showTab tells us Tools (or its Targets page) is on screen: the Tools tab opens to the tiles
+    shown(t,R){rel=R||rel;setup();if(t==="tools"){view(pending);pending=null;}},
     // open a tool from elsewhere, e.g. Shooting's twist warning
-    open(t,o){if(window.APP_showTab)APP_showTab("tools");pick(t,true);if(o&&o.traj)twistFill("t:"+o.traj);window.scrollTo(0,0);}
+    open(t,o){pending=t;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)twistFill("t:"+o.traj);window.scrollTo(0,0);}
   };
 })();
 </script>
