@@ -154,6 +154,10 @@ const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { r
 const getSetting = (k, d) => { const r = q("SELECT value FROM settings WHERE key=?").get(k); return r ? JSON.parse(r.value) : d; };
 const setSetting = (k, v) => q("INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(k, JSON.stringify(v));
 const now = () => Date.now();
+// Live target remote sessions (in memory): id -> { uid, device, frame, state, cmds, waiters, ... }
+const REMOTE = new Map();
+function remoteEnd(id) { const r = REMOTE.get(id); if (!r) return; REMOTE.delete(id); for (const w of r.waiters) w(); r.waiters.clear(); }
+setInterval(() => { const t = Date.now(); for (const r of REMOTE.values()) if (t - r.last > 120000) remoteEnd(r.id); }, 30000).unref();
 
 /* ---------------- passwords ---------------- */
 const SCRYPT = { N: 16384, r: 8, p: 1, keylen: 64 };
@@ -718,6 +722,65 @@ async function api(req, res, url) {
       return send(res, 200, { ok: true });
     }
   }
+  /* ---- Live target remote: the phone on the scope sends its screen and state here, another device signed in to the
+     same account watches and sends taps back. Kept in memory only; nothing is saved. ---- */
+  if (p === "/api/remote" && method === "GET") {
+    const t = now();
+    return send(res, 200, { sessions: [...REMOTE.values()].filter((r) => r.uid === user.id && t - r.last < 20000).map((r) => ({ id: r.id, device: r.device, started: r.created, watching: t - r.watchSeen < 15000 })) });
+  }
+  if (p === "/api/remote" && method === "POST") {
+    const b = await readJson(req);
+    const mine = [...REMOTE.values()].filter((r) => r.uid === user.id).sort((a, c) => a.last - c.last);
+    while (mine.length >= 3) remoteEnd(mine.shift().id);
+    const id = crypto.randomUUID(), t = now();
+    REMOTE.set(id, { id, uid: user.id, device: String(b.device || "Phone").slice(0, 40), created: t, last: t, seq: 0, frame: null, state: null, cmds: [], waiters: new Set(), watchSeen: 0 });
+    return send(res, 200, { id });
+  }
+  m = /^\/api\/remote\/([0-9a-f-]{36})(\/push|\/wait|\/frame|\/cmd)?$/.exec(p);
+  if (m) {
+    const r = REMOTE.get(m[1]);
+    if (!r || r.uid !== user.id) {
+      if (m[2] === "/wait") return send(res, 200, { ended: true });
+      throw new HttpError(404, "That Live target isn't running any more.");
+    }
+    const t = now();
+    if (m[2] === "/push" && method === "POST") {
+      const b = await readJson(req, 3 * 1024 * 1024);
+      const mm = /^data:image\/jpeg;base64,(.+)$/.exec(b.frame || "");
+      if (mm) r.frame = Buffer.from(mm[1], "base64");
+      if (b.state && typeof b.state === "object") r.state = b.state;
+      r.last = t; r.seq++;
+      for (const w of r.waiters) w(); r.waiters.clear();
+      const cmds = r.cmds; r.cmds = [];
+      return send(res, 200, { cmds, watching: t - r.watchSeen < 15000 });
+    }
+    if (m[2] === "/wait" && method === "GET") {
+      r.watchSeen = t;
+      const since = Number(url.searchParams.get("since")) || 0;
+      const reply = () => { const x = REMOTE.get(r.id); if (!x) return send(res, 200, { ended: true }); send(res, 200, { seq: x.seq, state: x.state, alive: now() - x.last < 6000, hasFrame: !!x.frame }); };
+      if (r.seq > since) return reply();
+      let done = false;
+      const fin = () => { if (done) return; done = true; clearTimeout(timer); r.waiters.delete(fin); reply(); };
+      const timer = setTimeout(fin, 12000);
+      r.waiters.add(fin); req.on("close", () => { if (!done) { done = true; clearTimeout(timer); r.waiters.delete(fin); } });
+      return;
+    }
+    if (m[2] === "/frame" && method === "GET") {
+      r.watchSeen = t;
+      if (!r.frame) throw new HttpError(404, "No picture yet.");
+      res.writeHead(200, { "Content-Type": "image/jpeg", "Content-Length": r.frame.length, "Cache-Control": "no-store", ...SECURITY_HEADERS });
+      return res.end(r.frame);
+    }
+    if (m[2] === "/cmd" && method === "POST") {
+      const b = await readJson(req);
+      if (typeof b.cmd !== "string" || b.cmd.length > 40) throw new HttpError(400, "Bad command.");
+      r.watchSeen = t;
+      if (r.cmds.length < 30) r.cmds.push({ cmd: b.cmd, id: typeof b.id === "string" ? b.id.slice(0, 40) : undefined, k: typeof b.k === "string" ? b.k.slice(0, 20) : undefined, v: typeof b.v === "string" || typeof b.v === "number" ? String(b.v).slice(0, 80) : undefined, u: Number(b.u), w: Number(b.w) });
+      return send(res, 200, { ok: true });
+    }
+    if (!m[2] && method === "DELETE") { remoteEnd(r.id); return send(res, 200, { ok: true }); }
+  }
+
   /* ---- Live target pictures saved without a load or trip: kept as trip photos with no trip yet, so they're in
      backups and can be moved into a range trip (or a load's ladder) later ---- */
   if (p === "/api/live" && method === "GET") {

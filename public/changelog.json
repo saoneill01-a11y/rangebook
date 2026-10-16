@@ -2,7 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.3.3",
+      "version": "2.4.0",
+      "date": "2026-10-16",
+      "title": "Control Live target from your iPad",
+      "items": [
+        "Tap Remote on the phone's Live target screen, then Tools → Live target → Watch on your iPad (or any device signed in to your account). The iPad shows the phone's screen and group numbers and can tap Shot, Undo, Next aim, Whole target and Save, set the charge, shots and distance, pick the microphone sensitivity, and add or remove marks by tapping the picture, so you never touch the phone on the scope.",
+        "It works through your Range Book server, so both devices need a signal (an iPad on the iPhone's hotspot works). Nothing from it is saved; it stops when you tap Remote again or close Live target.",
+        "Red Night now turns the Live target camera picture fully red."
+      ]
+    },
+    {
+      "version": "2.3",
       "date": "2026-10-16",
       "title": "Live target",
       "items": [

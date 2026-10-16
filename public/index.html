@@ -482,12 +482,18 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .live .mtitle{color:#eee;flex:1}
 .live [hidden],.lvsheet[hidden]{display:none!important}
 .lvtop{display:flex;align-items:center;gap:8px}
+.lvremote{font-size:13px;padding:6px 10px;min-height:0;white-space:nowrap}
+.lvremote.on{background:var(--accent)!important;color:var(--accent-fg,#fff)!important;border-color:var(--accent)!important}
+@media(max-width:400px){.live .mtitle{display:none}}
 .lvchip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;border:1px solid #444;background:#1b1b1b;color:#ddd;font-size:13px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .lvchip:empty{display:none}.lvchip b{color:#fff}
 .lvmain{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px}
 .lvcam{position:relative;flex:1 1 auto;min-height:180px;border-radius:10px;overflow:hidden;background:#000}
 .lvcam canvas{display:block;touch-action:manipulation;cursor:crosshair}
-:root[data-palette="night"] .lvcam canvas{filter:grayscale(1) sepia(1) saturate(5) hue-rotate(-38deg) brightness(.7)}
+:root[data-palette="night"] .lvcam canvas,:root[data-palette="night"] .watch .lvcam img{filter:grayscale(1) brightness(.55)}
+:root[data-palette="night"] .lvcam::after{content:"";position:absolute;inset:0;background:#ff2a1a;mix-blend-mode:multiply;pointer-events:none;z-index:1}
+.lvstat,.lvview,.lvthumb{z-index:2}
+.watch .lvcam img{display:block;width:100%;height:100%;object-fit:contain;cursor:crosshair}
 .lvthumb{position:absolute;top:8px;right:8px;border:2px solid rgba(255,255,255,.85);border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,.6);cursor:zoom-out}
 .lvstat{position:absolute;left:8px;right:8px;bottom:10px;display:flex;justify-content:center;pointer-events:none}
 .lvpill{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:6px 11px;border-radius:14px;background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:13px;line-height:1.3}
@@ -1214,6 +1220,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>After the last shot for that aim point it shows the group. Tap <b>Next</b> to move to the next aim point and charge, or use <b>‹ Aim</b> and <b>Next aim ›</b> any time.</li>
         <li>Tap <b>Save</b> when you're done. It saves one photo of the target with every group measured, the same as <b>Measure groups</b>, and each charge gets its group size, mean radius and distance. You can open the photo and edit the marks later. (From Tools, it's kept under <b>Tools → Live target → Saved</b> until you move it to a range trip or a ladder.)</li>
       </ol>
+      <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <b>Tools → Live target</b> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
       <h3>Use a load in the calculator</h3>
@@ -1329,6 +1336,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <div class="field"><label for="lt_dist">Distance (<span data-unit="yd">yd</span>)</label><input id="lt_dist" type="number" inputmode="numeric" step="any"></div>
         <div class="field"><label for="lt_want">Shots per aim point</label><input id="lt_want" type="number" inputmode="numeric" min="1" step="1"></div></div>
       <div class="row"><button class="btn primary" id="lt_go" type="button">Start Live target</button><button class="btn" id="lt_print" type="button">Printable targets</button></div>
+      <div id="lt_watch"></div>
       <p class="note" id="lt_msg" hidden></p>
       <div id="lt_saved"></div>
       <p class="note">It needs Range Book's https address: phones only allow the camera on a secure address. <b>Listen for shots</b> (on the Live target screen) uses the microphone instead of the Shot button; use it only when nobody is shooting near you.</p>
@@ -4158,7 +4166,7 @@ function openLive(o){
   const groups=o.groups||[];
   const shotCount=g=>(g&&g.shots||[]).filter(x=>Number(x)>0).length||null;
   const v=document.createElement("div");v.className="viewer live";v.id="live";v.setAttribute("role","dialog");v.setAttribute("aria-label","Live target");
-  v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><b class="mtitle">Live target</b><span class="lvchip" id="lvAimChip"></span></div>'+
+  v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
       '<div class="lvstat"><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
       '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button></div>'+
@@ -4444,9 +4452,11 @@ function openLive(o){
   }
   function goAim(i){if(!lock)return;aim=Math.max(0,Math.min(aims().length-1,i));newest=null;view="aim";fillAim();setStat("Fire at "+aimLabel(aim)+", then tap Shot.","");}
   /* ----- taps on the picture: add a missed hole, or remove a wrong mark ----- */
-  can.addEventListener("click",e=>{
+  can.addEventListener("click",e=>{const rc=can.getBoundingClientRect();tapAt((e.clientX-rc.left)/rc.width,(e.clientY-rc.top)/rc.height);});
+  // a tap at a spot on the picture (0–1 across and down), from this screen or from a device watching it
+  function tapAt(u,w){
     if(!lock||!crop)return;const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);
-    const cx=crop[0]+(e.clientX-rc.left)/k,cy=crop[1]+(e.clientY-rc.top)/k,[px,py]=applyH(lock.H,cx,cy);
+    const cx=crop[0]+u*rc.width/k,cy=crop[1]+w*rc.height/k,[px,py]=applyH(lock.H,cx,cy);
     if(px<0||py<0||px>pageW||py>pageH)return;
     const ppi=k*Math.hypot(...[0,1].map(i=>applyH(lock.Hinv,1,0)[i]-applyH(lock.Hinv,0,0)[i])),tol=Math.max(dia*.75,16/ppi);
     const hs=holes[aim]||[],j=hs.findIndex(([x,y])=>Math.hypot(x-px,y-py)<tol);
@@ -4454,7 +4464,53 @@ function openLive(o){
     if(j>=0){holes[aim].splice(j,1);newest=null;setStat("Removed that mark.","");}
     else{holes[aim].push([px,py]);newest=holes[aim].length-1;setStat("Added shot "+holes[aim].length+".","");}
     after();
-  });
+  }
+  /* ----- remote: another device signed in to this account watches this screen and sends taps back ----- */
+  let rmId=null,rmBusy=false,rmTimer=null,rmWatch=false,rmFail=0;
+  const rfetch=(method,url,body)=>fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:body===undefined?undefined:JSON.stringify(body)}).then(r=>r.ok?r.json():r.json().catch(()=>({})).then(j=>{const e=new Error(j.error||"error "+r.status);e.status=r.status;throw e;}));
+  const devName=()=>/iPhone/.test(navigator.userAgent)?"iPhone":/iPad|Macintosh.*Mobile/.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform))?"iPad":/Android/.test(navigator.userAgent)?"Android phone":"computer";
+  function rmLabel(){const b=$("lvRemote");if(!b)return;b.setAttribute("aria-pressed",rmId?"true":"false");b.classList.toggle("on",!!rmId);b.textContent=rmId?(rmWatch?"Remote · watching":"Remote · waiting"):"Remote";}
+  async function remoteStart(){
+    try{const r=await rfetch("POST","/api/remote",{device:devName()});rmId=r.id;rmFail=0;rmLabel();
+      setStat("Remote is on. On your iPad (signed in to this account), open Tools → Live target → Watch.","");remotePush();}
+    catch(e){setStat("Couldn't start the remote: it needs a signal to reach your Range Book.","bad");}
+  }
+  function remoteStop(){if(!rmId)return;const id=rmId;rmId=null;rmWatch=false;clearTimeout(rmTimer);rfetch("DELETE","/api/remote/"+id).catch(()=>{});rmLabel();}
+  function rmState(){
+    const r=stats(aim),m=moaOf(r.size),sh=$("lvSheet"),gs=$("lvGroup");
+    let sheet=null;
+    if(sh&&!sh.hidden)sheet={title:(sh.querySelector("h3")||{}).textContent||"",note:(sh.querySelector("p.note")||{}).textContent||"",
+      rows:[...sh.querySelectorAll(".lvsum > div")].map(d=>[(d.querySelector("b")||{}).textContent||"",(d.querySelector("span")||{}).textContent||"",d.classList.contains("wide")?1:0]),
+      buttons:[...sh.querySelectorAll("button")].filter(b=>b.id!=="lvsShare").map(b=>[b.id,b.textContent,b.classList.contains("primary")?1:0])};
+    return {status:status.t,kind:status.k,locked:!!lock,ready:!!ref,chip:$("lvAimChip").textContent,
+      stats:{n:r.n,want:want||null,size:r.size!=null?U.n("in",r.size,2):"–",moa:m!=null?m.toFixed(2):"–",mr:r.mr!=null?U.n("in",r.mr,2):"–",off:offTxt(r)},
+      en:{shot:!$("lvShot").disabled,undo:!$("lvUndo").disabled,prev:!$("lvPrev").disabled,next:!$("lvNext").disabled,done:!$("lvDone").disabled},
+      viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,doneLabel:$("lvDone").textContent,
+      groups:gs?[...gs.options].map(o=>[o.value,o.textContent]):null,group:gs?gs.value:null,want:$("lvWant").value,dist:$("lvDist").value,unitIn:U.u("in"),unitYd:U.u("yd"),
+      mic:!!micT,sens,sheet,title:o.title||""};
+  }
+  const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone"];
+  function rmRun(c){
+    if(c.cmd==="click"&&RM_CLICK.includes(c.id)){const b=$(c.id);if(b&&!b.disabled)b.click();}
+    else if(c.cmd==="tap"&&isFinite(c.u)&&isFinite(c.w))tapAt(Math.min(1,Math.max(0,c.u)),Math.min(1,Math.max(0,c.w)));
+    else if(c.cmd==="set"){const el=c.k==="group"?$("lvGroup"):c.k==="want"?$("lvWant"):c.k==="dist"?$("lvDist"):null;if(el){el.value=c.v==null?"":c.v;el.dispatchEvent(new Event(el.tagName==="SELECT"?"change":"input"));}}
+    else if(c.cmd==="sens"&&SENS[c.v])setSens(c.v);
+  }
+  const rmCan=document.createElement("canvas");
+  async function remotePush(){
+    if(!rmId||closed)return;clearTimeout(rmTimer);
+    if(rmBusy)return;rmBusy=true;const t0=Date.now();
+    try{
+      let frame=null;
+      if(can.width>10){const k=Math.min(1,640/can.width);rmCan.width=Math.round(can.width*k);rmCan.height=Math.round(can.height*k);rmCan.getContext("2d").drawImage(can,0,0,rmCan.width,rmCan.height);frame=rmCan.toDataURL("image/jpeg",.55);}
+      const r=await rfetch("POST","/api/remote/"+rmId+"/push",{frame,state:rmState()});
+      rmFail=0;if(!!r.watching!==rmWatch){rmWatch=!!r.watching;rmLabel();if(rmWatch&&!busy)setStat("Another device is watching."+(ref?" Fire at "+aimLabel(aim)+", then tap Shot.":""),"");}
+      (r.cmds||[]).forEach(rmRun);
+    }catch(e){if(e&&e.status===404){rmId=null;rmLabel();setStat("The remote stopped. Tap Remote to start it again.","bad");}else if(++rmFail===5)setStat("The remote can't reach your Range Book. It keeps trying.","bad");}
+    finally{rmBusy=false;}
+    if(rmId&&!closed)rmTimer=setTimeout(remotePush,Math.max(150,650-(Date.now()-t0)));
+  }
+  $("lvRemote").addEventListener("click",()=>{if(rmId)remoteStop();else remoteStart();});
   thumb.addEventListener("click",()=>{view="full";renderStats();});
   $("lvView").addEventListener("click",()=>{view=view==="aim"?"full":"aim";renderStats();});
   $("lvShot").addEventListener("click",()=>shot("button"));
@@ -4590,7 +4646,7 @@ function openLive(o){
   function close(force){
     const total=holes.reduce((s,h)=>s+(h?h.length:0),0);
     if(!force&&total&&dirty){arm($("lvClose"),"live","Discard "+total+" shot"+(total===1?"":"s")+"?",()=>close(true));return;}
-    closed=true;micOff();if(stream)stream.getTracks().forEach(t=>t.stop());keep(false);
+    closed=true;remoteStop();micOff();if(stream)stream.getTracks().forEach(t=>t.stop());keep(false);
     document.removeEventListener("keydown",onKey);document.removeEventListener("visibilitychange",onVis);v.remove();
   }
   const onKey=e=>{if(e.key==="Escape")close();};
@@ -4662,7 +4718,84 @@ function livePick(tid){
   },()=>banner("Couldn't load your saved Live targets. Check your connection.",true));
 }
 window.RB_LIVE_OPEN=o=>openLive(Object.assign({store:liveStore},o));
-window.RB_LIVE_LIST=()=>renderLiveSaved();
+window.RB_LIVE_LIST=()=>{renderLiveSaved();watchList();};
+/* ----- watching a phone's Live target from another device (an iPad, say) signed in to the same account ----- */
+const rfetch=(method,url,body)=>fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:body===undefined?undefined:JSON.stringify(body)}).then(r=>r.ok?r.json():r.json().catch(()=>({})).then(j=>{const e=new Error(j.error||"error "+r.status);e.status=r.status;throw e;}));
+let watchTimer=null;
+function watchList(){
+  const box=document.getElementById("lt_watch");clearTimeout(watchTimer);if(!box)return;
+  if(!box.offsetParent){return;} // the Tools page isn't showing
+  rfetch("GET","/api/remote").then(r=>{
+    const ss=(r.sessions||[]);
+    box.innerHTML=ss.length?'<h2>Watch a phone</h2>'+ss.map(x=>'<div class="row"><button class="btn primary" type="button" data-watch="'+esc(x.id)+'" data-dev="'+esc(x.device)+'">Watch the '+esc(x.device)+'</button><span class="note">Live target, started '+esc(new Date(x.started).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))+(x.watching?' · already being watched':'')+'</span></div>').join(""):
+      '<p class="note"><b>Control it from another device:</b> on the phone\'s Live target screen, tap <b>Remote</b>. Then a <b>Watch</b> button shows up here on your iPad (or any device signed in to your account).</p>';
+    box.querySelectorAll("[data-watch]").forEach(b=>b.addEventListener("click",()=>openWatch(b.dataset.watch,b.dataset.dev)));
+  },()=>{box.innerHTML='<p class="note">Watching a phone needs a signal to reach your Range Book.</p>';}).finally(()=>{watchTimer=setTimeout(watchList,4000);});
+}
+function openWatch(id,dev){
+  clearTimeout(watchTimer);
+  const v=document.createElement("div");v.className="viewer live watch";v.id="liveWatch";v.setAttribute("role","dialog");v.setAttribute("aria-label","Watching Live target");
+  v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><b class="mtitle">Watching the '+esc(dev||"phone")+'</b><span class="lvchip" id="wChip"></span></div>'+
+    '<div class="lvmain"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
+      '<button class="btn lvview" id="wView" type="button" hidden>Whole target</button></div>'+
+    '<div class="lvside"><div class="lvinfo"><span class="lvchip" id="wTitle"></span></div>'+
+      '<div class="lvgrid"><label id="wGroupL" hidden>Charge for this aim<select id="wGroup"></select></label><label>Shots<input id="wWant" type="number" inputmode="numeric" min="1" step="1"></label><label><span>Distance (<span id="wYd">yd</span>)</span><input id="wDist" type="number" inputmode="numeric" step="any"></label></div>'+
+      '<div class="lvstats" id="wStats"></div>'+
+      '<div class="lvrow"><button class="lvshot" id="wShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="wUndo" type="button" disabled>↶ Undo</button></div>'+
+      '<div class="lvrow"><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
+      '<div class="lvsens" id="wSens" hidden role="group" aria-label="Microphone sensitivity"><span>Microphone</span><button type="button" data-wsens="normal">Normal</button><button type="button" data-wsens="supp">Suppressed</button><button type="button" data-wsens="quiet">Quiet .22</button></div>'+
+      '<p class="note lvnote" style="display:block!important">Everything here runs on the phone: tap <b>Shot</b> after each shot, or tap a hole on the picture to add it or a mark to remove it. Turn the microphone on from the phone.</p>'+
+    '</div></div><div class="lvsheet" id="wSheet" hidden></div>';
+  document.body.appendChild(v);
+  let closed=false,seq=0,st=null,lastGroups="";
+  const img=$("wImg");
+  const cmd=b=>rfetch("POST","/api/remote/"+id+"/cmd",b).catch(()=>setStat("Couldn't reach the phone. Check the signal.","bad"));
+  const setStat=(t,k)=>{const s=$("wStat");s.className="lvpill"+(k?" "+k:"");s.lastChild.textContent=t;};
+  const click=bid=>cmd({cmd:"click",id:bid});
+  [["wShot","lvShot"],["wUndo","lvUndo"],["wPrev","lvPrev"],["wNext","lvNext"],["wDone","lvDone"],["wView","lvView"]].forEach(([a,b])=>$(a).addEventListener("click",()=>{click(b);if(a==="wShot"){$(a).disabled=true;setStat("Looking for the shot…","busy");}}));
+  v.querySelectorAll("[data-wsens]").forEach(b=>b.addEventListener("click",()=>{cmd({cmd:"sens",v:b.dataset.wsens});v.querySelectorAll("[data-wsens]").forEach(x=>x.classList.toggle("on",x===b));}));
+  $("wGroup").addEventListener("change",e=>cmd({cmd:"set",k:"group",v:e.target.value}));
+  let wt=null;const later=(k,el)=>{clearTimeout(wt);wt=setTimeout(()=>cmd({cmd:"set",k,v:el.value}),500);};
+  $("wWant").addEventListener("input",e=>later("want",e.target));$("wDist").addEventListener("input",e=>later("dist",e.target));
+  // a tap on the picture goes to the same spot on the phone's picture
+  img.addEventListener("click",e=>{if(!img.naturalWidth)return;const rc=img.getBoundingClientRect(),s=Math.min(rc.width/img.naturalWidth,rc.height/img.naturalHeight),dw=img.naturalWidth*s,dh=img.naturalHeight*s,ox=rc.left+(rc.width-dw)/2,oy=rc.top+(rc.height-dh)/2;
+    const u=(e.clientX-ox)/dw,w=(e.clientY-oy)/dh;if(u<0||w<0||u>1||w>1)return;cmd({cmd:"tap",u,w});});
+  function render(S){
+    st=S;if(!S)return;
+    setStat(S.status||"",S.kind||"");$("wChip").textContent=S.chip||"";$("wTitle").textContent=S.title||"";$("wYd").textContent=S.unitYd||"yd";
+    const T=S.stats||{};
+    $("wStats").innerHTML='<div><b>'+esc(T.n)+(T.want?'<small>/'+esc(T.want)+'</small>':'')+'</b><span>Shots</span></div><div><b>'+esc(T.size)+'</b><span>Group '+esc(S.unitIn||"in")+'</span></div><div><b>'+esc(T.moa)+'</b><span>MOA</span></div><div><b>'+esc(T.mr)+'</b><span>Mean rad.</span></div><div class="wide">Center from aim: <b>'+esc(T.off)+'</b></div>';
+    const E=S.en||{};$("wShot").disabled=!E.shot;$("wUndo").disabled=!E.undo;$("wPrev").disabled=!E.prev;$("wNext").disabled=!E.next;$("wDone").disabled=!E.done;$("wDone").textContent=S.doneLabel||"Save";
+    $("wView").hidden=!S.viewShown;$("wView").textContent=S.viewLabel||"Whole target";
+    const gl=$("wGroupL"),gsel=$("wGroup");gl.hidden=!S.groups;gl.parentNode.style.gridTemplateColumns=S.groups?"":"1fr 1fr";
+    if(S.groups){const key=JSON.stringify(S.groups);if(key!==lastGroups){lastGroups=key;gsel.innerHTML=S.groups.map(([a,b])=>'<option value="'+esc(a)+'">'+esc(b)+'</option>').join("");}if(document.activeElement!==gsel)gsel.value=S.group||"";}
+    if(document.activeElement!==$("wWant"))$("wWant").value=S.want||"";if(document.activeElement!==$("wDist"))$("wDist").value=S.dist||"";
+    $("wSens").hidden=!S.mic;v.querySelectorAll("[data-wsens]").forEach(x=>x.classList.toggle("on",x.dataset.wsens===S.sens));
+    const sh=$("wSheet");
+    if(S.sheet){const X=S.sheet;sh.innerHTML='<h3>'+esc(X.title)+'</h3>'+(X.note?'<p class="note" style="margin:0">'+esc(X.note)+'</p>':'')+
+        (X.rows&&X.rows.length?'<div class="lvsum">'+X.rows.map(([b,s2,w])=>'<div'+(w?' class="wide"':'')+'><b>'+esc(b)+'</b><span>'+esc(s2)+'</span></div>').join("")+'</div>':'')+
+        '<div class="lvrow" style="flex-wrap:wrap">'+(X.buttons||[]).map(([bid,l,pr])=>'<button class="btn lvbtn'+(pr?' primary':'')+'" type="button" data-wclick="'+esc(bid)+'">'+esc(l)+'</button>').join("")+'</div>';
+      sh.hidden=false;sh.querySelectorAll("[data-wclick]").forEach(b=>b.addEventListener("click",()=>{b.disabled=true;click(b.dataset.wclick);}));}
+    else sh.hidden=true;
+  }
+  function ended(){setStat("The phone stopped sharing (Remote is off, or Live target was closed).","bad");["wShot","wUndo","wPrev","wNext","wDone"].forEach(x=>$(x).disabled=true);$("wSheet").hidden=true;}
+  let lastSheet="";
+  async function loop(){
+    while(!closed){
+      try{const r=await rfetch("GET","/api/remote/"+id+"/wait?since="+seq);if(closed)return;
+        if(r.ended){ended();return;}
+        if(r.seq>seq){seq=r.seq;if(r.hasFrame)img.src="/api/remote/"+id+"/frame?seq="+seq;
+          // keep a sheet the person is tapping in place unless it changed
+          const sk=JSON.stringify(r.state&&r.state.sheet);if(sk!==lastSheet||!r.state||!r.state.sheet){lastSheet=sk;render(r.state);}else{const keep=r.state.sheet;r.state.sheet=null;render(r.state);r.state.sheet=keep;$("wSheet").hidden=false;}}
+        if(!r.alive)setStat("Waiting for the phone… (check its signal, and keep its screen on)","busy");
+      }catch(e){if(closed)return;setStat("Can't reach your Range Book. Trying again…","bad");await new Promise(res=>setTimeout(res,2000));}
+    }
+  }
+  const close=()=>{closed=true;document.removeEventListener("keydown",onKey);v.remove();watchList();};
+  const onKey=e=>{if(e.key==="Escape")close();};document.addEventListener("keydown",onKey);
+  $("wClose").addEventListener("click",close);
+  loop();
+}
 function liveForLadder(lid){
   const id=openId,L=loads.get(id);if(!L||!isMine(id))return;
   const lad=(L.ladders||[]).find(l=>l.id===lid)||null,gs=(L.groups||[]).filter(g=>lad?g.ladderId===lid:true);
