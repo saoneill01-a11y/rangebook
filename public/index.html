@@ -1402,7 +1402,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Round count and barrel life</h3>
       <p>Each gun's page has a <b>Round count</b>. It adds the rounds from range trips on Shooting loads that use that gun, the shots in your load-development groups on Reloading loads that use it, and the <b>Rounds before Range Book</b> you enter. Fill in <b>Barrel life</b> to see a bar of how much is used (it turns red at 80%, and Home warns you). Set <b>Clean every</b> and tap <b>Cleaned today</b> after cleaning to see the rounds since then; Home tells you when it's due. When you fit a new barrel, set <b>Barrel fitted on</b> to that date and <b>Rounds before Range Book</b> to 0.</p>
       <h3>Scopes</h3>
-      <p><b>Guns &amp; Ammo → Scopes</b> keeps your scopes. Tap <b>+ Add scope</b> and search the list of about 40 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting load that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
+      <p><b>Guns &amp; Ammo → Scopes</b> keeps your scopes. Tap <b>+ Add scope</b> and search the list of about 90 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting load that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
       <p><b>Second focal plane</b> scopes have marks that are only their true size at one power, often the highest (the scope's manual says). Enter it in <b>Marks true at power</b>. On the dope card's reticle a <b>Scope power</b> picker then works out the hold in marks for the power you're on; at the true power it's the same as the MIL or MOA.</p>
       <h3>Make the reticle look like yours</h3>
       <p>Range Book's reticle is a plain one, not any brand's design. Tap <b>Change how it looks</b> (on the scope's page, or under the reticle on the dope card) to open a window with a preview where you pick where the main marks are, the small marks between them, the holdover dots (a full grid, a tree that widens as it goes down, or none), the numbers, the center (lines that meet, an open center, or an open center with a dot) and the line thickness. <b>Back to the standard look</b> undoes it.</p>
@@ -2188,8 +2188,10 @@ function renderReticle(L,S,zs,path){
   const R0=L.ret||{},lim=Math.min(S.MR,S.last);
   if(!DOPE||DOPE.selX==null){box.innerHTML='<p class="note">No distances on the card. Check From, To and Every.</p>';retNav();return;}
   const x=Math.min(DOPE.selX,lim);$("rt_mode").value=R0.mode==="dial"?"dial":"hold";
-  const MIL=o.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",per=x*UF/100;
-  const up=-path(x,za)/per,wind=(L.wind||0)*crossFactor(L),side=windSide(L);
+  // the reticle's own units (a few scopes have turrets in other units: the dial below is in the turret's)
+  const RU=sc?(sc.unit==="mil"?"mil":"moa"):o.unit,MIL=RU==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",per=x*UF/100;
+  const DU=o.unit==="mil"?"MIL":"MOA",dper=x*(o.unit==="mil"?3.6:1.0472)/100;
+  const up=-path(x,za)/per,upD=-path(x,za)/dper,wind=(L.wind||0)*crossFactor(L),side=windSide(L);
   const wd=wind*1.46667*(S.at(S.t,x)-x*3/L.mv)*12/per,sp=S.sg!=null?(spinIn(S.sg,S.at(S.t,x))||0)/per:0;
   // where the bullet goes from the center, in reticle units (right and down are positive)
   const dx0=(side==="right"?-wd:side==="left"?wd:0)+sp,dial=R0.mode==="dial",dy0=dial?0:up;
@@ -2198,10 +2200,10 @@ function renderReticle(L,S,zs,path){
   let pw=sfp&&tp?(num(R0.power)>0?num(R0.power):tp):null;if(pw&&mag[0]&&mag[1])pw=Math.min(mag[1],Math.max(mag[0],pw));
   const kf=sfp&&tp&&pw?pw/tp:1,dx=dx0*kf,dy=dy0*kf,MK=kf!==1?"marks":UN;
   const pic=sc&&sc.retMode==="pic"&&sc.pic&&sc.pic.ppu>0&&window.RB_RETPIC?RB_RETPIC(sc.id):null;
-  const g=RB_RET.svg({unit:o.unit,look:sc?sc.look:R0.look,pic:pic?Object.assign({url:pic.url},sc.pic):null,dx,dy,label:"Reticle with the hold for "+U.s("yd",x,0)});
+  const g=RB_RET.svg({unit:RU,look:sc?sc.look:R0.look,pic:pic?Object.assign({url:pic.url},sc.pic):null,dx,dy,label:"Reticle with the hold for "+U.s("yd",x,0)});
   const f1=n=>{const s2=Math.abs(n).toFixed(1);return s2;};
   const lines=[];
-  if(dial)lines.push('Dial <b>'+(up>=0?f1(up)+' '+UN+' up':f1(up)+' '+UN+' down')+'</b>.');
+  if(dial)lines.push('Dial <b>'+(upD>=0?f1(upD)+' '+DU+' up':f1(upD)+' '+DU+' down')+'</b>.');
   const hv=dy===0?'':(dy>0?f1(dy)+' '+MK+' below':f1(dy)+' '+MK+' above'),hh=Math.abs(dx)<.05?'':f1(dx)+' '+MK+' '+(dx>0?'right':'left');
   lines.push(hv||hh?'Put the target on the mark <b>'+(hv&&hh?hv+' and '+hh+' of':hh?hh+' of':hv)+'</b> the center.':'Hold dead on.');
   const why=[];if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+f1(wd)+' '+UN+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+f1(sp)+' '+UN+' right');
@@ -2215,14 +2217,14 @@ function renderReticle(L,S,zs,path){
   const lookBtn=pic?'':'<button class="btn small" type="button" id="rtLook">Change how it looks</button>';
   box.innerHTML=pwr+'<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+
     '<div class="row retbtns">'+lookBtn+(sc?'<span class="note">'+(pic?'Your reticle picture · ':'')+escL(scopeName(sc))+'</span>':'')+'</div></div></div>';
-  const lb=$("rtLook");if(lb)lb.addEventListener("click",()=>RB_RET.editLook({unit:o.unit,look:sc?sc.look:R0.look,onSave:lk=>{
+  const lb=$("rtLook");if(lb)lb.addEventListener("click",()=>RB_RET.editLook({unit:RU,look:sc?sc.look:R0.look,onSave:lk=>{
     if(sc&&window.RB_SCOPE_SAVE)RB_SCOPE_SAVE(sc.id,{look:lk});else{const C=cur();C.ret=Object.assign({},C.ret||{},{look:lk});save();}render();}}));
   const ps=$("rt_pwr");if(ps)ps.addEventListener("change",()=>{const C=cur();C.ret=Object.assign({},C.ret||{},{power:+ps.value});save();render();});
   retNav();
 }
 // the dope card's distances are kept separately for yards and metres, so each stays in round numbers
 function dopeOpts(L){const d=L.dope||{},M=U.metric?"M":"";const MRx=L.lr?1000:400,sc=scopeOf(L);
-  return {from:d["from"+M]!=null?d["from"+M]:100,to:d["to"+M]!=null?d["to"+M]:(L.lr?1000:400),step:d["step"+M]!=null?d["step"+M]:(L.lr?50:25),unit:sc?(sc.unit==="mil"?"mil":"moa"):(d.unit==="mil"?"mil":"moa"),MRx,scope:sc};}
+  return {from:d["from"+M]!=null?d["from"+M]:100,to:d["to"+M]!=null?d["to"+M]:(L.lr?1000:400),step:d["step"+M]!=null?d["step"+M]:(L.lr?50:25),unit:sc?(sc.turret==="mil"||sc.turret==="moa"?sc.turret:sc.unit==="mil"?"mil":"moa"):(d.unit==="mil"?"mil":"moa"),MRx,scope:sc};}
 function fillDope(){const o=dopeOpts(cur());$("d_from").value=o.from;$("d_to").value=o.to;$("d_step").value=o.step;$("d_unit").value=o.unit;}
 function renderDope(L,S,zs,path){
   const box=$("dopeCard");if(!box)return;
@@ -2249,7 +2251,7 @@ function renderDope(L,S,zs,path){
     DOPE.sel=bi;DOPE.selX=bi>=0?U.from("yd",DOPE.rows[bi].x):null;
     if(bi>=0){const dx=DOPE.rows[bi].x;rows=rows.replace('<tr data-dx="'+dx+'" tabindex="0">','<tr data-dx="'+dx+'" tabindex="0" class="sel" aria-current="true">');}}
   document.querySelectorAll("[data-du]").forEach(b=>{const on=b.dataset.du===o.unit;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");b.disabled=!!o.scope;});
-  {const sn=$("d_unitNote");if(sn){sn.hidden=!o.scope;if(o.scope)sn.innerHTML='Set by the scope on this gun: <b>'+escL(scopeName(o.scope))+'</b>'+(num(o.scope.click)>0?' ('+o.scope.click+' '+(o.unit==="mil"?"MIL":"MOA")+' clicks)':'')+'.';}}
+  {const sn=$("d_unitNote");if(sn){sn.hidden=!o.scope;if(o.scope){const rU=o.scope.unit==="mil"?"mil":"moa";sn.innerHTML='Set by the scope on this gun: <b>'+escL(scopeName(o.scope))+'</b>'+(num(o.scope.click)>0?' ('+o.scope.click+' '+(o.unit==="mil"?"MIL":"MOA")+' clicks)':' (click value not published: check your turrets)')+'.'+(rU!==o.unit?' Its reticle is in '+(rU==="mil"?"MIL":"MOA")+', so the reticle holds are in '+(rU==="mil"?"MIL":"MOA")+'.':'');}}}
   const today=new Date();const ds=today.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
   box.innerHTML='<div class="dopehead"><div class="dopename">'+esc(L.name||"Load")+'</div><div class="dopemeta">'+
     (L.rifleName?esc(L.rifleName)+" · ":"")+(o.scope?esc(scopeName(o.scope))+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
@@ -3533,7 +3535,9 @@ function renderRifles(){
 /* ---------- scopes (Guns & Ammo → Scopes): kept with the guns, one per gun ---------- */
 let scopes=[],scopeOpen=null,scopeAdding=false,scopeQ="",scopeFromGun=null,scopeForGun=null,SCOPE_CAT=null,retUp=0;
 const scopeLabel=x=>[x.mfr,x.model].filter(Boolean).join(" ")||"Unnamed scope";
-const scopeSpec=x=>[num(x.magMin)&&num(x.magMax)?num(x.magMin)+"-"+num(x.magMax)+"x":"",x.fp==="SFP"?"second focal plane":x.fp==="FFP"?"first focal plane":"",(x.unit==="mil"?"MIL":"MOA")+(num(x.click)>0?", "+num(x.click)+" clicks":"")].filter(Boolean).join(" · ");
+const turretU=x=>x.turret==="mil"||x.turret==="moa"?x.turret:(x.unit==="mil"?"mil":"moa");
+const unitTxt=x=>{const t=turretU(x),U2=t==="mil"?"MIL":"MOA";return (t!==(x.unit==="mil"?"mil":"moa")?(x.unit==="mil"?"MIL":"MOA")+" reticle, "+U2+" turrets":U2)+(num(x.click)>0?", "+num(x.click)+" "+U2+" clicks":", click value not published");};
+const scopeSpec=x=>[num(x.magMin)&&num(x.magMax)?num(x.magMin)+"-"+num(x.magMax)+"x":"",x.fp==="SFP"?"second focal plane":x.fp==="FFP"?"first focal plane":"",unitTxt(x)].filter(Boolean).join(" · ");
 function scopesChanged(){queueRifles();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}
 // a gun has one scope, and a scope is on one gun
 function mountScope(sid,rid){rifles.forEach(g=>{if(g.id===rid)g.scopeId=sid||null;else if(sid&&g.scopeId===sid)g.scopeId=null;});queueRifles();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}
@@ -3576,15 +3580,16 @@ function renderScopes(root){
     h+='</section>';
   }else{
     const gs=onGun(sc),MIL=sc.unit==="mil",ph=RB_RETPIC(sc.id),usePic=sc.retMode==="pic";
-    const clicks=MIL?[[0.1,"0.1 MIL"],[0.05,"0.05 MIL"],[0.2,"0.2 MIL"]]:[[0.25,"¼ MOA"],[0.125,"⅛ MOA"],[0.5,"½ MOA"],[1,"1 MOA"]];
+    const TMIL=turretU(sc)==="mil",clicks=[["","Not published: check your turrets"]].concat(TMIL?[[0.1,"0.1 MIL"],[0.05,"0.05 MIL"],[0.2,"0.2 MIL"],[0.5,"0.5 MIL"]]:[[0.25,"¼ MOA"],[0.125,"⅛ MOA"],[0.5,"½ MOA"],[1,"1 MOA"]]);
     const sel=(id,opts,v)=>'<select id="'+id+'" class="fieldselect">'+opts.map(([a,b])=>'<option value="'+a+'"'+(String(a)===String(v)?' selected':'')+'>'+b+'</option>').join("")+'</select>';
     h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Scope"><h2>Details</h2><div class="grid">'+
       field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+
       field("sc_magMin","Power from (x)",sc.magMin,"number")+field("sc_magMax","Power to (x)",sc.magMax,"number")+field("sc_obj","Objective (mm)",sc.obj,"number")+
       '<div class="field"><label for="sc_fp">Focal plane</label>'+sel("sc_fp",[["FFP","First (FFP)"],["SFP","Second (SFP)"]],sc.fp)+'</div>'+
       (sc.fp==="SFP"?field("sc_sfpTrue","Marks true at power (x)",sc.sfpTrue,"number"):'')+
-      '<div class="field"><label for="sc_unit">Reticle and turrets</label>'+sel("sc_unit",[["mil","MIL (MRAD)"],["moa","MOA"]],sc.unit)+'</div>'+
-      '<div class="field"><label for="sc_click">One click is</label>'+sel("sc_click",clicks,num(sc.click))+'</div>'+
+      '<div class="field"><label for="sc_unit">Reticle</label>'+sel("sc_unit",[["mil","MIL (MRAD)"],["moa","MOA"]],sc.unit)+'</div>'+
+      '<div class="field"><label for="sc_turret">Turrets</label>'+sel("sc_turret",[["","Same as the reticle"],["mil","MIL (MRAD)"],["moa","MOA"]],sc.turret==="mil"||sc.turret==="moa"?sc.turret:"")+'</div>'+
+      '<div class="field"><label for="sc_click">One click is</label>'+sel("sc_click",clicks,num(sc.click)>0?num(sc.click):"")+'</div>'+
       field("sc_reticle","Reticle name",sc.reticle,"text"," wide")+
       '<div class="field"><label for="sc_gun">On gun</label><select id="sc_gun" class="fieldselect"><option value="">None</option>'+[...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"")).map(g=>'<option value="'+esc(g.id)+'"'+(g.scopeId===sc.id?' selected':'')+'>'+esc(g.name||"Unnamed gun")+'</option>').join("")+'</select></div>'+
       '<div class="field wide"><label for="sc_notes">Notes</label><textarea id="sc_notes" style="min-height:70px">'+esc(sc.notes||"")+'</textarea></div></div>'+
@@ -3611,9 +3616,9 @@ function renderScopes(root){
       const hit=SCOPE_CAT.map((x,i)=>[x,i]).filter(([x])=>{const t=(x.mfr+" "+x.model+" "+x.unit+" "+(x.unit==="mil"?"mrad":"")+" "+x.fp+" "+x.reticle).toLowerCase();return q.every(w=>t.includes(w));});
       if(!hit.length){box.innerHTML='<p class="note">No match. Try fewer words, or tap <b>+ Enter a scope yourself</b>.</p>';return;}
       const by={};hit.forEach(([x,i])=>{(by[x.mfr]=by[x.mfr]||[]).push([x,i]);});
-      box.innerHTML=Object.keys(by).sort().map(m=>'<h3 class="catmk">'+esc(m)+'</h3><div class="cartgroup">'+by[m].map(([x,i])=>'<button class="loaditem" type="button" data-scat="'+i+'"><span class="t">'+esc(x.model)+'</span><span class="d">'+esc([x.unit==="mil"?"MIL, "+x.click+" clicks":"MOA, "+x.click+" clicks",x.fp,x.reticle].filter(Boolean).join(" · "))+'</span></button>').join("")+'</div>').join("");
+      box.innerHTML=Object.keys(by).sort().map(m=>'<h3 class="catmk">'+esc(m)+'</h3><div class="cartgroup">'+by[m].map(([x,i])=>'<button class="loaditem" type="button" data-scat="'+i+'"><span class="t">'+esc(x.model)+'</span><span class="d">'+esc([unitTxt(x),x.fp,x.reticle].filter(Boolean).join(" · "))+'</span></button>').join("")+'</div>').join("");
       box.querySelectorAll("[data-scat]").forEach(b=>b.addEventListener("click",()=>{const x=SCOPE_CAT[+b.dataset.scat];
-        newScope({mfr:x.mfr,model:x.model,magMin:x.mag[0],magMax:x.mag[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,click:x.click,reticle:x.reticle,src:x.src});renderRifles();window.scrollTo(0,0);}));};
+        newScope({mfr:x.mfr,model:x.model,magMin:x.mag[0],magMax:x.mag[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src});renderRifles();window.scrollTo(0,0);}));};
     loadScopeCat().then(draw).catch(()=>{const b=$("scopeCat");if(b)b.innerHTML='<p class="err">Couldn\'t load the list. Check your connection, or enter the scope yourself.</p>';});
     $("scopeQ").addEventListener("input",e=>{scopeQ=e.target.value;draw();});
     $("scopeOwn").addEventListener("click",()=>{newScope({});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();});
@@ -3632,8 +3637,9 @@ function renderScopes(root){
   [["mfr",false],["model",false],["magMin",true],["magMax",true],["obj",true],["sfpTrue",true],["reticle",false],["notes",false]].forEach(([k,isNum])=>{const el=$("sc_"+k);if(!el)return;
     el.addEventListener("input",()=>{sc[k]=isNum?num(el.value):el.value;scopesChanged();if(k==="mfr"||k==="model")$("rifTitle").textContent=scopeLabel(sc);});});
   $("sc_fp").addEventListener("change",e=>{sc.fp=e.target.value;scopesChanged();renderRifles();});
-  $("sc_unit").addEventListener("change",e=>{sc.unit=e.target.value;sc.click=sc.unit==="mil"?0.1:0.25;sc.look=null;if(sc.pic)sc.pic=null;scopesChanged();renderRifles();});
-  $("sc_click").addEventListener("change",e=>{sc.click=+e.target.value;scopesChanged();});
+  $("sc_unit").addEventListener("change",e=>{sc.unit=e.target.value;if(!sc.turret)sc.click=sc.unit==="mil"?0.1:0.25;else if(sc.turret===sc.unit)sc.turret=null;sc.look=null;if(sc.pic)sc.pic=null;scopesChanged();renderRifles();});
+  $("sc_turret").addEventListener("change",e=>{const v=e.target.value;sc.turret=v&&v!==sc.unit?v:null;sc.click=turretU(sc)==="mil"?0.1:0.25;scopesChanged();renderRifles();});
+  $("sc_click").addEventListener("change",e=>{sc.click=e.target.value===""?null:+e.target.value;scopesChanged();});
   $("sc_gun").addEventListener("change",e=>{const v=e.target.value;if(v)mountScope(sc.id,v);else{rifles.forEach(g=>{if(g.scopeId===sc.id)g.scopeId=null;});queueRifles();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}renderRifles();});
   root.querySelectorAll('input[name="sc_ret"]').forEach(r=>r.addEventListener("change",()=>{sc.retMode=r.value;scopesChanged();renderRifles();}));
   {const b=$("scLook");if(b)b.addEventListener("click",()=>RB_RET.editLook({unit:sc.unit,look:sc.look,onSave:lk=>{sc.look=lk;scopesChanged();prev();}}));}
