@@ -965,7 +965,13 @@ function serveStatic(req, res, url) {
   if (!fp.startsWith(PUBLIC_DIR + path.sep)) return send(res, 404, "Not found");
   fs.stat(fp, (err, st) => {
     if (err || !st.isFile()) return send(res, 404, "Not found");
-    const head = { "Content-Type": TYPES[path.extname(fp)] || "application/octet-stream", "Cache-Control": rel === "/index.html" || rel === "/sw.js" ? "no-cache" : "public, max-age=3600", ...SECURITY_HEADERS };
+    // the page, its worker and the data files it reads (targets, what's new, the app manifest) are checked on every load,
+    // so an update shows up right away; icons and libraries can be kept for an hour
+    const fresh = rel === "/index.html" || rel === "/sw.js" || /\.(json|webmanifest)$/.test(rel);
+    const head = { "Content-Type": TYPES[path.extname(fp)] || "application/octet-stream", "Cache-Control": fresh ? "no-cache" : "public, max-age=3600", "Last-Modified": st.mtime.toUTCString(), ...SECURITY_HEADERS };
+    // nothing changed since the browser's copy: say so instead of sending it again
+    const ims = Date.parse(req.headers["if-modified-since"] || "");
+    if (rel !== "/index.html" && !isNaN(ims) && Math.floor(st.mtimeMs / 1000) * 1000 <= ims) { res.writeHead(304, head); return res.end(); }
     if (!PACK.has(path.extname(fp)) && rel !== "/index.html") { res.writeHead(200, head); return fs.createReadStream(fp).pipe(res); }
     packFile(fp, rel, st, (e2, e) => {
       if (e2) return send(res, 500, "Couldn't read the file");
