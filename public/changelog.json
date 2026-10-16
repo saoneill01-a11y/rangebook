@@ -2,7 +2,21 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.5.0",
+      "version": "2.6.0",
+      "date": "2026-10-16",
+      "title": "Hit chance, reticle holds, saved ranges and more",
+      "items": [
+        "Tools → Hit chance: your odds of a first-round hit at a distance from your group size, velocity SD and how sure you are of the wind and range, with a picture of the spread, what would help most, and the same target at other distances.",
+        "Shooting loads have Reticle holds: a plain MIL or MOA reticle with a dot where the target goes for any distance, holding everything or dialing elevation and holding wind.",
+        "Saved ranges: save the places you shoot with each target's distance, angle and size, and see the dial and wind for every target with any load. Range names show up under Where on range trips.",
+        "Range trips record the cold-bore shot, and each gun's page has a Cold-bore log that shows where your first shot tends to land.",
+        "Ladder groups have Pressure signs (flat or cratered primers, ejector marks, heavy bolt lift, sticky extraction, loose primer pockets, case head expansion), marked on the velocity chart, in the Summary and in the exports.",
+        "Live target remembers the order of the holes, so a group shows Shot by shot: each shot's velocity next to where it hit, and whether faster shots hit higher.",
+        "Live target works on any target: tap its four corners, give its size and tap the aim points."
+      ]
+    },
+    {
+      "version": "2.5",
       "date": "2026-10-16",
       "title": "A quick tour",
       "items": [

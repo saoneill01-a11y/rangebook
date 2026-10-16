@@ -305,6 +305,19 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .samplebanner b{color:var(--warn)}
 /* Tools: one calculator at a time under the menu bar */
 @media (max-width:760px){#tab-tools{display:none!important}}
+.toolsub{font-size:15px;margin:16px 0 8px}
+.hcmain{display:grid;grid-template-columns:160px minmax(0,1fr);gap:14px;align-items:center}
+.hcsvg{width:160px;height:160px;display:block}
+@media(max-width:400px){.hcmain{grid-template-columns:120px minmax(0,1fr)}.hcsvg{width:120px;height:120px}}
+.hcbars{display:flex;flex-direction:column;gap:6px;max-width:560px}
+.hcbar{display:grid;grid-template-columns:minmax(0,1fr) 44px 80px 34px;gap:8px;align-items:center;font-size:14px}
+.hcbar b{font-family:var(--mono);text-align:right}
+.hcbar i{display:block;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--accent) var(--w),var(--line) var(--w))}
+.hcbar em{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right}
+.hcdist{display:flex;gap:4px;align-items:flex-end;height:120px;overflow-x:auto;padding-bottom:2px;max-width:760px}
+.hcdist div{flex:1 0 26px;display:flex;flex-direction:column-reverse;align-items:center;height:100%;gap:3px}
+.hcdist i{display:block;width:70%;flex:none;background:var(--accent);border-radius:3px 3px 0 0}
+.hcdist span{font-size:11px;color:var(--muted);font-family:var(--mono)}.hcdist b{font-size:11px;font-family:var(--mono)}
 .tooltiles{display:grid;grid-template-columns:1fr;gap:12px;margin-top:6px}
 @media(min-width:700px){.tooltiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1100px){.tooltiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -394,6 +407,21 @@ details.oldrel>summary{cursor:pointer;font-weight:600}
 #guestBox .btn.big{width:100%}
 .guestbanner{font-size:14px}
 
+.sbs:empty{display:none}.sbsd{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.sbsd summary{cursor:pointer;font-weight:600;font-size:14px}
+.sbt{width:auto;border-collapse:collapse;font-size:12.5px;margin:8px 0}.sbt th,.sbt td{padding:3px 7px;text-align:right;border-bottom:1px solid var(--line)}.sbt th:first-child,.sbt td:first-child{text-align:left}
+.sbt td{font-family:var(--mono)}
+.sbsum{font-size:14px;margin:6px 0}
+.sbch{width:100%;max-width:420px;height:auto;display:block}
+.press{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.press .lbl{font-size:12px;color:var(--muted);font-weight:600;width:100%}
+.pchip{font:inherit;font-size:13px;padding:5px 10px;border-radius:99px;border:1px solid var(--line);background:var(--sunk);color:var(--fg);cursor:pointer}
+.pchip.on{background:var(--warn);border-color:var(--warn);color:#fff;font-weight:700}
+.pchip:disabled{cursor:default;opacity:.8}.pchip:disabled:not(.on){display:none}
+.pexp{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.pexp:has(input:disabled:placeholder-shown){display:none}
+.chip.presschip{background:var(--warn);color:#fff}
+.pexp input{width:96px;padding:5px 8px;border-radius:7px;border:1px solid var(--line);background:var(--input,var(--sunk));color:var(--input-fg,var(--fg));font:inherit;font-size:15px}
 .chip.maxchip{background:#f6e3b4;color:#6b4a00}
 .chip.maxchip.over{background:var(--warn);color:#fff}
 .ammobtn{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);font:inherit;font-weight:500;font-size:16px;color:var(--fg);text-align:left;cursor:pointer}
@@ -411,6 +439,21 @@ details.oldrel>summary{cursor:pointer;font-weight:600}
 .pickmore{font-size:12.5px;color:var(--muted);padding:8px 10px}
 select.fieldselect{flex:0 0 auto;width:100%;padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);font-weight:500;font-size:16px;color:var(--fg)}
 
+.coldrow .pair{display:flex;gap:6px}.coldrow .pair input{flex:1 1 60px;min-width:0}.coldrow .pair select{flex:0 0 auto;width:auto}
+.coldwrap{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:center;margin-bottom:10px}
+.coldkey{display:flex;flex-wrap:wrap;gap:4px 12px}.coldkey i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.coldsvg{width:200px;height:200px;display:block}
+@media(max-width:480px){.coldwrap{grid-template-columns:1fr}.coldsvg{margin:0 auto}}
+.rgsub{font-size:15px;margin:14px 0 6px}
+.rgedit{display:flex;flex-direction:column;gap:8px}
+.rgrow{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr)) auto;gap:6px;align-items:end}
+.rgrow label{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted)}
+.rgrow input{width:100%;min-width:0;padding:7px 8px;border-radius:7px;border:1px solid var(--line);background:var(--input,var(--sunk));color:var(--input-fg,var(--fg));font:inherit;font-size:16px}
+@media(max-width:560px){.rgrow{grid-template-columns:repeat(3,minmax(0,1fr)) auto}.rgrow>input[data-k="name"]{grid-column:1/-1}}
+table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
+.retwrap{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:16px;align-items:center}
+.retsvg{width:100%;max-width:300px;height:auto;display:block}
+@media(max-width:600px){.retwrap{grid-template-columns:1fr}.retsvg{max-width:280px;margin:0 auto}}
 .dopecard{margin:12px 0;border:1px solid var(--line,#ccc);border-radius:10px;padding:10px;max-width:420px;background:var(--surface)}
 .dopehead{margin-bottom:6px}
 .dopename{font-weight:700;font-size:16px}
@@ -500,6 +543,8 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvpill i{flex:none;width:9px;height:9px;border-radius:50%;background:var(--accent)}
 .lvpill.busy i{background:#e3b341;animation:lvp 1s infinite}.lvpill.bad i{background:#ff6b5b}
 @keyframes lvp{50%{opacity:.25}}
+.lvmanual{position:absolute;left:8px;top:52px;z-index:2;background:rgba(20,20,20,.85)!important;font-size:13px;padding:6px 10px;min-height:0}
+.lvmdone{position:absolute;right:8px;top:8px;z-index:2;font-size:15px;padding:8px 14px;background:var(--accent)!important;color:var(--accent-fg,#fff)!important;border-color:var(--accent)!important}
 .lvview{position:absolute;left:8px;top:8px;background:rgba(20,20,20,.8)!important;font-size:13px;padding:6px 10px;min-height:0}
 .lvside{display:flex;flex-direction:column;gap:8px;flex:none}
 .lvinfo{display:flex;gap:6px;flex-wrap:wrap;min-width:0}
@@ -1055,7 +1100,25 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div>
     <div id="dopeCard" class="dopecard"></div>
     <div class="row"><button class="btn primary" id="dopeField" type="button">Field mode</button><button class="btn" id="dopePrint" type="button">Print dope card</button></div>
+    <div class="row"><button class="btn" id="hitTool" type="button">Hit chance at a distance</button></div>
     <p class="note">A small card to tape to your stock or keep in your range bag. It uses the zero your scope is set to, the conditions above and the crosswind you entered. Up is how far to dial up; wind is how far to hold or dial into the wind.</p>
+  </section>
+
+  <section class="card" aria-label="Reticle holds" id="secTRet">
+    <h2>Reticle holds</h2>
+    <div class="grid">
+      <div class="field"><label for="rt_dist">Distance (<span data-unit="yd">yd</span>)</label><input id="rt_dist" type="number" inputmode="numeric" step="any"></div>
+      <div class="field"><label for="rt_mode">Elevation</label><select id="rt_mode" class="fieldselect"><option value="hold">Hold it (no dialing)</option><option value="dial">Dial it, hold the wind</option></select></div>
+    </div>
+    <div id="retBox" class="retbox"></div>
+    <p class="note">A plain reticle in the units your scope clicks in (set on the Dope card), with marks every 1 MIL (half MIL between) or every 2 MOA (1 MOA between). It isn't any particular brand's reticle, so count the marks on yours. Put the target on the dot. It uses the conditions and crosswind above, plus spin drift when the bullet length and twist are filled in.</p>
+  </section>
+
+  <section class="card" aria-label="Saved ranges" id="secTRanges">
+    <h2>Saved ranges</h2>
+    <div class="row"><select id="rg_pick" class="fieldselect" aria-label="Range" style="flex:1 1 220px;min-width:0"></select><button class="btn" id="rg_edit" type="button">Edit</button><button class="btn" id="rg_new" type="button">+ New range</button></div>
+    <div id="rgBox"></div>
+    <p class="note">Save the places you shoot, with each target's distance and angle. Pick one and it shows the dial and wind for every target with this load and the conditions above. Ranges are shared by all your Shooting loads.</p>
   </section>
   </div>
   </div>
@@ -1148,10 +1211,16 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Print a dope card</h3>
       <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL. It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold, in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
+      <h3>Reticle holds</h3>
+      <p>Under the dope card, <b>Reticle holds</b> draws a plain reticle in the units your scope clicks in (MIL or MOA, set on the Dope card) and puts a dot where the target goes for the distance you enter. Pick <b>Hold it</b> to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
+      <h3>Saved ranges</h3>
+      <p>Save the places you shoot under <b>Saved ranges</b>: tap <b>+ New range</b>, give it a name, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Tap <b>Done</b> and it lists the dial and wind for every target with this load. The size column shows the target in MOA or MIL, so you can see how much room you have. <b>Use these conditions</b> sets the load's temperature and altitude to the range's usual ones. Ranges are shared by all your Shooting loads, and their names show up under <b>Where</b> on range trips.</p>
       <h3>The inputs fold up on a phone</h3>
       <p>On a phone, when you open a load the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a load (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
       <p>Every load in the calculator has a <b>Range trips</b> log at the bottom (tap <b>Range trips</b> in the row of links at the top to jump there). Tap <b>+ New range trip</b> and fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target for this trip</b> opens a printable target with the trip's load, date, distance and gun already filled in at the top. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this load's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, tap <b>+ Shot</b> to add one, or tap <b>− Shot</b>, tap the shots you want gone (a bad reading, an unused box) and tap <b>Delete</b>. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
+      <h3>Cold-bore shot</h3>
+      <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point (right or left, high or low, in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
       <h3>Zoom the chart</h3>
       <p>Pinch to zoom and drag with one finger to move around. A sideways pinch stretches the range, an up-and-down pinch stretches the inches. Double-tap the chart or tap <b>Reset view</b> to go back. On a computer, use the zoom buttons or pinch on a trackpad. <b>Declutter</b> hides the near and far yardage labels on the line of sight (the colored diamonds stay, and the numbers are in the zero boxes); tap it again to bring them back. The normal chart stretches the up-and-down direction a lot so you can read the drop in inches. <b>True scale</b> draws it at its real proportions, the same scale up and down as across, so you see how flat the bullet really flies; a 1,000 yd shot is 36,000 inches long, so even several feet of drop is a gentle curve. The up-and-down numbers switch to feet when they get big. Zooming in keeps the bullet centered and the proportions true. Tap it again to go back. Both buttons are highlighted while they're on and are remembered on this device. Drag the small bar under the chart up or down to make the chart shorter or taller (double-tap the bar to go back to the normal height). The picture doesn't stretch or squash: a taller chart shows more inches of drop and a shorter one shows fewer, so drag on a short chart to move up and down. The height is remembered on this device.</p>
       <h3>Printable targets</h3>
@@ -1208,6 +1277,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To label the box of ladder rounds, tap <b>Print a label</b> in the planner (or <b>Ladder label</b> in a ladder once its groups exist; it uses that ladder's charges and dates). One 3.5 × 2 in label holds the recipe and every charge, numbered in order with a box to tick as you load each one, plus shots per charge, distance, the loaded date and the tested date (or a blank line to write it on).</p>
       <h3>Velocity by charge</h3>
       <p>Once two or more groups have charges and shots, the <b>Velocity by charge</b> chart plots average speed for each charge, with a bar showing ± one SD. Look for a flat spot where adding powder barely changes the speed: that's usually the most forgiving charge. Under the chart, the fps gained per grain between each step is listed. The dashed red line is your max charge. Groups with a size also get a purple diamond showing their MOA on the right-hand scale, so you can see which charge shot tightest.</p>
+      <h3>Pressure signs</h3>
+      <p>Each group in a ladder has <b>Pressure signs</b>: tap any you saw on that charge's cases or bolt (flat or cratered primers, ejector marks, a heavy bolt lift, sticky extraction, loose primer pockets), and enter case head expansion if you measure it. A charge with any of them gets a <b>!</b> triangle on the <b>Velocity by charge</b> chart and a <b>pressure signs</b> tag in the Summary, and they're listed in the Excel and PDF exports. This is a notebook, not a pressure gauge: pressure can be dangerous with no visible signs at all, so always stay within your load manual.</p>
       <h3>Import from your chronograph</h3>
       <p>Set up a group for each charge weight in the ladder first. Then tap <b>Import chronograph file</b> on the ladder's first group and pick the export from your RangeCraft (.xlsx), Garmin Xero (ShotView .csv or .xlsx) MagnetoSpeed (LOG.CSV from the V3's memory card, or the .csv from the XFR app) or LabRadar (the SR0001 Report.csv files from its SD card; pick several at once and each series fills its own group, SR0001 first). Each string fills the next empty group in that ladder in the order you shot them. If the ladder has no tested date yet, it takes the date from the file when the file has one (MagnetoSpeed's memory-card file doesn't, so set that date yourself). Check that each string landed on the right charge weight. If the chronograph caught a bad reading (a miss or an echo), tap <b>− Shot</b>, tap that shot and tap <b>Delete</b>.</p>
       <h3>Target photos</h3>
@@ -1236,9 +1307,12 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>After the last shot for that aim point it shows the group. Tap <b>Next</b> to move to the next aim point and charge, or use <b>‹ Aim</b> and <b>Next aim ›</b> any time.</li>
         <li>Tap <b>Save</b> when you're done. It saves one photo of the target with every group measured, the same as <b>Measure groups</b>, and each charge gets its group size, mean radius and distance. You can open the photo and edit the marks later. (From Tools, it's kept under <b>Tools → Live target → Saved</b> until you move it to a range trip or a ladder.)</li>
       </ol>
+      <p><b>Not a Range Book target?</b> Live target works on any paper or board. Tap <b>Not a Range Book target?</b> on the camera picture, tap the target's four corners (top-left first, then clockwise), pick or type its size, then tap each aim point in the order you'll shoot them and tap <b>Done</b>. Without the corner squares it can't follow the target if the phone moves, so keep it still; if it does move, tap <b>Tap corners again</b>. Your marks stay put.</p>
       <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <b>Tools → Live target</b> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
+      <h3>Shot by shot: which shots were fast or slow</h3>
+      <p>When you shoot a ladder with <b>Live target</b>, it remembers the order of the holes. Once that group has its chronograph velocities (typed in or imported, in the order you fired), the group shows <b>Shot by shot</b>: each shot's velocity next to where it hit, and a small chart of height against velocity. It tells you whether faster shots hit higher (or lower), and by how much per 10 fps, so you can see how much of your up-and-down spread comes from velocity. If a hole or a velocity is missing the pairs shift, so check that the chronograph caught every shot. Editing the marks in <b>Measure groups</b> keeps the order.</p>
       <h3>Use a load in the calculator</h3>
       <p>In a load's <b>Summary</b>, tap <b>Use in calculator</b> on a group. It makes a new trajectory load with that bullet weight, average velocity, the ballistic coefficient from the recipe, and the sight height of the gun you picked. Anything missing, fill in on the Shooting tab.</p>
       <h3>Other tools</h3>
@@ -1279,6 +1353,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
         <li><b>Powder</b>: how many rounds a container of powder makes at your charge, what the powder costs per round, and how much you need for a number of rounds. <b>Fill in from</b> uses a Reloading load's charge and, if its powder has a price in Components, the price.</li>
         <li><b>Convert</b>: grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules. Type in either box.</li>
+        <li><b>Hit chance</b>: your odds of a first-round hit on a target at a distance. Pick a Shooting load (it uses its trajectory and conditions), the target size, and what throws the shot off: your 5-shot group size, your velocity SD, and how far off your wind call and range could be. It shows the chance, a picture of the likely spread on the target, what would help most (a perfect wind call, a tighter group…), and the same target at other distances. On a Shooting load, <b>Hit chance at a distance</b> under the dope card opens it for that load.</li>
         <li><b>Live target</b>: the spotting-scope camera without a load or range trip. Set the bullet diameter, distance and shots per aim point, tap <b>Start Live target</b>, and use it the same way (see Live target under Reloading). <b>Save</b> keeps the target photo and its measured groups in your Range Book, listed under <b>Saved</b> on that page (with no signal, it waits on the phone and uploads later). Tap a saved one to see it, fix its marks with <b>Edit measurement</b>, or bring it into a range trip or a reloading ladder with <b>Move to</b>. A range trip also has <b>+ Saved Live target</b>. After saving, <b>Share picture</b> gives you a picture with every group drawn on it and its size, MOA, mean radius and center underneath, to keep in Photos or send to someone. Saved Live targets are in your backups too.</li>
         <li><b>Targets</b>: the printable targets (see Shooting above).</li>
       </ul>
@@ -1327,7 +1402,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved to your loads.</p></header>
-    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <div class="col toolsroot">
     <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden>
       <p class="note toolnote">Will this bullet be stable in your barrel? This uses the Miller formula, corrected for velocity, temperature and altitude, the same one Shooting uses for spin drift.</p>
@@ -1345,6 +1420,25 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="toolfill"><label for="pw_from">Fill in from</label><select id="pw_from" class="fieldselect"></select></div>
       <div class="grid toolgrid t4"><div class="field"><label for="pw_c">Charge (gr)</label><input id="pw_c" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_j">Container</label><select id="pw_j" class="fieldselect"><option value="7000">1 lb</option><option value="56000">8 lb</option><option value="3500">½ lb</option><option value="28000">4 lb</option><option value="15432.36">1 kg</option><option value="7716.18">500 g</option></select></div><div class="field"><label for="pw_p">Price of the container ($)</label><input id="pw_p" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_n">Rounds you want to load</label><input id="pw_n" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="pw_res" aria-live="polite"></div>
+    </section>
+    <section class="card tool" data-toolsec="hit" aria-label="Hit chance" hidden>
+      <p class="note toolnote">How likely is a first-round hit? It uses a Shooting load's trajectory and the conditions on it, and assumes you aim at the center with the right dial and a wind call that's right on average, give or take what you enter.</p>
+      <div class="grid">
+        <div class="field wide"><label for="hc_load">Shooting load</label><select id="hc_load" class="fieldselect"></select></div>
+        <div class="field"><label for="hc_dist">Distance (<span data-unit="yd">yd</span>)</label><input id="hc_dist" type="number" inputmode="numeric" step="any"></div>
+        <div class="field"><label for="hc_shape">Target</label><select id="hc_shape" class="fieldselect"><option value="rect">Rectangle or square</option><option value="circle">Circle</option></select></div>
+        <div class="field"><label for="hc_w"><span id="hc_wl">Width</span> (<span data-unit="in">in</span>)</label><input id="hc_w" type="number" inputmode="decimal" step="any"></div>
+        <div class="field" id="hc_hf"><label for="hc_h">Height (<span data-unit="in">in</span>)</label><input id="hc_h" type="number" inputmode="decimal" step="any"></div>
+      </div>
+      <h3 class="toolsub">What throws the shot off</h3>
+      <div class="grid">
+        <div class="field"><label for="hc_grp">Your group (MOA, 5 shots)</label><input id="hc_grp" type="number" inputmode="decimal" step="any"></div>
+        <div class="field"><label for="hc_sd">Velocity SD (<span data-unit="fps">fps</span>)</label><input id="hc_sd" type="number" inputmode="numeric" step="any"></div>
+        <div class="field"><label for="hc_wind">Wind call, give or take (<span data-unit="mph">mph</span>)</label><input id="hc_wind" type="number" inputmode="decimal" step="any"></div>
+        <div class="field"><label for="hc_rng">Range, give or take (<span data-unit="yd">yd</span>)</label><input id="hc_rng" type="number" inputmode="numeric" step="any"></div>
+      </div>
+      <div class="tres" id="hc_res"></div>
+      <p class="note">Group size is the usual 5-shot extreme spread (rifle, ammo and you together). "Give or take" is how far off your wind or range could typically be: 2 mph is a good wind call, 5 mph a tough day; a laser rangefinder is within a yard or two. Each is treated as a normal spread, so take the answer as a guide, not a promise.</p>
     </section>
     <section class="card tool" data-toolsec="live" aria-label="Live target" hidden>
       <p class="note toolnote">Put your phone on a spotting scope (an adapter keeps it still) and aim it at a <b>printed Range Book target</b> with all four corner squares in view. After each shot, tap <b>Shot</b> and it marks the new hole and updates the group. <b>Save</b> keeps the target and its groups in your Range Book (listed under Saved, below), so you can add it to a range trip or a ladder later, and <b>Share picture</b> gives you a picture with every group and its numbers.</p>
@@ -1604,7 +1698,7 @@ window.foldCard=foldCard;
 // fold every titled card on a page (Reloading loads, guns, factory ammo); each page type remembers its own
 window.foldAll=(root,prefix)=>{if(!root)return;root.querySelectorAll("section.card:not(.collapsible)").forEach(sec=>{if(sec.id==="shareSec")return;const h=sec.querySelector(":scope>h2");if(!h)return;
   foldCard(sec,prefix+"_"+String(sec.id||sec.getAttribute("aria-label")||h.textContent).replace(/[^A-Za-z0-9]+/g,"_"));});};
-[["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
+[["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRet","ret"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
 function openTraj(id){state.cur=id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
 window.RB_TRAJ={
   cur(){if(TVIEW!=="detail")return null;const L=cur();return L?{id:L.id,name:L.name,cal:L.cal,mv:L.mv,mvtemp:num(L.mvtemp),tsens:num(L.tsens),temp:num(L.temp)}:null;},
@@ -1615,7 +1709,22 @@ window.RB_TRAJ={
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
   all(){return state.loads.map(l=>({id:l.id,name:l.name||"Untitled load",rifleId:l.rifleId||null,ammoId:l.ammoId||null,cart:l.cart||""}));},
   forTools(){return state.loads.map(l=>({id:l.id,label:l.name||"Untitled load",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
-  where(){return TVIEW==="detail"?state.cur:null;}
+  where(){return TVIEW==="detail"?state.cur:null;},
+  ranges(){return (Array.isArray(state.ranges)?state.ranges:[]).map(r=>r.name).filter(Boolean);},
+  // the trajectory of a Shooting load for other screens (hit chance, saved ranges). o can change the wind, angle,
+  // conditions, or add dmv (fps) to the velocity while keeping the same sight setting.
+  solve(id,o){
+    const L0=state.loads.find(l=>l.id===id);if(!L0)return {err:"That Shooting load is gone."};
+    o=o||{};const L=Object.assign({},L0,o,{mv:effMV(L0)});
+    if(!(L.mv>0&&L.bc>0&&L.w>0)||L.sh==null)return {err:"Fill in the Shooting load's velocity, BC, bullet weight and sight height first."};
+    const ai=Math.round(L.adj||0)-1;let z=(ai>=0&&ai<4)?num(L.z[ai]):null;if(!(z>0))z=(L.z||[]).map(num).find(v=>v>0)||null;
+    if(!(z>0))return {err:"Give the Shooting load a zero distance first."};
+    const S=simulate(L),AC=angleCos(L),Sd=o.dmv?simulate(Object.assign({},L,{mv:L.mv+o.dmv})):S;
+    const sight=x=>x*(L.sh-S.at(S.G,z))/z-L.sh;
+    const dr=(spd,x)=>spd*1.46667*(S.at(S.t,x)-x*3/L.mv)*12,sg=stability(L,S);
+    return {name:L0.name||"Untitled load",z,last:Math.min(S.MR,S.last,Sd.last),mv:L.mv,unit:dopeOpts(L0).unit,wind:(L.wind||0)*crossFactor(L),side:windSide(L),clock:windClock(L),sg,temp:L.temp,alt:L.alt,
+      at(x){return {path:Sd.at(Sd.G,x)*AC+sight(x),drift1:dr(1,x),drift:dr((L.wind||0)*crossFactor(L),x),spin:sg!=null?(spinIn(sg,S.at(S.t,x))||0):0,v:Sd.at(Sd.v,x),t:Sd.at(Sd.t,x)};}};
+  }
 };
 $("trajBack").addEventListener("click",()=>{showTrajView("list");window.scrollTo(0,0);});
 // common target sizes: 4, 6 and 8 in, or 10, 15 and 20 cm in metric
@@ -1811,7 +1920,117 @@ function render(){
     h+="</tr>";
   }
   $("tbl").innerHTML=h+"</tbody>";
-  renderDope(L,S,zs,path);
+  renderDope(L,S,zs,path);renderReticle(L,S,zs,path);renderRanges();
+}
+/* ---------- saved ranges: places with targets at known distances and angles (kept with the Shooting loads) ---------- */
+let RG_EDIT=false;
+const rgList=()=>{if(!Array.isArray(state.ranges))state.ranges=[];return state.ranges;};
+const rgId=()=>"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function renderRanges(){
+  const box=$("rgBox"),pick=$("rg_pick");if(!box||!pick)return;
+  const RS=rgList(),L=cur();
+  if(state.rangeCur&&!RS.some(r=>r.id===state.rangeCur))state.rangeCur=null;
+  if(!state.rangeCur&&RS[0])state.rangeCur=RS[0].id;
+  pick.innerHTML=RS.length?RS.map(r=>'<option value="'+escL(r.id)+'">'+escL(r.name||"Unnamed range")+'</option>').join(""):'<option value="">No saved ranges yet</option>';
+  pick.value=state.rangeCur||"";pick.disabled=!RS.length;$("rg_edit").hidden=!RS.length;$("rg_edit").textContent=RG_EDIT?"Done":"Edit";
+  const r=RS.find(x=>x.id===state.rangeCur);
+  if(!r){box.innerHTML='<p class="note">Tap <b>+ New range</b> to save a place you shoot.</p>';return;}
+  let h='';
+  if(RG_EDIT){
+    h+='<div class="grid"><div class="field wide"><label for="rg_name">Name</label><input id="rg_name" value="'+escL(r.name||"")+'" placeholder="e.g. Rio Salado, south steel line"></div>'+
+      '<div class="field"><label for="rg_temp">Usual temperature ('+U.u("F")+')</label><input id="rg_temp" type="number" inputmode="decimal" step="any"></div>'+
+      '<div class="field"><label for="rg_alt">Altitude ('+U.u("ft")+')</label><input id="rg_alt" type="number" inputmode="numeric" step="any"></div>'+
+      '<div class="field wide"><label for="rg_notes">Notes</label><input id="rg_notes" value="'+escL(r.notes||"")+'" placeholder="Wind flags, best time of day, rules"></div></div>';
+    h+='<h3 class="rgsub">Targets</h3><div class="rgedit">'+(r.targets||[]).map((t,i)=>'<div class="rgrow" data-ti="'+i+'">'+
+      '<input data-k="name" aria-label="Target name" value="'+escL(t.name||"")+'" placeholder="Target '+(i+1)+'">'+
+      '<label>'+U.u("yd")+'<input data-k="dist" type="number" inputmode="numeric" step="any" aria-label="Distance"></label>'+
+      '<label>Angle °<input data-k="angle" type="number" inputmode="decimal" step="any" aria-label="Angle up or down, degrees" placeholder="0"></label>'+
+      '<label>Size '+U.u("in")+'<input data-k="size" type="number" inputmode="decimal" step="any" aria-label="Target size" placeholder="opt."></label>'+
+      '<button class="btn danger small" type="button" data-rgdel="'+i+'" aria-label="Delete this target">✕</button></div>').join("")+'</div>'+
+      '<div class="row"><button class="btn" id="rg_add" type="button">+ Target</button><button class="btn" id="rg_take" type="button">Use today\'s conditions as usual</button><button class="btn danger" id="rg_del" type="button" style="margin-left:auto">Delete range</button></div>'+
+      '<p class="note">Angle is how far up (+) or down (−) you shoot at that target, in degrees; your rangefinder may show it.</p>';
+  }else{
+    const B=window.RB_TRAJ?RB_TRAJ.solve(L.id):null;
+    if(r.notes)h+='<p class="note">'+escL(r.notes)+'</p>';
+    if(num(r.temp)!=null||num(r.alt)!=null)h+='<div class="row"><span class="note">Usual conditions: '+[num(r.temp)!=null?U.s("F",num(r.temp),0):"",num(r.alt)!=null?U.s("ft",num(r.alt),0,true):""].filter(Boolean).join(" · ")+'</span><button class="btn small" id="rg_use" type="button">Use these conditions</button></div>';
+    if(B&&B.err)h+='<p class="err">'+escL(B.err)+'</p>';
+    else if(!(r.targets||[]).length)h+='<p class="note">No targets yet. Tap <b>Edit</b>, then <b>+ Target</b>.</p>';
+    else{
+      const MIL=B.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",f1=n=>{const s2=n.toFixed(1);return s2==="-0.0"?"0.0":s2;};
+      h+='<div class="tablewrap"><table class="dope rgtbl"><thead><tr><th style="text-align:left">Target</th><th>'+U.u("yd")+'</th><th>Up<br>('+UN+')</th><th>Wind<br>('+UN+')</th><th>Size<br>('+UN+')</th></tr></thead><tbody>'+
+        r.targets.slice().sort((a,b)=>(num(a.dist)||0)-(num(b.dist)||0)).map(t=>{const d=num(t.dist),ang=num(t.angle)||0;
+          if(!(d>0))return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td colspan="4" class="note">Add its distance</td></tr>';
+          const Bt=ang?RB_TRAJ.solve(L.id,{angle:ang}):B;if(d>Bt.last)return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td>'+U.n("yd",d,0)+'</td><td colspan="3" class="note">Too far for this load</td></tr>';
+          const a2=Bt.at(d),per=d*UF/100,sz=num(t.size);
+          return '<tr><td style="text-align:left">'+escL(t.name||"Target")+(ang?' <span class="note">'+(ang>0?"↑":"↓")+Math.abs(ang)+'°</span>':'')+'</td><td>'+U.n("yd",d,0)+'</td><td><b>'+f1(-a2.path/per)+'</b></td><td>'+f1(a2.drift/per)+'</td><td>'+(sz>0?f1(sz/per):'')+'</td></tr>';}).join("")+'</tbody></table></div>'+
+        '<p class="note">Up is how far to dial from your '+U.s("yd",B.z,0)+' zero (angles included). Wind is for '+(B.wind?U.s("mph",L.wind||0,0)+' from '+B.clock+' o\'clock, hold '+B.side:'no wind (set it under Conditions)')+'. Size is the target in '+UN+', so you can see how much room you have.</p>';
+    }
+  }
+  box.innerHTML=h;
+  if(RG_EDIT){
+    const ch=()=>{save();};
+    $("rg_name").addEventListener("input",e=>{r.name=e.target.value;const o=pick.querySelector('option[value="'+CSS.escape(r.id)+'"]');if(o)o.textContent=r.name||"Unnamed range";ch();});
+    $("rg_notes").addEventListener("input",e=>{r.notes=e.target.value;ch();});
+    if(num(r.temp)!=null)U.fill($("rg_temp"),"F",num(r.temp),1,0);if(num(r.alt)!=null)U.fill($("rg_alt"),"ft",num(r.alt),0,0);
+    $("rg_temp").addEventListener("input",e=>{const v=U.read(e.target,"F",r.temp);r.temp=num(v);ch();});
+    $("rg_alt").addEventListener("input",e=>{const v=U.read(e.target,"ft",r.alt);r.alt=num(v);ch();});
+    box.querySelectorAll(".rgrow").forEach(row=>{const t=r.targets[+row.dataset.ti];
+      const di=row.querySelector('[data-k="dist"]'),an=row.querySelector('[data-k="angle"]'),sz=row.querySelector('[data-k="size"]');
+      if(num(t.dist)>0)U.fill(di,"yd",num(t.dist),0,0);if(num(t.angle))an.value=num(t.angle);if(num(t.size)>0)U.fill(sz,"in",num(t.size),1,1);
+      row.querySelector('[data-k="name"]').addEventListener("input",e=>{t.name=e.target.value;ch();});
+      di.addEventListener("input",()=>{t.dist=num(U.read(di,"yd",t.dist));ch();});
+      an.addEventListener("input",()=>{const v=num(an.value);t.angle=v!=null&&Math.abs(v)<=60?v:null;ch();});
+      sz.addEventListener("input",()=>{t.size=num(U.read(sz,"in",t.size));ch();});});
+    box.querySelectorAll("[data-rgdel]").forEach(b=>b.addEventListener("click",()=>{r.targets.splice(+b.dataset.rgdel,1);save();renderRanges();}));
+    $("rg_add").addEventListener("click",()=>{r.targets=r.targets||[];const last=r.targets[r.targets.length-1];r.targets.push({id:rgId(),name:"",dist:last&&num(last.dist)?num(last.dist)+(U.metric?100/0.9144:100):null,angle:null,size:null});save();renderRanges();
+      const rows=box.querySelectorAll(".rgrow");const nm=rows.length&&rows[rows.length-1].querySelector('[data-k="name"]');if(nm)nm.focus();});
+    $("rg_take").addEventListener("click",()=>{r.temp=num(L.temp);r.alt=num(L.alt);save();renderRanges();});
+    const del=$("rg_del");del.addEventListener("click",()=>{if(del.dataset.armed){state.ranges=RS.filter(x=>x.id!==r.id);state.rangeCur=null;RG_EDIT=false;save();renderRanges();return;}
+      del.dataset.armed="1";del.textContent="Tap again to delete";setTimeout(()=>{if(del.isConnected){delete del.dataset.armed;del.textContent="Delete range";}},4000);});
+  }else{
+    const u=$("rg_use");if(u)u.addEventListener("click",()=>{if(num(r.temp)!=null)L.temp=num(r.temp);if(num(r.alt)!=null)L.alt=num(r.alt);fillInputs();save();render();});
+  }
+}
+$("rg_pick").addEventListener("change",e=>{state.rangeCur=e.target.value||null;save();renderRanges();});
+$("rg_edit").addEventListener("click",()=>{RG_EDIT=!RG_EDIT;renderRanges();if(!RG_EDIT)render();});
+$("rg_new").addEventListener("click",()=>{const r={id:rgId(),name:"",targets:[{id:rgId(),name:"",dist:U.metric?100/0.9144:100,angle:null,size:null}],temp:null,alt:null,notes:""};rgList().push(r);state.rangeCur=r.id;RG_EDIT=true;save();renderRanges();const n=$("rg_name");if(n)n.focus();});
+// the holds for one distance drawn on a plain reticle: the dot is where the target goes
+function renderReticle(L,S,zs,path){
+  const box=$("retBox");if(!box)return;
+  const o=dopeOpts(L),ai=Math.round(L.adj||0)-1,za=(ai>=0&&ai<4)?zs[ai]:null;
+  if(!za){box.innerHTML='<p class="note">Pick the circle on a zero you have filled in (the zero boxes under the chart).</p>';return;}
+  const R0=L.ret||{},lim=Math.min(S.MR,S.last);
+  let x=num(R0.dist)>0?num(R0.dist):Math.min(lim,Math.max(za*2,U.metric?500/0.9144:500));x=Math.min(x,lim);
+  if(document.activeElement!==$("rt_dist"))U.fill($("rt_dist"),"yd",x,0,0);$("rt_mode").value=R0.mode==="dial"?"dial":"hold";
+  const MIL=o.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",per=x*UF/100;
+  const up=-path(x,za)/per,wind=(L.wind||0)*crossFactor(L),side=windSide(L);
+  const wd=wind*1.46667*(S.at(S.t,x)-x*3/L.mv)*12/per,sp=S.sg!=null?(spinIn(S.sg,S.at(S.t,x))||0)/per:0;
+  // where the bullet goes from the center, in reticle units (right and down are positive)
+  const dx=(side==="right"?-wd:side==="left"?wd:0)+sp,dial=R0.mode==="dial",dy=dial?0:up;
+  const big=MIL?1:2,small=MIL?.5:1,span=MIL?10:36;
+  const view=Math.min(span,Math.max(MIL?3:10,Math.abs(dx)*1.35,Math.abs(dy)*1.35)),W=300,c=150,k=(W/2-14)/view;
+  const P=(u,v)=>[c+u*k,c+v*k];
+  let g='<svg class="retsvg" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="Reticle with the hold for '+U.s("yd",x,0)+'"><defs><clipPath id="retClip"><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'"/></clipPath></defs>';
+  g+='<circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="var(--sunk)" stroke="var(--line)" stroke-width="2"/><g clip-path="url(#retClip)" stroke="var(--fg)">';
+  g+='<line x1="0" y1="'+c+'" x2="'+W+'" y2="'+c+'" stroke-width="1.2"/><line x1="'+c+'" y1="0" x2="'+c+'" y2="'+W+'" stroke-width="1.2"/>';
+  for(let t=small;t<=span+1e-9;t+=small){const isBig=Math.abs(t/big-Math.round(t/big))<1e-6,len=isBig?7:4;
+    [[t,0],[-t,0]].forEach(([u])=>{const [px]=P(u,0);g+='<line x1="'+px+'" y1="'+(c-len)+'" x2="'+px+'" y2="'+(c+len)+'" stroke-width="'+(isBig?1.4:1)+'"/>';});
+    [[0,t],[0,-t]].forEach(([,v])=>{const [,py]=P(0,v);g+='<line x1="'+(c-len)+'" y1="'+py+'" x2="'+(c+len)+'" y2="'+py+'" stroke-width="'+(isBig?1.4:1)+'"/>';});
+    // a small tree of wind dots under the center
+    if(isBig&&t<=view+big)for(let u=-Math.floor(view/big)*big;u<=view;u+=big){if(!u)continue;const [px,py]=P(u,t);g+='<circle cx="'+px+'" cy="'+py+'" r="1.4" fill="var(--fg)" stroke="none" opacity=".7"/>';}
+    if(isBig&&t<=view&&Math.round(t/big)%(MIL?2:5)===0){const [px]=P(t,0),[,py]=P(0,t);g+='<text x="'+(px)+'" y="'+(c-10)+'" font-size="9" text-anchor="middle" fill="var(--muted)" stroke="none">'+t+'</text><text x="'+(c+10)+'" y="'+(py+3)+'" font-size="9" fill="var(--muted)" stroke="none">'+t+'</text>';}
+  }
+  g+='</g>';
+  const [hx,hy]=P(dx,dy);
+  g+='<line x1="'+c+'" y1="'+c+'" x2="'+hx+'" y2="'+hy+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="'+hx+'" cy="'+hy+'" r="7" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>';
+  g+='</svg>';
+  const f1=n=>{const s2=Math.abs(n).toFixed(1);return s2;};
+  const lines=[];
+  if(dial)lines.push('Dial <b>'+(up>=0?f1(up)+' '+UN+' up':f1(up)+' '+UN+' down')+'</b>.');
+  const hv=dy===0?'':(dy>0?f1(dy)+' '+UN+' below':f1(dy)+' '+UN+' above'),hh=Math.abs(dx)<.05?'':f1(dx)+' '+UN+' '+(dx>0?'right':'left');
+  lines.push(hv||hh?'Put the target on the mark <b>'+(hv&&hh?hv+' and '+hh+' of':hh?hh+' of':hv)+'</b> the center.':'Hold dead on.');
+  const why=[];if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+f1(wd)+' '+UN+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+f1(sp)+' '+UN+' right');
+  box.innerHTML='<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+'</div></div>';
 }
 // the dope card's distances are kept separately for yards and metres, so each stays in round numbers
 function dopeOpts(L){const d=L.dope||{},M=U.metric?"M":"";const MRx=L.lr?1000:400;
@@ -1843,6 +2062,9 @@ function renderDope(L,S,zs,path){
     (rows?'<table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table>"
          :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this load slows too much past "+U.s("yd",S.last,0)+")":"")+".</p>");
 }
+$("rt_dist").addEventListener("input",()=>{const L=cur(),v=U.read($("rt_dist"),"yd",null);L.ret=Object.assign({},L.ret||{},{dist:num(v)>0?v:null});save();render();});
+$("rt_mode").addEventListener("change",()=>{const L=cur();L.ret=Object.assign({},L.ret||{},{mode:$("rt_mode").value});save();render();});
+$("hitTool").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("hit",{hit:cur().id});});
 ["d_from","d_to","d_step","d_unit"].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener(id==="d_unit"?"change":"input",()=>{
   const L=cur(),M=U.metric?"M":"";L.dope=Object.assign({},L.dope||{},{["from"+M]:num($("d_from").value),["to"+M]:num($("d_to").value),["step"+M]:num($("d_step").value),unit:$("d_unit").value});save();render();});});
 $("f_bcm").addEventListener("change",()=>{readInputs();render();});
@@ -2360,6 +2582,45 @@ function stats(g,L){
 }
 const fmtDate=d=>{if(!d)return "";const p=d.split("-");if(p.length!==3)return d;const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return M[+p[1]-1]+" "+(+p[2])+", "+p[0];};
 const gName=(g,i)=>g.label?g.label:(g.charge!=null?g.charge+" gr":"Group "+(i+1));
+// pressure signs noted on a charge (a notebook, not a pressure gauge)
+const PRESS=[["flat","Flat primer"],["crater","Cratered primer"],["eject","Ejector mark"],["bolt","Heavy bolt lift"],["sticky","Sticky extraction"],["pocket","Loose primer pocket"]];
+const pressList=g=>{const p=g&&g.press||{};const out=PRESS.filter(([k])=>p[k]).map(([,n])=>n);if(num(g&&g.headExp)>0)out.push("case head +"+U.n("dim",g.headExp,U.metric?3:4)+" "+U.u("dim"));return out;};
+// Live target keeps the holes in the order they were fired: pair hole n with chronograph shot n
+function shotByShotHtml(g){
+  const H0=Array.isArray(g.holes)?g.holes:[],V=(g.shots||[]).map(x=>num(x)>0?num(x):null);
+  if(!H0.length)return "";
+  const n=Math.min(H0.length,V.length),P=[];for(let k=0;k<n;k++)if(V[k]!=null)P.push({k,v:V[k],x:H0[k][0],y:H0[k][1]});
+  let h='<details class="sbsd"><summary>Shot by shot <span class="note">(holes from Live target matched to velocities)</span></summary>';
+  if(H0.length!==V.filter(x=>x!=null).length)h+='<p class="note">'+H0.length+' hole'+(H0.length===1?'':'s')+' and '+V.filter(x=>x!=null).length+' velocit'+(V.filter(x=>x!=null).length===1?'y':'ies')+'. They\'re matched in order, so check that the chronograph caught every shot.</p>';
+  const lr=x=>Math.abs(x)<.005?"0":U.n("in",Math.abs(x),2)+(x>0?" R":" L"),ud=y=>Math.abs(y)<.005?"0":U.n("in",Math.abs(y),2)+(y>0?" high":" low");
+  h+='<div class="tablewrap"><table class="sbt"><thead><tr><th>Shot</th><th>'+U.u("fps")+'</th><th>Across ('+U.u("in")+')</th><th>Up/down ('+U.u("in")+')</th></tr></thead><tbody>'+
+    H0.map((q,k)=>'<tr><td>'+(k+1)+'</td><td>'+(V[k]!=null?vS(V[k]):"–")+'</td><td>'+lr(q[0])+'</td><td>'+ud(q[1])+'</td></tr>').join("")+'</tbody></table></div>';
+  if(P.length>=3){
+    const mv=P.reduce((a,p)=>a+p.v,0)/P.length,my=P.reduce((a,p)=>a+p.y,0)/P.length;
+    let sxy=0,sxx=0,syy=0;P.forEach(p=>{sxy+=(p.v-mv)*(p.y-my);sxx+=(p.v-mv)**2;syy+=(p.y-my)**2;});
+    if(sxx>0&&syy>0){const slope=sxy/sxx,r=sxy/Math.sqrt(sxx*syy),per10=slope*10;
+      const strong=Math.abs(r)>=.7,some=Math.abs(r)>=.4;
+      h+='<p class="sbsum">'+(strong?(slope>0?'<b>Faster shots hit higher.</b> ':'<b>Faster shots hit lower.</b> '):some?'Some link between speed and height. ':'<b>Speed doesn\'t explain the up-and-down spread here</b>; look at the rifle, rest or wind. ')+
+        'About '+U.s("in",Math.abs(per10),2)+' '+(per10>=0?'higher':'lower')+' per '+U.s("fps",10,0)+' faster (r = '+r.toFixed(2)+', '+P.length+' shots'+(P.length<5?'; more shots make this more certain':'')+').</p>';
+      // a small scatter: velocity across, height up
+      const W=300,Hh=150,m={l:40,r:10,t:10,b:28},pw=W-m.l-m.r,ph=Hh-m.t-m.b;
+      const v0=Math.min(...P.map(p=>p.v)),v1=Math.max(...P.map(p=>p.v)),y0=Math.min(...P.map(p=>p.y)),y1=Math.max(...P.map(p=>p.y));
+      const vp=Math.max(5,(v1-v0)*.15),yp=Math.max(.05,(y1-y0)*.2),X=v=>m.l+(v-(v0-vp))/((v1+vp)-(v0-vp))*pw,Y=y=>m.t+((y1+yp)-y)/((y1+yp)-(y0-yp))*ph;
+      let sv='<svg class="sbch" viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="Height of each hole by velocity"><rect x="'+m.l+'" y="'+m.t+'" width="'+pw+'" height="'+ph+'" fill="var(--surface)" stroke="var(--line)"/>';
+      sv+='<line x1="'+X(v0-vp)+'" x2="'+X(v1+vp)+'" y1="'+Y(my+slope*((v0-vp)-mv))+'" y2="'+Y(my+slope*((v1+vp)-mv))+'" stroke="var(--muted)" stroke-dasharray="4 3"/>';
+      P.forEach(p=>{sv+='<circle cx="'+X(p.v).toFixed(1)+'" cy="'+Y(p.y).toFixed(1)+'" r="4" fill="var(--accent)"><title>Shot '+(p.k+1)+': '+U.s("fps",p.v,0)+', '+ud(p.y)+'</title></circle><text x="'+(X(p.v)+6).toFixed(1)+'" y="'+(Y(p.y)-5).toFixed(1)+'" font-size="9.5" fill="var(--muted)" font-family="var(--mono)">'+(p.k+1)+'</text>';});
+      sv+='<text x="'+(m.l+pw/2)+'" y="'+(Hh-6)+'" text-anchor="middle" font-size="10.5" fill="var(--muted)">Velocity ('+esc(U.u("fps"))+') →</text><text transform="translate(12,'+(m.t+ph/2)+') rotate(-90)" text-anchor="middle" font-size="10.5" fill="var(--muted)">Higher →</text>';
+      sv+='<text x="'+(m.l-4)+'" y="'+(m.t+ph+12)+'" text-anchor="end" font-size="9" fill="var(--muted)" font-family="var(--mono)">'+Math.round(U.to("fps",v0))+'</text><text x="'+(m.l+pw)+'" y="'+(m.t+ph+12)+'" text-anchor="end" font-size="9" fill="var(--muted)" font-family="var(--mono)">'+Math.round(U.to("fps",v1))+'</text>';
+      h+=sv+'</svg>';}
+  }else h+='<p class="note">With 3 or more shots that have both a hole and a velocity, this also shows whether faster shots hit higher.</p>';
+  return h+'</details>';
+}
+function pressHtml(g,canEdit){
+  const p=g.press||{},any=pressList(g).length;
+  if(!canEdit&&!any)return "";
+  return '<div class="press" data-press="'+g.id+'"><span class="lbl">Pressure signs</span>'+PRESS.map(([k,n])=>'<button type="button" class="pchip'+(p[k]?' on':'')+'" data-pk="'+k+'" aria-pressed="'+(p[k]?'true':'false')+'"'+(canEdit?'':' disabled')+'>'+n+'</button>').join("")+
+    '<label class="pexp">Case head expansion ('+U.u("dim")+')<input type="number" inputmode="decimal" step="any" id="ghx_'+g.id+'" placeholder="optional"'+(canEdit?'':' disabled')+'></label></div>';
+}
 
 /* ---------- + Shot / − Shot, shared by load-development groups and range-trip strings ---------- */
 // the bar shown while picking shots to delete; its set's boxes are in .shots[data-shotset=key]
@@ -2997,7 +3258,7 @@ function renderRifles(){
         const rt=trips.filter(t=>sid.has(t.trajId)).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0));
         return '<section class="card" aria-label="Shooting loads with this gun" id="secGunTraj"><h2>Shooting loads</h2>'+(sl.length?'<div class="cartgroup">'+sl.map(t=>'<button class="loaditem" type="button" data-gtraj="'+esc(t.id)+'"><span class="t">'+esc(t.name)+'</span>'+(t.cart?'<span class="d">'+esc(t.cart)+'</span>':'')+'</button>').join("")+'</div>':'<p class="note">No Shooting loads use this gun yet. Pick it under <b>Gun</b> in a Shooting load\'s inputs, or use <b>Start a range day</b> below.</p>')+
           '<div class="row"><button class="btn primary" type="button" id="gunRangeDay">Start a range day with this gun</button></div></section>'+
-          '<section class="card" aria-label="Range trips with this gun" id="secGunTrips"><h2>Range trips</h2>'+(rt.length?'<p class="note">'+rt.length+' trip'+(rt.length===1?'':'s')+' · '+rt.reduce((a,t)=>a+(num(t.rounds)||0),0).toLocaleString()+' rounds logged</p><div class="cartgroup">'+rt.slice(0,6).map(t=>{const s2=t.sum||{};return '<button class="loaditem" type="button" data-gtrip="'+esc(t.id)+'"><span class="t">'+esc(t.date?fmtDate(t.date):"No date")+(t.place?' · '+esc(t.place):'')+'</span><span class="d">'+esc([tn[t.trajId],num(t.rounds)?num(t.rounds)+" rounds":"",num(t.distance)?U.s("yd",num(t.distance),0):""].filter(Boolean).join(" · "))+'</span>'+(s2.best?'<span class="best">Best: <b>'+esc(tripBestTxt(s2.best))+'</b></span>':'')+'</button>';}).join("")+'</div>'+(rt.length>6?'<p class="note">Showing the latest 6. The rest are on each Shooting load.</p>':''):'<p class="note">No range trips with this gun yet.</p>')+'</section>';})()+
+          coldLogHtml(rt)+'<section class="card" aria-label="Range trips with this gun" id="secGunTrips"><h2>Range trips</h2>'+(rt.length?'<p class="note">'+rt.length+' trip'+(rt.length===1?'':'s')+' · '+rt.reduce((a,t)=>a+(num(t.rounds)||0),0).toLocaleString()+' rounds logged</p><div class="cartgroup">'+rt.slice(0,6).map(t=>{const s2=t.sum||{};return '<button class="loaditem" type="button" data-gtrip="'+esc(t.id)+'"><span class="t">'+esc(t.date?fmtDate(t.date):"No date")+(t.place?' · '+esc(t.place):'')+'</span><span class="d">'+esc([tn[t.trajId],num(t.rounds)?num(t.rounds)+" rounds":"",num(t.distance)?U.s("yd",num(t.distance),0):""].filter(Boolean).join(" · "))+'</span>'+(s2.best?'<span class="best">Best: <b>'+esc(tripBestTxt(s2.best))+'</b></span>':'')+'</button>';}).join("")+'</div>'+(rt.length>6?'<p class="note">Showing the latest 6. The rest are on each Shooting load.</p>':''):'<p class="note">No range trips with this gun yet.</p>')+'</section>';})()+
       '<section class="card" aria-label="Reloading loads using this gun" id="secGunRel"><h2>Reloading loads</h2>'+
       (ul.length?'<div class="cartgroup">'+ul.map(([id,L])=>'<button class="loaditem" type="button" data-rload="'+esc(id)+'"><span class="t">'+esc(L.title||"Untitled load")+'</span>'+(L.cartridge?'<span class="d">'+esc(L.cartridge)+'</span>':'')+'</button>').join("")+'</div>'
         :'<p class="note">No reloading loads use this gun. Pick it in a load\'s recipe on the Reloading tab.</p>')+'</section>'+
@@ -3671,6 +3932,7 @@ function loadCtx(){
         g.groupSize=+t.size.toFixed(2);changed=true;
         if(t.mr!=null)g.meanRadius=+t.mr.toFixed(3);else delete g.meanRadius;
         if(t.dx!=null&&t.dy!=null){g.poaX=+t.dx.toFixed(3);g.poaY=+t.dy.toFixed(3);}else{delete g.poaX;delete g.poaY;}
+        if(Array.isArray(t.hin)&&t.hin.length)g.holes=t.hin;else delete g.holes;
         const lad=M.distance>0&&(L.ladders||[]).find(l=>l.id===g.ladderId);
         if(lad){lad.dist=M.distance;syncLadder(L,lad);const b=$("lt_"+lad.id+"_dist"),ls=$("ls_"+lad.id);if(b)U.fill(b,"yd",lad.dist,0,1);if(ls)ls.textContent=ladderSum(L,lad);}
         const a=$("g_"+g.id+"_groupSize");if(a)U.fill(a,"in",g.groupSize,2,3);});
@@ -4139,11 +4401,13 @@ function openMeasure(pid,C){
     const del=$("mDelG");
     del.addEventListener("click",()=>arm(del,"tg"+(cur()&&cur().id),"Tap again to delete",()=>{if(!cur())return;snap();M.groups.splice(act,1);act=Math.max(0,act-1);syncFields();draw();}));
     $("mSave").addEventListener("click",()=>{
-      const out={v:2,a:M.a,b:M.b,scaleIn:M.scaleIn,H:M.H||null,layout:M.layout||null,dia:M.dia,distance:M.distance,groups:[]};
+      const out={v:2,a:M.a,b:M.b,scaleIn:M.scaleIn,H:M.H||null,layout:M.layout||null,dia:M.dia,distance:M.distance,live:M.live||undefined,groups:[]};
       M.groups.forEach(t=>{
         if(!t.shots.length&&!t.aim)return;
         const r=computeGroup(M,t,W,H),f=x=>x!=null?+x.toFixed(3):null;
-        out.groups.push({id:t.id,ai:t.ai!=null?t.ai:undefined,groupId:t.groupId||null,aim:t.aim,box:t.box,want:t.want||null,shots:t.shots.map(q=>[+q[0].toFixed(5),+q[1].toFixed(5)]),
+        // a Live target photo keeps its shots in the order they were fired, so each hole can be matched to its velocity
+        const hin=M.live&&M.H&&t.aim?t.shots.map(([x,y])=>{const P=applyH(M.H,x*W,y*H),A=applyH(M.H,t.aim[0]*W,t.aim[1]*H);return [+(P[0]-A[0]).toFixed(3),+(A[1]-P[1]).toFixed(3)];}):undefined;
+        out.groups.push({id:t.id,ai:t.ai!=null?t.ai:undefined,hin,groupId:t.groupId||null,aim:t.aim,box:t.box,want:t.want||null,shots:t.shots.map(q=>[+q[0].toFixed(5),+q[1].toFixed(5)]),
           n:t.shots.length,size:f(r.size),moa:f(r.moa),mr:f(r.mr),dx:f(r.dx),dy:f(r.dy)});
       });
       const m=out.groups.length?out:null;
@@ -4185,7 +4449,7 @@ function openLive(o){
   v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
       '<div class="lvstat"><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
-      '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button></div>'+
+      '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
     '<div class="lvside">'+
       '<div class="lvinfo"><span class="lvchip">'+esc(o.title||"Target")+'</span></div>'+
       '<div class="lvgrid">'+
@@ -4264,6 +4528,8 @@ function openLive(o){
   }
   /* ----- finding the target ----- */
   function relock(fr,keepOld){
+    if(lock&&lock.manual){lockMiss=0;return true;}  // a target you tapped: no corner squares to follow
+    if(man)return false;
     let r=null;try{r=detectRBTarget(work,T);}catch(e){r=null;}
     if(r&&lock&&r.layout.id!==lock.layout.id)r=null; // a different page: ignore it
     if(r){
@@ -4281,14 +4547,15 @@ function openLive(o){
     lockMiss++;return !!(keepOld&&lock);
   }
   async function lockLoop(){
-    try{T=await loadTargets();}catch(e){setStat("Couldn't load the target layouts. Check your connection.","bad");return;}
+    try{T=await loadTargets();}catch(e){T=null;}
+    if(!T){setStat("Couldn't load the Range Book target layouts. Tap Not a Range Book target? to tap your target's corners instead.","bad");return;}
     while(!closed){
       const fr=grab();
       if(fr&&!busy){
         const had=!!lock,ok=relock(fr,false);
         if(ok&&!had){
           const f=await steady(1500);if(closed)return;ref=f;
-          setStat("Target locked: "+lock.layout.name+". Fire at "+aimLabel(aim)+", then tap Shot.","");$("lvShot").disabled=false;$("lvView").hidden=false;
+          setStat("Target locked: "+lock.layout.name+". Fire at "+aimLabel(aim)+", then tap Shot.","");$("lvShot").disabled=false;$("lvView").hidden=false;$("lvManual").hidden=true;
           lastRefresh=Date.now();
         }else if(!ok&&lock&&lockMiss===8)setStat("Can't see all four corner squares. Keep the whole page in view.","busy");
         else if(ok&&had&&lockMiss===0&&/corner squares/.test(status.t)&&status.k==="busy")setStat("Target found again. Fire at "+aimLabel(aim)+", then tap Shot.","");
@@ -4300,7 +4567,7 @@ function openLive(o){
   }
   /* ----- comparing before and after ----- */
   function findNew(A,B){
-    const P=LIVE_PPI,w=A.w,h=A.h,N=w*h,fid=(lock&&lock.fid)||T.fid,fs=(T.fidSize||1)/2+.18,edge=.22;
+    const P=LIVE_PPI,w=A.w,h=A.h,N=w*h,fid=(lock&&lock.fid)||T.fid,fs=lock&&lock.manual?.3:((T&&T.fidSize)||1)/2+.18,edge=.22;
     const skip=new Uint8Array(N);
     for(let y=0;y<h;y++)for(let x=0;x<w;x++){const px=(x+.5)/P,py=(y+.5)/P,i=y*w+x;
       if(px<edge||py<edge||px>pageW-edge||py>pageH-edge||A.g[i]<0||B.g[i]<0||fid.some(f=>Math.abs(px-f[0])<fs&&Math.abs(py-f[1])<fs))skip[i]=1;}
@@ -4401,7 +4668,8 @@ function openLive(o){
       const ppi=Math.hypot(...[0,1].map(i=>S(1,0)[i]-S(0,0)[i])),hr=Math.max(4,dia/2*ppi);
       if(view==="full"||!ref){
         ctx.strokeStyle=ac;ctx.lineWidth=2;ctx.setLineDash([8,6]);ctx.beginPath();lock.fid.forEach((f,i)=>{const p=S(f[0],f[1]);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});ctx.closePath();ctx.stroke();ctx.setLineDash([]);
-        lock.fid.forEach(f=>{const p=S(f[0],f[1]),q=S(f[0]+(T.fidSize||1)*.6,f[1]),r2=Math.hypot(q[0]-p[0],q[1]-p[1]);ctx.lineWidth=3;ctx.strokeRect(p[0]-r2,p[1]-r2,r2*2,r2*2);});
+        if(lock.manual)lock.fid.forEach(f=>{const p=S(f[0],f[1]);ctx.fillStyle=ac;ctx.beginPath();ctx.arc(p[0],p[1],6,0,7);ctx.fill();});
+        else lock.fid.forEach(f=>{const p=S(f[0],f[1]),q=S(f[0]+((T&&T.fidSize)||1)*.6,f[1]),r2=Math.hypot(q[0]-p[0],q[1]-p[1]);ctx.lineWidth=3;ctx.strokeRect(p[0]-r2,p[1]-r2,r2*2,r2*2);});
       }
       // aim points: the current one stands out
       aims().forEach((a,i)=>{const p=S(a.x,a.y),r1=ppi*.55;ctx.lineWidth=i===aim?3:1.5;ctx.strokeStyle=i===aim?HL:"rgba(255,255,255,.55)";ctx.setLineDash(i===aim?[6,5]:[3,4]);ctx.beginPath();ctx.arc(p[0],p[1],r1,0,7);ctx.stroke();ctx.setLineDash([]);
@@ -4412,6 +4680,11 @@ function openLive(o){
         if(cur){ctx.font="800 13px system-ui,sans-serif";ctx.lineWidth=4;ctx.strokeStyle="#000";const t=String(j+1);ctx.strokeText(t,p[0]+hr+4,p[1]-hr);ctx.fillStyle=nw?HL:"#fff";ctx.fillText(t,p[0]+hr+4,p[1]-hr);}});});
       const r=stats(aim);if(r.c){const p=S(r.c[0],r.c[1]);ctx.strokeStyle=CTR;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p[0]-7,p[1]);ctx.lineTo(p[0]+7,p[1]);ctx.moveTo(p[0],p[1]-7);ctx.lineTo(p[0],p[1]+7);ctx.stroke();}
     }
+    // setting up a target by tapping: the corners and aim points so far
+    if(man){const C=([x,y])=>[(x-sx)*k/dpr,(y-sy)*k/dpr];ctx.strokeStyle=HL;ctx.fillStyle=HL;ctx.lineWidth=2.5;
+      const pts=man.pts.map(C);if(pts.length>1){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));if(pts.length===4)ctx.closePath();ctx.stroke();}
+      pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(p[0],p[1],7,0,7);ctx.fill();ctx.font="800 12px system-ui,sans-serif";ctx.fillText(String(i+1),p[0]+9,p[1]-8);});
+      if(man.Hinv)man.aims.forEach((a,i)=>{const p=C(applyH(man.Hinv,a[0],a[1]));ctx.beginPath();ctx.arc(p[0],p[1],12,0,7);ctx.moveTo(p[0]-18,p[1]);ctx.lineTo(p[0]+18,p[1]);ctx.moveTo(p[0],p[1]-18);ctx.lineTo(p[0],p[1]+18);ctx.stroke();ctx.fillText("Aim "+(i+1),p[0]+14,p[1]-14);});}
     // the whole target, small, while zoomed in
     const showT=view==="aim"&&!!lock&&!!ref;thumb.hidden=!showT;
     if(showT){const ar=video.videoHeight/video.videoWidth,tw=Math.round(Math.min(cw*.27,130,ch*.42/ar)),th=Math.round(tw*ar);
@@ -4471,6 +4744,7 @@ function openLive(o){
   can.addEventListener("click",e=>{const rc=can.getBoundingClientRect();tapAt((e.clientX-rc.left)/rc.width,(e.clientY-rc.top)/rc.height);});
   // a tap at a spot on the picture (0–1 across and down), from this screen or from a device watching it
   function tapAt(u,w){
+    if(man&&crop){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);manTap(crop[0]+u*rc.width/k,crop[1]+w*rc.height/k);return;}
     if(!lock||!crop)return;const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);
     const cx=crop[0]+u*rc.width/k,cy=crop[1]+w*rc.height/k,[px,py]=applyH(lock.H,cx,cy);
     if(px<0||py<0||px>pageW||py>pageH)return;
@@ -4481,6 +4755,53 @@ function openLive(o){
     else{holes[aim].push([px,py]);newest=holes[aim].length-1;setStat("Added shot "+holes[aim].length+".","");}
     after();
   }
+  /* ----- any target: tap its four corners, give its size, then tap each aim point ----- */
+  let man=null;
+  const CORN=["top-left","top-right","bottom-right","bottom-left"];
+  function manStart(){
+    man={step:"corners",pts:[],aims:[]};view="full";busy=false;
+    $("lvManual").hidden=true;$("lvMDone").hidden=true;
+    setStat("Tap the paper's "+CORN[0]+" corner.","busy");
+  }
+  function manTap(cx,cy){
+    if(!man)return;
+    if(man.step==="corners"){man.pts.push([cx,cy]);if(man.pts.length<4)setStat("Tap the paper's "+CORN[man.pts.length]+" corner.","busy");else manSize();return;}
+    if(man.step==="aims"){const p=applyH(man.H,cx,cy);if(p[0]<0||p[1]<0||p[0]>man.w||p[1]>man.h)return;man.aims.push(p);
+      setStat(man.aims.length+" aim point"+(man.aims.length===1?"":"s")+". Tap the next one, or Done.","busy");$("lvMDone").hidden=false;}
+  }
+  function manSize(){
+    man.step="size";const sh=$("lvSheet"),din=v=>U.n("in",v,U.metric?1:2);
+    const PRE=[[8.5,11,"Letter (8.5 × 11 in)"],[11,17,"11 × 17 in"],[12,12,"12 × 12 in"],[12,18,"12 × 18 in"],[23,35,"23 × 35 in"]];
+    sh.innerHTML='<h3>How big is the target?</h3><p class="note" style="margin:0">The paper (or board) whose corners you tapped. Width is across the top.</p>'+
+      '<div class="lvgrid" style="grid-template-columns:1fr 1fr"><label>Size<select id="lvmPre" style="grid-column:1/-1">'+PRE.map(([w,h,n],k)=>'<option value="'+k+'">'+esc(n)+'</option>').join("")+'<option value="x">Other size</option></select></label><span></span>'+
+      '<label>Width ('+U.u("in")+')<input id="lvmW" type="number" inputmode="decimal" step="any" value="'+din(8.5)+'"></label><label>Height ('+U.u("in")+')<input id="lvmH" type="number" inputmode="decimal" step="any" value="'+din(11)+'"></label></div>'+
+      '<div class="lvrow"><button class="btn primary lvbtn" id="lvmOk" type="button">Next: tap the aim points</button><button class="btn lvbtn" id="lvmRedo" type="button">Tap corners again</button></div>';
+    sh.hidden=false;
+    $("lvmPre").addEventListener("change",e=>{const P2=PRE[+e.target.value];if(P2){$("lvmW").value=din(P2[0]);$("lvmH").value=din(P2[1]);}});
+    $("lvmRedo").addEventListener("click",()=>{sh.hidden=true;manStart();});
+    $("lvmOk").addEventListener("click",()=>{
+      const w=U.from("in",num($("lvmW").value)),h=U.from("in",num($("lvmH").value));if(!(w>0&&h>0))return;
+      const page=[[0,0],[w,0],[w,h],[0,h]],Hm=homography(man.pts,page);if(!Hm){setStat("Those corners don't make a box. Tap them again.","bad");sh.hidden=true;manStart();return;}
+      man.w=w;man.h=h;man.H=Hm;man.Hinv=homography(page,man.pts);man.step="aims";sh.hidden=true;
+      setStat("Now tap each aim point, in the order you'll shoot them. Then tap Done.","busy");});
+  }
+  async function manDone(){
+    if(!man||man.step!=="aims"||!man.aims.length)return;
+    const A=man.aims,w=man.w,h=man.h;
+    const aimsL=A.map(([x,y],i)=>{const d=Math.min(1.5,...A.filter((_,j)=>j!==i).map(([x2,y2])=>Math.hypot(x2-x,y2-y)/2));
+      return {x,y,cell:[Math.max(0,x-d),Math.max(0,y-d),Math.min(w,x+d),Math.min(h,y+d)],groupId:groups[i]?groups[i].id:null};});
+    const keepAims=lock&&lock.manual&&lock.layout.aims.length===aimsL.length?lock.layout.aims:null;
+    if(keepAims)aimsL.forEach((a,i)=>a.groupId=keepAims[i].groupId);
+    lock={manual:true,H:man.H,Hinv:man.Hinv,corners:man.pts,fid:[[0,0],[w,0],[w,h],[0,h]],fmt:null,layout:{id:"custom",name:"your target",aims:aimsL}};
+    pageW=w;pageH=h;man=null;$("lvMDone").hidden=true;$("lvManual").hidden=false;$("lvManual").textContent="Tap corners again";
+    if(!keepAims){aim=0;fillAim();}
+    busy=true;setStat("Taking a picture of the target to compare against…","busy");
+    const f=await steady(1500);busy=false;if(closed)return;ref=f;view="aim";lastRefresh=Date.now();
+    setStat("Ready: "+aimsL.length+" aim point"+(aimsL.length===1?"":"s")+". Keep the phone still. Fire at "+aimLabel(aim)+", then tap Shot.","");
+    $("lvShot").disabled=false;$("lvView").hidden=false;renderStats();
+  }
+  $("lvManual").addEventListener("click",()=>{if(lock&&lock.manual){ref=null;$("lvShot").disabled=true;}manStart();});
+  $("lvMDone").addEventListener("click",manDone);
   /* ----- remote: another device signed in to this account watches this screen and sends taps back ----- */
   let rmId=null,rmBusy=false,rmTimer=null,rmWatch=false,rmFail=0;
   const rfetch=(method,url,body)=>fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:body===undefined?undefined:JSON.stringify(body)}).then(r=>r.ok?r.json():r.json().catch(()=>({})).then(j=>{const e=new Error(j.error||"error "+r.status);e.status=r.status;throw e;}));
@@ -4505,7 +4826,7 @@ function openLive(o){
       groups:gs?[...gs.options].map(o=>[o.value,o.textContent]):null,group:gs?gs.value:null,want:$("lvWant").value,dist:$("lvDist").value,unitIn:U.u("in"),unitYd:U.u("yd"),
       mic:!!micT,sens,sheet,title:o.title||""};
   }
-  const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone"];
+  const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvMDone","lvmOk","lvmRedo"];
   function rmRun(c){
     if(c.cmd==="click"&&RM_CLICK.includes(c.id)){const b=$(c.id);if(b&&!b.disabled)b.click();}
     else if(c.cmd==="tap"&&isFinite(c.u)&&isFinite(c.w))tapAt(Math.min(1,Math.max(0,c.u)),Math.min(1,Math.max(0,c.w)));
@@ -4605,7 +4926,7 @@ function openLive(o){
     aims().forEach((a,i)=>{const hs=holes[i]||[];if(!hs.length)return;const r=stats(i);
       const pts=[[a.cell[0],a.cell[1]],[a.cell[2],a.cell[1]],[a.cell[2],a.cell[3]],[a.cell[0],a.cell[3]]].map(([x,y])=>nrm([x,y]));
       const box=[Math.max(0,Math.min(...pts.map(p=>p[0]))),Math.max(0,Math.min(...pts.map(p=>p[1]))),Math.min(1,Math.max(...pts.map(p=>p[0]))),Math.min(1,Math.max(...pts.map(p=>p[1])))];
-      M.groups.push({id:"t"+Date.now().toString(36)+i,ai:i,groupId:a.groupId||null,aim:nrm([a.x,a.y]),box,want:want||null,shots:hs.map(nrm),n:hs.length,size:f3(r.size),moa:f3(moaOf(r.size)),mr:f3(r.mr),dx:f3(r.dx),dy:f3(r.dy)});});
+      M.groups.push({id:"t"+Date.now().toString(36)+i,ai:i,groupId:a.groupId||null,aim:nrm([a.x,a.y]),box,want:want||null,shots:hs.map(nrm),hin:hs.map(([x,y])=>[+(x-a.x).toFixed(3),+(a.y-y).toFixed(3)]),n:hs.length,size:f3(r.size),moa:f3(moaOf(r.size)),mr:f3(r.mr),dx:f3(r.dx),dy:f3(r.dy)});});
     return {data,W,H,M};
   }
   $("lvDone").addEventListener("click",save);
@@ -4670,7 +4991,8 @@ function openLive(o){
   document.addEventListener("keydown",onKey);document.addEventListener("visibilitychange",onVis);
   $("lvClose").addEventListener("click",()=>close());
   window.RB_LIVE={state:()=>({locked:!!lock,layout:lock&&lock.layout.id,aim,holes:JSON.parse(JSON.stringify(holes)),view,crop,status:status.t,busy,ref:!!ref}),shot:()=>shot("button"),mic:()=>!!micT,
-    at(px,py){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1),p=applyH(lock.Hinv,px,py);return [rc.left+(p[0]-crop[0])*k,rc.top+(p[1]-crop[1])*k];}};
+    at(px,py){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1),p=applyH(lock.Hinv,px,py);return [rc.left+(p[0]-crop[0])*k,rc.top+(p[1]-crop[1])*k];},
+    camAt(cx,cy){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);return [rc.left+(cx-crop[0])*k,rc.top+(cy-crop[1])*k];}};
   renderStats();setStat(status.t,status.k);
   startCam().then(()=>{if(stream){frame();lockLoop();}});
 }
@@ -5036,7 +5358,7 @@ function renderDetail(){
       (g.shots||[]).forEach((v,j)=>{
         h+='<div class="shot" data-k="'+j+'"><label for="s_'+g.id+'_'+j+'">'+(j+1)+'</label><input id="s_'+g.id+'_'+j+'" data-g="'+g.id+'" data-s="'+j+'" type="number" inputmode="numeric" step="1" enterkeyhint="next" placeholder="'+U.u("fps")+'" value="'+(v==null?"":esc(U.n("fps",v,0)))+'"></div>';
       });
-      h+='</div>'+shotPickBar(g.id)+'<div class="row"><button class="btn edit-only" type="button" data-addshot="'+g.id+'">+ Shot</button><button class="btn edit-only" type="button" data-pickshot="'+g.id+'"'+((g.shots||[]).length?'':' hidden')+'>− Shot</button><button class="btn edit-only" type="button" data-import="'+g.id+'">Import chronograph file</button><div class="stats" id="st_'+g.id+'"></div></div></div>';
+      h+='</div>'+shotPickBar(g.id)+'<div class="row"><button class="btn edit-only" type="button" data-addshot="'+g.id+'">+ Shot</button><button class="btn edit-only" type="button" data-pickshot="'+g.id+'"'+((g.shots||[]).length?'':' hidden')+'>− Shot</button><button class="btn edit-only" type="button" data-import="'+g.id+'">Import chronograph file</button><div class="stats" id="st_'+g.id+'"></div></div><div class="sbs" id="sb_'+g.id+'"></div>'+pressHtml(g,canEdit)+'</div>';
     });
     h+='<div class="ladphotos" id="lp_'+lad.id+'"></div>';
     h+='<div class="row edit-only"><button class="btn primary" type="button" data-ladd="'+lad.id+'">+ Add group</button><button class="btn" type="button" data-limport="'+lad.id+'">Import chronograph file as new group</button><button class="btn" type="button" data-llbl="'+lad.id+'"'+(lg.some(g=>num(g.charge)>0)?'':' hidden')+'>Ladder label</button></div><div class="lblrow" id="llr_'+lad.id+'" hidden></div></div></div>';
@@ -5135,6 +5457,11 @@ function renderDetail(){
     bindTop("g_"+g.id+"_charge",v=>{g.charge=num(v);const lad=LADS.find(l=>l.id===g.ladderId);const ls=lad&&$("ls_"+lad.id);if(ls)ls.textContent=ladderSum(L,lad);
       const lb=lad&&$("relRoot").querySelector('[data-llbl="'+lad.id+'"]');if(lb)lb.hidden=!ladderGroups(L,lad).some(x=>num(x.charge)>0);if(lad)refreshLadLog(lad);});
     bindTop("g_"+g.id+"_label",v=>g.label=v);
+    {const box=$("relRoot").querySelector('[data-press="'+g.id+'"]');
+     if(box){box.querySelectorAll("[data-pk]").forEach(b=>b.addEventListener("click",()=>{if(b.disabled)return;g.press=g.press||{};const k=b.dataset.pk;if(g.press[k])delete g.press[k];else g.press[k]=true;if(!Object.keys(g.press).length)delete g.press;
+         b.classList.toggle("on",!!(g.press&&g.press[k]));b.setAttribute("aria-pressed",String(!!(g.press&&g.press[k])));queueSave(openId);drawChargeChart();}));
+       const hx=$("ghx_"+g.id);if(hx){if(num(g.headExp)>0)U.fill(hx,"dim",g.headExp,3,4);
+         hx.addEventListener("input",()=>{const v=U.read(hx,"dim",g.headExp);if(num(v)>0)g.headExp=+(+v).toFixed(5);else delete g.headExp;queueSave(openId);drawChargeChart();});}}}
     bindTop("g_"+g.id+"_groupSize",v=>{const nv=U.read($("g_"+g.id+"_groupSize"),"in",g.groupSize);if(nv!==g.groupSize){delete g.meanRadius;delete g.poaX;delete g.poaY;}g.groupSize=nv;});
   });
   $("relRoot").querySelectorAll("[data-s]").forEach(inp=>{
@@ -5465,8 +5792,9 @@ function refreshComputed(){
     const grpTxt=(moa!=null?'<span>Group <b>'+U.s("in",num(g.groupSize),2)+' · '+moa.toFixed(2)+' MOA</b> at '+U.s("yd",num(g.distance),0)+'</span>':'')+
       (mr!=null?'<span>Mean radius <b>'+U.s("in",num(g.meanRadius),2)+' · '+mr.toFixed(2)+' MOA</b></span>':'')+(pt?'<span>Center '+esc(pt)+'</span>':'');
     if(st)st.innerHTML=(s?'<span>Avg <b>'+vS(s.avgT)+'</b></span><span>SD <b>'+sdS(s.sd)+'</b></span><span>ES <b>'+esS(s.es)+'</b></span>'+(s.me!=null?'<span>Energy <b>'+eS(s.me)+' '+U.u("ftlb")+'</b></span>':''):'<span>Enter shot velocities to see stats.</span>')+grpTxt;
+    {const sb=$("sb_"+g.id);if(sb)sb.innerHTML=shotByShotHtml(g);}
     const chip=$("gmax_"+g.id);if(chip){chip.hidden=!ms;chip.textContent=ms==="over"?"Over max charge":"At max charge";chip.classList.toggle("over",ms==="over");}
-    const flag=ms?' <span class="chip maxchip'+(ms==="over"?' over':'')+'">'+(ms==="over"?"over max":"at max")+'</span>':'';
+    const pl=pressList(g),flag=(ms?' <span class="chip maxchip'+(ms==="over"?' over':'')+'">'+(ms==="over"?"over max":"at max")+'</span>':'')+(pl.length?' <span class="chip presschip" title="'+esc(pl.join(", "))+'">pressure signs</span>':'');
     if(relComb[openId]&&many)return;
     if(show&&g.ladderId!==show.id)return;
     const ltag=many&&!show?' <span class="note">· '+esc(ladderName(L,(L.ladders||[]).find(l=>l.id===g.ladderId)||{}))+'</span>':'';
@@ -5543,10 +5871,13 @@ function drawChargeChart(){
     const x=X(o.g.charge),col=maxState(o.g,L)==="over"?"var(--warn)":COLORS[o.i%COLORS.length];
     s+='<line x1="'+x+'" x2="'+x+'" y1="'+Y(o.s.avg+o.s.sd)+'" y2="'+Y(o.s.avg-o.s.sd)+'" stroke="'+col+'" stroke-width="1.5"/>';
     s+='<line x1="'+(x-4)+'" x2="'+(x+4)+'" y1="'+Y(o.s.avg+o.s.sd)+'" y2="'+Y(o.s.avg+o.s.sd)+'" stroke="'+col+'" stroke-width="1.5"/><line x1="'+(x-4)+'" x2="'+(x+4)+'" y1="'+Y(o.s.avg-o.s.sd)+'" y2="'+Y(o.s.avg-o.s.sd)+'" stroke="'+col+'" stroke-width="1.5"/>';
+    {const pl=pressList(o.g);if(pl.length){const ty=Math.min(m.t+ph-3,Y(o.s.avg-o.s.sd)+17);
+      s+='<g><title>'+esc(gName(o.g,o.i)+": "+pl.join(", "))+'</title><path d="M'+x+' '+(ty-11)+'L'+(x+7)+' '+ty+'L'+(x-7)+' '+ty+'Z" fill="var(--warn)"/><text x="'+x+'" y="'+(ty-2)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">!</text></g>';}}
     s+='<circle cx="'+x+'" cy="'+Y(o.s.avg)+'" r="4.5" fill="'+col+'" stroke="var(--surface)" stroke-width="1.5"><title>'+esc(gName(o.g,o.i))+': '+U.s("fps",o.s.avgT,0,true)+', SD '+sdS(o.s.sd)+'</title></circle>';
     if(showLabels)s+='<text x="'+x+'" y="'+(Y(o.s.avg+o.s.sd)-6)+'" text-anchor="middle" font-size="10" font-family="var(--mono)" fill="var(--fg)">'+o.s.avgT+'</text>';
   });
-  s+='</svg><p class="note">Dots are the average velocity, bars show ± one SD. '+(moaPts.length?'Purple diamonds are group size in MOA (right-hand scale; lower is tighter). ':'Enter group sizes (or measure them from a target photo) to add group MOA here. ')+'A flat stretch between charges (little gain per grain) is often where a load is most forgiving.</p>';
+  const anyP=pts.some(o=>pressList(o.g).length);
+  s+='</svg><p class="note">Dots are the average velocity, bars show ± one SD. '+(anyP?'Triangles with ! mark charges where you noted pressure signs. ':'')+(moaPts.length?'Purple diamonds are group size in MOA (right-hand scale; lower is tighter). ':'Enter group sizes (or measure them from a target photo) to add group MOA here. ')+'A flat stretch between charges (little gain per grain) is often where a load is most forgiving.</p>';
   box.innerHTML=s;
   if(stepsBox){
     let t='';
@@ -5656,6 +5987,47 @@ function newTrip(){
   trips.push(t);queueTrips();openTrip(t.id);
   setTimeout(()=>{const f=$("tp_place");if(f&&!f.value)f.focus();},50);
 }
+/* ---------- cold-bore shot: where the first shot of the day landed, from the aim point ---------- */
+function coldHtml(t){
+  const c=t.cold||{};
+  return '<h3>Cold-bore shot</h3><p class="note" style="margin-top:0">Where your first shot of the day landed from the aim point, before the barrel warmed up. Over many trips the gun\'s page shows whether the cold-bore shot wanders from your zero.</p>'+
+    '<div class="grid coldrow"><div class="field"><label for="cb_x">Across ('+U.u("in")+')</label><div class="pair"><input id="cb_x" type="number" inputmode="decimal" step="any" min="0" placeholder="0"><select id="cb_xs" class="fieldselect" aria-label="Right or left"><option value="1">right</option><option value="-1">left</option></select></div></div>'+
+    '<div class="field"><label for="cb_y">Up or down ('+U.u("in")+')</label><div class="pair"><input id="cb_y" type="number" inputmode="decimal" step="any" min="0" placeholder="0"><select id="cb_ys" class="fieldselect" aria-label="High or low"><option value="1">high</option><option value="-1">low</option></select></div></div>'+
+    '<div class="field"><label for="cb_b">Barrel</label><select id="cb_b" class="fieldselect"><option value="">Not noted</option><option value="clean">Clean</option><option value="fouled">Fouled</option></select></div>'+
+    '<div class="field"><label for="cb_d">At (<span data-unit="yd">'+U.u("yd")+'</span>)</label><input id="cb_d" type="number" inputmode="numeric" step="any" placeholder="trip distance"></div></div>';
+}
+function bindCold(t){
+  const X=$("cb_x");if(!X)return;const c=t.cold||{};
+  if(c.x!=null){U.fill(X,"in",Math.abs(c.x),2,2);$("cb_xs").value=c.x<0?"-1":"1";}
+  if(c.y!=null){U.fill($("cb_y"),"in",Math.abs(c.y),2,2);$("cb_ys").value=c.y<0?"-1":"1";}
+  $("cb_b").value=c.bore||"";if(num(c.dist)>0)U.fill($("cb_d"),"yd",num(c.dist),0,0);
+  const upd=()=>{const ax=num($("cb_x").value),ay=num($("cb_y").value);
+    const x=ax==null?null:U.from("in",Math.abs(ax))*(+$("cb_xs").value),y=ay==null?null:U.from("in",Math.abs(ay))*(+$("cb_ys").value),d=num(U.read($("cb_d"),"yd",null));
+    if(x==null&&y==null)delete t.cold;else t.cold={x:x==null?0:+x.toFixed(3),y:y==null?0:+y.toFixed(3),bore:$("cb_b").value||null,dist:d>0?d:null};
+    t.updated=Date.now();queueTrips();};
+  ["cb_x","cb_y","cb_d"].forEach(id=>$(id).addEventListener("input",upd));["cb_xs","cb_ys","cb_b"].forEach(id=>$(id).addEventListener("change",upd));
+}
+// a gun's cold-bore shots over time, in MOA so different distances compare
+function coldLogHtml(rt){
+  const rows=rt.filter(t=>t.cold&&(t.cold.x||t.cold.y)).map(t=>{const d=num(t.cold.dist)>0?num(t.cold.dist):(num(t.distance)>0?num(t.distance):100),k=d/100*1.0472;return {t,d,mx:t.cold.x/k,my:t.cold.y/k};});
+  if(!rows.length)return '<section class="card" aria-label="Cold-bore log" id="secGunCold"><h2>Cold-bore log</h2><p class="note">No cold-bore shots yet. On a range trip with this gun, fill in <b>Cold-bore shot</b>: where your first shot landed from the aim point.</p></section>';
+  const ax=rows.reduce((a,r)=>a+r.mx,0)/rows.length,ay=rows.reduce((a,r)=>a+r.my,0)/rows.length;
+  const lr=v=>Math.abs(v)<.05?"centered":Math.abs(v).toFixed(1)+" MOA "+(v>0?"right":"left"),ud=v=>Math.abs(v)<.05?"centered":Math.abs(v).toFixed(1)+" MOA "+(v>0?"high":"low");
+  const span=Math.max(1,...rows.map(r=>Math.max(Math.abs(r.mx),Math.abs(r.my))))*1.25,W=200,c=100,sc=(W/2-14)/span;
+  let g='<svg class="coldsvg" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="Cold-bore shots around the aim point"><rect width="'+W+'" height="'+W+'" rx="10" fill="var(--sunk)"/>';
+  for(let r=1;r<=Math.floor(span);r++)g+='<circle cx="'+c+'" cy="'+c+'" r="'+(r*sc)+'" fill="none" stroke="var(--line)"/>';
+  g+='<line x1="'+c+'" y1="8" x2="'+c+'" y2="'+(W-8)+'" stroke="var(--line)"/><line x1="8" y1="'+c+'" x2="'+(W-8)+'" y2="'+c+'" stroke="var(--line)"/>';
+  rows.forEach((r,i)=>{const x=c+r.mx*sc,y=c-r.my*sc,last=i===0;g+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(last?5:4)+'" fill="'+(r.t.cold.bore==="clean"?"var(--accent)":r.t.cold.bore==="fouled"?"var(--moa)":"var(--muted)")+'"'+(last?' stroke="var(--fg)" stroke-width="1.5"':'')+'><title>'+esc((r.t.date?fmtDate(r.t.date):"No date")+": "+lr(r.mx)+", "+ud(r.my))+'</title></circle>';});
+  if(rows.length>1)g+='<path d="M'+(c+ax*sc-6)+' '+(c-ay*sc)+'h12M'+(c+ax*sc)+' '+(c-ay*sc-6)+'v12" stroke="var(--warn)" stroke-width="2.5"/>';
+  g+='<text x="'+(W-8)+'" y="'+(W-8)+'" text-anchor="end" font-size="9" fill="var(--muted)">rings 1 MOA apart</text></svg>';
+  let h='<section class="card" aria-label="Cold-bore log" id="secGunCold"><h2>Cold-bore log</h2><div class="coldwrap">'+g+'<div>'+
+    (rows.length>1?'<p class="tline">Average of '+rows.length+' cold-bore shots: <b>'+lr(ax)+', '+ud(ay)+'</b> of the aim point.</p>':'<p class="tline">One cold-bore shot so far. A few more trips show whether it\'s a habit.</p>')+
+    (rows.length>2&&Math.hypot(ax,ay)>=.75?'<p class="note">That\'s a steady shift. Many shooters note it on the dope card as a first-shot hold.</p>':'')+
+    '<p class="note coldkey"><span><i style="background:var(--accent)"></i>clean barrel</span><span><i style="background:var(--moa)"></i>fouled</span><span><i style="background:var(--muted)"></i>not noted</span></p><p class="note">The outlined dot is the latest'+(rows.length>1?'; the cross is the average':'')+'.</p></div></div>'+
+    '<div class="tablewrap"><table class="sbt"><thead><tr><th>Date</th><th>'+U.u("yd")+'</th><th>Across (MOA)</th><th>Up/down (MOA)</th><th>Barrel</th></tr></thead><tbody>'+
+    rows.slice(0,12).map(r=>'<tr><td>'+esc(r.t.date?fmtDate(r.t.date):"–")+'</td><td>'+U.n("yd",r.d,0)+'</td><td>'+(Math.abs(r.mx)<.05?"0":Math.abs(r.mx).toFixed(1)+(r.mx>0?" R":" L"))+'</td><td>'+(Math.abs(r.my)<.05?"0":Math.abs(r.my).toFixed(1)+(r.my>0?" high":" low"))+'</td><td>'+esc(r.t.cold.bore||"–")+'</td></tr>').join("")+'</tbody></table></div></section>';
+  return h;
+}
 const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["wind","Wind","text","e.g. 5 mph from 3 o'clock"],["avgVel","Average velocity (fps)","number","optional"],["sd","SD (fps)","number","optional"]];
 /* velocity vs temperature: each trip's average velocity against its temperature, with a best-fit line.
    Its slope is the powder's temperature sensitivity for this load, which the calculator can use. */
@@ -5747,7 +6119,7 @@ function renderTrips(){
     root.querySelectorAll("[data-trip]").forEach(b=>b.addEventListener("click",()=>openTrip(b.dataset.trip)));
     return;
   }
-  const places=[...new Set(trips.map(x=>String(x.place||"").trim()).filter(Boolean))].sort();
+  const places=[...new Set([...trips.map(x=>String(x.place||"").trim()),...((window.RB_TRAJ&&RB_TRAJ.ranges())||[])].filter(Boolean))].sort();
   let h='<section class="card" aria-label="Range trip" id="secTrips"><div class="row triphead"><button class="btn" id="tripBack" type="button">‹ All range trips</button><span class="savestate" id="tripState"></span></div>'+
     '<h2>Range trip</h2><datalist id="dl_place">'+places.map(p=>'<option value="'+esc(p)+'">').join("")+'</datalist><div class="grid">';
   TRIP_FIELDS.forEach(([k,label,type,ph])=>{
@@ -5755,6 +6127,7 @@ function renderTrips(){
   });
   h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">Use the weather where I am</button><span class="note" id="tripWxNote"></span></div>'+
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>'+
+    coldHtml(t)+
     '<h3>Chronograph</h3><div id="tripChrono"></div>'+
     '<div class="row"><label class="btn" for="tripChronoIn" style="cursor:pointer">Import chronograph file</label><input id="tripChronoIn" type="file" multiple accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn" id="tripShotAdd" type="button">+ Type in shots</button><span class="note" id="tripChronoMsg"></span></div>'+
     '<div class="row" id="tripMvRow"></div>'+
@@ -5825,6 +6198,7 @@ function renderTrips(){
   root.querySelectorAll("[data-tf]").forEach(inp=>inp.addEventListener("input",()=>{
     const k=inp.dataset.tf,isNum=inp.type==="number";t[k]=isNum?readU(inp,k,FIELD_U,t[k]):inp.value;t.updated=Date.now();queueTrips();
     if(k==="avgVel")mvRow();}));
+  bindCold(t);
   $("tripBack").addEventListener("click",()=>{tripOpen=null;tripPhotos=[];renderTrips();const s=$("secTrips");if(s)s.scrollIntoView({block:"start"});});
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
   $("tripLiveAdd").addEventListener("click",()=>livePick(t.id));
@@ -6803,8 +7177,8 @@ API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)l
 window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
-  const TOOLS=["twist","moa","powder","conv","live"];
-  const TITLES={twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target"};
+  const TOOLS=["twist","moa","powder","conv","live","hit"];
+  const TITLES={twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance"};
   let tool=null, pending=null, rel=null, ready=false;      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   // a box in the person's units <-> the imperial value behind it
@@ -6818,7 +7192,57 @@ window.RB_TOOLS=(function(){
     $("toolTiles").hidden=!!tool;
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
-    if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();
+    if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
+  }
+  /* ----- hit chance: the shot lands in a spread made of your group, velocity spread, wind call and range error ----- */
+  const HKEY="rangebook.hittool";let hitPick=null;
+  const erf=x=>{const t=1/(1+.3275911*Math.abs(x)),y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;};
+  // the same 4,000 random pairs every time, so the answer doesn't jitter
+  const NRM=(()=>{let a=1234567;const r=()=>{a^=a<<13;a^=a>>>17;a^=a<<5;return ((a>>>0)+.5)/4294967296;};const o=[];for(let i=0;i<4000;i++){const u=r(),v=r(),m=Math.sqrt(-2*Math.log(u));o.push([m*Math.cos(2*Math.PI*v),m*Math.sin(2*Math.PI*v)]);}return o;})();
+  function hitP(sx,sy,shape,w,h){
+    sx=Math.max(sx,1e-6);sy=Math.max(sy,1e-6);
+    if(shape!=="circle")return erf(w/2/(sx*Math.SQRT2))*erf(h/2/(sy*Math.SQRT2));
+    const R2=(w/2)*(w/2);let n=0;for(const [a,b] of NRM)if((a*sx)**2+(b*sy)**2<=R2)n++;return n/NRM.length;
+  }
+  function hitFrom(){
+    const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],sel=$("hc_load"),keep=sel.value;
+    sel.innerHTML=T.length?T.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>').join(""):'<option value="">No Shooting loads yet</option>';
+    let o=null;try{o=JSON.parse(localStorage.getItem(HKEY)||"null");}catch(e){}o=o||{};
+    sel.value=hitPick&&T.some(t=>t.id===hitPick)?hitPick:keep||(o.load&&T.some(t=>t.id===o.load)?o.load:(T[0]&&T[0].id)||"");hitPick=null;
+    if(!num($("hc_dist").value)){put("hc_dist","yd",o.dist||(U.metric?500/0.9144:500),0);$("hc_shape").value=o.shape||"rect";put("hc_w","in",o.w||(U.metric?25/2.54:10),U.metric?0:1);put("hc_h","in",o.h||(U.metric?25/2.54:10),U.metric?0:1);
+      put("hc_grp",null,o.grp||1);put("hc_sd","fps",o.sd||10,U.metric?1:0);put("hc_wind","mph",o.wind!=null?o.wind:2,1);put("hc_rng","yd",o.rng!=null?o.rng:2,0);}
+    hitCalc();
+  }
+  function hitCalc(){
+    const out=$("hc_res"),id=$("hc_load").value,shape=$("hc_shape").value;
+    $("hc_hf").hidden=shape==="circle";$("hc_wl").textContent=shape==="circle"?"Diameter":"Width";
+    if(!id||!window.RB_TRAJ){out.innerHTML='<p class="note">Make a Shooting load first (Shooting → + New load); this uses its trajectory.</p>';return;}
+    const x=get("hc_dist","yd"),w=get("hc_w","in"),h=shape==="circle"?w:get("hc_h","in"),grp=num($("hc_grp").value)||0,sd=get("hc_sd","fps")||0,we=get("hc_wind","mph")||0,re=get("hc_rng","yd")||0;
+    try{localStorage.setItem(HKEY,JSON.stringify({load:id,dist:x,shape,w,h:shape==="circle"?null:h,grp,sd,wind:we,rng:re}));}catch(e){}
+    const B=RB_TRAJ.solve(id);
+    if(B.err){out.innerHTML='<p class="err">'+esc(B.err)+'</p>';return;}
+    if(!(x>0&&w>0&&h>0)){out.innerHTML='<p class="note">Enter the distance and the target size.</p>';return;}
+    const Bp=sd>0?RB_TRAJ.solve(id,{dmv:sd}):B,Bm=sd>0?RB_TRAJ.solve(id,{dmv:-sd}):B;
+    const sig=d=>{if(!(d>1)||d>B.last)return null;const moaIn=d/100*1.0472,c=Math.min(Math.max(1,re),d-1,B.last-d);
+      const sp=grp*moaIn/3.08,smv=sd>0?Math.abs(Bp.at(d).path-Bm.at(d).path)/2:0,sw=Math.abs(B.at(d).drift1)*we,sr=re>0&&c>0?Math.abs(B.at(d+c).path-B.at(d-c).path)/2*(re/c):0;
+      return {sp,smv,sw,sr,sx:Math.hypot(sp,sw),sy:Math.hypot(sp,smv,sr)};};
+    const S0=sig(x);if(!S0){out.innerHTML='<p class="err">That\'s farther than this load\'s trajectory goes ('+U.s("yd",B.last,0)+').</p>';return;}
+    const P=hitP(S0.sx,S0.sy,shape,w,h),pct=v=>Math.round(v*100);
+    const parts=[["Perfect wind call",hitP(S0.sp,S0.sy,shape,w,h)],["No velocity spread",hitP(S0.sx,Math.hypot(S0.sp,S0.sr),shape,w,h)],["Exact range",hitP(S0.sx,Math.hypot(S0.sp,S0.smv),shape,w,h)],["Half the group size",hitP(Math.hypot(S0.sp/2,S0.sw),Math.hypot(S0.sp/2,S0.smv,S0.sr),shape,w,h)]]
+      .map(([n,v])=>[n,v,pct(v)-pct(P)]).sort((a,b)=>b[2]-a[2]);
+    // a picture: the target with the likely spread of shots around the aim point
+    const span=Math.max(w,h,S0.sx*5,S0.sy*5)*1.1,sc=180/span,cx=100,cy=100;
+    let g='<svg class="hcsvg" viewBox="0 0 200 200" role="img" aria-label="Target with the likely spread of shots"><rect x="0" y="0" width="200" height="200" fill="var(--sunk)" rx="8"/>';
+    g+=shape==="circle"?'<circle cx="'+cx+'" cy="'+cy+'" r="'+(w/2*sc)+'" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>':'<rect x="'+(cx-w/2*sc)+'" y="'+(cy-h/2*sc)+'" width="'+(w*sc)+'" height="'+(h*sc)+'" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>';
+    NRM.slice(0,120).forEach(([a,b])=>{g+='<circle cx="'+(cx+a*S0.sx*sc).toFixed(1)+'" cy="'+(cy+b*S0.sy*sc).toFixed(1)+'" r="1.8" fill="var(--fg)" opacity=".55"/>';});
+    [1,2].forEach(k=>{g+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(S0.sx*k*sc)+'" ry="'+(S0.sy*k*sc)+'" fill="none" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="'+(k===1?'4 3':'2 4')+'"/>';});
+    g+='</svg>';
+    let t='<div class="hcmain">'+g+'<div><div class="tbig">'+pct(P)+'%</div><div class="tline">chance of a first-round hit at <b>'+U.s("yd",x,0)+'</b> on a '+(shape==="circle"?U.s("in",w,1)+' circle':U.s("in",w,1)+' × '+U.s("in",h,1)+' target')+'</div>'+
+      '<div class="note" style="margin-top:6px">The dots are 120 likely shots; the dashed rings hold about 4 in 10 and 9 in 10 of them. The spread here is about '+U.s("in",S0.sx*2,1)+' wide and '+U.s("in",S0.sy*2,1)+' tall (one standard deviation each side).</div></div></div>';
+    t+='<h3 class="toolsub">What would help most</h3><div class="hcbars">'+parts.map(([n,v,d])=>'<div class="hcbar"><span>'+esc(n)+'</span><b>'+pct(v)+'%</b><i style="--w:'+Math.max(0,Math.min(100,pct(v)))+'%"></i><em>'+(d>0?'+'+d:'±0')+'</em></div>').join("")+'</div>';
+    const stp=U.metric?100/0.9144:100,rows=[];for(let d=stp;d<=Math.min(B.last,stp*15)+1e-6;d+=stp){const q=sig(d);if(q)rows.push([d,hitP(q.sx,q.sy,shape,w,h)]);}
+    if(rows.length>1)t+='<h3 class="toolsub">The same target at other distances</h3><div class="hcdist">'+rows.map(([d,v])=>'<div><span>'+U.n("yd",d,0)+'</span><i style="height:'+Math.max(2,Math.round(v*80))+'px"></i><b>'+pct(v)+'</b></div>').join("")+'</div><p class="note">Distance ('+U.u("yd")+') along the bottom, hit chance (%) on top.</p>';
+    out.innerHTML=t;
   }
   /* ----- Live target without a load: remembers the last bullet, distance and shot count on this device ----- */
   const LKEY="rangebook.livetool";
@@ -6937,7 +7361,8 @@ window.RB_TOOLS=(function(){
     document.querySelectorAll("[data-tooltile]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tooltile;
       if(t==="targets"){if(window.APP_showTab)APP_showTab("targets");return;}view(t);window.scrollTo(0,0);}));
     $("toolsBack").addEventListener("click",()=>{view(null);window.scrollTo(0,0);});
-    $("lt_go").addEventListener("click",liveGo);$("lt_print").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("targets");});
+    $("lt_go").addEventListener("click",liveGo);
+    ["hc_dist","hc_w","hc_h","hc_grp","hc_sd","hc_wind","hc_rng"].forEach(id=>$(id).addEventListener("input",hitCalc));["hc_load","hc_shape"].forEach(id=>$(id).addEventListener("change",hitCalc));$("lt_print").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("targets");});
     $("targetsBack").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("tools");});
     convBuild();
     // starting values: your first bullet and gun (if any), standard air, 1.5 in at 100, and the first reloading load
@@ -6951,7 +7376,7 @@ window.RB_TOOLS=(function(){
     // showTab tells us Tools (or its Targets page) is on screen: the Tools tab opens to the tiles
     shown(t,R){rel=R||rel;setup();if(t==="tools"){view(pending);pending=null;}},
     // open a tool from elsewhere, e.g. Shooting's twist warning
-    open(t,o){pending=t;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
+    open(t,o){pending=t;if(o&&o.hit)hitPick=o.hit;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
   };
 })();
 </script>
