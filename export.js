@@ -734,20 +734,23 @@ function gunRounds(r, d) {
   return { base, trip, dev, total, life, pct: life > 0 ? Math.round((total / life) * 100) : null, since: cl ? since : null };
 }
 const gunList = (d) => (d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : []).slice().sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), undefined, { numeric: true }));
+// the scope on a gun (Guns & Ammo → Scopes), as one line
+const scopeTxt = (r, d) => { const L = d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : [], x = r.scopeId && L.find((y) => y.id === r.scopeId); if (!x) return "";
+  return [[x.mfr, x.model].filter(Boolean).join(" "), [x.fp, x.unit === "mil" ? "MIL" : "MOA", numv(x.click) ? numv(x.click) + " clicks" : ""].filter(Boolean).join(", ")].filter(Boolean).join(" · "); };
 const twistTxt = (t) => (t == null || t === "" ? "" : /^\s*1\s*:/.test(String(t)) ? String(t) : "1:" + t);
 function gunsXlsx(d) {
   useUnits(d);
   const calc = d.calc && Array.isArray(d.calc.loads) ? d.calc.loads : [];
   const rows = gunList(d).map((r) => {
     const rc = gunRounds(r, d), uses = d.loads.filter((l) => l.data.rifleId === r.id).length + calc.filter((c) => c.rifleId === r.id).length;
-    return [r.name || "", r.serial || "", numv(r.barrel) != null ? cv("dim", r.barrel, METRIC ? 0 : null) : r.barrel || "", twistTxt(numv(r.twist) != null && METRIC ? cv("dim", r.twist, 0) : r.twist), cv("in", r.sightHeight, METRIC ? 2 : null), rc.total || null, rc.life, rc.pct, r.barrelSince ? { date: r.barrelSince } : null, r.cleaned ? { date: r.cleaned } : null, numv(r.cleanEvery), rc.since, uses || null, (d.gunPhotos || []).filter((p) => p.rifle_id === r.id).length || null, r.notes || ""];
+    return [r.name || "", r.serial || "", numv(r.barrel) != null ? cv("dim", r.barrel, METRIC ? 0 : null) : r.barrel || "", twistTxt(numv(r.twist) != null && METRIC ? cv("dim", r.twist, 0) : r.twist), cv("in", r.sightHeight, METRIC ? 2 : null), scopeTxt(r, d), rc.total || null, rc.life, rc.pct, r.barrelSince ? { date: r.barrelSince } : null, r.cleaned ? { date: r.cleaned } : null, numv(r.cleanEvery), rc.since, uses || null, (d.gunPhotos || []).filter((p) => p.rifle_id === r.id).length || null, r.notes || ""];
   });
-  return buildXlsx([{ name: "Guns", selected: true, rows, cols: [{ h: "Gun", w: 28 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 11 }, { h: "Twist" + (METRIC ? " (mm)" : ""), w: 9 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Round count", w: 12 }, { h: "Barrel life", w: 11 }, { h: "Barrel life used (%)", w: 17 }, { h: "Barrel fitted", w: 13 }, { h: "Last cleaned", w: 13 }, { h: "Clean every", w: 11 }, { h: "Rounds since cleaning", w: 18 }, { h: "Loads using it", w: 13 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] }]);
+  return buildXlsx([{ name: "Guns", selected: true, rows, cols: [{ h: "Gun", w: 28 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 11 }, { h: "Twist" + (METRIC ? " (mm)" : ""), w: 9 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Scope", w: 34 }, { h: "Round count", w: 12 }, { h: "Barrel life", w: 11 }, { h: "Barrel life used (%)", w: 17 }, { h: "Barrel fitted", w: 13 }, { h: "Last cleaned", w: 13 }, { h: "Clean every", w: 11 }, { h: "Rounds since cleaning", w: 18 }, { h: "Loads using it", w: 13 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] }]);
 }
 function gunsPdf(d, readPhoto) {
   useUnits(d);
   const pdf = new Pdf(), ACC = "#0e5a61", MUTED = "#5b645d", content = pdf.W - 2 * pdf.M;
-  const name = d.user.display_name || d.user.username, today = localDay(), guns = gunList(d), photos = d.gunPhotos || [];
+  const name = d.user.display_name || d.user.username, today = localDay(), guns = gunList(d), gid = new Set(guns.map((r) => r.id)), photos = (d.gunPhotos || []).filter((p) => gid.has(p.rifle_id));
   pdf.title = `Guns - ${name}`;
   pdf.text(pdf.M, pdf.y + 10, "RANGE BOOK", { size: 11, bold: true, color: ACC });
   pdf.y += 40; pdf.text(pdf.M, pdf.y, `Guns of ${name}`, { size: 22, bold: true });
@@ -764,7 +767,7 @@ function gunsPdf(d, readPhoto) {
     pdf.text(pdf.M, pdf.y + 8, "GUN", { size: 9, bold: true, color: ACC });
     pdf.y += 30; pdf.text(pdf.M, pdf.y, r.name || "Unnamed gun", { size: 18, bold: true });
     pdf.y += 12; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y); pdf.y += 6;
-    const facts = [["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, 0) : r.barrel ? r.barrel + " in" : ""], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""],
+    const facts = [["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, 0) : r.barrel ? r.barrel + " in" : ""], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""], ["Scope", scopeTxt(r, d)],
       ["Round count", rc.total ? rc.total.toLocaleString("en-US") + (rc.base ? ` (${rc.base.toLocaleString("en-US")} before Range Book)` : "") : ""], ["Barrel life", rc.life ? rc.life.toLocaleString("en-US") + " rounds" + (rc.pct != null ? `, ${rc.pct}% used` : "") : ""],
       ["Barrel fitted", r.barrelSince ? fmtDate(r.barrelSince) : ""], ["Last cleaned", r.cleaned ? fmtDate(r.cleaned) + (rc.since != null ? ` (${rc.since} rounds since)` : "") : ""], ["Clean every", numv(r.cleanEvery) ? numv(r.cleanEvery) + " rounds" : ""]].filter((x) => x[1]);
     const colW = content / 2;

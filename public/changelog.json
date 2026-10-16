@@ -2,7 +2,20 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.7.5",
+      "version": "2.8.0",
+      "date": "2026-10-16",
+      "title": "Scopes and your own reticle",
+      "items": [
+        "Guns & Ammo → Scopes: add your scopes from a list of about 40 popular ones (power, focal plane, MOA or MIL, click value and reticle name from the makers' published specs), or enter one yourself, and put each on a gun.",
+        "A gun's scope sets MOA or MIL for every Shooting load that uses it, and its name goes on the dope card.",
+        "Second focal plane scopes: enter the power the marks are true at, then pick the power you're on under the dope card's reticle and the hold is worked out in marks.",
+        "Change how it looks: a window with a preview to set the plain reticle's marks, holdover dots, numbers, center and lines so it looks like yours.",
+        "Use a picture of your own reticle: upload it to the scope, tap the center and a mark a known distance away, and the dope card puts the dot on your reticle. Private to you and in your backups.",
+        "The guns Excel and PDF exports list each gun's scope."
+      ]
+    },
+    {
+      "version": "2.7",
       "date": "2026-10-16",
       "title": "Help where you need it",
       "items": [

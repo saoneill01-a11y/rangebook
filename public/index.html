@@ -467,6 +467,30 @@ table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
 #dopeCard table.dope tbody tr.sel td{background:color-mix(in srgb,var(--accent) 24%,transparent)!important;font-weight:700}
 #dopeCard table.dope tbody tr.sel td:first-child{box-shadow:inset 4px 0 0 var(--accent)}
 #dopeCard table.dope tbody tr[data-dx]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.catmk{margin:14px 0 6px;font-size:15px}
+.scret{grid-template-columns:minmax(0,260px) minmax(0,1fr)!important;align-items:center;margin-top:8px}
+.scret .retsvg{max-width:260px}
+.scraw{max-width:100%;max-height:260px;display:block;border-radius:10px;border:1px solid var(--line);background:#fff}
+@media(max-width:600px){.scret{grid-template-columns:1fr!important}.scret .retsvg{margin:0 auto}}
+.lookwin .infosheet,.calwin .infosheet{max-width:640px}
+.lookprev .retsvg{max-width:240px;margin:0 auto 10px}
+.lookgrid{margin-bottom:6px}
+.lookbtns{margin-top:12px;gap:8px;flex-wrap:wrap}.lookbtns .grow,.calmodes .grow{flex:1}
+.calstep{margin:0 0 8px}
+.calmodes{gap:6px;margin-bottom:8px}.calmodes .btn.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg,#fff)}
+.calbox{max-height:52vh;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff;touch-action:pan-x pan-y}
+.calinner{position:relative;width:100%;cursor:crosshair}
+.calinner img{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}
+.calinner svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.calval{gap:8px;align-items:center;margin-top:10px}.calval input{max-width:90px}
+@media(max-width:760px){.calwin .infosheet{max-height:94vh}.calbox{max-height:46vh}}
+:root[data-palette="night"] .retpic,:root[data-palette="night"] .scraw,:root[data-palette="night"] .calinner img{filter:invert(1) grayscale(1) brightness(.6) sepia(1) saturate(10) hue-rotate(-40deg);color-interpolation-filters:sRGB}
+:root[data-palette="night"] .retpicbg{fill:#000}:root[data-palette="night"] .calbox,:root[data-palette="night"] .scraw{background:#000}
+.unitsw button:disabled{opacity:.55;cursor:default}
+#d_unitNote{display:block;margin-top:4px;font-size:12px}
+.retpwr{display:flex;align-items:center;gap:8px;margin-bottom:6px}.retpwr label{font-size:13px;color:var(--muted)}.retpwr select{width:auto}
+.sfpnote{margin:0 0 8px}
+.retbtns{margin-top:6px;gap:8px;align-items:center}
 .retsheetw .retwrap{grid-template-columns:1fr}.retsheetw .retsvg{max-width:260px;margin:0 auto}
 .retnav{display:flex;gap:8px;margin-top:12px}.retnav .btn{flex:1;justify-content:center}
 .retwrap{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:16px;align-items:center}
@@ -1140,14 +1164,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="field"><label for="d_from">From (<span data-unit="yd">yd</span>)</label><input id="d_from" type="number" inputmode="numeric" step="1"></div>
       <div class="field"><label for="d_to">To (<span data-unit="yd">yd</span>)</label><input id="d_to" type="number" inputmode="numeric" step="1"></div>
       <div class="field"><label for="d_step">Every (<span data-unit="yd">yd</span>)</label><input id="d_step" type="number" inputmode="numeric" step="1"></div>
-      <div class="field"><span class="flabel" id="d_unitL">Scope clicks in</span><div class="unitsw" role="group" aria-labelledby="d_unitL"><button type="button" data-du="moa" aria-pressed="false">MOA</button><button type="button" data-du="mil" aria-pressed="false">MIL</button></div><select id="d_unit" hidden tabindex="-1" aria-hidden="true"><option value="moa">MOA</option><option value="mil">MIL</option></select></div>
+      <div class="field"><span class="flabel" id="d_unitL">Scope clicks in</span><div class="unitsw" role="group" aria-labelledby="d_unitL"><button type="button" data-du="moa" aria-pressed="false">MOA</button><button type="button" data-du="mil" aria-pressed="false">MIL</button></div><select id="d_unit" hidden tabindex="-1" aria-hidden="true"><option value="moa">MOA</option><option value="mil">MIL</option></select><span class="note" id="d_unitNote" hidden></span></div>
       <div class="field"><label for="rt_mode">Reticle: elevation</label><select id="rt_mode" class="fieldselect"><option value="hold">Hold it (no dialing)</option><option value="dial">Dial it, hold the wind</option></select></div>
     </div>
     <p class="note dopehint">Tap a distance on the card to see it on the reticle.</p>
     <div class="dopecombo"><div id="dopeCard" class="dopecard"></div><div class="retpane" id="retPane" aria-live="polite"><div id="retBox" class="retbox"></div></div></div>
     <div class="row"><button class="btn primary" id="dopeField" type="button">Field mode</button><button class="btn" id="dopePrint" type="button">Print dope card</button></div>
     <div class="row"><button class="btn" id="hitTool" type="button">Hit chance at a distance</button></div>
-    <p class="note">A small card to tape to your stock or keep in your range bag. It uses the zero your scope is set to, the conditions above and the crosswind you entered. Up is how far to dial up; wind is how far to hold or dial into the wind. The reticle is a plain one in your scope's units, with marks every 1 MIL (half MIL between) or every 2 MOA (1 MOA between); it isn't any particular brand's reticle, so count the marks on yours. Put the target on the dot. It adds spin drift when the bullet length and twist are filled in.</p>
+    <p class="note">A small card to tape to your stock or keep in your range bag. It uses the zero your scope is set to, the conditions above and the crosswind you entered. Up is how far to dial up; wind is how far to hold or dial into the wind. The reticle is a plain one in your scope's units (tap <b>Change how it looks</b> to make it like yours), or a picture of your own reticle if you've added one to the gun's scope under Guns &amp; Ammo → Scopes. The plain one isn't any brand's design, so count the marks on yours. Put the target on the dot. It adds spin drift when the bullet length and twist are filled in.</p>
   </section>
 
   <section class="card" aria-label="Saved ranges" id="secTRanges">
@@ -1248,7 +1272,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the switch). It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold, in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
       <h3>Reticle holds</h3>
-      <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> switch (Scope clicks in) sets both the card and the reticle. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
+      <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> switch (Scope clicks in) sets both the card and the reticle; when the load's gun has a scope (Guns &amp; Ammo → Scopes), the scope sets it and the reticle can look like yours, or be a picture of it. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
       <h3>Saved ranges</h3>
       <p>Save the places you shoot under <b>Saved ranges</b>: tap <b>+ New range</b>, give it a name, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Tap <b>Done</b> and it lists the dial and wind for every target with this load. The size column shows the target in MOA or MIL, so you can see how much room you have. <b>Use these conditions</b> sets the load's temperature and altitude to the range's usual ones. Ranges are shared by all your Shooting loads, and their names show up under <b>Where</b> on range trips.</p>
       <h3>The inputs fold up on a phone</h3>
@@ -1369,6 +1393,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The <b>Guns &amp; Ammo</b> tab lists your guns under <b>Guns</b>. Tap <b>+ Add gun</b> or tap a gun to open it, then fill in its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the loads and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
       <h3>Round count and barrel life</h3>
       <p>Each gun's page has a <b>Round count</b>. It adds the rounds from range trips on Shooting loads that use that gun, the shots in your load-development groups on Reloading loads that use it, and the <b>Rounds before Range Book</b> you enter. Fill in <b>Barrel life</b> to see a bar of how much is used (it turns red at 80%, and Home warns you). Set <b>Clean every</b> and tap <b>Cleaned today</b> after cleaning to see the rounds since then; Home tells you when it's due. When you fit a new barrel, set <b>Barrel fitted on</b> to that date and <b>Rounds before Range Book</b> to 0.</p>
+      <h3>Scopes</h3>
+      <p><b>Guns &amp; Ammo → Scopes</b> keeps your scopes. Tap <b>+ Add scope</b> and search the list of about 40 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting load that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
+      <p><b>Second focal plane</b> scopes have marks that are only their true size at one power, often the highest (the scope's manual says). Enter it in <b>Marks true at power</b>. On the dope card's reticle a <b>Scope power</b> picker then works out the hold in marks for the power you're on; at the true power it's the same as the MIL or MOA.</p>
+      <h3>Make the reticle look like yours</h3>
+      <p>Range Book's reticle is a plain one, not any brand's design. Tap <b>Change how it looks</b> (on the scope's page, or under the reticle on the dope card) to open a window with a preview where you pick where the main marks are, the small marks between them, the holdover dots (a full grid, a tree that widens as it goes down, or none), the numbers, the center (lines that meet, an open center, or an open center with a dot) and the line thickness. <b>Back to the standard look</b> undoes it.</p>
+      <h3>Your own reticle picture</h3>
+      <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
       <h3>Ammunition</h3>
       <p><b>Guns &amp; Ammo → Ammunition</b> keeps the ammo you shoot, in two lists: <b>Reloaded ammo</b> and <b>Factory ammo</b>. Each one counts the rounds you have on hand (loaded or bought, minus what your range trips fire) and can warn you when you're running low.</p>
       <h3>Reloaded ammo</h3>
@@ -1417,7 +1448,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-rifles" role="tabpanel" aria-labelledby="tab-rifles" hidden>
     <header class="phead"><button class="backbtn" id="rifHeadBack" type="button" hidden aria-label="Back to the list">‹ Guns</button><h1 id="rifTitle">Guns and Ammo</h1><p class="sub" id="rifSub">Your guns (barrel, twist, sight height, round count) and the ammunition you shoot, factory and reloaded.</p></header>
-    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Guns and Ammo"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammunition</button></div>
+    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Guns and Ammo"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammunition</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button></div>
     <div id="riflesRoot" style="display:flex;flex-direction:column;gap:14px"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-brass" role="tabpanel" aria-labelledby="tab-rel" hidden>
@@ -1631,6 +1662,116 @@ window.DIA={
   };
   window.addEventListener("pagehide",()=>finish(true));
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")finish(true);});
+})();
+</script>
+<script>
+/* ---------- reticles: the plain one (with your choice of looks), or a picture of yours with its scale set ----------
+   Everything is in reticle units (MIL or MOA) with the center at 0,0; right and down are positive. */
+(function(){
+  const escR=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  let uid=0;
+  const DEF=unit=>unit==="mil"?{main:1,sub:1,tree:"grid",num:2,center:"cross",weight:"normal"}:{main:2,sub:1,tree:"grid",num:5,center:"cross",weight:"normal"};
+  const look=(unit,L)=>Object.assign(DEF(unit),L||{});
+  const MAINS={mil:[[1,"Every 1 MIL"],[0.5,"Every ½ MIL"]],moa:[[1,"Every 1 MOA"],[2,"Every 2 MOA"],[5,"Every 5 MOA"],[10,"Every 10 MOA"]]};
+  // o: {unit, look, pic:{url,cx,cy,ppu,w,h}, dx, dy, view, size, label}
+  function svg(o){
+    const MIL=o.unit==="mil",lk=look(o.unit,o.look),id="rc"+(++uid),W=o.size||300,c=W/2;
+    const span=MIL?10:40,minV=MIL?3:10;
+    const has=o.dx!=null&&o.dy!=null;
+    const view=o.view||Math.min(span,Math.max(minV,has?Math.abs(o.dx)*1.35:0,has?Math.abs(o.dy)*1.35:0)),k=(W/2-14)/view;
+    const P=(u,v)=>[c+u*k,c+v*k],f=n=>n.toFixed(1),wt=lk.weight==="thin"?.7:lk.weight==="thick"?1.7:1;
+    let g='<svg class="retsvg" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="'+escR(o.label||"Reticle")+'"><defs><clipPath id="'+id+'"><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'"/></clipPath></defs>';
+    if(o.pic&&o.pic.url&&o.pic.ppu>0){
+      const s=k/o.pic.ppu;
+      g+='<circle class="retpicbg" cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="#fff"/><g clip-path="url(#'+id+')"><image class="retpic" href="'+escR(o.pic.url)+'" x="'+f(c-o.pic.cx*s)+'" y="'+f(c-o.pic.cy*s)+'" width="'+f(o.pic.w*s)+'" height="'+f(o.pic.h*s)+'" preserveAspectRatio="none"/></g><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="none" stroke="var(--line)" stroke-width="2"/>';
+    }else{
+      g+='<circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="var(--sunk)" stroke="var(--line)" stroke-width="2"/><g clip-path="url(#'+id+')" stroke="var(--fg)">';
+      const M=lk.main,sub=lk.sub|0,st=M/(sub+1),gap=lk.center==="cross"?0:Math.min(M*.6,view*.2)*k;
+      // the crosshair, with a gap in the middle for an open center
+      g+='<path d="M0 '+c+'H'+(c-gap)+'M'+(c+gap)+' '+c+'H'+W+'M'+c+' 0V'+(c-gap)+'M'+c+' '+(c+gap)+'V'+W+'" stroke-width="'+f(1.2*wt)+'" fill="none"/>';
+      if(lk.center==="dot")g+='<circle cx="'+c+'" cy="'+c+'" r="'+f(1.8*wt+.6)+'" fill="var(--fg)" stroke="none"/>';
+      for(let i=1;i*st<=span+1e-9;i++){const t=i*st,isBig=i%(sub+1)===0,len=isBig?7:4,sw=f((isBig?1.4:1)*wt);
+        if(t*k<gap-1)continue;
+        [t,-t].forEach(u=>{const [px]=P(u,0);g+='<line x1="'+f(px)+'" y1="'+(c-len)+'" x2="'+f(px)+'" y2="'+(c+len)+'" stroke-width="'+sw+'"/>';});
+        [t,-t].forEach(v=>{const [,py]=P(0,v);g+='<line x1="'+(c-len)+'" y1="'+f(py)+'" x2="'+(c+len)+'" y2="'+f(py)+'" stroke-width="'+sw+'"/>';});
+        if(isBig&&lk.tree!=="none"&&t<=view+M){const n=Math.floor(view/M);
+          for(let j=-n;j<=n;j++){if(!j)continue;const u=j*M;if(lk.tree==="tree"&&Math.abs(u)>t*.7+M)continue;const [px,py]=P(u,t);g+='<circle cx="'+f(px)+'" cy="'+f(py)+'" r="'+f(1.3*wt+.2)+'" fill="var(--fg)" stroke="none" opacity=".75"/>';}}
+        const nn=lk.num|0;if(isBig&&nn&&t<=view&&Math.round(t/M)%nn===0){const lab=+t.toFixed(2);const [px]=P(t,0),[,py]=P(0,t);g+='<text x="'+f(px)+'" y="'+(c-10)+'" font-size="9" text-anchor="middle" fill="var(--muted)" stroke="none">'+lab+'</text><text x="'+(c+10)+'" y="'+f(py+3)+'" font-size="9" fill="var(--muted)" stroke="none">'+lab+'</text>';}
+      }
+      g+='</g>';
+    }
+    if(has){const [hx,hy]=P(o.dx,o.dy);
+      g+='<line x1="'+c+'" y1="'+c+'" x2="'+f(hx)+'" y2="'+f(hy)+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="'+f(hx)+'" cy="'+f(hy)+'" r="7" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>';}
+    return g+'</svg>';
+  }
+  /* a pop-up window (a sheet on a phone) */
+  function win(cls,html){
+    const w=document.createElement("div");w.className="infowrap "+cls;w.hidden=true;
+    w.innerHTML='<div class="infoback" data-wclose></div><div class="infosheet" role="dialog" aria-modal="true">'+html+'</div>';
+    document.body.appendChild(w);const last=document.activeElement;
+    const close=()=>{w.classList.remove("on");setTimeout(()=>w.remove(),180);if(last&&last.focus)last.focus({preventScroll:true});};
+    w.addEventListener("click",e=>{if(e.target.closest("[data-wclose]"))close();});
+    w.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();close();}});
+    w.hidden=false;requestAnimationFrame(()=>{w.classList.add("on");const f=w.querySelector(".infox");if(f)f.focus();});
+    return {el:w,close};
+  }
+  /* change how the plain reticle looks, with a live preview */
+  function editLook(o){
+    const unit=o.unit==="mil"?"mil":"moa",UN=unit==="mil"?"MIL":"MOA";let lk=look(unit,o.look);
+    const opt=(name,list,val)=>'<select class="fieldselect" data-lk="'+name+'">'+list.map(([v,t])=>'<option value="'+v+'"'+(String(v)===String(val)?' selected':'')+'>'+escR(t)+'</option>').join("")+'</select>';
+    const W=win("lookwin",'<div class="infohead"><h2>How the reticle looks</h2><button class="infox" type="button" data-wclose aria-label="Close">✕</button></div>'+
+      '<div class="lookprev" id="lkPrev"></div>'+
+      '<div class="grid lookgrid">'+
+      '<div class="field"><label>Main marks</label>'+opt("main",MAINS[unit],lk.main)+'</div>'+
+      '<div class="field"><label>Small marks between</label>'+opt("sub",[[0,"None"],[1,"One (halfway)"],[4,"Four"],[9,"Nine"]],lk.sub)+'</div>'+
+      '<div class="field"><label>Holdover dots</label>'+opt("tree",[["grid","A full grid below the center"],["tree","A tree that widens as it goes down"],["none","None"]],lk.tree)+'</div>'+
+      '<div class="field"><label>Numbers</label>'+opt("num",[[1,"On every main mark"],[2,"Every 2nd main mark"],[5,"Every 5th main mark"],[0,"None"]],lk.num)+'</div>'+
+      '<div class="field"><label>Center</label>'+opt("center",[["cross","Lines meet in the middle"],["open","Open center"],["dot","Open center with a dot"]],lk.center)+'</div>'+
+      '<div class="field"><label>Lines</label>'+opt("weight",[["thin","Thin"],["normal","Normal"],["thick","Thick"]],lk.weight)+'</div>'+
+      '</div><p class="note">This is a plain '+UN+' reticle, not any brand\'s design. Set it up to look like yours so it\'s easy to count the marks.</p>'+
+      '<div class="row lookbtns"><button class="btn" type="button" id="lkReset">Back to the standard look</button><span class="grow"></span><button class="btn" type="button" data-wclose>Cancel</button><button class="btn primary" type="button" id="lkSave">Save</button></div>');
+    const read=()=>{W.el.querySelectorAll("[data-lk]").forEach(s=>{const k=s.dataset.lk;lk[k]=["main","sub","num"].includes(k)?+s.value:s.value;});};
+    const draw=()=>{read();W.el.querySelector("#lkPrev").innerHTML=svg({unit,look:lk,dx:unit==="mil"?-0.8:-2.8,dy:unit==="mil"?2.6:9,label:"Preview of the reticle"});};
+    W.el.querySelectorAll("[data-lk]").forEach(s=>s.addEventListener("change",draw));
+    W.el.querySelector("#lkReset").addEventListener("click",()=>{const d=DEF(unit);W.el.querySelectorAll("[data-lk]").forEach(s=>{s.value=String(d[s.dataset.lk]);});draw();});
+    W.el.querySelector("#lkSave").addEventListener("click",()=>{read();W.close();o.onSave(Object.assign({},lk));});
+    draw();
+  }
+  /* set the scale of a reticle picture: tap the center, then a mark a known distance from it */
+  function calibrate(o){
+    const unit=o.unit==="mil"?"mil":"moa",UN=unit==="mil"?"MIL":"MOA";const c0=o.cal||{};
+    let cx=c0.cx!=null?c0.cx:null,cy=c0.cy!=null?c0.cy:null,mx=c0.mx!=null?c0.mx:null,my=c0.my!=null?c0.my:null,val=c0.val||(unit==="mil"?5:10),mode=cx==null?"c":"m",zoom=1;
+    const W=win("calwin",'<div class="infohead"><h2>Set the scale</h2><button class="infox" type="button" data-wclose aria-label="Close">✕</button></div>'+
+      '<p class="calstep" id="calStep"></p>'+
+      '<div class="row calmodes" role="group" aria-label="What a tap places"><button class="btn small" type="button" data-cm="c">Center</button><button class="btn small" type="button" data-cm="m">Mark</button><span class="grow"></span><button class="btn small" type="button" id="calOut" aria-label="Zoom out">−</button><button class="btn small" type="button" id="calIn" aria-label="Zoom in">+</button></div>'+
+      '<div class="calbox" id="calBox"><div class="calinner" id="calInner"><img id="calImg" alt="Your reticle picture" src="'+escR(o.url)+'" draggable="false"><svg id="calSvg" viewBox="0 0 '+o.w+' '+o.h+'" preserveAspectRatio="none"></svg></div></div>'+
+      '<div class="row calval"><label for="calV">That mark is</label><input id="calV" type="number" inputmode="decimal" step="any" min="0.1" value="'+val+'"><span>'+UN+' from the center</span></div>'+
+      '<p class="note">Use a mark far from the center for the best accuracy, like the 5 '+(unit==="mil"?"MIL":"MOA")+' mark on the line to the right. Zoom in with + to place it exactly. If your picture\'s marks are only true at one power (second focal plane), use a picture of the reticle as the maker draws it.</p>'+
+      '<div class="row lookbtns"><span class="grow"></span><button class="btn" type="button" data-wclose>Cancel</button><button class="btn primary" type="button" id="calSave">Save</button></div>');
+    const E=id=>W.el.querySelector("#"+id),img=E("calImg"),sv=E("calSvg");
+    const draw=()=>{
+      W.el.querySelectorAll("[data-cm]").forEach(b=>{b.classList.toggle("on",b.dataset.cm===mode);b.setAttribute("aria-pressed",b.dataset.cm===mode?"true":"false");});
+      E("calInner").style.width=(zoom*100)+"%";
+      const r=Math.max(o.w,o.h)/90/zoom;let h="";
+      if(cx!=null)h+='<path d="M'+(cx-r*3)+' '+cy+'H'+(cx+r*3)+'M'+cx+' '+(cy-r*3)+'V'+(cy+r*3)+'" stroke="#e0218a" stroke-width="'+r/2.5+'"/><circle cx="'+cx+'" cy="'+cy+'" r="'+r*1.6+'" fill="none" stroke="#e0218a" stroke-width="'+r/2.5+'"/>';
+      if(mx!=null)h+='<circle cx="'+mx+'" cy="'+my+'" r="'+r*1.4+'" fill="none" stroke="#0a9396" stroke-width="'+r/2.5+'"/><circle cx="'+mx+'" cy="'+my+'" r="'+r/2+'" fill="#0a9396"/>';
+      if(cx!=null&&mx!=null)h+='<line x1="'+cx+'" y1="'+cy+'" x2="'+mx+'" y2="'+my+'" stroke="#0a9396" stroke-width="'+r/3+'" stroke-dasharray="'+r+' '+r+'"/>';
+      sv.innerHTML=h;
+      E("calStep").innerHTML=cx==null?'<b>1.</b> Tap the exact center of the crosshair.':mx==null?'<b>2.</b> Now tap a mark on the line, a known distance from the center.':'<b>3.</b> Enter how far that mark is from the center, then <b>Save</b>. Tap <b>Center</b> or <b>Mark</b> to move one.';
+      E("calSave").disabled=!(cx!=null&&mx!=null&&Math.hypot(mx-cx,my-cy)>3);
+    };
+    E("calInner").addEventListener("click",e=>{const rc=img.getBoundingClientRect();if(!rc.width)return;
+      const x=(e.clientX-rc.left)/rc.width*o.w,y=(e.clientY-rc.top)/rc.height*o.h;
+      if(mode==="c"){cx=x;cy=y;if(mx==null)mode="m";}else{mx=x;my=y;}draw();});
+    W.el.querySelectorAll("[data-cm]").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.cm;draw();}));
+    const zoomTo=z=>{const bx=E("calBox"),fx=(bx.scrollLeft+bx.clientWidth/2)/bx.scrollWidth,fy=(bx.scrollTop+bx.clientHeight/2)/bx.scrollHeight;zoom=Math.max(1,Math.min(8,z));draw();
+      requestAnimationFrame(()=>{bx.scrollLeft=fx*bx.scrollWidth-bx.clientWidth/2;bx.scrollTop=fy*bx.scrollHeight-bx.clientHeight/2;});};
+    E("calIn").addEventListener("click",()=>zoomTo(zoom*2));E("calOut").addEventListener("click",()=>zoomTo(zoom/2));
+    E("calSave").addEventListener("click",()=>{const v=parseFloat(E("calV").value);if(!(v>0)){E("calV").focus();return;}
+      const d=Math.hypot(mx-cx,my-cy);W.close();o.onSave({cx:+cx.toFixed(1),cy:+cy.toFixed(1),mx:+mx.toFixed(1),my:+my.toFixed(1),val:v,ppu:+(d/v).toFixed(4),w:o.w,h:o.h});});
+    draw();
+  }
+  window.RB_RET={svg,look,editLook,calibrate,DEF};
 })();
 </script>
 <script>
@@ -2031,10 +2172,11 @@ $("rg_pick").addEventListener("change",e=>{state.rangeCur=e.target.value||null;s
 $("rg_edit").addEventListener("click",()=>{RG_EDIT=!RG_EDIT;renderRanges();if(!RG_EDIT)render();});
 $("rg_new").addEventListener("click",()=>{const r={id:rgId(),name:"",targets:[{id:rgId(),name:"",dist:U.metric?100/0.9144:100,angle:null,size:null}],temp:null,alt:null,notes:""};rgList().push(r);state.rangeCur=r.id;RG_EDIT=true;save();renderRanges();const n=$("rg_name");if(n)n.focus();});
 // the holds for one distance drawn on a plain reticle: the dot is where the target goes
+const scopeName=sc=>[sc.mfr,sc.model].filter(Boolean).join(" ")||"Unnamed scope";
 function renderReticle(L,S,zs,path){
   const box=$("retBox");if(!box)return;
-  const o=dopeOpts(L),ai=Math.round(L.adj||0)-1,za=(ai>=0&&ai<4)?zs[ai]:null;
-  if(!za){box.innerHTML='<p class="note">Pick the circle on a zero you have filled in (the zero boxes under the chart).</p>';return;}
+  const o=dopeOpts(L),ai=Math.round(L.adj||0)-1,za=(ai>=0&&ai<4)?zs[ai]:null,sc=o.scope;
+  if(!za){box.innerHTML='<p class="note">Pick the circle on a zero you have filled in (the zero boxes under the chart).</p>';retNav();return;}
   const R0=L.ret||{},lim=Math.min(S.MR,S.last);
   if(!DOPE||DOPE.selX==null){box.innerHTML='<p class="note">No distances on the card. Check From, To and Every.</p>';retNav();return;}
   const x=Math.min(DOPE.selX,lim);$("rt_mode").value=R0.mode==="dial"?"dial":"hold";
@@ -2042,36 +2184,37 @@ function renderReticle(L,S,zs,path){
   const up=-path(x,za)/per,wind=(L.wind||0)*crossFactor(L),side=windSide(L);
   const wd=wind*1.46667*(S.at(S.t,x)-x*3/L.mv)*12/per,sp=S.sg!=null?(spinIn(S.sg,S.at(S.t,x))||0)/per:0;
   // where the bullet goes from the center, in reticle units (right and down are positive)
-  const dx=(side==="right"?-wd:side==="left"?wd:0)+sp,dial=R0.mode==="dial",dy=dial?0:up;
-  const big=MIL?1:2,small=MIL?.5:1,span=MIL?10:36;
-  const view=Math.min(span,Math.max(MIL?3:10,Math.abs(dx)*1.35,Math.abs(dy)*1.35)),W=300,c=150,k=(W/2-14)/view;
-  const P=(u,v)=>[c+u*k,c+v*k];
-  let g='<svg class="retsvg" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="Reticle with the hold for '+U.s("yd",x,0)+'"><defs><clipPath id="retClip"><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'"/></clipPath></defs>';
-  g+='<circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="var(--sunk)" stroke="var(--line)" stroke-width="2"/><g clip-path="url(#retClip)" stroke="var(--fg)">';
-  g+='<line x1="0" y1="'+c+'" x2="'+W+'" y2="'+c+'" stroke-width="1.2"/><line x1="'+c+'" y1="0" x2="'+c+'" y2="'+W+'" stroke-width="1.2"/>';
-  for(let t=small;t<=span+1e-9;t+=small){const isBig=Math.abs(t/big-Math.round(t/big))<1e-6,len=isBig?7:4;
-    [[t,0],[-t,0]].forEach(([u])=>{const [px]=P(u,0);g+='<line x1="'+px+'" y1="'+(c-len)+'" x2="'+px+'" y2="'+(c+len)+'" stroke-width="'+(isBig?1.4:1)+'"/>';});
-    [[0,t],[0,-t]].forEach(([,v])=>{const [,py]=P(0,v);g+='<line x1="'+(c-len)+'" y1="'+py+'" x2="'+(c+len)+'" y2="'+py+'" stroke-width="'+(isBig?1.4:1)+'"/>';});
-    // a small tree of wind dots under the center
-    if(isBig&&t<=view+big)for(let u=-Math.floor(view/big)*big;u<=view;u+=big){if(!u)continue;const [px,py]=P(u,t);g+='<circle cx="'+px+'" cy="'+py+'" r="1.4" fill="var(--fg)" stroke="none" opacity=".7"/>';}
-    if(isBig&&t<=view&&Math.round(t/big)%(MIL?2:5)===0){const [px]=P(t,0),[,py]=P(0,t);g+='<text x="'+(px)+'" y="'+(c-10)+'" font-size="9" text-anchor="middle" fill="var(--muted)" stroke="none">'+t+'</text><text x="'+(c+10)+'" y="'+(py+3)+'" font-size="9" fill="var(--muted)" stroke="none">'+t+'</text>';}
-  }
-  g+='</g>';
-  const [hx,hy]=P(dx,dy);
-  g+='<line x1="'+c+'" y1="'+c+'" x2="'+hx+'" y2="'+hy+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="'+hx+'" cy="'+hy+'" r="7" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>';
-  g+='</svg>';
+  const dx0=(side==="right"?-wd:side==="left"?wd:0)+sp,dial=R0.mode==="dial",dy0=dial?0:up;
+  // second focal plane: the marks are only true at one power; at another power the same hold covers more or fewer marks
+  const sfp=sc&&sc.fp==="SFP",mag=sc?[num(sc.magMin),num(sc.magMax)]:[null,null],tp=sfp?(num(sc.sfpTrue)||mag[1]||null):null;
+  let pw=sfp&&tp?(num(R0.power)>0?num(R0.power):tp):null;if(pw&&mag[0]&&mag[1])pw=Math.min(mag[1],Math.max(mag[0],pw));
+  const kf=sfp&&tp&&pw?pw/tp:1,dx=dx0*kf,dy=dy0*kf,MK=kf!==1?"marks":UN;
+  const pic=sc&&sc.retMode==="pic"&&sc.pic&&sc.pic.ppu>0&&window.RB_RETPIC?RB_RETPIC(sc.id):null;
+  const g=RB_RET.svg({unit:o.unit,look:sc?sc.look:R0.look,pic:pic?Object.assign({url:pic.url},sc.pic):null,dx,dy,label:"Reticle with the hold for "+U.s("yd",x,0)});
   const f1=n=>{const s2=Math.abs(n).toFixed(1);return s2;};
   const lines=[];
   if(dial)lines.push('Dial <b>'+(up>=0?f1(up)+' '+UN+' up':f1(up)+' '+UN+' down')+'</b>.');
-  const hv=dy===0?'':(dy>0?f1(dy)+' '+UN+' below':f1(dy)+' '+UN+' above'),hh=Math.abs(dx)<.05?'':f1(dx)+' '+UN+' '+(dx>0?'right':'left');
+  const hv=dy===0?'':(dy>0?f1(dy)+' '+MK+' below':f1(dy)+' '+MK+' above'),hh=Math.abs(dx)<.05?'':f1(dx)+' '+MK+' '+(dx>0?'right':'left');
   lines.push(hv||hh?'Put the target on the mark <b>'+(hv&&hh?hv+' and '+hh+' of':hh?hh+' of':hv)+'</b> the center.':'Hold dead on.');
   const why=[];if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+f1(wd)+' '+UN+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+f1(sp)+' '+UN+' right');
-  box.innerHTML='<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+'</div></div>';
+  let pwr='';
+  if(sfp){
+    if(tp){const lo=Math.ceil(mag[0]||1),hi=Math.floor(mag[1]||tp),opts=[];for(let m=lo;m<=hi;m++)opts.push(m);if(!opts.includes(tp))opts.push(tp);opts.sort((a,b)=>a-b);
+      pwr='<div class="retpwr"><label for="rt_pwr">Scope power</label><select id="rt_pwr" class="fieldselect">'+opts.map(m=>'<option value="'+m+'"'+(m===pw?' selected':'')+'>'+m+'x'+(m===tp?' (marks true)':'')+'</option>').join("")+'</select></div>'+
+        '<p class="note sfpnote">Second focal plane: the marks are true at <b>'+tp+'x</b>.'+(kf!==1?' At '+pw+'x each mark covers '+(tp/pw).toFixed(2)+' '+UN+', so the hold is counted in marks; turn it to '+tp+'x to hold in true '+UN+'.':'')+'</p>';}
+    else pwr='<p class="note sfpnote">Second focal plane: enter the power the reticle is true at on the scope\'s page (Guns &amp; Ammo → Scopes) to get holds at other powers. Until then the holds are only right at that power.</p>';
+  }
+  const lookBtn=pic?'':'<button class="btn small" type="button" id="rtLook">Change how it looks</button>';
+  box.innerHTML=pwr+'<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+
+    '<div class="row retbtns">'+lookBtn+(sc?'<span class="note">'+(pic?'Your reticle picture · ':'')+escL(scopeName(sc))+'</span>':'')+'</div></div></div>';
+  const lb=$("rtLook");if(lb)lb.addEventListener("click",()=>RB_RET.editLook({unit:o.unit,look:sc?sc.look:R0.look,onSave:lk=>{
+    if(sc&&window.RB_SCOPE_SAVE)RB_SCOPE_SAVE(sc.id,{look:lk});else{const C=cur();C.ret=Object.assign({},C.ret||{},{look:lk});save();}render();}}));
+  const ps=$("rt_pwr");if(ps)ps.addEventListener("change",()=>{const C=cur();C.ret=Object.assign({},C.ret||{},{power:+ps.value});save();render();});
   retNav();
 }
 // the dope card's distances are kept separately for yards and metres, so each stays in round numbers
-function dopeOpts(L){const d=L.dope||{},M=U.metric?"M":"";const MRx=L.lr?1000:400;
-  return {from:d["from"+M]!=null?d["from"+M]:100,to:d["to"+M]!=null?d["to"+M]:(L.lr?1000:400),step:d["step"+M]!=null?d["step"+M]:(L.lr?50:25),unit:d.unit==="mil"?"mil":"moa",MRx};}
+function dopeOpts(L){const d=L.dope||{},M=U.metric?"M":"";const MRx=L.lr?1000:400,sc=scopeOf(L);
+  return {from:d["from"+M]!=null?d["from"+M]:100,to:d["to"+M]!=null?d["to"+M]:(L.lr?1000:400),step:d["step"+M]!=null?d["step"+M]:(L.lr?50:25),unit:sc?(sc.unit==="mil"?"mil":"moa"):(d.unit==="mil"?"mil":"moa"),MRx,scope:sc};}
 function fillDope(){const o=dopeOpts(cur());$("d_from").value=o.from;$("d_to").value=o.to;$("d_step").value=o.step;$("d_unit").value=o.unit;}
 function renderDope(L,S,zs,path){
   const box=$("dopeCard");if(!box)return;
@@ -2097,10 +2240,11 @@ function renderDope(L,S,zs,path){
     DOPE.rows.forEach((r,i)=>{const d=Math.abs(U.from("yd",r.x)-want);if(d<bd-1e-6){bd=d;bi=i;}});
     DOPE.sel=bi;DOPE.selX=bi>=0?U.from("yd",DOPE.rows[bi].x):null;
     if(bi>=0){const dx=DOPE.rows[bi].x;rows=rows.replace('<tr data-dx="'+dx+'" tabindex="0">','<tr data-dx="'+dx+'" tabindex="0" class="sel" aria-current="true">');}}
-  document.querySelectorAll("[data-du]").forEach(b=>{const on=b.dataset.du===o.unit;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});
+  document.querySelectorAll("[data-du]").forEach(b=>{const on=b.dataset.du===o.unit;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");b.disabled=!!o.scope;});
+  {const sn=$("d_unitNote");if(sn){sn.hidden=!o.scope;if(o.scope)sn.innerHTML='Set by the scope on this gun: <b>'+escL(scopeName(o.scope))+'</b>'+(num(o.scope.click)>0?' ('+o.scope.click+' '+(o.unit==="mil"?"MIL":"MOA")+' clicks)':'')+'.';}}
   const today=new Date();const ds=today.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
   box.innerHTML='<div class="dopehead"><div class="dopename">'+esc(L.name||"Load")+'</div><div class="dopemeta">'+
-    (L.rifleName?esc(L.rifleName)+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
+    (L.rifleName?esc(L.rifleName)+" · ":"")+(o.scope?esc(scopeName(o.scope))+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
     '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+" · "+esc(ds)+"</div></div>"+
     (rows?'<table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table>"
          :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this load slows too much past "+U.s("yd",S.last,0)+")":"")+".</p>");
@@ -2464,6 +2608,10 @@ window.TRAJ_ADD=function(spec){
 let RIFLES=[];
 function escT(t){return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function rifleOf(L){return L.rifleId?RIFLES.find(r=>r.id===L.rifleId):null;}
+// the scope on this load's gun (Guns & Ammo → Scopes), if it has one
+let SCOPES=[];
+function scopeOf(L){const r=rifleOf(L);return r&&r.scopeId?SCOPES.find(x=>x.id===r.scopeId)||null:null;}
+window.TRAJ_SCOPES=function(list){SCOPES=Array.isArray(list)?list:[];if(TVIEW==="detail")render();};
 function fillRifle(){
   const sel=$("f_rifle"),L=cur(),r=rifleOf(L);
   let h='<option value="">No gun</option>'+RIFLES.map(x=>'<option value="'+escT(x.id)+'">'+escT(x.name||"Unnamed gun")+'</option>').join("");
@@ -2894,7 +3042,7 @@ function queueRifles(){
   riflesDirty=true;riflesVer++;const my=riflesVer;
   clearTimeout(riflesTimer);
   riflesTimer=setTimeout(()=>{
-    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles))}}))
+    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes))}}))
       .then(()=>{if(riflesVer===my){riflesDirty=false;const el=$("rifleState");if(el)el.textContent="Saved";}},e=>{riflesDirty=false;onWriteError(e);});
   },600);
   const el=$("rifleState");if(el)el.textContent="Saving…";
@@ -2905,11 +3053,12 @@ function syncRifleIntoLoads(r){
 }
 function riflesEditing(){const a=document.activeElement;return a&&$("riflesRoot").contains(a)&&/INPUT|TEXTAREA/.test(a.tagName);}
 let rifleOpen=null;
-document.getElementById("rifHeadBack").addEventListener("click",()=>{rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;renderRifles();window.scrollTo(0,0);});
+document.getElementById("rifHeadBack").addEventListener("click",()=>{if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
+  rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;renderRifles();window.scrollTo(0,0);});
 let ammoReturnTraj=null;
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;ammoOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 function rifleSummary(r){return [num(r.barrel)?U.s("dim",num(r.barrel),0)+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
 /* round count: starting count + rounds from range trips (loads in the calculator using this rifle) + shots in load-development groups */
 function rifleRounds(r){
@@ -3274,6 +3423,7 @@ function renderAmmo(root){
 function renderRifles(){
   const root=$("riflesRoot");if(!root)return;
   document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.setAttribute("aria-selected",b.dataset.garea===gunArea?"true":"false"));
+  if(gunArea==="scopes"){renderScopes(root);return;}
   if(gunArea==="ammo"){
     const a0=ammoOpen&&ammo.find(x=>x.id===ammoOpen);
     renderAmmo(root);
@@ -3290,7 +3440,7 @@ function renderRifles(){
     else{
       h+='<div class="cartgroup">';
       [...rifles].sort((x,y)=>(x.name||"").localeCompare(y.name||"",undefined,{numeric:true})).forEach(r=>{
-        const n=usedBy(r.id).length,d=rifleSummary(r),rc=rifleRounds(r);
+        const n=usedBy(r.id).length,sc0=r.scopeId&&scopes.find(x=>x.id===r.scopeId),d=[rifleSummary(r),sc0?scopeLabel(sc0):""].filter(Boolean).join(" · "),rc=rifleRounds(r);
         const rt=rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
         const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
@@ -3309,6 +3459,7 @@ function renderRifles(){
       field("rf_barrel","Barrel length (in)",r.barrel,"number")+
       field("rf_twist","Twist (1 turn in __ in)",r.twist,"number")+
       field("rf_sightHeight","Sight height over bore (in)",r.sightHeight,"number")+
+      '<div class="field"><label for="rf_scope">Scope</label><select id="rf_scope" class="fieldselect"><option value="">None</option>'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b))).map(x=>'<option value="'+esc(x.id)+'"'+(r.scopeId===x.id?' selected':'')+'>'+esc(scopeLabel(x))+'</option>').join("")+'<option value="__new">+ Add a scope…</option></select>'+(r.scopeId&&scopes.some(x=>x.id===r.scopeId)?'<button class="linkbtn" type="button" id="rfScopeOpen">Open this scope ›</button>':'')+'</div>'+
       '<div class="field wide"><label for="rf_notes">Notes</label><textarea id="rf_notes" style="min-height:90px">'+esc(r.notes||"")+'</textarea></div></div>'+
       '<p class="note">Measure sight height the way the How to Use tab describes. Changing it here also updates the loads that use this gun.</p></section>'+
       (()=>{const ps=gunPhotosOf(r.id);
@@ -3366,6 +3517,126 @@ function renderRifles(){
   root.querySelectorAll("[data-gtraj]").forEach(b=>b.addEventListener("click",()=>RB_TRAJ.open(b.dataset.gtraj)));
   root.querySelectorAll("[data-gtrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.gtrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("gunRangeDay").addEventListener("click",()=>{homePick={gun:r.id};showTab("home");window.scrollTo(0,0);});
+  $("rf_scope").addEventListener("change",e=>{const v=e.target.value;
+    if(v==="__new"){scopeFromGun=r.id;gunArea="scopes";scopeAdding=true;scopeForGun=r.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);return;}
+    mountScope(v||null,r.id);renderRifles();});
+  {const so=$("rfScopeOpen");if(so)so.addEventListener("click",()=>{scopeFromGun=r.id;gunArea="scopes";scopeOpen=r.scopeId;rifleOpen=null;renderRifles();window.scrollTo(0,0);});}
+}
+/* ---------- scopes (Guns & Ammo → Scopes): kept with the guns, one per gun ---------- */
+let scopes=[],scopeOpen=null,scopeAdding=false,scopeQ="",scopeFromGun=null,scopeForGun=null,SCOPE_CAT=null,retUp=0;
+const scopeLabel=x=>[x.mfr,x.model].filter(Boolean).join(" ")||"Unnamed scope";
+const scopeSpec=x=>[num(x.magMin)&&num(x.magMax)?num(x.magMin)+"-"+num(x.magMax)+"x":"",x.fp==="SFP"?"second focal plane":x.fp==="FFP"?"first focal plane":"",(x.unit==="mil"?"MIL":"MOA")+(num(x.click)>0?", "+num(x.click)+" clicks":"")].filter(Boolean).join(" · ");
+function scopesChanged(){queueRifles();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}
+// a gun has one scope, and a scope is on one gun
+function mountScope(sid,rid){rifles.forEach(g=>{if(g.id===rid)g.scopeId=sid||null;else if(sid&&g.scopeId===sid)g.scopeId=null;});queueRifles();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}
+window.RB_SCOPE_SAVE=(id,patch)=>{const x=scopes.find(y=>y.id===id);if(!x)return;Object.assign(x,patch);scopesChanged();if(gunArea==="scopes"&&scopeOpen===id&&!$("panel-rifles").hidden)renderRifles();};
+// the newest picture uploaded for a scope (kept with the gun photos, private to you)
+window.RB_RETPIC=id=>{const ps=gunPhotos.filter(q=>q.rifle===id);return ps.length?ps[ps.length-1]:null;};
+function loadScopeCat(){return SCOPE_CAT?Promise.resolve(SCOPE_CAT):fetch("/scopes.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>(SCOPE_CAT=j.scopes||[]));}
+function newScope(f){const x=Object.assign({id:"s"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",model:"",magMin:null,magMax:null,obj:null,fp:"FFP",sfpTrue:null,unit:"mil",click:0.1,reticle:"",notes:"",retMode:"plain",look:null,pic:null},f||{});
+  scopes.push(x);if(scopeForGun&&rifles.some(g=>g.id===scopeForGun))mountScope(x.id,scopeForGun);scopeForGun=null;scopesChanged();scopeAdding=false;scopeOpen=x.id;return x;}
+async function retJpeg(file){
+  const im=await loadImage(file),k=Math.min(1,2000/Math.max(im.naturalWidth,im.naturalHeight));
+  const w=Math.round(im.naturalWidth*k),h=Math.round(im.naturalHeight*k),c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);
+  return {data:c.toDataURL("image/jpeg",.92),w,h};
+}
+async function uploadRetPic(sc,file){
+  retUp++;renderRifles();
+  try{const {data,w,h}=await retJpeg(file);const old=gunPhotos.filter(q=>q.rifle===sc.id);
+    const res=await API.post("/api/gunphotos",{data,w,h,rifle:sc.id});
+    if(res&&res.photo){gunPhotos.push(res.photo);old.forEach(q=>{gunPhotos=gunPhotos.filter(z=>z!==q);API.del("/api/gunphotos/"+q.id).catch(()=>{});});
+      sc.pic=null;sc.retMode="pic";scopesChanged();retUp--;renderRifles();calScope(sc);return;}
+    else if(res&&res.queued)banner("No signal: the picture will upload when you're back online. Set its scale after that.",false);}
+  catch(e){if(e&&(e.status||e.network))onWriteError(e);else banner("That picture couldn't be read. Try a JPEG or PNG.",true);}
+  retUp--;renderRifles();
+}
+function calScope(sc){const ph=RB_RETPIC(sc.id);if(!ph)return;
+  const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{sc.pic=cal;sc.retMode="pic";scopesChanged();renderRifles();}});
+  if(ph.w&&ph.h)go(ph.w,ph.h);else{const im=new Image();im.onload=()=>go(im.naturalWidth,im.naturalHeight);im.src=ph.url;}}
+function renderScopes(root){
+  if(scopeOpen&&!scopes.some(x=>x.id===scopeOpen))scopeOpen=null;
+  const sc=scopeOpen&&scopes.find(x=>x.id===scopeOpen),onGun=x=>rifles.filter(g=>g.scopeId===x.id);
+  let h;
+  if(scopeAdding){
+    h='<section class="card" aria-label="Add a scope"><h2>Add a scope</h2><p class="note">Pick yours to fill in its power, focal plane, units and click value from the maker\'s published specs, or enter it yourself.</p>'+
+      '<div class="row"><input id="scopeQ" type="search" placeholder="Search: maker, model, MIL or MOA" value="'+esc(scopeQ)+'" aria-label="Search scopes" style="flex:1 1 220px"><button class="btn" type="button" id="scopeOwn">+ Enter a scope yourself</button></div><div id="scopeCat"><p class="note">Loading the list…</p></div></section>';
+  }else if(!sc){
+    h='<section class="card" aria-label="Scopes list"><div class="row"><button class="btn primary" id="scopeAdd" type="button">+ Add scope</button></div>';
+    if(!scopes.length)h+='<p class="note">No scopes yet. Add the scope on each gun: its units and click value then set the dope card for every load that uses that gun, and the reticle on the card can look like yours.</p>';
+    else h+='<div class="cartgroup">'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true})).map(x=>{const gs=onGun(x);
+      return '<button class="loaditem" type="button" data-sopen="'+esc(x.id)+'"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc(scopeSpec(x))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></button>';}).join("")+'</div>';
+    h+='</section>';
+  }else{
+    const gs=onGun(sc),MIL=sc.unit==="mil",ph=RB_RETPIC(sc.id),usePic=sc.retMode==="pic";
+    const clicks=MIL?[[0.1,"0.1 MIL"],[0.05,"0.05 MIL"],[0.2,"0.2 MIL"]]:[[0.25,"¼ MOA"],[0.125,"⅛ MOA"],[0.5,"½ MOA"],[1,"1 MOA"]];
+    const sel=(id,opts,v)=>'<select id="'+id+'" class="fieldselect">'+opts.map(([a,b])=>'<option value="'+a+'"'+(String(a)===String(v)?' selected':'')+'>'+b+'</option>').join("")+'</select>';
+    h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Scope"><h2>Details</h2><div class="grid">'+
+      field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+
+      field("sc_magMin","Power from (x)",sc.magMin,"number")+field("sc_magMax","Power to (x)",sc.magMax,"number")+field("sc_obj","Objective (mm)",sc.obj,"number")+
+      '<div class="field"><label for="sc_fp">Focal plane</label>'+sel("sc_fp",[["FFP","First (FFP)"],["SFP","Second (SFP)"]],sc.fp)+'</div>'+
+      (sc.fp==="SFP"?field("sc_sfpTrue","Marks true at power (x)",sc.sfpTrue,"number"):'')+
+      '<div class="field"><label for="sc_unit">Reticle and turrets</label>'+sel("sc_unit",[["mil","MIL (MRAD)"],["moa","MOA"]],sc.unit)+'</div>'+
+      '<div class="field"><label for="sc_click">One click is</label>'+sel("sc_click",clicks,num(sc.click))+'</div>'+
+      field("sc_reticle","Reticle name",sc.reticle,"text"," wide")+
+      '<div class="field"><label for="sc_gun">On gun</label><select id="sc_gun" class="fieldselect"><option value="">None</option>'+[...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"")).map(g=>'<option value="'+esc(g.id)+'"'+(g.scopeId===sc.id?' selected':'')+'>'+esc(g.name||"Unnamed gun")+'</option>').join("")+'</select></div>'+
+      '<div class="field wide"><label for="sc_notes">Notes</label><textarea id="sc_notes" style="min-height:70px">'+esc(sc.notes||"")+'</textarea></div></div>'+
+      (sc.src?'<p class="note">Filled in from the maker\'s published specs (<a href="'+esc(sc.src)+'" target="_blank" rel="noopener">source</a>). Check the click value against your turrets.</p>':'')+
+      (sc.fp==="SFP"?'<p class="note">On a second focal plane scope the reticle\'s marks are only their true size at one power (often the highest; the manual says). Enter it above and the dope card\'s reticle works out holds at the power you\'re on.</p>':'<p class="note">First focal plane: the marks are true at every power.</p>')+
+      '</section>'+
+      '<section class="card" aria-label="Reticle"><h2>Reticle</h2>'+
+      '<div class="row" role="radiogroup" aria-label="Which reticle"><label class="toggle"><input type="radio" name="sc_ret" value="plain"'+(!usePic?' checked':'')+'> Plain reticle</label><label class="toggle"><input type="radio" name="sc_ret" value="pic"'+(usePic?' checked':'')+'> A picture of my reticle</label></div>'+
+      '<div class="retwrap scret"><div id="scPrev"></div><div>'+
+      (!usePic?'<p class="note">A plain '+(MIL?'MIL':'MOA')+' reticle. Make it look like yours (where the marks are, holdover dots, numbers, the center) so it\'s easy to count.</p><div class="row"><button class="btn" type="button" id="scLook">Change how it looks</button></div>'
+        :(window.GUEST?'<p class="note">Reticle pictures need an account.</p>':
+          (ph?(sc.pic&&sc.pic.ppu>0?'<p class="note">Your picture, with the scale set: '+esc(String(sc.pic.val))+' '+(MIL?'MIL':'MOA')+' from the center. The dope card puts the dot on it.</p>':'<p class="err">Set the scale so Range Book knows how big the marks are. Until then the dope card uses the plain reticle.</p>'):
+            '<p class="note">Upload a picture of just your reticle, straight on, like the drawing in the scope\'s manual or on the maker\'s website (a screenshot is fine). It stays private to you.</p>')+
+          '<div class="row"><label class="btn'+(ph?'':' primary')+'" for="scPicIn" style="cursor:pointer">'+(ph?'Replace picture':'+ Upload a picture')+'</label><input id="scPicIn" type="file" accept="image/*" hidden>'+(ph?'<button class="btn'+(sc.pic&&sc.pic.ppu>0?'':' primary')+'" type="button" id="scCal">Set the scale</button><button class="btn danger" type="button" id="scPicDel">Remove picture</button>':'')+'<span class="savestate">'+(retUp?'Uploading…':'')+'</span></div>'))+
+      '</div></div></section>'+
+      '<section class="card" aria-label="Guns with this scope"><h2>On</h2>'+(gs.length?'<div class="cartgroup">'+gs.map(g=>'<button class="loaditem" type="button" data-sgun="'+esc(g.id)+'"><span class="t">'+esc(g.name||"Unnamed gun")+'</span></button>').join("")+'</div><p class="note">Every Shooting load that uses this gun takes its MOA or MIL and reticle from this scope.</p>':'<p class="note">Not on a gun yet. Pick the gun under <b>On gun</b> above.</p>')+'</section>'+
+      '<div class="row endrow"><button class="btn danger" type="button" id="scopeDel">Delete scope</button></div>';
+  }
+  root.innerHTML=h;
+  $("rifSeg").hidden=!!(sc||scopeAdding);$("rifHeadBack").hidden=!(sc||scopeAdding);$("rifHeadBack").textContent=scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)&&sc?"‹ "+(rifles.find(r=>r.id===scopeFromGun).name||"Gun"):"‹ Scopes";$("rifSub").hidden=!!(sc||scopeAdding);
+  $("rifTitle").textContent=sc?scopeLabel(sc):scopeAdding?"Add a scope":"Guns and Ammo";
+  if(scopeAdding){
+    const draw=()=>{const box=$("scopeCat");if(!box||!SCOPE_CAT)return;const q=scopeQ.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      const hit=SCOPE_CAT.map((x,i)=>[x,i]).filter(([x])=>{const t=(x.mfr+" "+x.model+" "+x.unit+" "+(x.unit==="mil"?"mrad":"")+" "+x.fp+" "+x.reticle).toLowerCase();return q.every(w=>t.includes(w));});
+      if(!hit.length){box.innerHTML='<p class="note">No match. Try fewer words, or tap <b>+ Enter a scope yourself</b>.</p>';return;}
+      const by={};hit.forEach(([x,i])=>{(by[x.mfr]=by[x.mfr]||[]).push([x,i]);});
+      box.innerHTML=Object.keys(by).sort().map(m=>'<h3 class="catmk">'+esc(m)+'</h3><div class="cartgroup">'+by[m].map(([x,i])=>'<button class="loaditem" type="button" data-scat="'+i+'"><span class="t">'+esc(x.model)+'</span><span class="d">'+esc([x.unit==="mil"?"MIL, "+x.click+" clicks":"MOA, "+x.click+" clicks",x.fp,x.reticle].filter(Boolean).join(" · "))+'</span></button>').join("")+'</div>').join("");
+      box.querySelectorAll("[data-scat]").forEach(b=>b.addEventListener("click",()=>{const x=SCOPE_CAT[+b.dataset.scat];
+        newScope({mfr:x.mfr,model:x.model,magMin:x.mag[0],magMax:x.mag[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,click:x.click,reticle:x.reticle,src:x.src});renderRifles();window.scrollTo(0,0);}));};
+    loadScopeCat().then(draw).catch(()=>{const b=$("scopeCat");if(b)b.innerHTML='<p class="err">Couldn\'t load the list. Check your connection, or enter the scope yourself.</p>';});
+    $("scopeQ").addEventListener("input",e=>{scopeQ=e.target.value;draw();});
+    $("scopeOwn").addEventListener("click",()=>{newScope({});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();});
+    return;
+  }
+  if(!sc){
+    $("scopeAdd").addEventListener("click",()=>{scopeAdding=true;scopeQ="";renderRifles();window.scrollTo(0,0);const q=$("scopeQ");if(q)q.focus();});
+    root.querySelectorAll("[data-sopen]").forEach(b=>b.addEventListener("click",()=>{scopeOpen=b.dataset.sopen;scopeFromGun=null;renderRifles();window.scrollTo(0,0);}));
+    return;
+  }
+  if(window.foldAll)foldAll(root,"scope");
+  const prev=()=>{const ph=RB_RETPIC(sc.id),pic=sc.retMode==="pic"&&ph&&sc.pic&&sc.pic.ppu>0?Object.assign({url:ph.url},sc.pic):null,box=$("scPrev");if(!box)return;
+    if(sc.retMode==="pic"&&ph&&!pic){box.innerHTML='<img class="scraw" src="'+esc(ph.url)+'" alt="Your reticle picture">';return;}
+    box.innerHTML=RB_RET.svg({unit:sc.unit,look:sc.look,pic,view:sc.unit==="mil"?5:16,label:"Preview of this scope's reticle"});};
+  prev();
+  [["mfr",false],["model",false],["magMin",true],["magMax",true],["obj",true],["sfpTrue",true],["reticle",false],["notes",false]].forEach(([k,isNum])=>{const el=$("sc_"+k);if(!el)return;
+    el.addEventListener("input",()=>{sc[k]=isNum?num(el.value):el.value;scopesChanged();if(k==="mfr"||k==="model")$("rifTitle").textContent=scopeLabel(sc);});});
+  $("sc_fp").addEventListener("change",e=>{sc.fp=e.target.value;scopesChanged();renderRifles();});
+  $("sc_unit").addEventListener("change",e=>{sc.unit=e.target.value;sc.click=sc.unit==="mil"?0.1:0.25;sc.look=null;if(sc.pic)sc.pic=null;scopesChanged();renderRifles();});
+  $("sc_click").addEventListener("change",e=>{sc.click=+e.target.value;scopesChanged();});
+  $("sc_gun").addEventListener("change",e=>{const v=e.target.value;if(v)mountScope(sc.id,v);else{rifles.forEach(g=>{if(g.scopeId===sc.id)g.scopeId=null;});queueRifles();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}renderRifles();});
+  root.querySelectorAll('input[name="sc_ret"]').forEach(r=>r.addEventListener("change",()=>{sc.retMode=r.value;scopesChanged();renderRifles();}));
+  {const b=$("scLook");if(b)b.addEventListener("click",()=>RB_RET.editLook({unit:sc.unit,look:sc.look,onSave:lk=>{sc.look=lk;scopesChanged();prev();}}));}
+  {const fi=$("scPicIn");if(fi)fi.addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)uploadRetPic(sc,f);});}
+  {const b=$("scCal");if(b)b.addEventListener("click",()=>calScope(sc));}
+  {const b=$("scPicDel");if(b)b.addEventListener("click",()=>{const ps=gunPhotos.filter(q=>q.rifle===sc.id),pic0=sc.pic;gunPhotos=gunPhotos.filter(q=>q.rifle!==sc.id);sc.pic=null;sc.retMode="plain";scopesChanged();renderRifles();
+    RB_UNDO("Removed the reticle picture",()=>{gunPhotos=gunPhotos.concat(ps);sc.pic=pic0;sc.retMode="pic";scopesChanged();renderRifles();},()=>{ps.forEach(q=>API.del("/api/gunphotos/"+q.id).catch(()=>{}));});});}
+  root.querySelectorAll("[data-sgun]").forEach(b=>b.addEventListener("click",()=>{gunArea="guns";rifleOpen=b.dataset.sgun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);}));
+  $("scopeDel").addEventListener("click",()=>{const i=scopes.indexOf(sc),on=rifles.filter(g=>g.scopeId===sc.id).map(g=>g.id),ps=gunPhotos.filter(q=>q.rifle===sc.id);
+    scopes=scopes.filter(x=>x!==sc);rifles.forEach(g=>{if(g.scopeId===sc.id)g.scopeId=null;});gunPhotos=gunPhotos.filter(q=>q.rifle!==sc.id);scopeOpen=null;scopesChanged();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles);renderRifles();window.scrollTo(0,0);
+    RB_UNDO("Deleted "+scopeLabel(sc),()=>{scopes.splice(Math.min(i,scopes.length),0,sc);rifles.forEach(g=>{if(on.includes(g.id))g.scopeId=sc.id;});gunPhotos=gunPhotos.concat(ps);scopesChanged();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles);renderRifles();},()=>{if(ps.length&&!window.GUEST)API.del("/api/rifles/"+sc.id+"/photos").catch(()=>{});});});
 }
 
 /* ---------- components: saved bullets, powders and primers (Components tab) ---------- */
@@ -6502,7 +6773,7 @@ async function refresh(first){
       renderComps();}
     if(AM&&!ammoDirty&&!ammoEditing()){ammo=AM.data&&Array.isArray(AM.data.rows)?AM.data.rows:[];if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
-    if(!riflesDirty&&!riflesEditing()){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];renderRifles();}
+    if(!riflesDirty&&!riflesEditing()){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
     if(!$("panel-home").hidden)renderHome();
@@ -6851,6 +7122,9 @@ const INFO={
   secTargets:{t:"Targets",b:"Target photos for each ladder. Tap <b>+ Photo</b> to add one, then tap it and <b>Measure groups</b>; printed Range Book targets are read by themselves. <b>Live target</b> marks the shots as they land through a spotting scope.",h:"Target photos"},
   "@Details":{t:"Details",b:"What this component is, how much you have and what it cost. Fill in <b>On hand</b> and <b>Warn when</b> to keep track of stock; logging a batch takes it out for you. The cost is used for each load's cost per round.",h:()=>{const k=document.querySelector("#compTabs [aria-selected=true]");return k&&k.dataset.ck==="brass"?"Brass lots":"Components: bullets, powders and primers";}},
   "@Loads using this":{t:"Loads",b:"The loads that use this. If you change the details above, loads with the old details are marked; tap <b>Update</b> to copy the new details into them.",h:"Components: bullets, powders and primers"},
+  "@Scope":{t:"Scope details",b:"The scope's power, focal plane, units and click value. Put it on a gun with <b>On gun</b>, and every Shooting load with that gun uses its MOA or MIL. On a second focal plane scope, enter the power the marks are true at so holds work at other powers.",h:"Scopes"},
+  "@Reticle":{t:"Reticle",b:"Pick the plain reticle and tap <b>Change how it looks</b> to make it like yours, or pick <b>A picture of my reticle</b>, upload one and set its scale (tap the center, then a mark a known distance away). The dope card then shows your holds on it.",h:"Your own reticle picture"},
+  "@Add a scope":{t:"Add a scope",b:"Search by maker, model, or MIL or MOA, and tap yours to fill in its specs from the maker's published numbers. Not listed? Tap <b>+ Enter a scope yourself</b>.",h:"Scopes"},
   "@Gun":{t:"Gun details",b:"The gun's serial number, barrel, twist rate, sight height and notes. The sight height and twist fill in on any Shooting load that uses this gun. How to Use shows how to measure sight height.",h:"Measure sight height (height over bore)"},
   secGunPh:{t:"Photos",b:"Pictures of the gun, private to you. The first one shows in your list of guns. With the serial number, they're handy for insurance; <b>Export PDF</b> on the Guns list puts them in one file.",h:"Guns"},
   secRounds:{t:"Round count",b:"Rounds from your range trips and load-development groups with this gun, plus <b>Rounds before Range Book</b>. Fill in <b>Barrel life</b> to see how much is used, and <b>Clean every</b> with <b>Cleaned today</b> to know when it's due.",h:"Round count and barrel life"},
@@ -6878,6 +7152,7 @@ function helpTopic(tab){
   if(tab==="brass"){const k=document.querySelector("#compTabs [aria-selected=true]");return k&&k.dataset.ck==="brass"?"Brass lots":"Components: bullets, powders and primers";}
   if(tab==="rnotes")return "Reloading notes";
   if(tab==="rifles"){const g=document.querySelector('#rifSeg [aria-selected="true"]');if(g&&g.dataset.garea==="ammo"){if(document.querySelector('#panel-rifles [aria-label="Box photo"]'))return "Factory ammo";if(document.querySelector('#panel-rifles [aria-label="Ammo details"]'))return "Reloaded ammo";return "Ammunition";}
+    if(g&&g.dataset.garea==="scopes")return document.querySelector('#panel-rifles [aria-label="Reticle"]')?"Your own reticle picture":"Scopes";
     return document.querySelector('#panel-rifles [aria-label="Round count"]')?"Round count and barrel life":"Guns";}
   if(tab==="tools"){const t=document.querySelector("[data-toolsec]:not([hidden])");return t&&HELP_TOOL[t.dataset.toolsec]||"#hTools";}
   if(tab==="targets")return "Printable targets";
@@ -6903,7 +7178,7 @@ function helpGo(topic){
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     el.scrollIntoView({block:"start"});
     const fl=el.matches("section")?(el.querySelector("h2")||el):el;
-    fl.classList.remove("hflash");void fl.offsetWidth;fl.classList.add("hflash");setTimeout(()=>fl.classList.remove("hflash"),2200);
+    clearTimeout(fl._hft);fl.classList.remove("hflash");void fl.offsetWidth;fl.classList.add("hflash");fl._hft=setTimeout(()=>fl.classList.remove("hflash"),2200);
   }));
   const bb=$("helpBackBtn");if(bb&&helpFrom){bb.querySelector("span").textContent="Back to "+(TAB_NAMES[helpFrom.tab]||"where you were");bb.hidden=false;}
 }
