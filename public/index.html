@@ -637,6 +637,32 @@ h1{font-size:26px}
 .tourcard p{margin:0 0 10px;line-height:1.45;font-size:15px}
 .tourtop{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .tourstep{font-size:12px;color:var(--muted);font-weight:600}
+/* Help button on each page, ⓘ on tiles, and the how-to sheet */
+header.hashelp{position:relative}
+header.hashelp>h1{padding-right:92px}
+.helpbtn{position:absolute;top:0;right:0;display:inline-flex;align-items:center;gap:5px;padding:6px 12px 6px 9px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);color:var(--accent);font:inherit;font-size:14px;font-weight:600;cursor:pointer;line-height:1.1}
+.helpbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.helpbtn:hover,.helpbtn:focus-visible{border-color:var(--accent);outline:none}
+.infobtn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin:-4px 0 -4px 4px;vertical-align:middle;color:var(--accent);cursor:pointer;border-radius:50%;flex:0 0 auto;position:relative;font-size:0}
+.infobtn::after{content:"";position:absolute;inset:-8px}
+.infobtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.infobtn:hover,.infobtn:focus-visible{background:var(--sunk);outline:none}
+.sechead h2 .infobtn{margin-left:6px}
+.infowrap{position:fixed;inset:0;z-index:90}
+.infoback{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .18s}
+.infosheet{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0;padding:16px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .18s ease-out;max-height:80vh;overflow:auto}
+.infowrap.on .infoback{opacity:1}.infowrap.on .infosheet{transform:none}
+.infohead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.infohead h2{margin:0;font-size:18px;flex:1}
+.infox{border:0;background:var(--sunk);color:var(--fg);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;flex:0 0 auto}
+#infoB{margin:0 0 14px;line-height:1.5}
+@media(min-width:761px){.infosheet{top:50%;bottom:auto;border-radius:16px;border-bottom:1px solid var(--line);transform:translateY(-40%);opacity:0;transition:transform .18s,opacity .18s;padding-bottom:18px}.infowrap.on .infosheet{transform:translateY(-50%);opacity:1}}
+@media(prefers-reduced-motion:reduce){.infosheet,.infoback{transition:none}}
+#panel-help h3,#panel-help li{scroll-margin-top:calc(var(--stick,110px) + 8px)}
+.hflash{animation:hflash 2.2s ease-out}
+@keyframes hflash{0%,35%{background:color-mix(in srgb,var(--accent) 22%,transparent);box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent;box-shadow:0 0 0 6px transparent}}
+.helpback{position:fixed;left:16px;bottom:20px;z-index:45;display:inline-flex;gap:4px;align-items:center;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--accent);color:var(--surface);font:inherit;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+@media (max-width:760px){.helpback{bottom:calc(var(--tabh) + 16px + env(safe-area-inset-bottom,0px))}}
 .tourskip{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;padding:4px 2px;text-decoration:underline}
 .tourdots{display:flex;gap:5px;margin:0 0 12px}.tourdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.tourdots i.on{background:var(--accent)}
 .tourbtns{display:flex;justify-content:flex-end;gap:8px}
@@ -1154,7 +1180,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To use metric, go to <b>More → Account → Units</b> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>Pick a color theme under <b>More → Account → Theme</b>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
-      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same.</p>
+      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same. Most pages have a <b>Help</b> button at the top right that opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Guns &amp; Ammo and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <b>Shooting → Range log</b>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting loads, or ammunition from your inventory (it makes the Shooting load for that gun the first time). It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
       <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
@@ -6740,6 +6766,7 @@ const tabs=["home","traj","rel","help","brass","rnotes","targets","log","rifles"
 const TAB_PARENT={brass:"rel",rnotes:"rel",targets:"tools",log:"traj"};
 function showTab(t,remember){
   if(t==="admin"&&!(ME&&ME.isAdmin))t="home";
+  {const hb=$("helpBackBtn");if(hb&&t!=="help")hb.hidden=true;}
   tabs.forEach(k=>{const on=k===t;const b=$("tab-"+k);if(b)b.setAttribute("aria-selected",(on||TAB_PARENT[t]===k)?"true":"false");$("panel-"+k).hidden=!on;});
   $("tab-more").classList.toggle("on",["help","admin","account","tools","targets"].includes(t));closeMore();
   if(remember!==false)window.scrollTo(0,0);
@@ -6757,6 +6784,139 @@ function showTab(t,remember){
   if(t==="admin")loadAdmin();
 }
 window.APP_showTab=showTab;
+
+/* ---------- Help buttons and ⓘ tips ---------- */
+// short how-tos for the tiles; h is the How to Use topic ("#id" a section, "tool:Name" a Tools item, otherwise an h3's text)
+const INFO={
+  secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},
+  secTWx:{t:"Conditions",b:"Temperature, altitude and wind change where the bullet lands. <b>Use the weather where I am</b> fills in today's temperature and air pressure. Enter the wind's speed and the o'clock it comes from (3 is from the right, 9 from the left), and the shot angle for uphill or downhill shots.",h:"Weather where you are"},
+  secTChart:{t:"Bullet path",b:"The bullet's path for up to four zeros, each in its own color. Type the zeros in the boxes under the chart and tap the circle in the one your scope is set to. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
+  secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), then <b>Use the far zero</b> to add it to your zeros. Wind isn't included.",h:"Point-blank range"},
+  secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns, and turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds.",h:"Reading the results"},
+  "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
+  secTDope:{t:"Dope card",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and whether your scope clicks in MOA or MIL, then tap <b>Print dope card</b>. <b>Field mode</b> shows the same holds in big numbers for the bench. <b>Hit chance at a distance</b> opens your odds of a first-round hit with this load.",h:"Print a dope card"},
+  secTRet:{t:"Reticle holds",b:"Shows where to put the target on a plain reticle for the distance you enter. Pick <b>Hold it</b> to hold everything, or <b>Dial it, hold the wind</b>. It uses the conditions and crosswind above. It isn't any brand's reticle, so count the marks on yours.",h:"Reticle holds"},
+  secTRanges:{t:"Saved ranges",b:"Save the places you shoot: tap <b>+ New range</b>, add each target's distance, angle and size, then tap <b>Done</b>. It lists the dial and wind for every target with this load. <b>Use these conditions</b> sets the range's usual temperature and altitude.",h:"Saved ranges"},
+  "@Range trips":{t:"Range trips",b:"A log of each day you shot this load. Tap <b>+ New range trip</b> and fill in what you like: distance, rounds, weather, chronograph strings, target photos and the cold-bore shot. Rounds fired count toward the gun's round count and come off your ammo.",h:"Range trips"},
+  "@Range trip":{t:"Range trip",b:"Fill in what you like about the day. <b>Import chronograph file</b> reads your chronograph's export, and target photos are measured when you tap one (or use <b>Live target</b> on a spotting scope). <b>Cold-bore shot</b> records where your first shot landed. <b>Print trip report</b> makes a PDF of the day.",h:"Range trips"},
+  secBatches:{t:"Loaded rounds",b:"Log each batch you load: how many rounds, the charge, the brass lot and the date. It takes the bullets, primers and powder out of your Components and adds the rounds to your ammo. <b>Remove</b> on a batch puts them back, and <b>Label</b> prints box labels.",h:"Inventory"},
+  secLoad:{t:"Load sheet",b:"The finished load at its working charge, to read at the press. It can't be edited here; switch to <b>Develop</b> to change anything. <b>Use in calculator</b> makes a Shooting load from it.",h:"Develop and Load"},
+  secRecipe:{t:"Recipe",b:"The load's components and measurements. Pick the bullet, powder, primer and brass from your Components (the shaded box above each) to fill in their details, or type them in. Enter your manual's <b>Max charge</b> so groups at or over it are flagged.",h:"Add a load"},
+  secGroups:{t:"Ladder tests",b:"Each ladder is one batch you loaded and shot, with a group per charge. <b>Plan a new ladder</b> makes the groups for you; then type the velocities or tap <b>Import chronograph file</b>. Add target photos or use <b>Live target</b> to measure the groups, and tap <b>Pressure signs</b> on a group if you saw any.",h:"Ladder tests"},
+  secMake:{t:"Ready to load it?",b:"When a charge shoots well, pick it here to make it the working charge. The load then opens on its <b>Load</b> sheet, and that charge is filled in when you log a batch. Turn on <b>Locked</b> once the load is done so nothing changes by accident.",h:"Develop and Load"},
+  shareSec:{t:"Sharing",b:"Tick people to let them see this load, its velocities and photos. They can't change anything; untick to stop sharing.",h:"Share a load"},
+  secSummary:{t:"Summary",b:"Every charge side by side: velocity, SD, ES, group size and MOA. Tap <b>This is my load</b> next to the best charge to make it the working charge, or <b>Use in calculator</b> to send a group to Shooting.",h:"Use a load in the calculator"},
+  secCharts:{t:"Velocity by charge",b:"Average speed for each charge, with a bar for ± one SD. Look for a flat spot where more powder barely adds speed; that charge is usually the most forgiving. Purple diamonds show each group's MOA, the dashed red line is your max, and a <b>!</b> marks pressure signs.",h:"Velocity by charge"},
+  "@Velocity chart":{t:"Velocity by shot",b:"Every shot's velocity in the order you fired it, one color per group. It makes a bad reading, or a string that slowed down as the barrel heated, easy to spot. Remove a bad shot with <b>− Shot</b> on its group.",h:"Velocity by charge"},
+  secTargets:{t:"Targets",b:"Target photos for each ladder. Tap <b>+ Photo</b> to add one, then tap it and <b>Measure groups</b>; printed Range Book targets are read by themselves. <b>Live target</b> marks the shots as they land through a spotting scope.",h:"Target photos"},
+  "@Details":{t:"Details",b:"What this component is, how much you have and what it cost. Fill in <b>On hand</b> and <b>Warn when</b> to keep track of stock; logging a batch takes it out for you. The cost is used for each load's cost per round.",h:()=>{const k=document.querySelector("#compTabs [aria-selected=true]");return k&&k.dataset.ck==="brass"?"Brass lots":"Components: bullets, powders and primers";}},
+  "@Loads using this":{t:"Loads",b:"The loads that use this. If you change the details above, loads with the old details are marked; tap <b>Update</b> to copy the new details into them.",h:"Components: bullets, powders and primers"},
+  "@Gun":{t:"Gun details",b:"The gun's serial number, barrel, twist rate, sight height and notes. The sight height and twist fill in on any Shooting load that uses this gun. How to Use shows how to measure sight height.",h:"Measure sight height (height over bore)"},
+  secGunPh:{t:"Photos",b:"Pictures of the gun, private to you. The first one shows in your list of guns. With the serial number, they're handy for insurance; <b>Export PDF</b> on the Guns list puts them in one file.",h:"Guns"},
+  secRounds:{t:"Round count",b:"Rounds from your range trips and load-development groups with this gun, plus <b>Rounds before Range Book</b>. Fill in <b>Barrel life</b> to see how much is used, and <b>Clean every</b> with <b>Cleaned today</b> to know when it's due.",h:"Round count and barrel life"},
+  secGunCold:{t:"Cold-bore log",b:"Where your first shot of each range trip landed, in MOA so different distances compare. Fill it in on a range trip under <b>Cold-bore shot</b>. The orange cross is the average; a steady shift is worth noting as a first-shot hold.",h:"Cold-bore shot"},
+  "@Ammo details":{t:"Ammo details",b:"The bullet, BC and velocity for this ammo. If you've chronographed it in your gun, enter your measured velocity; it's used instead of the box number when you make a Shooting load.",h:()=>document.querySelector('#panel-rifles [aria-label="Box photo"]')?"Factory ammo":"Reloaded ammo"},
+  "@Box photo":{t:"Box",b:"A quick photo of the box. For catalog ammo it's shared so others can recognize the box; for ammo you entered yourself it stays private.",h:"Box photos"},
+  "@Rounds":{t:"Rounds",b:"How many rounds you have: bought or loaded, minus what your range trips fired. Add a box with <b>+ Bought more</b> (or <b>+ Loaded more</b>), and set <b>Warn when fewer than</b> so Home tells you when you're running low.",h:"Ammunition"},
+  "@Use in calculator":{t:"Shooting loads",b:"Pick the gun and tap <b>Use in calculator</b> to make a Shooting load with this ammo's bullet, BC and velocity. Range trips you log there count down your rounds here.",h:"Factory ammo"},
+  "@Twist and stability":{head:1,t:"Twist & stability",b:"Pick a bullet from your Components and a gun for its twist, or type the numbers in. 1.5 or more is fully stable, 1.0 to 1.5 is marginal, and under 1.0 the bullet will likely tumble. Check it for the coldest day you'll shoot.",h:"tool:Stability"},
+  "@MOA, MIL and inches":{head:1,t:"MOA · MIL · inches",b:"Enter a group size or hold and the distance to get MOA and MIL, or an angle to get the size back. Change any number and the rest update.",h:"tool:MOA/MIL"},
+  "@Powder per container":{head:1,t:"Powder per container",b:"How many rounds a container of powder makes at your charge, the powder cost per round, and how much powder a batch needs. <b>Fill in from</b> uses a Reloading load's charge and its powder's price.",h:"tool:Powder"},
+  "@Convert":{head:1,t:"Convert",b:"Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules. Type in either box.",h:"tool:Convert"},
+  "@Hit chance":{head:1,t:"Hit chance",b:"Pick a Shooting load, the target size and distance, and what throws the shot off: your group size, velocity SD, and how far off your wind call and range could be. It shows your odds of a first-round hit, the likely spread on the target, and what would help most.",h:"tool:Hit chance"},
+  "@Live target":{head:1,t:"Live target",b:"Put your phone on a spotting scope and it marks each shot on a printed target as it lands. Set the bullet diameter, distance and shots per aim point and tap <b>Start Live target</b>. Saved targets are listed under <b>Saved</b>, where <b>Move to</b> puts one into a range trip or a ladder. <b>Watch</b> shows a phone's Live target on this screen.",h:"Live target (phone on a spotting scope)"},
+  "@Printable targets":{t:"Printable targets",b:"Tap <b>Open PDF to print</b> and print at <b>Actual size</b>. Photograph the target with all four corner squares showing and Range Book measures the groups by itself, or point Live target at it. The two-page targets tape together into one big target.",h:"Printable targets"}
+};
+const HELP_TOOL={twist:"tool:Stability",moa:"tool:MOA/MIL",powder:"tool:Powder",conv:"tool:Convert",hit:"tool:Hit chance",live:"Live target (phone on a spotting scope)"};
+const shownEl=id=>{const e=$(id);return !!(e&&!e.hidden&&e.offsetParent);};
+// the How to Use topic closest to what's on screen
+function helpTopic(tab){
+  if(tab==="home")return "#hStart";
+  if(tab==="traj"){if(document.querySelector('#panel-traj section[aria-label="Range trip"]'))return "Range trips";return $("trajDetail")&&!$("trajDetail").hidden?"Fill in the fields":"Pick or make a load";}
+  if(tab==="log")return "Range trips";
+  if(tab==="rel"){if(!shownEl("relHeadBack"))return "Add a load";return document.querySelector("#panel-rel #secGroups")&&$("secGroups").offsetParent?"Develop and Load":"Inventory";}
+  if(tab==="brass"){const k=document.querySelector("#compTabs [aria-selected=true]");return k&&k.dataset.ck==="brass"?"Brass lots":"Components: bullets, powders and primers";}
+  if(tab==="rnotes")return "Reloading notes";
+  if(tab==="rifles"){const g=document.querySelector('#rifSeg [aria-selected="true"]');if(g&&g.dataset.garea==="ammo"){if(document.querySelector('#panel-rifles [aria-label="Box photo"]'))return "Factory ammo";if(document.querySelector('#panel-rifles [aria-label="Ammo details"]'))return "Reloaded ammo";return "Ammunition";}
+    return document.querySelector('#panel-rifles [aria-label="Round count"]')?"Round count and barrel life":"Guns";}
+  if(tab==="tools"){const t=document.querySelector("[data-toolsec]:not([hidden])");return t&&HELP_TOOL[t.dataset.toolsec]||"#hTools";}
+  if(tab==="targets")return "Printable targets";
+  if(tab==="account")return "Back up, export and import";
+  return "#hStart";
+}
+let helpFrom=null;
+const curTab=()=>tabs.find(k=>{const p=$("panel-"+k);return p&&!p.hidden;})||"home";
+const TAB_NAMES={home:"Home",traj:"Shooting",log:"Range log",rel:"Reloading",brass:"Components",rnotes:"Notes",rifles:"Guns & Ammo",tools:"Tools",targets:"Printable targets",account:"Account"};
+function helpFind(topic){
+  const P=$("panel-help");if(!P||!topic)return null;
+  if(topic[0]==="#")return P.querySelector(topic);
+  if(topic.startsWith("tool:")){const n=topic.slice(5);return [...P.querySelectorAll("#hTools li")].find(li=>{const b=li.querySelector("b");return b&&b.textContent.trim()===n;})||P.querySelector("#hTools");}
+  return [...P.querySelectorAll("h3")].find(h=>h.textContent.trim()===topic)||null;
+}
+function helpGo(topic){
+  const from=curTab();
+  if(from!=="help")helpFrom={tab:from,y:window.scrollY};
+  showTab("help");
+  const el=helpFind(topic);if(!el)return;
+  const sec=el.closest("section.card"),sh=sec&&sec.querySelector(":scope>.sechead");
+  if(sh&&sh.getAttribute("aria-expanded")==="false")sh.click();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    el.scrollIntoView({block:"start"});
+    const fl=el.matches("section")?(el.querySelector("h2")||el):el;
+    fl.classList.remove("hflash");void fl.offsetWidth;fl.classList.add("hflash");setTimeout(()=>fl.classList.remove("hflash"),2200);
+  }));
+  const bb=$("helpBackBtn");if(bb&&helpFrom){bb.querySelector("span").textContent="Back to "+(TAB_NAMES[helpFrom.tab]||"where you were");bb.hidden=false;}
+}
+function helpBack(){
+  const f=helpFrom;helpFrom=null;$("helpBackBtn").hidden=true;if(!f)return;
+  showTab(f.tab,false);requestAnimationFrame(()=>window.scrollTo(0,f.y));
+}
+const INFO_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg>';
+const infoKey=sec=>{if(sec.id&&INFO[sec.id])return sec.id;const l="@"+(sec.getAttribute("aria-label")||"");return INFO[l]?l:null;};
+// put an ⓘ after each tile's title (tiles are drawn again and again, so this keeps up with them)
+function infoDecorate(){
+  ["traj","rel","brass","rifles","tools","targets"].forEach(t=>{const P=$("panel-"+t);if(!P||P.hidden)return;
+    P.querySelectorAll("section.card").forEach(sec=>{
+      if(sec.closest("[hidden]"))return;const k=infoKey(sec);if(!k)return;const E=INFO[k];
+      const tgt=E.head?P.querySelector(".phead h1"):sec.querySelector("h2");if(!tgt||tgt.querySelector(".infobtn"))return;
+      const b=document.createElement("span");b.className="infobtn";b.setAttribute("role","button");b.tabIndex=0;b.dataset.ik=k;b.setAttribute("aria-label","How to use "+E.t);b.innerHTML=INFO_SVG;
+      tgt.appendChild(b);});});
+}
+let infoQ=false;
+new MutationObserver(()=>{if(infoQ)return;infoQ=true;requestAnimationFrame(()=>{infoQ=false;infoDecorate();});}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["hidden"]});
+let infoLast=null;
+function openInfo(k){
+  const E=INFO[k];if(!E)return;
+  let sh=$("infoSheet");
+  if(!sh){sh=document.createElement("div");sh.id="infoSheet";sh.className="infowrap";sh.hidden=true;
+    sh.innerHTML='<div class="infoback" data-iclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="infoT"><div class="infohead"><h2 id="infoT"></h2><button class="infox" type="button" data-iclose aria-label="Close">✕</button></div><p id="infoB"></p><button class="btn" type="button" id="infoMore">More in How to Use ›</button></div>';
+    document.body.appendChild(sh);
+    sh.addEventListener("click",e=>{if(e.target.closest("[data-iclose]"))closeInfo();});
+    $("infoMore").addEventListener("click",()=>{const h=sh._h;closeInfo(true);helpGo(typeof h==="function"?h():h);});}
+  infoLast=document.activeElement;sh._h=E.h;
+  $("infoT").textContent=E.t;$("infoB").innerHTML=E.b;sh.hidden=false;
+  requestAnimationFrame(()=>{sh.classList.add("on");sh.querySelector(".infox").focus();});
+}
+function closeInfo(noFocus){const sh=$("infoSheet");if(!sh||sh.hidden)return;sh.classList.remove("on");setTimeout(()=>{sh.hidden=true;},180);if(!noFocus&&infoLast&&infoLast.focus)infoLast.focus();}
+// caught before the tile's own fold button sees the tap
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".infobtn");if(!b)return;e.preventDefault();e.stopPropagation();openInfo(b.dataset.ik);},true);
+document.addEventListener("keydown",e=>{
+  const b=e.target.closest&&e.target.closest(".infobtn");
+  if(b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();e.stopPropagation();openInfo(b.dataset.ik);return;}
+  if(e.key==="Escape"&&$("infoSheet")&&!$("infoSheet").hidden){e.stopPropagation();closeInfo();}
+},true);
+// a Help button at the top of each tab page
+["home","traj","log","rel","brass","rnotes","rifles","tools","targets","account"].forEach(t=>{
+  const P=$("panel-"+t),H=P&&P.querySelector(":scope>header");if(!H)return;
+  H.classList.add("hashelp");
+  const b=document.createElement("button");b.type="button";b.className="helpbtn";b.dataset.help=t;
+  b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg><span>Help</span>';
+  b.setAttribute("aria-label","Help with this page");
+  b.addEventListener("click",()=>helpGo(helpTopic(t)));
+  H.appendChild(b);
+});
+{const bb=document.createElement("button");bb.type="button";bb.id="helpBackBtn";bb.className="helpback";bb.hidden=true;bb.innerHTML='‹ <span>Back</span>';bb.addEventListener("click",helpBack);document.body.appendChild(bb);}
+window.RB_HELP={go:helpGo,topic:helpTopic,info:openInfo,keys:()=>Object.keys(INFO)};
 function measurePins(){const r=document.documentElement,tb=document.querySelector(".topbar"),tabs=document.querySelector(".tabs"),gb=$("guestBanner");if(!tb)return;
   const wide=window.matchMedia("(min-width:761px)").matches,GAP=14;
   let top=tb.offsetHeight+GAP;if(gb&&!gb.hidden)top+=gb.offsetHeight+GAP;if(wide&&tabs)top+=tabs.offsetHeight+GAP;
