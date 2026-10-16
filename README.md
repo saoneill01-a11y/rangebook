@@ -4,6 +4,8 @@ A self-hosted ballistics calculator and reloading log, with a sign-in for each p
 
 Free software under the [GNU AGPL-3.0](#license).
 
+> **Beta:** Range Book is still in beta, and not everything has been tested thoroughly. Double-check anything that matters (charges, load data, dope) against your load manual and your own results. Each new version shows this notice once in the app, and it has to be dismissed.
+
 <p>
   <img src="docs/screenshots/shooting-desktop.png" alt="Shooting: trajectory chart and zeros" width="49%">
   <img src="docs/screenshots/reloading-desktop.png" alt="Reloading: a ladder test with its summary" width="49%">

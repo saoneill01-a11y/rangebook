@@ -705,6 +705,12 @@ header.hashelp>h1{padding-right:92px}
 @keyframes hflash{0%,35%{background:color-mix(in srgb,var(--accent) 22%,transparent);box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent;box-shadow:0 0 0 6px transparent}}
 .helpback{position:fixed;left:16px;bottom:20px;z-index:45;display:inline-flex;gap:4px;align-items:center;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--accent);color:var(--surface);font:inherit;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 @media (max-width:760px){.helpback{bottom:calc(var(--tabh) + 16px + env(safe-area-inset-bottom,0px))}}
+.betawrap .infosheet.betabox{max-width:480px}
+@media(min-width:761px){.betawrap .infosheet.betabox{top:50%}}
+.betatag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:999px;background:var(--warn,#c77d00);color:#fff;margin-bottom:8px}
+.betabox h2{font-size:20px;margin:0 0 8px}
+.betabox p{line-height:1.5;margin:0 0 10px}
+.betabtns{margin-top:12px;gap:8px;flex-wrap:wrap}.betabtns .grow{flex:1}
 .tourskip{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;padding:4px 2px;text-decoration:underline}
 .tourdots{display:flex;gap:5px;margin:0 0 12px}.tourdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.tourdots i.on{background:var(--accent)}
 .tourbtns{display:flex;justify-content:flex-end;gap:8px}
@@ -7254,7 +7260,7 @@ function applyTheme(t,persist){
   const m=document.querySelector('meta[name="theme-color"]');if(m){const bg=getComputedStyle(r).getPropertyValue("--theme").trim()||getComputedStyle(r).getPropertyValue("--accent").trim();m.setAttribute("content",bg||"#0e5a61");}
   renderThemePicker();
   window.dispatchEvent(new Event("resize"));
-  if(persist&&!GUEST)API.put("/api/doc/prefs",{data:{theme:THEME,units:U.metric?"metric":"imperial"}}).catch(()=>{});
+  if(persist&&!GUEST)API.put("/api/doc/prefs",{data:prefsData()}).catch(()=>{});
 }
 function renderThemePicker(){
   const g=$("themeGrid");if(!g)return;
@@ -7451,7 +7457,7 @@ async function startApp(user,api){
   document.querySelectorAll("#themeMode [data-mode]").forEach(b=>b.addEventListener("click",()=>applyTheme({palette:THEME.palette,mode:b.dataset.mode},true)));
   // the account's preferences (theme, units) arrive with the calculator data, so the app starts in the right units
   let calc=null;{const [pr,cr]=await Promise.all([GUEST?Promise.resolve(null):A.get("/api/doc/prefs").catch(()=>null),A.get("/api/doc/calc").catch(()=>null)]);
-    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);}
+    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);BETA_SEEN=pr.data.betaSeen||null;}
     calc=cr?cr.data:null;}
   U.labels();
   // Units on Account: save it to the account, then reload so every screen redraws in the new units
@@ -7459,7 +7465,7 @@ async function startApp(user,api){
   unitBtns();
   document.querySelectorAll("#unitMode [data-units]").forEach(b=>b.addEventListener("click",async()=>{
     if((b.dataset.units==="metric")===U.metric)return;U.set(b.dataset.units);unitBtns();$("unitNote").textContent="Switching to "+(U.metric?"metric":"imperial")+"…";
-    if(!GUEST){try{await A.put("/api/doc/prefs",{data:{theme:THEME,units:U.metric?"metric":"imperial"}});}catch(e){}}
+    if(!GUEST){try{await A.put("/api/doc/prefs",{data:prefsData()});}catch(e){}}
     try{localStorage.setItem("rb.where",JSON.stringify({tab:"account",at:Date.now()}));}catch(e){}
     location.reload();}));
   if(GUEST)calc={guestFresh:true};
@@ -7485,8 +7491,31 @@ async function startApp(user,api){
   }
   $("more-tour").addEventListener("click",()=>{closeMore();startTour();});
   ["tourBtn","tourBtnTop"].forEach(id=>{const tb=$(id);if(tb)tb.addEventListener("click",startTour);});
-  // a brand-new account (it just agreed to the terms) gets the tour once
-  if(window.RB_TOUR_NEXT){window.RB_TOUR_NEXT=false;setTimeout(startTour,900);}
+  // every new version: the beta notice, which has to be dismissed; then, for a brand-new account, the tour
+  const tourNext=!!window.RB_TOUR_NEXT;window.RB_TOUR_NEXT=false;
+  betaNotice(()=>{if(tourNext)setTimeout(startTour,500);});
+}
+/* ---------- beta notice: shown once for each new version, until it's dismissed ---------- */
+let BETA_SEEN=null;
+const appVersion=()=>{const m=document.querySelector('meta[name="rb-version"]');return m&&m.content&&m.content.indexOf("__")<0?m.content:"";};
+function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined};}
+function betaNotice(then){
+  const v=appVersion();let local=null;try{local=localStorage.getItem("rangebook.betaSeen");}catch(e){}
+  if(!v||BETA_SEEN===v||(GUEST||BETA_SEEN==null)&&local===v){then();return;}
+  const w=document.createElement("div");w.className="infowrap betawrap";w.hidden=true;
+  w.innerHTML='<div class="infoback"></div><div class="infosheet betabox" role="alertdialog" aria-modal="true" aria-labelledby="betaT" aria-describedby="betaB">'+
+    '<div class="betatag">BETA</div><h2 id="betaT">Range Book '+esc(v)+' is still in beta</h2>'+
+    '<div id="betaB"><p>This update hasn\'t all been tested thoroughly, and some things may not work the way they should. Double-check anything that matters, especially charges, load data and your dope, against your load manual and what you see at the range before you rely on it.</p>'+
+    '<p class="note">If something looks wrong, tell whoever runs your Range Book. This shows once for each new version.</p></div>'+
+    '<div class="row betabtns"><button class="btn" type="button" id="betaNew">See what\'s new</button><span class="grow"></span><button class="btn primary" type="button" id="betaOk">I understand</button></div></div>';
+  document.body.appendChild(w);w.hidden=false;requestAnimationFrame(()=>{w.classList.add("on");$("betaOk").focus();});
+  // it has to be dismissed with a button: tapping outside or Escape doesn't close it
+  w.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();e.stopPropagation();}if(e.key==="Tab"){const f=[$("betaNew"),$("betaOk")],i=f.indexOf(document.activeElement);e.preventDefault();f[(i+(e.shiftKey?f.length-1:1))%f.length].focus();}});
+  const done=next=>{BETA_SEEN=v;try{localStorage.setItem("rangebook.betaSeen",v);}catch(e){}
+    if(!GUEST)API.put("/api/doc/prefs",{data:prefsData()}).catch(()=>{});
+    w.classList.remove("on");setTimeout(()=>w.remove(),180);next();};
+  $("betaOk").addEventListener("click",()=>done(then));
+  $("betaNew").addEventListener("click",()=>done(()=>{showTab("help");openHelpCard("hNew");then();}));
 }
 /* ---------- the tour: a short, skippable walk through the basics. It points at each part of the app in turn;
    it doesn't change anything. It runs after a new account agrees to the terms, and from More → Take the tour. ---------- */
