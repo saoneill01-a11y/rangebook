@@ -1,28 +1,40 @@
-# Builds the Range Book Docker image and publishes it to the GitHub Container Registry (ghcr.io).
-#   - every push to main      -> ghcr.io/<owner>/rangebook:edge
-#   - a version tag like v1.8.0 -> ghcr.io/<owner>/rangebook:1.8.0, :1.8 and :latest
+# Publishes Range Book on every push to main:
+#   1. reads the version from public/changelog.json (the top entry, e.g. 1.7.15)
+#   2. builds the Docker image for amd64 and arm64 and pushes it to the GitHub Container Registry as
+#      ghcr.io/<owner>/rangebook:1.7.15, :1.7 and :latest
+#   3. if there's no release for that version yet, tags the commit v1.7.15 and creates a GitHub release
+#      whose notes are that changelog entry
 # Nothing to set up: it signs in with the repository's own GITHUB_TOKEN.
-name: Docker image
+name: Publish
 
 on:
   push:
     branches: [main]
-    tags: ["v*.*.*"]
+    paths-ignore: ["**.md", "docs/**", "unraid/**"]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  packages: write
-
 concurrency:
-  group: docker-${{ github.ref }}
-  cancel-in-progress: true
+  group: publish
+  cancel-in-progress: false
 
 jobs:
-  build:
+  image:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
     steps:
       - uses: actions/checkout@v4
+
+      - id: ver
+        name: Read the version from the changelog
+        run: |
+          v=$(node -p "require('./public/changelog.json').releases[0].version")
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "minor=$(echo "$v" | cut -d. -f1-2)" >> "$GITHUB_OUTPUT"
+          echo "owner=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
 
       - uses: docker/setup-qemu-action@v3
 
@@ -34,26 +46,57 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/rangebook
-          tags: |
-            type=edge,branch=main
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-          labels: |
-            org.opencontainers.image.title=Range Book
-            org.opencontainers.image.description=Self-hosted ballistics calculator and reloading log
-            org.opencontainers.image.licenses=AGPL-3.0-or-later
-
       - uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ghcr.io/${{ steps.ver.outputs.owner }}/rangebook:${{ steps.ver.outputs.version }}
+            ghcr.io/${{ steps.ver.outputs.owner }}/rangebook:${{ steps.ver.outputs.minor }}
+            ghcr.io/${{ steps.ver.outputs.owner }}/rangebook:latest
+          labels: |
+            org.opencontainers.image.title=Range Book
+            org.opencontainers.image.description=Self-hosted ballistics calculator and reloading log
+            org.opencontainers.image.licenses=AGPL-3.0-or-later
+            org.opencontainers.image.version=${{ steps.ver.outputs.version }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  release:
+    needs: image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag and release this version (once)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          V: ${{ needs.image.outputs.version }}
+        run: |
+          if gh release view "v$V" >/dev/null 2>&1; then
+            echo "Release v$V already exists; nothing to do."
+            exit 0
+          fi
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          node -e '
+            const r = require("./public/changelog.json").releases[0];
+            const img = "ghcr.io/" + process.argv[1] + "/rangebook:" + r.version;
+            const lines = [
+              "**" + r.title + "**", "",
+              ...r.items.map(i => "- " + i), "",
+              "### Install or update", "",
+              "```sh",
+              "docker pull " + img,
+              "```", "",
+              "Full instructions are in the [README](https://github.com/" + process.env.GITHUB_REPOSITORY + "#install).",
+              "",
+              "Range Book is a notebook and a calculator, not a load manual. The built-in SAMPLE load is made up; always work from a current published load manual."
+            ];
+            require("fs").writeFileSync("notes.md", lines.join("\n"));
+          ' "$owner"
+          gh release create "v$V" --target "$GITHUB_SHA" --title "Range Book $V" --notes-file notes.md --latest
