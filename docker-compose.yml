@@ -1,0 +1,18 @@
+# Range Book with Docker Compose:  docker compose up -d
+services:
+  rangebook:
+    image: ghcr.io/saoneill01-a11y/rangebook:latest
+    # build: .                 # or build it yourself from this folder instead of using the published image
+    container_name: rangebook
+    restart: unless-stopped
+    ports:
+      - "9090:9090"            # change the left number if 9090 is taken
+    environment:
+      - TZ=America/Chicago     # your time zone
+      # - ADMIN_USERNAME=      # suggested username for the admin account you create on the Welcome page
+      # - COOKIE_SECURE=true   # turn on once you reach it through https (reverse proxy or Cloudflare Tunnel)
+      # - TRUST_PROXY=true     # turn on if it sits behind a reverse proxy or tunnel
+      # - PUID=99              # owner of the data folder (99:100 is Unraid's nobody:users)
+      # - PGID=100
+    volumes:
+      - ./data:/data           # database, photos and backups (on Unraid: /mnt/user/appdata/rangebook:/data)

@@ -1,0 +1,121 @@
+{
+  "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
+  "releases": [
+    {
+      "version": "1.7.15",
+      "date": "2026-10-15",
+      "title": "Metric units, combined charges, pull to refresh",
+      "items": [
+        "More → Account → Units switches between Imperial and Metric. Metric shows metres, m/s, centimetres (millimetres for cartridge sizes), joules, °C, km/h, metres of altitude and kilograms of powder. Bullet weights and powder charges stay in grains. It covers the whole app, the Excel and PDF exports and printed targets. Your data doesn't change, only how it's shown, and the setting follows your account to your other devices.",
+        "Pull to refresh in the home-screen app: at the top of any page, pull down until it says Release to refresh and let go. It saves anything you were typing, then reloads with the newest data, so a change made on your computer shows up on your phone without closing the app.",
+        "With two or more ladders, the Summary and charts have a Combine matching charges button. Each charge is shown once with every shot at that charge from all your ladders pooled: combined average velocity, SD, ES and the average group. Your ladders and their shots aren't changed.",
+        "Tap a ladder's title (Ladder 1, Ladder 2…) to fold it down to its title and summary line. Each phone or computer remembers which ladders you folded.",
+        "Distance moved to the top of each ladder, next to the Loaded date, Tested date and Temperature. Enter it once and every group in that ladder uses it for its MOA; each ladder can have its own distance. Existing ladders took the distance most of their groups used, and the folded ladder's summary line shows it.",
+        "On Shooting and Reloading, an open load's name sits in large type at the right end of the bar of links, so it stays in view as you scroll. The big page title is hidden while a load is open.",
+        "Importing a chronograph spreadsheet (RangeCraft or Garmin .xlsx) works again on the home-screen app, and works without a signal after the first import.",
+        "The new-version banner (Reload now) and the \"Range Book was updated\" note float at the bottom of the screen, just above the tabs on a phone, so you see them wherever you are on the page. The app now checks for a new version when it opens, when your phone gets its signal back and every minute while it's open, and tries again shortly if the server was restarting, so the Reload now prompt shows up within about a minute of an update.",
+        "On Shooting, every load can now be deleted, including the example loads Range Book starts with (.22 LR, .308, 6mm ARC and the rest). Open the load and tap Delete load at the very bottom; Undo brings it back. The examples also keep a separate Reset to defaults button.",
+        "The \"Group (MOA)\" label on the Velocity by charge chart is no longer cut off.",
+        "What's new is shorter: one entry for each version series instead of one for every small update.",
+        "Range Book is now free software under the GNU AGPL-3.0, copyright Sean O'Neill: anyone can use, change and share it, and anyone who shares or hosts a changed version has to share their code too. See How to Use → License.",
+        "New installs start with a made-up SAMPLE · 6.5 Creedmoor load: a worked-up ladder on Reloading (first account) and a matching load on Shooting. Both carry a warning that the numbers are examples, not load data, and must be checked against a load manual. The real reloading data that used to ship for a new install has been removed from the code; existing installs keep all their data.",
+        "Range Book is published on GitHub. How to Use → License links to its source code, and a few messages that were written just for the original install now read for everyone."
+      ]
+    },
+    {
+      "version": "1.6",
+      "date": "2026-10-15",
+      "title": "Pick the range table columns",
+      "items": [
+        "Under the range table, tick Adjust (MOA), Adjust (MIL) and Wind to choose which of those columns to show. Wind includes the wind brackets and spin drift. Range, velocity, energy, time and the path are always there.",
+        "It starts with just Adjust (MOA), so the table is much narrower. Your choice is remembered on each phone or computer."
+      ]
+    },
+    {
+      "version": "1.5",
+      "date": "2026-10-15",
+      "title": "Ladder tests",
+      "items": [
+        "Groups is now called Ladder tests, and a load can hold several ladders, each with its own groups. The Loaded date, Tested date and Temperature are at the top of each ladder. Plan a new ladder or + Empty ladder starts another one without touching the first.",
+        "Target photos belong to the ladder you shot them with. Each ladder has its own + Photo button, and Shot with in the photo moves it to another ladder.",
+        "With more than one ladder, the Summary and charts show one ladder at a time; pick another or All ladders from Showing.",
+        "Each ladder has a Take components out of inventory button that takes its bullets, primers and powder out of Components and counts a loading on the brass lot. Put them back undoes it.",
+        "Shot boxes are sized for a 4-digit speed, five to a row. + Shot adds one; − Shot lets you pick one or more shots and delete them, with Undo. Range trips work the same way, and + Type in shots starts a string you type in yourself.",
+        "Every group uses the bullet weight from the recipe. Group size sits right next to Distance.",
+        "The range table shows one Path column, for the zero you picked.",
+        "Sign in at home at http://<server IP>:9090 as well as through your Cloudflare address. Offline use, Use the weather where I am and Field mode's keep-awake need the https address.",
+        "The app is sent compressed, about a quarter of its old size, so it opens faster on a weak signal.",
+        "What's new on How to Use stays folded until you tap it.",
+        "The Excel export has a Ladder Tests sheet with a Ladder column (also on Photos and Loads)."
+      ]
+    },
+    {
+      "version": "1.4",
+      "date": "2026-10-15",
+      "title": "Angle, wind, temperature, compare and labels",
+      "items": [
+        "Shot angle: on the Conditions card, enter how steeply you're shooting up or down hill. The table, chart and dope card show the smaller hold you need.",
+        "Wind direction: enter the wind's speed and the o'clock it comes from, and the calculator works out the push and which way to hold. A switch adds 5, 10 and 15 mph wind brackets to the range table, dope card and Field mode.",
+        "Powder temperature sensitivity: enter the temperature your velocity was measured at and how many fps it changes per 10°F, and muzzle velocity adjusts for today. A chart under a load's Range trips plots velocity against temperature, and one tap uses its trend.",
+        "Compare loads: on the Reloading list, pick up to three loads to see them side by side, with the best numbers highlighted.",
+        "Labels: ammo box labels for each logged batch, and a ladder test label with every charge numbered and a box to tick as you load it, plus Loaded and Tested dates.",
+        "Groups have Loaded and Tested dates and a Temperature, also in the Excel export."
+      ]
+    },
+    {
+      "version": "1.3",
+      "date": "2026-10-15",
+      "title": "Chart, zeros, ammo and update banner",
+      "items": [
+        "Bullet path chart: drag the bar under it to make it taller or shorter (it keeps its shape), Declutter hides the yardage labels, and True scale draws the flight at its real proportions. It starts at half its old height.",
+        "Each zero has one box under the chart with its near, far and top numbers. Pick the circle in a box for the zero your scope is set to; the range table and dope card use it.",
+        "Weather has its own Conditions card under Inputs.",
+        "On a Shooting load, sight height and twist come from the picked gun, and bullet length, weight, BC and diameter from the picked ammo. + Enter new factory ammo opens Guns & Ammo to add one.",
+        "Reloaded ammo has a Locked switch and Duplicate, and picks its bullet, powder, primer and brass from Components.",
+        "Add a powder from the list has a search box.",
+        "Reloading has a Load view (a read-only load sheet for the bench) and a Notes page for notes that aren't about one load.",
+        "When the server has a new version, a banner offers Reload now, even if the app has been open the whole time.",
+        "Swiping in from the left edge to go back is quicker on iPhone, and the boxes you tap to open a load, gun or ammo stand out more."
+      ]
+    },
+    {
+      "version": "1.2",
+      "date": "2026-10-14",
+      "title": "Simpler reloading",
+      "items": [
+        "Each load has two views: Develop (recipe, groups, ladder, charts, targets) and Load (the finished load and your loaded rounds).",
+        "Working charge: tap This is my load next to a charge in the Summary. It's used when you log batches, add the load to your ammo, work out the cost or use it in the calculator.",
+        "Locked switch: a finished load can be locked so its recipe, groups and working charge can't be changed.",
+        "Recipe parts picked from Components fold to one line with a Change link and a Done button.",
+        "Logging a batch adds the rounds to your ammo inventory by itself.",
+        "+ New load asks for the cartridge, gun and parts from Components, then can go straight to the ladder planner. Duplicate can swap in a different powder or bullet."
+      ]
+    },
+    {
+      "version": "1.1",
+      "date": "2026-10-14",
+      "title": "Reloaded ammo and Components",
+      "items": [
+        "Reloaded ammo inventory: add a recipe's ammo from Loaded rounds, or make an entry by hand under Guns & Ammo → Ammunition. Batches you log add to the count, and range trips count it down. Entries can pick their parts from Components for a cost per round.",
+        "The Ammunition box on a Shooting load is a short, searchable list of your reloaded ammo, your factory ammo and the catalog.",
+        "Components: a list of about 150 popular powders, brass lots with a case length, and Update buttons that copy changed component details into the loads that use them. A Components › button on a load jumps there and back.",
+        "A recipe's Case is now called Brass and can be picked from your brass lots.",
+        "Guns & Ammo → Guns has Export Excel and Export PDF for just your guns, with a photo page per gun.",
+        "Each section of How to Use folds up, and every card in Guns & Ammo → Ammunition folds too."
+      ]
+    },
+    {
+      "version": "1.0",
+      "date": "2026-10-14",
+      "title": "First numbered release",
+      "items": [
+        "Version number and this What's new page.",
+        "Cost per round from what you paid for bullets, powder, primers and brass.",
+        "LabRadar import into Reloading groups and range trips.",
+        "A welcome page where the first person on a new install creates the admin account.",
+        "Nosler and Barnes factory ammo in the catalog (about 155 loads), and picking factory ammo straight from the catalog on Shooting.",
+        "A Range trips page with every trip in one list, gun photos and serial numbers, swipe back from the left edge, and collapsible cards."
+      ]
+    }
+  ]
+}

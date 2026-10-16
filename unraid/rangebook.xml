@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>rangebook</Name>
+  <Repository>ghcr.io/saoneill01-a11y/rangebook:latest</Repository>
+  <Registry>https://github.com/saoneill01-a11y/rangebook/pkgs/container/rangebook</Registry>
+  <Network>bridge</Network>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/saoneill01-a11y/rangebook/issues</Support>
+  <Project>https://github.com/saoneill01-a11y/rangebook</Project>
+  <Overview>Range Book: a self-hosted ballistics calculator and reloading log with a sign-in for each person. Trajectory tables, dope cards and field mode; reloading recipes with ladder tests, chronograph imports (LabRadar, Garmin, MagnetoSpeed, RangeCraft) and target photos you can measure; gun, ammo and component inventory with cost per round; range trips and a range log. Works as a home-screen app on a phone, including with no signal when reached over https. After the first start, open the WebUI and create your admin account right away.</Overview>
+  <Category>Tools: Productivity:</Category>
+  <WebUI>http://[IP]:[PORT:9090]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/saoneill01-a11y/rangebook/main/unraid/rangebook.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/saoneill01-a11y/rangebook/main/public/icon-512.png</Icon>
+  <Description>Self-hosted ballistics calculator and reloading log. Open the WebUI after the first start and create your admin account right away.</Description>
+  <Config Name="Web port" Target="9090" Default="9090" Mode="tcp" Description="Port for the web page. Change the host side if 9090 is taken." Type="Port" Display="always" Required="true" Mask="false">9090</Config>
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/rangebook" Mode="rw" Description="Database, photos and nightly backups." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/rangebook</Config>
+  <Config Name="Admin username" Target="ADMIN_USERNAME" Default="" Mode="" Description="Suggested username for the admin account you create on the first-run Welcome page." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="HTTPS cookie (COOKIE_SECURE)" Target="COOKIE_SECURE" Default="false" Mode="" Description="Set true when you reach Range Book through https (reverse proxy or Cloudflare Tunnel)." Type="Variable" Display="always" Required="false" Mask="false">false</Config>
+  <Config Name="Behind a proxy (TRUST_PROXY)" Target="TRUST_PROXY" Default="false" Mode="" Description="Set true behind a reverse proxy or Cloudflare Tunnel so sign-in limits see real addresses." Type="Variable" Display="always" Required="false" Mask="false">false</Config>
+  <Config Name="Time zone" Target="TZ" Default="America/Chicago" Mode="" Description="Your time zone, used for dates and the nightly backup time." Type="Variable" Display="always" Required="false" Mask="false">America/Chicago</Config>
+  <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="Owner of the data folder (99 = nobody)." Type="Variable" Display="advanced" Required="false" Mask="false">99</Config>
+  <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="Group of the data folder (100 = users)." Type="Variable" Display="advanced" Required="false" Mask="false">100</Config>
+  <Config Name="Sample load (IMPORT_SEED)" Target="IMPORT_SEED" Default="true" Mode="" Description="The first account gets a made-up sample 6.5 Creedmoor ladder. Set false to start empty." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Backup hour" Target="BACKUP_HOUR" Default="3" Mode="" Description="Hour of the night (0-23) for the automatic backup." Type="Variable" Display="advanced" Required="false" Mask="false">3</Config>
+  <Config Name="Backups to keep" Target="BACKUP_KEEP" Default="14" Mode="" Description="How many daily backups to keep." Type="Variable" Display="advanced" Required="false" Mask="false">14</Config>
+</Container>

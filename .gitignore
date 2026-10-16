@@ -1,0 +1,12 @@
+# your data never goes in the code
+data/
+*.db
+*.db-wal
+*.db-shm
+backups/
+photos/
+# working notes and local files
+PROJECT_NOTES.md
+node_modules/
+.DS_Store
+*.zip

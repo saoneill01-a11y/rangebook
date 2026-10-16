@@ -1,0 +1,160 @@
+{
+ "version": 1,
+ "note": "Sample data for a brand-new Range Book. Everything here is made up to show how the app works; it is not real load data.",
+ "loads": [
+  {
+   "id": "sample-65cm",
+   "data": {
+    "title": "SAMPLE · 6.5 Creedmoor 147 gr ELD Match",
+    "sample": true,
+    "cartridge": "6.5 Creedmoor",
+    "bullet": {
+     "mfr": "Hornady",
+     "type": "ELD Match"
+    },
+    "bulletGrains": 147,
+    "bc": 0.351,
+    "bcm": "G7",
+    "blen": 1.424,
+    "bulletDia": 0.264,
+    "powder": {
+     "mfr": "Hodgdon",
+     "type": "H4350"
+    },
+    "primer": {
+     "mfr": "CCI",
+     "type": "No. 200"
+    },
+    "case": {
+     "mfr": "Winchester",
+     "type": "6.5 CM"
+    },
+    "caseLength": 1.91,
+    "coal": 2.8,
+    "maxCharge": 40.3,
+    "workCharge": 39,
+    "notes": "SAMPLE DATA. Everything in this load is made up to show how Range Book works: a 6-step ladder from 37 to 40 gr, five shots per charge at 100 yards. The charges, velocities and group sizes are NOT real load data and were not shot.\n\nDon't load or shoot anything from this example. Always start from a current published load manual for your exact bullet, powder, primer, brass and rifle, start low and work up carefully.\n\nWhen you're done looking, delete it (Delete load at the bottom) or use Duplicate recipe as a starting point for your own.",
+    "ladders": [
+     {
+      "id": "lsample1",
+      "loaded": "2026-09-12",
+      "tested": "2026-09-20",
+      "temp": 68,
+      "dist": 100
+     }
+    ],
+    "groups": [
+     {
+      "id": "gs1",
+      "ladderId": "lsample1",
+      "charge": 37.0,
+      "label": "",
+      "groupSize": 1.15,
+      "distance": 100,
+      "shots": [
+       2569,
+       2581,
+       2560,
+       2575,
+       2588
+      ],
+      "date": "2026-09-20",
+      "loaded": "2026-09-12",
+      "temp": 68
+     },
+     {
+      "id": "gs2",
+      "ladderId": "lsample1",
+      "charge": 38.0,
+      "label": "",
+      "groupSize": 0.95,
+      "distance": 100,
+      "shots": [
+       2622,
+       2631,
+       2615,
+       2640,
+       2628
+      ],
+      "date": "2026-09-20",
+      "loaded": "2026-09-12",
+      "temp": 68
+     },
+     {
+      "id": "gs3",
+      "ladderId": "lsample1",
+      "charge": 38.5,
+      "label": "",
+      "groupSize": 0.62,
+      "distance": 100,
+      "shots": [
+       2651,
+       2656,
+       2648,
+       2660,
+       2653
+      ],
+      "date": "2026-09-20",
+      "loaded": "2026-09-12",
+      "temp": 68
+     },
+     {
+      "id": "gs4",
+      "ladderId": "lsample1",
+      "charge": 39.0,
+      "label": "",
+      "groupSize": 0.48,
+      "distance": 100,
+      "shots": [
+       2668,
+       2672,
+       2664,
+       2675,
+       2670
+      ],
+      "date": "2026-09-20",
+      "loaded": "2026-09-12",
+      "temp": 68
+     },
+     {
+      "id": "gs5",
+      "ladderId": "lsample1",
+      "charge": 39.5,
+      "label": "",
+      "groupSize": 0.85,
+      "distance": 100,
+      "shots": [
+       2701,
+       2688,
+       2712,
+       2695,
+       2720
+      ],
+      "date": "2026-09-20",
+      "loaded": "2026-09-12",
+      "temp": 68
+     },
+     {
+      "id": "gs6",
+      "ladderId": "lsample1",
+      "charge": 40.0,
+      "label": "",
+      "groupSize": 1.05,
+      "distance": 100,
+      "shots": [
+       2738,
+       2721,
+       2750,
+       2729,
+       2745
+      ],
+      "date": "2026-09-20",
+      "loaded": "2026-09-12",
+      "temp": 68
+     }
+    ],
+    "order": 1
+   }
+  }
+ ]
+}

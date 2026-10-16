@@ -1,0 +1,8 @@
+data
+*.md
+.git
+.github
+.gitignore
+unraid
+docs
+*.zip
