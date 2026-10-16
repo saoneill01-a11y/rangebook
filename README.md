@@ -26,7 +26,8 @@ Free software under the [GNU AGPL-3.0](#license).
 - **Tools:** quick calculators, nothing saved: twist & bullet stability (also a warning on any Shooting load whose twist is too slow), MOA/MIL/inches, powder per container and cost per round, unit conversions, and printable targets.
 - **Range trips and Range log:** conditions, rounds fired, chronograph strings and target photos you can measure (printed targets with corner squares are measured automatically). Each trip prints as a PDF report.
 - **For everyone on your server:** each person's data is private; loads can be shared view-only with specific people. Admins add people, reset passwords and check backups. An optional guest mode lets people try it without an account.
-- **Phone-friendly:** works offline (over https), pull to refresh, Light, Dark and Red Night themes, imperial or metric, and Excel or PDF export of everything.
+- **Phone-friendly:** works offline (over https), pull to refresh, Light, Dark and Red Night themes, imperial or metric.
+- **Your data is yours:** a one-file backup with photos, Excel and PDF exports, and Import to bring a backup or Excel export back in (or move to another server).
 
 ---
 
@@ -128,7 +129,9 @@ An **https** address is what lets a phone use Range Book **offline**, share its 
 
 ## Backups
 
-Everything is in your data folder: the database `rangebook.db` and the `photos` folder.
+**Your own copy:** everyone can tap **Account → Download backup** for a .zip of everything in their account, photos included, and bring it back with **Account → Import** on this or any other Range Book. Import adds to the account and skips anything already there, so it never deletes or doubles anything. Excel exports can be imported too (without photos). Admins can download any person's backup from the Admin page.
+
+**The whole server:** everything is in your data folder: the database `rangebook.db` and the `photos` folder.
 
 **Automatic:** every night at 3 am (and when the container starts, if there isn't one for today yet), Range Book saves a full copy in `backups/<date>/` inside the data folder, with the database and the photos. The last 14 are kept. The **Admin** page shows the last backup and has a **Back up now** button. Photos in each backup are hard links, so they take almost no extra space.
 

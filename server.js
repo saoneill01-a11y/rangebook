@@ -13,7 +13,8 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const zlib = require("node:zlib");
 const { DatabaseSync } = require("node:sqlite");
-const { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf } = require("./export.js");
+const { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf, zip } = require("./export.js");
+const backupKit = require("./backup.js");
 
 /* ---------------- configuration ---------------- */
 const PORT = parseInt(process.env.PORT || "9090", 10);
@@ -381,9 +382,19 @@ function sendGunExport(res, uid, kind) {
   });
   res.end(buf);
 }
+let BK = null; // backups and imports (backup.js), set up once the database helpers exist
+function backups() { return BK || (BK = backupKit({ q, db, PHOTO_DIR, getDoc, putDoc, now, APP_VERSION, zip })); }
 function sendExport(res, uid, kind) {
   const d = collectUser(uid);
   if (!d.user) throw new HttpError(404, "User not found.");
+  if (kind === "zip") {
+    const buf = backups().backupZip(uid);
+    const safe = (d.user.username || "user").replace(/[^A-Za-z0-9._-]/g, "_");
+    const n = new Date(), day = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
+    res.writeHead(200, { "Content-Type": "application/zip", "Content-Disposition": `attachment; filename="RangeBook-backup-${safe}-${day}.zip"`, "Content-Length": buf.length, "Cache-Control": "no-store", ...SECURITY_HEADERS });
+    return res.end(buf);
+  }
+  if (kind === "xlsx") d.dataRows = backups().dataSheetRows(uid);
   const safe = (d.user.username || "user").replace(/[^A-Za-z0-9._-]/g, "_");
   const n = new Date(), day = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
   const buf = kind === "xlsx" ? exportXlsx(d) : exportPdf(d, (file) => { try { return fs.readFileSync(path.join(PHOTO_DIR, path.basename(file))); } catch { return null; } });
@@ -484,6 +495,16 @@ async function api(req, res, url) {
   if (gx && method === "GET") return sendGunExport(res, user.id, gx[1]);
   let ex = /^\/api\/export\.(xlsx|pdf)$/.exec(p);
   if (ex && method === "GET") return sendExport(res, user.id, ex[1]);
+  if (p === "/api/backup.zip" && method === "GET") return sendExport(res, user.id, "zip");
+  /* ---- import a backup or an Excel export into your own account (adds; skips what's already here) ---- */
+  if (p === "/api/import" && method === "POST") {
+    const buf = await readBody(req, 700 * 1024 * 1024);
+    if (!buf.length) throw new HttpError(400, "Pick a file to import.");
+    let r;
+    try { r = backups().importInto(user.id, buf); } catch (e) { throw new HttpError(400, e && e.message ? e.message : "That file couldn't be imported."); }
+    console.log(` Import into ${user.username}: ${r.kind}, ${r.loads.added} loads added, ${r.photos.added} photos added`);
+    return send(res, 200, { ok: true, result: r });
+  }
 
   /* ---- people directory (for sharing) ---- */
   if (p === "/api/users" && method === "GET") {
@@ -759,7 +780,7 @@ async function api(req, res, url) {
         .run(username, String(b.name || username).trim().slice(0, 80), hashPassword(pw), b.isAdmin ? 1 : 0, now());
       return send(res, 200, { id: Number(info.lastInsertRowid), username, tempPassword: pw });
     }
-    const ax = /^\/api\/admin\/users\/(\d+)\/export\.(xlsx|pdf)$/.exec(p);
+    const ax = /^\/api\/admin\/users\/(\d+)\/export\.(xlsx|pdf|zip)$/.exec(p);
     if (ax && method === "GET") return sendExport(res, +ax[1], ax[2]);
     m = /^\/api\/admin\/users\/(\d+)(\/reset-password)?$/.exec(p);
     if (m) {

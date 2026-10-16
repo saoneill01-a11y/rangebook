@@ -2,7 +2,18 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.1.2",
+      "version": "2.2.0",
+      "date": "2026-10-16",
+      "title": "Mean radius, backups and import",
+      "items": [
+        "Measuring a target photo now keeps the group's mean radius (the average distance of every hole from the group's center) and where the group's center landed from the aim point. Both show on each group, and Mean radius gets its own column in the Summary, Combine matching charges, and the Excel and PDF exports. Groups you measured before fill in by themselves when you open the load.",
+        "Account → Download backup saves everything in your account in one .zip file, photos included.",
+        "Account → Import brings in a backup or an Excel export (from now on, Excel files carry a hidden copy of your data). It adds to your account and skips anything already there, so nothing is deleted or doubled. Use it to restore, or to move to another Range Book.",
+        "Admins can download any person's backup from the Admin page."
+      ]
+    },
+    {
+      "version": "2.1",
       "date": "2026-10-16",
       "title": "Tools",
       "items": [

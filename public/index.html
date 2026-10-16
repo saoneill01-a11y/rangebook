@@ -636,6 +636,7 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
   .sumtbl tbody tr:nth-child(n) td[data-l="Shots"]::before{content:"Shots";font-size:12px}
   .sumtbl tbody tr:nth-child(n) td[data-l="Energy"]::before{content:"ft-lb"}
   .sumtbl tbody tr:nth-child(n) td[data-l="Group MOA"]::before{content:"MOA"}
+  .sumtbl tbody tr:nth-child(n) td[data-l="Mean radius"]::before{content:"Mean radius"}
   .sumtbl tbody tr:nth-child(n) td.act .linkbtn{padding:5px 9px;font-size:12px}
 }
 /* photo viewer: solid background */
@@ -1127,7 +1128,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Target photos</h3>
       <p>Each target photo belongs to the ladder you shot it with. Tap <b>+ Photo</b> in that ladder (or next to the ladder's name on the <b>Targets</b> card) to take a picture or choose one. The Targets card shows the photos under each ladder, and each ladder shows its own photos too. Tap a photo to see it full size, add a caption, delete it, or move it to another ladder with <b>Shot with</b>. When you measure groups on a photo, you pick from that ladder's charges. Photos added before ladders existed are linked for you when the app can tell which ladder they go with; open any that say <b>Pick a ladder</b> and choose one.</p>
       <h3>Measure groups from a photo</h3>
-      <p>One photo can hold several groups, each with its own aim point and charge weight.</p>
+      <p>One photo can hold several groups, each with its own aim point and charge weight. Measuring gives you two sizes: the <b>group size</b> (center to center of the two widest holes) and the <b>mean radius</b>, the average distance of every hole from the group's center. Mean radius uses every shot, so it's a steadier way to compare charges, especially with small groups. Both show on each group and in the Summary, along with how far the group's center is from your aim point (for a zero check). Typing a group size by hand clears the photo's mean radius, since it no longer matches.</p>
       <ol>
         <li>Tap a target photo, then <b>Measure groups</b>.</li>
         <li><b>Scale</b> (once per photo): tap two points a known distance apart, such as two grid lines 1 inch apart, and enter that distance in <b>Scale (in)</b>. Check <b>Distance (yd)</b> too.</li>
@@ -1136,7 +1137,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Shots</b>: check every mark. Tap a wrong one to remove it, tap a missed hole to add it, drag a mark to move it. Holes that touch usually need adding by hand. Pinch to zoom.</li>
         <li>Under <b>This group is</b>, pick the charge weight it goes with.</li>
         <li>Tap <b>+ Group</b> for the next group and repeat from the aim point. Tap a group's chip (or any of its marks) to go back to it.</li>
-        <li>Tap <b>Save</b>. Each matched charge gets its group size and distance, and the group MOA shows on the <b>Velocity by charge</b> chart.</li>
+        <li>Tap <b>Save</b>. Each matched charge gets its group size, distance, <b>mean radius</b> and where the group's center landed from the aim point, and the group MOA shows on the <b>Velocity by charge</b> chart.</li>
       </ol>
       <p>Group size is center to center of the two farthest shots, the same as calipers across the outside edges minus one bullet width.</p>
       <h3>Use a load in the calculator</h3>
@@ -1149,8 +1150,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </ul>
       <h3>Share a load</h3>
       <p>Open the load and tick people under <b>Sharing</b>. They can see the load, its velocities and photos but can't change anything. Untick to stop sharing. Loads shared with you appear under <b>Shared with me</b>; use <b>Duplicate recipe</b> to make your own editable copy.</p>
-      <h3>Export your data</h3>
-      <p>Tap <b>More → Account</b> (or <b>Account</b> at the top on a computer), then <b>Download Excel</b> or <b>Download PDF</b>. The PDF includes your target photos.</p>
+      <h3>Back up, export and import</h3>
+      <p>Tap <b>More → Account</b> (or <b>Account</b> at the top on a computer). <b>Download backup</b> saves everything in your account in one .zip file, photos included. <b>Download Excel</b> and <b>Download PDF</b> are for reading and printing (the PDF includes your target photos).</p>
+      <p>To bring data back in, or move it to another Range Book, use <b>Import</b> on the same page and pick a backup or an Excel export (Excel files don't carry photos). Importing <b>adds</b> to your account: anything already there is left alone and nothing is deleted, so importing the same file twice doesn't double anything.</p>
     </section>
     <section class="card guide" aria-label="Guns and Ammo" id="hGuns">
       <h2>Guns &amp; Ammo</h2>
@@ -1189,7 +1191,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 <h2>The math is an estimate.</h2>
 <p>Trajectories, dope cards, true-up, spin drift, the weather and group measurements are all educated guesses. Confirm your dope on paper before you bet a shot or a hunt on it. Nothing here tells you whether a shot is safe; that's on you. Know your target and what's behind it.</p>
 <h2>Software breaks.</h2>
-<p>There may be bugs. Data may get lost. Back up anything you care about (<b>Account → Download Excel</b>).</p>
+<p>There may be bugs. Data may get lost. Back up anything you care about (<b>Account → Download backup</b>).</p>
 <h2>The part where you agree.</h2>
 <p>You're responsible for your own guns, ammo, components and decisions. If you do something dumb, like blowing up a rifle, hurting yourself, hurting someone else, or putting a hole in something you didn't mean to, that's on you. It's not on the person who runs this site or anyone who helped build it. Range Book comes with no warranty of any kind, express or implied. If you can't live with that, close this page and go read a reloading manual. (You should probably do that anyway.)</p>
 <p>Follow the four rules, wear eye and ear protection, and keep the powder away from the cigarette.</p></div></section>
@@ -1282,9 +1284,16 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-account" role="tabpanel" hidden>
     <header><h1>Account</h1><p class="sub" id="acctWho"></p></header>
-    <section class="card" aria-label="Export my data"><h2>Export my data</h2>
-      <p class="note">Download everything in your account: your loads and recipes, every shot's velocity, group results and your calculator loads. The PDF also includes your target photos.</p>
-      <div class="row"><a class="btn primary" href="/api/export.xlsx" download>Download Excel</a><a class="btn" href="/api/export.pdf" download>Download PDF</a></div>
+    <section class="card" aria-label="Back up and export"><h2>Back up and export</h2>
+      <p class="note"><b>Download backup</b> saves everything in your account in one .zip file, photos included: loads, ladders, Shooting loads, guns, ammo, components, range trips and notes. Import it here (or on another Range Book) to get it all back.</p>
+      <div class="row"><a class="btn primary" href="/api/backup.zip" download>Download backup</a></div>
+      <p class="note">To read or print your data: the Excel file has your loads, every shot's velocity, group results and more (it can be imported too, without photos); the PDF also includes your target photos.</p>
+      <div class="row"><a class="btn" href="/api/export.xlsx" download>Download Excel</a><a class="btn" href="/api/export.pdf" download>Download PDF</a></div>
+    </section>
+    <section class="card" aria-label="Import" id="importCard"><h2>Import</h2>
+      <p class="note">Bring in a Range Book backup (.zip) or an Excel export from Range Book. Everything in the file is <b>added</b> to your account; anything already here (the same load, gun, trip or photo) is left as it is, so importing the same file twice doesn't double anything. Nothing is deleted.</p>
+      <div class="row"><input id="impFile" type="file" accept=".zip,.xlsx,application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn primary" type="button" id="impPick">Choose a file to import</button><span class="savestate" id="impState" aria-live="polite"></span></div>
+      <div id="impRes"></div>
     </section>
     <section class="card" aria-label="Theme"><h2>Theme</h2>
       <div class="themegrid" id="themeGrid"></div>
@@ -2219,6 +2228,13 @@ function newGroup(prev){
 
 const MOA_IN=1.04720;
 function groupMoa(g){const sz=num(g.groupSize),d=num(g.distance);return (sz>0&&d>0)?sz/(d/100*MOA_IN):null;}
+// mean radius: the average distance of every hole from the group's center (from a measured target photo). It uses every
+// shot, so it's steadier than the two widest holes, especially for small groups.
+function groupMr(g){const r=num(g.meanRadius),d=num(g.distance);return (r>0&&d>0)?r/(d/100*MOA_IN):null;}
+// where the group's center landed relative to the aim point, in inches (right and up are positive)
+function poaText(g){const x=num(g.poaX),y=num(g.poaY);if(x==null||y==null)return "";
+  const lr=Math.abs(x)<.005?"centered":U.s("in",Math.abs(x),2)+" "+(x>0?"right":"left"),ud=Math.abs(y)<.005?"centered":U.s("in",Math.abs(y),2)+" "+(y>0?"high":"low");
+  return lr===ud?"centered on the aim point":lr+", "+ud+" of aim";}
 function maxState(g,L){const mx=num(L.maxCharge);if(!(mx>0)||g.charge==null)return null;if(g.charge>mx)return "over";if(g.charge===mx)return "at";return null;}
 function stats(g,L){
   const sh=(g.shots||[]).map(Number).filter(x=>isFinite(x)&&x>0).map(Math.round);
@@ -3465,7 +3481,7 @@ function openLoad(id){openId=id;importMsg=null;photos=[];loadPhotos(id);renderDe
 document.getElementById("relHeadBack").addEventListener("click",()=>closeLoad());
 function closeLoad(){openId=null;photos=[];renderList();window.scrollTo(0,0);}
 function loadPhotos(id){
-  API.get("/api/loads/"+id+"/photos").then(r=>{if(openId!==id)return;photos=r.photos||[];renderPhotos();},()=>{});
+  API.get("/api/loads/"+id+"/photos").then(r=>{if(openId!==id)return;photos=r.photos||[];renderPhotos();backfillMr(id);},()=>{});
 }
 /* ---------- target photos ---------- */
 function loadImage(file){
@@ -3522,6 +3538,15 @@ function renderPhotos(){
   document.querySelectorAll("#photoGrid [data-photo],.ladphotos [data-photo]").forEach(b=>b.addEventListener("click",()=>openViewer(b.dataset.photo)));
   document.querySelectorAll("#photoGrid [data-padd],.ladphotos [data-padd]").forEach(b=>b.addEventListener("click",()=>{photoLad=b.dataset.padd||null;const pi=$("photoIn");if(pi)pi.click();}));
 }
+// groups measured from a photo before mean radius was kept on the group: copy it (and the aim-point offset) from the photo
+function backfillMr(id){
+  const L=loads.get(id);if(!L||!isMine(id)||L.locked)return;let changed=false;
+  photos.forEach(p=>{const M=normMeasure(p.measure);if(!M)return;
+    M.groups.forEach(t=>{const g=(L.groups||[]).find(x=>x.id===t.groupId);if(!g||g.meanRadius!=null||t.mr==null||t.size==null)return;
+      if(Math.abs(num(g.groupSize)-t.size)>0.02)return;               // the size was changed by hand since: leave it
+      g.meanRadius=+t.mr.toFixed(3);if(t.dx!=null&&t.dy!=null){g.poaX=+t.dx.toFixed(3);g.poaY=+t.dy.toFixed(3);}changed=true;});});
+  if(changed){queueSave(id);if(openId===id){refreshComputed();}}
+}
 let viewerId=null,capTimer=null,VCTX=null;
 // the photo viewer and measuring screen work on a "context": a reloading load's photos, or a range trip's
 function loadCtx(){
@@ -3532,6 +3557,8 @@ function loadCtx(){
       let changed=false;
       out.groups.forEach(t=>{const g=(L.groups||[]).find(x=>x.id===t.groupId);if(!g||t.size==null)return;
         g.groupSize=+t.size.toFixed(2);changed=true;
+        if(t.mr!=null)g.meanRadius=+t.mr.toFixed(3);else delete g.meanRadius;
+        if(t.dx!=null&&t.dy!=null){g.poaX=+t.dx.toFixed(3);g.poaY=+t.dy.toFixed(3);}else{delete g.poaX;delete g.poaY;}
         const lad=M.distance>0&&(L.ladders||[]).find(l=>l.id===g.ladderId);
         if(lad){lad.dist=M.distance;syncLadder(L,lad);const b=$("lt_"+lad.id+"_dist"),ls=$("ls_"+lad.id);if(b)U.fill(b,"yd",lad.dist,0,1);if(ls)ls.textContent=ladderSum(L,lad);}
         const a=$("g_"+g.id+"_groupSize");if(a)U.fill(a,"in",g.groupSize,2,3);});
@@ -4339,7 +4366,7 @@ function renderDetail(){
     bindTop("g_"+g.id+"_charge",v=>{g.charge=num(v);const lad=LADS.find(l=>l.id===g.ladderId);const ls=lad&&$("ls_"+lad.id);if(ls)ls.textContent=ladderSum(L,lad);
       const lb=lad&&$("relRoot").querySelector('[data-llbl="'+lad.id+'"]');if(lb)lb.hidden=!ladderGroups(L,lad).some(x=>num(x.charge)>0);if(lad)refreshLadLog(lad);});
     bindTop("g_"+g.id+"_label",v=>g.label=v);
-    bindTop("g_"+g.id+"_groupSize",v=>g.groupSize=U.read($("g_"+g.id+"_groupSize"),"in",g.groupSize));
+    bindTop("g_"+g.id+"_groupSize",v=>{const nv=U.read($("g_"+g.id+"_groupSize"),"in",g.groupSize);if(nv!==g.groupSize){delete g.meanRadius;delete g.poaX;delete g.poaY;}g.groupSize=nv;});
   });
   $("relRoot").querySelectorAll("[data-s]").forEach(inp=>{
     inp.addEventListener("input",()=>{const g=L.groups.find(x=>x.id===inp.dataset.g),n=num(inp.value);g.shots[+inp.dataset.s]=n==null?null:Math.round(U.from("fps",n));touched();});
@@ -4637,9 +4664,9 @@ function sendToCalc(L,s,what){
 function combinedGroups(L){
   const by=[];(L.groups||[]).forEach(g=>{const c=num(g.charge);if(!(c>0))return;let e=by.find(x=>sameCharge(x.charge,c));if(!e){e={charge:c,src:[]};by.push(e);}e.src.push(g);});
   return by.sort((a,b)=>a.charge-b.charge).map(e=>{
-    const ms=e.src.map(groupMoa).filter(v=>v!=null),lads=new Set(e.src.map(g=>g.ladderId));
+    const ms=e.src.map(groupMoa).filter(v=>v!=null),mrs=e.src.map(groupMr).filter(v=>v!=null),lads=new Set(e.src.map(g=>g.ladderId));
     const dates=[...new Set(e.src.map(g=>g.date).filter(Boolean))].sort();
-    return {id:"cmb_"+e.charge,charge:e.charge,label:"",shots:e.src.flatMap(g=>(g.shots||[]).filter(x=>Number(x)>0)),_cmb:true,_groups:e.src.length,_ladders:lads.size,_moa:ms.length?ms.reduce((a,b)=>a+b,0)/ms.length:null,_moaN:ms.length,_dates:dates};});
+    return {id:"cmb_"+e.charge,charge:e.charge,label:"",shots:e.src.flatMap(g=>(g.shots||[]).filter(x=>Number(x)>0)),_cmb:true,_groups:e.src.length,_ladders:lads.size,_moa:ms.length?ms.reduce((a,b)=>a+b,0)/ms.length:null,_moaN:ms.length,_mr:mrs.length?mrs.reduce((a,b)=>a+b,0)/mrs.length:null,_mrN:mrs.length,_dates:dates};});
 }
 const moaOf=g=>g._cmb?g._moa:groupMoa(g);
 // the groups the Summary and charts show: one ladder, all of them, or all of them combined by charge
@@ -4657,20 +4684,24 @@ function refreshComputed(){
     el.innerHTML+='<button type="button" class="btn small combbtn" data-comb aria-pressed="'+comb+'">Combine matching charges</button>';
     $(id+"_s").addEventListener("change",e=>{relLad[openId]=e.target.value;refreshComputed();});
     el.querySelector("[data-comb]").addEventListener("click",()=>{relComb[openId]=!relComb[openId];refreshComputed();});});
-  let h='<thead><tr><th>Group</th><th>Date</th><th>Shots</th><th>Avg '+U.u("fps")+'</th><th>SD</th><th>ES</th><th>Group (MOA)</th><th>Energy ('+U.u("ftlb")+')</th><th></th></tr></thead><tbody>';
+  // the Mean radius column only when some group has one (it comes from measuring a target photo)
+  const MRC=(L.groups||[]).some(g=>groupMr(g)!=null);
+  let h='<thead><tr><th>Group</th><th>Date</th><th>Shots</th><th>Avg '+U.u("fps")+'</th><th>SD</th><th>ES</th><th>Group (MOA)</th>'+(MRC?'<th>Mean radius (MOA)</th>':'')+'<th>Energy ('+U.u("ftlb")+')</th><th></th></tr></thead><tbody>';
   (L.groups||[]).forEach((g,i)=>{
     const s=stats(g,L);
     const t=$("gt_"+g.id);if(t)t.textContent=gName(g,i);
     const st=$("st_"+g.id);
     const moa=groupMoa(g),ms=maxState(g,L);
-    const grpTxt=moa!=null?'<span>Group <b>'+U.s("in",num(g.groupSize),2)+' · '+moa.toFixed(2)+' MOA</b> at '+U.s("yd",num(g.distance),0)+'</span>':'';
+    const mr=groupMr(g),pt=poaText(g);
+    const grpTxt=(moa!=null?'<span>Group <b>'+U.s("in",num(g.groupSize),2)+' · '+moa.toFixed(2)+' MOA</b> at '+U.s("yd",num(g.distance),0)+'</span>':'')+
+      (mr!=null?'<span>Mean radius <b>'+U.s("in",num(g.meanRadius),2)+' · '+mr.toFixed(2)+' MOA</b></span>':'')+(pt?'<span>Center '+esc(pt)+'</span>':'');
     if(st)st.innerHTML=(s?'<span>Avg <b>'+vS(s.avgT)+'</b></span><span>SD <b>'+sdS(s.sd)+'</b></span><span>ES <b>'+esS(s.es)+'</b></span>'+(s.me!=null?'<span>Energy <b>'+eS(s.me)+' '+U.u("ftlb")+'</b></span>':''):'<span>Enter shot velocities to see stats.</span>')+grpTxt;
     const chip=$("gmax_"+g.id);if(chip){chip.hidden=!ms;chip.textContent=ms==="over"?"Over max charge":"At max charge";chip.classList.toggle("over",ms==="over");}
     const flag=ms?' <span class="chip maxchip'+(ms==="over"?' over':'')+'">'+(ms==="over"?"over max":"at max")+'</span>':'';
     if(relComb[openId]&&many)return;
     if(show&&g.ladderId!==show.id)return;
     const ltag=many&&!show?' <span class="note">· '+esc(ladderName(L,(L.ladders||[]).find(l=>l.id===g.ladderId)||{}))+'</span>':'';
-    h+='<tr style="--gc:'+COLORS[i%COLORS.length]+'"><td class="gname" style="color:'+COLORS[i%COLORS.length]+';font-weight:600">'+esc(gName(g,i))+ltag+flag+'</td><td data-l="Date">'+esc(fmtDate(g.date))+'</td><td data-l="Shots">'+(s?s.n:0)+'</td><td data-l="Avg fps">'+(s?vS(s.avgT):"–")+'</td><td data-l="SD">'+(s?sdS(s.sd):"–")+'</td><td data-l="ES">'+(s?esS(s.es):"–")+'</td><td data-l="Group MOA">'+(moa!=null?moa.toFixed(2):"–")+'</td><td data-l="Energy">'+(s&&s.me!=null?eS(s.me):"–")+'</td><td class="act">'+
+    h+='<tr style="--gc:'+COLORS[i%COLORS.length]+'"><td class="gname" style="color:'+COLORS[i%COLORS.length]+';font-weight:600">'+esc(gName(g,i))+ltag+flag+'</td><td data-l="Date">'+esc(fmtDate(g.date))+'</td><td data-l="Shots">'+(s?s.n:0)+'</td><td data-l="Avg fps">'+(s?vS(s.avgT):"–")+'</td><td data-l="SD">'+(s?sdS(s.sd):"–")+'</td><td data-l="ES">'+(s?esS(s.es):"–")+'</td><td data-l="Group MOA">'+(moa!=null?moa.toFixed(2):"–")+'</td>'+(MRC?'<td data-l="Mean radius">'+(groupMr(g)!=null?groupMr(g).toFixed(2):"–")+'</td>':'')+'<td data-l="Energy">'+(s&&s.me!=null?eS(s.me):"–")+'</td><td class="act">'+
       (s&&s.w?'<button class="linkbtn" type="button" data-calc="'+g.id+'">Use in calculator</button>':'')+
       (g.charge!=null?(sameCharge(num(g.charge),num(L.workCharge))?' <span class="chip workchip">Working charge</span>':(isMine(openId)&&!L.locked?' <button class="linkbtn" type="button" data-work="'+g.charge+'">This is my load</button>':'')):'')+'</td></tr>';
   });
@@ -4680,12 +4711,12 @@ function refreshComputed(){
     const flag=ms?' <span class="chip maxchip'+(ms==="over"?' over':'')+'">'+(ms==="over"?"over max":"at max")+'</span>':'';
     const tag=' <span class="note">· '+g._groups+' group'+(g._groups===1?'':'s')+(g._ladders>1?' in '+g._ladders+' ladders':'')+'</span>';
     const dts=g._dates.length?g._dates.map(fmtDate).join(", "):"";
-    h+='<tr style="--gc:'+col+'"><td class="gname" style="color:'+col+';font-weight:600">'+esc(g.charge+" gr")+tag+flag+'</td><td data-l="Date">'+esc(dts)+'</td><td data-l="Shots">'+(s?s.n:0)+'</td><td data-l="Avg fps">'+(s?vS(s.avgT):"–")+'</td><td data-l="SD">'+(s?sdS(s.sd):"–")+'</td><td data-l="ES">'+(s?esS(s.es):"–")+'</td><td data-l="Group MOA">'+(moa!=null?moa.toFixed(2)+(g._moaN>1?' <span class="note">avg of '+g._moaN+'</span>':''):"–")+'</td><td data-l="Energy">'+(s&&s.me!=null?eS(s.me):"–")+'</td><td class="act">'+
+    h+='<tr style="--gc:'+col+'"><td class="gname" style="color:'+col+';font-weight:600">'+esc(g.charge+" gr")+tag+flag+'</td><td data-l="Date">'+esc(dts)+'</td><td data-l="Shots">'+(s?s.n:0)+'</td><td data-l="Avg fps">'+(s?vS(s.avgT):"–")+'</td><td data-l="SD">'+(s?sdS(s.sd):"–")+'</td><td data-l="ES">'+(s?esS(s.es):"–")+'</td><td data-l="Group MOA">'+(moa!=null?moa.toFixed(2)+(g._moaN>1?' <span class="note">avg of '+g._moaN+'</span>':''):"–")+'</td>'+(MRC?'<td data-l="Mean radius">'+(g._mr!=null?g._mr.toFixed(2)+(g._mrN>1?' <span class="note">avg of '+g._mrN+'</span>':''):"–")+'</td>':'')+'<td data-l="Energy">'+(s&&s.me!=null?eS(s.me):"–")+'</td><td class="act">'+
       (s&&s.w?'<button class="linkbtn" type="button" data-calc="'+g.id+'">Use in calculator</button>':'')+
       (sameCharge(num(g.charge),num(L.workCharge))?' <span class="chip workchip">Working charge</span>':(isMine(openId)&&!L.locked?' <button class="linkbtn" type="button" data-work="'+g.charge+'">This is my load</button>':''))+'</td></tr>';
   });
   $("sumTbl").innerHTML=h+'</tbody>';
-  {const n=$("sumNote");if(n)n.innerHTML=CG.length?'Combined: each charge pools every shot at that charge from all your ladders. Group (MOA) is the average of the groups you measured at that charge. Your ladders aren\'t changed.':'';}
+  {const n=$("sumNote");if(n)n.innerHTML=CG.length?'Combined: each charge pools every shot at that charge from all your ladders. Group (MOA) and Mean radius are averages of the groups you measured at that charge. Your ladders aren\'t changed.':'';}
   $("sumTbl").querySelectorAll("[data-calc]").forEach(b=>b.addEventListener("click",()=>{
     const g=L.groups.find(x=>x.id===b.dataset.calc)||CG.find(x=>x.id===b.dataset.calc),s=stats(g,L);
     if(s)sendToCalc(L,s,[g.charge!=null?g.charge+" gr":"",g.label||""].filter(Boolean).join(" · "));
@@ -5713,6 +5744,34 @@ window.addEventListener("focus",()=>checkUpdate(false));
 setInterval(()=>{if(document.visibilityState==="visible")checkUpdate(false);},60000);
 // right after opening too: the page may be the phone's saved copy (opened while the server was restarting for an update)
 setTimeout(()=>checkUpdate(true),2500);
+/* ---------- Account → Import: a backup (.zip) or an Excel export; the server adds what isn't here yet ---------- */
+function setupImport(){
+  const pick=$("impPick"),inp=$("impFile"),st=$("impState"),out=$("impRes");if(!pick||GUEST){const c=$("importCard");if(c&&GUEST)c.hidden=true;return;}
+  pick.addEventListener("click",()=>inp.click());
+  const NAMES={calc:"Shooting loads",rifles:"Gun list",ammo:"Ammunition",components:"Components",trips:"Range trips",notes:"Reloading notes",brass:"Brass notes"};
+  inp.addEventListener("change",async()=>{
+    const f=inp.files&&inp.files[0];inp.value="";if(!f)return;
+    if(!navigator.onLine){st.textContent="You're offline. Import needs a connection.";return;}
+    pick.disabled=true;out.innerHTML="";st.textContent="Saving your latest changes…";
+    try{if(window.RB_UNDO_FLUSH)RB_UNDO_FLUSH();}catch(e){}
+    await new Promise(r=>setTimeout(r,1000));{const t0=Date.now();while(window.RB_BUSY&&RB_BUSY()&&Date.now()-t0<8000)await new Promise(r=>setTimeout(r,150));}
+    st.textContent="Importing "+f.name+"…";
+    let j=null,ok=false;
+    try{const r=await fetch("/api/import",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/octet-stream","X-Requested-With":"rangebook"},body:f});
+      try{j=await r.json();}catch(e){}ok=r.ok;}catch(e){j={error:"The server couldn't be reached. Check your connection and try again."};}
+    pick.disabled=false;
+    if(!ok||!j||!j.result){st.textContent="";out.innerHTML='<p class="err">'+esc((j&&j.error)||"That file couldn't be imported.")+'</p>';return;}
+    const R=j.result,lines=[];
+    const ln=(name,t)=>{if(!t||!(t.added||t.skipped))return;lines.push('<li><b>'+esc(name)+'</b>: '+t.added+' added'+(t.skipped?', '+t.skipped+' already here':'')+'</li>');};
+    ln("Reloading loads",R.loads);Object.keys(NAMES).forEach(k=>ln(NAMES[k],R.lists&&R.lists[k]));if(R.kind==="backup")ln("Photos",R.photos);
+    const any=R.loads.added||R.photos.added||Object.values(R.lists||{}).some(t=>t.added);
+    st.textContent="";
+    out.innerHTML='<div class="banner" role="status"><p style="margin:0 0 6px"><b>'+(any?'Imported':'Nothing new to import')+'</b> from '+esc(f.name)+(R.from&&R.from.name?' ('+esc(R.from.name)+(R.made?', '+esc(fmtRelDate(String(R.made).slice(0,10))):'')+')':'')+'.</p>'+
+      (lines.length?'<ul style="margin:0;padding-left:20px">'+lines.join("")+'</ul>':'')+(R.kind==="excel"?'<p class="note" style="margin:6px 0 0">Excel files don\'t carry photos. Use a backup file to bring photos along.</p>':'')+
+      (any?'<div class="row" style="margin-top:8px"><button class="btn primary" type="button" id="impReload">Show my imported data</button></div>':'')+'</div>';
+    const b=$("impReload");if(b)b.addEventListener("click",()=>location.reload());
+  });
+}
 async function loadChangelog(){
   try{CHANGELOG=await (await fetch("/changelog.json",{cache:"no-cache"})).json();}catch(e){return;}
   const R=(CHANGELOG&&CHANGELOG.releases)||[];if(!R.length)return;
@@ -5739,6 +5798,7 @@ async function startApp(user,api){
   setupGoUp();setupPullRefresh();
   ["help","admin","account","tools"].forEach(k=>$("more-"+k).addEventListener("click",()=>showTab(k)));
   $("more-new").addEventListener("click",showWhatsNew);$("updSee").addEventListener("click",showWhatsNew);$("updReload").addEventListener("click",reloadForUpdate);
+  setupImport();
   $("updX").addEventListener("click",()=>{$("updBanner").hidden=true;if(UPD_VER)updDismissed=UPD_VER;try{localStorage.setItem("rb.seenVer",CHANGELOG.releases[0].version);}catch(e){}});
   loadChangelog();
   // How to Use → License: link to this copy's source code when the server sets SOURCE_URL
@@ -5789,7 +5849,7 @@ async function startApp(user,api){
     if(w&&w.at&&Date.now()-w.at<12*3600e3&&want==="home")REL.restore(w);
   }
 }
-const TERMS_HTML="<h2>Shooting is dangerous.</h2><p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p><h2>This is a notebook, not a load manual.</h2><p>Range Book is a log and a calculator built by a guy who likes to shoot. It is not a load manual, a gunsmith, or your mom. Every charge weight in here is just a number somebody typed, and somebody makes typos. That includes the max-charge warnings, the ladder test planner and anything someone shared with you. <b>Check every load against a current published manual</b> from the powder or bullet maker before it goes in a case. Start low, work up, and watch for pressure signs. If your primers look like pancakes, stop.</p><h2>The math is an estimate.</h2><p>Trajectories, dope cards, true-up, spin drift, the weather and group measurements are all educated guesses. Confirm your dope on paper before you bet a shot or a hunt on it. Nothing here tells you whether a shot is safe; that's on you. Know your target and what's behind it.</p><h2>Software breaks.</h2><p>There may be bugs. Data may get lost. Back up anything you care about (<b>Account → Download Excel</b>).</p><h2>The part where you agree.</h2><p>You're responsible for your own guns, ammo, components and decisions. If you do something dumb, like blowing up a rifle, hurting yourself, hurting someone else, or putting a hole in something you didn't mean to, that's on you. It's not on the person who runs this site or anyone who helped build it. Range Book comes with no warranty of any kind, express or implied. If you can't live with that, close this page and go read a reloading manual. (You should probably do that anyway.)</p><p>Follow the four rules, wear eye and ear protection, and keep the powder away from the cigarette.</p>";
+const TERMS_HTML="<h2>Shooting is dangerous.</h2><p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p><h2>This is a notebook, not a load manual.</h2><p>Range Book is a log and a calculator built by a guy who likes to shoot. It is not a load manual, a gunsmith, or your mom. Every charge weight in here is just a number somebody typed, and somebody makes typos. That includes the max-charge warnings, the ladder test planner and anything someone shared with you. <b>Check every load against a current published manual</b> from the powder or bullet maker before it goes in a case. Start low, work up, and watch for pressure signs. If your primers look like pancakes, stop.</p><h2>The math is an estimate.</h2><p>Trajectories, dope cards, true-up, spin drift, the weather and group measurements are all educated guesses. Confirm your dope on paper before you bet a shot or a hunt on it. Nothing here tells you whether a shot is safe; that's on you. Know your target and what's behind it.</p><h2>Software breaks.</h2><p>There may be bugs. Data may get lost. Back up anything you care about (<b>Account → Download backup</b>).</p><h2>The part where you agree.</h2><p>You're responsible for your own guns, ammo, components and decisions. If you do something dumb, like blowing up a rifle, hurting yourself, hurting someone else, or putting a hole in something you didn't mean to, that's on you. It's not on the person who runs this site or anyone who helped build it. Range Book comes with no warranty of any kind, express or implied. If you can't live with that, close this page and go read a reloading manual. (You should probably do that anyway.)</p><p>Follow the four rules, wear eye and ear protection, and keep the powder away from the cigarette.</p>";
 function termsScreen(onAgree,onDecline,guest){
   showAuth('<div class="authcard card terms" role="dialog" aria-labelledby="termsTitle">'+
     '<div class="brand"><span class="mark" aria-hidden="true"></span>Range Book</div>'+
@@ -5877,7 +5937,7 @@ async function loadAdmin(){
         '<div class="row unameedit" data-nameedit hidden><input type="text" maxlength="80" aria-label="Display name" value="'+esc(u.name||"")+'" placeholder="'+esc(u.username)+'"><button class="btn primary" type="button" data-act="namesave">Save</button><button class="btn" type="button" data-act="namecancel">Cancel</button></div>'+
         '<div class="row"><button class="btn" type="button" data-act="name">Edit name</button>'+(u.isMe?'':'<button class="btn" type="button" data-act="reset">Reset password</button>')+
         '<button class="btn" type="button" data-act="admin">'+(u.isAdmin?'Remove admin':'Make admin')+'</button>'+
-        '<a class="btn" href="/api/admin/users/'+u.id+'/export.xlsx" download>Export Excel</a><a class="btn" href="/api/admin/users/'+u.id+'/export.pdf" download>Export PDF</a>'+
+        '<a class="btn" href="/api/admin/users/'+u.id+'/export.xlsx" download>Export Excel</a><a class="btn" href="/api/admin/users/'+u.id+'/export.pdf" download>Export PDF</a><a class="btn" href="/api/admin/users/'+u.id+'/export.zip" download>Backup</a>'+
         (u.isMe?'':'<button class="btn" type="button" data-act="toggle">'+(u.disabled?'Turn on':'Turn off')+'</button><button class="btn danger" type="button" data-act="delete">Delete</button>')+
         '</div><div class="banner" data-out hidden></div></div>';
     });
