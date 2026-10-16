@@ -25,7 +25,7 @@ Free software under the [GNU AGPL-3.0](#license).
 - **Guns & Ammo:** gun records with photos, round counts, barrel life and cleaning reminders; reloaded and factory ammo inventory, with a catalog of about 155 factory loads.
 - **Tools:** quick calculators, nothing saved: twist & bullet stability (also a warning on any Shooting load whose twist is too slow), MOA/MIL/inches, powder per container and cost per round, unit conversions, printable targets, and **Live target** on its own (no load needed: saved targets can be moved into a range trip or a ladder later, or shared as a marked picture).
 - **Range trips and Range log:** conditions, rounds fired, chronograph strings and target photos you can measure (printed targets with corner squares are measured automatically). Each trip prints as a PDF report.
-- **For everyone on your server:** each person's data is private; loads can be shared view-only with specific people. Admins add people, reset passwords and check backups. An optional guest mode lets people try it without an account.
+- **For everyone on your server:** a short, skippable tour the first time someone signs in; each person's data is private; loads can be shared view-only with specific people. Admins add people, reset passwords and check backups. An optional guest mode lets people try it without an account.
 - **Phone-friendly:** works offline (over https), pull to refresh, Light, Dark and Red Night themes, imperial or metric.
 - **Your data is yours:** a one-file backup with photos, Excel and PDF exports, and Import to bring a backup or Excel export back in (or move to another server).
 

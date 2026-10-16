@@ -584,6 +584,20 @@ h1{font-size:26px}
 .moreback{position:absolute;inset:0;background:rgba(0,0,0,.35)}
 .morepanel{position:absolute;left:8px;right:8px;bottom:calc(var(--tabh) + 10px + env(safe-area-inset-bottom,0px));margin-left:auto;max-width:360px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px;display:flex;flex-direction:column;gap:2px;box-shadow:0 12px 32px rgba(0,0,0,.25)}
 .morewho{font-size:12px;color:var(--muted);padding:8px 12px 4px}
+.tour{position:fixed;inset:0;z-index:90}
+.tour.dim{background:rgba(0,0,0,.6)}
+.tourhole{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.6);outline:3px solid var(--accent);outline-offset:0;transition:all .25s ease;pointer-events:none}
+.tourcard{position:fixed;width:min(360px,calc(100vw - 24px));background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:14px;padding:14px 16px 14px;box-shadow:0 12px 40px rgba(0,0,0,.45);transition:top .25s ease,left .25s ease;outline:none}
+.tourcard h2{margin:2px 0 6px;font-family:var(--display);font-size:21px}
+.tourcard p{margin:0 0 10px;line-height:1.45;font-size:15px}
+.tourtop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tourstep{font-size:12px;color:var(--muted);font-weight:600}
+.tourskip{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;padding:4px 2px;text-decoration:underline}
+.tourdots{display:flex;gap:5px;margin:0 0 12px}.tourdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.tourdots i.on{background:var(--accent)}
+.tourbtns{display:flex;justify-content:flex-end;gap:8px}
+.tourbtns .btn{min-width:90px;justify-content:center}
+@media(max-width:760px){.tourwide{display:none}}@media(min-width:761px){.tournarrow{display:none}}
+@media(prefers-reduced-motion:reduce){.tourhole,.tourcard{transition:none}}
 .moreitem{display:flex;align-items:center;gap:12px;padding:12px;border:0;background:none;border-radius:9px;font:inherit;font-size:16px;text-align:left;cursor:pointer;color:var(--fg)}
 .moreitem:hover,.moreitem:focus-visible{background:var(--sunk);outline:none}
 .moreitem svg{color:var(--accent)}
@@ -902,6 +916,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="morewho" id="moreWho"></div>
       <button class="moreitem" role="menuitem" id="more-tools" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.1L4 16.8V20h3.2l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.6-.6-.6-2.6z"/></svg>Tools</button>
       <button class="moreitem" role="menuitem" id="more-help" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>How to Use</button>
+      <button class="moreitem" role="menuitem" id="more-tour" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>Take the tour</button>
       <button class="moreitem" role="menuitem" id="more-new" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg>What's new</button>
       <button class="moreitem" role="menuitem" id="more-admin" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M17 11h5M19.5 8.5v5"/></svg>Admin</button>
       <button class="moreitem" role="menuitem" id="more-account" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Account</button>
@@ -1069,6 +1084,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="What's new" id="hNew"><h2>What's new</h2><div id="relNotes"><p class="note">Loading…</p></div></section>
     <section class="card guide" aria-label="Getting started" id="hStart">
       <h2>Getting started</h2>
+      <div class="row"><button class="btn primary" id="tourBtn" type="button">Take the tour</button><span class="note">A one-minute walk through the basics.</span></div>
       <h3>Signing in</h3>
       <p>The admin makes your account and gives you a temporary password. The first time you sign in you'll choose your own. To change it later, tap <b>More</b> at the bottom right, then <b>Account</b> (on a computer, <b>Account</b> is at the top right). Want a different name shown (on shared loads, box photos and the greeting on Home)? Ask the admin; they can change it with <b>Edit name</b> on the Admin page.</p>
       <h3>Colors</h3>
@@ -6607,6 +6623,59 @@ async function startApp(user,api){
     let w=null;try{w=JSON.parse(localStorage.getItem("rb.where")||"null");}catch(e){}
     if(w&&w.at&&Date.now()-w.at<12*3600e3&&want==="home")REL.restore(w);
   }
+  $("more-tour").addEventListener("click",()=>{closeMore();startTour();});
+  {const tb=$("tourBtn");if(tb)tb.addEventListener("click",startTour);}
+  // a brand-new account (it just agreed to the terms) gets the tour once
+  if(window.RB_TOUR_NEXT){window.RB_TOUR_NEXT=false;setTimeout(startTour,900);}
+}
+/* ---------- the tour: a short, skippable walk through the basics. It points at each part of the app in turn;
+   it doesn't change anything. It runs after a new account agrees to the terms, and from More → Take the tour. ---------- */
+function startTour(){
+  if($("tour"))return;
+  showTab("home",false);window.scrollTo(0,0);
+  const wide=()=>window.innerWidth>760,vis=id=>{const e=$(id);return e&&e.offsetParent!==null&&e.getBoundingClientRect().width>0?e:null;};
+  const navFor=id=>vis(id)||vis("tab-more");
+  const STEPS=[
+    {t:"Welcome to Range Book",b:"A one-minute tour of the basics. Skip it any time; you can take it again from "+"<span class=\"tournarrow\"><b>More → Take the tour</b>.</span><span class=\"tourwide\"><b>How to Use → Getting started</b>.</span>"},
+    {el:()=>vis("hNewTrip"),t:"Home",b:"Start here. <b>Start a range day</b> picks your gun and load and opens a range trip with today's weather. Home also shows what needs attention, like low components or a gun due for cleaning, and your recent trips and loads."},
+    {el:()=>navFor("tab-traj"),t:"Shooting",b:"Your ballistics calculator: drops and holds for each gun and load, a printable dope card, and <b>Field mode</b> for the bench. Your range trips and the <b>Range log</b> live here too."},
+    {el:()=>navFor("tab-rel"),t:"Reloading",b:"Your load recipes and <b>ladder tests</b>: charges, chronograph strings (import from LabRadar, Garmin and others), velocity charts and target photos Range Book can measure. Open the <b>SAMPLE</b> load to see how it all fits together."},
+    {el:()=>navFor("tab-rifles"),t:"Guns & Ammo",b:"Your guns with round counts, barrel life and cleaning reminders, your ammunition, and your components (bullets, powder, primers and brass) with what's on hand and what it costs."},
+    {el:()=>navFor("tab-tools"),t:"Tools",b:"Quick calculators, printable targets, and <b>Live target</b>: put your phone on a spotting scope and it marks each shot as it lands."+"<span class=\"tournarrow\"> On a phone, Tools is under <b>More</b>.</span>"},
+    {el:()=>navFor("tab-help"),t:"How to Use",b:"Every screen explained, plus <b>What's new</b> after each update. Your theme (including <b>Red Night</b>), metric or imperial, backups and password are under <b>Account</b>."+"<span class=\"tournarrow\"> On a phone, they're all under <b>More</b>.</span>"},
+    ...(ME&&ME.isAdmin&&!GUEST?[{el:()=>navFor("tab-admin"),t:"Admin",b:"You're an admin. Add the people who'll use this Range Book under <b>Admin → Add a user</b>; each gets a temporary password and their own private data. Backups and the guest button are here too."+"<span class=\"tournarrow\"> On a phone, Admin is under <b>More</b>.</span>"}]:[]),
+    {t:"One last thing",b:"Range Book is a notebook and a calculator, not a load manual. Always work up from a current published load manual for your exact components. That's the tour. Have fun out there."}
+  ];
+  let i=0;
+  const ov=document.createElement("div");ov.id="tour";ov.className="tour";
+  ov.innerHTML='<div class="tourhole" id="tourHole"></div><div class="tourcard" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourT" tabindex="-1"><div class="tourtop"><span class="tourstep" id="tourN"></span><button class="tourskip" id="tourSkip" type="button">Skip tour</button></div><h2 id="tourT"></h2><p id="tourB"></p><div class="tourdots" id="tourDots" aria-hidden="true"></div><div class="tourbtns"><button class="btn" id="tourBack" type="button">Back</button><button class="btn primary" id="tourNext" type="button">Next</button></div></div>';
+  document.body.appendChild(ov);
+  const hole=$("tourHole"),card=$("tourCard");
+  function place(){
+    const S=STEPS[i],el=S.el&&S.el();
+    if(!el){hole.hidden=true;ov.classList.add("dim");card.style.left="50%";card.style.top="50%";card.style.transform="translate(-50%,-50%)";return;}
+    ov.classList.remove("dim");hole.hidden=false;
+    const r=el.getBoundingClientRect(),pad=6;
+    hole.style.left=(r.left-pad)+"px";hole.style.top=(r.top-pad)+"px";hole.style.width=(r.width+pad*2)+"px";hole.style.height=(r.height+pad*2)+"px";
+    const cw=Math.min(360,window.innerWidth-24),ch=card.offsetHeight,vw=window.innerWidth,vh=window.innerHeight,gap=14;
+    let top=r.bottom+gap;if(top+ch>vh-12)top=r.top-gap-ch;if(top<12)top=Math.max(12,(vh-ch)/2);
+    let left=r.left+r.width/2-cw/2;left=Math.max(12,Math.min(vw-cw-12,left));
+    card.style.transform="none";card.style.left=left+"px";card.style.top=top+"px";
+  }
+  function show(){
+    const S=STEPS[i];$("tourT").textContent=S.t;$("tourB").innerHTML=S.b;$("tourN").textContent=(i+1)+" of "+STEPS.length;
+    $("tourDots").innerHTML=STEPS.map((x,k)=>'<i'+(k===i?' class="on"':'')+'></i>').join("");
+    $("tourBack").hidden=i===0;$("tourNext").textContent=i===0?"Show me":i===STEPS.length-1?"Done":"Next";$("tourSkip").hidden=i===STEPS.length-1;
+    const el=S.el&&S.el();if(el&&el.scrollIntoView){const r=el.getBoundingClientRect();if(r.top<0||r.bottom>window.innerHeight)el.scrollIntoView({block:"center"});}
+    requestAnimationFrame(place);card.focus();
+  }
+  function end(){window.removeEventListener("resize",place);window.removeEventListener("scroll",place,true);document.removeEventListener("keydown",key,true);ov.remove();}
+  const key=e=>{if(e.key==="Escape"){e.preventDefault();end();}else if(e.key==="ArrowRight"){e.preventDefault();$("tourNext").click();}else if(e.key==="ArrowLeft"&&i>0){e.preventDefault();i--;show();}};
+  $("tourNext").addEventListener("click",()=>{if(i>=STEPS.length-1)return end();i++;show();});
+  $("tourBack").addEventListener("click",()=>{if(i>0){i--;show();}});
+  $("tourSkip").addEventListener("click",end);
+  window.addEventListener("resize",place);window.addEventListener("scroll",place,true);document.addEventListener("keydown",key,true);
+  show();
 }
 const TERMS_HTML="<h2>Shooting is dangerous.</h2><p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p><h2>This is a notebook, not a load manual.</h2><p>Range Book is a log and a calculator built by a guy who likes to shoot. It is not a load manual, a gunsmith, or your mom. Every charge weight in here is just a number somebody typed, and somebody makes typos. That includes the max-charge warnings, the ladder test planner and anything someone shared with you. <b>Check every load against a current published manual</b> from the powder or bullet maker before it goes in a case. Start low, work up, and watch for pressure signs. If your primers look like pancakes, stop.</p><h2>The math is an estimate.</h2><p>Trajectories, dope cards, true-up, spin drift, the weather and group measurements are all educated guesses. Confirm your dope on paper before you bet a shot or a hunt on it. Nothing here tells you whether a shot is safe; that's on you. Know your target and what's behind it.</p><h2>Software breaks.</h2><p>There may be bugs. Data may get lost. Back up anything you care about (<b>Account → Download backup</b>).</p><h2>The part where you agree.</h2><p>You're responsible for your own guns, ammo, components and decisions. If you do something dumb, like blowing up a rifle, hurting yourself, hurting someone else, or putting a hole in something you didn't mean to, that's on you. It's not on the person who runs this site or anyone who helped build it. Range Book comes with no warranty of any kind, express or implied. If you can't live with that, close this page and go read a reloading manual. (You should probably do that anyway.)</p><p>Follow the four rules, wear eye and ear protection, and keep the powder away from the cigarette.</p>";
 function termsScreen(onAgree,onDecline,guest){
@@ -6628,7 +6697,7 @@ function route(user){
   if(!user)return loginScreen();
   if(user.mustChange)return changePasswordScreen(user);
   if(!user.acceptedTerms)return termsScreen(async()=>{const b=$("termsGo");b.disabled=true;b.textContent="One sec…";
-    try{const r=await API.post("/api/me/accept-terms");OFF.put("/api/me",{user:r.user});startApp(r.user);}catch(e){b.disabled=false;b.textContent="I agree, let me in";alertBox(e.message);}},signOut,false);
+    try{const r=await API.post("/api/me/accept-terms");OFF.put("/api/me",{user:r.user});window.RB_TOUR_NEXT=true;startApp(r.user);}catch(e){b.disabled=false;b.textContent="I agree, let me in";alertBox(e.message);}},signOut,false);
   startApp(user);
 }
 function alertBox(msg){const n=document.createElement("p");n.className="err";n.textContent=msg;const c=document.querySelector(".authcard");if(c)c.appendChild(n);}
