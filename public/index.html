@@ -1199,13 +1199,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Live target (phone on a spotting scope)</h3>
       <p>Range Book can watch a printed Range Book target through your phone's camera and mark each shot as it lands. Put the phone on the spotting scope with an adapter so it holds still, and aim the scope so the whole page and all four corner squares are in the picture. It needs Range Book's https address (the camera doesn't work on a plain http address).</p>
       <ol>
-        <li>In a ladder, tap <b>Live target</b> (next to <b>+ Photo</b>). From a range trip, use <b>Live target</b> next to <b>+ Add target photo</b>.</li>
+        <li>In a ladder, tap <b>Live target</b> (next to <b>+ Photo</b>). From a range trip, use <b>Live target</b> next to <b>+ Add target photo</b>. To use it without a load, open <b>Tools → Live target</b>.</li>
         <li>Allow the camera. When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
         <li>Check <b>Charge for this aim</b>, <b>Shots</b> and <b>Distance</b>.</li>
         <li>Fire, then tap <b>Shot</b>. It compares the page with how it looked before the shot and marks the new hole, numbered, with the group size, MOA, mean radius and where the group's center is from the aim point. A hole in the black center counts too.</li>
         <li>If it misses a hole, tap the hole on the picture to add it. Tap a wrong mark to remove it. <b>Undo</b> takes back the last change.</li>
         <li>After the last shot for that aim point it shows the group. Tap <b>Next</b> to move to the next aim point and charge, or use <b>‹ Aim</b> and <b>Next aim ›</b> any time.</li>
-        <li>Tap <b>Save</b> when you're done. It saves one photo of the target with every group measured, the same as <b>Measure groups</b>, and each charge gets its group size, mean radius and distance. You can open the photo and edit the marks later.</li>
+        <li>Tap <b>Save</b> when you're done. It saves one photo of the target with every group measured, the same as <b>Measure groups</b>, and each charge gets its group size, mean radius and distance. You can open the photo and edit the marks later. (From Tools, the button is <b>Save picture</b> instead.)</li>
       </ol>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows what the microphone hears.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
@@ -1249,6 +1249,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
         <li><b>Powder</b>: how many rounds a container of powder makes at your charge, what the powder costs per round, and how much you need for a number of rounds. <b>Fill in from</b> uses a Reloading load's charge and, if its powder has a price in Components, the price.</li>
         <li><b>Convert</b>: grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules. Type in either box.</li>
+        <li><b>Live target</b>: the spotting-scope camera without a load or range trip. Set the bullet diameter, distance and shots per aim point, tap <b>Start Live target</b>, and use it the same way (see Live target under Reloading). Nothing is saved to a load: <b>Save picture</b> gives you a picture of the target with every group drawn on it and its size, MOA, mean radius and center underneath, to keep in Photos or send to someone.</li>
         <li><b>Targets</b>: the printable targets (see Shooting above).</li>
       </ul>
       <p>On a Shooting load with a bullet length and twist filled in, a warning also appears at the top when the bullet isn't fully stable in that twist under today's conditions, with a <b>Check it in Tools</b> button.</p>
@@ -1295,8 +1296,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div id="targetsRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
-    <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators. Nothing here is saved: change a number and the answer updates.</p></header>
-    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved to your loads.</p></header>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <div class="col toolsroot">
     <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden>
       <p class="note toolnote">Will this bullet be stable in your barrel? This uses the Miller formula, corrected for velocity, temperature and altitude, the same one Shooting uses for spin drift.</p>
@@ -1314,6 +1315,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="toolfill"><label for="pw_from">Fill in from</label><select id="pw_from" class="fieldselect"></select></div>
       <div class="grid toolgrid t4"><div class="field"><label for="pw_c">Charge (gr)</label><input id="pw_c" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_j">Container</label><select id="pw_j" class="fieldselect"><option value="7000">1 lb</option><option value="56000">8 lb</option><option value="3500">½ lb</option><option value="28000">4 lb</option><option value="15432.36">1 kg</option><option value="7716.18">500 g</option></select></div><div class="field"><label for="pw_p">Price of the container ($)</label><input id="pw_p" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_n">Rounds you want to load</label><input id="pw_n" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="pw_res" aria-live="polite"></div>
+    </section>
+    <section class="card tool" data-toolsec="live" aria-label="Live target" hidden>
+      <p class="note toolnote">Put your phone on a spotting scope (an adapter keeps it still) and aim it at a <b>printed Range Book target</b> with all four corner squares in view. After each shot, tap <b>Shot</b> and it marks the new hole and updates the group. Nothing is saved to a load: <b>Save picture</b> gives you a picture of the target with every group and its numbers. To save the groups to a ladder instead, use <b>Live target</b> in that ladder.</p>
+      <div class="grid"><div class="field"><label for="lt_dia">Bullet diameter (<span data-unit="dim">in</span>)</label><input id="lt_dia" type="number" inputmode="decimal" step="any" list="lt_dias"><datalist id="lt_dias"><option value=".224"><option value=".243"><option value=".264"><option value=".277"><option value=".284"><option value=".308"><option value=".338"><option value=".355"><option value=".357"><option value=".452"></datalist></div>
+        <div class="field"><label for="lt_dist">Distance (<span data-unit="yd">yd</span>)</label><input id="lt_dist" type="number" inputmode="numeric" step="any"></div>
+        <div class="field"><label for="lt_want">Shots per aim point</label><input id="lt_want" type="number" inputmode="numeric" min="1" step="1"></div></div>
+      <div class="row"><button class="btn primary" id="lt_go" type="button">Start Live target</button><button class="btn" id="lt_print" type="button">Printable targets</button></div>
+      <p class="note">It needs Range Book's https address: phones only allow the camera on a secure address. <b>Listen for shots</b> (on the Live target screen) uses the microphone instead of the Shot button; use it only when nobody is shooting near you.</p>
     </section>
     <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden>
       <p class="note toolnote">Type in either box.</p>
@@ -4149,7 +4158,7 @@ function openLive(o){
         '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label></div>'+
       '<div class="lvstats" id="lvStats"></div>'+
       '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
-      '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
+      '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>'+(o.save?'Save':'Save picture')+'</button></div>'+
       '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
       '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it.</p>'+
     '</div></div><div class="lvsheet" id="lvSheet" hidden></div>';
@@ -4157,7 +4166,7 @@ function openLive(o){
   const can=$("lvCan"),ctx=can.getContext("2d"),thumb=$("lvThumb"),tctx=thumb.getContext("2d"),camBox=$("lvCam");
   const video=document.createElement("video");video.setAttribute("playsinline","");video.muted=true;video.autoplay=true;
   const work=document.createElement("canvas"),wctx=work.getContext("2d",{willReadFrequently:true});
-  let stream=null,closed=false,T=null,lock=null,lockMiss=0,ref=null,busy=false,view="aim",crop=null,want=null;
+  let stream=null,closed=false,T=null,lock=null,lockMiss=0,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
   let aim=0,holes=[],newest=null,status={t:"Starting the camera…",k:"busy"},pageW=8.5,pageH=11,undo=[],sheetFor=null;
   const ac=getComputedStyle(v).getPropertyValue("--accent").trim()||"#2bb",night=document.documentElement.getAttribute("data-palette")==="night";
   const HL=night?"#ffb3ab":"#ffd23f",CTR=night?"#ff8a80":"#ff5bd1";
@@ -4390,7 +4399,7 @@ function openLive(o){
     $("lvStats").innerHTML='<div><b>'+r.n+(want?'<small>/'+want+'</small>':'')+'</b><span>Shots</span></div><div><b>'+(r.size!=null?U.n("in",r.size,2):"–")+'</b><span>Group '+U.u("in")+'</span></div><div><b>'+(m!=null?m.toFixed(2):"–")+'</b><span>MOA</span></div><div><b>'+(r.mr!=null?U.n("in",r.mr,2):"–")+'</b><span>Mean rad.</span></div>'+
       '<div class="wide">Center from aim: <b>'+esc(offTxt(r))+'</b></div>';
     const total=holes.reduce((s,h)=>s+(h?h.length:0),0);
-    $("lvDone").disabled=!total;$("lvDone").textContent=total?"Save":"Save";
+    $("lvDone").disabled=!total;
     const n=aims().length;$("lvPrev").disabled=!lock||aim<=0;$("lvNext").disabled=!lock||aim>=n-1;
     $("lvAimChip").innerHTML=lock?'Aim <b>'+(aim+1)+'</b> of '+n+(grpFor(aim)?' · <b>'+esc(aimLabel(aim))+'</b>':''):'';
     $("lvView").textContent=view==="aim"?"Whole target":"Zoom to aim";
@@ -4412,11 +4421,11 @@ function openLive(o){
     sh.innerHTML='<h3>'+esc(aimLabel(aim))+' done: '+r.n+' shot'+(r.n===1?'':'s')+'</h3>'+
       '<div class="lvsum"><div><b>'+(r.size!=null?U.s("in",r.size,2):"–")+'</b><span>Group'+(m!=null?' ('+m.toFixed(2)+' MOA)':'')+'</span></div><div><b>'+(r.mr!=null?U.s("in",r.mr,2):"–")+'</b><span>Mean radius</span></div>'+
       '<div class="wide"><b>'+esc(offTxt(r))+'</b><span>Group center from the aim point</span></div></div>'+
-      '<div class="lvrow">'+(aim<n-1?'<button class="btn primary lvbtn" id="lvsNext" type="button">Next: '+esc(aimLabel(aim+1))+' ›</button>':'')+'<button class="btn lvbtn'+(aim<n-1?'':' primary')+'" id="lvsSave" type="button">Save &amp; finish</button></div>'+
+      '<div class="lvrow">'+(aim<n-1?'<button class="btn primary lvbtn" id="lvsNext" type="button">Next: '+esc(aimLabel(aim+1))+' ›</button>':'')+'<button class="btn lvbtn'+(aim<n-1?'':' primary')+'" id="lvsSave" type="button">'+(o.save?'Save &amp; finish':'Save picture')+'</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="lvsMore" type="button">Keep shooting this one</button></div>';
     sh.hidden=false;
     const nx=$("lvsNext");if(nx)nx.addEventListener("click",()=>{sh.hidden=true;goAim(aim+1);});
-    $("lvsSave").addEventListener("click",()=>{sh.hidden=true;save();});
+    $("lvsSave").addEventListener("click",()=>{sh.hidden=true;o.save?save():savePicture();});
     $("lvsMore").addEventListener("click",()=>{sh.hidden=true;});
   }
   function goAim(i){if(!lock)return;aim=Math.max(0,Math.min(aims().length-1,i));newest=null;view="aim";fillAim();setStat("Fire at "+aimLabel(aim)+", then tap Shot.","");}
@@ -4483,11 +4492,61 @@ function openLive(o){
     try{await o.save(data,W,H,M);close(true);}
     catch(e){b.disabled=false;b.textContent="Save";setStat("Couldn't save. Check your connection and tap Save again.","bad");}
   }
-  $("lvDone").addEventListener("click",save);
+  $("lvDone").addEventListener("click",()=>o.save?save():savePicture());
+  /* ----- without a load: a picture of the target with every group drawn on it and its numbers underneath ----- */
+  let saved=0;
+  async function savePicture(){
+    if(!lock)return;
+    const used=aims().map((a,i)=>[a,i]).filter(([a,i])=>(holes[i]||[]).length);if(!used.length)return;
+    grab();
+    const W0=work.width,H0=work.height,k=Math.min(1,2000/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);
+    const fs=Math.max(15,Math.round(W/42)),lh=Math.round(fs*1.45),pad=Math.round(fs*.9);
+    // a close-up of each group under the whole page, then the numbers, wrapped to the picture's width
+    const per=Math.min(used.length,3),gap=pad,tile=Math.floor((W-gap*(per+1))/per),rows=Math.ceil(used.length/per);
+    const x0=document.createElement("canvas").getContext("2d");x0.font=fs+"px system-ui,sans-serif";
+    const wrap=(t,maxW)=>{const out=[];let line="";t.split(" ").forEach(w=>{const tr=line?line+" "+w:w;if(x0.measureText(tr).width>maxW&&line){out.push(line);line=w;}else line=tr;});if(line)out.push(line);return out;};
+    const head="Range Book · "+new Date().toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})+" · "+U.s("yd",dist,0)+" · "+U.s("dim",dia,3)+" bullet";
+    const lines=[];used.forEach(([a,i])=>{const r=stats(i),m=moaOf(r.size);
+      const t="Aim "+(i+1)+": "+r.n+" shot"+(r.n===1?"":"s")+(r.size!=null?", "+U.s("in",r.size,2)+(m!=null?" ("+m.toFixed(2)+" MOA)":"")+", mean radius "+U.s("in",r.mr,2):"")+(r.dx!=null?", center "+offTxt(r):"");
+      wrap(t,W-pad*2-fs*1.1).forEach((l,j)=>lines.push([j?null:TG_COLORS[i%TG_COLORS.length],l]));});
+    const tilesH=rows*(tile+gap+lh),textTop=H+gap+tilesH;
+    const c=document.createElement("canvas");c.width=W;c.height=textTop+pad+lh*(lines.length+1);const x=c.getContext("2d");
+    x.fillStyle="#111";x.fillRect(0,0,c.width,c.height);x.drawImage(work,0,0,W,H);
+    const lw=Math.max(1.5,W/700);
+    // marks, drawn through a mapping from camera pixels to this picture
+    const marks=(map,scale,only)=>used.forEach(([a,i])=>{if(only!=null&&i!==only)return;const col=TG_COLORS[i%TG_COLORS.length],P=(px,py)=>map(applyH(lock.Hinv,px,py));
+      const A=P(a.x,a.y),B=P(a.x+1,a.y),ppi=Math.hypot(B[0]-A[0],B[1]-A[1]),hr=Math.max(3,dia/2*ppi),l2=lw*scale;
+      x.strokeStyle=col;x.lineWidth=l2;x.beginPath();x.arc(A[0],A[1],hr*1.6,0,7);x.moveTo(A[0]-hr*2.6,A[1]);x.lineTo(A[0]+hr*2.6,A[1]);x.moveTo(A[0],A[1]-hr*2.6);x.lineTo(A[0],A[1]+hr*2.6);x.stroke();
+      (holes[i]||[]).forEach(([px,py],j)=>{const p=P(px,py);x.lineWidth=l2*2.2;x.strokeStyle="rgba(0,0,0,.7)";x.beginPath();x.arc(p[0],p[1],hr+l2,0,7);x.stroke();x.lineWidth=l2*1.3;x.strokeStyle=col;x.stroke();
+        x.font="700 "+Math.round(fs*.8)+"px system-ui,sans-serif";x.lineWidth=lw*2.5;x.strokeStyle="#000";x.strokeText(String(j+1),p[0]+hr+l2*2,p[1]-hr);x.fillStyle=col;x.fillText(String(j+1),p[0]+hr+l2*2,p[1]-hr);});});
+    marks(([cx,cy])=>[cx*k,cy*k],1,null);
+    used.forEach(([a,i],n)=>{
+      let bx0=a.x-1.5,bx1=a.x+1.5,by0=a.y-1.5,by1=a.y+1.5;(holes[i]||[]).forEach(([hx,hy])=>{bx0=Math.min(bx0,hx-.5);bx1=Math.max(bx1,hx+.5);by0=Math.min(by0,hy-.5);by1=Math.max(by1,hy+.5);});
+      const Q=[[bx0,by0],[bx1,by0],[bx1,by1],[bx0,by1]].map(([px,py])=>applyH(lock.Hinv,px,py));
+      let sx0=Math.min(...Q.map(q=>q[0])),sx1=Math.max(...Q.map(q=>q[0])),sy0=Math.min(...Q.map(q=>q[1])),sy1=Math.max(...Q.map(q=>q[1]));
+      const sz=Math.max(sx1-sx0,sy1-sy0),cx=(sx0+sx1)/2,cy=(sy0+sy1)/2;sx0=cx-sz/2;sy0=cy-sz/2;
+      const tx=gap+(n%per)*(tile+gap),ty=H+gap+Math.floor(n/per)*(tile+gap+lh)+lh,f=tile/sz;
+      x.save();x.beginPath();x.rect(tx,ty,tile,tile);x.clip();x.fillStyle="#000";x.fillRect(tx,ty,tile,tile);x.drawImage(work,sx0,sy0,sz,sz,tx,ty,tile,tile);
+      marks(([qx,qy])=>[tx+(qx-sx0)*f,ty+(qy-sy0)*f],Math.min(3,f/k*.6),i);x.restore();
+      x.strokeStyle=TG_COLORS[i%TG_COLORS.length];x.lineWidth=lw*1.5;x.strokeRect(tx,ty,tile,tile);
+      x.textBaseline="middle";x.font="700 "+fs+"px system-ui,sans-serif";x.fillStyle=TG_COLORS[i%TG_COLORS.length];x.fillText("Aim "+(i+1),tx,ty-lh/2);});
+    x.textBaseline="middle";x.font="700 "+fs+"px system-ui,sans-serif";x.fillStyle="#fff";x.fillText(head,pad,textTop+lh/2);
+    x.font=fs+"px system-ui,sans-serif";
+    lines.forEach(([col,t],j)=>{const y=textTop+lh*(j+1.5);if(col){x.fillStyle=col;x.beginPath();x.arc(pad+fs*.35,y,fs*.32,0,7);x.fill();}x.fillStyle="#eee";x.fillText(t,pad+fs*1.1,y);});
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.88));if(!blob){setStat("Couldn't make the picture.","bad");return;}
+    const dd=new Date(),name="rangebook-target-"+dd.getFullYear()+"-"+String(dd.getMonth()+1).padStart(2,"0")+"-"+String(dd.getDate()).padStart(2,"0")+".jpg";
+    let file=null;try{file=new File([blob],name,{type:"image/jpeg"});}catch(e){file=null;}
+    // a phone shares it (Save Image, Photos, Messages…); a computer downloads it
+    if(file&&navigator.canShare&&navigator.canShare({files:[file]})&&/Mobi|iPhone|iPad|Android/i.test(navigator.userAgent)){
+      try{await navigator.share({files:[file],title:"Target"});saved++;setStat("Picture shared.","");return;}catch(e){if(e&&e.name==="AbortError")return;}
+    }
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    saved++;setStat("Picture saved.","");
+  }
   /* ----- closing ----- */
   function close(force){
     const total=holes.reduce((s,h)=>s+(h?h.length:0),0);
-    if(!force&&total){arm($("lvClose"),"live","Discard "+total+" shot"+(total===1?"":"s")+"?",()=>close(true));return;}
+    if(!force&&total&&!(saved&&!o.save)){arm($("lvClose"),"live","Discard "+total+" shot"+(total===1?"":"s")+"?",()=>close(true));return;}
     closed=true;micOff();if(stream)stream.getTracks().forEach(t=>t.stop());keep(false);
     document.removeEventListener("keydown",onKey);document.removeEventListener("visibilitychange",onVis);v.remove();
   }
@@ -4500,6 +4559,7 @@ function openLive(o){
   renderStats();setStat(status.t,status.k);
   startCam().then(()=>{if(stream){frame();lockLoop();}});
 }
+window.RB_LIVE_OPEN=o=>openLive(o);
 function liveForLadder(lid){
   const id=openId,L=loads.get(id);if(!L||!isMine(id))return;
   const lad=(L.ladders||[]).find(l=>l.id===lid)||null,gs=(L.groups||[]).filter(g=>lad?g.ladderId===lid:true);
@@ -6437,8 +6497,8 @@ API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)l
 window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
-  const TOOLS=["twist","moa","powder","conv"];
-  const TITLES={twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert"};
+  const TOOLS=["twist","moa","powder","conv","live"];
+  const TITLES={twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target"};
   let tool=null, pending=null, rel=null, ready=false;      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   // a box in the person's units <-> the imperial value behind it
@@ -6452,7 +6512,22 @@ window.RB_TOOLS=(function(){
     $("toolTiles").hidden=!!tool;
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
-    if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();
+    if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();
+  }
+  /* ----- Live target without a load: remembers the last bullet, distance and shot count on this device ----- */
+  const LKEY="rangebook.livetool";
+  function liveFrom(){
+    let o=null;try{o=JSON.parse(localStorage.getItem(LKEY)||"null");}catch(e){o=null;}
+    o=o||{};const D=rel&&rel.toolData?rel.toolData():{bullets:[]};const b0=D.bullets.find(b=>num(b.d)>0);
+    if(!num($("lt_dia").value))put("lt_dia","dim",o.dia||(b0?num(b0.d):.308),DEC.dim);
+    if(!num($("lt_dist").value))put("lt_dist","yd",o.dist||100,0);
+    if(!num($("lt_want").value))put("lt_want",null,o.want||5);
+  }
+  function liveGo(){
+    const dia=get("lt_dia","dim"),dist=get("lt_dist","yd"),want=Math.round(num($("lt_want").value)||0)||null;
+    const o={dia:dia>0?dia:.308,dist:dist>0?dist:100,want};
+    try{localStorage.setItem(LKEY,JSON.stringify(o));}catch(e){}
+    if(window.RB_LIVE_OPEN)RB_LIVE_OPEN({title:"Live target",groups:[],dia:o.dia,dist:o.dist,want:o.want});
   }
 
   /* ----- twist & stability (Miller), the same formula Shooting uses for spin drift ----- */
@@ -6555,6 +6630,7 @@ window.RB_TOOLS=(function(){
     document.querySelectorAll("[data-tooltile]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tooltile;
       if(t==="targets"){if(window.APP_showTab)APP_showTab("targets");return;}view(t);window.scrollTo(0,0);}));
     $("toolsBack").addEventListener("click",()=>{view(null);window.scrollTo(0,0);});
+    $("lt_go").addEventListener("click",liveGo);$("lt_print").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("targets");});
     $("targetsBack").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("tools");});
     convBuild();
     // starting values: your first bullet and gun (if any), standard air, 1.5 in at 100, and the first reloading load
