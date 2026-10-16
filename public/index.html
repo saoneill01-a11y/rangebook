@@ -4037,7 +4037,9 @@ function measureText(m,L){
 }
 /* ---------- printed Range Book targets: find the four corner squares, then everything else is known ---------- */
 let RBT=null;
-function loadTargets(){return RBT?Promise.resolve(RBT):fetch("/targets.json").then(r=>r.json()).then(j=>(RBT=j));}
+// the version is part of the address, so an update never reads an old copy kept by the browser, its offline helper or Cloudflare
+function targetsUrl(){const m=document.querySelector('meta[name="rb-version"]'),v=m&&m.content&&m.content.indexOf("__")<0?m.content:"";return "/targets.json"+(v?"?v="+encodeURIComponent(v):"");}
+function loadTargets(){return RBT?Promise.resolve(RBT):fetch(targetsUrl(),{cache:"no-cache"}).then(r=>r.json()).then(j=>(RBT=j));}
 // homography from 4 point pairs (src → dst), returned as 9 numbers
 function homography(src,dst){
   const A=[],b=[];
@@ -6245,7 +6247,7 @@ function renderTrips(){
         const txt=measureText(M,null);await API.patch("/api/photos/"+ph.id,{measure:M,caption:txt});Object.assign(ph,{measure:M,caption:txt,w,h});
         if(tripOpen===id){tripPhotos.push(ph);renderTripPhotos();openViewer(ph.id,tripCtx(t));}}});});
   {const sel=$("tripTgt");let last="rb5";try{last=localStorage.getItem("rb.tripTgt")||"rb5";}catch(e){}
-    fetch("/targets.json").then(r=>r.json()).then(T=>{if(!$("tripTgt"))return;const FO=Object.keys(T.formats||{letter:1});sel.innerHTML=T.layouts.filter(L=>!L.legacy).sort((x,y)=>(FO.indexOf(x.fmt||"letter")-FO.indexOf(y.fmt||"letter"))||(x.aims.length-y.aims.length)).map(L=>'<option value="'+esc(L.id)+'"'+(L.id===last?' selected':'')+'>'+esc(L.name)+' ('+esc(((T.formats||{})[L.fmt||"letter"]||{}).label||((L.fmt||"letter")==="tabloid"?"11 × 17":"Letter"))+')</option>').join("");}).catch(()=>{});
+    fetch(targetsUrl(),{cache:"no-cache"}).then(r=>r.json()).then(T=>{if(!$("tripTgt"))return;const FO=Object.keys(T.formats||{letter:1});sel.innerHTML=T.layouts.filter(L=>!L.legacy).sort((x,y)=>(FO.indexOf(x.fmt||"letter")-FO.indexOf(y.fmt||"letter"))||(x.aims.length-y.aims.length)).map(L=>'<option value="'+esc(L.id)+'"'+(L.id===last?' selected':'')+'>'+esc(L.name)+' ('+esc(((T.formats||{})[L.fmt||"letter"]||{}).label||((L.fmt||"letter")==="tabloid"?"11 × 17":"Letter"))+')</option>').join("");}).catch(()=>{});
     $("tripTgtGo").addEventListener("click",()=>{const id=sel.value||"rb5";try{localStorage.setItem("rb.tripTgt",id);}catch(e){}
       const T0=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId)||{},g=rifles.find(r=>r.id===T0.rifleId);
       const q=new URLSearchParams();if(T0.name)q.set("load",T0.name);if(t.date)q.set("date",fmtDate(t.date));if(num(t.distance))q.set("dist",String(U.n("yd",num(t.distance),0)));if(g&&g.name)q.set("gun",g.name);
