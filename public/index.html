@@ -451,6 +451,12 @@ select.fieldselect{flex:0 0 auto;width:100%;padding:9px 10px;border-radius:7px;b
 .rgrow input{width:100%;min-width:0;padding:7px 8px;border-radius:7px;border:1px solid var(--line);background:var(--input,var(--sunk));color:var(--input-fg,var(--fg));font:inherit;font-size:16px}
 @media(max-width:560px){.rgrow{grid-template-columns:repeat(3,minmax(0,1fr)) auto}.rgrow>input[data-k="name"]{grid-column:1/-1}}
 table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
+.flabel{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
+.unitsw{display:flex;width:100%;max-width:220px}
+.unitsw button{flex:1 1 0;min-height:42px;background:var(--surface);color:var(--fg);border:1px solid var(--line);font:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-left:-1px}
+.unitsw button:first-child{border-radius:9px 0 0 9px;margin-left:0}.unitsw button:last-child{border-radius:0 9px 9px 0}
+.unitsw button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg,#fff)}
+.unitsw button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;position:relative}
 .retwrap{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:16px;align-items:center}
 .retsvg{width:100%;max-width:300px;height:auto;display:block}
 @media(max-width:600px){.retwrap{grid-template-columns:1fr}.retsvg{max-width:280px;margin:0 auto}}
@@ -1135,9 +1141,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="grid">
       <div class="field"><label for="rt_dist">Distance (<span data-unit="yd">yd</span>)</label><input id="rt_dist" type="number" inputmode="numeric" step="any"></div>
       <div class="field"><label for="rt_mode">Elevation</label><select id="rt_mode" class="fieldselect"><option value="hold">Hold it (no dialing)</option><option value="dial">Dial it, hold the wind</option></select></div>
+      <div class="field"><span class="flabel" id="rt_unitL">Reticle units</span><div class="unitsw" role="group" aria-labelledby="rt_unitL"><button type="button" data-rtu="moa" aria-pressed="false">MOA</button><button type="button" data-rtu="mil" aria-pressed="false">MIL</button></div></div>
     </div>
     <div id="retBox" class="retbox"></div>
-    <p class="note">A plain reticle in the units your scope clicks in (set on the Dope card), with marks every 1 MIL (half MIL between) or every 2 MOA (1 MOA between). It isn't any particular brand's reticle, so count the marks on yours. Put the target on the dot. It uses the conditions and crosswind above, plus spin drift when the bullet length and twist are filled in.</p>
+    <p class="note">A plain reticle in MOA or MIL (pick with the switch; it starts with the units on the Dope card), with marks every 1 MIL (half MIL between) or every 2 MOA (1 MOA between). It isn't any particular brand's reticle, so count the marks on yours. Put the target on the dot. It uses the conditions and crosswind above, plus spin drift when the bullet length and twist are filled in.</p>
   </section>
 
   <section class="card" aria-label="Saved ranges" id="secTRanges">
@@ -1238,7 +1245,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL. It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold, in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
       <h3>Reticle holds</h3>
-      <p>Under the dope card, <b>Reticle holds</b> draws a plain reticle in the units your scope clicks in (MIL or MOA, set on the Dope card) and puts a dot where the target goes for the distance you enter. Pick <b>Hold it</b> to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
+      <p>Under the dope card, <b>Reticle holds</b> draws a plain reticle in MOA or MIL (flip the <b>Reticle units</b> switch; it starts with the units on the Dope card and remembers your pick for each load) and puts a dot where the target goes for the distance you enter. Pick <b>Hold it</b> to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
       <h3>Saved ranges</h3>
       <p>Save the places you shoot under <b>Saved ranges</b>: tap <b>+ New range</b>, give it a name, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Tap <b>Done</b> and it lists the dial and wind for every target with this load. The size column shows the target in MOA or MIL, so you can see how much room you have. <b>Use these conditions</b> sets the load's temperature and altitude to the range's usual ones. Ranges are shared by all your Shooting loads, and their names show up under <b>Where</b> on range trips.</p>
       <h3>The inputs fold up on a phone</h3>
@@ -2028,7 +2035,9 @@ function renderReticle(L,S,zs,path){
   const R0=L.ret||{},lim=Math.min(S.MR,S.last);
   let x=num(R0.dist)>0?num(R0.dist):Math.min(lim,Math.max(za*2,U.metric?500/0.9144:500));x=Math.min(x,lim);
   if(document.activeElement!==$("rt_dist"))U.fill($("rt_dist"),"yd",x,0,0);$("rt_mode").value=R0.mode==="dial"?"dial":"hold";
-  const MIL=o.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",per=x*UF/100;
+  const ru=R0.unit==="mil"||R0.unit==="moa"?R0.unit:(o.unit==="mil"?"mil":"moa");
+  document.querySelectorAll("[data-rtu]").forEach(b=>{const on=b.dataset.rtu===ru;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});
+  const MIL=ru==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",per=x*UF/100;
   const up=-path(x,za)/per,wind=(L.wind||0)*crossFactor(L),side=windSide(L);
   const wd=wind*1.46667*(S.at(S.t,x)-x*3/L.mv)*12/per,sp=S.sg!=null?(spinIn(S.sg,S.at(S.t,x))||0)/per:0;
   // where the bullet goes from the center, in reticle units (right and down are positive)
@@ -2089,6 +2098,7 @@ function renderDope(L,S,zs,path){
          :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this load slows too much past "+U.s("yd",S.last,0)+")":"")+".</p>");
 }
 $("rt_dist").addEventListener("input",()=>{const L=cur(),v=U.read($("rt_dist"),"yd",null);L.ret=Object.assign({},L.ret||{},{dist:num(v)>0?v:null});save();render();});
+document.querySelectorAll("[data-rtu]").forEach(b=>b.addEventListener("click",()=>{const L=cur();L.ret=Object.assign({},L.ret||{},{unit:b.dataset.rtu});save();render();}));
 $("rt_mode").addEventListener("change",()=>{const L=cur();L.ret=Object.assign({},L.ret||{},{mode:$("rt_mode").value});save();render();});
 $("hitTool").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("hit",{hit:cur().id});});
 ["d_from","d_to","d_step","d_unit"].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener(id==="d_unit"?"change":"input",()=>{
@@ -6797,7 +6807,7 @@ const INFO={
   secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns, and turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds.",h:"Reading the results"},
   "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
   secTDope:{t:"Dope card",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and whether your scope clicks in MOA or MIL, then tap <b>Print dope card</b>. <b>Field mode</b> shows the same holds in big numbers for the bench. <b>Hit chance at a distance</b> opens your odds of a first-round hit with this load.",h:"Print a dope card"},
-  secTRet:{t:"Reticle holds",b:"Shows where to put the target on a plain reticle for the distance you enter. Pick <b>Hold it</b> to hold everything, or <b>Dial it, hold the wind</b>. It uses the conditions and crosswind above. It isn't any brand's reticle, so count the marks on yours.",h:"Reticle holds"},
+  secTRet:{t:"Reticle holds",b:"Shows where to put the target on a plain reticle for the distance you enter. Flip <b>Reticle units</b> between MOA and MIL to match your scope. Pick <b>Hold it</b> to hold everything, or <b>Dial it, hold the wind</b>. It uses the conditions and crosswind above. It isn't any brand's reticle, so count the marks on yours.",h:"Reticle holds"},
   secTRanges:{t:"Saved ranges",b:"Save the places you shoot: tap <b>+ New range</b>, add each target's distance, angle and size, then tap <b>Done</b>. It lists the dial and wind for every target with this load. <b>Use these conditions</b> sets the range's usual temperature and altitude.",h:"Saved ranges"},
   "@Range trips":{t:"Range trips",b:"A log of each day you shot this load. Tap <b>+ New range trip</b> and fill in what you like: distance, rounds, weather, chronograph strings, target photos and the cold-bore shot. Rounds fired count toward the gun's round count and come off your ammo.",h:"Range trips"},
   "@Range trip":{t:"Range trip",b:"Fill in what you like about the day. <b>Import chronograph file</b> reads your chronograph's export, and target photos are measured when you tap one (or use <b>Live target</b> on a spotting scope). <b>Cold-bore shot</b> records where your first shot landed. <b>Print trip report</b> makes a PDF of the day.",h:"Range trips"},
