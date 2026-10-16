@@ -681,8 +681,10 @@ h1{font-size:26px}
 .tourstep{font-size:12px;color:var(--muted);font-weight:600}
 /* Help button on each page, ⓘ on tiles, and the how-to sheet */
 header.hashelp{position:relative}
-header.hashelp>h1{padding-right:92px}
-.helpbtn{position:absolute;top:0;right:0;display:inline-flex;align-items:center;gap:5px;padding:6px 12px 6px 9px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);color:var(--accent);font:inherit;font-size:14px;font-weight:600;cursor:pointer;line-height:1.1}
+header.hashelp>h1{padding-right:180px}
+.pagebtns{position:absolute;top:0;right:0;display:flex;gap:6px}
+@media(max-width:480px){header.hashelp>h1{padding-right:84px}.pagebtns .helpbtn{padding:6px;width:36px;height:36px;justify-content:center}.pagebtns .helpbtn span{display:none}}
+.helpbtn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px 6px 9px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);color:var(--accent);font:inherit;font-size:14px;font-weight:600;cursor:pointer;line-height:1.1}
 .helpbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .helpbtn:hover,.helpbtn:focus-visible{border-color:var(--accent);outline:none}
 .infobtn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin:-4px 0 -4px 4px;vertical-align:middle;color:var(--accent);cursor:pointer;border-radius:50%;flex:0 0 auto;position:relative;font-size:0}
@@ -1220,7 +1222,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To use metric, go to <b>More → Account → Units</b> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>Pick a color theme under <b>More → Account → Theme</b>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
-      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same. Most pages have a <b>Help</b> button at the top right that opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Guns &amp; Ammo and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
+      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Guns &amp; Ammo and Tools) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Guns &amp; Ammo and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <b>Shooting → Range log</b>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting loads, or ammunition from your inventory (it makes the Shooting load for that gun the first time). It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
       <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
@@ -7234,7 +7236,13 @@ document.addEventListener("keydown",e=>{
   b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg><span>Help</span>';
   b.setAttribute("aria-label","Help with this page");
   b.addEventListener("click",()=>helpGo(helpTopic(t)));
-  H.appendChild(b);
+  const tb=document.createElement("button");tb.type="button";tb.className="helpbtn tourbtn";tb.dataset.ttour=t;
+  tb.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor"/></svg><span>Tour</span>';
+  tb.setAttribute("aria-label","Take a tour of this tab");
+  tb.addEventListener("click",()=>startTabTour(t));
+  const wrap=document.createElement("div");wrap.className="pagebtns";wrap.appendChild(tb);wrap.appendChild(b);
+  if(t==="account"){wrap.removeChild(tb);}
+  H.appendChild(wrap);
 });
 {const bb=document.createElement("button");bb.type="button";bb.id="helpBackBtn";bb.className="helpback";bb.hidden=true;bb.innerHTML='‹ <span>Back</span>';bb.addEventListener("click",helpBack);document.body.appendChild(bb);}
 window.RB_HELP={go:helpGo,topic:helpTopic,info:openInfo,keys:()=>Object.keys(INFO)};
@@ -7535,13 +7543,19 @@ function startTour(){
     ...(ME&&ME.isAdmin&&!GUEST?[{el:()=>navFor("tab-admin"),t:"Admin",b:"You're an admin. Add the people who'll use this Range Book under <b>Admin → Add a user</b>; each gets a temporary password and their own private data. Backups and the guest button are here too."+"<span class=\"tournarrow\"> On a phone, Admin is under <b>More</b>.</span>"}]:[]),
     {t:"One last thing",b:"Range Book is a notebook and a calculator, not a load manual. Always work up from a current published load manual for your exact components. That's the tour. Have fun out there."}
   ];
+  runTour(STEPS);
+}
+/* the spotlight engine for every tour: each step can point at something (el) and first move to the screen it's on (go) */
+function runTour(STEPS){
+  if($("tour"))return;
   let i=0;
   const ov=document.createElement("div");ov.id="tour";ov.className="tour";
   ov.innerHTML='<div class="tourhole" id="tourHole"></div><div class="tourcard" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourT" tabindex="-1"><div class="tourtop"><span class="tourstep" id="tourN"></span><button class="tourskip" id="tourSkip" type="button">Skip tour</button></div><h2 id="tourT"></h2><p id="tourB"></p><div class="tourdots" id="tourDots" aria-hidden="true"></div><div class="tourbtns"><button class="btn" id="tourBack" type="button">Back</button><button class="btn primary" id="tourNext" type="button">Next</button></div></div>';
   document.body.appendChild(ov);
   const hole=$("tourHole"),card=$("tourCard");
+  const target=S=>{let el=S.el&&S.el();if(el&&el.getBoundingClientRect().height>window.innerHeight*.4){const h=el.querySelector(".sechead,h2,h1");if(h)el=h;}return el;};
   function place(){
-    const S=STEPS[i],el=S.el&&S.el();
+    const S=STEPS[i],el=target(S);
     if(!el){hole.hidden=true;ov.classList.add("dim");card.style.left="50%";card.style.top="50%";card.style.transform="translate(-50%,-50%)";return;}
     ov.classList.remove("dim");hole.hidden=false;
     const r=el.getBoundingClientRect(),pad=6;
@@ -7552,19 +7566,96 @@ function startTour(){
     card.style.transform="none";card.style.left=left+"px";card.style.top=top+"px";
   }
   function show(){
-    const S=STEPS[i];$("tourT").textContent=S.t;$("tourB").innerHTML=S.b;$("tourN").textContent=(i+1)+" of "+STEPS.length;
+    const S=STEPS[i];
+    if(S.go&&!S._went){S._went=true;try{S.go();}catch(e){}card.style.visibility="hidden";setTimeout(()=>{card.style.visibility="";show();},380);return;}
+    STEPS.forEach(x=>{if(x!==S)x._went=false;});
+    $("tourT").textContent=S.t;$("tourB").innerHTML=S.b;$("tourN").textContent=(i+1)+" of "+STEPS.length;
     $("tourDots").innerHTML=STEPS.map((x,k)=>'<i'+(k===i?' class="on"':'')+'></i>').join("");
-    $("tourBack").hidden=i===0;$("tourNext").textContent=i===0?"Show me":i===STEPS.length-1?"Done":"Next";$("tourSkip").hidden=i===STEPS.length-1;
-    const el=S.el&&S.el();if(el&&el.scrollIntoView){const r=el.getBoundingClientRect();if(r.top<0||r.bottom>window.innerHeight)el.scrollIntoView({block:"center"});}
-    requestAnimationFrame(place);card.focus();
+    $("tourBack").hidden=i===0;$("tourNext").textContent=i===0&&!STEPS[0].el?"Show me":i===STEPS.length-1?"Done":"Next";$("tourSkip").hidden=i===STEPS.length-1;
+    bring();
+    requestAnimationFrame(place);setTimeout(place,350);card.focus({preventScroll:true});
   }
-  function end(){window.removeEventListener("resize",place);window.removeEventListener("scroll",place,true);document.removeEventListener("keydown",key,true);ov.remove();}
+  // bring the thing into view, with room under it for this box
+  function bring(){const el=target(STEPS[i]);if(!el)return;const r=el.getBoundingClientRect(),top=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--stick"))||0)+8,ch=card.offsetHeight,vh=window.innerHeight;
+    if(r.top<top||r.bottom>vh||r.bottom+14+ch>vh-12&&r.top-14-ch<top)window.scrollBy(0,r.top-top);}
+  // the page can still be drawing (charts, photos) and move things: keep following
+  const follow=setInterval(()=>{bring();place();},500);
+  function end(){clearInterval(follow);window.removeEventListener("resize",place);window.removeEventListener("scroll",place,true);document.removeEventListener("keydown",key,true);ov.remove();}
   const key=e=>{if(e.key==="Escape"){e.preventDefault();end();}else if(e.key==="ArrowRight"){e.preventDefault();$("tourNext").click();}else if(e.key==="ArrowLeft"&&i>0){e.preventDefault();i--;show();}};
   $("tourNext").addEventListener("click",()=>{if(i>=STEPS.length-1)return end();i++;show();});
   $("tourBack").addEventListener("click",()=>{if(i>0){i--;show();}});
   $("tourSkip").addEventListener("click",end);
   window.addEventListener("resize",place);window.addEventListener("scroll",place,true);document.addEventListener("keydown",key,true);
   show();
+}
+
+/* ---------- a tour of one tab: what it's for and where things are. It may open the SAMPLE load or switch views, but it never changes anything ---------- */
+function startTabTour(tab){
+  if($("tour"))return;
+  const q=sel=>{const e=document.querySelector(sel);return e&&e.offsetParent!==null&&e.getBoundingClientRect().width>0?e:null;};
+  const click=sel=>{const e=document.querySelector(sel);if(e&&!e.hidden&&e.offsetParent!==null)e.click();};
+  const info=k=>(INFO[k]||{}).b||"";
+  const card=(sel,k,t,go)=>({el:()=>q(sel),t:t||(INFO[k]||{}).t,b:info(k),go});
+  const END={t:"That's the tour",b:"Every card with an <b>ⓘ</b> next to its title has a quick how-to, and <b>Help</b> at the top right opens How to Use at the part you're looking at. Take this tour again any time with <b>Tour</b>."};
+  let STEPS=[];
+  if(tab==="home")STEPS=[
+    {t:"Home",b:"Your range trips, loads and guns at a glance, and the quickest way to start a range day."},
+    {el:()=>q("#hNewTrip"),t:"Start a range day",b:"Pick the gun, then the load or ammo, and it opens a range trip with today's weather. The buttons next to it start a new reloading load and open the calculator, the Range log and Tools."},
+    {el:()=>q('#panel-home [aria-label="Needs attention"]'),t:"Needs attention",b:"Components running low, a barrel near the end of its life, a gun due for cleaning. Tap one to go take care of it."},
+    {el:()=>q('#panel-home [aria-label="This year"]'),t:"This year",b:"Rounds fired this month and this year, range trips and rounds loaded."},
+    {el:()=>q('#panel-home [aria-label="Recent range trips"]'),t:"Recent range trips",b:"Your latest trips with their best groups. Tap one to open it, or <b>See the whole range log</b>."},
+    {el:()=>q('#panel-home [aria-label="Recent reloading"]'),t:"Reloading lately",b:"The reloading loads you've worked on lately. Tap one to pick up where you left off."},
+    END];
+  if(tab==="traj"||tab==="log"){
+    const list=()=>{showTab("traj",false);click("#trajBack");click('#trajSeg [data-area="traj"]');},
+      open=()=>{showTab("traj",false);if(!q("#secTInputs")){click('#trajSeg [data-area="traj"]');const it=[...document.querySelectorAll("#trajList .loaditem")].find(b=>/SAMPLE/.test(b.textContent))||document.querySelector("#trajList .loaditem");if(it)it.click();}};
+    const has=!!document.querySelector("#trajList .loaditem");
+    STEPS=[
+      {t:"The Shooting tab",b:"Your ballistics calculator: where the bullet goes, how far to dial or hold, printable dope cards, and the range trips you log with each load.",go:list},
+      {el:()=>q("#newBtn"),t:"Your loads",b:"Each load is a bullet and gun. <b>+ New load</b> charts to 400 yd, <b>+ New long-range load</b> to 1,000 yd. Tap a load in the list to open it.",go:list},
+      {el:()=>q('#trajSeg [data-area="log"]'),t:"Range log",b:"Every range trip from every load in one place, with the rounds you've fired.",go:list},
+      ...(has?[card("#secTInputs","secTInputs",null,open),card("#secTWx","secTWx",null,open),card("#secTChart","secTChart",null,open),card("#secTPbr","secTPbr",null,open),card("#secTTable","secTTable",null,open),
+        card("#secTDope","secTDope",null,open),card("#secTRanges","secTRanges",null,open),card('#trajDetail [aria-label="Range trips"]',"@Range trips",null,open)]:[]),
+      END];
+  }
+  if(tab==="rel"||tab==="brass"||tab==="rnotes"){
+    const list=()=>{showTab("rel",false);click("#relHeadBack");click('#relSeg [data-area="rel"]');},
+      open=v=>()=>{showTab("rel",false);if(!q("[data-rview]")){click('#relSeg [data-area="rel"]');const it=[...document.querySelectorAll("#relRoot .loaditem")].find(b=>/SAMPLE/.test(b.textContent))||document.querySelector("#relRoot .loaditem");if(it)it.click();}
+        const b=document.querySelector('[data-rview="'+v+'"][role="tab"]');if(b&&b.getAttribute("aria-selected")!=="true")b.click();};
+    const has=!!document.querySelector("#relRoot .loaditem")||(REL&&true);
+    STEPS=[
+      {t:"The Reloading tab",b:"Your load recipes and how you work them up: ladder tests, chronograph strings, charts and target photos, then the finished load and the batches you load.",go:list},
+      {el:()=>q("#relSeg"),t:"Loads, Components and Notes",b:"<b>Loads</b> are your recipes. <b>Components</b> keeps your bullets, powders, primers and brass, with what's on hand and what it cost. <b>Notes</b> is for anything that isn't about one load.",go:list},
+      {el:()=>q("#relNew"),t:"Add a load",b:"Enter the cartridge and gun, pick your components and your manual's max charge. <b>Create and plan a ladder</b> goes straight to the ladder planner.",go:list},
+      ...(has?[{el:()=>q(".viewbar"),t:"Develop and Load",b:"Each load has two views. <b>Develop</b> is for working it up; <b>Load</b> is the finished load sheet, with the batches you've loaded.",go:open("develop")},
+        card("#secRecipe","secRecipe",null,open("develop")),card("#secGroups","secGroups",null,open("develop")),card("#secSummary","secSummary",null,open("develop")),
+        card("#secCharts","secCharts",null,open("develop")),card("#secTargets","secTargets",null,open("develop")),card("#secBatches","secBatches",null,open("load"))]:[]),
+      END];
+  }
+  if(tab==="rifles"){
+    const area=a=>()=>{showTab("rifles",false);click("#rifHeadBack");click('#rifSeg [data-garea="'+a+'"]');};
+    STEPS=[
+      {t:"The Guns & Ammo tab",b:"Your guns, the ammunition you shoot and the scopes on your guns.",go:area("guns")},
+      {el:()=>q("#rifSeg"),t:"Guns, Ammunition and Scopes",b:"Switch between the three here.",go:area("guns")},
+      {el:()=>q("#rifleAdd"),t:"Guns",b:"Add each gun with its serial number, barrel, twist, sight height, scope and photos. Its page counts the rounds fired, tracks barrel life and cleaning, and keeps a cold-bore log. <b>Export Excel</b> and <b>Export PDF</b> make a list for insurance.",go:area("guns")},
+      {el:()=>q("#ammoAddCard"),t:"Ammunition",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low.",go:area("ammo")},
+      {el:()=>q("#calBrowse"),t:"Factory ammo catalog",b:"About 155 popular factory loads with their bullet, BC and box velocity. Pick a caliber or search, and tap one to add it.",go:area("ammo")},
+      {el:()=>q("#scopeAdd"),t:"Scopes",b:"Add your scopes from a list of popular ones and put each on a gun. A gun's scope sets MOA or MIL on its loads, and the dope card's reticle can look like yours or be a picture of it.",go:area("scopes")},
+      END];
+  }
+  if(tab==="tools"||tab==="targets"){
+    const tiles=()=>{showTab("tools",false);click("#toolsBack");};
+    STEPS=[
+      {t:"The Tools tab",b:"Quick calculators that don't need a load, plus printable targets and the spotting-scope camera. Nothing in a calculator is saved.",go:tiles},
+      {el:()=>q("#toolTiles"),t:"One tile each",b:"Tap a tile to open that tool, and <b>‹ Tools</b> to come back.",go:tiles},
+      {el:()=>q('[data-tooltile="hit"]'),t:"Hit chance",b:info("@Hit chance"),go:tiles},
+      {el:()=>q('[data-tooltile="live"]'),t:"Live target",b:info("@Live target"),go:tiles},
+      {el:()=>q('[data-tooltile="targets"]'),t:"Printable targets",b:info("@Printable targets"),go:tiles},
+      END];
+  }
+  // leave out anything this account doesn't have (no alerts yet, say), except steps that open a screen first
+  STEPS=STEPS.filter(x=>!x.el||x.go||x.el());
+  if(STEPS.length>1)runTour(STEPS);
 }
 const TERMS_HTML="<h2>Shooting is dangerous.</h2><p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p><h2>This is a notebook, not a load manual.</h2><p>Range Book is a log and a calculator built by a guy who likes to shoot. It is not a load manual, a gunsmith, or your mom. Every charge weight in here is just a number somebody typed, and somebody makes typos. That includes the max-charge warnings, the ladder test planner and anything someone shared with you. <b>Check every load against a current published manual</b> from the powder or bullet maker before it goes in a case. Start low, work up, and watch for pressure signs. If your primers look like pancakes, stop.</p><h2>The math is an estimate.</h2><p>Trajectories, dope cards, true-up, spin drift, the weather and group measurements are all educated guesses. Confirm your dope on paper before you bet a shot or a hunt on it. Nothing here tells you whether a shot is safe; that's on you. Know your target and what's behind it.</p><h2>Software breaks.</h2><p>There may be bugs. Data may get lost. Back up anything you care about (<b>Account → Download backup</b>).</p><h2>The part where you agree.</h2><p>You're responsible for your own guns, ammo, components and decisions. If you do something dumb, like blowing up a rifle, hurting yourself, hurting someone else, or putting a hole in something you didn't mean to, that's on you. It's not on the person who runs this site or anyone who helped build it. Range Book comes with no warranty of any kind, express or implied. If you can't live with that, close this page and go read a reloading manual. (You should probably do that anyway.)</p><p>Follow the four rules, wear eye and ear protection, and keep the powder away from the cigarette.</p>";
 function termsScreen(onAgree,onDecline,guest){
