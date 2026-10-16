@@ -457,6 +457,18 @@ table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
 .unitsw button:first-child{border-radius:9px 0 0 9px;margin-left:0}.unitsw button:last-child{border-radius:0 9px 9px 0}
 .unitsw button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg,#fff)}
 .unitsw button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;position:relative}
+.dopehint{margin:4px 0 8px}
+.dopecombo{display:grid;gap:16px;align-items:start}
+.dopecombo .retpane{display:none}
+@media(min-width:761px){.dopecombo{grid-template-columns:auto minmax(0,1fr)}.dopecombo .retpane{display:block;position:sticky;top:var(--stick,110px);border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--sunk);min-width:280px}
+  .retpane .retwrap{grid-template-columns:1fr}.retpane .retsvg{max-width:300px;margin:0 auto}}
+#dopeCard table.dope tbody tr[data-dx]{cursor:pointer}
+#dopeCard table.dope tbody tr[data-dx]:hover td{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+#dopeCard table.dope tbody tr.sel td{background:color-mix(in srgb,var(--accent) 24%,transparent)!important;font-weight:700}
+#dopeCard table.dope tbody tr.sel td:first-child{box-shadow:inset 4px 0 0 var(--accent)}
+#dopeCard table.dope tbody tr[data-dx]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.retsheetw .retwrap{grid-template-columns:1fr}.retsheetw .retsvg{max-width:260px;margin:0 auto}
+.retnav{display:flex;gap:8px;margin-top:12px}.retnav .btn{flex:1;justify-content:center}
 .retwrap{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:16px;align-items:center}
 .retsvg{width:100%;max-width:300px;height:auto;display:block}
 @media(max-width:600px){.retwrap{grid-template-columns:1fr}.retsvg{max-width:280px;margin:0 auto}}
@@ -1123,28 +1135,19 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </section>
 
   <section class="card" aria-label="Dope card" id="secTDope">
-    <h2>Dope card</h2>
+    <h2>Dope card &amp; reticle</h2>
     <div class="grid">
       <div class="field"><label for="d_from">From (<span data-unit="yd">yd</span>)</label><input id="d_from" type="number" inputmode="numeric" step="1"></div>
       <div class="field"><label for="d_to">To (<span data-unit="yd">yd</span>)</label><input id="d_to" type="number" inputmode="numeric" step="1"></div>
       <div class="field"><label for="d_step">Every (<span data-unit="yd">yd</span>)</label><input id="d_step" type="number" inputmode="numeric" step="1"></div>
-      <div class="field"><label for="d_unit">Scope clicks in</label><select id="d_unit" class="fieldselect"><option value="moa">MOA</option><option value="mil">MIL</option></select></div>
+      <div class="field"><span class="flabel" id="d_unitL">Scope clicks in</span><div class="unitsw" role="group" aria-labelledby="d_unitL"><button type="button" data-du="moa" aria-pressed="false">MOA</button><button type="button" data-du="mil" aria-pressed="false">MIL</button></div><select id="d_unit" hidden tabindex="-1" aria-hidden="true"><option value="moa">MOA</option><option value="mil">MIL</option></select></div>
+      <div class="field"><label for="rt_mode">Reticle: elevation</label><select id="rt_mode" class="fieldselect"><option value="hold">Hold it (no dialing)</option><option value="dial">Dial it, hold the wind</option></select></div>
     </div>
-    <div id="dopeCard" class="dopecard"></div>
+    <p class="note dopehint">Tap a distance on the card to see it on the reticle.</p>
+    <div class="dopecombo"><div id="dopeCard" class="dopecard"></div><div class="retpane" id="retPane" aria-live="polite"><div id="retBox" class="retbox"></div></div></div>
     <div class="row"><button class="btn primary" id="dopeField" type="button">Field mode</button><button class="btn" id="dopePrint" type="button">Print dope card</button></div>
     <div class="row"><button class="btn" id="hitTool" type="button">Hit chance at a distance</button></div>
-    <p class="note">A small card to tape to your stock or keep in your range bag. It uses the zero your scope is set to, the conditions above and the crosswind you entered. Up is how far to dial up; wind is how far to hold or dial into the wind.</p>
-  </section>
-
-  <section class="card" aria-label="Reticle holds" id="secTRet">
-    <h2>Reticle holds</h2>
-    <div class="grid">
-      <div class="field"><label for="rt_dist">Distance (<span data-unit="yd">yd</span>)</label><input id="rt_dist" type="number" inputmode="numeric" step="any"></div>
-      <div class="field"><label for="rt_mode">Elevation</label><select id="rt_mode" class="fieldselect"><option value="hold">Hold it (no dialing)</option><option value="dial">Dial it, hold the wind</option></select></div>
-      <div class="field"><span class="flabel" id="rt_unitL">Reticle units</span><div class="unitsw" role="group" aria-labelledby="rt_unitL"><button type="button" data-rtu="moa" aria-pressed="false">MOA</button><button type="button" data-rtu="mil" aria-pressed="false">MIL</button></div></div>
-    </div>
-    <div id="retBox" class="retbox"></div>
-    <p class="note">A plain reticle in MOA or MIL (pick with the switch; it starts with the units on the Dope card), with marks every 1 MIL (half MIL between) or every 2 MOA (1 MOA between). It isn't any particular brand's reticle, so count the marks on yours. Put the target on the dot. It uses the conditions and crosswind above, plus spin drift when the bullet length and twist are filled in.</p>
+    <p class="note">A small card to tape to your stock or keep in your range bag. It uses the zero your scope is set to, the conditions above and the crosswind you entered. Up is how far to dial up; wind is how far to hold or dial into the wind. The reticle is a plain one in your scope's units, with marks every 1 MIL (half MIL between) or every 2 MOA (1 MOA between); it isn't any particular brand's reticle, so count the marks on yours. Put the target on the dot. It adds spin drift when the bullet length and twist are filled in.</p>
   </section>
 
   <section class="card" aria-label="Saved ranges" id="secTRanges">
@@ -1242,10 +1245,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Weather where you are</h3>
       <p>On the <b>Conditions</b> card, <b>Use the weather where I am</b> fills in the temperature and the altitude from today's air pressure where you're standing. It needs a signal and the https:// (Cloudflare) address, since phones only share location with secure sites. Set the crosswind yourself, since it depends on which way you're shooting.</p>
       <h3>Print a dope card</h3>
-      <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL. It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
+      <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the switch). It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold, in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
       <h3>Reticle holds</h3>
-      <p>Under the dope card, <b>Reticle holds</b> draws a plain reticle in MOA or MIL (flip the <b>Reticle units</b> switch; it starts with the units on the Dope card and remembers your pick for each load) and puts a dot where the target goes for the distance you enter. Pick <b>Hold it</b> to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
+      <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> switch (Scope clicks in) sets both the card and the reticle. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
       <h3>Saved ranges</h3>
       <p>Save the places you shoot under <b>Saved ranges</b>: tap <b>+ New range</b>, give it a name, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Tap <b>Done</b> and it lists the dial and wind for every target with this load. The size column shows the target in MOA or MIL, so you can see how much room you have. <b>Use these conditions</b> sets the load's temperature and altitude to the range's usual ones. Ranges are shared by all your Shooting loads, and their names show up under <b>Where</b> on range trips.</p>
       <h3>The inputs fold up on a phone</h3>
@@ -1731,7 +1734,7 @@ window.foldCard=foldCard;
 // fold every titled card on a page (Reloading loads, guns, factory ammo); each page type remembers its own
 window.foldAll=(root,prefix)=>{if(!root)return;root.querySelectorAll("section.card:not(.collapsible)").forEach(sec=>{if(sec.id==="shareSec")return;const h=sec.querySelector(":scope>h2");if(!h)return;
   foldCard(sec,prefix+"_"+String(sec.id||sec.getAttribute("aria-label")||h.textContent).replace(/[^A-Za-z0-9]+/g,"_"));});};
-[["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRet","ret"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
+[["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
 function openTraj(id){state.cur=id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
 window.RB_TRAJ={
   cur(){if(TVIEW!=="detail")return null;const L=cur();return L?{id:L.id,name:L.name,cal:L.cal,mv:L.mv,mvtemp:num(L.mvtemp),tsens:num(L.tsens),temp:num(L.temp)}:null;},
@@ -2033,11 +2036,9 @@ function renderReticle(L,S,zs,path){
   const o=dopeOpts(L),ai=Math.round(L.adj||0)-1,za=(ai>=0&&ai<4)?zs[ai]:null;
   if(!za){box.innerHTML='<p class="note">Pick the circle on a zero you have filled in (the zero boxes under the chart).</p>';return;}
   const R0=L.ret||{},lim=Math.min(S.MR,S.last);
-  let x=num(R0.dist)>0?num(R0.dist):Math.min(lim,Math.max(za*2,U.metric?500/0.9144:500));x=Math.min(x,lim);
-  if(document.activeElement!==$("rt_dist"))U.fill($("rt_dist"),"yd",x,0,0);$("rt_mode").value=R0.mode==="dial"?"dial":"hold";
-  const ru=R0.unit==="mil"||R0.unit==="moa"?R0.unit:(o.unit==="mil"?"mil":"moa");
-  document.querySelectorAll("[data-rtu]").forEach(b=>{const on=b.dataset.rtu===ru;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});
-  const MIL=ru==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",per=x*UF/100;
+  if(!DOPE||DOPE.selX==null){box.innerHTML='<p class="note">No distances on the card. Check From, To and Every.</p>';retNav();return;}
+  const x=Math.min(DOPE.selX,lim);$("rt_mode").value=R0.mode==="dial"?"dial":"hold";
+  const MIL=o.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",per=x*UF/100;
   const up=-path(x,za)/per,wind=(L.wind||0)*crossFactor(L),side=windSide(L);
   const wd=wind*1.46667*(S.at(S.t,x)-x*3/L.mv)*12/per,sp=S.sg!=null?(spinIn(S.sg,S.at(S.t,x))||0)/per:0;
   // where the bullet goes from the center, in reticle units (right and down are positive)
@@ -2066,6 +2067,7 @@ function renderReticle(L,S,zs,path){
   lines.push(hv||hh?'Put the target on the mark <b>'+(hv&&hh?hv+' and '+hh+' of':hh?hh+' of':hv)+'</b> the center.':'Hold dead on.');
   const why=[];if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+f1(wd)+' '+UN+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+f1(sp)+' '+UN+' right');
   box.innerHTML='<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+'</div></div>';
+  retNav();
 }
 // the dope card's distances are kept separately for yards and metres, so each stays in round numbers
 function dopeOpts(L){const d=L.dope||{},M=U.metric?"M":"";const MRx=L.lr?1000:400;
@@ -2088,8 +2090,14 @@ function renderDope(L,S,zs,path){
     const p=path(x,za), up=-p/(x*UF/100), wh=drift(wind,x)/(x*UF/100), brs=BR.map(v=>drift(v,x)/(x*UF/100));
     const sp=S.sg!=null?spinIn(S.sg,S.at(S.t,x)):null;
     DOPE.rows.push({x:dd,up:f1(up),wind:f1(wh),brs:brs.map(f1)});
-    rows+="<tr><td>"+dd+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
+    rows+="<tr data-dx=\""+dd+"\" tabindex=\"0\"><td>"+dd+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
   }
+  // the distance shown on the reticle: the one you tapped, or the closest row to it
+  {const R0=L.ret||{},want=num(R0.dist)>0?num(R0.dist):Math.min(lim,Math.max(za*2,U.metric?500/0.9144:500));let bi=-1,bd=1e9;
+    DOPE.rows.forEach((r,i)=>{const d=Math.abs(U.from("yd",r.x)-want);if(d<bd-1e-6){bd=d;bi=i;}});
+    DOPE.sel=bi;DOPE.selX=bi>=0?U.from("yd",DOPE.rows[bi].x):null;
+    if(bi>=0){const dx=DOPE.rows[bi].x;rows=rows.replace('<tr data-dx="'+dx+'" tabindex="0">','<tr data-dx="'+dx+'" tabindex="0" class="sel" aria-current="true">');}}
+  document.querySelectorAll("[data-du]").forEach(b=>{const on=b.dataset.du===o.unit;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");});
   const today=new Date();const ds=today.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
   box.innerHTML='<div class="dopehead"><div class="dopename">'+esc(L.name||"Load")+'</div><div class="dopemeta">'+
     (L.rifleName?esc(L.rifleName)+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
@@ -2097,8 +2105,29 @@ function renderDope(L,S,zs,path){
     (rows?'<table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table>"
          :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this load slows too much past "+U.s("yd",S.last,0)+")":"")+".</p>");
 }
-$("rt_dist").addEventListener("input",()=>{const L=cur(),v=U.read($("rt_dist"),"yd",null);L.ret=Object.assign({},L.ret||{},{dist:num(v)>0?v:null});save();render();});
-document.querySelectorAll("[data-rtu]").forEach(b=>b.addEventListener("click",()=>{const L=cur();L.ret=Object.assign({},L.ret||{},{unit:b.dataset.rtu});save();render();}));
+// the units switch sets the dope card and the reticle together
+document.querySelectorAll("[data-du]").forEach(b=>b.addEventListener("click",()=>{$("d_unit").value=b.dataset.du;$("d_unit").dispatchEvent(new Event("change"));}));
+// tap a distance on the card: the reticle shows it (beside the card on a wide screen, in a sheet on a phone)
+const retNarrow=()=>window.matchMedia("(max-width:760px)").matches;
+function retPick(i){if(!DOPE||!DOPE.rows[i])return;const L=cur();L.ret=Object.assign({},L.ret||{},{dist:U.from("yd",DOPE.rows[i].x)});save();render();}
+$("dopeCard").addEventListener("click",e=>{const tr=e.target.closest("tbody tr[data-dx]");if(!tr||!DOPE)return;const i=DOPE.rows.findIndex(r=>String(r.x)===tr.dataset.dx);if(i<0)return;retPick(i);if(retNarrow())retSheet(true);});
+$("dopeCard").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tbody tr[data-dx]");if(!tr)return;e.preventDefault();tr.click();});
+let retLast=null;
+function retSheet(on){
+  let sh=$("retSheet");
+  if(on&&!sh){sh=document.createElement("div");sh.id="retSheet";sh.className="infowrap retsheetw";sh.hidden=true;
+    sh.innerHTML='<div class="infoback" data-rclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-label="Reticle hold"><div class="infohead"><h2>Reticle hold</h2><button class="infox" type="button" data-rclose aria-label="Close">✕</button></div><div id="retSlot"></div><div class="retnav"><button class="btn" type="button" id="retPrev"></button><button class="btn" type="button" id="retNext"></button></div></div>';
+    document.body.appendChild(sh);
+    sh.addEventListener("click",e=>{if(e.target.closest("[data-rclose]"))retSheet(false);});
+    $("retPrev").addEventListener("click",()=>retPick(DOPE.sel-1));$("retNext").addEventListener("click",()=>retPick(DOPE.sel+1));
+    sh.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();retSheet(false);}});}
+  if(!sh)return;
+  if(on){retLast=document.activeElement;$("retSlot").appendChild($("retBox"));sh.hidden=false;retNav();requestAnimationFrame(()=>{sh.classList.add("on");sh.querySelector(".infox").focus();});}
+  else if(!sh.hidden){sh.classList.remove("on");$("retPane").appendChild($("retBox"));setTimeout(()=>{sh.hidden=true;},180);if(retLast&&retLast.focus)retLast.focus({preventScroll:true});}
+}
+function retNav(){const sh=$("retSheet");if(!sh||sh.hidden||!DOPE)return;const i=DOPE.sel,R=DOPE.rows,u=" "+U.u("yd");
+  const p=$("retPrev"),n=$("retNext");p.disabled=!(i>0);n.disabled=!(i>=0&&i<R.length-1);p.textContent=i>0?"‹ "+R[i-1].x+u:"‹";n.textContent=i>=0&&i<R.length-1?R[i+1].x+u+" ›":"›";}
+window.addEventListener("resize",()=>{if(!retNarrow())retSheet(false);});
 $("rt_mode").addEventListener("change",()=>{const L=cur();L.ret=Object.assign({},L.ret||{},{mode:$("rt_mode").value});save();render();});
 $("hitTool").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("hit",{hit:cur().id});});
 ["d_from","d_to","d_step","d_unit"].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener(id==="d_unit"?"change":"input",()=>{
@@ -2172,7 +2201,7 @@ document.getElementById("dopeField").addEventListener("click",openField);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("fieldMode"))closeField();});
 document.getElementById("dopePrint").addEventListener("click",()=>{
   let pa=document.getElementById("printArea");if(!pa){pa=document.createElement("div");pa.id="printArea";document.body.appendChild(pa);}
-  pa.innerHTML='<div class="dopecard">'+$("dopeCard").innerHTML+'</div>';
+  pa.innerHTML='<div class="dopecard">'+$("dopeCard").innerHTML.replace(/ class="sel" aria-current="true"/g,"")+'</div>';
   document.body.classList.add("printdope");window.print();});
 window.addEventListener("afterprint",()=>document.body.classList.remove("printdope"));
 
@@ -6806,8 +6835,7 @@ const INFO={
   secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), then <b>Use the far zero</b> to add it to your zeros. Wind isn't included.",h:"Point-blank range"},
   secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns, and turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds.",h:"Reading the results"},
   "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
-  secTDope:{t:"Dope card",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and whether your scope clicks in MOA or MIL, then tap <b>Print dope card</b>. <b>Field mode</b> shows the same holds in big numbers for the bench. <b>Hit chance at a distance</b> opens your odds of a first-round hit with this load.",h:"Print a dope card"},
-  secTRet:{t:"Reticle holds",b:"Shows where to put the target on a plain reticle for the distance you enter. Flip <b>Reticle units</b> between MOA and MIL to match your scope. Pick <b>Hold it</b> to hold everything, or <b>Dial it, hold the wind</b>. It uses the conditions and crosswind above. It isn't any brand's reticle, so count the marks on yours.",h:"Reticle holds"},
+  secTDope:{t:"Dope card & reticle",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and <b>MOA</b> or <b>MIL</b>, then tap <b>Print dope card</b>. Tap any distance on the card to see where the target goes on a plain reticle; on a phone it slides up, with ‹ › to step through the distances. <b>Field mode</b> shows the holds in big numbers for the bench.",h:"Print a dope card"},
   secTRanges:{t:"Saved ranges",b:"Save the places you shoot: tap <b>+ New range</b>, add each target's distance, angle and size, then tap <b>Done</b>. It lists the dial and wind for every target with this load. <b>Use these conditions</b> sets the range's usual temperature and altitude.",h:"Saved ranges"},
   "@Range trips":{t:"Range trips",b:"A log of each day you shot this load. Tap <b>+ New range trip</b> and fill in what you like: distance, rounds, weather, chronograph strings, target photos and the cold-bore shot. Rounds fired count toward the gun's round count and come off your ammo.",h:"Range trips"},
   "@Range trip":{t:"Range trip",b:"Fill in what you like about the day. <b>Import chronograph file</b> reads your chronograph's export, and target photos are measured when you tap one (or use <b>Live target</b> on a spotting scope). <b>Cold-bore shot</b> records where your first shot landed. <b>Print trip report</b> makes a PDF of the day.",h:"Range trips"},
