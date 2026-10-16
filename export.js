@@ -584,11 +584,14 @@ function targetPdf(T, layoutId, fill, du) {
   du = du === "m" ? "m" : "yd";
   const L = T.layouts.find((x) => x.id === layoutId);
   if (!L) return null;
-  const F = targetFmt(T, L), [PW, PH] = F.page;
+  const F = targetFmt(T, L), [PW, PH] = F.page, SH = F.short != null ? F.short : PW > 9 ? "11 x 17" : "";
   const pdf = new Pdf(), I = 72, X = (v) => v * I;
-  pdf.W = PW * I; pdf.H = PH * I;
-  pdf.title = "Range Book target - " + L.name + (PW > 9 ? " (11 x 17)" : "");
+  // a target taped together from two Letter pages: each page is printed sideways and shows its own strip of the sheet
+  const parts = F.pages || null;
+  pdf.W = PW * I; pdf.H = parts ? 8.5 * I : PH * I;
+  pdf.title = "Range Book target - " + L.name + (SH ? " (" + SH + ")" : "");
   const GRID = "#8fa2b5", INK = "#111111";
+  const sheet = () => {
   // 1-inch squares; every aim point sits in the middle of one
   const [gx0, gy0, gx1, gy1] = F.grid;
   for (let x = gx0; x <= gx1 + 1e-9; x += 1) pdf.line(X(x), X(gy0), X(x), X(gy1), GRID, 0.75);
@@ -600,24 +603,27 @@ function targetPdf(T, layoutId, fill, du) {
     if (i === 0) pdf.rect(X(cx - fs / 5), X(cy - fs / 5), X((fs * 2) / 5), X((fs * 2) / 5), "#ffffff");
   });
   // header, between the top squares
-  pdf.text(X(1.6), X(0.6), "RANGE BOOK", { size: 13, bold: true, color: INK });
-  pdf.text(X(PW - 1.6), X(0.6), L.name + (PW > 9 ? " · 11 x 17" : ""), { size: 10, color: INK, align: "right" });
+  // the side marks that tell the app this is a two-page target
+  if (F.marked && T.mark) T.mark.uv.forEach(([u, v]) => { const mx = F.fid[0][0] + u * (F.fid[1][0] - F.fid[0][0]), my = F.fid[0][1] + v * (F.fid[3][1] - F.fid[0][1]), ms = T.mark.size; pdf.rect(X(mx - ms / 2), X(my - ms / 2), X(ms), X(ms), INK); });
+  const hx = Math.max(1.6, F.fid[0][0] + fs / 2 + 0.3);
+  pdf.text(X(hx), X(0.6), "RANGE BOOK", { size: 13, bold: true, color: INK });
+  pdf.text(X(PW - hx), X(0.6), L.name + (SH ? " · " + SH : ""), { size: 10, color: INK, align: "right" });
   if (fill) {
     // filled in from a range trip: the values in bold after each label
     const FS = PW > 9 ? 9.5 : 8.5;
-    const room = X(PW - 3.2), parts = [["Load", fill.load], ["Date", fill.date], ["Distance", fill.dist ? fill.dist + " " + du : ""], ["Gun", fill.gun]].filter((q) => q[1]);
-    let x = X(1.6);
+    const room = X(PW - 2 * hx), parts = [["Load", fill.load], ["Date", fill.date], ["Distance", fill.dist ? fill.dist + " " + du : ""], ["Gun", fill.gun]].filter((q) => q[1]);
+    let x = X(hx);
     for (const [k, v0] of parts) {
       let v = String(v0);
       const lw = textWidth(k + " ", FS, false);
       const cap = k === "Load" ? room * 0.36 : k === "Gun" ? room * 0.24 : room;
-      while (v.length > 3 && (textWidth(v, FS, true) > cap || x + lw + textWidth(v, FS, true) > X(1.6) + room)) v = v.slice(0, -4) + "...";
-      if (x + lw + textWidth(v, FS, true) > X(1.6) + room) break;
+      while (v.length > 3 && (textWidth(v, FS, true) > cap || x + lw + textWidth(v, FS, true) > X(hx) + room)) v = v.slice(0, -4) + "...";
+      if (x + lw + textWidth(v, FS, true) > X(hx) + room) break;
       pdf.text(x, X(0.98), k, { size: FS, color: "#444444" });
       pdf.text(x + lw, X(0.98), v, { size: FS, bold: true, color: INK });
       x += lw + textWidth(v, FS, true) + 12;
     }
-  } else pdf.text(X(1.6), X(0.98), "Load ____________________   Date _________   Distance _____ " + du + (PW > 9 ? "   Gun ______________________" : ""), { size: 9.5, color: INK });
+  } else pdf.text(X(hx), X(0.98), "Load ____________________   Date _________   Distance _____ " + du + (PW > 9 ? "   Gun ______________________" : ""), { size: 9.5, color: INK });
   // optional scoring rings around a single big aim point
   (L.rings || []).forEach((r) => L.aims.forEach((a) => pdf.circle(X(a.x), X(a.y), X(r), "#8a9aa8", 0.6)));
   // aim points: a round bullseye ring with a crosshair, so they never look like the square corner marks
@@ -635,10 +641,34 @@ function targetPdf(T, layoutId, fill, du) {
   });
   (L.rings || []).forEach((r) => L.aims.forEach((a) => pdf.text(X(a.x + r) + 2, X(a.y) - 3, r + '"', { size: 7.5, color: "#5b6b78" })));
   // footer, between the bottom squares: how to use + a 1 inch check
-  pdf.text(X(1.6), X(PH - 0.7), "Print at Actual size (100%)" + (PW > 9 ? " on 11 x 17 (Tabloid / Ledger) paper" : "") + ". Photograph the whole page with all 4 squares showing.", { size: 7.5, color: INK });
-  const ly = PH - 0.45;
-  pdf.line(X(1.6), X(ly), X(2.6), X(ly), INK, 0.8); pdf.line(X(1.6), X(ly - 0.07), X(1.6), X(ly + 0.07), INK, 0.8); pdf.line(X(2.6), X(ly - 0.07), X(2.6), X(ly + 0.07), INK, 0.8);
-  pdf.text(X(2.7), X(ly + 0.03), "this line should measure exactly 1 inch", { size: 7.5, color: "#444444" });
+  const fy = parts ? F.fid[3][1] + 0.35 : PH - 0.45;
+  pdf.text(X(hx), X(fy - 0.25), parts ? "Print both pages at Actual size (100%) on Letter paper. Photograph the whole target with all 4 squares showing." : "Print at Actual size (100%)" + (PW > 9 ? " on 11 x 17 (Tabloid / Ledger) paper" : "") + ". Photograph the whole page with all 4 squares showing.", { size: 7.5, color: INK });
+  pdf.line(X(hx), X(fy), X(hx + 1), X(fy), INK, 0.8); pdf.line(X(hx), X(fy - 0.07), X(hx), X(fy + 0.07), INK, 0.8); pdf.line(X(hx + 1), X(fy - 0.07), X(hx + 1), X(fy + 0.07), INK, 0.8);
+  pdf.text(X(hx + 1.1), X(fy + 0.03), "this line should measure exactly 1 inch", { size: 7.5, color: "#444444" });
+  };
+  if (!parts) { sheet(); return pdf.build(null); }
+  const PG = 8.5 * I;
+  parts.forEach((pt, i) => {
+    if (i) pdf.addPage();
+    const top = pt.show != null ? pt.show : pt.from, bot = Math.min(pt.to, pt.from + 8.5);
+    // only this page's strip of the sheet, moved up to the top of the page
+    pdf.cur.push(`q 0 ${(PG - X(bot - pt.from)).toFixed(2)} ${pdf.W} ${X(bot - top).toFixed(2)} re W n 1 0 0 1 0 ${X(pt.from).toFixed(2)} cm`);
+    sheet();
+    pdf.cur.push("Q");
+    const Y = (v) => X(v - pt.from);
+    if (i === 0) {
+      // the cut line along the bottom of page 1
+      for (let x = 0.3; x < PW - 0.3; x += 0.3) pdf.line(X(x), Y(pt.to), X(Math.min(x + 0.17, PW - 0.3)), Y(pt.to), INK, 0.9);
+      pdf.text(X(PW / 2), Y(pt.to) + 11, "PAGE 1 OF 2 - CUT ALONG THE DASHED LINE, THEN LAY THIS PAGE OVER THE GRAY STRIP AT THE TOP OF PAGE 2", { size: 7, bold: true, color: "#444444", align: "center" });
+    } else {
+      // the strip page 1 covers: line up its cut edge with the line, and its grid lines with these ticks
+      pdf.rect(0, 0, pdf.W, Y(top), "#e6e9ec");
+      pdf.text(X(PW / 2), Y(top) - 14, "PAGE 2 OF 2 - TAPE PAGE 1 OVER THIS STRIP: ITS CUT EDGE ON THE LINE, ITS GRID LINES ON THESE TICKS", { size: 7, bold: true, color: "#444444", align: "center" });
+      const [gx0, , gx1] = F.grid;
+      for (let x = gx0; x <= gx1 + 1e-9; x += 1) pdf.line(X(x), Y(top) - 9, X(x), Y(top), INK, 0.9);
+      pdf.line(X(0.3), Y(top), X(PW - 0.3), Y(top), INK, 1.1);
+    }
+  });
   return pdf.build(null);
 }
 

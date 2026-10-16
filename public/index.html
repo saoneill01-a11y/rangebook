@@ -1224,7 +1224,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Zoom the chart</h3>
       <p>Pinch to zoom and drag with one finger to move around. A sideways pinch stretches the range, an up-and-down pinch stretches the inches. Double-tap the chart or tap <b>Reset view</b> to go back. On a computer, use the zoom buttons or pinch on a trackpad. <b>Declutter</b> hides the near and far yardage labels on the line of sight (the colored diamonds stay, and the numbers are in the zero boxes); tap it again to bring them back. The normal chart stretches the up-and-down direction a lot so you can read the drop in inches. <b>True scale</b> draws it at its real proportions, the same scale up and down as across, so you see how flat the bullet really flies; a 1,000 yd shot is 36,000 inches long, so even several feet of drop is a gentle curve. The up-and-down numbers switch to feet when they get big. Zooming in keeps the bullet centered and the proportions true. Tap it again to go back. Both buttons are highlighted while they're on and are remembered on this device. Drag the small bar under the chart up or down to make the chart shorter or taller (double-tap the bar to go back to the normal height). The picture doesn't stretch or squash: a taller chart shows more inches of drop and a shorter one shows fewer, so drag on a short chart to move up and down. The height is remembered on this device.</p>
       <h3>Printable targets</h3>
-      <p>Under <b>Tools → Targets</b> (or the <b>Tools</b> button on Home) are targets made for Range Book. On regular <b>Letter (8.5 × 11 in)</b> paper: 5 aim points, a 9-point ladder grid, and 1 big aim point. On <b>Tabloid / Ledger (11 × 17 in)</b> paper: a 12-point ladder grid, 6 big aim boxes, and 1 big aim point with 1- to 4-inch rings for zeroing or long range. Most home printers can't print 11 × 17, but a print shop or office store can; ask for Actual size on Tabloid / Ledger paper. The app tells the two sizes apart on its own when you measure a photo. The background is a grid of 1-inch squares, and each aim point (a light red circle with a solid black center dot) sits in the middle of a square, so you can count inches by eye. The page has a 1-inch black square in each corner (the top-left one is hollow so the app knows which way is up). Tap <b>Open PDF to print</b> and print at <b>Actual size (100%)</b>; the 1-inch line at the bottom should measure exactly 1 inch.</p>
+      <p>Under <b>Tools → Targets</b> (or the <b>Tools</b> button on Home) are targets made for Range Book. On regular <b>Letter (8.5 × 11 in)</b> paper: 5 aim points, a 9-point ladder grid, and 1 big aim point. On <b>Tabloid / Ledger (11 × 17 in)</b> paper: a 12-point ladder grid, 6 big aim boxes, and 1 big aim point with 1- to 4-inch rings for zeroing or long range. Most home printers can't print 11 × 17, but a print shop or office store can; ask for Actual size on Tabloid / Ledger paper. Bigger targets from a home printer are made of <b>two Letter pages taped together (11 × 16 in)</b>: 1 big aim point with rings out to 5 inches, 2 big aim points with rings out to 3 inches, 4 aim points with rings out to 2 inches, and an 8-point ladder grid. Print both pages at Actual size (they print sideways), cut page 1 along its dashed line, lay it over the gray strip at the top of page 2 so the cut edge sits on the line and the grid lines meet, and tape the whole seam on the back so it lies flat. These have bigger corner squares and a small black square on each side, which is how the app knows it's a two-page target. The app tells all the sizes apart on its own when you measure a photo or use Live target. The background is a grid of 1-inch squares, and each aim point (a light red circle with a solid black center dot) sits in the middle of a square, so you can count inches by eye. The page has a 1-inch black square in each corner (the top-left one is hollow so the app knows which way is up). Tap <b>Open PDF to print</b> and print at <b>Actual size (100%)</b>; the 1-inch line at the bottom should measure exactly 1 inch.</p>
       <p>Write the charge for each aim point on its line before you shoot. Afterwards, photograph the whole page with all four squares showing, add the photo to the load, and tap <b>Measure groups</b>. It finds the page, sets the scale, corrects for an angled photo, and marks the holes around every aim point by itself. Aim points with no holes are left out. Check each group and pick its charge, then Save. If it doesn't find the page, tap <b>Read printed target</b> after a better photo, or measure by hand.</p>
       <h3>Measure sight height (height over bore)</h3>
       <p>The distance from the center of the bore to the center of the scope. It matters most at short range.</p>
@@ -3460,7 +3460,9 @@ function targetSvg(T,L){
   for(let x=gx0;x<=gx1+.001;x+=1)h+='<line x1="'+x+'" y1="'+gy0+'" x2="'+x+'" y2="'+gy1+'" stroke="#8fa2b5" stroke-width=".02"/>';
   for(let y=gy0;y<=gy1+.001;y+=1)h+='<line x1="'+gx0+'" y1="'+y+'" x2="'+gx1+'" y2="'+y+'" stroke="#8fa2b5" stroke-width=".02"/>';
   F.forEach(([x,y],i)=>{h+='<rect x="'+(x-fs/2)+'" y="'+(y-fs/2)+'" width="'+fs+'" height="'+fs+'" fill="#111"/>'+(i===0?'<rect x="'+(x-fs/5)+'" y="'+(y-fs/5)+'" width="'+(fs*2/5)+'" height="'+(fs*2/5)+'" fill="#fff"/>':'');});
+  if(Fm.marked&&T.mark)T.mark.uv.forEach(([u,v])=>{const mx=F[0][0]+u*(F[1][0]-F[0][0]),my=F[0][1]+v*(F[3][1]-F[0][1]),ms=T.mark.size;h+='<rect x="'+(mx-ms/2)+'" y="'+(my-ms/2)+'" width="'+ms+'" height="'+ms+'" fill="#111"/>';});
   (L.rings||[]).forEach(r=>L.aims.forEach(a=>{h+='<circle cx="'+a.x+'" cy="'+a.y+'" r="'+r+'" fill="none" stroke="#8a9aa8" stroke-width=".03"/>';}));
+  if(Fm.seam)h+='<path d="M0 '+Fm.seam+'H'+PW+'" stroke="#111" stroke-width=".04" stroke-dasharray=".25 .15"/>';
   L.aims.forEach((a,k)=>{h+='<circle cx="'+a.x+'" cy="'+a.y+'" r=".5" fill="#f2a3a3" stroke="#111" stroke-width=".05"/><circle cx="'+a.x+'" cy="'+a.y+'" r=".25" fill="none" stroke="#111" stroke-width=".025"/><path d="M'+(a.x-.95)+' '+a.y+'H'+(a.x+.95)+'M'+a.x+' '+(a.y-.95)+'V'+(a.y+.95)+'" stroke="#111" stroke-width=".025"/><circle cx="'+a.x+'" cy="'+a.y+'" r=".07" fill="#111"/><text x="'+(a.cell[0]+.12)+'" y="'+(a.cell[1]+.42)+'" font-size=".4" font-weight="700" fill="#111">'+(k+1)+'</text>';});
   return h+'</svg>';
 }
@@ -3472,10 +3474,10 @@ function renderTargets(root){
     let opened=false;
     fmts.forEach(fk=>{const Ls=T.layouts.filter(L=>(L.fmt||"letter")===fk&&!L.legacy);if(!Ls.length)return;
       if(opened)h+='</div>';opened=true;
-      h+='<h3 class="tfmt">'+esc(T.formats?T.formats[fk].name:"Letter")+'</h3>'+(fk==="tabloid"?'<p class="note">Bigger pages with more room for long-range and ladder groups. Most home printers can\'t do 11 × 17; a print shop or office store can for well under a dollar a sheet. Ask for <b>Actual size</b> on Tabloid / Ledger paper.</p>':'')+'<div class="tgrid">';
+      h+='<h3 class="tfmt">'+esc(T.formats?T.formats[fk].name:"Letter")+'</h3>'+(T.formats&&T.formats[fk].pages?'<p class="note">Bigger targets from a home printer: each one is two regular Letter pages, printed sideways. Print both at <b>Actual size</b>, cut page 1 along its dashed line, lay it over the gray strip at the top of page 2 so the cut edge sits on the line and the grid lines meet, and tape it on the back. The dashed line in the preview is where the pages meet. Tape the whole seam so it stays flat; the black squares on the sides tell Range Book it\'s a two-page target.</p>':'')+(fk==="tabloid"?'<p class="note">Bigger pages with more room for long-range and ladder groups. Most home printers can\'t do 11 × 17; a print shop or office store can for well under a dollar a sheet. Ask for <b>Actual size</b> on Tabloid / Ledger paper.</p>':'')+'<div class="tgrid">';
       Ls.forEach(L=>{h+='<div class="tcard">'+targetSvg(T,L)+'<div class="tinfo"><b>'+esc(L.name)+'</b><span class="note">'+esc(L.desc)+'</span><a class="btn primary" href="/api/targets/'+L.id+'.pdf" target="_blank" rel="noopener">Open PDF to print</a></div></div>';});});
     h+='</div></section><section class="card guide" aria-label="Tips"><h2>Tips for the best results</h2><ul>'+
-      '<li><b>Print at Actual size (100%)</b>, not "Fit to page", on plain white paper of the size the target is made for (Letter, or 11 × 17 Tabloid / Ledger). The 1-inch line at the bottom should measure exactly 1 inch.</li>'+
+      '<li><b>Print at Actual size (100%)</b>, not "Fit to page", on plain white paper of the size the target is made for (Letter, or 11 × 17 Tabloid / Ledger; the two-page targets use Letter). The 1-inch line at the bottom should measure exactly 1 inch.</li>'+
       '<li>Hang it on a backer that is darker than the paper (cardboard is fine) so the holes show up dark.</li>'+
       '<li>Take the photo straight on if you can, with <b>all four black squares</b> in the picture and the page filling most of the frame. Good, even light; no shadows across the page.</li>'+
       '<li>Add the photo to the load, tap it, then <b>Measure groups</b>. It reads the target by itself. Check each group: tap wrong marks to remove them and missed holes to add them, and pick the charge for each group.</li>'+
@@ -4061,17 +4063,23 @@ function detectRBTarget(img,T){
   start=hollow.indexOf(true);
   ord=[0,1,2,3].map(i=>best[(start+i)%4]);
   const img4=ord.map(p=>[p.cx/k,p.cy/k]);
-  // try each paper size (Letter, 11 x 17): map the page with its corner squares and see whose aim rings are really there
+  // try each paper size (Letter, 11 x 17, two Letter pages): map the page with its corner squares and see whose aim rings are really there
   const fmts=T.formats?Object.entries(T.formats):[["letter",{fid:T.fid,grid:T.grid,page:T.page}]];
   let pick=null;
   for(const [fk,Fm] of fmts){
     const Ls=T.layouts.filter(L=>(L.fmt||"letter")===fk);if(!Ls.length)continue;
     const Hti=homography(Fm.fid,img4),Hit=homography(img4,Fm.fid);
     if(!Hti||!Hit)continue;
+    const darkAt0=(tx,ty)=>{const [x,y]=applyH(Hti,tx,ty);const X=Math.round(x*k),Y=Math.round(y*k);if(X<1||Y<1||X>=W-1||Y>=H-1)return 0;
+      let s=1e9;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)s=Math.min(s,mean(X+dx,Y+dy)-g[(Y+dy)*W+X+dx]);return s;};
+    // two-page targets have a black square partway down each side, between the corner squares; other pages are blank there
+    if(T.mark){const F0=Fm.fid,ms=T.mark.size*.25,ref=darkAt0(F0[1][0],F0[1][1]);
+      const mk=Math.min(...T.mark.uv.map(([u,v])=>{const mx=F0[0][0]+u*(F0[1][0]-F0[0][0]),my=F0[0][1]+v*(F0[3][1]-F0[0][1]);return Math.min(darkAt0(mx,my),darkAt0(mx-ms,my-ms),darkAt0(mx+ms,my+ms),darkAt0(mx+ms,my-ms),darkAt0(mx-ms,my+ms));}));
+      if(!!Fm.marked!==(mk>Math.max(25,ref*.4)))continue;}
     // which layout? look for the dark ring around each layout's aim points
     const darkAt=(tx,ty)=>{const [x,y]=applyH(Hti,tx,ty);const X=Math.round(x*k),Y=Math.round(y*k);if(X<1||Y<1||X>=W-1||Y>=H-1)return 0;
       let s=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)s=Math.max(s,mean(X+dx,Y+dy)-g[(Y+dy)*W+X+dx]);return s;};
-    const ring=(x,y)=>{let v=0;for(let t=0;t<16;t++){const ang=(t+.5)/16*2*Math.PI;v+=darkAt(x+.5*Math.cos(ang),y+.5*Math.sin(ang));}return v/16;};
+    const ring=(x,y,r=.5)=>{let v=0;for(let t=0;t<16;t++){const ang=(t+.5)/16*2*Math.PI;v+=darkAt(x+r*Math.cos(ang),y+r*Math.sin(ang));}return v/16;};
     const spots=[];Ls.forEach(L=>L.aims.forEach(a=>{if(!spots.some(q=>Math.hypot(q.x-a.x,q.y-a.y)<.05))spots.push({x:a.x,y:a.y,v:ring(a.x,a.y)});}));
     // every ring of the right layout is there, and the spots only other layouts use are blank
     let bestL=null,bestV=-1,bestS=-1e9;
@@ -4081,8 +4089,11 @@ function detectRBTarget(img,T){
     // and the rings must really be there (not just random dark blobs): compare with plain grid paper on that page
     const [gx0,gy0,gx1,gy1]=Fm.grid;let bg=0;for(let t=0;t<40;t++)bg+=darkAt(gx0+.62+(t%8)*((gx1-gx0-1.2)/8),gy0+.41+Math.floor(t/8)*((gy1-gy0-1)/5));bg/=40;
     if(!(bestV>30&&bestV>bg*2.5&&bestS>0))continue;
-    const q=bestS/(bg+5);
-    if(!pick||q>pick.q)pick={q,H:Hit,Hinv:Hti,corners:img4,layout:bestL,score:bestV,fid:Fm.fid,fmt:fk};
+    // the ring must be its real size on this paper, with plain paper just outside it (a page of another size can put its ring in about the same spot, but bigger or smaller)
+    const sharp=bestL.aims.reduce((t,a)=>t+ring(a.x,a.y)-ring(a.x,a.y,.7),0)/bestL.aims.length;
+    if(sharp<bestV*.3)continue;
+    const q=bestS/(bg+5)*(sharp/bestV);
+    if(!pick||q>pick.q)pick={q,H:Hit,Hinv:Hti,corners:img4,layout:bestL,score:bestV,fid:Fm.fid,fmt:fk,fs:Fm.fidSize||T.fidSize||1};
   }
   return pick;
 }
@@ -4567,7 +4578,7 @@ function openLive(o){
   }
   /* ----- comparing before and after ----- */
   function findNew(A,B){
-    const P=LIVE_PPI,w=A.w,h=A.h,N=w*h,fid=(lock&&lock.fid)||T.fid,fs=lock&&lock.manual?.3:((T&&T.fidSize)||1)/2+.18,edge=.22;
+    const P=LIVE_PPI,w=A.w,h=A.h,N=w*h,fid=(lock&&lock.fid)||T.fid,fs=lock&&lock.manual?.3:((lock&&lock.fs)||(T&&T.fidSize)||1)/2+.18,edge=.22;
     const skip=new Uint8Array(N);
     for(let y=0;y<h;y++)for(let x=0;x<w;x++){const px=(x+.5)/P,py=(y+.5)/P,i=y*w+x;
       if(px<edge||py<edge||px>pageW-edge||py>pageH-edge||A.g[i]<0||B.g[i]<0||fid.some(f=>Math.abs(px-f[0])<fs&&Math.abs(py-f[1])<fs))skip[i]=1;}
@@ -4669,7 +4680,7 @@ function openLive(o){
       if(view==="full"||!ref){
         ctx.strokeStyle=ac;ctx.lineWidth=2;ctx.setLineDash([8,6]);ctx.beginPath();lock.fid.forEach((f,i)=>{const p=S(f[0],f[1]);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});ctx.closePath();ctx.stroke();ctx.setLineDash([]);
         if(lock.manual)lock.fid.forEach(f=>{const p=S(f[0],f[1]);ctx.fillStyle=ac;ctx.beginPath();ctx.arc(p[0],p[1],6,0,7);ctx.fill();});
-        else lock.fid.forEach(f=>{const p=S(f[0],f[1]),q=S(f[0]+((T&&T.fidSize)||1)*.6,f[1]),r2=Math.hypot(q[0]-p[0],q[1]-p[1]);ctx.lineWidth=3;ctx.strokeRect(p[0]-r2,p[1]-r2,r2*2,r2*2);});
+        else lock.fid.forEach(f=>{const p=S(f[0],f[1]),q=S(f[0]+((lock&&lock.fs)||(T&&T.fidSize)||1)*.6,f[1]),r2=Math.hypot(q[0]-p[0],q[1]-p[1]);ctx.lineWidth=3;ctx.strokeRect(p[0]-r2,p[1]-r2,r2*2,r2*2);});
       }
       // aim points: the current one stands out
       aims().forEach((a,i)=>{const p=S(a.x,a.y),r1=ppi*.55;ctx.lineWidth=i===aim?3:1.5;ctx.strokeStyle=i===aim?HL:"rgba(255,255,255,.55)";ctx.setLineDash(i===aim?[6,5]:[3,4]);ctx.beginPath();ctx.arc(p[0],p[1],r1,0,7);ctx.stroke();ctx.setLineDash([]);
@@ -6208,7 +6219,7 @@ function renderTrips(){
         const txt=measureText(M,null);await API.patch("/api/photos/"+ph.id,{measure:M,caption:txt});Object.assign(ph,{measure:M,caption:txt,w,h});
         if(tripOpen===id){tripPhotos.push(ph);renderTripPhotos();openViewer(ph.id,tripCtx(t));}}});});
   {const sel=$("tripTgt");let last="rb5";try{last=localStorage.getItem("rb.tripTgt")||"rb5";}catch(e){}
-    fetch("/targets.json").then(r=>r.json()).then(T=>{if(!$("tripTgt"))return;sel.innerHTML=T.layouts.filter(L=>!L.legacy).map(L=>'<option value="'+esc(L.id)+'"'+(L.id===last?' selected':'')+'>'+esc(L.name)+' ('+((L.fmt||"letter")==="tabloid"?"11 × 17":"Letter")+')</option>').join("");}).catch(()=>{});
+    fetch("/targets.json").then(r=>r.json()).then(T=>{if(!$("tripTgt"))return;sel.innerHTML=T.layouts.filter(L=>!L.legacy).map(L=>'<option value="'+esc(L.id)+'"'+(L.id===last?' selected':'')+'>'+esc(L.name)+' ('+esc(((T.formats||{})[L.fmt||"letter"]||{}).label||((L.fmt||"letter")==="tabloid"?"11 × 17":"Letter"))+')</option>').join("");}).catch(()=>{});
     $("tripTgtGo").addEventListener("click",()=>{const id=sel.value||"rb5";try{localStorage.setItem("rb.tripTgt",id);}catch(e){}
       const T0=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId)||{},g=rifles.find(r=>r.id===T0.rifleId);
       const q=new URLSearchParams();if(T0.name)q.set("load",T0.name);if(t.date)q.set("date",fmtDate(t.date));if(num(t.distance))q.set("dist",String(U.n("yd",num(t.distance),0)));if(g&&g.name)q.set("gun",g.name);

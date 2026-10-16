@@ -91,7 +91,7 @@
    "id": "rb9",
    "fmt": "letter",
    "name": "9 aim points (ladder)",
-   "desc": "A 3 \u00d7 3 grid for ladder tests. Write each charge on its line before you shoot.",
+   "desc": "A 3 × 3 grid for ladder tests. Write each charge on its line before you shoot.",
    "aims": [
     {
      "x": 1.25,
@@ -207,7 +207,7 @@
    "id": "tb12",
    "fmt": "tabloid",
    "name": "12 aim points (ladder)",
-   "desc": "A 3 \u00d7 4 grid on 11 \u00d7 17 paper for longer ladder tests. Write each charge on its line before you shoot.",
+   "desc": "A 3 × 4 grid on 11 × 17 paper for longer ladder tests. Write each charge on its line before you shoot.",
    "aims": [
     {
      "x": 2.5,
@@ -335,7 +335,7 @@
    "id": "tb6",
    "fmt": "tabloid",
    "name": "6 aim points",
-   "desc": "Six big boxes on 11 \u00d7 17 paper, with room for wider groups at longer range.",
+   "desc": "Six big boxes on 11 × 17 paper, with room for wider groups at longer range.",
    "aims": [
     {
      "x": 3.5,
@@ -403,7 +403,7 @@
    "id": "tb1",
    "fmt": "tabloid",
    "name": "1 big aim point",
-   "desc": "One aim point with 1-inch rings out to 4 inches on 11 \u00d7 17 paper, for zeroing or long range.",
+   "desc": "One aim point with 1-inch rings out to 4 inches on 11 × 17 paper, for zeroing or long range.",
    "rings": [
     1,
     2,
@@ -419,6 +419,204 @@
       1.45,
       9.95,
       16.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lt1",
+   "fmt": "letter2",
+   "name": "1 big aim point, 10-inch rings",
+   "desc": "One aim point with 1-inch rings out to 5 inches, for long range, zeroing far out, or a big group you want to see whole.",
+   "rings": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "aims": [
+    {
+     "x": 5.5,
+     "y": 9.3,
+     "cell": [
+      1.05,
+      1.85,
+      9.95,
+      14.75
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lt2",
+   "fmt": "letter2",
+   "name": "2 big aim points",
+   "desc": "One aim point on each page with 1-inch rings out to 3 inches. Two long-range groups, or a group and a cold-bore shot.",
+   "rings": [
+    1,
+    2,
+    3
+   ],
+   "aims": [
+    {
+     "x": 5.5,
+     "y": 4.3,
+     "cell": [
+      1.05,
+      1.85,
+      9.95,
+      7.95
+     ]
+    },
+    {
+     "x": 5.5,
+     "y": 11.3,
+     "cell": [
+      1.05,
+      8.05,
+      9.95,
+      14.75
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lt4",
+   "fmt": "letter2",
+   "name": "4 aim points",
+   "desc": "Four roomy boxes with 1-inch rings out to 2 inches, for groups at 300 yards and beyond.",
+   "rings": [
+    1,
+    2
+   ],
+   "aims": [
+    {
+     "x": 3.5,
+     "y": 4.3,
+     "cell": [
+      1.05,
+      1.85,
+      5.45,
+      7.95
+     ]
+    },
+    {
+     "x": 7.5,
+     "y": 4.3,
+     "cell": [
+      5.55,
+      1.85,
+      9.95,
+      7.95
+     ]
+    },
+    {
+     "x": 3.5,
+     "y": 11.3,
+     "cell": [
+      1.05,
+      8.05,
+      5.45,
+      14.75
+     ]
+    },
+    {
+     "x": 7.5,
+     "y": 11.3,
+     "cell": [
+      5.55,
+      8.05,
+      9.95,
+      14.75
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lt8",
+   "fmt": "letter2",
+   "name": "8 aim points (ladder)",
+   "desc": "A 2 × 4 grid with big boxes for ladder tests at longer range. Write each charge on its line before you shoot.",
+   "aims": [
+    {
+     "x": 3.5,
+     "y": 3.3,
+     "cell": [
+      1.05,
+      1.85,
+      5.45,
+      4.75
+     ]
+    },
+    {
+     "x": 7.5,
+     "y": 3.3,
+     "cell": [
+      5.55,
+      1.85,
+      9.95,
+      4.75
+     ]
+    },
+    {
+     "x": 3.5,
+     "y": 6.3,
+     "cell": [
+      1.05,
+      4.85,
+      5.45,
+      7.95
+     ]
+    },
+    {
+     "x": 7.5,
+     "y": 6.3,
+     "cell": [
+      5.55,
+      4.85,
+      9.95,
+      7.95
+     ]
+    },
+    {
+     "x": 3.5,
+     "y": 9.3,
+     "cell": [
+      1.05,
+      8.05,
+      5.45,
+      10.75
+     ]
+    },
+    {
+     "x": 7.5,
+     "y": 9.3,
+     "cell": [
+      5.55,
+      8.05,
+      9.95,
+      10.75
+     ]
+    },
+    {
+     "x": 3.5,
+     "y": 12.3,
+     "cell": [
+      1.05,
+      10.85,
+      5.45,
+      14.75
+     ]
+    },
+    {
+     "x": 7.5,
+     "y": 12.3,
+     "cell": [
+      5.55,
+      10.85,
+      9.95,
+      14.75
      ]
     }
    ]
@@ -485,7 +683,7 @@
   {
    "id": "rb9v1",
    "name": "9 aim points (ladder)",
-   "desc": "A 3 \u00d7 3 grid for ladder tests. Write each charge on its line before you shoot.",
+   "desc": "A 3 × 3 grid for ladder tests. Write each charge on its line before you shoot.",
    "aims": [
     {
      "x": 1.75,
@@ -585,7 +783,7 @@
    "id": "tb12v1",
    "fmt": "tabloid",
    "name": "12 aim points (ladder)",
-   "desc": "A 3 \u00d7 4 grid on 11 \u00d7 17 paper for longer ladder tests. Write each charge on its line before you shoot.",
+   "desc": "A 3 × 4 grid on 11 × 17 paper for longer ladder tests. Write each charge on its line before you shoot.",
    "aims": [
     {
      "x": 2.5,
@@ -714,7 +912,7 @@
    "id": "tb6v1",
    "fmt": "tabloid",
    "name": "6 aim points",
-   "desc": "Six big boxes on 11 \u00d7 17 paper, with room for wider groups at longer range.",
+   "desc": "Six big boxes on 11 × 17 paper, with room for wider groups at longer range.",
    "aims": [
     {
      "x": 3.0,
@@ -782,7 +980,7 @@
  ],
  "formats": {
   "letter": {
-   "name": "Letter (8.5 \u00d7 11 in)",
+   "name": "Letter (8.5 × 11 in)",
    "page": [
     8.5,
     11
@@ -811,10 +1009,12 @@
     1.1,
     7.75,
     10.1
-   ]
+   ],
+   "label": "Letter",
+   "short": ""
   },
   "tabloid": {
-   "name": "Tabloid / Ledger (11 \u00d7 17 in)",
+   "name": "Tabloid / Ledger (11 × 17 in)",
    "page": [
     11,
     17
@@ -843,7 +1043,69 @@
     1.1,
     10.0,
     16.1
-   ]
+   ],
+   "label": "11 × 17",
+   "short": "11 x 17"
+  },
+  "letter2": {
+   "name": "Two Letter pages, taped together (11 × 16 in)",
+   "label": "2 Letter pages",
+   "short": "2 Letter pages",
+   "page": [
+    11,
+    16
+   ],
+   "fid": [
+    [
+     1.05,
+     1.05
+    ],
+    [
+     9.95,
+     1.05
+    ],
+    [
+     9.95,
+     14.8
+    ],
+    [
+     1.05,
+     14.8
+    ]
+   ],
+   "fidSize": 1.5,
+   "grid": [
+    1.0,
+    1.8,
+    10.0,
+    14.8
+   ],
+   "marked": true,
+   "pages": [
+    {
+     "from": 0,
+     "to": 8.0
+    },
+    {
+     "from": 7.5,
+     "to": 16,
+     "show": 8.0
+    }
+   ],
+   "seam": 8.0
   }
+ },
+ "mark": {
+  "uv": [
+   [
+    0,
+    0.35
+   ],
+   [
+    1,
+    0.35
+   ]
+  ],
+  "size": 0.6
  }
 }
