@@ -35,6 +35,8 @@ Free software under the [GNU AGPL-3.0](#license).
 
 Range Book runs as one Docker container. All your data lives in one folder you choose (`/data` inside the container).
 
+Don't have a server? See [No server? Here's how](#no-server-heres-how).
+
 ### Unraid
 
 **With the template (a form in the Docker tab):** open the Unraid **Terminal** (the `>_` icon) and run
