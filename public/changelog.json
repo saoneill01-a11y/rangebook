@@ -2,7 +2,16 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "1.7.15",
+      "version": "2.0.0",
+      "date": "2026-10-15",
+      "title": "Range Book 2.0",
+      "items": [
+        "Range Book 2.0 is the first release for everyone: free software you can install on your own server from https://github.com/saoneill01-a11y/rangebook.",
+        "A new account's Shooting list starts with just the SAMPLE · 6.5 Creedmoor load. The other built-in example loads (.22 LR, .308, 300 Blackout, 6mm ARC and the rest) are gone. Accounts that already have them keep them and can delete them like any other load."
+      ]
+    },
+    {
+      "version": "1.7",
       "date": "2026-10-15",
       "title": "Metric units, combined charges, pull to refresh",
       "items": [

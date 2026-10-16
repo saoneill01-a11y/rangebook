@@ -987,8 +987,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h2>Shooting</h2>
       <p>The <b>Shooting</b> tab is the trajectory calculator plus your range trips and printable targets.</p>
       <h3>Pick or make a load</h3>
-      <p>The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your loads, grouped by cartridge and sorted by name (long-range loads are tagged). Set a load's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Loads</b> to go back. To add your own, tap <b>+ New load</b> (chart to 400 yd) or <b>+ New long-range load</b> (chart to 1,000 yd, table to 2,000 yd). It starts as a copy of the load you were looking at. Your loads are saved to your account. To remove a load, open it and tap <b>Delete load</b> at the very bottom (<b>Undo</b> brings it back). That works for the example loads Range Book starts with too; those also have <b>Reset to defaults</b> if you've changed one and want the original back.</p>
-      <p>A new Range Book also comes with a <b>SAMPLE · 6.5 Creedmoor</b> load on Shooting and, for the first account, a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
+      <p>The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your loads, grouped by cartridge and sorted by name (long-range loads are tagged). Set a load's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Loads</b> to go back. To add your own, tap <b>+ New load</b> (chart to 400 yd) or <b>+ New long-range load</b> (chart to 1,000 yd, table to 2,000 yd). It starts as a copy of the load you were looking at. Your loads are saved to your account. To remove a load, open it and tap <b>Delete load</b> at the very bottom (<b>Undo</b> brings it back). That works for the sample load too, which also has <b>Reset to defaults</b> if you've changed it and want the original back.</p>
+      <p>A new account's Shooting list starts with a single <b>SAMPLE · 6.5 Creedmoor</b> load, and on a new Range Book the first account also gets a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
       <h3>Fill in the fields</h3>
       <ul>
         <li><b>Rifle</b>: pick one from your Guns and Ammo tab and its sight height fills in. Loads sent over from Reloading come with the gun already picked. If you change the gun's sight height on the Guns and Ammo tab, the calculator follows unless you've typed in your own.</li>
@@ -1318,16 +1318,8 @@ function cdG1(m){
   return G1[G1.length-1][1];
 }
 const base={adj:2,temp:59,alt:0,wind:10,step:50,bcm:"G1"};
+// a new account's Shooting list starts with just the made-up sample (older accounts keep whatever they had)
 const DEFAULTS=[
- {id:"308-168",cart:"308 Winchester",name:".308 Win 168 gr",w:168,mv:2650,bc:.462,cal:.308,sh:1.5,z:[50,100,200,300],lr:false},
- {id:"300blk-220",cart:"300 Blackout",name:"300 Blackout 220 gr subsonic",w:220,mv:950,bc:.600,cal:.308,sh:2.6,z:[25,50,75,100],lr:false},
- {id:"300blk-147",cart:"300 Blackout",name:"300 Blackout 147 gr",w:147,mv:1900,bc:.400,cal:.308,sh:2.6,z:[50,100,150,200],lr:false},
- {id:"22lr-40",cart:"22 LR",name:".22 LR 40 gr",w:40,mv:1070,bc:.125,cal:.223,sh:1.5,z:[25,50,75,100],lr:false},
- {id:"38spl-158",cart:"38 Special",name:".38 Special 158 gr",w:158,mv:900,bc:.150,cal:.357,sh:1.5,z:[25,50,75,100],lr:false},
- {id:"556-55",cart:"5.56 NATO",name:"5.56 NATO 55 gr",w:55,mv:3100,bc:.243,cal:.224,sh:2.6,z:[50,100,200,300],lr:false},
- {id:"6arc-105",cart:"6mm ARC",name:"6mm ARC 105 gr BTHP Match",w:105,mv:2700,bc:.530,cal:.243,sh:2.6,z:[50,100,200,300],lr:true},
- {id:"270-130",cart:"270 Winchester",name:".270 Win 130 gr",w:130,mv:3060,bc:.435,cal:.277,sh:1.75,z:[100,200,300,500],lr:true},
- {id:"338wm-225",cart:"338 Win Mag",name:".338 Win Mag 225 gr",w:225,mv:2780,bc:.450,cal:.338,sh:1.75,z:[100,200,300,500],lr:true},
  // made-up example matching the sample reloading load (seed/initial.json): its 39 gr charge averaged 2,670 fps
  {id:"65cm-147-sample",cart:"6.5 Creedmoor",name:"SAMPLE · 6.5 Creedmoor 147 gr ELD Match",w:147,mv:2670,bc:.351,bcm:"G7",cal:.264,blen:1.424,twist:8,sh:1.75,z:[100,200,300,500],lr:true,sample:true}
 ].map(l=>Object.assign({},base,l,{builtin:true}));
@@ -1463,8 +1455,8 @@ function fillInputs(){
   resetDel();
 }
 let delArmed=false;
-// every load can be deleted (examples too; they only come back if the list is ever empty); the built-in examples can also be reset
-function resetDel(){delArmed=false;const L=cur(),only=state.loads.length<2;$("resetBtn").hidden=!L.builtin;$("delBtn").disabled=only;$("delNote").hidden=!only;}
+// every load can be deleted (the sample too; it only comes back if the list is ever empty); a built-in load can be reset while it's still in DEFAULTS
+function resetDel(){delArmed=false;const L=cur(),only=state.loads.length<2;$("resetBtn").hidden=!(L.builtin&&DEFAULTS.some(d=>d.id===L.id));$("delBtn").disabled=only;$("delNote").hidden=!only;}
 function num(v){const n=parseFloat(v);return isFinite(n)?n:null;}
 
 function readInputs(){
