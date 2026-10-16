@@ -303,6 +303,31 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 /* the sample loads (a new install's example 6.5 Creedmoor) carry a warning that the numbers are made up */
 .samplebanner{background:var(--surface);border:2px solid var(--warn);color:var(--fg);margin:0 0 12px;line-height:1.45}
 .samplebanner b{color:var(--warn)}
+/* Tools: one calculator at a time under the menu bar */
+@media (max-width:760px){#tab-tools{display:none!important}}
+@media (max-width:760px){.areatabs.toolbar{gap:14px}.areatabs.toolbar button{font-size:14px;padding-left:0;padding-right:0}}
+@media (max-width:370px){.areatabs.toolbar{gap:10px}}
+.toolsroot{margin-top:14px}
+.tool .toolnote{margin-top:0}
+.toolgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:900px){.toolgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.toolgrid.t4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.toolfill{display:flex;gap:8px 10px;align-items:center;flex-wrap:wrap;margin:0 0 12px}.toolfill label{font-size:13px;color:var(--muted)}
+.toolfill select{flex:1 1 220px;min-width:0}
+.toolres{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--sunk);border:1px solid var(--line)}
+.toolres:empty{display:none}
+.toolres .stats{margin:0}
+.toolres .note{margin:8px 0 0}
+.tbig{font-family:var(--display);font-size:34px;font-weight:700;line-height:1;color:var(--fg)}
+.tbadge{display:inline-block;margin-left:10px;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:700;vertical-align:middle;background:var(--accent);color:var(--accent-fg)}
+.tbadge.mid{background:#c99700;color:#1a1400}.tbadge.bad{background:var(--warn);color:#fff}
+.tmeter{position:relative;height:10px;border-radius:5px;margin:14px 0 4px;background:linear-gradient(90deg,var(--warn) 0 33.3%,#c99700 33.3% 50%,var(--accent) 50% 100%)}
+.tmeter i{position:absolute;top:-4px;width:4px;height:18px;border-radius:2px;background:var(--fg);transform:translateX(-2px)}
+.tscale{position:relative;height:14px;font-size:11px;color:var(--muted);font-family:var(--mono)}.tscale span{position:absolute;transform:translateX(-50%)}.tscale span:first-child{transform:none}.tscale span:last-child{transform:translateX(-100%)}
+.tline{font-size:15px;margin-top:10px}.tline b{font-family:var(--mono)}
+.cvrow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:end;margin-bottom:10px}.cvrow:last-child{margin-bottom:0}
+.cvrow .eq{padding-bottom:12px;color:var(--muted);font-weight:700}
+.twistbanner{background:var(--surface);border:2px solid var(--warn);color:var(--fg);margin:0 0 12px;line-height:1.45}
+.twistbanner b{color:var(--warn)}
 .banner.bad{color:var(--warn)}
 /* the update notice floats at the bottom of the screen (above the tab bar on a phone), so it's seen even when you're scrolled down in a load */
 .updbanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:65;width:min(560px,calc(100% - 24px));margin:0;background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.28)}
@@ -788,6 +813,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <button class="tab" role="tab" id="tab-traj" aria-controls="panel-traj" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18C7 6 15 4 21 9"/><path d="M3 20h18"/><circle cx="21" cy="9" r="1.4" fill="currentColor"/></svg><span>Shooting</span></button>
     <button class="tab" role="tab" id="tab-rel" aria-controls="panel-rel" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l3-5 3 5v12z"/><path d="M9 15h6"/></svg><span>Reloading</span></button>
     <button class="tab" role="tab" id="tab-rifles" aria-controls="panel-rifles" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg><span>Guns &amp; Ammo</span></button>
+    <button class="tab" role="tab" id="tab-tools" aria-controls="panel-tools" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.1L4 16.8V20h3.2l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.6-.6-.6-2.6z"/></svg><span>Tools</span></button>
     <button class="tab wideonly" role="tab" id="tab-admin" aria-controls="panel-admin" aria-selected="false" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M17 11h5M19.5 8.5v5"/></svg><span>Admin</span></button>
     <button class="tab wideonly" role="tab" id="tab-help" aria-controls="panel-help" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg><span>How to Use</span></button>
     <button class="tab narrowonly" id="tab-more" type="button" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg><span>More</span></button>
@@ -796,6 +822,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="moreback" id="moreBack"></div>
     <div class="morepanel" role="menu" aria-label="More">
       <div class="morewho" id="moreWho"></div>
+      <button class="moreitem" role="menuitem" id="more-tools" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.1L4 16.8V20h3.2l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.6-.6-.6-2.6z"/></svg>Tools</button>
       <button class="moreitem" role="menuitem" id="more-help" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>How to Use</button>
       <button class="moreitem" role="menuitem" id="more-new" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg>What's new</button>
       <button class="moreitem" role="menuitem" id="more-admin" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M17 11h5M19.5 8.5v5"/></svg>Admin</button>
@@ -816,9 +843,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <p class="sub" id="trajSub">Bullet path for up to four zeros. Everything updates as you type.</p>
   </header>
 
-  <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Loads</button><button type="button" role="tab" data-area="log" aria-selected="false">Range log</button><button type="button" role="tab" data-area="targets" aria-selected="false">Printable targets</button></div>
+  <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Loads</button><button type="button" role="tab" data-area="log" aria-selected="false">Range log</button></div>
   <div id="trajList"></div>
   <div id="trajDetail" hidden>
+  <div class="banner twistbanner" id="trajTwist" role="note" hidden></div>
   <div class="banner samplebanner" id="trajSample" role="note" hidden><b>Sample data.</b> This load is a made-up example to show how Range Book works. The charges, velocities and groups are not real load data. Don't load or shoot anything from it without checking it against a current published load manual for your exact components, and work up safely on your own. Delete it whenever you like.</div>
   <div class="cols">
   <div class="col colL">
@@ -957,7 +985,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
 
   <div class="panel" id="panel-help" role="tabpanel" aria-labelledby="tab-help" hidden>
-    <nav class="jump helpnav" id="helpNav" aria-label="Help sections"><a href="#hNew">What's new</a><a href="#hStart">Getting started</a><a href="#hShoot">Shooting</a><a href="#hRel">Reloading</a><a href="#hGuns">Guns &amp; Ammo</a><a href="#hFine">Fine print</a><a href="#hLimits">Limits</a></nav>
+    <nav class="jump helpnav" id="helpNav" aria-label="Help sections"><a href="#hNew">What's new</a><a href="#hStart">Getting started</a><a href="#hShoot">Shooting</a><a href="#hRel">Reloading</a><a href="#hGuns">Guns &amp; Ammo</a><a href="#hTools">Tools</a><a href="#hFine">Fine print</a><a href="#hLimits">Limits</a></nav>
     <header><h1>How to Use</h1><p class="sub">Everything you need to get started, measure your gun and log your loads.</p></header>
     <section class="card guide" aria-label="What's new" id="hNew"><h2>What's new</h2><div id="relNotes"><p class="note">Loading…</p></div></section>
     <section class="card guide" aria-label="Getting started" id="hStart">
@@ -968,7 +996,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To use metric, go to <b>More → Account → Units</b> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>Pick a color theme under <b>More → Account → Theme</b>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
-      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Printable targets</b> does the same. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same.</p>
+      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> has its own bar for picking a calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <b>Shooting → Range log</b>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting loads, or ammunition from your inventory (it makes the Shooting load for that gun the first time). It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
       <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
@@ -1032,7 +1060,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Zoom the chart</h3>
       <p>Pinch to zoom and drag with one finger to move around. A sideways pinch stretches the range, an up-and-down pinch stretches the inches. Double-tap the chart or tap <b>Reset view</b> to go back. On a computer, use the zoom buttons or pinch on a trackpad. <b>Declutter</b> hides the near and far yardage labels on the line of sight (the colored diamonds stay, and the numbers are in the zero boxes); tap it again to bring them back. The normal chart stretches the up-and-down direction a lot so you can read the drop in inches. <b>True scale</b> draws it at its real proportions, the same scale up and down as across, so you see how flat the bullet really flies; a 1,000 yd shot is 36,000 inches long, so even several feet of drop is a gentle curve. The up-and-down numbers switch to feet when they get big. Zooming in keeps the bullet centered and the proportions true. Tap it again to go back. Both buttons are highlighted while they're on and are remembered on this device. Drag the small bar under the chart up or down to make the chart shorter or taller (double-tap the bar to go back to the normal height). The picture doesn't stretch or squash: a taller chart shows more inches of drop and a shorter one shows fewer, so drag on a short chart to move up and down. The height is remembered on this device.</p>
       <h3>Printable targets</h3>
-      <p>Under <b>Shooting → Printable targets</b> (or the <b>Printable targets</b> button on Home) are targets made for Range Book. On regular <b>Letter (8.5 × 11 in)</b> paper: 5 aim points, a 9-point ladder grid, and 1 big aim point. On <b>Tabloid / Ledger (11 × 17 in)</b> paper: a 12-point ladder grid, 6 big aim boxes, and 1 big aim point with 1- to 4-inch rings for zeroing or long range. Most home printers can't print 11 × 17, but a print shop or office store can; ask for Actual size on Tabloid / Ledger paper. The app tells the two sizes apart on its own when you measure a photo. The background is a grid of 1-inch squares, and each aim point (a light red circle with a solid black center dot) sits in the middle of a square, so you can count inches by eye. The page has a 1-inch black square in each corner (the top-left one is hollow so the app knows which way is up). Tap <b>Open PDF to print</b> and print at <b>Actual size (100%)</b>; the 1-inch line at the bottom should measure exactly 1 inch.</p>
+      <p>Under <b>Tools → Targets</b> (or the <b>Tools</b> button on Home) are targets made for Range Book. On regular <b>Letter (8.5 × 11 in)</b> paper: 5 aim points, a 9-point ladder grid, and 1 big aim point. On <b>Tabloid / Ledger (11 × 17 in)</b> paper: a 12-point ladder grid, 6 big aim boxes, and 1 big aim point with 1- to 4-inch rings for zeroing or long range. Most home printers can't print 11 × 17, but a print shop or office store can; ask for Actual size on Tabloid / Ledger paper. The app tells the two sizes apart on its own when you measure a photo. The background is a grid of 1-inch squares, and each aim point (a light red circle with a solid black center dot) sits in the middle of a square, so you can count inches by eye. The page has a 1-inch black square in each corner (the top-left one is hollow so the app knows which way is up). Tap <b>Open PDF to print</b> and print at <b>Actual size (100%)</b>; the 1-inch line at the bottom should measure exactly 1 inch.</p>
       <p>Write the charge for each aim point on its line before you shoot. Afterwards, photograph the whole page with all four squares showing, add the photo to the load, and tap <b>Measure groups</b>. It finds the page, sets the scale, corrects for an angled photo, and marks the holes around every aim point by itself. Aim points with no holes are left out. Check each group and pick its charge, then Save. If it doesn't find the page, tap <b>Read printed target</b> after a better photo, or measure by hand.</p>
       <h3>Measure sight height (height over bore)</h3>
       <p>The distance from the center of the bore to the center of the scope. It matters most at short range.</p>
@@ -1134,6 +1162,17 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Box photos</h3>
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
     </section>
+    <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
+      <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators. Pick one from the bar across the top; Range Book remembers which one you used last. Nothing in Tools is saved: change a number and the answer updates.</p>
+      <ul>
+        <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a Shooting load, a bullet from Components or a gun (for its twist) under <b>Fill in from</b>, or type the numbers in. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
+        <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
+        <li><b>Powder</b>: how many rounds a container of powder makes at your charge, what the powder costs per round, and how much you need for a number of rounds. <b>Fill in from</b> uses a Reloading load's charge and, if its powder has a price in Components, the price.</li>
+        <li><b>Convert</b>: grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules. Type in either box.</li>
+        <li><b>Targets</b>: the printable targets (see Shooting above).</li>
+      </ul>
+      <p>On a Shooting load with a bullet length and twist filled in, a warning appears at the top when the bullet isn't fully stable in that twist under today's conditions, with a <b>Check it in Tools</b> button.</p>
+    </section>
     <section class="card guide terms" aria-label="The fine print" id="hFine"><h2>The fine print</h2><div class="termsbody"><h2>Shooting is dangerous.</h2>
 <p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p>
 <h2>This is a notebook, not a load manual.</h2>
@@ -1170,14 +1209,41 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="areatabs" id="rnSeg" role="tablist" aria-label="Reloading"><button type="button" role="tab" data-area="rel" aria-selected="false">Loads</button><button type="button" role="tab" data-area="brass" aria-selected="false">Components</button><button type="button" role="tab" data-area="rnotes" aria-selected="true">Notes</button></div>
     <div id="rnRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
-  <div class="panel" id="panel-targets" role="tabpanel" aria-labelledby="tab-traj" hidden>
-    <header class="phead"><h1>Shooting</h1><p class="sub">Targets to print that Range Book reads by itself when you measure a photo.</p></header>
-    <div class="areatabs" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="false">Loads</button><button type="button" role="tab" data-area="log" aria-selected="false">Range log</button><button type="button" role="tab" data-area="targets" aria-selected="true">Printable targets</button></div>
+  <div class="panel" id="panel-targets" role="tabpanel" aria-labelledby="tab-tools" hidden>
+    <header class="phead"><h1>Tools</h1><p class="sub">Quick calculators. Nothing here is saved: change a number and the answer updates.</p></header>
+    <div class="areatabs toolbar" role="tablist" aria-label="Tools"><button type="button" role="tab" data-tool="twist" aria-selected="false">Stability</button><button type="button" role="tab" data-tool="moa" aria-selected="false">MOA/MIL</button><button type="button" role="tab" data-tool="powder" aria-selected="false">Powder</button><button type="button" role="tab" data-tool="conv" aria-selected="false">Convert</button><button type="button" role="tab" data-area="targets" aria-selected="true">Targets</button></div>
     <div id="targetsRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
+  </div>
+  <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
+    <header class="phead"><h1>Tools</h1><p class="sub">Quick calculators. Nothing here is saved: change a number and the answer updates.</p></header>
+    <div class="areatabs toolbar" role="tablist" aria-label="Tools"><button type="button" role="tab" data-tool="twist" aria-selected="false">Stability</button><button type="button" role="tab" data-tool="moa" aria-selected="false">MOA/MIL</button><button type="button" role="tab" data-tool="powder" aria-selected="false">Powder</button><button type="button" role="tab" data-tool="conv" aria-selected="false">Convert</button><button type="button" role="tab" data-area="targets" aria-selected="false">Targets</button></div>
+    <div class="col toolsroot">
+    <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden><h2>Twist &amp; stability</h2>
+      <p class="note toolnote">Will this bullet be stable in your barrel? This uses the Miller formula, corrected for velocity, temperature and altitude, the same one Shooting uses for spin drift.</p>
+      <div class="toolfill"><label for="tw_from">Fill in from</label><select id="tw_from" class="fieldselect"></select></div>
+      <div class="grid toolgrid t4"><div class="field"><label for="tw_w">Bullet weight (gr)</label><input id="tw_w" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_d">Diameter (<span data-unit="dim">in</span>)</label><input id="tw_d" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_l">Bullet length (<span data-unit="dim">in</span>)</label><input id="tw_l" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_t">Barrel twist, 1 in (<span data-unit="dim">in</span>)</label><input id="tw_t" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_v">Muzzle velocity (<span data-unit="fps">fps</span>)</label><input id="tw_v" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_tf">Temperature (<span data-unit="F">°F</span>)</label><input id="tw_tf" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_a">Altitude (<span data-unit="ft">ft</span>)</label><input id="tw_a" type="number" inputmode="numeric" step="any"></div></div>
+      <div class="toolres" id="tw_res" aria-live="polite"></div>
+    </section>
+    <section class="card tool" data-toolsec="moa" aria-label="MOA, MIL and inches" hidden><h2>MOA · MIL · <span data-unit="in">inches</span></h2>
+      <p class="note toolnote">Turn a group size or a hold into angles, or an angle back into a size, at any distance.</p>
+      <div class="grid toolgrid"><div class="field"><label for="mm_s">Size or angle</label><input id="mm_s" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="mm_u">In</label><select id="mm_u" class="fieldselect"><option value="in" id="mm_uin">inches</option><option value="moa">MOA</option><option value="mil">MIL</option></select></div><div class="field"><label for="mm_r">Distance (<span data-unit="yd">yd</span>)</label><input id="mm_r" type="number" inputmode="numeric" step="any"></div></div>
+      <div class="toolres" id="mm_res" aria-live="polite"></div>
+    </section>
+    <section class="card tool" data-toolsec="powder" aria-label="Powder per container" hidden><h2>Powder per container</h2>
+      <p class="note toolnote">How many rounds a jug of powder makes at your charge, and what the powder costs per round.</p>
+      <div class="toolfill"><label for="pw_from">Fill in from</label><select id="pw_from" class="fieldselect"></select></div>
+      <div class="grid toolgrid t4"><div class="field"><label for="pw_c">Charge (gr)</label><input id="pw_c" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_j">Container</label><select id="pw_j" class="fieldselect"><option value="7000">1 lb</option><option value="56000">8 lb</option><option value="3500">½ lb</option><option value="28000">4 lb</option><option value="15432.36">1 kg</option><option value="7716.18">500 g</option></select></div><div class="field"><label for="pw_p">Price of the container ($)</label><input id="pw_p" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_n">Rounds you want to load</label><input id="pw_n" type="number" inputmode="numeric" step="any"></div></div>
+      <div class="toolres" id="pw_res" aria-live="polite"></div>
+    </section>
+    <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden><h2>Convert</h2>
+      <p class="note toolnote">Type in either box.</p>
+      <div id="cv_rows"></div>
+    </section>
+    </div>
   </div>
   <div class="panel" id="panel-log" role="tabpanel" aria-labelledby="tab-traj" hidden>
     <header class="phead"><h1>Shooting</h1><p class="sub">Every day at the range: your range trips and the days you shot groups for a reloading load.</p></header>
-    <div class="areatabs" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="false">Loads</button><button type="button" role="tab" data-area="log" aria-selected="true">Range log</button><button type="button" role="tab" data-area="targets" aria-selected="false">Printable targets</button></div>
+    <div class="areatabs" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="false">Loads</button><button type="button" role="tab" data-area="log" aria-selected="true">Range log</button></div>
     <div id="logRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
@@ -1254,8 +1320,9 @@ window.U=(function(){
     // a shown number with its unit, e.g. "91 m"; loc adds thousands separators
     s(k,v,dec,loc){const r=U.n(k,v,dec);if(r==="")return "";return (loc?r.toLocaleString(undefined,{maximumFractionDigits:dec||0}):r)+(K[k].temp?"":" ")+U.u(k);},
     // input boxes: fill with the shown value and remember it; read back only if the person changed it, so untouched values never drift
-    fill(el,k,v,dec,decImp){if(!el)return;const t=v==null||v===""||!isFinite(v)?"":String(metric?U.n(k,v,dec):decImp==null?v:Math.round(v*Math.pow(10,decImp))/Math.pow(10,decImp));el.value=t;el.dataset.shown=t;el.dataset.ukind=k;},
-    read(el,k,old){if(!el)return old;if(el.dataset.shown!=null&&el.value===el.dataset.shown)return old;const n=parseFloat(el.value);return isFinite(n)?U.from(k,n):null;}
+    fill(el,k,v,dec,decImp){if(!el)return;const t=v==null||v===""||!isFinite(v)?"":String(metric?U.n(k,v,dec):decImp==null?v:Math.round(v*Math.pow(10,decImp))/Math.pow(10,decImp));el.value=t;el.dataset.shown=t;el.dataset.orig=t===""?"":String(+v);el.dataset.ukind=k;},
+    // a box showing what it was filled with gives back that exact value (also after typing the old number back in)
+    read(el,k,old){if(!el)return old;if(el.dataset.shown!=null&&el.value===el.dataset.shown){if(el.dataset.orig==null)return old;const o=parseFloat(el.dataset.orig);return isFinite(o)?o:null;}const n=parseFloat(el.value);return isFinite(n)?U.from(k,n):null;}
   };
   // any element with data-unit="kind" shows that kind's unit label
   U.labels=root=>{(root||document).querySelectorAll("[data-unit]").forEach(e=>{e.textContent=U.u(e.dataset.unit);});};
@@ -1418,6 +1485,7 @@ window.RB_TRAJ={
   listChanged(){if(TVIEW==="list")fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
   all(){return state.loads.map(l=>({id:l.id,name:l.name||"Untitled load",rifleId:l.rifleId||null,ammoId:l.ammoId||null,cart:l.cart||""}));},
+  forTools(){return state.loads.map(l=>({id:l.id,label:l.name||"Untitled load",w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
   where(){return TVIEW==="detail"?state.cur:null;}
 };
 $("trajBack").addEventListener("click",()=>{showTrajView("list");window.scrollTo(0,0);});
@@ -1538,6 +1606,9 @@ function render(){
   if(mvAdj(L0))d+="<span>Muzzle velocity at "+U.s("F",num(L0.temp),0)+" <b>"+U.s("fps",L.mv,0,true)+"</b> ("+(mvAdj(L0)>0?"+":"")+U.n("fps",mvAdj(L0),0)+" from "+U.s("fps",L0.mv,0,true)+" at "+U.s("F",num(L0.mvtemp),0)+")</span>";
   else if(num(L0.tsens)!=null&&num(L0.mvtemp)==null)d+='<span>Enter the temperature your velocity was measured at to use the temperature sensitivity.</span>';
   const SG=stability(L,S);S.sg=SG;
+  {const tb=$("trajTwist");if(tb){const show=SG!=null&&SG<1.5;tb.hidden=!show;
+    if(show)tb.innerHTML='<b>'+(SG<1?'This bullet won\'t be stable':'This bullet may not be fully stable')+'</b> in a 1-in-'+U.n("dim",L.twist,U.metric?0:1)+(U.metric?' mm':'"')+' twist today: stability <b>'+SG.toFixed(2)+'</b> '+(SG<1?'(under 1.0, so it will likely tumble).':'(marginal: 1.5 or more is fully stable, so it may group poorly, especially in cold weather).')+' <button class="linkbtn" type="button" id="twistTool">Check it in Tools</button>';
+    const b=$("twistTool");if(b)b.onclick=()=>{if(window.RB_TOOLS)RB_TOOLS.open("twist",{traj:L0.id});};}}
   if(SG!=null)d+="<span>Stability (SG) <b>"+SG.toFixed(2)+"</b>"+(SG<1?' <span class="err">unstable: faster twist needed</span>':SG<1.4?' <span class="err">marginal</span>':"")+"</span>";
   else if(L.twist>0&&!(L.blen>0))d+='<span>Enter the bullet length to see stability and spin drift.</span>';
   $("derived").innerHTML=d;
@@ -5061,7 +5132,7 @@ function renderHome(){
   const tripsYear=live.filter(t=>String(t.date||"").startsWith(yr)).length;
   let loaded=0;loads.forEach((L,id)=>{if(!isMine(id))return;(L.batches||[]).forEach(b=>{if(String(b.date||"").startsWith(yr))loaded+=b.n||0;});});
   $("homeTitle").textContent=ME&&ME.name&&ME.username!=="guest"?"Hi, "+(n=>n.charAt(0).toUpperCase()+n.slice(1))(ME.name.split(" ")[0]):"Range Book";
-  let h='<section class="card" aria-label="Quick start"><div class="row homeacts"><button class="btn primary" id="hNewTrip" type="button">Start a range day</button><button class="btn" id="hNewLoad" type="button">+ New reloading load</button><button class="btn" id="hCalc" type="button">Trajectory calculator</button><button class="btn" id="hLog" type="button">Range log</button><button class="btn" id="hTargets" type="button">Printable targets</button></div>';
+  let h='<section class="card" aria-label="Quick start"><div class="row homeacts"><button class="btn primary" id="hNewTrip" type="button">Start a range day</button><button class="btn" id="hNewLoad" type="button">+ New reloading load</button><button class="btn" id="hCalc" type="button">Trajectory calculator</button><button class="btn" id="hLog" type="button">Range log</button><button class="btn" id="hTargets" type="button">Tools</button></div>';
   if(homePick){
     // range day: pick the gun, then what you're shooting through it; makes the trip and fills in the weather
     const used={};live.forEach(t=>{used[t.trajId]=Math.max(used[t.trajId]||0,Date.parse(t.date||0)||0);});
@@ -5125,7 +5196,7 @@ function renderHome(){
     showTab("traj");window.TRAJ_ADD(sp);startDay();}));
   $("hNewLoad").addEventListener("click",()=>{showTab("rel");createLoad();});
   $("hCalc").addEventListener("click",()=>showTab("traj"));
-  $("hTargets").addEventListener("click",()=>showTab("targets"));
+  $("hTargets").addEventListener("click",()=>showTab("tools"));
   $("hLog").addEventListener("click",()=>showTab("log"));
   {const sa=$("hSeeLog");if(sa)sa.addEventListener("click",()=>showTab("log"));}
   root.querySelectorAll("[data-hpick]").forEach(b=>b.addEventListener("click",()=>{RB_TRAJ.open(b.dataset.hpick);startDay();}));
@@ -5193,7 +5264,13 @@ function restore(w){return firstLoad.then(()=>{
   else return;
   if(w.y>0)setTimeout(()=>window.scrollTo(0,w.y),350);
 });}
-return {where,restore,onLog(){renderLog();},onHome(){renderHome();},onShow(){if(openId){drawShotChart();drawChargeChart();}},onRifles(){if(!riflesEditing())renderRifles();},onComps(){if(!compsEditing())renderComps();},onNotes(){if(!notesEditing())renderNotes();}};
+function toolData(){
+  return {bullets:comps.bullets.map(c=>({id:c.id,label:[c.mfr,c.name,num(c.weight)>0?num(c.weight)+" gr":""].filter(Boolean).join(" "),w:num(c.weight),d:num(c.caliber),l:num(c.length)})).filter(b=>b.w>0),
+    rifles:rifles.map(r=>({id:r.id,label:r.name||"Gun",twist:num(r.twist)})).filter(r=>r.twist>0),
+    loads:[...loads].filter(([id])=>isMine(id)).map(([id,L])=>{const pw=L.powderId&&comps.powders.find(x=>x.id===L.powderId),u=unitCost("powders",pw);
+      return {id,label:L.title||"Untitled load",charge:loadCharge(L),perLb:u?u*7000:null,powder:pw?[pw.mfr,pw.name].filter(Boolean).join(" "):(L.powder&&L.powder.type)||""};}).filter(x=>x.charge>0)};
+}
+return {where,restore,toolData,onLog(){renderLog();},onHome(){renderHome();},onShow(){if(openId){drawShotChart();drawChargeChart();}},onRifles(){if(!riflesEditing())renderRifles();},onComps(){if(!compsEditing())renderComps();},onNotes(){if(!notesEditing())renderNotes();}};
 };
 </script>
 <script>
@@ -5458,12 +5535,12 @@ let confirmSignOut=false;
 
 /* ---------- main app ---------- */
 let started=false, REL=null, ME=null;
-const tabs=["home","traj","rel","help","brass","rnotes","targets","log","rifles","admin","account"];
-const TAB_PARENT={brass:"rel",rnotes:"rel",targets:"traj",log:"traj"};
+const tabs=["home","traj","rel","help","brass","rnotes","targets","log","rifles","tools","admin","account"];
+const TAB_PARENT={brass:"rel",rnotes:"rel",targets:"tools",log:"traj"};
 function showTab(t,remember){
   if(t==="admin"&&!(ME&&ME.isAdmin))t="home";
   tabs.forEach(k=>{const on=k===t;const b=$("tab-"+k);if(b)b.setAttribute("aria-selected",(on||TAB_PARENT[t]===k)?"true":"false");$("panel-"+k).hidden=!on;});
-  $("tab-more").classList.toggle("on",["help","admin","account"].includes(t));closeMore();
+  $("tab-more").classList.toggle("on",["help","admin","account","tools","targets"].includes(t));closeMore();
   if(remember!==false)window.scrollTo(0,0);
   if(remember!==false&&!GUEST){try{localStorage.setItem("rangebook.tab",t);}catch(e){}}
   if(t==="traj")window.dispatchEvent(new Event("resize"));
@@ -5471,6 +5548,7 @@ function showTab(t,remember){
   if(t==="rel"&&REL)REL.onShow();
   if(t==="home"&&REL)REL.onHome();
   if(t==="targets"&&window.RB_TARGETS)RB_TARGETS();
+  if((t==="tools"||t==="targets")&&window.RB_TOOLS)RB_TOOLS.shown(t,REL);
   if(t==="log"&&REL)REL.onLog();
   if(t==="rifles"&&REL)REL.onRifles();
   if(t==="brass"&&REL)REL.onComps();
@@ -5649,7 +5727,7 @@ async function startApp(user,api){
   $("moreBack").addEventListener("click",closeMore);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMore();});
   setupGoUp();setupPullRefresh();
-  ["help","admin","account"].forEach(k=>$("more-"+k).addEventListener("click",()=>showTab(k)));
+  ["help","admin","account","tools"].forEach(k=>$("more-"+k).addEventListener("click",()=>showTab(k)));
   $("more-new").addEventListener("click",showWhatsNew);$("updSee").addEventListener("click",showWhatsNew);$("updReload").addEventListener("click",reloadForUpdate);
   $("updX").addEventListener("click",()=>{$("updBanner").hidden=true;if(UPD_VER)updDismissed=UPD_VER;try{localStorage.setItem("rb.seenVer",CHANGELOG.releases[0].version);}catch(e){}});
   loadChangelog();
@@ -5821,3 +5899,134 @@ async function loadAdmin(){
 API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)loginScreen();else loginScreen(e.message);});
 })();
 </script>
+<script>
+/* ---------- Tools: quick calculators, one at a time under the menu bar. Nothing here is saved. ----------
+   Numbers are kept in imperial (like the rest of Range Book) and shown in the person's units. */
+window.RB_TOOLS=(function(){
+  const $=id=>document.getElementById(id), U=window.U;
+  const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
+  const KEY="rb.tool", TOOLS=["twist","moa","powder","conv"];
+  let tool="twist", rel=null, ready=false;
+  try{const t=localStorage.getItem(KEY);if(t&&(TOOLS.includes(t)||t==="targets"))tool=t;}catch(e){}
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  // a box in the person's units <-> the imperial value behind it
+  const put=(id,kind,v,dec)=>{const e=$(id);if(e)e.value=v==null?"":String(kind?U.n(kind,v,dec):v);};
+  const get=(id,kind)=>{const n=num($(id).value);return n==null?null:kind?U.from(kind,n):n;};
+  const DEC={dim:U.metric?2:3,fps:0,F:0,ft:0};
+
+  function bars(){document.querySelectorAll(".toolbar").forEach(b=>b.querySelectorAll("button").forEach(x=>x.setAttribute("aria-selected",(x.dataset.tool||x.dataset.area)===tool?"true":"false")));}
+  function pick(t,silent){
+    tool=t;try{localStorage.setItem(KEY,t);}catch(e){}
+    if(t==="targets"){if(!silent&&window.APP_showTab)APP_showTab("targets");bars();return;}
+    document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==t);bars();
+    if(!silent&&window.APP_showTab&&$("panel-tools").hidden)APP_showTab("tools");
+  }
+
+  /* ----- twist & stability (Miller), the same formula Shooting uses for spin drift ----- */
+  function miller(w,d,l,tw,v,T,alt){
+    if(!(w>0&&d>0&&l>0&&tw>0&&v>0))return null;
+    const t=tw/d,L=l/d,rho=Math.pow(1-6.8756e-6*(alt||0),5.2559)*518.67/((T==null?59:T)+459.67);
+    return 30*w/(t*t*d*d*d*L*(1+L*L))*Math.cbrt(v/2800)/rho;
+  }
+  function twistFrom(){
+    const sel=$("tw_from"),T=(window.RB_TRAJ&&RB_TRAJ.forTools())||[],D=rel&&rel.toolData?rel.toolData():{bullets:[],rifles:[]},keep=sel.value;
+    let h='<option value="">Type it in</option>';
+    if(T.length)h+='<optgroup label="Shooting loads">'+T.map(x=>'<option value="t:'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")+'</optgroup>';
+    if(D.bullets.length)h+='<optgroup label="Bullets (Components)">'+D.bullets.map(x=>'<option value="b:'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")+'</optgroup>';
+    if(D.rifles.length)h+='<optgroup label="Guns (twist only)">'+D.rifles.map(x=>'<option value="r:'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")+'</optgroup>';
+    sel.innerHTML=h;if(keep&&[...sel.options].some(o=>o.value===keep))sel.value=keep;
+    return {T,D};
+  }
+  function twistFill(v){
+    const {T,D}=twistFrom(),[k,id]=String(v||"").split(/:(.*)/);
+    const set=(o)=>{if(o.w!=null)put("tw_w",null,o.w);if(o.d!=null)put("tw_d","dim",o.d,DEC.dim);if(o.l!=null)put("tw_l","dim",o.l,DEC.dim);
+      if(o.twist!=null)put("tw_t","dim",o.twist,U.metric?0:2);if(o.mv!=null)put("tw_v","fps",o.mv,0);if(o.temp!=null)put("tw_tf","F",o.temp,0);if(o.alt!=null)put("tw_a","ft",o.alt,0);};
+    if(k==="t"){const x=T.find(y=>y.id===id);if(x)set(x);}
+    if(k==="b"){const x=D.bullets.find(y=>y.id===id);if(x)set({w:x.w,d:x.d,l:x.l});}
+    if(k==="r"){const x=D.rifles.find(y=>y.id===id);if(x)set({twist:x.twist});}
+    $("tw_from").value=v||"";twistCalc();
+  }
+  function twistCalc(){
+    const w=get("tw_w"),d=get("tw_d","dim"),l=get("tw_l","dim"),tw=get("tw_t","dim"),v=get("tw_v","fps"),T=get("tw_tf","F"),alt=get("tw_a","ft");
+    const sg=miller(w,d,l,tw,v,T,alt),out=$("tw_res");
+    if(sg==null){const miss=[!(w>0)&&"bullet weight",!(d>0)&&"diameter",!(l>0)&&"bullet length",!(tw>0)&&"barrel twist",!(v>0)&&"muzzle velocity"].filter(Boolean);
+      out.innerHTML='<p class="note" style="margin:0">Enter the '+miss.join(", ")+'.</p>';return;}
+    const ok=sg>=1.5,mid=sg>=1&&sg<1.5,full=tw*Math.sqrt(sg/1.5);
+    const twStr=x=>U.metric?Math.round(U.to("dim",x))+' mm':x.toFixed(1)+'"';
+    out.innerHTML='<div><span class="tbig">'+sg.toFixed(2)+'</span><span class="tbadge'+(ok?'':mid?' mid':' bad')+'">'+(ok?'Stable':mid?'Marginal':'Unstable')+'</span></div>'+
+      '<div class="tmeter" aria-hidden="true"><i style="left:'+Math.max(0,Math.min(100,sg/3*100))+'%"></i></div><div class="tscale" aria-hidden="true"><span style="left:0">0</span><span style="left:33.3%">1.0</span><span style="left:50%">1.5</span><span style="left:100%">3.0</span></div>'+
+      '<div class="tline">Slowest twist for full stability: <b>1 in '+twStr(full)+'</b></div>'+
+      '<p class="note">1.5 or more is fully stable. 1.0 to 1.5 is marginal: it may group poorly, especially in cold, dense air. Under 1.0 the bullet will likely tumble. Colder weather and lower altitude make the number smaller. This is an estimate: very long or unusually shaped bullets can behave differently.</p>';
+  }
+
+  /* ----- MOA · MIL · inches ----- */
+  function moaCalc(){
+    const s=num($("mm_s").value),u=$("mm_u").value,r=get("mm_r","yd"),out=$("mm_res");
+    if(!(s>0&&r>0)){out.innerHTML='<p class="note" style="margin:0">Enter a size or angle and a distance.</p>';return;}
+    const moaIn=r/100*1.0472,milIn=r*0.036;               // inches per MOA and per MIL at this distance (yards)
+    const inches=u==="in"?U.from("in",s):u==="moa"?s*moaIn:s*milIn;
+    const parts=[];
+    if(u!=="in")parts.push('<span><b>'+U.n("in",inches,2)+'</b> '+U.u("in")+'</span>');
+    if(u!=="moa")parts.push('<span><b>'+(inches/moaIn).toFixed(2)+'</b> MOA</span>');
+    if(u!=="mil")parts.push('<span><b>'+(inches/milIn).toFixed(2)+'</b> MIL</span>');
+    out.innerHTML='<div class="stats">'+parts.join("")+'</div><p class="note">At '+U.s("yd",r,0,true)+', 1 MOA is '+U.s("in",moaIn,2)+' and 1 MIL is '+U.s("in",milIn,2)+'.</p>';
+  }
+
+  /* ----- powder per container ----- */
+  function powderFrom(){
+    const sel=$("pw_from"),L=(rel&&rel.toolData?rel.toolData().loads:[])||[],keep=sel.value;
+    sel.innerHTML='<option value="">Type it in</option>'+(L.length?'<optgroup label="Reloading loads">'+L.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.label+" · "+x.charge+" gr"+(x.powder?" "+x.powder:""))+'</option>').join("")+'</optgroup>':"");
+    if(keep&&[...sel.options].some(o=>o.value===keep))sel.value=keep;return L;
+  }
+  function powderFill(id){const L=powderFrom(),x=L.find(y=>y.id===id);
+    if(x){put("pw_c",null,x.charge);if(x.perLb){$("pw_j").value="7000";put("pw_p",null,Math.round(x.perLb*100)/100);}}
+    $("pw_from").value=id||"";powderCalc();}
+  function powderCalc(){
+    const c=num($("pw_c").value),jug=num($("pw_j").value),price=num($("pw_p").value),want=num($("pw_n").value),out=$("pw_res");
+    if(!(c>0&&jug>0)){out.innerHTML='<p class="note" style="margin:0">Enter the charge.</p>';return;}
+    const rounds=Math.floor(jug/c),parts=['<span><b>'+rounds.toLocaleString()+'</b> rounds per container</span>'];
+    if(price>0){const per=price/(jug/c);parts.push('<span><b>$'+per.toFixed(per<0.1?3:2)+'</b> powder per round</span>');}
+    const jl=$("pw_j").selectedOptions[0].textContent;
+    let note=''; if(want>0){const gr=want*c;note=want.toLocaleString()+' rounds need '+(U.metric?(gr*0.06479891/1000).toFixed(2)+' kg':(gr/7000).toFixed(2)+' lb')+' of powder: '+Math.ceil(gr/jug)+' × '+jl+'.';}
+    out.innerHTML='<div class="stats">'+parts.join("")+'</div>'+(note?'<p class="note">'+note+'</p>':'');
+  }
+
+  /* ----- convert (either box) ----- */
+  const CV=[["Grains","Grams",0.06479891,2,1],["Feet per second","Metres per second",0.3048,1,0],["Inches","Millimetres",25.4,2,3],["Yards","Metres",0.9144,1,1],["Foot-pounds","Joules",1.3558179,0,0]];
+  function convBuild(){
+    $("cv_rows").innerHTML=CV.map((c,i)=>'<div class="cvrow"><div class="field"><label for="cv'+i+'a">'+c[0]+'</label><input id="cv'+i+'a" type="number" inputmode="decimal" step="any"></div><span class="eq">=</span><div class="field"><label for="cv'+i+'b">'+c[1]+'</label><input id="cv'+i+'b" type="number" inputmode="decimal" step="any"></div></div>').join("");
+    CV.forEach((c,i)=>{const a=$("cv"+i+"a"),b=$("cv"+i+"b"),r=(x,d)=>String(Math.round(x*Math.pow(10,d))/Math.pow(10,d));
+      a.addEventListener("input",()=>{const n=num(a.value);b.value=n==null?"":r(n*c[2],c[3]);});
+      b.addEventListener("input",()=>{const n=num(b.value);a.value=n==null?"":r(n/c[2],c[4]);});});
+  }
+
+  function setup(){
+    if(ready)return;ready=true;
+    if(U.metric){const o=$("mm_uin");if(o)o.textContent=U.u("in");}
+    ["tw_w","tw_d","tw_l","tw_t","tw_v","tw_tf","tw_a"].forEach(id=>$(id).addEventListener("input",()=>{$("tw_from").value="";twistCalc();}));
+    $("tw_from").addEventListener("change",e=>twistFill(e.target.value));
+    ["mm_s","mm_r"].forEach(id=>$(id).addEventListener("input",moaCalc));$("mm_u").addEventListener("change",moaCalc);
+    ["pw_c","pw_p","pw_n"].forEach(id=>$(id).addEventListener("input",()=>{if(id!=="pw_n")$("pw_from").value="";powderCalc();}));
+    $("pw_j").addEventListener("change",powderCalc);$("pw_from").addEventListener("change",e=>powderFill(e.target.value));
+    document.querySelectorAll(".toolbar [data-tool]").forEach(b=>b.addEventListener("click",()=>pick(b.dataset.tool)));
+    document.querySelectorAll(".toolbar [data-area='targets']").forEach(b=>b.addEventListener("click",()=>{tool="targets";try{localStorage.setItem(KEY,"targets");}catch(e){}}));
+    convBuild();
+    // starting values: the Shooting load you're on (or the first one), 1.5 in at 100, and the first reloading load
+    const T=(window.RB_TRAJ&&RB_TRAJ.forTools())||[],here=window.RB_TRAJ&&RB_TRAJ.where&&RB_TRAJ.where();
+    const start=T.find(x=>x.id===here)||T[0];twistFill(start?"t:"+start.id:"");
+    put("mm_s",null,U.metric?3:1.5);put("mm_r","yd",U.metric?100/0.9144:100,0);moaCalc();
+    const PL=powderFrom();if(PL[0])powderFill(PL[0].id);else{put("pw_c",null,40);put("pw_n",null,500);powderCalc();}
+    if(!num($("pw_n").value))put("pw_n",null,500);powderCalc();
+  }
+  return {
+    // showTab tells us Tools (or its Targets page) is on screen
+    shown(t,R){rel=R||rel;setup();
+      if(t==="targets"){tool="targets";try{localStorage.setItem(KEY,"targets");}catch(e){}bars();return;}
+      if(tool==="targets"){tool="twist";}            // opening the Tools tab itself shows a calculator
+      twistFrom();powderFrom();pick(tool,true);},
+    // open a tool from elsewhere, e.g. Shooting's twist warning
+    open(t,o){if(window.APP_showTab)APP_showTab("tools");pick(t,true);if(o&&o.traj)twistFill("t:"+o.traj);window.scrollTo(0,0);}
+  };
+})();
+</script>
+
