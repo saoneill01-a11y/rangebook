@@ -2,14 +2,14 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.3.1",
+      "version": "2.3.2",
       "date": "2026-10-16",
       "title": "Live target",
       "items": [
         "New Live target: put your phone on a spotting scope, aim it at a printed Range Book target, and Range Book marks each shot as it lands. Tap Shot after each shot, or turn on Listen for shots to have the microphone hear them (only when nobody is shooting near you).",
         "It zooms in on the aim point you're shooting at but keeps watching the whole page, and widens the view by itself when a shot lands outside the zoom. Group size, MOA, mean radius and the group's center from the aim point update after every shot.",
         "Tap a hole to add one it missed, or a mark to remove it. Save makes one measured photo of the target, and each charge gets its group size, mean radius and distance. Open it from a ladder (next to + Photo) or a range trip.",
-        "Live target is also in Tools, so you can use it without a load or a range trip. Set the bullet, distance and shots per aim point and start; Save picture gives you a picture of the target with each group and its numbers, to keep in Photos or send."
+        "Live target is also in Tools, so you can use it without a load or a range trip. Save keeps the target photo and its measured groups in your Range Book (it waits on the phone if there's no signal), listed under Tools → Live target → Saved. Later, move one into a range trip (or use + Saved Live target in the trip) or into a reloading ladder. Share picture gives you a picture of the target with each group and its numbers."
       ]
     },
     {

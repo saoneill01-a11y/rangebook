@@ -718,6 +718,48 @@ async function api(req, res, url) {
       return send(res, 200, { ok: true });
     }
   }
+  /* ---- Live target pictures saved without a load or trip: kept as trip photos with no trip yet, so they're in
+     backups and can be moved into a range trip (or a load's ladder) later ---- */
+  if (p === "/api/live" && method === "GET") {
+    const rows = q("SELECT id, caption, w, h, measure, created_at FROM trip_photos WHERE owner_id=? AND trip_id='' ORDER BY created_at DESC").all(user.id);
+    return send(res, 200, { photos: rows.map((r) => ({ id: r.id, caption: r.caption, w: r.w, h: r.h, measure: parseMeasure(r.measure), created: r.created_at, url: `/api/photos/${r.id}` })) });
+  }
+  if (p === "/api/live" && method === "POST") {
+    const body = await readJson(req, 15 * 1024 * 1024);
+    const mm = /^data:image\/(jpeg|png|webp);base64,(.+)$/.exec(body.data || "");
+    if (!mm) throw new HttpError(400, "That isn't a JPEG, PNG or WebP image.");
+    let mtext = null;
+    if (body.measure != null) {
+      if (typeof body.measure !== "object" || Array.isArray(body.measure)) throw new HttpError(400, "Bad measurement.");
+      mtext = JSON.stringify(body.measure);
+      if (mtext.length > 50000) throw new HttpError(400, "That measurement has too many marks.");
+    }
+    const pid = crypto.randomUUID(), file = `${pid}.${mm[1] === "jpeg" ? "jpg" : mm[1]}`;
+    fs.writeFileSync(path.join(PHOTO_DIR, file), Buffer.from(mm[2], "base64"));
+    const at = Number(body.created) > 0 && Number(body.created) <= now() ? Math.round(Number(body.created)) : now();
+    q("INSERT INTO trip_photos(id,trip_id,owner_id,caption,file,w,h,measure,created_at) VALUES(?,?,?,?,?,?,?,?,?)")
+      .run(pid, "", user.id, String(body.caption || "").slice(0, 500), file, body.w | 0 || null, body.h | 0 || null, mtext, at);
+    return send(res, 200, { photo: { id: pid, caption: String(body.caption || "").slice(0, 500), w: body.w | 0 || null, h: body.h | 0 || null, measure: body.measure || null, created: at, url: `/api/photos/${pid}` } });
+  }
+  m = /^\/api\/live\/([^/]+)\/move$/.exec(p);
+  if (m && method === "POST") {
+    const ph = q("SELECT * FROM trip_photos WHERE id=? AND owner_id=? AND trip_id=''").get(m[1], user.id);
+    if (!ph) throw new HttpError(404, "That saved Live target wasn't found. It may have been moved already.");
+    const b = await readJson(req);
+    if (b.tripId && ID_RE.test(String(b.tripId))) {
+      q("UPDATE trip_photos SET trip_id=? WHERE id=?").run(String(b.tripId), ph.id);
+      return send(res, 200, { photo: { id: ph.id, caption: ph.caption, w: ph.w, h: ph.h, measure: parseMeasure(ph.measure), url: `/api/photos/${ph.id}` } });
+    }
+    if (b.loadId) {
+      const L = q("SELECT id FROM loads WHERE id=? AND owner_id=?").get(String(b.loadId), user.id);
+      if (!L) throw new HttpError(404, "That load wasn't found.");
+      const lad = ladderIdOf(b.ladderId);
+      q("INSERT INTO photos(id,load_id,owner_id,caption,file,w,h,measure,ladder_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?)").run(ph.id, L.id, user.id, ph.caption, ph.file, ph.w, ph.h, ph.measure, lad, ph.created_at);
+      q("DELETE FROM trip_photos WHERE id=?").run(ph.id);
+      return send(res, 200, { photo: { id: ph.id, caption: ph.caption, w: ph.w, h: ph.h, measure: parseMeasure(ph.measure), ladderId: lad, url: `/api/photos/${ph.id}` } });
+    }
+    throw new HttpError(400, "Pick a range trip or a load.");
+  }
   m = /^\/api\/photos\/([^/]+)$/.exec(p);
   if (m) {
     let ph = q("SELECT * FROM photos WHERE id=?").get(m[1]), table = "photos", access = null;
