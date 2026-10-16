@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.6.0",
+      "version": "2.6.1",
       "date": "2026-10-16",
       "title": "Hit chance, reticle holds, saved ranges and more",
       "items": [
@@ -12,7 +12,8 @@
         "Range trips record the cold-bore shot, and each gun's page has a Cold-bore log that shows where your first shot tends to land.",
         "Ladder groups have Pressure signs (flat or cratered primers, ejector marks, heavy bolt lift, sticky extraction, loose primer pockets, case head expansion), marked on the velocity chart, in the Summary and in the exports.",
         "Live target remembers the order of the holes, so a group shows Shot by shot: each shot's velocity next to where it hit, and whether faster shots hit higher.",
-        "Live target works on any target: tap its four corners, give its size and tap the aim points."
+        "Live target works on any target: tap its four corners, give its size and tap the aim points.",
+        "Take the tour is now at the top of How to Use, so it's easy to find on an iPad or computer (on a phone it's also under More)."
       ]
     },
     {

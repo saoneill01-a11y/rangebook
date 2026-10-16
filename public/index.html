@@ -1143,7 +1143,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 
   <div class="panel" id="panel-help" role="tabpanel" aria-labelledby="tab-help" hidden>
     <nav class="jump helpnav" id="helpNav" aria-label="Help sections"><a href="#hNew">What's new</a><a href="#hStart">Getting started</a><a href="#hShoot">Shooting</a><a href="#hRel">Reloading</a><a href="#hGuns">Guns &amp; Ammo</a><a href="#hTools">Tools</a><a href="#hFine">Fine print</a><a href="#hLimits">Limits</a></nav>
-    <header><h1>How to Use</h1><p class="sub">Everything you need to get started, measure your gun and log your loads.</p></header>
+    <header><h1>How to Use</h1><p class="sub">Everything you need to get started, measure your gun and log your loads.</p><div class="row helptour"><button class="btn primary" id="tourBtnTop" type="button">Take the tour</button><span class="note">A one-minute walk through the basics.</span></div></header>
     <section class="card guide" aria-label="What's new" id="hNew"><h2>What's new</h2><div id="relNotes"><p class="note">Loading…</p></div></section>
     <section class="card guide" aria-label="Getting started" id="hStart">
       <h2>Getting started</h2>
@@ -6998,7 +6998,7 @@ async function startApp(user,api){
     if(w&&w.at&&Date.now()-w.at<12*3600e3&&want==="home")REL.restore(w);
   }
   $("more-tour").addEventListener("click",()=>{closeMore();startTour();});
-  {const tb=$("tourBtn");if(tb)tb.addEventListener("click",startTour);}
+  ["tourBtn","tourBtnTop"].forEach(id=>{const tb=$(id);if(tb)tb.addEventListener("click",startTour);});
   // a brand-new account (it just agreed to the terms) gets the tour once
   if(window.RB_TOUR_NEXT){window.RB_TOUR_NEXT=false;setTimeout(startTour,900);}
 }
@@ -7010,7 +7010,7 @@ function startTour(){
   const wide=()=>window.innerWidth>760,vis=id=>{const e=$(id);return e&&e.offsetParent!==null&&e.getBoundingClientRect().width>0?e:null;};
   const navFor=id=>vis(id)||vis("tab-more");
   const STEPS=[
-    {t:"Welcome to Range Book",b:"A one-minute tour of the basics. Skip it any time; you can take it again from "+"<span class=\"tournarrow\"><b>More → Take the tour</b>.</span><span class=\"tourwide\"><b>How to Use → Getting started</b>.</span>"},
+    {t:"Welcome to Range Book",b:"A one-minute tour of the basics. Skip it any time; you can take it again from "+"<span class=\"tournarrow\"><b>More → Take the tour</b>.</span><span class=\"tourwide\"><b>How to Use → Take the tour</b>, at the top of that page.</span>"},
     {el:()=>vis("hNewTrip"),t:"Home",b:"Start here. <b>Start a range day</b> picks your gun and load and opens a range trip with today's weather. Home also shows what needs attention, like low components or a gun due for cleaning, and your recent trips and loads."},
     {el:()=>navFor("tab-traj"),t:"Shooting",b:"Your ballistics calculator: drops and holds for each gun and load, a printable dope card, and <b>Field mode</b> for the bench. Your range trips and the <b>Range log</b> live here too."},
     {el:()=>navFor("tab-rel"),t:"Reloading",b:"Your load recipes and <b>ladder tests</b>: charges, chronograph strings (import from LabRadar, Garmin and others), velocity charts and target photos Range Book can measure. Open the <b>SAMPLE</b> load to see how it all fits together."},
