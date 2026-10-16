@@ -520,8 +520,15 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvmic input:checked+.lvtog{background:var(--accent)}.lvmic input:checked+.lvtog::after{left:21px}
 .lvmic input:focus-visible+.lvtog{outline:2px solid #fff;outline-offset:2px}
 .lvmic small{display:block;color:#888;font-size:12px;margin-top:2px}
-.lvmeter{display:inline-block;width:60px;height:6px;border-radius:3px;background:#333;margin-left:6px;vertical-align:middle;overflow:hidden}
+.lvmeter{position:relative;display:inline-block;width:110px;height:8px;border-radius:4px;background:#333;margin-left:6px;vertical-align:middle;overflow:hidden}
 .lvmeter i{display:block;height:100%;width:0;background:var(--accent)}
+.lvmeter b{position:absolute;top:0;bottom:0;width:2px;background:#fff;left:0}
+.lvsens{display:flex;align-items:center;gap:0;margin:-2px 0 0 52px;font-size:13px;color:#bbb;flex-wrap:nowrap}
+.lvsens span{margin-right:8px;white-space:nowrap}
+.lvsens button{flex:1 1 auto;white-space:nowrap;background:#1d1d1d;color:#ccc;border:1px solid #444;padding:6px 8px;font:inherit;font-size:13px;cursor:pointer;margin-left:-1px}
+@media(max-width:420px){.lvsens{margin-left:0}}
+.lvsens button:first-of-type{border-radius:8px 0 0 8px}.lvsens button:last-of-type{border-radius:0 8px 8px 0}
+.lvsens button.on{background:var(--accent);color:var(--accent-fg,#fff);border-color:var(--accent);font-weight:700}
 .lvnote{color:#888!important;font-size:12px!important;margin:0!important}
 @media(max-width:899px){.lvinfo,.lvnote{display:none!important}}
 .lvsheet{position:absolute;left:0;right:0;bottom:0;z-index:2;background:var(--surface);color:var(--fg);border-radius:16px 16px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 16px);box-shadow:0 -10px 30px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:10px;max-width:640px;margin:0 auto}
@@ -1207,7 +1214,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>After the last shot for that aim point it shows the group. Tap <b>Next</b> to move to the next aim point and charge, or use <b>‹ Aim</b> and <b>Next aim ›</b> any time.</li>
         <li>Tap <b>Save</b> when you're done. It saves one photo of the target with every group measured, the same as <b>Measure groups</b>, and each charge gets its group size, mean radius and distance. You can open the photo and edit the marks later. (From Tools, it's kept under <b>Tools → Live target → Saved</b> until you move it to a range trip or a ladder.)</li>
       </ol>
-      <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows what the microphone hears.</p>
+      <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
       <h3>Use a load in the calculator</h3>
       <p>In a load's <b>Summary</b>, tap <b>Use in calculator</b> on a group. It makes a new trajectory load with that bullet weight, average velocity, the ballistic coefficient from the recipe, and the sight height of the gun you picked. Anything missing, fill in on the Shooting tab.</p>
@@ -4164,7 +4171,8 @@ function openLive(o){
       '<div class="lvstats" id="lvStats"></div>'+
       '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
-      '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
+      '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i><b></b></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
+      '<div class="lvsens" id="lvSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-sens="normal">Normal</button><button type="button" data-sens="supp">Suppressed</button><button type="button" data-sens="quiet">Quiet .22</button></div>'+
       '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it.</p>'+
     '</div></div><div class="lvsheet" id="lvSheet" hidden></div>';
   document.body.appendChild(v);
@@ -4458,25 +4466,35 @@ function openLive(o){
   $("lvDist").addEventListener("input",e=>{const d=U.read(e.target,"yd",dist);if(d>0)dist=d;renderStats();});
   {const gs=$("lvGroup");if(gs)gs.addEventListener("change",()=>{const a=aims()[aim];if(!a)return;const id=gs.value||null;aims().forEach(x=>{if(x!==a&&x.groupId===id&&id)x.groupId=null;});a.groupId=id;fillAim();});}
   /* ----- microphone ----- */
-  let actx=null,mic=null,micT=null,bg=0.01,lastBang=0;
+  let actx=null,mic=null,micT=null,bg=0.01,lastBang=0,hold=0;
+  // how loud a bang has to be: a suppressed rifle is still very loud at the bench, a suppressed .22 or subsonic load much less so
+  const SENS={normal:{pk:.35,x:8},supp:{pk:.15,x:6},quiet:{pk:.06,x:5}};
+  let sens="normal";try{const v=localStorage.getItem("rangebook.livesens");if(SENS[v])sens=v;}catch(e){}
+  const meterX=v=>Math.min(100,Math.round(Math.sqrt(v)*100));
+  function setSens(k){sens=SENS[k]?k:"normal";try{localStorage.setItem("rangebook.livesens",sens);}catch(e){}
+    v.querySelectorAll("[data-sens]").forEach(b=>{b.classList.toggle("on",b.dataset.sens===sens);b.setAttribute("aria-pressed",b.dataset.sens===sens);});
+    const m=$("lvMeter");if(m)m.lastChild.style.left="calc("+meterX(SENS[sens].pk)+"% - 1px)";}
+  v.querySelectorAll("[data-sens]").forEach(b=>b.addEventListener("click",()=>setSens(b.dataset.sens)));setSens(sens);
   async function micOn(){
     try{
       mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
       actx=new (window.AudioContext||window.webkitAudioContext)();await actx.resume();
       const src=actx.createMediaStreamSource(mic),an=actx.createAnalyser();an.fftSize=1024;src.connect(an);
-      const buf=new Float32Array(an.fftSize),meter=$("lvMeter");meter.hidden=false;
+      const buf=new Float32Array(an.fftSize),meter=$("lvMeter");meter.hidden=false;$("lvSens").hidden=false;
       micT=setInterval(()=>{
         an.getFloatTimeDomainData(buf);let pk=0,ss=0;for(let i=0;i<buf.length;i++){const a=Math.abs(buf[i]);if(a>pk)pk=a;ss+=a*a;}
         const rms=Math.sqrt(ss/buf.length),now=Date.now();
-        meter.firstChild.style.width=Math.min(100,Math.round(Math.sqrt(pk)*100))+"%";
-        // a gunshot: a sudden, very loud bang, far above the usual noise
-        if(pk>.35&&rms>bg*8&&now-lastBang>1500&&!busy&&lock&&ref){lastBang=now;shot("mic");}
+        // the bar holds the loudest recent sound for a moment, so you can see whether a shot reached the white mark
+        hold=Math.max(pk,hold*.96);meter.firstChild.style.width=meterX(hold)+"%";
+        // a gunshot: a sudden bang, far above the usual noise and past the chosen level
+        const S2=SENS[sens];
+        if(pk>S2.pk&&rms>bg*S2.x&&now-lastBang>1500&&!busy&&lock&&ref){lastBang=now;shot("mic");}
         else bg=bg*.97+Math.min(rms,bg*3)*.03;
         if(bg<.002)bg=.002;
       },20);
     }catch(e){$("lvMic").checked=false;setStat(e&&e.name==="NotAllowedError"?"Microphone access was blocked. Allow it in your settings, or tap Shot after each shot.":"Couldn't start the microphone.","bad");}
   }
-  function micOff(){clearInterval(micT);micT=null;if(mic)mic.getTracks().forEach(t=>t.stop());mic=null;if(actx)actx.close().catch(()=>{});actx=null;const m=$("lvMeter");if(m)m.hidden=true;}
+  function micOff(){clearInterval(micT);micT=null;if(mic)mic.getTracks().forEach(t=>t.stop());mic=null;if(actx)actx.close().catch(()=>{});actx=null;const m=$("lvMeter");if(m)m.hidden=true;const se=$("lvSens");if(se)se.hidden=true;}
   $("lvMic").addEventListener("change",e=>{if(e.target.checked)micOn();else micOff();});
   /* ----- saving: one photo of the target with every aim point's group measured, the same as measuring a photo ----- */
   async function save(){
