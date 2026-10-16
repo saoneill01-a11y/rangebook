@@ -2,13 +2,14 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.7.1",
+      "version": "2.7.2",
       "date": "2026-10-16",
       "title": "Help where you need it",
       "items": [
         "Each page has a Help button at the top right that opens How to Use right at the part about what you're looking at, with a Back button to return.",
         "Cards on Shooting loads, Reloading loads, guns, ammo, components and in Tools have a small ⓘ next to their title: tap it for a quick how-to, and More in How to Use for the full story.",
-        "Fixed: after updating Range Book, a computer's browser could keep showing the old list of printable targets (and the old What's new) for up to an hour."
+        "Fixed: after updating Range Book, a computer's browser could keep showing the old list of printable targets (and the old What's new) for up to an hour.",
+        "Printable targets are listed from one aim point to the most, on each paper size (and in a range trip's Print a target list)."
       ]
     },
     {
