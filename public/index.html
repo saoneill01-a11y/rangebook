@@ -318,6 +318,9 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media(min-width:900px){.toolgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.toolgrid.t4{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .toolfill{display:flex;gap:8px 10px;align-items:center;flex-wrap:wrap;margin:0 0 12px}.toolfill label{font-size:13px;color:var(--muted)}
 .toolfill select{flex:1 1 220px;min-width:0}
+.twfrom{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+@media(min-width:900px){.twfrom{max-width:66%}}
+.twistrow{margin-top:10px}
 .toolres{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--sunk);border:1px solid var(--line)}
 .toolres:empty{display:none}
 .toolres .stats{margin:0}
@@ -879,6 +882,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div></fieldset>
     <div class="derived" id="derived"></div>
     </div>
+    <div class="row twistrow"><button class="btn" type="button" id="twistCheck">Check barrel twist</button></div>
     <div class="err" id="err" hidden></div>
   </section>
   <section class="card" aria-label="Conditions" id="secTWx">
@@ -1170,13 +1174,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
       <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. Nothing in Tools is saved: change a number and the answer updates.</p>
       <ul>
-        <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a Shooting load, a bullet from Components or a gun (for its twist) under <b>Fill in from</b>, or type the numbers in. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
+        <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a <b>Bullet</b> from your Components and a <b>Gun</b> (for its twist) side by side, or type the numbers in. On a Shooting load, <b>Check barrel twist</b> (under Inputs) opens it filled in from that load. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
         <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
         <li><b>Powder</b>: how many rounds a container of powder makes at your charge, what the powder costs per round, and how much you need for a number of rounds. <b>Fill in from</b> uses a Reloading load's charge and, if its powder has a price in Components, the price.</li>
         <li><b>Convert</b>: grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules. Type in either box.</li>
         <li><b>Targets</b>: the printable targets (see Shooting above).</li>
       </ul>
-      <p>On a Shooting load with a bullet length and twist filled in, a warning appears at the top when the bullet isn't fully stable in that twist under today's conditions, with a <b>Check it in Tools</b> button.</p>
+      <p>On a Shooting load with a bullet length and twist filled in, a warning also appears at the top when the bullet isn't fully stable in that twist under today's conditions, with a <b>Check it in Tools</b> button.</p>
     </section>
     <section class="card guide terms" aria-label="The fine print" id="hFine"><h2>The fine print</h2><div class="termsbody"><h2>Shooting is dangerous.</h2>
 <p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p>
@@ -1225,7 +1229,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="col toolsroot">
     <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden>
       <p class="note toolnote">Will this bullet be stable in your barrel? This uses the Miller formula, corrected for velocity, temperature and altitude, the same one Shooting uses for spin drift.</p>
-      <div class="toolfill"><label for="tw_from">Fill in from</label><select id="tw_from" class="fieldselect"></select></div>
+      <div class="grid twfrom"><div class="field"><label for="tw_bul">Bullet</label><select id="tw_bul" class="fieldselect"></select></div><div class="field"><label for="tw_gun">Gun</label><select id="tw_gun" class="fieldselect"></select></div></div>
       <div class="grid toolgrid t4"><div class="field"><label for="tw_w">Bullet weight (gr)</label><input id="tw_w" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_d">Diameter (<span data-unit="dim">in</span>)</label><input id="tw_d" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_l">Bullet length (<span data-unit="dim">in</span>)</label><input id="tw_l" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_t">Barrel twist, 1 in (<span data-unit="dim">in</span>)</label><input id="tw_t" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_v">Muzzle velocity (<span data-unit="fps">fps</span>)</label><input id="tw_v" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_tf">Temperature (<span data-unit="F">°F</span>)</label><input id="tw_tf" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_a">Altitude (<span data-unit="ft">ft</span>)</label><input id="tw_a" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="tw_res" aria-live="polite"></div>
     </section>
@@ -1490,7 +1494,7 @@ window.RB_TRAJ={
   listChanged(){if(TVIEW==="list")fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
   all(){return state.loads.map(l=>({id:l.id,name:l.name||"Untitled load",rifleId:l.rifleId||null,ammoId:l.ammoId||null,cart:l.cart||""}));},
-  forTools(){return state.loads.map(l=>({id:l.id,label:l.name||"Untitled load",w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
+  forTools(){return state.loads.map(l=>({id:l.id,label:l.name||"Untitled load",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
   where(){return TVIEW==="detail"?state.cur:null;}
 };
 $("trajBack").addEventListener("click",()=>{showTrajView("list");window.scrollTo(0,0);});
@@ -2020,6 +2024,7 @@ function newLoad(lr){
   state.loads.push(L);state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
   $("f_name").focus();$("f_name").select();
 }
+$("twistCheck").addEventListener("click",()=>{readInputs();if(window.RB_TOOLS)RB_TOOLS.open("twist",{traj:cur().id});});
 $("resetBtn").addEventListener("click",()=>{
   const L=cur();if(!L.builtin)return;
   const before=clone(L),d=DEFAULTS.find(x=>x.id===L.id);if(!d)return;Object.assign(L,clone(d));save();fillInputs();render();
@@ -5934,23 +5939,32 @@ window.RB_TOOLS=(function(){
     const t=tw/d,L=l/d,rho=Math.pow(1-6.8756e-6*(alt||0),5.2559)*518.67/((T==null?59:T)+459.67);
     return 30*w/(t*t*d*d*d*L*(1+L*L))*Math.cbrt(v/2800)/rho;
   }
+  // Bullet (from Components) and Gun (its twist), side by side; "This load" appears when a Shooting load sent us here
+  let fromLoad=null;
   function twistFrom(){
-    const sel=$("tw_from"),T=(window.RB_TRAJ&&RB_TRAJ.forTools())||[],D=rel&&rel.toolData?rel.toolData():{bullets:[],rifles:[]},keep=sel.value;
-    let h='<option value="">Type it in</option>';
-    if(T.length)h+='<optgroup label="Shooting loads">'+T.map(x=>'<option value="t:'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")+'</optgroup>';
-    if(D.bullets.length)h+='<optgroup label="Bullets (Components)">'+D.bullets.map(x=>'<option value="b:'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")+'</optgroup>';
-    if(D.rifles.length)h+='<optgroup label="Guns (twist only)">'+D.rifles.map(x=>'<option value="r:'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")+'</optgroup>';
-    sel.innerHTML=h;if(keep&&[...sel.options].some(o=>o.value===keep))sel.value=keep;
-    return {T,D};
+    const D=rel&&rel.toolData?rel.toolData():{bullets:[],rifles:[]},b=$("tw_bul"),g=$("tw_gun"),kb=b.value,kg=g.value;
+    b.innerHTML=(fromLoad?'<option value="load">From this load</option>':'')+'<option value="">Type it in</option>'+
+      (D.bullets.length?'<optgroup label="Your bullets (Components)">'+D.bullets.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.label)+'</option>').join("")+'</optgroup>':'<option value="" disabled>No bullets in Components yet</option>');
+    g.innerHTML=(fromLoad&&!fromLoad.gunListed&&fromLoad.twist>0?'<option value="load">From this load</option>':'')+'<option value="">Type it in</option>'+
+      (D.rifles.length?'<optgroup label="Your guns">'+D.rifles.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.label+" · 1 in "+(U.metric?Math.round(U.to("dim",x.twist))+" mm":x.twist+'"'))+'</option>').join("")+'</optgroup>':'<option value="" disabled>No guns with a twist yet</option>');
+    if([...b.options].some(o=>o.value===kb))b.value=kb;if([...g.options].some(o=>o.value===kg))g.value=kg;
+    return D;
   }
-  function twistFill(v){
-    const {T,D}=twistFrom(),[k,id]=String(v||"").split(/:(.*)/);
-    const set=(o)=>{if(o.w!=null)put("tw_w",null,o.w);if(o.d!=null)put("tw_d","dim",o.d,DEC.dim);if(o.l!=null)put("tw_l","dim",o.l,DEC.dim);
-      if(o.twist!=null)put("tw_t","dim",o.twist,U.metric?0:2);if(o.mv!=null)put("tw_v","fps",o.mv,0);if(o.temp!=null)put("tw_tf","F",o.temp,0);if(o.alt!=null)put("tw_a","ft",o.alt,0);};
-    if(k==="t"){const x=T.find(y=>y.id===id);if(x)set(x);}
-    if(k==="b"){const x=D.bullets.find(y=>y.id===id);if(x)set({w:x.w,d:x.d,l:x.l});}
-    if(k==="r"){const x=D.rifles.find(y=>y.id===id);if(x)set({twist:x.twist});}
-    $("tw_from").value=v||"";twistCalc();
+  function setVals(o){if(o.w!=null)put("tw_w",null,o.w);if(o.d!=null)put("tw_d","dim",o.d,DEC.dim);if(o.l!=null)put("tw_l","dim",o.l,DEC.dim);
+    if(o.twist!=null)put("tw_t","dim",o.twist,U.metric?0:2);if(o.mv!=null)put("tw_v","fps",o.mv,0);if(o.temp!=null)put("tw_tf","F",o.temp,0);if(o.alt!=null)put("tw_a","ft",o.alt,0);}
+  function pickBullet(id){if(id!=="load"&&fromLoad&&$("tw_gun").value!=="load")fromLoad=null;const D=twistFrom();
+    if(id==="load"&&fromLoad)setVals({w:fromLoad.w,d:fromLoad.d,l:fromLoad.l});else{const x=D.bullets.find(y=>y.id===id);if(x)setVals({w:x.w,d:x.d,l:x.l});}
+    $("tw_bul").value=id||"";twistCalc();}
+  function pickGun(id){const D=twistFrom();
+    if(id==="load"&&fromLoad)setVals({twist:fromLoad.twist});else{const x=D.rifles.find(y=>y.id===id);if(x)setVals({twist:x.twist});}
+    $("tw_gun").value=id||"";twistCalc();}
+  // everything from a Shooting load: its bullet, its gun (or the twist typed on it), velocity and conditions
+  function fromTraj(id){
+    const T=(window.RB_TRAJ&&RB_TRAJ.forTools())||[],x=T.find(y=>y.id===id);if(!x)return;
+    const D=rel&&rel.toolData?rel.toolData():{rifles:[]},gun=x.rifleId&&D.rifles.find(r=>r.id===x.rifleId);
+    fromLoad=Object.assign({},x,{gunListed:!!gun});twistFrom();
+    setVals(x);$("tw_bul").value="load";$("tw_gun").value=gun?gun.id:(x.twist>0?"load":"");if(gun)setVals({twist:gun.twist});
+    twistCalc();
   }
   function twistCalc(){
     const w=get("tw_w"),d=get("tw_d","dim"),l=get("tw_l","dim"),tw=get("tw_t","dim"),v=get("tw_v","fps"),T=get("tw_tf","F"),alt=get("tw_a","ft");
@@ -6009,8 +6023,10 @@ window.RB_TOOLS=(function(){
   function setup(){
     if(ready)return;ready=true;
     if(U.metric){const o=$("mm_uin");if(o)o.textContent=U.u("in");}
-    ["tw_w","tw_d","tw_l","tw_t","tw_v","tw_tf","tw_a"].forEach(id=>$(id).addEventListener("input",()=>{$("tw_from").value="";twistCalc();}));
-    $("tw_from").addEventListener("change",e=>twistFill(e.target.value));
+    ["tw_w","tw_d","tw_l"].forEach(id=>$(id).addEventListener("input",()=>{$("tw_bul").value="";twistCalc();}));
+    $("tw_t").addEventListener("input",()=>{$("tw_gun").value="";twistCalc();});
+    ["tw_v","tw_tf","tw_a"].forEach(id=>$(id).addEventListener("input",twistCalc));
+    $("tw_bul").addEventListener("change",e=>pickBullet(e.target.value));$("tw_gun").addEventListener("change",e=>pickGun(e.target.value));
     ["mm_s","mm_r"].forEach(id=>$(id).addEventListener("input",moaCalc));$("mm_u").addEventListener("change",moaCalc);
     ["pw_c","pw_p","pw_n"].forEach(id=>$(id).addEventListener("input",()=>{if(id!=="pw_n")$("pw_from").value="";powderCalc();}));
     $("pw_j").addEventListener("change",powderCalc);$("pw_from").addEventListener("change",e=>powderFill(e.target.value));
@@ -6019,9 +6035,9 @@ window.RB_TOOLS=(function(){
     $("toolsBack").addEventListener("click",()=>{view(null);window.scrollTo(0,0);});
     $("targetsBack").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("tools");});
     convBuild();
-    // starting values: the Shooting load you're on (or the first one), 1.5 in at 100, and the first reloading load
-    const T=(window.RB_TRAJ&&RB_TRAJ.forTools())||[],here=window.RB_TRAJ&&RB_TRAJ.where&&RB_TRAJ.where();
-    const start=T.find(x=>x.id===here)||T[0];twistFill(start?"t:"+start.id:"");
+    // starting values: your first bullet and gun (if any), standard air, 1.5 in at 100, and the first reloading load
+    {const D=twistFrom();put("tw_tf","F",59,0);put("tw_a","ft",0,0);
+     if(D.bullets[0])pickBullet(D.bullets[0].id);if(D.rifles[0])pickGun(D.rifles[0].id);twistCalc();}
     put("mm_s",null,U.metric?3:1.5);put("mm_r","yd",U.metric?100/0.9144:100,0);moaCalc();
     const PL=powderFrom();if(PL[0])powderFill(PL[0].id);else{put("pw_c",null,40);put("pw_n",null,500);powderCalc();}
     if(!num($("pw_n").value))put("pw_n",null,500);powderCalc();
@@ -6030,7 +6046,7 @@ window.RB_TOOLS=(function(){
     // showTab tells us Tools (or its Targets page) is on screen: the Tools tab opens to the tiles
     shown(t,R){rel=R||rel;setup();if(t==="tools"){view(pending);pending=null;}},
     // open a tool from elsewhere, e.g. Shooting's twist warning
-    open(t,o){pending=t;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)twistFill("t:"+o.traj);window.scrollTo(0,0);}
+    open(t,o){pending=t;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
   };
 })();
 </script>

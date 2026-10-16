@@ -2,15 +2,15 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.1.1",
+      "version": "2.1.2",
       "date": "2026-10-16",
       "title": "Tools",
       "items": [
         "New Tools area: a tab on a computer, More → Tools on a phone, and the Tools button on Home. It opens to a tile for each tool (Twist & stability, MOA · MIL · inches, Powder per container, Convert and Printable targets) with a line about what it does; tap one to open it and ‹ Tools to go back. Nothing in Tools is saved.",
-        "Stability tells you whether a bullet is stable in your barrel's twist (the Miller formula, corrected for velocity, temperature and altitude) and the slowest twist that fully stabilizes it. Fill it in from a Shooting load, a bullet in Components or a gun's twist.",
+        "Twist & stability tells you whether a bullet is stable in your barrel's twist (the Miller formula, corrected for velocity, temperature and altitude) and the slowest twist that fully stabilizes it. Pick a Bullet from your Components and a Gun side by side, or type the numbers in.",
         "MOA/MIL turns a group or hold into MOA and MIL at any distance (or back). Powder works out rounds per container, powder cost per round and how much powder a batch needs. Convert does grains/grams, fps/m·s, inches/mm, yards/metres and foot-pounds/joules.",
         "Printable targets moved into Tools (Tools → Targets).",
-        "Shooting warns at the top of a load when its bullet isn't fully stable in that twist under today's conditions, with a Check it in Tools button.",
+        "On a Shooting load, Check barrel twist (under Inputs) opens Twist & stability filled in from that load. A warning also appears at the top of a load when its bullet isn't fully stable in that twist under today's conditions.",
         "Fixed: if you changed a number box and then typed the original number back, Range Book kept the in-between value. It now goes back to exactly what was saved."
       ]
     },
