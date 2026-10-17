@@ -2,15 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.14.0",
+      "version": "2.14.1",
       "date": "2026-10-17",
-      "title": "Gun types",
+      "title": "Gun types, manufacturer and model",
       "items": [
+        "A gun's Name is now two boxes, Manufacturer and Model (Manufacturer suggests common makers as you type). Everywhere a gun is listed or picked, it shows the two together, like Tikka T3x Lite. Guns you already had are split for you: a name that starts with a maker Range Book knows (Tikka, Ruger, Smith & Wesson and about 60 more) has it moved to Manufacturer, and any other name stays whole in Model.",
         "Each gun has a Type: Rifle, Pistol or Shotgun (pistol includes revolvers). Pick it on the gun's page under its name.",
         "The Guns list on Gear & Ranges is grouped by type: rifles, then pistols, then shotguns, then any gun without a type, each sorted by name.",
         "When you fill in a gun's cartridge, Range Book guesses its type (a handgun cartridge means a pistol, a gauge means a shotgun) and says so; tap another type if it's wrong. Guns you already had get a guessed type the same way.",
         "The import template's Guns tab has a Type column with a drop-down list. A blank Type is guessed from the cartridge, and words like handgun, revolver, carbine and shotgun are understood.",
-        "The guns export (Excel and PDF) and the full Excel export have a Type column and list guns by type."
+        "The guns export (Excel and PDF) and the full Excel export have a Type column and list guns by type.",
+        "The import template's Guns tab has Manufacturer and Model columns instead of Name. A spreadsheet with a single Name column still works: a known maker at the start is moved to Manufacturer. The guns exports have Manufacturer and Model columns."
       ]
     },
     {
