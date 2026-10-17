@@ -846,6 +846,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .lthumb svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6}
 .ltext{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ltext.grow{flex:1 1 auto}
+/* a barrel picker under the gun picker: indented with a line on the left, so it reads as part of the gun (2.16.1) */
+.field.subfield{margin-left:14px;padding-left:12px;border-left:2px solid var(--line);min-width:0}
 .loaditem .best{font-size:13px;color:var(--fg)}
 .loaditem .best b{font-family:var(--mono);font-weight:500;color:var(--accent)}
 /* summary as compact cards on phones */
@@ -1132,7 +1134,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div>
     <fieldset class="ingrp"><legend>Load &amp; gun</legend><div class="grid">
       <div class="field wide"><label for="f_rifle">Gun</label><select id="f_rifle" class="fieldselect"></select><span class="note" id="f_rifleNote"></span></div>
-      <div class="field wide" id="f_partBox" hidden><label for="f_part">Barrel</label><select id="f_part" class="fieldselect"></select><span class="note" id="f_partNote"></span></div>
+      <div class="field wide subfield" id="f_partBox" hidden><label for="f_part">Barrel</label><select id="f_part" class="fieldselect"></select><span class="note" id="f_partNote"></span></div>
       <div class="field wide"><label for="f_ammoBtn">Ammunition</label><button type="button" id="f_ammoBtn" class="ammobtn" aria-expanded="false" aria-controls="ammoPick"><span id="f_ammoLbl"></span></button>
         <div class="ammopick" id="ammoPick" hidden><input id="f_ammoQ" type="search" placeholder="Search: varget, hornady 168, 6.5 creed…" autocomplete="off" aria-label="Search ammunition"><div id="ammoPickList" class="ammopicklist" role="listbox" aria-label="Ammunition"></div></div><div id="f_ammoInfo"></div><span class="note" id="f_ammoNote"></span></div>
       <div class="field"><label for="f_w">Bullet weight (gr)</label><input id="f_w" type="number" inputmode="decimal" step="any"></div>
@@ -6236,7 +6238,7 @@ function renderDetail(){
     if(L.rifleId&&!own)opts+='<option value="'+esc(L.rifleId)+'" selected>'+esc(L.rifleName||"Rifle")+'</option>';
     h+='<div class="field wide"><label for="ld_rifle">Gun</label><select id="ld_rifle" class="fieldselect">'+opts+'</select><span class="note">Add guns on the <b>Gear &amp; Ranges</b> tab. Picking one here lets Use in calculator fill in its sight height.</span></div>';
     {const ps=partsOf(L.rifleId);if(ps.length){const ask=L.partId===undefined||(L.partId&&!ps.some(p=>p.id===L.partId));
-      h+='<div class="field wide"><label for="ld_part">Barrel</label><select id="ld_part" class="fieldselect">'+(ask?'<option value="__ask" selected>Pick one…</option>':'')+'<option value=""'+(!ask&&!L.partId?' selected':'')+'>The gun as it is</option>'+ps.map(p=>'<option value="'+esc(p.id)+'"'+(L.partId===p.id?' selected':'')+'>'+esc(partName(p))+'</option>').join("")+'</select>'+
+      h+='<div class="field wide subfield"><label for="ld_part">Barrel</label><select id="ld_part" class="fieldselect">'+(ask?'<option value="__ask" selected>Pick one…</option>':'')+'<option value=""'+(!ask&&!L.partId?' selected':'')+'>The gun as it is</option>'+ps.map(p=>'<option value="'+esc(p.id)+'"'+(L.partId===p.id?' selected':'')+'>'+esc(partName(p))+'</option>').join("")+'</select>'+
         '<span class="note'+(ask?' sxflag':'')+'">'+(ask?'This gun has '+ps.length+' barrel'+(ps.length===1?'':'s')+'. Which one are you using?':'New ladders shoot with this barrel (each ladder can be changed), and their shots count toward it.')+'</span></div>';}}
   }
   h+='<div class="field wide"><label for="ld_notes">Notes</label><textarea id="ld_notes">'+esc(L.notes)+'</textarea></div>';
