@@ -351,6 +351,11 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .cvrow .eq{padding-bottom:12px;color:var(--muted);font-weight:700}
 .twistbanner{background:var(--surface);border:2px solid var(--warn);color:var(--fg);margin:0 0 12px;line-height:1.45}
 .twistbanner b{color:var(--warn)}
+.cartsug{position:absolute;left:0;right:0;top:100%;z-index:40;margin-top:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22);max-height:330px;overflow:auto;padding:4px}
+.cartsug button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;background:none;border:0;padding:8px 10px;border-radius:7px;color:var(--fg);font:inherit;font-size:15px;cursor:pointer;min-height:44px}
+.cartsug button small{color:var(--muted);font-size:13px}.cartsug button:hover,.cartsug button.on{background:var(--accent-soft)}
+.cartinfo{font-size:14px;color:var(--muted);line-height:1.45;margin-top:-4px}.cartinfo:empty{display:none}.cartinfo>div+div{margin-top:4px}
+.chip.warnchip{font-family:var(--body);vertical-align:2px;margin-left:4px;background:transparent;color:var(--warn);border:1px solid var(--warn)}
 .banner.bad{color:var(--warn)}
 /* the update notice floats at the bottom of the screen (above the tab bar on a phone), so it's seen even when you're scrolled down in a load */
 .updbanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:65;width:min(560px,calc(100% - 24px));margin:0;background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.28)}
@@ -1065,6 +1070,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Loads</button><button type="button" role="tab" data-area="log" aria-selected="false">Range log</button></div>
   <div id="trajList"></div>
   <div id="trajDetail" hidden>
+  <div class="banner twistbanner" id="trajFit" role="alert" hidden></div>
   <div class="banner twistbanner" id="trajTwist" role="note" hidden></div>
   <div class="banner samplebanner" id="trajSample" role="note" hidden><b>Sample data.</b> This load is a made-up example to show how Range Book works. The charges, velocities and groups are not real load data. Don't load or shoot anything from it without checking it against a current published load manual for your exact components, and work up safely on your own. Delete it whenever you like.</div>
   <div class="cols">
@@ -1405,7 +1411,16 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Gear & Ranges" id="hGuns">
       <h2>Gear &amp; Ranges</h2>
       <h3>Guns</h3>
-      <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. Tap <b>+ Add gun</b> or tap a gun to open it, then fill in its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the loads and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
+      <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. Tap <b>+ Add gun</b> or tap a gun to open it, then fill in the <b>Cartridge</b> it's chambered for, its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the loads and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
+      <h3>Cartridges</h3>
+      <p>Range Book knows about 115 rifle, handgun and rimfire cartridges. Wherever you enter a cartridge (a gun, a reloading recipe, factory or reloaded ammo, a Shooting load), start typing any name for it, like <b>3006</b>, <b>308 Win</b>, <b>7.62 NATO</b> or <b>6.5 CM</b>, and pick it from the list. It's saved under its standard name (30-06 Springfield, 308 Winchester and so on), so loads group together, and the bullet diameter fills in if it's empty. Under the box you'll see the bullet it takes and the SAAMI (or C.I.P.) maximum case length and overall length. A cartridge that isn't in the list (a wildcat, say) can still be typed in; just enter the bullet diameter yourself. Cartridges you'd already typed with another name for a listed one were switched to its standard name.</p>
+      <p><b>Warnings:</b> Range Book checks that things fit, and warns you (it doesn't stop you) when they don't:</p>
+      <ul>
+        <li>A Shooting load whose ammo isn't right for its gun gets a warning at the top and a <b>Check cartridge</b> tag in the list. So does a reloading recipe whose gun is chambered for something else.</li>
+        <li>Some ammo is safe in another chamber but not the other way around, and Range Book knows which: 38 Special in a 357 Magnum, 223 Remington in a 5.56 NATO (both in a 223 Wylde), 44 Special in a 44 Magnum, 45 Colt in a 454 Casull or 460 S&amp;W, 32 H&amp;R and 32 S&amp;W Long in a 327 Federal, 22 Short and Long in a 22 LR, 280 Remington in a 280 Ackley Improved, and others. The reverse (357 Magnum in a 38 Special gun, 5.56 in a 223-only gun) is flagged as dangerous, and so is 300 Blackout with a 5.56/.223 gun. 308 Winchester and 7.62x51mm NATO pass, but check your gun's manual.</li>
+        <li>A bullet whose diameter doesn't match the cartridge (a .308" bullet in a 7.62x39, say), a case length over the maximum, and a COAL longer than the SAAMI maximum (common when seating close to the lands, so make sure it fits your magazine and chamber).</li>
+      </ul>
+      <p>Always confirm against your gun's barrel stamp and a current load manual: this list is a check, not a replacement for them.</p>
       <h3>Round count and barrel life</h3>
       <p>Each gun's page has a <b>Round count</b>. It adds the rounds from range trips on Shooting loads that use that gun, the shots in your load-development groups on Reloading loads that use it, and the <b>Rounds before Range Book</b> you enter. Fill in <b>Barrel life</b> to see a bar of how much is used (it turns red at 80%, and Home warns you). Set <b>Clean every</b> and tap <b>Cleaned today</b> after cleaning to see the rounds since then; Home tells you when it's due. When you fit a new barrel, set <b>Barrel fitted on</b> to that date and <b>Rounds before Range Book</b> to 0.</p>
       <h3>Scopes</h3>
@@ -1648,6 +1663,74 @@ window.DIA={
 };
 </script>
 <script>
+/* ---------- cartridges: names, true bullet diameter, SAAMI/C.I.P. max case length and overall length, and what else each chamber can safely fire ---------- */
+(function(){
+  // n name · t rifle/handgun/rimfire · d bullet diameter (in) · cl max case length (in) · oal max overall length (in) · a other names · x also safe in this chamber
+  const L=[{"n":"17 HMR","t":"rimfire","d":0.172,"cl":1.058,"oal":1.349,"a":["17 Hornady Magnum Rimfire",".17 HMR"],"x":[]},{"n":"17 WSM","t":"rimfire","d":0.172,"cl":1.2,"oal":1.59,"a":["17 Winchester Super Magnum"],"x":[]},{"n":"22 Short","t":"rimfire","d":0.223,"cl":0.423,"oal":0.686,"a":[".22 Short"],"x":[]},{"n":"22 Long","t":"rimfire","d":0.223,"cl":0.613,"oal":0.888,"a":[".22 Long"],"x":["22 Short"]},{"n":"22 LR","t":"rimfire","d":0.223,"cl":0.613,"oal":1.0,"a":["22 Long Rifle",".22 LR","22LR"],"x":["22 Long","22 Short"]},{"n":"22 WMR","t":"rimfire","d":0.224,"cl":1.055,"oal":1.35,"a":["22 Magnum","22 Mag","22 Winchester Magnum Rimfire",".22 WMR"],"x":[]},{"n":"17 Hornet","t":"rifle","d":0.172,"cl":1.35,"oal":1.723,"a":["17 Hornady Hornet"],"x":[]},{"n":"17 Remington","t":"rifle","d":0.172,"cl":1.796,"oal":2.15,"a":["17 Rem"],"x":[]},{"n":"204 Ruger","t":"rifle","d":0.204,"cl":1.85,"oal":2.26,"a":[".204 Ruger","204"],"x":[]},{"n":"22 Hornet","t":"rifle","d":0.224,"cl":1.403,"oal":1.723,"a":[".22 Hornet"],"x":[]},{"n":"222 Remington","t":"rifle","d":0.224,"cl":1.7,"oal":2.13,"a":["222 Rem",".222"],"x":[]},{"n":"223 Remington","t":"rifle","d":0.224,"cl":1.76,"oal":2.26,"a":["223","223 Rem",".223",".223 Remington","223 Rem."],"x":[]},{"n":"5.56x45mm NATO","t":"rifle","d":0.224,"cl":1.76,"oal":2.26,"a":["5.56","5.56 NATO","5.56x45","5.56mm","5.56x45 NATO","5.56mm NATO"],"x":["223 Remington"]},{"n":"223 Wylde","t":"rifle","d":0.224,"cl":1.76,"oal":2.26,"a":[".223 Wylde","223 Wylde chamber"],"x":["223 Remington","5.56x45mm NATO"]},{"n":"22 Nosler","t":"rifle","d":0.224,"cl":1.76,"oal":2.26,"a":[],"x":[]},{"n":"22 ARC","t":"rifle","d":0.224,"cl":1.525,"oal":2.26,"a":["22 Advanced Rifle Cartridge"],"x":[]},{"n":"224 Valkyrie","t":"rifle","d":0.224,"cl":1.6,"oal":2.26,"a":[".224 Valkyrie","224 Valk"],"x":[]},{"n":"22-250 Remington","t":"rifle","d":0.224,"cl":1.912,"oal":2.35,"a":["22-250","22-250 Rem",".22-250"],"x":[]},{"n":"220 Swift","t":"rifle","d":0.224,"cl":2.205,"oal":2.68,"a":[".220 Swift"],"x":[]},{"n":"22 Creedmoor","t":"rifle","d":0.224,"cl":1.92,"oal":null,"a":["22 CM","22 Creed"],"x":[]},{"n":"243 Winchester","t":"rifle","d":0.243,"cl":2.045,"oal":2.71,"a":["243","243 Win",".243",".243 Win",".243 Winchester"],"x":[]},{"n":"6mm Creedmoor","t":"rifle","d":0.243,"cl":1.92,"oal":2.8,"a":["6 Creedmoor","6mm CM","6 CM","6mm Creed","6 Creed"],"x":[]},{"n":"6mm ARC","t":"rifle","d":0.243,"cl":1.49,"oal":2.26,"a":["6 ARC","6mm Advanced Rifle Cartridge"],"x":[]},{"n":"6mm BR Norma","t":"rifle","d":0.243,"cl":1.56,"oal":2.441,"a":["6mm BR","6 BR","6BR"],"x":[]},{"n":"6mm Remington","t":"rifle","d":0.243,"cl":2.233,"oal":2.825,"a":["6mm Rem","244 Remington"],"x":[]},{"n":"25-06 Remington","t":"rifle","d":0.257,"cl":2.494,"oal":3.25,"a":["25-06","25-06 Rem",".25-06"],"x":[]},{"n":"257 Roberts","t":"rifle","d":0.257,"cl":2.233,"oal":2.78,"a":[".257 Roberts","257 Bob"],"x":[]},{"n":"6.5 Grendel","t":"rifle","d":0.264,"cl":1.52,"oal":2.26,"a":["6.5mm Grendel","6.5 Gren"],"x":[]},{"n":"6.5 Creedmoor","t":"rifle","d":0.264,"cl":1.92,"oal":2.825,"a":["6.5 CM","6.5mm Creedmoor","6.5 Creed","6.5CM","65 Creedmoor"],"x":[]},{"n":"6.5 PRC","t":"rifle","d":0.264,"cl":2.03,"oal":2.955,"a":["6.5mm PRC","6.5 Precision Rifle Cartridge"],"x":[]},{"n":"6.5x47 Lapua","t":"rifle","d":0.264,"cl":1.85,"oal":2.795,"a":["6.5x47","6.5x47mm Lapua"],"x":[]},{"n":"260 Remington","t":"rifle","d":0.264,"cl":2.035,"oal":2.8,"a":["260 Rem",".260 Remington","6.5-08"],"x":[]},{"n":"6.5x55 Swedish","t":"rifle","d":0.264,"cl":2.165,"oal":3.15,"a":["6.5x55","6.5x55mm Swedish","6.5 Swede","6.5x55 SE"],"x":[]},{"n":"6.5-284 Norma","t":"rifle","d":0.264,"cl":2.17,"oal":3.228,"a":["6.5x284","6.5-284","6.5x284 Norma"],"x":[]},{"n":"264 Win Mag","t":"rifle","d":0.264,"cl":2.5,"oal":3.34,"a":["264 Winchester Magnum",".264 Win Mag"],"x":[]},{"n":"26 Nosler","t":"rifle","d":0.264,"cl":2.59,"oal":3.34,"a":[],"x":[]},{"n":"270 Winchester","t":"rifle","d":0.277,"cl":2.54,"oal":3.34,"a":["270","270 Win",".270",".270 Win",".270 Winchester"],"x":[]},{"n":"270 WSM","t":"rifle","d":0.277,"cl":2.1,"oal":2.86,"a":["270 Winchester Short Magnum"],"x":[]},{"n":"6.8 Rem SPC","t":"rifle","d":0.277,"cl":1.686,"oal":2.26,"a":["6.8 SPC","6.8mm Remington SPC","6.8x43","6.8 Remington SPC"],"x":[]},{"n":"6.8 Western","t":"rifle","d":0.277,"cl":2.02,"oal":2.955,"a":["6.8mm Western"],"x":[]},{"n":"277 Fury","t":"rifle","d":0.277,"cl":2.015,"oal":2.825,"a":["6.8x51","6.8x51mm",".277 SIG Fury","277 SIG Fury"],"x":[]},{"n":"7mm-08 Remington","t":"rifle","d":0.284,"cl":2.035,"oal":2.8,"a":["7mm-08","7mm-08 Rem","7-08"],"x":[]},{"n":"7x57 Mauser","t":"rifle","d":0.284,"cl":2.235,"oal":3.065,"a":["7mm Mauser","7x57","7x57mm","275 Rigby"],"x":[]},{"n":"280 Remington","t":"rifle","d":0.284,"cl":2.54,"oal":3.33,"a":["280 Rem",".280 Remington","7mm Express Remington"],"x":[]},{"n":"280 Ackley Improved","t":"rifle","d":0.284,"cl":2.525,"oal":3.33,"a":["280 AI","280 Ackley",".280 Ackley Improved"],"x":["280 Remington"]},{"n":"7mm Rem Mag","t":"rifle","d":0.284,"cl":2.5,"oal":3.29,"a":["7mm Remington Magnum","7mm Mag","7 Mag","7mm RM"],"x":[]},{"n":"7mm WSM","t":"rifle","d":0.284,"cl":2.1,"oal":2.86,"a":["7mm Winchester Short Magnum"],"x":[]},{"n":"7mm PRC","t":"rifle","d":0.284,"cl":2.28,"oal":3.34,"a":["7 PRC","7mm Precision Rifle Cartridge"],"x":[]},{"n":"7mm Backcountry","t":"rifle","d":0.284,"cl":2.417,"oal":3.34,"a":["7 Backcountry","7mm BC"],"x":[]},{"n":"28 Nosler","t":"rifle","d":0.284,"cl":2.59,"oal":3.34,"a":[],"x":[]},{"n":"30 Carbine","t":"rifle","d":0.308,"cl":1.29,"oal":1.68,"a":[".30 Carbine","30 M1 Carbine"],"x":[]},{"n":"300 Blackout","t":"rifle","d":0.308,"cl":1.368,"oal":2.26,"a":["300 BLK","300 AAC Blackout","300 AAC",".300 Blackout","7.62x35"],"x":[]},{"n":"30-30 Winchester","t":"rifle","d":0.308,"cl":2.039,"oal":2.55,"a":["30-30","30-30 Win",".30-30","30 WCF"],"x":[]},{"n":"300 Savage","t":"rifle","d":0.308,"cl":1.871,"oal":2.6,"a":[".300 Savage"],"x":[]},{"n":"30-40 Krag","t":"rifle","d":0.308,"cl":2.314,"oal":3.089,"a":["30 Army",".30-40 Krag"],"x":[]},{"n":"308 Winchester","t":"rifle","d":0.308,"cl":2.015,"oal":2.81,"a":["308","308 Win",".308",".308 Win",".308 Winchester","308 Win."],"x":["7.62x51mm NATO"]},{"n":"7.62x51mm NATO","t":"rifle","d":0.308,"cl":2.015,"oal":2.8,"a":["7.62x51","7.62 NATO","7.62x51 NATO","7.62mm NATO"],"x":["308 Winchester"]},{"n":"30-06 Springfield","t":"rifle","d":0.308,"cl":2.494,"oal":3.34,"a":["30-06","3006","30.06",".30-06","30-06 Sprg","30-06 Spfd","30 Gov't 06"],"x":[]},{"n":"300 WSM","t":"rifle","d":0.308,"cl":2.1,"oal":2.86,"a":["300 Winchester Short Magnum"],"x":[]},{"n":"300 Win Mag","t":"rifle","d":0.308,"cl":2.62,"oal":3.34,"a":["300 Winchester Magnum","300 WM","300 Win. Mag.",".300 Win Mag"],"x":[]},{"n":"300 PRC","t":"rifle","d":0.308,"cl":2.58,"oal":3.7,"a":["300 Precision Rifle Cartridge"],"x":[]},{"n":"300 Weatherby Mag","t":"rifle","d":0.308,"cl":2.825,"oal":3.562,"a":["300 Weatherby","300 Wby","300 Wby Mag"],"x":[]},{"n":"300 H&H Magnum","t":"rifle","d":0.308,"cl":2.85,"oal":3.6,"a":["300 H&H","300 Holland & Holland"],"x":[]},{"n":"300 Norma Mag","t":"rifle","d":0.308,"cl":2.492,"oal":3.681,"a":["300 Norma","300 Norma Magnum"],"x":[]},{"n":"7.62x39","t":"rifle","d":0.311,"cl":1.528,"oal":2.2,"a":["7.62x39mm","7.62 Soviet","7.62x39 Soviet"],"x":[]},{"n":"7.62x54R","t":"rifle","d":0.311,"cl":2.115,"oal":3.038,"a":["7.62x54mmR","7.62x54","7.62x54 R"],"x":[]},{"n":"303 British","t":"rifle","d":0.311,"cl":2.222,"oal":3.075,"a":[".303 British",".303","303"],"x":[]},{"n":"32 Win Special","t":"rifle","d":0.321,"cl":2.04,"oal":2.565,"a":["32 Winchester Special","32 Special"],"x":[]},{"n":"8mm Mauser","t":"rifle","d":0.323,"cl":2.24,"oal":3.25,"a":["8x57 IS","8x57mm IS","8x57 JS","7.92x57","8mm Mauser"],"x":[]},{"n":"338 Federal","t":"rifle","d":0.338,"cl":2.015,"oal":2.82,"a":[".338 Federal"],"x":[]},{"n":"338 Win Mag","t":"rifle","d":0.338,"cl":2.5,"oal":3.34,"a":["338 Winchester Magnum",".338 Win Mag"],"x":[]},{"n":"338 Lapua Mag","t":"rifle","d":0.338,"cl":2.724,"oal":3.681,"a":["338 Lapua","338 Lapua Magnum",".338 Lapua","338 LM"],"x":[]},{"n":"338 Norma Mag","t":"rifle","d":0.338,"cl":2.492,"oal":3.681,"a":["338 Norma"],"x":[]},{"n":"350 Legend","t":"rifle","d":0.355,"cl":1.71,"oal":2.26,"a":[".350 Legend"],"x":[]},{"n":"35 Remington","t":"rifle","d":0.358,"cl":1.92,"oal":2.525,"a":["35 Rem",".35 Remington"],"x":[]},{"n":"35 Whelen","t":"rifle","d":0.358,"cl":2.494,"oal":3.34,"a":[".35 Whelen"],"x":[]},{"n":"360 Buckhammer","t":"rifle","d":0.358,"cl":1.8,"oal":2.5,"a":["360 Buck"],"x":[]},{"n":"9.3x62","t":"rifle","d":0.366,"cl":2.441,"oal":3.291,"a":["9.3x62mm","9.3x62 Mauser"],"x":[]},{"n":"375 H&H Magnum","t":"rifle","d":0.375,"cl":2.85,"oal":3.6,"a":["375 H&H","375 Holland & Holland"],"x":[]},{"n":"375 Ruger","t":"rifle","d":0.375,"cl":2.58,"oal":3.34,"a":[],"x":[]},{"n":"444 Marlin","t":"rifle","d":0.429,"cl":2.225,"oal":2.57,"a":[".444 Marlin"],"x":[]},{"n":"45-70 Government","t":"rifle","d":0.458,"cl":2.105,"oal":2.55,"a":["45-70","45-70 Gov't",".45-70","45/70"],"x":[]},{"n":"450 Bushmaster","t":"rifle","d":0.452,"cl":1.7,"oal":2.26,"a":["450 BM",".450 Bushmaster"],"x":[]},{"n":"458 SOCOM","t":"rifle","d":0.458,"cl":1.575,"oal":2.26,"a":[".458 SOCOM"],"x":[]},{"n":"458 Win Mag","t":"rifle","d":0.458,"cl":2.5,"oal":3.34,"a":["458 Winchester Magnum"],"x":[]},{"n":"50 BMG","t":"rifle","d":0.51,"cl":3.91,"oal":5.545,"a":[".50 BMG","12.7x99","50 Browning"],"x":[]},{"n":"25 ACP","t":"handgun","d":0.251,"cl":0.615,"oal":0.91,"a":[".25 Auto","25 Auto","6.35mm Browning"],"x":[]},{"n":"32 ACP","t":"handgun","d":0.312,"cl":0.68,"oal":1.03,"a":[".32 Auto","32 Auto","7.65mm Browning"],"x":[]},{"n":"32 S&W Long","t":"handgun","d":0.312,"cl":0.93,"oal":1.28,"a":["32 Long","32 S&W L"],"x":["32 S&W"]},{"n":"32 H&R Magnum","t":"handgun","d":0.312,"cl":1.075,"oal":1.35,"a":["32 H&R Mag","32 H&R"],"x":["32 S&W Long","32 S&W"]},{"n":"327 Federal Magnum","t":"handgun","d":0.312,"cl":1.2,"oal":1.475,"a":["327 Federal","327 Fed Mag","327 Mag"],"x":["32 H&R Magnum","32 S&W Long","32 S&W"]},{"n":"30 Super Carry","t":"handgun","d":0.312,"cl":0.827,"oal":1.1,"a":["30 SC"],"x":[]},{"n":"380 Auto","t":"handgun","d":0.355,"cl":0.68,"oal":0.984,"a":["380","380 ACP",".380 ACP",".380 Auto","9mm Kurz","9x17"],"x":[]},{"n":"9mm Luger","t":"handgun","d":0.355,"cl":0.754,"oal":1.169,"a":["9mm","9x19","9x19mm","9mm Parabellum","9mm Para","9mm NATO"],"x":[]},{"n":"9x18 Makarov","t":"handgun","d":0.365,"cl":0.713,"oal":0.984,"a":["9mm Makarov","9x18"],"x":[]},{"n":"38 Super","t":"handgun","d":0.356,"cl":0.9,"oal":1.28,"a":["38 Super Auto","38 Super +P"],"x":["38 Auto"]},{"n":"357 SIG","t":"handgun","d":0.355,"cl":0.865,"oal":1.14,"a":[".357 SIG"],"x":[]},{"n":"38 S&W","t":"handgun","d":0.361,"cl":0.775,"oal":1.2,"a":["38 Smith & Wesson"],"x":[]},{"n":"38 Special","t":"handgun","d":0.357,"cl":1.155,"oal":1.55,"a":["38 Spl","38 Spcl",".38 Special","38 Spl +P","38 Special +P"],"x":["38 Long Colt","38 Short Colt"]},{"n":"357 Magnum","t":"handgun","d":0.357,"cl":1.29,"oal":1.59,"a":["357","357 Mag",".357 Magnum",".357 Mag"],"x":["38 Special","38 Long Colt","38 Short Colt"]},{"n":"7.62x25 Tokarev","t":"handgun","d":0.308,"cl":0.984,"oal":1.386,"a":["7.62x25","7.62 Tokarev"],"x":["7.63x25 Mauser"]},{"n":"5.7x28mm","t":"handgun","d":0.224,"cl":1.138,"oal":1.594,"a":["5.7x28","5.7mm","FN 5.7"],"x":[]},{"n":"40 S&W","t":"handgun","d":0.4,"cl":0.85,"oal":1.135,"a":["40 Smith & Wesson",".40 S&W","40 SW"],"x":[]},{"n":"10mm Auto","t":"handgun","d":0.4,"cl":0.992,"oal":1.26,"a":["10mm","10mm Automatic"],"x":[]},{"n":"41 Rem Magnum","t":"handgun","d":0.41,"cl":1.29,"oal":1.59,"a":["41 Magnum","41 Mag",".41 Magnum"],"x":[]},{"n":"44 Special","t":"handgun","d":0.429,"cl":1.16,"oal":1.615,"a":["44 Spl",".44 Special","44 S&W Special"],"x":["44 S&W Russian"]},{"n":"44 Rem Magnum","t":"handgun","d":0.429,"cl":1.285,"oal":1.61,"a":["44 Magnum","44 Mag",".44 Magnum",".44 Mag","44 Remington Magnum"],"x":["44 Special","44 S&W Russian"]},{"n":"45 GAP","t":"handgun","d":0.452,"cl":0.755,"oal":1.07,"a":["45 G.A.P."],"x":[]},{"n":"45 ACP","t":"handgun","d":0.452,"cl":0.898,"oal":1.275,"a":["45 Auto",".45 ACP",".45 Auto"],"x":[]},{"n":"45 Super","t":"handgun","d":0.452,"cl":0.898,"oal":1.275,"a":[".45 Super"],"x":["45 ACP"]},{"n":"45 Colt","t":"handgun","d":0.452,"cl":1.285,"oal":1.6,"a":["45 Long Colt","45 LC",".45 Colt"],"x":[]},{"n":"454 Casull","t":"handgun","d":0.452,"cl":1.383,"oal":1.77,"a":[".454 Casull"],"x":["45 Colt"]},{"n":"460 S&W Magnum","t":"handgun","d":0.452,"cl":1.8,"oal":2.29,"a":["460 S&W","460 Mag"],"x":["454 Casull","45 Colt","45 Schofield"]},{"n":"480 Ruger","t":"handgun","d":0.475,"cl":1.285,"oal":1.65,"a":[".480 Ruger"],"x":[]},{"n":"500 S&W Magnum","t":"handgun","d":0.5,"cl":1.625,"oal":2.25,"a":["500 S&W","500 Mag"],"x":[]}];
+  const WORDS=[[/\bremington\b/g,"rem"],[/\bwinchester\b/g,"win"],[/\bmagnum\b/g,"mag"],[/\bspringfield\b/g,"sprg"],[/\bspecial\b/g,"spl"],[/\bgovernment\b|\bgov'?t\b/g,"govt"],[/\bautomatic\b/g,"auto"],[/\bcartridge\b/g,""],[/\+p\+?/g,""]];
+  const norm=s=>String(s||"").toLowerCase().replace(/["”″]/g,"").trim();
+  const key=s=>{let t=norm(s);WORDS.forEach(([re,r])=>{t=t.replace(re,r);});return t.replace(/[^a-z0-9&]/g,"");};
+  const BY=new Map();L.forEach(c=>{[c.n,...(c.a||[])].forEach(s=>{const k=key(s);if(k&&!BY.has(k))BY.set(k,c);});});
+  const find=s=>s?BY.get(key(s))||null:null;
+  // the family people call it by, from the bullet diameter
+  const FAM=[[.172,"17 caliber"],[.204,"20 caliber"],[.224,"22 caliber"],[.243,"6mm"],[.257,"25 caliber"],[.264,"6.5mm"],[.277,"6.8mm / 270"],[.284,"7mm"],[.308,"30 caliber"],[.311,"30 caliber (.311)"],[.312,"32 caliber"],[.323,"8mm"],[.338,"338"],[.357,"38 / 357 / 9mm"],[.366,"9.3mm"],[.375,"375"],[.400,"40 / 10mm"],[.410,"41"],[.429,"44 caliber"],[.452,"45 caliber"],[.458,"45 caliber (.458)"],[.475,"475"],[.500,"50 caliber"],[.510,"50 caliber"]];
+  const fam=d=>{if(!(d>0))return "";let b=null;FAM.forEach(f=>{if(!b||Math.abs(f[0]-d)<Math.abs(b[0]-d))b=f;});return Math.abs(b[0]-d)<=.007?b[1]:"";};
+  const dtxt=d=>String(d).replace(/^0\./,".").replace(/(\.\d)$/,"$10").replace(/(\.\d\d)$/,"$10");
+  const TOL=.0025;
+  // can a gun chambered for g fire ammo made for m?
+  function fits(g,m){
+    const G=find(g),M=find(m),gn=G?G.n:String(g||"").trim(),mn=M?M.n:String(m||"").trim();
+    if(!gn||!mn)return {ok:true,skip:true};
+    if(key(gn)===key(mn))return {ok:true};
+    const inX=(C,name)=>!!C&&(C.x||[]).some(x=>key(x)===key(name));
+    if(inX(G,mn)){const p=[G.n,mn].sort().join("|");return {ok:true,note:p==="308 Winchester|7.62x51mm NATO"?"308 Winchester and 7.62x51mm NATO are made to shoot in each other's guns, but some gun makers say to use only one: check your gun's manual.":(mn+" is safe in a "+G.n+" gun.")};}
+    if(inX(M,gn))return {ok:false,danger:true,msg:"<b>Don't shoot "+esc(mn)+" in a "+esc(gn)+" gun.</b> "+esc(gn)+" ammo is safe in a "+esc(mn)+" gun, but not the other way around."};
+    if(!G||!M)return {ok:false,unknown:true,msg:"The gun is chambered in <b>"+esc(gn)+"</b> and this load is <b>"+esc(mn)+"</b>. Check they match."};
+    const blk=["300 Blackout"],ar=["223 Remington","5.56x45mm NATO","223 Wylde","22 Nosler","224 Valkyrie","22 ARC"];
+    const danger=(blk.includes(mn)&&ar.includes(G.n))||Math.abs(M.d-G.d)>TOL&&M.d>G.d;
+    return {ok:false,danger,msg:"<b>Wrong cartridge:</b> the gun is chambered in <b>"+esc(G.n)+"</b> and this load is <b>"+esc(M.n)+"</b>."+(blk.includes(mn)&&ar.includes(G.n)?" 300 Blackout ammo can chamber in a 5.56/.223 gun, and firing it can destroy the gun and hurt you.":Math.abs(M.d-G.d)<=TOL?" They use the same "+dtxt(G.d)+" bullet but are different cartridges, so this ammo won't fit safely.":"")};
+  }
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  // does a bullet diameter fit the cartridge?
+  function diaOk(cart,d){const C=find(cart);if(!C||!(d>0))return true;return Math.abs(C.d-d)<=TOL;}
+  function search(q,max){const k=key(q);if(!k)return [];const hits=[];
+    L.forEach(c=>{let best=9;[c.n,...(c.a||[])].forEach((s,i)=>{const ks=key(s);if(ks===k)best=Math.min(best,0);else if(ks.startsWith(k))best=Math.min(best,i?2:1);else if(ks.includes(k))best=Math.min(best,3);});if(best<9)hits.push([best,c]);});
+    hits.sort((a,b)=>a[0]-b[0]||a[1].n.localeCompare(b[1].n,undefined,{numeric:true}));return hits.slice(0,max||8).map(h=>h[1]);}
+  const desc=c=>[dtxt(c.d)+'" bullet',fam(c.d),c.t].filter(Boolean).join(" · ");
+  /* the picker: type any name for it ("3006", "7.62 NATO", "6.5 CM") and pick; you can still type one that isn't in the list */
+  function picker(inp,o){
+    if(!inp||inp._cp)return;inp._cp=1;o=o||{};inp.removeAttribute("list");inp.setAttribute("autocomplete","off");inp.setAttribute("role","combobox");inp.setAttribute("aria-autocomplete","list");inp.setAttribute("aria-expanded","false");
+    const host=inp.parentNode;if(getComputedStyle(host).position==="static")host.style.position="relative";
+    const box=document.createElement("div");box.className="cartsug";box.setAttribute("role","listbox");box.hidden=true;box.id=inp.id+"_sug";inp.setAttribute("aria-controls",box.id);host.appendChild(box);
+    let items=[],act=-1;
+    const close=()=>{box.hidden=true;inp.setAttribute("aria-expanded","false");act=-1;};
+    const pick=(name,c)=>{close();if(inp.value!==name){inp.value=name;inp.dispatchEvent(new Event("input",{bubbles:true}));inp.dispatchEvent(new Event("change",{bubbles:true}));}if(o.onPick)o.onPick(c||find(name),name);};
+    const draw=()=>{const q=inp.value.trim();const cs=q?search(q,8):[];
+      const own=(o.extra?o.extra():[]).filter(s=>s&&!find(s)&&(!q||key(s).includes(key(q)))).slice(0,4);
+      items=[...cs.map(c=>({name:c.n,c,d:desc(c)})),...own.map(s=>({name:s,c:null,d:"yours (not in the list)"}))];
+      if(!items.length||(items.length===1&&items[0].name===inp.value&&document.activeElement!==inp)){close();return;}
+      box.innerHTML=items.map((it,i)=>'<button type="button" role="option" tabindex="-1" data-i="'+i+'"'+(i===act?' class="on" aria-selected="true"':'')+'><b>'+esc(it.name)+'</b><small>'+esc(it.d)+'</small></button>').join("");
+      box.hidden=false;inp.setAttribute("aria-expanded","true");};
+    inp.addEventListener("input",()=>{act=-1;if(document.activeElement===inp)draw();});
+    inp.addEventListener("focus",()=>{if(inp.value.trim())draw();});
+    inp.addEventListener("keydown",e=>{if(box.hidden)return;
+      if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();act=(act+(e.key==="ArrowDown"?1:-1)+items.length)%items.length;draw();}
+      else if(e.key==="Enter"&&act>=0){e.preventDefault();pick(items[act].name,items[act].c);}
+      else if(e.key==="Escape"){close();}});
+    box.addEventListener("mousedown",e=>e.preventDefault());
+    box.addEventListener("click",e=>{const b=e.target.closest("[data-i]");if(!b)return;const it=items[+b.dataset.i];pick(it.name,it.c);});
+    // leaving the box: another name for a listed cartridge becomes its standard name ("308 Win" → 308 Winchester)
+    inp.addEventListener("blur",()=>{setTimeout(close,120);const c=find(inp.value);if(c){if(inp.value!==c.n)pick(c.n,c);else if(o.onBlurMatch)o.onBlurMatch(c);}});
+  }
+  // a short line about a cartridge: its bullet and SAAMI/C.I.P. maximums (dimension text from the caller, for units)
+  // SAAMI figures read to the thousandth (2.260 in), or hundredths of a mm
+  const dimT=x=>(window.U&&U.metric)?(x*25.4).toFixed(2)+" mm":x.toFixed(3)+" in";
+  function info(cart,dimTxt){dimTxt=dimT;const C=find(cart);if(!C)return String(cart||"").trim()?"Not in the cartridge list, so Range Book can't check it. Enter the bullet diameter yourself.":"";
+    return [dtxt(C.d)+'" bullet'+(fam(C.d)?" ("+fam(C.d)+")":""),C.cl?"max case length "+dimTxt(C.cl):"",C.oal?"max overall length "+dimTxt(C.oal):""].filter(Boolean).join(" · ")+((C.x||[]).length?". Also safe in this chamber: "+C.x.join(", "):"")+".";}
+  window.RB_CARTS={dimT,info,list:L,find,canon:s=>{const c=find(s);return c?c.n:s;},dia:s=>{const c=find(s);return c?c.d:null;},fam,fits,diaOk,search,picker,desc,dtxt,TOL};
+})();
+</script>
+<script>
 /* one-tap delete with Undo: the change shows at once; anything permanent on the server waits until the Undo note goes away */
 (function(){
   let U=null,el=null;
@@ -1839,7 +1922,7 @@ function guessCart(l){
 }
 function fillSelect(){
   const root=$("trajList");
-  let fixed=false;state.loads.forEach(l=>{if(l.cart===undefined){l.cart=guessCart(l);fixed=true;}if(!l.zpb){migZ(l);fixed=true;}});if(fixed)save();
+  let fixed=false;state.loads.forEach(l=>{if(l.cart===undefined){l.cart=guessCart(l);fixed=true;}if(!l.zpb){migZ(l);fixed=true;}if(l.cart&&window.RB_CARTS){const c=RB_CARTS.canon(l.cart);if(c!==l.cart){l.cart=c;fixed=true;}}});if(fixed)save();
   let h='<div class="card"><div class="row"><button class="btn primary" id="newBtn" type="button">+ New load</button><button class="btn" id="newLrBtn" type="button">+ New long-range load</button></div>';
   const item=l=>{
     const d=[l.w>0?l.w+" gr":"",l.mv>0?U.s("fps",l.mv,0,true):"",l.bc>0?"BC "+l.bc:""].filter(Boolean).join(" · ");
@@ -1847,7 +1930,7 @@ function fillSelect(){
     const nt=window.RB_TRIPS?RB_TRIPS.count(l.id):0;
     const pbz=num((l.z||[])[3]),uz=(l.z||[]).slice(0,3).map(num).filter(z=>z>0);
     const m=[[pbz>0?"Point-blank "+U.s("yd",pbz,0):"",uz.length?"zeros "+uz.map(z=>U.n("yd",z,0)).join(", ")+" "+U.u("yd"):""].filter(Boolean).join(", ").replace(/^z/,"Z")||"No zeros",l.rifleName?l.rifleName:"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ");
-    return '<button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled load")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>';
+    return '<button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled load")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+(fitCheck(l)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>';
   };
   const coll=new Intl.Collator(undefined,{numeric:false,sensitivity:"base"});
   const groups=new Map();
@@ -2039,8 +2122,15 @@ function pbrCalc(L,S,path){
   let nz=null;for(let x=1;x<=a.x;x++){if(path(x,z)>=0){nz=x;break;}}
   return {z,nz,r,size,near:near==null?0:near,far,beyond:far==null,lim,apex:a,show:pb.show!==false};
 }
+// does this load's ammo fit its gun, and its bullet the cartridge? (the cartridge is the ammo's, or the load's own)
+function loadCart(L){const a=L.ammoId?(AMMO||[]).find(x=>x.id===L.ammoId):null;return (a&&a.cartridge)||L.cart||"";}
+function fitCheck(L){if(!window.RB_CARTS)return null;const r=rifleOf(L),mc=loadCart(L),out=[];
+  if(r&&r.cartridge&&mc){const f=RB_CARTS.fits(r.cartridge,mc);if(!f.ok)out.push(f.msg.replace("this load is","this load's ammo is"));}
+  const C=RB_CARTS.find(mc),d=num(L.cal);if(C&&d>0&&!RB_CARTS.diaOk(C.n,d))out.push('The bullet diameter under Inputs ('+RB_CARTS.dtxt(d)+'") doesn\'t match '+escL(C.n)+', which takes '+RB_CARTS.dtxt(C.d)+'" bullets.');
+  return out.length?out:null;}
 function render(){
   const L0=cur(), err=$("err");
+  {const fb=$("trajFit"),f=fitCheck(L0);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.join("<br>")+' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <b>Gear &amp; Ranges</b>.</span>';}}
   const L=Object.assign({},L0,{mv:effMV(L0)}); // what the bullet actually does today
   const bad=[];
   if(!(L.mv>0))bad.push("muzzle velocity");
@@ -2612,6 +2702,7 @@ function newLoad(lr){
   state.loads.push(L);state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
   $("f_name").focus();$("f_name").select();
 }
+RB_CARTS.picker($("f_cart"),{extra:()=>[...new Set(state.loads.map(l=>l.cart).filter(Boolean))],onPick:c=>{const L=cur();if(c&&!(num(L.cal)>0)){L.cal=c.d;L.calUnit="in";$("f_cal_u").value="in";$("f_cal").value=DIA.show(c.d,"in");save();}render();}});
 $("twistCheck").addEventListener("click",()=>{readInputs();if(window.RB_TOOLS)RB_TOOLS.open("twist",{traj:cur().id});});
 $("resetBtn").addEventListener("click",()=>{
   const L=cur();if(!L.builtin)return;
@@ -2660,7 +2751,7 @@ function fillRifle(){
   {let changed=false;if(rs>0&&L.sh!==rs){L.sh=rs;L._rifleSh=rs;U.fill($("f_sh"),"in",rs,2,3);changed=true;}if(tw>0&&L.twist!==tw){L.twist=tw;L._rifleTw=tw;U.fill($("f_twist"),"dim",tw,1,2);changed=true;}
     if(changed){save();setTimeout(()=>{try{render();}catch(e){}},0);}}
   {const a=$("f_sh").closest(".field"),b=$("f_twist").closest(".field");if(a)a.hidden=rs>0;if(b)b.hidden=tw>0;}
-  if(r){const bits=[];if(r.barrel)bits.push((num(r.barrel)!=null&&/^\s*[\d.]+\s*(in|")?\s*$/.test(r.barrel)?U.s("dim",num(r.barrel),0):r.barrel+" in")+" barrel");if(tw>0)bits.push("1:"+(U.metric?U.s("dim",tw,0):tw)+" twist");if(rs>0)bits.push("sight height "+U.s("in",rs,U.metric?1:2));t=bits.join(" · ");
+  if(r){const bits=[];if(r.cartridge)bits.push(r.cartridge);if(r.barrel)bits.push((num(r.barrel)!=null&&/^\s*[\d.]+\s*(in|")?\s*$/.test(r.barrel)?U.s("dim",num(r.barrel),0):r.barrel+" in")+" barrel");if(tw>0)bits.push("1:"+(U.metric?U.s("dim",tw,0):tw)+" twist");if(rs>0)bits.push("sight height "+U.s("in",rs,U.metric?1:2));t=bits.join(" · ");
     if(rs>0||tw>0)t+=(t?". ":"")+"Change these on the Gear & Ranges tab.";}
   else if(!RIFLES.length)t="Add guns on the Gear & Ranges tab to pick one here.";
   note.textContent=t;note.hidden=!t;
@@ -2992,6 +3083,8 @@ function sortedLoads(){
   });
 }
 function renderList(){
+  // recipes typed with another name for a listed cartridge get its standard name ("308 Win" → 308 Winchester)
+  if(window.RB_CARTS)loads.forEach((L,id)=>{if(!isMine(id)||!L.cartridge)return;const c=RB_CARTS.canon(L.cartridge);if(c!==L.cartridge){L.cartridge=c;queueSave(id);}});
   $("relJumpSlot").innerHTML="";
   $("relTitle").textContent="Reloading";$("relTitle").classList.remove("sr");
   $("relSub").hidden=false;$("relHeadBack").hidden=true;$("relSeg").hidden=false;
@@ -3010,7 +3103,7 @@ function renderList(){
       gs.forEach((g,i)=>{const mo=groupMoa(g);if(mo!=null&&(!best||mo<best.v))best={v:mo,g,i};const st=stats(g,L);if(st&&st.n>=3&&(!bestSd||st.sd<bestSd.sd))bestSd={sd:st.sd,g,i};});
       const bestTxt=[best?'<b>'+best.v.toFixed(2)+' MOA</b> at '+esc(gName(best.g,best.i)):'',bestSd?'<b>SD '+bestSd.sd.toFixed(1)+'</b> at '+esc(gName(bestSd.g,bestSd.i)):''].filter(Boolean).join(' · ');
       const thumb=(m.photoUrl||m.photoId)?'<img alt="" loading="lazy" src="'+esc(m.photoUrl||("/api/photos/"+m.photoId))+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>';
-      return '<button class="loaditem withthumb" type="button" data-open="'+esc(id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(L.title||"Untitled load")+(L.subsonic?' <span class="chip subchip">Subsonic</span>':'')+'</span>'+
+      return '<button class="loaditem withthumb" type="button" data-open="'+esc(id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(L.title||"Untitled load")+(L.subsonic?' <span class="chip subchip">Subsonic</span>':'')+(recipeMismatch(L)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+
         (comp?'<span class="d">'+esc(comp)+'</span>':'')+
         (bestTxt?'<span class="best">Best: '+bestTxt+'</span>':'')+
         '<span class="m">'+gs.length+' group'+(gs.length===1?'':'s')+' · '+shot.length+' with velocities'+(dates.length?' · last '+esc(fmtDate(dates[dates.length-1])):'')+tag+'</span></span></button>';
@@ -3098,7 +3191,7 @@ let ammoReturnTraj=null;
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
 document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
-function rifleSummary(r){return [num(r.barrel)?U.s("dim",num(r.barrel),0)+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
+function rifleSummary(r){return [r.cartridge||"",num(r.barrel)?U.s("dim",num(r.barrel),0)+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
 /* round count: starting count + rounds from range trips (loads in the calculator using this rifle) + shots in load-development groups */
 function rifleRounds(r){
   const trajs=(window.RB_TRAJ&&RB_TRAJ.all())||[],tids=new Set(trajs.filter(t=>t.rifleId===r.id).map(t=>t.id));
@@ -3399,7 +3492,7 @@ function renderAmmo(root){
     else if(t==="area")h+='<div class="field wide"><label for="af_'+k+'">'+lab+'</label><textarea id="af_'+k+'" style="min-height:70px">'+esc(a[k]||"")+'</textarea></div>';
     else if(t==="bcm")h+='<div class="field"><label for="af_'+k+'">'+lab+'</label><select id="af_'+k+'" class="fieldselect"><option value="G1">G1</option><option value="G7"'+(a[k]==="G7"?' selected':'')+'>G7</option></select></div>';
     else{let f=field("af_"+k,lab,a[k],t,k==="name"||k==="bullet"||k==="cartridge"?" wide":"").replace('autocomplete="off"','autocomplete="off"'+(ph?' placeholder="'+esc(ph)+'"':'')+(k==="cartridge"?' list="dl_cart"':''));
-      if(k==="cartridge"){const fromRec=RL&&a.loadId&&loads.has(a.loadId);f=withSonic(f,sonicBtn("af_sonic",ammoSub(a),fromRec||ALOCK,fromRec?"Set on its reloading recipe":""));}
+      if(k==="cartridge"){const fromRec=RL&&a.loadId&&loads.has(a.loadId);f=withSonic(f,sonicBtn("af_sonic",ammoSub(a),fromRec||ALOCK,fromRec?"Set on its reloading recipe":""))+'<div class="field wide cartinfo" id="af_cartNote" aria-live="polite"></div>';}
       h+=f;}
   });
   h+='</div>'+(a.src?'<p class="note">Filled in from the catalog. <a href="'+esc(a.src)+'" target="_blank" rel="noopener">'+((AMMO_CATALOG.find(x=>x.item===a.catItem)||{}).dealer?"See the dealer\'s listing</a> (the velocity isn\'t from "+esc(a.mfr)+" directly)":"See it on the maker\'s site</a>")+'.</p>':'')+
@@ -3430,6 +3523,12 @@ function renderAmmo(root){
   draw();
   unitize("af_",a,FIELD_U);
   bindSonic("af_sonic",()=>!!a.subsonic,on=>{a.subsonic=on;queueAmmo();if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);});
+  {const note=()=>{const box=$("af_cartNote");if(!box)return;const C=RB_CARTS.find(a.cartridge),dim=RB_CARTS.dimT,out=[];const inf=RB_CARTS.info(a.cartridge,dim);if(inf)out.push(esc(inf));
+      if(C){const d=num(a.dia);if(d>0&&!RB_CARTS.diaOk(C.n,d))out.push('<span class="err">Bullet diameter '+RB_CARTS.dtxt(d)+'" doesn\'t match '+esc(C.n)+', which takes '+RB_CARTS.dtxt(C.d)+'" bullets.</span>');
+        const oa=num(a.coal);if(RL&&oa>0&&C.oal&&oa>C.oal+.0005)out.push('<span class="err">COAL '+dim(oa)+' is longer than the SAAMI maximum of '+dim(C.oal)+'. Make sure it fits your magazine and chamber.</span>');}
+      box.innerHTML=out.map(x=>'<div>'+x+'</div>').join("");};
+    note();["af_cartridge","af_dia","af_coal"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>setTimeout(note,0));});
+    const ce=$("af_cartridge");if(ce&&!ce.disabled)RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[],onPick:c=>{if(c&&!(num(a.dia)>0)){a.dia=c.d;const di=$("af_dia");if(di)U.fill(di,"dim",c.d,2,4);queueAmmo();if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}note();}});}
   FIELDS.forEach(([k,lab,t])=>{const el=$("af_"+k);if(!el)return;
     el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{a[k]=t==="number"?readU(el,k,FIELD_U,a[k]):el.value;queueAmmo();if(a.shared&&SHARE_KEYS.includes(k))pushShared(a);$("rifTitle").textContent=ammoLabel(a);if(k==="bought"||k==="lowAt"||k==="price"||k==="perBox"||k==="cpr"||k==="charge")draw();});});
   if(RL){bindReloadSrc(a);
@@ -3500,6 +3599,7 @@ function renderRifles(){
     h='<div class="row"><span class="savestate" id="rifleState"></span></div>'+
       '<section class="card" aria-label="Gun"><h2>Details</h2><div class="grid">'+
       field("rf_name","Name",r.name,"text"," wide")+
+      field("rf_cartridge","Cartridge (chambered for)",r.cartridge,"text"," wide")+'<div class="field wide cartinfo" id="rf_cartNote"></div>'+
       field("rf_serial","Serial number",r.serial,"text")+
       field("rf_barrel","Barrel length (in)",r.barrel,"number")+
       field("rf_twist","Twist (1 turn in __ in)",r.twist,"number")+
@@ -3551,6 +3651,11 @@ function renderRifles(){
   root.querySelectorAll("[data-gdel]").forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.gdel,i=gunPhotos.findIndex(p=>p.id===id),ph=gunPhotos[i];gunPhotos=gunPhotos.filter(p=>p.id!==id);renderRifles();
     RB_UNDO("Deleted gun photo",()=>{if(ph){gunPhotos.splice(i,0,ph);renderRifles();}},()=>API.del("/api/gunphotos/"+id).catch(onWriteError));}));
   unitize("rf_",r,GUN_U);
+  {const ce=$("rf_cartridge"),nt=$("rf_cartNote"),draw=()=>{nt.innerHTML=esc(RB_CARTS.info(r.cartridge));};draw();
+    ce.placeholder="e.g. 308 Winchester, 5.56 NATO, 9mm";
+    ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();queueRifles();syncRifleIntoLoads(r);draw();});
+    ce.addEventListener("change",()=>{if(ce.value.trim())rememberCartridge(RB_CARTS.canon(ce.value));});
+    RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[]});}
   [["name",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
     const el=$("rf_"+k);if(!el)return;
     el.addEventListener("input",()=>{r[k]=isNum?readU(el,k,GUN_U,r[k]):el.value;queueRifles();if(k==="name")$("rifTitle").textContent=el.value||"Unnamed gun";if(k==="name"||k==="sightHeight")syncRifleIntoLoads(r);});
@@ -4403,12 +4508,15 @@ function openViewer(pid,C){
 /* ---------- measure a group on a target photo ---------- */
 // bullet diameter from the cartridge or bullet name, or null if it can't tell
 function guessDiaStrict(L){
+  {const d=window.RB_CARTS&&RB_CARTS.dia(L.cartridge);if(d)return d;}
   const t=((L.cartridge||"")+" "+(L.bullet&&L.bullet.type||"")+" "+(L.title||"")).toLowerCase();
   const table=[[/38 ?spl|38 ?special|38\/357|357/,.357],[/380|9 ?mm|9x19/,.355],[/6\.5|260|264/,.264],[/6mm|243|6 ?arc|6br|6 ?creed/,.243],[/6\.8|277|270/,.277],[/7mm|280|284/,.284],[/300|308|30-06|30\.06|7\.62|30 ?cal|\.30\b/,.308],[/338/,.338],[/22 ?lr|22 ?long|\.22 ?wmr|22 ?mag/,.223],[/223|5\.56|22-250|224|204/,.224],[/40 ?s&w|40 ?sw|10 ?mm|\.40\b/,.400],[/45 ?acp|\.45\b|45 ?colt/,.452]];
   for(const [re,d] of table)if(re.test(t))return d;
   return null;
 }
 function guessDia(L){
+  if(num(L.bulletDia)>0)return num(L.bulletDia);
+  {const d=window.RB_CARTS&&RB_CARTS.dia(L.cartridge);if(d)return d;}
   const t=((L.cartridge||"")+" "+(L.title||"")).toLowerCase();
   const table=[[/6\.5|260|264/,.264],[/6mm|243|6 ?arc|6br|6 ?creed/,.243],[/270/,.277],[/7mm|280|284/,.284],[/300|308|30-06|30\.06|7\.62|30 ?cal|\.30\b/,.308],[/338/,.338],[/22 ?lr|22 ?long|\.22 ?wmr|22 ?mag/,.223],[/223|5\.56|22-250|224|204/,.224],[/38 ?spl|38 ?special|357/,.357],[/380|9 ?mm|9x19/,.355],[/40 ?s|10 ?mm/,.400],[/45/,.452],[/6\.8|277/,.277]];
   for(const [re,d] of table)if(re.test(t))return d;
@@ -5665,6 +5773,15 @@ function arm(btn,key,label,fn){
 function sonicBtn(id,on,dis,title){return '<button type="button" class="btn sonicbtn'+(on?' on':'')+'" id="'+id+'" aria-pressed="'+(on?'true':'false')+'"'+(dis?' disabled':'')+' title="'+esc(title||"Tap if this load is subsonic")+'">'+(on?'Subsonic':'Supersonic')+'</button>';}
 const withSonic=(html,btn)=>html.replace('<input','<div class="cartrow"><input').replace(/<\/div>$/,btn+'</div></div>');
 function bindSonic(id,get,set){const b=$(id);if(!b||b.disabled)return;b.addEventListener("click",()=>{const on=!get();set(on);b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");b.textContent=on?"Subsonic":"Supersonic";});}
+// under a recipe's cartridge: its bullet and SAAMI maximums, and anything that doesn't fit (bullet, case length, COAL, gun)
+function recipeMismatch(L){if(!window.RB_CARTS||!L.cartridge)return false;const g=rifles.find(r=>r.id===L.rifleId);return !!(g&&g.cartridge&&!RB_CARTS.fits(g.cartridge,L.cartridge).ok);}
+function recipeCartNote(L){const box=$("ld_cartNote");if(!box||!window.RB_CARTS)return;const C=RB_CARTS.find(L.cartridge),dim=RB_CARTS.dimT,out=[];
+  const inf=RB_CARTS.info(L.cartridge,dim);if(inf)out.push('<span>'+esc(inf)+'</span>');
+  if(C){const bd=num(L.bulletDia);if(bd>0&&!RB_CARTS.diaOk(C.n,bd))out.push('<span class="err">The bullet\'s diameter ('+esc(DIA.label(bd,L.bulletDiaUnit))+') doesn\'t match '+esc(C.n)+', which takes '+RB_CARTS.dtxt(C.d)+'" bullets.</span>');
+    const cl=num(L.caseLength);if(cl>0&&C.cl&&cl>C.cl+.0005)out.push('<span class="err">Case length '+dim(cl)+' is over the maximum of '+dim(C.cl)+'. Trim the brass.</span>');
+    const oa=num(L.coal);if(oa>0&&C.oal&&oa>C.oal+.0005)out.push('<span class="err">COAL '+dim(oa)+' is longer than the SAAMI maximum of '+dim(C.oal)+'. That\'s common when seating close to the lands, but make sure it fits your magazine and chamber.</span>');}
+  const g=(typeof rifles!=="undefined"?rifles:[]).find(r=>r.id===L.rifleId);if(g&&g.cartridge&&L.cartridge){const f=RB_CARTS.fits(g.cartridge,L.cartridge);if(!f.ok)out.push('<span class="err">'+f.msg.replace("this load is","this recipe is")+'</span>');}
+  box.innerHTML=out.map(x=>'<div>'+x+'</div>').join("");}
 function field(id,label,val,type,extra){
   type=type||"text";
   const cls=type==="text"?' class="text"':"";
@@ -5717,7 +5834,7 @@ function renderDetail(){
   h+='<div class="cols relcols"><div class="col colL"><!--MAKE-->';
   h+='<section class="card collapsible o1" aria-label="Recipe" id="secRecipe"'+(DEV?'':' hidden')+'><button class="sechead" type="button" id="recipeToggle" aria-expanded="'+(ropen?"true":"false")+'" aria-controls="recipeBody"><h2>Recipe</h2><span class="secsum" id="recipeSum">'+esc(recipeSummary(L))+'</span><span class="chev" aria-hidden="true"></span></button><div class="secbody" id="recipeBody"'+(ropen?'':' hidden')+'><div class="grid">';
   h+=field("ld_title","Load name",L.title,"text"," wide");
-  h+=withSonic(field("ld_cartridge","Cartridge",L.cartridge,"text"," wide"),sonicBtn("ld_sonic",!!L.subsonic,!canEdit));
+  h+=withSonic(field("ld_cartridge","Cartridge",L.cartridge,"text"," wide"),sonicBtn("ld_sonic",!!L.subsonic,!canEdit))+'<div class="field wide cartinfo" id="ld_cartNote" aria-live="polite"></div>';
   COMPS.forEach(([k,lab])=>{
     const c=L[k]||blankComp(),pw=k==="powder";
     const ckind={bullet:"bullets",powder:"powders",primer:"primers",case:"brass"}[k];
@@ -5853,13 +5970,16 @@ function renderDetail(){
   renderPhotos();
   const bindTop=(id,fn)=>{const el=$(id);if(el)el.addEventListener("input",()=>{fn(el.value);touched();});};
   bindTop("ld_title",v=>{L.title=v;$("relTitle").textContent=v||"Untitled load";const jn=$("relJumpName");if(jn){jn.textContent=v||"Untitled load";jn.title=jn.textContent;}});
-  bindTop("ld_cartridge",v=>L.cartridge=v);
+  bindTop("ld_cartridge",v=>{L.cartridge=v;recipeCartNote(L);});
   bindSonic("ld_sonic",()=>!!L.subsonic,on=>{L.subsonic=on;touched();});
   {const ce=$("ld_cartridge");if(ce)ce.addEventListener("change",()=>rememberCartridge(ce.value));}
-  DIA.bind("ld_bdia",()=>L.bulletDia,(inch,u)=>{L.bulletDia=inch;L.bulletDiaUnit=u;touched();});
+  DIA.bind("ld_bdia",()=>L.bulletDia,(inch,u)=>{L.bulletDia=inch;L.bulletDiaUnit=u;touched();recipeCartNote(L);});
   buildDatalists();
   [["ld_cartridge","dl_cart"],["ld_bullet_mfr","dl_bullet_mfr"],["ld_bullet_type","dl_bullet_type"],["ld_powder_mfr","dl_powder_mfr"],["ld_powder_type","dl_powder_type"],["ld_primer_mfr","dl_primer_mfr"],["ld_primer_type","dl_primer_type"],["ld_case_mfr","dl_case_mfr"],["ld_case_type","dl_case_type"]].forEach(([id,dl])=>{const el=$(id);if(el)el.setAttribute("list",dl);});
   if(canEdit)["bullets","powders","primers","brass"].forEach(k=>bindCompPick(k,L,touched));
+  {const ce=$("ld_cartridge");if(ce&&canEdit)RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[],onPick:c=>{if(c&&!(num(L.bulletDia)>0)){L.bulletDia=c.d;L.bulletDiaUnit="in";const bd=$("ld_bdia"),bu=$("ld_bdia_u");if(bd){if(bu)bu.value="in";bd.value=DIA.show(c.d,"in");}touched();}recipeCartNote(L);}});}
+  {const lc=$("ld_caseLength");if(lc)lc.addEventListener("input",()=>setTimeout(()=>recipeCartNote(L),0));const lr=$("ld_rifle");if(lr)lr.addEventListener("change",()=>setTimeout(()=>recipeCartNote(L),0));}
+  recipeCartNote(L);
   bindTop("ld_bulletGrains",v=>L.bulletGrains=num(v));
   bindTop("ld_bc",v=>L.bc=num(v));
   bindTop("ld_blen",v=>L.blen=U.read($("ld_blen"),"dim",L.blen));
@@ -5870,7 +5990,7 @@ function renderDetail(){
       refreshPick(k);});bindTop("ld_"+k+"_mfr",v=>{L[k]=L[k]||blankComp();L[k].mfr=v;refreshPick(k);});});
   {const bg=$("ld_bulletGrains");if(bg)bg.addEventListener("input",()=>refreshPick("bullet"));}
   bindTop("ld_caseLength",v=>L.caseLength=U.read($("ld_caseLength"),"dim",L.caseLength));
-  bindTop("ld_coal",v=>L.coal=U.read($("ld_coal"),"dim",L.coal));
+  bindTop("ld_coal",v=>{L.coal=U.read($("ld_coal"),"dim",L.coal);recipeCartNote(L);});
   bindTop("ld_maxCharge",v=>L.maxCharge=num(v));
   {const sel=$("ld_rifle");if(sel)sel.addEventListener("change",()=>{
     const r=rifles.find(x=>x.id===sel.value);
@@ -6866,7 +6986,8 @@ async function refresh(first){
       let fixed=false;comps.bullets.forEach(c=>{if(num(c.caliber)!=null)return;for(const [id,L] of loads)if(L.bulletId===c.id){const d=num(L.bulletDia)!=null?num(L.bulletDia):guessDiaStrict(L);if(d){c.caliber=d;c.caliberUnit="in";fixed=true;}break;}});
       if(fixed)queueComps();
       renderComps();}
-    if(AM&&!ammoDirty&&!ammoEditing()){ammo=AM.data&&Array.isArray(AM.data.rows)?AM.data.rows:[];if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
+    if(AM&&!ammoDirty&&!ammoEditing()){ammo=AM.data&&Array.isArray(AM.data.rows)?AM.data.rows:[];
+      if(window.RB_CARTS&&!window.GUEST){let ch=false;ammo.forEach(a=>{if(!a.cartridge)return;const c=RB_CARTS.canon(a.cartridge);if(c!==a.cartridge){a.cartridge=c;ch=true;}});if(ch)queueAmmo();}if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
     if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
@@ -7222,7 +7343,7 @@ const INFO={
   "@Scope":{t:"Scope details",b:"The scope's power, focal plane, units and click value. Put it on a gun with <b>On gun</b>, and every Shooting load with that gun uses its MOA or MIL. On a second focal plane scope, enter the power the marks are true at so holds work at other powers.",h:"Scopes"},
   "@Reticle":{t:"Reticle",b:"Pick the plain reticle and tap <b>Change how it looks</b> to make it like yours, or pick <b>A picture of my reticle</b>, upload one and set its scale (tap the center, then a mark a known distance away). The dope card then shows your holds on it.",h:"Your own reticle picture"},
   "@Add a scope":{t:"Add a scope",b:"Search by maker, model, or MIL or MOA, and tap yours to fill in its specs from the maker's published numbers. Not listed? Tap <b>+ Enter a scope yourself</b>.",h:"Scopes"},
-  "@Gun":{t:"Gun details",b:"The gun's serial number, barrel, twist rate, sight height and notes. The sight height and twist fill in on any Shooting load that uses this gun. How to Use shows how to measure sight height.",h:"Measure sight height (height over bore)"},
+  "@Gun":{t:"Gun details",b:"The cartridge it's chambered for (start typing any name for it and pick from the list; ammo and loads that don't fit it get a warning), the gun's serial number, barrel, twist rate, sight height and notes. The sight height and twist fill in on any Shooting load that uses this gun. How to Use shows how to measure sight height.",h:"Measure sight height (height over bore)"},
   secGunPh:{t:"Photos",b:"Pictures of the gun, private to you. The first one shows in your list of guns. With the serial number, they're handy for insurance; <b>Export PDF</b> on the Guns list puts them in one file.",h:"Guns"},
   secRounds:{t:"Round count",b:"Rounds from your range trips and load-development groups with this gun, plus <b>Rounds before Range Book</b>. Fill in <b>Barrel life</b> to see how much is used, and <b>Clean every</b> with <b>Cleaned today</b> to know when it's due.",h:"Round count and barrel life"},
   secGunCold:{t:"Cold-bore log",b:"Where your first shot of each range trip landed, in MOA so different distances compare. Fill it in on a range trip under <b>Cold-bore shot</b>. The orange cross is the average; a steady shift is worth noting as a first-shot hold.",h:"Cold-bore shot"},
