@@ -4,12 +4,13 @@
     {
       "version": "2.15.0",
       "date": "2026-10-17",
-      "title": "Barrels and upper receivers",
+      "title": "Lowers, uppers, built guns and barrels",
       "items": [
-        "Gear & Ranges → Guns has a Barrels & uppers section, and each gun's page lists its own. Add a barrel or an upper receiver, link it to a gun, and give it its own cartridge, barrel length, twist, sight height and scope (blank boxes use the gun's). Move it to another gun any time; its round count goes with it.",
-        "Pick a gun that has barrels or uppers on a Shooting load, a Reloading recipe or Start a range day, and Range Book asks which one you're using (or the gun as it is). Its twist, sight height, scope and cartridge are used for the trajectory, the dope card and the cartridge check.",
-        "Each barrel and upper has its own round count, barrel life and cleaning reminder, from the range trips and load-development groups shot with it. Range trips and ladders remember which one they used, so changing a load's barrel later doesn't move old rounds. Worn or due-for-cleaning barrels and uppers show on Home.",
-        "The guns Excel export and the full Excel export have a Barrels and uppers tab."
+        "Gear & Ranges → Guns has a Lowers & uppers section. A lower has its manufacturer, model and serial number (no caliber); an upper has its cartridge, barrel length, twist, sight height and scope.",
+        "Put a lower and an upper together to make a gun: on a gun's page choose Made as: A lower + an upper and pick them (or tap Make a gun with this lower or upper). The gun uses the upper's specs and the lower's serial number. One lower can be in several guns, so you set up each combination once and just pick the gun on Shooting, Reloading or a range day.",
+        "Barrels for complete guns: add them under Barrels or on the gun's page, with their own cartridge, length, twist, sight height and scope (blank boxes use the gun's). When you pick a gun that has barrels on a Shooting load, a Reloading recipe or Start a range day, Range Book asks which barrel you're using.",
+        "Lowers, uppers and barrels each keep their own round count (uppers and barrels also barrel life), and cleaning reminder. Range trips and ladders remember what they were shot with, so changing a gun later doesn't move old rounds. Worn or due-for-cleaning parts show on Home.",
+        "The guns Excel export and the full Excel export have a Lowers uppers barrels tab, and a Built from column for guns made of a lower and an upper."
       ]
     },
     {
