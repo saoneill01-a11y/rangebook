@@ -2,7 +2,18 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.15.2",
+      "version": "2.16.0",
+      "date": "2026-10-17",
+      "title": "One gun, several uppers",
+      "items": [
+        "Guns built on the same lower are now one gun with several uppers. The Guns list shows it once, with a chip for each upper's cartridge; tap a chip to open that variation.",
+        "A built gun's page has an Uppers row to switch between its variations and + Add upper to put another upper on the same lower. The gun's name is shared; each variation shows as the name plus its cartridge.",
+        "Shooting and Reloading group a gun's variations together in the gun picker, and Start a range day asks which upper you're shooting.",
+        "The Upper list on a built gun marks uppers that are already on it, and uppers that are in a gun are shaded on the Guns list like lowers and barrels."
+      ]
+    },
+    {
+      "version": "2.15",
       "date": "2026-10-17",
       "title": "Lowers, uppers, built guns and barrels",
       "items": [
