@@ -133,6 +133,8 @@ body.noscroll{overflow:hidden}
 .cx.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .cxh{display:flex;align-items:center;gap:6px}
 .cxh input[type=radio]{width:20px;height:20px;margin:0;accent-color:var(--accent);flex:none}
+.cxpb .zin b{font-size:17px;font-variant-numeric:tabular-nums;padding:5px 0}.cxpb .pbfor{color:var(--moa);font-weight:600;font-family:var(--body)}
+.zeronote{margin:-2px 0 8px;font-size:14px;color:var(--muted)}.zeronote b{color:var(--fg)}.zeronote .zdot{vertical-align:-1px;margin-right:4px}
 .cxh input[type=number]{width:3.7em;padding:5px 4px;text-align:center;-moz-appearance:textfield}
 .cxh input::-webkit-inner-spin-button,.cxh input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .cross .cx .v{font-size:13px}.cross .cx .ck{min-width:2.6em;padding-right:.35em}
@@ -1054,7 +1056,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <header class="phead">
     <button class="backbtn" id="trajBack" type="button" hidden aria-label="All loads">‹ Loads</button>
     <h1 id="trajTitle">Shooting</h1>
-    <p class="sub" id="trajSub">Bullet path for up to four zeros. Everything updates as you type.</p>
+    <p class="sub" id="trajSub">Bullet path for your point-blank zero and up to three more. Everything updates as you type.</p>
   </header>
 
   <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Loads</button><button type="button" role="tab" data-area="log" aria-selected="false">Range log</button></div>
@@ -1126,12 +1128,12 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <h3 class="crossh">Zeros</h3>
     <input type="hidden" id="f_adj">
     <div class="cross" id="cross" role="radiogroup" aria-label="Zeros">
+      <div class="cx cxpb" id="cx3"><div class="cxh"><input type="radio" name="zsel" value="4" id="zsel3" aria-label="Use the point-blank zero for the range table and dope card"><span class="zin"><span class="zdot" style="background:var(--moa)"></span><b id="pbZ">—</b></span></div><div class="v" id="cxv3"></div></div>
       <div class="cx" id="cx0"><div class="cxh"><input type="radio" name="zsel" value="1" id="zsel0" aria-label="Use zero 1 for the range table"><label class="zin" for="f_z0"><span class="zdot" style="background:var(--z1)"></span><span class="sr">Zero 1</span><input id="f_z0" type="number" inputmode="numeric" step="1" min="1" max="9999"></label><span class="t" data-unit="yd">yd</span></div><div class="v" id="cxv0"></div></div>
       <div class="cx" id="cx1"><div class="cxh"><input type="radio" name="zsel" value="2" id="zsel1" aria-label="Use zero 2 for the range table"><label class="zin" for="f_z1"><span class="zdot" style="background:var(--z2)"></span><span class="sr">Zero 2</span><input id="f_z1" type="number" inputmode="numeric" step="1" min="1" max="9999"></label><span class="t" data-unit="yd">yd</span></div><div class="v" id="cxv1"></div></div>
       <div class="cx" id="cx2"><div class="cxh"><input type="radio" name="zsel" value="3" id="zsel2" aria-label="Use zero 3 for the range table"><label class="zin" for="f_z2"><span class="zdot" style="background:var(--z3)"></span><span class="sr">Zero 3</span><input id="f_z2" type="number" inputmode="numeric" step="1" min="1" max="9999"></label><span class="t" data-unit="yd">yd</span></div><div class="v" id="cxv2"></div></div>
-      <div class="cx" id="cx3"><div class="cxh"><input type="radio" name="zsel" value="4" id="zsel3" aria-label="Use zero 4 for the range table"><label class="zin" for="f_z3"><span class="zdot" style="background:var(--z4)"></span><span class="sr">Zero 4</span><input id="f_z3" type="number" inputmode="numeric" step="1" min="1" max="9999"></label><span class="t" data-unit="yd">yd</span></div><div class="v" id="cxv3"></div></div>
     </div>
-    <p class="note">Pick the circle (◉) for the zero your scope is set to. Leave a box blank to hide that zero.</p>
+    <p class="note">The first box is the point-blank zero, worked out from the target size in the <b>Point-blank range</b> card below. Type up to three more to compare. Pick the circle (◉) for the zero your scope is set to. Leave a box blank to hide that zero.</p>
   </section>
 
   <section class="card" aria-label="Point-blank range" id="secTPbr">
@@ -1142,12 +1144,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div>
     <div class="pbres" id="pbRes"></div>
     <label class="toggle"><input id="pb_show" type="checkbox" checked> Show it on the chart</label>
-    <div class="row"><button class="btn" id="pbUse" type="button">Use the far zero</button><button class="btn" id="pbUseNear" type="button">Use the near zero</button><span class="note" id="pbUseNote"></span></div>
-    <p class="note">The zero that keeps the bullet within half the target size above or below your line of sight for as long as possible. Hold dead on anywhere in that range and you'll stay on the target. It uses the load, gun and conditions above, and ignores wind.</p>
+    <div class="row"><button class="btn" id="pbUse" type="button">Set my scope to this zero</button><span class="note" id="pbUseNote"></span></div>
+    <p class="note">The zero that keeps the bullet within half the target size above or below your line of sight for as long as possible. It's the first zero box on the <b>Bullet path</b> card, in purple. Hold dead on anywhere in that range and you'll stay on the target. It uses the load, gun and conditions above, and ignores wind.</p>
   </section>
 
   <section class="card" aria-label="Data table" id="secTTable">
     <h2>Range table</h2>
+    <p class="zeronote" id="tblZero" aria-live="polite"></p>
     <div class="row tstep"><label for="f_step">Show a row every</label><input id="f_step" type="number" inputmode="numeric" step="1" aria-label="Table step"><span data-unit="yd">yd</span></div>
     <div class="tablewrap"><table id="tbl"></table></div>
     <div class="row tblcols" role="group" aria-label="Columns to show"><span class="note">Show:</span><label class="toggle"><input type="checkbox" id="tc_moa"> Adjust (MOA)</label><label class="toggle"><input type="checkbox" id="tc_mil"> Adjust (MIL)</label><label class="toggle"><input type="checkbox" id="tc_wind"> Wind</label></div>
@@ -1168,6 +1171,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 
   <section class="card" aria-label="Dope card" id="secTDope">
     <h2>Dope card &amp; reticle</h2>
+    <p class="zeronote" id="dopeZero" aria-live="polite"></p>
     <div class="grid">
       <div class="field"><label for="d_from">From (<span data-unit="yd">yd</span>)</label><input id="d_from" type="number" inputmode="numeric" step="1"></div>
       <div class="field"><label for="d_to">To (<span data-unit="yd">yd</span>)</label><input id="d_to" type="number" inputmode="numeric" step="1"></div>
@@ -1251,7 +1255,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Velocity measured at</b> and <b>Temp sensitivity</b> (optional): powder burns faster when it's warm, so a load is faster in summer than in winter. Enter the temperature your velocity was measured at and how many fps it changes for every 10°F (often 5–20 fps), and the calculator adjusts the velocity for the temperature on the Conditions card. Under the load's <b>Range trips</b>, a <b>Velocity and temperature</b> chart can work out the sensitivity from your own trips (it needs trips with an average velocity and temperatures at least 10°F apart); tap <b>Use … in the calculator</b> to fill it in. When you use a trip's average as the muzzle velocity, its temperature is saved as "measured at".</li>
         <li><b>Ballistic coefficient (G1)</b>: on the box or the bullet maker's website. Use the G1 number, not G7.</li>
         <li><b>Bullet diameter</b>: e.g. .224, .243, .277, .308, .338, .357. Used for sectional density and the form-factor check below the inputs. The path itself comes from the BC.</li>
-        <li><b>Zeros</b>: the four boxes at the bottom of the <b>Bullet path</b> card, under the chart. Type up to four distances to compare, each with its own color. Leave one blank to hide it.</li>
+        <li><b>Zeros</b>: the boxes at the bottom of the <b>Bullet path</b> card, under the chart. The first one (purple) is the <b>point-blank zero</b>, worked out from the target size in the <b>Point-blank range</b> card. Type up to three more distances to compare, each with its own color; leave one blank to hide it. Tap the circle on the zero your scope is set to: the <b>Range table</b> and <b>Dope card</b> say at the top which zero they're using.</li>
         <li><b>Scope zero</b>: tap the circle in the zero box your scope is actually set to (that box gets a highlighted border). The range table's MOA and MIL columns and the dope card are based on it.</li>
         <li><b>Conditions</b> (its own card, under Inputs): hot weather and high altitude make bullets drop less. For the wind, enter its speed and the o'clock it comes from (12 is straight at you, 3 from the right, 9 from the left); the calculator works out how much of it pushes the bullet sideways and which way to hold. Head and tail winds barely matter and aren't counted.</li>
         <li><b>Shot angle</b>: for shooting up or down hill, enter the angle (either way, it's the same). Only part of the drop counts at an angle, so you hold or dial less than on level ground; the table, chart and dope card all use it. Leave it blank for level shots.</li>
@@ -1267,7 +1271,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Wind</b>: drift for a full-value crosswind. Hold or dial into the wind.</li>
       </ul>
       <h3>Point-blank range</h3>
-      <p>The <b>Point-blank range</b> card (the <b>Point-blank</b> link at the top) works out the best zero for holding dead on. Enter the size of what you're shooting at, or tap <b>4" varmint</b>, <b>6" deer</b> or <b>8" elk</b>. It finds the zero that keeps the bullet within half that size above or below your line of sight for as long as possible, and shows the near and far zero for that path (zero at either one; the far one is more forgiving), where the bullet stays on target (from how close to how far), the maximum point-blank range, and the highest point. On the chart it draws the target band as a shaded box, that zero's path as a dashed purple line with purple diamonds at its near and far zeros, and a line at the maximum point-blank range. <b>Use the far zero</b> or <b>Use the near zero</b> adds it to your zeros (or replaces zero 4 if they're all full). It uses the load, gun and conditions you've entered, and doesn't include wind.</p>
+      <p>The <b>Point-blank range</b> card (the <b>Point-blank</b> link at the top) works out the best zero for holding dead on. Enter the size of what you're shooting at, or tap <b>4" varmint</b>, <b>6" deer</b> or <b>8" elk</b>. It finds the zero that keeps the bullet within half that size above or below your line of sight for as long as possible, and shows the near and far zero for that path (zero at either one; the far one is more forgiving), where the bullet stays on target (from how close to how far), the maximum point-blank range, and the highest point. This zero is always the first (purple) zero box under the chart, and the chart draws its path in purple, the target band as a shaded box and a line at the maximum point-blank range (<b>Show it on the chart</b> turns those off). <b>Set my scope to this zero</b> picks it for the range table and dope card, the same as tapping the circle in its box. It uses the load, gun and conditions you've entered, and doesn't include wind.</p>
       <h3>G1 or G7</h3>
       <p>Pick the <b>BC type</b> that matches the number you have. Many long-range bullets list a G7 number (around 0.2–0.35); it's usually more accurate past 600 yd. The Reloading recipe has the same choice and sends it over with <b>Use in calculator</b>.</p>
       <h3>Stability and spin drift</h3>
@@ -1796,7 +1800,7 @@ const base={adj:2,temp:59,alt:0,wind:10,step:50,bcm:"G1"};
 // a new account's Shooting list starts with just the made-up sample (older accounts keep whatever they had)
 const DEFAULTS=[
  // made-up example matching the sample reloading load (seed/initial.json): its 39 gr charge averaged 2,670 fps
- {id:"65cm-147-sample",cart:"6.5 Creedmoor",name:"SAMPLE · 6.5 Creedmoor 147 gr ELD Match",w:147,mv:2670,bc:.351,bcm:"G7",cal:.264,blen:1.424,twist:8,sh:1.75,z:[100,200,300,500],lr:true,sample:true}
+ {id:"65cm-147-sample",cart:"6.5 Creedmoor",name:"SAMPLE · 6.5 Creedmoor 147 gr ELD Match",w:147,mv:2670,bc:.351,bcm:"G7",cal:.264,blen:1.424,twist:8,sh:1.75,z:[100,300,500,null],zpb:1,lr:true,sample:true}
 ].map(l=>Object.assign({},base,l,{builtin:true}));
 const KEY="trajcalc.v1";
 // notes that mention units
@@ -1810,8 +1814,14 @@ else if(SAVED&&Array.isArray(SAVED.loads)&&SAVED.loads.length){state=SAVED;}
 else{try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&Array.isArray(s.loads)&&s.loads.length){state=s;}}catch(e){}}
 function save(){PERSIST(state);}
 const $=id=>document.getElementById(id);
-const ZC=["var(--z1)","var(--z2)","var(--z3)","var(--z4)"];
-function cur(){return state.loads.find(l=>l.id===state.cur)||state.loads[0];}
+const ZC=["var(--z1)","var(--z2)","var(--z3)","var(--moa)"];
+function cur(){const l=state.loads.find(l=>l.id===state.cur)||state.loads[0];if(l&&!l.zpb)migZ(l);return l;}
+// since 2.10.3 the 4th zero is the point-blank zero (worked out, not typed): an older 4th zero moves into a free box,
+// and if it was the picked one it takes the place of zero 3
+function migZ(l){if(l.zpb)return;l.zpb=1;const z=(Array.isArray(l.z)?l.z.slice(0,4):[]).map(v=>num(v)>0?num(v):null);while(z.length<4)z.push(null);
+  const v=z[3],picked=Math.round(l.adj||0)===4;z[3]=null;
+  if(v!=null){let k=z.slice(0,3).indexOf(v);if(k<0){k=z.slice(0,3).indexOf(null);if(k<0&&picked)k=2;if(k>=0)z[k]=v;}if(picked)l.adj=k>=0?k+1:0;}
+  l.z=z;}
 
 function escL(t){return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 let TVIEW="list";
@@ -1825,7 +1835,7 @@ function guessCart(l){
 }
 function fillSelect(){
   const root=$("trajList");
-  let fixed=false;state.loads.forEach(l=>{if(l.cart===undefined){l.cart=guessCart(l);fixed=true;}});if(fixed)save();
+  let fixed=false;state.loads.forEach(l=>{if(l.cart===undefined){l.cart=guessCart(l);fixed=true;}if(!l.zpb){migZ(l);fixed=true;}});if(fixed)save();
   let h='<div class="card"><div class="row"><button class="btn primary" id="newBtn" type="button">+ New load</button><button class="btn" id="newLrBtn" type="button">+ New long-range load</button></div>';
   const item=l=>{
     const d=[l.w>0?l.w+" gr":"",l.mv>0?U.s("fps",l.mv,0,true):"",l.bc>0?"BC "+l.bc:""].filter(Boolean).join(" · ");
@@ -1908,10 +1918,12 @@ window.RB_TRAJ={
   // the trajectory of a Shooting load for other screens (hit chance, saved ranges). o can change the wind, angle,
   // conditions, or add dmv (fps) to the velocity while keeping the same sight setting.
   solve(id,o){
-    const L0=state.loads.find(l=>l.id===id);if(!L0)return {err:"That Shooting load is gone."};
+    const L0=state.loads.find(l=>l.id===id);if(!L0)return {err:"That Shooting load is gone."};if(!L0.zpb)migZ(L0);
     o=o||{};const L=Object.assign({},L0,o,{mv:effMV(L0)});
     if(!(L.mv>0&&L.bc>0&&L.w>0)||L.sh==null)return {err:"Fill in the Shooting load's velocity, BC, bullet weight and sight height first."};
-    const ai=Math.round(L.adj||0)-1;let z=(ai>=0&&ai<4)?num(L.z[ai]):null;if(!(z>0))z=(L.z||[]).map(num).find(v=>v>0)||null;
+    const ai=Math.round(L.adj||0)-1;let z=(ai>=0&&ai<4)?num(L.z[ai]):null;
+    if(ai===3&&!(z>0)&&L.sh!=null){const S0=simulate(L),A0=angleCos(L0);const P=pbrCalc(L,S0,(x,zz)=>S0.at(S0.G,x)*A0+x*(L.sh-S0.at(S0.G,zz))/zz-L.sh);if(P){z=P.z;L0.z[3]=P.z;}}
+    if(!(z>0))z=(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null;
     if(!(z>0))return {err:"Give the Shooting load a zero distance first."};
     const S=simulate(L),AC=angleCos(L),Sd=o.dmv?simulate(Object.assign({},L,{mv:L.mv+o.dmv})):S;
     const sight=x=>x*(L.sh-S.at(S.G,z))/z-L.sh;
@@ -1925,11 +1937,7 @@ $("trajBack").addEventListener("click",()=>{showTrajView("list");window.scrollTo
 if(U.metric)document.querySelectorAll("#pbChips [data-pbs]").forEach((b,i)=>{const cm=[10,15,20][i];b.dataset.pbs=cm;b.textContent=cm+" cm "+b.textContent.replace(/^[\d.]+"\s*/,"");});
 document.querySelectorAll("#pbChips [data-pbs]").forEach(b=>b.addEventListener("click",()=>{$("pb_size").value=b.dataset.pbs;readInputs();render();}));
 $("pb_show").addEventListener("change",()=>{readInputs();render();});
-function usePbZero(v){if(v==null)return;const L=cur();let i=L.z.findIndex(z=>z==null);const note=$("pbUseNote");
-  if(i<0){i=3;note.textContent="Replaced zero 4 with "+U.s("yd",v,0)+".";}else note.textContent="Added "+U.s("yd",v,0)+" as zero "+(i+1)+".";
-  L.z[i]=v;fillZero(i,v);save();render();}
-$("pbUse").addEventListener("click",()=>{if(PBR)usePbZero(PBR.z);});
-$("pbUseNear").addEventListener("click",()=>{if(PBR)usePbZero(PBR.nz);});
+$("pbUse").addEventListener("click",()=>{if(!PBR)return;$("f_adj").value="4";readInputs();save();render();$("pbUseNote").textContent="Done: the range table and dope card use it now.";});
 $("trajJump").querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();if(a.getAttribute("href")==="#secTInputs"&&!IN_OPEN)setInOpen(true);const el=$(a.getAttribute("href").slice(1));const fb=el&&el.querySelector(":scope>.sechead[aria-expanded='false']");if(fb&&fb.id!=="inToggle")fb.click();if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}));
 const F=["w","mv","bc","sh","adj","temp","alt","wind","step","twist","blen","mvtemp","tsens","angle"];
 // the calculator boxes that have units: [kind, decimals shown in metric]; the rest (grains, BC, angle…) are the same in both
@@ -1945,7 +1953,7 @@ function fillInputs(){
     if(FU[k])U.fill(el,FU[k][0],L[k],FU[k][1],FU[k][2]);else el.value=L[k]==null?"":L[k];});
   $("f_bcm").value=L.bcm==="G7"?"G7":"G1";
   $("f_cal_u").value=L.calUnit==="mm"?"mm":"in";$("f_cal").value=DIA.show(L.cal,$("f_cal_u").value);
-  for(let i=0;i<4;i++)fillZero(i,L.z[i]);
+  for(let i=0;i<3;i++)fillZero(i,L.z[i]);
   $("f_lr").checked=!!L.lr;
   $("f_wclock").value=String(windClock(L));$("f_wbr").checked=!!L.wbr;
   {const pb=L.pbr||{};U.fill($("pb_size"),"in",pb.size,1,2);$("pb_show").checked=pb.show!==false;$("pbUseNote").textContent="";}
@@ -1967,7 +1975,7 @@ function readInputs(){
   F.forEach(k=>{const el=$("f_"+k);if(k==="step"){L[U.metric?"stepM":"step"]=num(el.value);return;}
     if(FU[k]){const v=U.read(el,FU[k][0],L[k]);L[k]=v==null?null:(U.metric?Math.round(v*1000)/1000:v);}else L[k]=num(el.value);});
   // zeros: whole yards, or whole metres in metric (kept in yards, so a 100 m zero is 109.361 yd)
-  L.z=[0,1,2,3].map(i=>readZero(i,L.z[i]));
+  L.z=[0,1,2].map(i=>readZero(i,L.z[i])).concat([L.z[3]!=null?L.z[3]:null]);
   L.lr=$("f_lr").checked;
   L.wclock=+$("f_wclock").value||3;L.wbr=$("f_wbr").checked;
   L.bcm=$("f_bcm").value;
@@ -2013,6 +2021,19 @@ const spinIn=(SG,t)=>SG!=null&&t>0?1.25*(SG+1.2)*Math.pow(t,1.83):null;
 // wind brackets: 5, 10 and 15 mph, or 10, 20 and 30 km/h in metric (kept in mph for the math)
 const brackets=()=>U.metric?[10,20,30].map(k=>k/1.609344):[5,10,15];
 const brLabel=b=>U.s("mph",b,0);
+// maximum point-blank range: the zero whose highest point is exactly half the target size,
+// then how far the bullet stays within ± that before it drops out
+function pbrCalc(L,S,path){
+  const pb=L.pbr||{},size=num(pb.size)>0?num(pb.size):6,r=size/2,lim=Math.min(S.MR,S.last);
+  const apexOf=z=>{let m=-1e9,mx=0;for(let x=0;x<=lim;x++){const y=path(x,z);if(y>m){m=y;mx=x;}}return {y:m,x:mx};};
+  // only "far" zeros count (the path comes down through the zero after its highest point); take the longest one whose highest point is within the target
+  let bz=null;for(let z=1;z<=lim;z++){const a=apexOf(z);if(a.x<=z&&a.y<=r)bz=z;else if(bz!=null&&a.y>r)break;}
+  if(bz==null)return {none:true,size};
+  const z=bz,a=apexOf(z);let near=null,far=null;
+  for(let x=0;x<=lim;x++){const y=path(x,z);if(near==null&&y>=-r)near=x;if(x>=a.x&&y<-r){far=x-1;break;}}
+  let nz=null;for(let x=1;x<=a.x;x++){if(path(x,z)>=0){nz=x;break;}}
+  return {z,nz,r,size,near:near==null?0:near,far,beyond:far==null,lim,apex:a,show:pb.show!==false};
+}
 function render(){
   const L0=cur(), err=$("err");
   const L=Object.assign({},L0,{mv:effMV(L0)}); // what the bullet actually does today
@@ -2023,11 +2044,14 @@ function render(){
   if(L.sh==null||L.sh<0)bad.push("sight height");
   if(bad.length){err.hidden=false;err.textContent="Enter a positive number for "+bad.join(", ")+".";for(let i=0;i<4;i++)$("cxv"+i).innerHTML="";$("chart").innerHTML="";$("tbl").innerHTML="";$("legend").innerHTML="";$("derived").innerHTML="";return;}
   const S=simulate(L), MR=S.MR, sh=L.sh;
-  const zs=L.z.map(z=>(z!=null&&z>=1&&z<=Math.min(MR,S.last))?z:null);
-  const badZ=L.z.some((z,i)=>z!=null&&zs[i]==null);
-  err.hidden=!badZ;if(badZ)err.textContent="Zeros must be between 1 and "+U.s("yd",MR,0,true)+(S.last<MR?" (this load goes subsonic-slow past "+U.s("yd",S.last,0,true)+")":"")+".";
   const AC=angleCos(L);
   const path=(x,z)=>S.at(S.G,x)*AC+x*(sh-S.at(S.G,z))/z-sh; // zeroed level; at an angle only cos(angle) of the drop counts
+  // the point-blank zero is zero 4 (the first box)
+  {const P=pbrCalc(L,S,path);PBR=P&&!P.none?P:null;const v=PBR?PBR.z:null;if(!Array.isArray(L0.z))L0.z=[null,null,null,null];if(L0.z[3]!==v){L0.z[3]=v;save();}L.z=L0.z.slice();}
+  const pbSize=PBR?PBR.size:((num((L.pbr||{}).size)>0)?num(L.pbr.size):6);
+  const zs=L.z.map(z=>(z!=null&&z>=1&&z<=Math.min(MR,S.last))?z:null);
+  const badZ=L.z.some((z,i)=>i<3&&z!=null&&zs[i]==null);
+  err.hidden=!badZ;if(badZ)err.textContent="Zeros must be between 1 and "+U.s("yd",MR,0,true)+(S.last<MR?" (this load goes subsonic-slow past "+U.s("yd",S.last,0,true)+")":"")+".";
 
   // derived
   const me=L.w*L.mv*L.mv/450240;
@@ -2048,41 +2072,31 @@ function render(){
   // crossings
   const cr=[];
   zs.forEach((z,i)=>{
-    if(z==null){cr.push(null);$("cxv"+i).innerHTML='<span class="note">Enter a distance</span>';return;}
+    if(z==null){cr.push(null);$("cxv"+i).innerHTML=i===3?'<span class="note">No point-blank zero for a '+U.s("in",pbSize,1)+' target</span>':'<span class="note">Enter a distance</span>';return;}
     let near=null,far=null,apex=null;
     for(let x=0;x<=S.last;x++){const y=path(x,z);if(y>=-0.001){if(near==null)near=x;far=x;}if(!apex||y>apex.y)apex={x,y};}
     if(!apex||apex.y<0.05)apex=null; // the path never rises above the line of sight
     cr.push({near,far,z,apex});
-    $("cxv"+i).innerHTML='<span class="cl"><span class="ck">Near</span>'+U.s("yd",near,0)+'</span><span class="cl"><span class="ck">Far</span>'+(far>=MR?"&gt;"+U.s("yd",MR,0):U.s("yd",far,0))+'</span>'+(apex?'<span class="cl"><span class="ck">Top</span>+'+U.s("in",apex.y,1)+' @ '+U.s("yd",apex.x,0)+'</span>':'')+'';
+    $("cxv"+i).innerHTML=(i===3?'<span class="cl pbfor">Point-blank, '+U.s("in",PBR.size,1)+' target</span>':'')+'<span class="cl"><span class="ck">Near</span>'+U.s("yd",near,0)+'</span><span class="cl"><span class="ck">Far</span>'+(far>=MR?"&gt;"+U.s("yd",MR,0):U.s("yd",far,0))+'</span>'+(apex?'<span class="cl"><span class="ck">Top</span>+'+U.s("in",apex.y,1)+' @ '+U.s("yd",apex.x,0)+'</span>':'')+(i===3?'<span class="cl"><span class="ck">Max</span>'+(PBR.beyond?'&gt;'+U.s("yd",PBR.lim,0):U.s("yd",PBR.far,0))+'</span>':'');
   });
+  $("pbZ").textContent=PBR?U.s("yd",PBR.z,0):"—";
   {const ai=Math.round(L.adj||0)-1;for(let i=0;i<4;i++){const on=ai===i;$("zsel"+i).checked=on;$("cx"+i).classList.toggle("sel",on);$("cx"+i).classList.toggle("off",zs[i]==null);}}
 
-  // maximum point-blank range: the zero whose highest point is exactly half the target size,
-  // then how far the bullet stays within ± that before it drops out
-  {const pb=L.pbr||{},size=num(pb.size)>0?num(pb.size):6,r=size/2,lim=Math.min(MR,S.last);
-    const apexOf=z=>{let m=-1e9,mx=0;for(let x=0;x<=lim;x++){const y=path(x,z);if(y>m){m=y;mx=x;}}return {y:m,x:mx};};
-    PBR=null;
-    // only "far" zeros count (the path comes down through the zero after its highest point); take the longest one whose highest point is within the target
-    let bz=null;for(let z=1;z<=lim;z++){const a=apexOf(z);if(a.x<=z&&a.y<=r)bz=z;else if(bz!=null&&a.y>r)break;}
-    if(bz!=null){
-      const z=bz,a=apexOf(z);let near=null,far=null;
-      for(let x=0;x<=lim;x++){const y=path(x,z);if(near==null&&y>=-r)near=x;if(x>=a.x&&y<-r){far=x-1;break;}}
-      let nz=null;for(let x=1;x<=a.x;x++){if(path(x,z)>=0){nz=x;break;}}
-      PBR={z,nz,r,size,near:near==null?0:near,far,beyond:far==null,lim,apex:a,show:pb.show!==false};
-    }
+  {const size=pbSize,lim=Math.min(MR,S.last),r=size/2;
     const out=$("pbRes");
     if(!PBR)out.innerHTML='<p class="err">This load can\'t stay inside a '+U.s("in",size,1)+' target from close in; try a bigger target size.</p>';
     else out.innerHTML='<div class="pbzeros"><div class="pbbig"><span>Near zero</span><b>'+(PBR.nz!=null?U.s("yd",PBR.nz,0):'—')+'</b></div><div class="pbbig"><span>Far zero</span><b>'+U.s("yd",PBR.z,0)+'</b></div></div>'+
       '<div class="pbline">Zero at either one; it\'s the same path. The bullet rises through your line of sight at the near zero and comes back down through it at the far zero. The far zero is more forgiving: being a little off at the near zero moves the far end much more, so if you sight in close, check it at the far zero too.</div>'+
       '<div class="pbline">Stays within ±'+U.s("in",r,U.metric?1:2)+' from <b>'+U.s("yd",PBR.near,0)+'</b> to <b>'+(PBR.beyond?'past '+U.s("yd",lim,0):U.s("yd",PBR.far,0))+'</b>'+(PBR.near>0?' (closer than '+U.s("yd",PBR.near,0)+' it\'s still low, because the scope sits above the bore)':'')+'.</div>'+
       '<div class="pbline">Maximum point-blank range: <b>'+(PBR.beyond?'past '+U.s("yd",lim,0):U.s("yd",PBR.far,0))+'</b>. Highest point: +'+U.s("in",PBR.apex.y,1)+' at '+U.s("yd",PBR.apex.x,0)+'.</div>';
-    $("pbUse").disabled=!PBR||L.z.includes(PBR&&PBR.z);$("pbUseNear").disabled=!PBR||PBR.nz==null||L.z.includes(PBR.nz);
-    {const n=$("pbUseNote");if(PBR&&(L.z.includes(PBR.z)||(PBR.nz!=null&&L.z.includes(PBR.nz)))){if(!/^(Added|Replaced)/.test(n.textContent))n.textContent="It's already one of your zeros.";}else if(/^It's already/.test(n.textContent))n.textContent="";}}
+    {const on=Math.round(L.adj||0)===4;$("pbUse").disabled=!PBR||on;const n=$("pbUseNote");if(PBR&&on){if(!/^Done/.test(n.textContent))n.textContent="Your scope is set to it.";}else n.textContent="";}}
 
   // legend
-  $("legend").innerHTML=zs.map((z,i)=>z==null?"":'<span><span class="zdot" style="background:'+ZC[i]+'"></span>'+U.s("yd",z,0)+' zero</span>').join("")+(PBR&&PBR.show?'<span><span class="zdot pbdot"></span>Point-blank zero '+(PBR.nz!=null?U.n("yd",PBR.nz,0)+' / ':'')+U.s("yd",PBR.z,0)+' (±'+U.s("in",PBR.r,U.metric?1:2)+')</span>':'');
+  const zc=zs.map((z,i)=>i===3&&!(PBR&&PBR.show)?null:z);
+  $("legend").innerHTML=[3,0,1,2].map(i=>zc[i]==null?"":'<span><span class="zdot" style="background:'+ZC[i]+'"></span>'+(i===3?'Point-blank '+U.s("yd",zc[i],0)+' zero (±'+U.s("in",PBR.r,U.metric?1:2)+')':U.s("yd",zc[i],0)+' zero')+'</span>').join("");
 
-  drawChart(L,S,zs,cr,path);
+  drawChart(L,S,zc,cr.map((c,i)=>zc[i]==null?null:c),path);
+  zeroNotes(L,zs);
 
   // table
   // rows every N yards, or every N metres in metric (each has its own setting, so neither gets odd numbers)
@@ -2233,6 +2247,17 @@ function renderReticle(L,S,zs,path){
 function dopeOpts(L){const d=L.dope||{},M=U.metric?"M":"";const MRx=L.lr?1000:400,sc=scopeOf(L);
   return {from:d["from"+M]!=null?d["from"+M]:100,to:d["to"+M]!=null?d["to"+M]:(L.lr?1000:400),step:d["step"+M]!=null?d["step"+M]:(L.lr?50:25),unit:sc?(sc.turret==="mil"||sc.turret==="moa"?sc.turret:sc.unit==="mil"?"mil":"moa"):(d.unit==="mil"?"mil":"moa"),MRx,scope:sc};}
 function fillDope(){const o=dopeOpts(cur());$("d_from").value=o.from;$("d_to").value=o.to;$("d_step").value=o.step;$("d_unit").value=o.unit;}
+// a line on the range table and dope card saying which zero they use
+function zeroNotes(L,zs){
+  const ai=Math.round(L.adj||0)-1,za=(ai>=0&&ai<4)?zs[ai]:null,dot=i=>'<span class="zdot" style="background:'+ZC[i]+'"></span>';
+  const what=i=>i===3?'the point-blank zero for a '+U.s("in",PBR?PBR.size:6,1)+' target':'zero '+(i+1);
+  let t,d;
+  if(za!=null){t=d=dot(ai)+'Zeroed at <b>'+U.s("yd",za,0)+'</b>'+(ai===3?': '+what(ai):'')+'.';}
+  else{const fi=[3,0,1,2].find(i=>zs[i]!=null);
+    d='No zero picked. Pick the circle on the zero your scope is set to, in the zero boxes under the Bullet path chart.';
+    t=fi!=null?dot(fi)+'Path is for <b>'+U.s("yd",zs[fi],0)+'</b>'+(fi===3?' ('+what(fi)+')':'')+'. No zero picked, so there\'s no Adjust: pick the circle on the zero your scope is set to, under the Bullet path chart.':d;}
+  const a=$("tblZero"),b=$("dopeZero");if(a)a.innerHTML=t;if(b)b.innerHTML=d;
+}
 function renderDope(L,S,zs,path){
   const box=$("dopeCard");if(!box)return;
   const o=dopeOpts(L), ai=Math.round(L.adj||0)-1, za=(ai>=0&&ai<4)?zs[ai]:null;
@@ -2444,8 +2469,7 @@ function drawChart(L,S,zs,cr,path){
   const PB=PBR&&PBR.show?PBR:null;
   if(PB){const x0=Math.max(PB.near,V.x0),x1=Math.min(PB.beyond?XMAX:PB.far,V.x1);
     if(x1>x0)s+='<rect x="'+X(x0).toFixed(1)+'" y="'+Y(PB.r).toFixed(1)+'" width="'+(X(x1)-X(x0)).toFixed(1)+'" height="'+(Y(-PB.r)-Y(PB.r)).toFixed(1)+'" fill="var(--moa)" fill-opacity=".10" stroke="var(--moa)" stroke-opacity=".5" stroke-dasharray="5 4"/>';
-    let d="",first=true;for(let x=xa;;x+=stepPts){if(x>xb)x=xb;d+=(first?"M":"L")+X(x).toFixed(1)+" "+Y(path(x,PB.z)).toFixed(1);first=false;if(x>=xb)break;}
-    s+='<path d="'+d+'" fill="none" stroke="var(--moa)" stroke-width="2.2" stroke-dasharray="7 5" stroke-linejoin="round"/>';}
+}
   zs.forEach((z,i)=>{
     if(z==null||xb<xa)return;
     let d="",first=true;
@@ -2481,15 +2505,6 @@ function drawChart(L,S,zs,cr,path){
     placed.push({x:lx,y:ly,w});
     lab+='<text x="'+lx.toFixed(1)+'" y="'+ly+'" text-anchor="middle" font-size="11" font-weight="600" font-family="var(--body)" fill="'+ZC[mk.i]+'" stroke="var(--surface)" stroke-width="3" paint-order="stroke">'+txt+'</text>';
   });
-  // point-blank near and far zeros on the line of sight
-  if(PB&&V.y0<=0&&V.y1>=0)[[PB.nz,"near"],[PB.z,"far"]].forEach(([zx,kind])=>{
-    if(zx==null||zx<V.x0||zx>V.x1||zx>XMAX)return;const cx=X(zx),cy=Y(0),txt="PB "+kind+" "+U.s("yd",zx,0),w=txt.length*6.2+4;
-    s+='<path d="M'+cx+' '+(cy-6)+'L'+(cx+5)+' '+cy+'L'+cx+' '+(cy+6)+'L'+(cx-5)+' '+cy+'Z" fill="var(--moa)" stroke="var(--surface)" stroke-width="1.2"/>';
-    if(DECLUTTER)return;
-    let lx=Math.min(Math.max(cx,m.l+w/2+2),m.l+pw-w/2-2),ly=null;
-    for(const off of [26,-26,39,-39,52,-52]){const y=cy+off;if(y<m.t+11||y>m.t+ph-4)continue;if(!placed.some(q=>Math.abs(q.x-lx)<(q.w+w)/2&&Math.abs(q.y-y)<11)){ly=y;break;}}
-    if(ly==null)return;placed.push({x:lx,y:ly,w});
-    lab+='<text x="'+lx.toFixed(1)+'" y="'+ly+'" text-anchor="middle" font-size="11" font-weight="700" font-family="var(--body)" fill="var(--moa)" stroke="var(--surface)" stroke-width="3" paint-order="stroke">'+txt+'</text>';});
   // point-blank range marker
   if(PB&&!PB.beyond&&PB.far>=V.x0&&PB.far<=V.x1&&PB.far<=XMAX){const fx=X(PB.far),txt="Point-blank "+U.s("yd",PB.far,0),w=txt.length*6.2+4;
     s+='<line x1="'+fx.toFixed(1)+'" x2="'+fx.toFixed(1)+'" y1="'+m.t+'" y2="'+(m.t+ph)+'" stroke="var(--moa)" stroke-width="1.4" stroke-dasharray="4 4"/>';
@@ -2588,7 +2603,7 @@ function zoomAbout(fx,fy,px,py){ // fx,fy <1 zooms in; px,py plot-pixel anchor
 function newLoad(lr){
   const src=cur();
   const L=clone(src);L.id="u"+Date.now().toString(36);L.builtin=false;delete L.sample;L.lr=lr;L.name=(lr?"New long-range load":"New load");
-  if(lr&&src.lr!==lr)L.z=[100,200,300,500];
+  if(lr&&src.lr!==lr)L.z=[100,300,500,null];
   state.loads.push(L);state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
   $("f_name").focus();$("f_name").select();
 }
@@ -7165,8 +7180,8 @@ window.APP_showTab=showTab;
 const INFO={
   secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},
   secTWx:{t:"Conditions",b:"Temperature, altitude and wind change where the bullet lands. <b>Use the weather where I am</b> fills in today's temperature and air pressure. Enter the wind's speed and the o'clock it comes from (3 is from the right, 9 from the left), and the shot angle for uphill or downhill shots.",h:"Weather where you are"},
-  secTChart:{t:"Bullet path",b:"The bullet's path for up to four zeros, each in its own color. Type the zeros in the boxes under the chart and tap the circle in the one your scope is set to. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
-  secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), then <b>Use the far zero</b> to add it to your zeros. Wind isn't included.",h:"Point-blank range"},
+  secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size in the Point-blank range card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
+  secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), and it becomes the first zero box under the chart. <b>Set my scope to this zero</b> uses it for the range table and dope card. Wind isn't included.",h:"Point-blank range"},
   secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns, and turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds.",h:"Reading the results"},
   "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
   secTDope:{t:"Dope card & reticle",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and <b>MOA</b> or <b>MIL</b>, then tap <b>Print dope card</b>. Tap any distance on the card to see where the target goes on a plain reticle; on a phone it slides up, with ‹ › to step through the distances. <b>Field mode</b> shows the holds in big numbers for the bench.",h:"Print a dope card"},
