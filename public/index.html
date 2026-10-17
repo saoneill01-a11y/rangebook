@@ -219,6 +219,9 @@ img{max-width:100%}
 .panel{display:flex;flex-direction:column;gap:14px}
 #trajDetail{display:flex;flex-direction:column;gap:14px}
 #trajDetail[hidden],#trajList[hidden]{display:none}
+#trajDetail.scratch #trajSample,#trajDetail.scratch #hitTool,#trajDetail.scratch .field:has(#f_name){display:none}
+/* the calculator with nothing filled in yet: only Inputs and Conditions, so no old numbers are left showing */
+#trajDetail.scratch.qcempty section.card:not(#secTInputs):not(#secTWx){display:none}
 textarea{font:inherit;color:var(--fg);width:100%;min-height:110px;padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);resize:vertical;line-height:1.45}
 textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .field input.text{font-family:var(--body);font-weight:500;color:var(--fg);background:var(--sunk)}
@@ -1514,7 +1517,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
       <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. Nothing in Tools is saved: change a number and the answer updates.</p>
       <ul>
-        <li><b>Trajectory calculator</b> (also the <b>Trajectory calculator</b> button on Home): quick drops, dial and wind holds for any bullet without making a Shooting profile. Fill it in from your factory or reloaded ammo or a Shooting profile with <b>Fill in from</b>, pick a <b>Gun</b> for its sight height, or type the numbers: bullet weight, BC (G1 or G7), muzzle velocity, sight height, zero, wind speed and the o'clock it comes from, temperature and altitude. The table goes out to the distance you pick in the steps you pick, with the drop, the elevation to dial from your zero and the wind hold in <b>MOA</b> or <b>MIL</b>, the wind drift, velocity and energy. It remembers the last numbers on this device. Want to keep it? <b>Save as a Shooting profile</b> makes one with these numbers and opens it on Shooting, with the full chart, dope card and range trips.</li>
+        <li><b>Trajectory calculator</b> (also the <b>Trajectory calculator</b> button on Home): the whole Shooting calculator without making a profile. Pick a gun and ammo (your own, or anything from the factory catalog, which here only fills in its numbers) or type the bullet weight, velocity, BC and sight height, and every card works the same as on a profile: conditions and wind, bullet path and zeros, point-blank range, range table, true-up, dope card and saved ranges. Nothing is saved to your profiles; this device remembers the last numbers so it opens where you left off. <b>Reset</b> clears it for new numbers (<b>Undo</b> brings them back), and <b>Save as a Shooting profile</b> keeps it as a profile, so it gets range trips too, and opens it on Shooting.</li>
         <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a <b>Bullet</b> from your Components and a <b>Gun</b> (for its twist) side by side, or type the numbers in. On a Shooting profile, <b>Check barrel twist</b> (under Inputs) opens it filled in from that profile. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
         <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
         <li><b>Powder</b>: how many rounds a container of powder makes at your charge, what the powder costs per round, and how much you need for a number of rounds. <b>Fill in from</b> uses a Reloading load's charge and, if its powder has a price in Components, the price.</li>
@@ -1570,27 +1573,12 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved unless you ask.</p></header>
     <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cart"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l1.5-5h3L15 9v12z"/><path d="M9 13h6"/></svg></span><span class="t">Cartridges</span><span class="d">The cartridge list Range Book uses: bullet diameters and SAAMI case and overall lengths. Fix anything wrong, or add your own.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <div class="tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
+      <section class="card qcbar"><p class="note toolnote">The full Shooting calculator, without making a profile: pick a gun and ammo or type the numbers, and every card below works (chart, point-blank range, range table, true-up, dope card, saved ranges). Nothing is saved to your profiles; this device remembers the last numbers until you tap <b>Reset</b>.</p>
+        <div class="row"><button class="btn primary" type="button" id="qcSave">Save as a Shooting profile</button><button class="btn" type="button" id="qcReset">Reset</button></div></section>
+      <div id="qcSlot"></div>
+    </div>
     <div class="col toolsroot">
-    <section class="card tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
-      <p class="note toolnote">Drops, dial and wind holds for any bullet. Fill it in from your ammo or a Shooting profile, or type the numbers. Nothing here is saved unless you tap <b>Save as a Shooting profile</b>.</p>
-      <div class="grid twfrom"><div class="field"><label for="qc_from">Fill in from</label><select id="qc_from" class="fieldselect"></select></div><div class="field"><label for="qc_gun">Gun (sight height)</label><select id="qc_gun" class="fieldselect"></select></div></div>
-      <div class="grid toolgrid t4">
-        <div class="field"><label for="qc_w">Bullet weight (gr)</label><input id="qc_w" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_bc">BC</label><div class="row" style="gap:6px;flex-wrap:nowrap"><input id="qc_bc" type="number" inputmode="decimal" step="any" style="min-width:0"><select id="qc_bcm" class="fieldselect" aria-label="BC type" style="width:auto"><option>G1</option><option>G7</option></select></div></div>
-        <div class="field"><label for="qc_mv">Muzzle velocity (<span data-unit="fps">fps</span>)</label><input id="qc_mv" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_sh">Sight height (<span data-unit="in">in</span>)</label><input id="qc_sh" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_z">Zero (<span data-unit="yd">yd</span>)</label><input id="qc_z" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_wind">Wind (<span data-unit="mph">mph</span>)</label><input id="qc_wind" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_clock">Wind from</label><select id="qc_clock" class="fieldselect"></select></div>
-        <div class="field"><label for="qc_temp">Temperature (<span data-unit="F">°F</span>)</label><input id="qc_temp" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_alt">Altitude (<span data-unit="ft">ft</span>)</label><input id="qc_alt" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_to">Table out to (<span data-unit="yd">yd</span>)</label><input id="qc_to" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><label for="qc_step">Every (<span data-unit="yd">yd</span>)</label><input id="qc_step" type="number" inputmode="decimal" step="any"></div>
-        <div class="field"><span class="flabel" id="qc_uL">Dial in</span><div class="segtabs" role="radiogroup" aria-labelledby="qc_uL"><button type="button" role="radio" data-qcu="moa">MOA</button><button type="button" role="radio" data-qcu="mil">MIL</button></div></div>
-      </div>
-      <div class="toolres" id="qc_res" aria-live="polite"></div>
-      <div class="row" style="margin-top:12px"><button class="btn" type="button" id="qc_save">Save as a Shooting profile</button></div>
-    </section>
     <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden>
       <p class="note toolnote">Will this bullet be stable in your barrel? This uses the Miller formula, corrected for velocity, temperature and altitude, the same one Shooting uses for spin drift.</p>
       <div class="grid twfrom"><div class="field"><label for="tw_bul">Bullet</label><select id="tw_bul" class="fieldselect"></select></div><div class="field"><label for="tw_gun">Gun</label><select id="tw_gun" class="fieldselect"></select></div></div>
@@ -2020,10 +2008,14 @@ let state={loads:clone(DEFAULTS),cur:DEFAULTS[0].id};
 if(SAVED&&SAVED.guestFresh){/* guest: built-in defaults */}
 else if(SAVED&&Array.isArray(SAVED.loads)&&SAVED.loads.length){state=SAVED;}
 else{try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&Array.isArray(s.loads)&&s.loads.length){state=s;}}catch(e){}}
-function save(){PERSIST(state);}
+/* Tools → Trajectory calculator (2.18.1): the whole Shooting detail (#trajDetail) is moved into Tools and works on SCRATCH,
+   a profile that isn't in state.loads. cur() returns it while SCR is on; it's kept only in this device's localStorage
+   (QC_KEY) so the tool opens where you left it. Opening the Shooting tab moves #trajDetail back (scratchOff). */
+let SCR=false,SCRATCH=null,SCR_PREV="list";const QC_KEY="rangebook.quickcalc2";
+function save(){if(SCR&&SCRATCH){try{localStorage.setItem(QC_KEY,JSON.stringify(SCRATCH));}catch(e){}}PERSIST(state);}
 const $=id=>document.getElementById(id);
 const ZC=["var(--z1)","var(--z2)","var(--z3)","var(--moa)"];
-function cur(){const l=state.loads.find(l=>l.id===state.cur)||state.loads[0];if(l&&!l.zpb)migZ(l);return l;}
+function cur(){if(SCR&&SCRATCH)return SCRATCH;const l=state.loads.find(l=>l.id===state.cur)||state.loads[0];if(l&&!l.zpb)migZ(l);return l;}
 // since 2.10.3 the 4th zero is the point-blank zero (worked out, not typed): an older 4th zero moves into a free box,
 // and if it was the picked one it takes the place of zero 3
 function migZ(l){if(l.zpb)return;l.zpb=1;const z=(Array.isArray(l.z)?l.z.slice(0,4):[]).map(v=>num(v)>0?num(v):null);while(z.length<4)z.push(null);
@@ -2103,8 +2095,26 @@ window.foldAll=(root,prefix)=>{if(!root)return;root.querySelectorAll("section.ca
   foldCard(sec,prefix+"_"+String(sec.id||sec.getAttribute("aria-label")||h.textContent).replace(/[^A-Za-z0-9]+/g,"_"));});};
 [["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
 function openTraj(id){state.cur=id;save();showTrajView("detail");fillInputs();trajHead();try{scopeCols(cur());}catch(e){}render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
+function freshScratch(){const L=clone(DEFAULTS[0]);delete L.sample;delete L.builtin;
+  Object.assign(L,{id:"quickcalc",name:"Trajectory calculator",cart:"",w:null,mv:null,bc:null,bcm:"G1",cal:null,blen:null,twist:null,sh:null,z:[100,null,null,null],zpb:1,adj:1,lr:false,wind:0,temp:null,alt:null,angle:null});
+  ["rifleId","rifleName","partId","ammoId","mvSrc","mvtemp","tsens","_rifleSh","_rifleTw","qcCat"].forEach(k=>delete L[k]);return L;}
+function scratchShow(){fillInputs();try{scopeCols(cur());}catch(e){}fillRifle();render();setInOpen(true);}
 window.RB_TRAJ={
-  cur(){if(TVIEW!=="detail")return null;const L=cur();return L?{id:L.id,name:L.name,rifleId:L.rifleId||null,partId:L.partId,cal:L.cal,mv:L.mv,mvtemp:num(L.mvtemp),tsens:num(L.tsens),temp:num(L.temp)}:null;},
+  scratchOn(slot){const d=$("trajDetail");if(!slot||!d)return;
+    if(!SCR){SCR_PREV=TVIEW;let o=null;try{o=JSON.parse(localStorage.getItem(QC_KEY)||"null");}catch(e){}SCRATCH=o&&typeof o==="object"?Object.assign(freshScratch(),o,{id:"quickcalc"}):freshScratch();
+      if(SCRATCH.ammoId&&!(AMMO||[]).some(a=>a.id===SCRATCH.ammoId))delete SCRATCH.ammoId;
+      if(SCRATCH.rifleId&&!RIFLES.some(r=>r.id===SCRATCH.rifleId)){delete SCRATCH.rifleId;delete SCRATCH.partId;}}
+    SCR=true;TVIEW="detail";d.classList.add("scratch");slot.appendChild(d);d.hidden=false;scratchShow();},
+  scratchOff(){if(!SCR)return;SCR=false;const d=$("trajDetail");d.classList.remove("scratch");$("trajList").after(d);
+    showTrajView(SCR_PREV==="detail"?"detail":"list");if(SCR_PREV==="detail"){fillInputs();try{scopeCols(cur());}catch(e){}fillRifle();render();if(window.RB_TRIPS)RB_TRIPS.show();}},
+  scratchOpen(){return SCR;},
+  scratchReset(){if(!SCR)return;const before=clone(SCRATCH);SCRATCH=freshScratch();save();scratchShow();window.scrollTo(0,0);
+    if(window.RB_UNDO)RB_UNDO("Cleared the calculator",()=>{SCRATCH=before;save();if(SCR)scratchShow();});},
+  scratchSave(){if(!SCR)return;readInputs();const L=clone(SCRATCH);L.id="u"+Date.now().toString(36);L.builtin=false;delete L.qcCat;
+    const r=rifleOf(L),a=L.ammoId&&(AMMO||[]).find(x=>x.id===L.ammoId);
+    L.name=[a?ammoName(a):(SCRATCH.qcCat||[num(L.w)?num(L.w)+" gr":"",L.cart||""].filter(Boolean).join(" ")||"New profile"),r?r.name:""].filter(Boolean).join(" · ");
+    state.loads.push(L);RB_TRAJ.scratchOff();state.cur=L.id;save();RB_TRAJ.open(L.id);},
+  cur(){if(TVIEW!=="detail"||SCR)return null;const L=cur();return L?{id:L.id,name:L.name,rifleId:L.rifleId||null,partId:L.partId,cal:L.cal,mv:L.mv,mvtemp:num(L.mvtemp),tsens:num(L.tsens),temp:num(L.temp)}:null;},
   // a velocity measured at a known temperature (e.g. a range trip's average): it becomes the load's muzzle velocity "measured at" that temperature
   setMV(v,temp){const L=cur();L.mv=v;delete L.mvSrc;if(temp!=null&&isFinite(temp))L.mvtemp=Math.round(temp);fillInputs();render();save();if(!IN_OPEN)$("inSum").textContent=inSummary(L);},
   setTempSens(perTen,mvtemp){const L=cur();L.tsens=Math.round(perTen*10)/10;if(mvtemp!=null&&num(L.mvtemp)==null)L.mvtemp=Math.round(mvtemp);fillInputs();render();save();},
@@ -2112,8 +2122,8 @@ window.RB_TRAJ={
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
   all(){return state.loads.map(l=>({id:l.id,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
   setPart(id,partId){const L=state.loads.find(l=>l.id===id);if(!L)return;L.partId=partId||"";const r=rifleOf(L);if(r){L.rifleName=r.name||"";const rs=num(r.sightHeight),tw=num(r.twist);if(rs>0){L.sh=rs;L._rifleSh=rs;}if(tw>0){L.twist=tw;L._rifleTw=tw;}}save();if(L===cur()&&TVIEW==="detail"){fillInputs();fillRifle();render();}},
-  forTools(){return state.loads.map(l=>({id:l.id,label:l.name||"Untitled profile",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
-  where(){return TVIEW==="detail"?state.cur:null;},
+  forTools(){return state.loads.concat(SCR&&SCRATCH?[SCRATCH]:[]).map(l=>({id:l.id,label:l.name||"Untitled profile",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
+  where(){return TVIEW==="detail"&&!SCR?state.cur:null;},
   // a Shooting profile's calculator inputs, to fill in Tools → Trajectory calculator
   spec(id){const L=state.loads.find(l=>l.id===id);if(!L)return null;if(!L.zpb)migZ(L);const ai=Math.round(L.adj||0)-1;
     return {w:num(L.w),mv:effMV(L),bc:num(L.bc),bcm:L.bcm==="G7"?"G7":"G1",sh:num(L.sh),zero:(ai>=0&&ai<3?num(L.z[ai]):null)||(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null,
@@ -2131,6 +2141,7 @@ window.RB_TRAJ={
   // the trajectory of a Shooting profile for other screens (hit chance, saved ranges). o can change the wind, angle,
   // conditions, or add dmv (fps) to the velocity while keeping the same sight setting.
   solve(id,o){
+    if(SCR&&SCRATCH&&id===SCRATCH.id)return RB_TRAJ.solveObj(SCRATCH,o);
     const L0=state.loads.find(l=>l.id===id);if(!L0)return {err:"That Shooting profile is gone."};return RB_TRAJ.solveObj(L0,o);},
   // the same, for a load that isn't saved (Tools → Trajectory calculator)
   solveObj(L0,o){
@@ -2275,6 +2286,7 @@ function render(){
   if(!(L.bc>0))bad.push("ballistic coefficient");
   if(!(L.w>0))bad.push("bullet weight");
   if(L.sh==null||L.sh<0)bad.push("sight height");
+  {const td=$("trajDetail");if(td)td.classList.toggle("qcempty",bad.length>0);}
   if(bad.length){err.hidden=false;err.textContent="Enter a positive number for "+bad.join(", ")+".";for(let i=0;i<4;i++)$("cxv"+i).innerHTML="";$("chart").innerHTML="";$("tbl").innerHTML="";$("legend").innerHTML="";$("derived").innerHTML="";return;}
   const S=simulate(L), MR=S.MR, sh=L.sh;
   const AC=angleCos(L);
@@ -2937,7 +2949,9 @@ $("f_rifle").addEventListener("change",()=>{
   delete L.partId;
   if(!id){delete L.rifleId;delete L.rifleName;}
   else if(r){L.rifleId=r.id;L.rifleName=r.name||"";const rs=num(r.sightHeight);if(rs>0){L.sh=rs;L._rifleSh=rs;U.fill($("f_sh"),"in",rs,2,3);}
-    const tw=num(r.twist);if(tw>0){L.twist=tw;L._rifleTw=tw;$("f_twist").value=tw;}}
+    const tw=num(r.twist);if(tw>0){L.twist=tw;L._rifleTw=tw;$("f_twist").value=tw;}
+    // no cartridge yet: take the gun's, so the ammo list shows what fits it
+    if(!L.cart&&r.cartridge){L.cart=window.RB_CARTS?RB_CARTS.canon(r.cartridge):r.cartridge;$("f_cart").value=L.cart;}}
   save();fillRifle();scopeCols(L);render();
 });
 // the range table's Adjust column in the scope's units (MOA or MIL turrets); you can still tick the other one
@@ -2952,7 +2966,7 @@ const ammoName=a=>a.kind==="reload"
 const pkNorm=t=>String(t||"").toLowerCase().replace(/(\d)\.(\d)/g,"$1$2").replace(/[^a-z0-9]+/g," ").trim();
 function fillAmmo(){
   if(!$("f_ammoBtn")||!AMMO)return;const L=cur(),a=L.ammoId&&AMMO.find(x=>x.id===L.ammoId);
-  $("f_ammoLbl").innerHTML=a?escT(ammoName(a)):'<span class="none">None. Tap to pick ammunition</span>';
+  $("f_ammoLbl").innerHTML=a?escT(ammoName(a)):L.qcCat?escT(L.qcCat)+' <span class="none">(from the catalog)</span>':'<span class="none">None. Tap to pick ammunition</span>';
   ["f_w","f_bc","f_bcm","f_cal","f_blen"].forEach(id=>{const el=$(id),fd=el&&el.closest(".field");if(fd)fd.hidden=!!a;});
   const info=$("f_ammoInfo");
   if(a){const rl=a.kind==="reload",v=num(a.measVel)||num(a.boxVel),f=(k,v2)=>v2?'<span><i>'+k+'</i>'+escT(v2)+'</span>':'';
@@ -2963,6 +2977,7 @@ function fillAmmo(){
     $("f_ammoEdit").addEventListener("click",()=>{if(window.RB_OPEN_AMMO)RB_OPEN_AMMO(a.id,cur().id);});
   }else info.innerHTML="";
   const note=$("f_ammoNote");note.textContent=a?"The bullet details come from this ammo; change them on the Gear & Ranges tab (Edit). Muzzle velocity below starts from its velocity and is yours to adjust for this gun. Range trips here count down your rounds on hand.":"Pick your own ammo (factory or reloaded), anything from the factory catalog, or enter new factory ammo. A catalog pick is added to your Ammunition on the Gear & Ranges tab.";note.hidden=!note.textContent;
+  if(SCR)note.textContent=a?"The bullet details come from this ammo. Muzzle velocity below starts from its velocity; change it to match your gun.":"Pick your own ammo (factory or reloaded) or anything from the factory catalog, or type the numbers below. A catalog pick here only fills in its numbers; it isn't added to your Ammunition.";
   if(!$("ammoPick").hidden)drawAmmoPick();
 }
 function drawAmmoPick(){
@@ -3013,8 +3028,11 @@ document.addEventListener("click",e=>{const p=$("ammoPick");if(p&&!p.hidden&&!p.
 const ablen=a=>window.RB_AMMO_BLEN?RB_AMMO_BLEN(a):(num(a.blen)>0?num(a.blen):null);
 function applyAmmo(v){
   if(v==="__newfac"){const L=cur();if(!window.RB_NEW_FACTORY_AMMO)return;L.mvSrc="ammo";const id=RB_NEW_FACTORY_AMMO(L.cart||"",L.id);L.ammoId=id;save();return;}
+  if(SCR&&v.startsWith("cat:")){const L=cur(),c=(window.RB_AMMO_CATALOG||[]).find(x=>x.item===v.slice(4));delete L.ammoId;
+    if(c){L.qcCat=[c.mfr,c.line,c.cart,c.bullet].filter(Boolean).join(" ");if(c.w>0)L.w=c.w;if(c.v>0)L.mv=c.v;if(c.bc>0){L.bc=c.bc;L.bcm="G1";}if(c.dia>0){L.cal=c.dia;L.calUnit="in";}if(c.cart)L.cart=c.cart;fillInputs();}
+    save();fillAmmo();render();return;}
   if(v.startsWith("cat:")&&window.RB_ADD_CATALOG_AMMO)v=RB_ADD_CATALOG_AMMO(v.slice(4))||"";
-  const L=cur(),a=(AMMO||[]).find(x=>x.id===v);
+  const L=cur(),a=(AMMO||[]).find(x=>x.id===v);delete L.qcCat;
   if(!a){delete L.ammoId;}
   else{L.ammoId=a.id;const mv=num(a.measVel)||num(a.boxVel);
     if(num(a.weight)>0)L.w=num(a.weight);if(mv>0){L.mv=mv;L.mvSrc="ammo";}if(num(a.bc)>0){L.bc=num(a.bc);L.bcm=a.bcm==="G7"?"G7":"G1";}
@@ -7801,6 +7819,7 @@ const tabs=["home","traj","rel","help","brass","rnotes","targets","log","rifles"
 const TAB_PARENT={brass:"rel",rnotes:"rel",targets:"tools",log:"traj",sheetimp:"account"};
 function showTab(t,remember){
   if(t==="admin"&&!(ME&&ME.isAdmin))t="home";
+  if(t==="traj"&&window.RB_TRAJ&&RB_TRAJ.scratchOff)RB_TRAJ.scratchOff(); // the calculator's cards go back to Shooting
   {const hb=$("helpBackBtn");if(hb&&t!=="help")hb.hidden=true;}
   tabs.forEach(k=>{const on=k===t;const b=$("tab-"+k);if(b)b.setAttribute("aria-selected",(on||TAB_PARENT[t]===k)?"true":"false");$("panel-"+k).hidden=!on;});
   $("tab-more").classList.toggle("on",["help","admin","account","tools","targets","sheetimp"].includes(t));closeMore();
@@ -8527,62 +8546,9 @@ window.RB_TOOLS=(function(){
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
     if(tool==="cart"&&window.RB_CARTPAGE)RB_CARTPAGE.draw();
-    if(tool==="traj")qcFrom();if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
+    if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
+    if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
   }
-  /* ----- trajectory calculator (2.17): the Shooting solver on numbers that aren't saved anywhere; the last ones typed are
-     remembered on this device so it opens where you left it ----- */
-  const QKEY="rangebook.quickcalc";let qcUnit="moa";
-  const QF=[["qc_w",null,"w"],["qc_bc",null,"bc"],["qc_mv","fps","mv"],["qc_sh","in","sh"],["qc_z","yd","zero"],["qc_wind","mph","wind"],["qc_temp","F","temp"],["qc_alt","ft","alt"],["qc_to","yd","to"],["qc_step","yd","step"]];
-  const QDEC={w:1,bc:3,mv:0,sh:U.metric?1:2,zero:0,wind:1,temp:0,alt:0,to:0,step:0};
-  function qcPut(o){QF.forEach(([id,k,f])=>{if(o[f]!==undefined&&o[f]!==null)put(id,k,o[f],k?QDEC[f]:undefined);});if(o.bcm)$("qc_bcm").value=o.bcm==="G7"?"G7":"G1";if(o.wclock)$("qc_clock").value=String(o.wclock);}
-  function qcFrom(){
-    const D=rel&&rel.toolData?rel.toolData():{guns:[],ammo:[]},T=(window.RB_TRAJ&&RB_TRAJ.all())||[],f=$("qc_from"),g=$("qc_gun"),kf=f.value,kg=g.value;
-    const am=D.ammo||[],gu=(D.guns||[]).filter(x=>x.sh>0);
-    f.innerHTML='<option value="">Type it in</option>'+(am.filter(a=>!a.reload).length?'<optgroup label="Your factory ammo">'+am.filter(a=>!a.reload).map(a=>'<option value="a:'+esc(a.id)+'">'+esc(a.label)+'</option>').join("")+'</optgroup>':'')+
-      (am.filter(a=>a.reload).length?'<optgroup label="Your reloaded ammo">'+am.filter(a=>a.reload).map(a=>'<option value="a:'+esc(a.id)+'">'+esc(a.label)+'</option>').join("")+'</optgroup>':'')+
-      (T.length?'<optgroup label="Shooting profiles">'+T.map(t=>'<option value="t:'+esc(t.id)+'">'+esc(t.name)+'</option>').join("")+'</optgroup>':'');
-    g.innerHTML='<option value="">Type it in</option>'+(gu.length?'<optgroup label="Your guns">'+gu.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.label+" · "+U.s("in",x.sh,U.metric?1:2))+'</option>').join("")+'</optgroup>':'');
-    if([...f.options].some(o=>o.value===kf))f.value=kf;if([...g.options].some(o=>o.value===kg))g.value=kg;
-    qcCalc();return D;}
-  function qcFill(v){const D=rel&&rel.toolData?rel.toolData():{ammo:[],guns:[]};
-    if(v.startsWith("a:")){const a=(D.ammo||[]).find(x=>x.id===v.slice(2));if(a)qcPut({w:a.w,bc:a.bc,bcm:a.bcm,mv:a.mv});}
-    else if(v.startsWith("t:")&&window.RB_TRAJ){const L=RB_TRAJ.spec(v.slice(2));if(L){qcPut(L);if(L.rifleId&&[...$("qc_gun").options].some(o=>o.value===L.rifleId))$("qc_gun").value=L.rifleId;}}
-    qcCalc();}
-  function qcGun(id){const D=rel&&rel.toolData?rel.toolData():{guns:[]},x=(D.guns||[]).find(r=>r.id===id);if(x&&x.sh>0)put("qc_sh","in",x.sh,QDEC.sh);qcCalc();}
-  function qcRead(){const o={};QF.forEach(([id,k,f])=>{o[f]=get(id,k);});o.bcm=$("qc_bcm").value==="G7"?"G7":"G1";o.wclock=+$("qc_clock").value||3;return o;}
-  function qcObj(o){return {w:o.w,mv:o.mv,bc:o.bc,bcm:o.bcm,sh:o.sh,z:[o.zero,null,null,null],zpb:1,adj:1,temp:o.temp,alt:o.alt,wind:o.wind||0,wclock:o.wclock,lr:(o.to||0)>1000,dope:{}};}
-  function qcCalc(){
-    const out=$("qc_res"),o=qcRead();
-    document.querySelectorAll("[data-qcu]").forEach(b=>{const on=b.dataset.qcu===qcUnit;b.setAttribute("aria-selected",on);b.setAttribute("aria-checked",on);});
-    try{localStorage.setItem(QKEY,JSON.stringify(Object.assign({unit:qcUnit,from:$("qc_from").value,gun:$("qc_gun").value},o)));}catch(e){}
-    if(!(o.w>0&&o.bc>0&&o.mv>0&&o.sh!=null&&o.zero>0)){out.innerHTML='<p class="note">Fill in the bullet weight, BC, muzzle velocity, sight height and zero.</p>';return;}
-    if(!window.RB_TRAJ){out.innerHTML='';return;}
-    const B=RB_TRAJ.solveObj(qcObj(o));if(B.err){out.innerHTML='<p class="err">'+esc(B.err)+'</p>';return;}
-    const to=Math.min(o.to>0?o.to:(U.metric?1000/0.9144:1000),B.last),st=Math.max(o.step>0?o.step:(U.metric?50/0.9144:50),U.metric?10/0.9144:10);
-    const ang=(inch,x)=>qcUnit==="mil"?inch/(x*0.036):inch/(x/100*1.0472),dec=qcUnit==="mil"?1:1,side=B.side?" "+B.side.charAt(0).toUpperCase():"";
-    let rows="";for(let i=1;;i++){const d0=st*i;if(d0>to+1e-6)break;const x=U.metric?Math.round(U.to("yd",d0))/U.to("yd",1):Math.round(d0);
-      const a=B.at(x),dr=a.path,dial=-ang(dr,x),wi=Math.abs(a.drift),wh=ang(wi,x),e=o.w*a.v*a.v/450400;
-      rows+='<tr><td>'+esc(U.n("yd",x,0))+'</td><td>'+esc(U.n("in",dr,1))+'</td><td>'+(dial>=0?'':'−')+Math.abs(dial).toFixed(dec)+'</td><td>'+esc(U.n("in",wi,1))+'</td><td>'+wh.toFixed(dec)+(wh>=0.05?side:'')+'</td><td>'+esc(U.n("fps",a.v,0))+'</td><td>'+esc(U.n("ftlb",e,0))+'</td></tr>';}
-    const un=qcUnit==="mil"?"MIL":"MOA";
-    out.innerHTML='<div class="tablewrap"><table><thead><tr><th>'+U.u("yd")+'</th><th>Drop ('+U.u("in")+')</th><th>Dial ('+un+')</th><th>Wind ('+U.u("in")+')</th><th>Hold ('+un+')</th><th>'+U.u("fps")+'</th><th>'+U.u("ftlb")+'</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-      '<p class="note">Dial is the elevation to dial up from a '+esc(U.s("yd",o.zero,0))+' zero. '+(o.wind>0?'Hold is for a '+esc(U.s("mph",o.wind,1))+' wind from '+(+o.wclock)+' o\'clock'+(B.side?', held '+B.side+' (into the wind)':'')+'. ':'Add a wind speed for wind holds. ')+'Spin drift isn\'t included. Always confirm on paper.</p>';}
-  function qcSave(){const o=qcRead();if(!(o.w>0&&o.bc>0&&o.mv>0&&o.zero>0)||!window.TRAJ_ADD){qcCalc();return;}
-    const D=rel&&rel.toolData?rel.toolData():{guns:[]},gid=$("qc_gun").value,g=gid&&(D.guns||[]).find(x=>x.id===gid),fv=$("qc_from").value,a=fv.startsWith("a:")&&(D.ammo||[]).find(x=>x.id===fv.slice(2));
-    const name=(a?a.label:[o.w+" gr","BC "+o.bc+(o.bcm==="G7"?" G7":""),U.s("fps",o.mv,0,true)].join(" · "))+(g?" · "+g.label:"");
-    if(window.APP_showTab)APP_showTab("traj");
-    TRAJ_ADD({name,w:o.w,mv:o.mv,bc:o.bc,bcm:o.bcm,sh:o.sh,rifleId:g?g.id:null,rifleName:g?g.label:"",twist:g?g.twist:null,cartridge:a?a.cart:(g?g.cart:""),cal:a&&a.d>0?a.d:null,ammoId:a?a.id:null,zero:o.zero,temp:o.temp,alt:o.alt,wind:o.wind||0,wclock:o.wclock,lr:(o.to||0)>1000});
-    window.scrollTo(0,0);}
-  function qcSetup(){
-    $("qc_clock").innerHTML=[12,1,2,3,4,5,6,7,8,9,10,11].map(c=>'<option value="'+c+'">'+c+' o\'clock'+(c===3?' (right)':c===9?' (left)':c===12?' (head-on)':c===6?' (behind)':'')+'</option>').join("");
-    let o=null;try{o=JSON.parse(localStorage.getItem(QKEY)||"null");}catch(e){}
-    o=o||{w:140,bc:.61,bcm:"G1",mv:2700,sh:1.75,zero:U.metric?100/0.9144:100,wind:U.metric?10/1.609344:10,wclock:3,temp:59,alt:0,to:U.metric?800/0.9144:1000,step:U.metric?50/0.9144:100};
-    qcPut(o);if(o.unit==="mil"||o.unit==="moa")qcUnit=o.unit;else qcUnit=U.metric?"mil":"moa";
-    qcFrom();if(o.from&&[...$("qc_from").options].some(x=>x.value===o.from))$("qc_from").value=o.from;if(o.gun&&[...$("qc_gun").options].some(x=>x.value===o.gun))$("qc_gun").value=o.gun;
-    QF.forEach(([id])=>$(id).addEventListener("input",()=>{if(["qc_w","qc_bc","qc_mv"].includes(id))$("qc_from").value="";if(id==="qc_sh")$("qc_gun").value="";qcCalc();}));
-    ["qc_bcm","qc_clock"].forEach(id=>$(id).addEventListener("change",qcCalc));
-    $("qc_from").addEventListener("change",e=>{if(e.target.value)qcFill(e.target.value);else qcCalc();});$("qc_gun").addEventListener("change",e=>qcGun(e.target.value));
-    document.querySelectorAll("[data-qcu]").forEach(b=>b.addEventListener("click",()=>{qcUnit=b.dataset.qcu;qcCalc();}));
-    $("qc_save").addEventListener("click",qcSave);qcCalc();}
   /* ----- hit chance: the shot lands in a spread made of your group, velocity spread, wind call and range error ----- */
   const HKEY="rangebook.hittool";let hitPick=null;
   const erf=x=>{const t=1/(1+.3275911*Math.abs(x)),y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;};
@@ -8753,7 +8719,8 @@ window.RB_TOOLS=(function(){
     $("lt_go").addEventListener("click",liveGo);
     ["hc_dist","hc_w","hc_h","hc_grp","hc_sd","hc_wind","hc_rng"].forEach(id=>$(id).addEventListener("input",hitCalc));["hc_load","hc_shape"].forEach(id=>$(id).addEventListener("change",hitCalc));$("lt_print").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("targets");});
     $("targetsBack").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("tools");});
-    convBuild();qcSetup();
+    convBuild();
+    $("qcSave").addEventListener("click",()=>RB_TRAJ.scratchSave());$("qcReset").addEventListener("click",()=>RB_TRAJ.scratchReset());
     // starting values: your first bullet and gun (if any), standard air, 1.5 in at 100, and the first reloading load
     {const D=twistFrom();put("tw_tf","F",59,0);put("tw_a","ft",0,0);
      if(D.bullets[0])pickBullet(D.bullets[0].id);if(D.rifles[0])pickGun(D.rifles[0].id);twistCalc();}

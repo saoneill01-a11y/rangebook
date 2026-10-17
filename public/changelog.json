@@ -2,14 +2,16 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.18.0",
+      "version": "2.18.1",
       "date": "2026-10-17",
       "title": "Shooting profiles, and a way to send feedback",
       "items": [
         "On Shooting, a \"load\" is now a profile: a gun and the ammo you shoot in it, with its zero, scope and conditions. Everything works the same and nothing you saved changes; Reloading still has loads.",
         "+ New long-range load is gone. Tap + New profile, then turn on Long range on its chart.",
         "Account has a Feedback and ideas card: it opens GitHub (or your email app, once there's an address for it) with the Range Book version filled in. Nothing is sent from your server.",
-        "Excel and PDF exports call the Shooting tab's list Shooting profiles."
+        "Excel and PDF exports call the Shooting tab's list Shooting profiles.",
+        "Tools → Trajectory calculator is now the full Shooting calculator (chart and zeros, point-blank range, range table, true-up, dope card, saved ranges) without making a profile. Reset clears it for new numbers; Save as a Shooting profile keeps it.",
+        "Picking a gun on a profile with no cartridge yet fills in the gun's cartridge, so the ammo list shows what fits."
       ]
     },
     {
