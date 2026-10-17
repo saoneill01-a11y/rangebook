@@ -2,7 +2,18 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.11.2",
+      "version": "2.12.0",
+      "date": "2026-10-16",
+      "title": "Syncing between devices",
+      "items": [
+        "Changes from your phone and computer are now combined when they sync, instead of the last device to save replacing everything. This includes changes made on a phone with no signal.",
+        "It works piece by piece: if one device changed a load's velocity and the other changed its name, you keep both. Guns, ammo, trips, loads and recipes added on either device are all kept, and a delete on one doesn't undo an edit made later on the other.",
+        "When both devices changed the very same thing, the newer edit wins, going by when you made it (a change made offline keeps the time you made it, not the time it synced).",
+        "This also fixes a computer left open for a while undoing changes made on another device when it saved."
+      ]
+    },
+    {
+      "version": "2.11",
       "date": "2026-10-16",
       "title": "Cartridges",
       "items": [

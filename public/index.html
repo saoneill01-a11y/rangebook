@@ -1266,6 +1266,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Everything saves to your account automatically, so it follows you to any phone or computer you sign in on.</p>
       <h3>No signal at the range</h3>
       <p>Open Range Book once on your phone through its https:// address while you have a signal. After that it opens even with no signal, showing your loads and photos as of the last time it synced. Anything you change or add (shots, groups, photos, measurements) is kept on the phone, and a yellow <b>Offline</b> tag at the top shows how many changes are waiting. They upload by themselves when you get a signal again. Don't sign out while changes are waiting, or they're lost.</p>
+      <h3>Using more than one phone or computer</h3>
+      <p>You can change things on your phone at the range (even with no signal) and on your computer at home, and nothing gets lost when the phone syncs. Range Book combines the two piece by piece: if the phone changed a load's velocity and the computer changed its name, you get both; a gun, ammo, trip or load added on either one is kept; something deleted on one stays deleted unless the other changed it later. Only when both changed the very same thing (the same box on the same load, say) does one win, and it's the newer edit, by the time you made it. A device that's been open a while shows the other's changes after you pull to refresh or reopen the app.</p>
       <h3>Guest mode</h3>
       <p>If the admin has turned it on, the sign-in page has a <b>Try it as a guest</b> button. Guests can use everything, but nothing is saved: it's all gone when the page is closed or reloaded.</p>
     </section>
@@ -7135,6 +7137,38 @@ const OFF=(()=>{
   };
 })();
 const NOQUEUE=/^\/api\/(login|logout|me|admin|public|export)/;
+/* ---------- merging saves from several devices (the server side is merge.js) ----------
+   Every save of a document or recipe also sends the version this device started from: "sent" (what it last
+   saved) and "seen" (what it last loaded). The server keeps other devices' edits to anything this device didn't
+   change, and the newest edit where both changed the same thing. Changes queued offline carry the time each
+   piece was changed, so an older offline edit doesn't beat a newer one made elsewhere. */
+const MERGE_RE=/^\/api\/(doc\/[a-z]+|loads\/[A-Za-z0-9_-]+)$/,RB_SEP="\u001f";
+const rbPlain=x=>x!==null&&typeof x==="object"&&!Array.isArray(x);
+function rbEq(a,b){if(a===b)return true;if(typeof a!==typeof b||a===null||b===null||typeof a!=="object")return false;if(Array.isArray(a)!==Array.isArray(b))return false;
+  if(Array.isArray(a)){if(a.length!==b.length)return false;for(let i=0;i<a.length;i++)if(!rbEq(a[i],b[i]))return false;return true;}
+  const ka=Object.keys(a).filter(k=>a[k]!==undefined),kb=Object.keys(b).filter(k=>b[k]!==undefined);if(ka.length!==kb.length)return false;for(const k of ka)if(!rbEq(a[k],b[k]))return false;return true;}
+function rbIdList(x){if(!Array.isArray(x))return false;const s=new Set();for(const o of x){if(!rbPlain(o)||o.id===undefined||o.id===null||o.id==="")return false;const k=String(o.id);if(s.has(k))return false;s.add(k);}return true;}
+const rbById=x=>{const m=new Map();if(Array.isArray(x))for(const o of x)m.set(String(o.id),o);return m;};
+// the same paths as diffPaths in merge.js
+function rbDiffPaths(a,b,p="",out=[]){if(rbEq(a,b))return out;
+  if(rbPlain(a)&&rbPlain(b)){for(const k of new Set([...Object.keys(a),...Object.keys(b)]))rbDiffPaths(a[k],b[k],p+RB_SEP+k,out);return out;}
+  if(rbIdList(a)&&rbIdList(b)&&(a.length||b.length)){const A=rbById(a),B=rbById(b);for(const k of new Set([...A.keys(),...B.keys()]))rbDiffPaths(A.get(k),B.get(k),p+RB_SEP+"#"+k,out);return out;}
+  out.push(p);return out;}
+let VERS=null,versT=null;
+async function versAll(){if(!VERS){const v=await OFF.get("rb-vers");if(!VERS)VERS=rbPlain(v)?v:{};}return VERS;}
+async function verOf(url){const all=await versAll();return all[url]||(all[url]={});}
+async function setVer(url,k,data){const v=await verOf(url);v[k]=data===undefined?null:JSON.parse(JSON.stringify(data));
+  clearTimeout(versT);versT=setTimeout(()=>{OFF.put("rb-vers",VERS);},400);}
+// a save as it goes to the server: the data plus the versions it started from
+async function wireBody(url,body,extra){
+  if(!MERGE_RE.test(url)||!body||!("data" in body))return body;
+  const v=await verOf(url),base=v.sent!==undefined?v.sent:v.seen;if(base===undefined)return body;
+  const w={data:body.data,base};if(v.sent!==undefined&&v.seen!==undefined&&!rbEq(v.sent,v.seen))w.seen=v.seen;
+  if(extra){if(extra.t)w.t=extra.t;if(extra.times)w.times=extra.times;}
+  return w;}
+async function noteSeen(url,j){if(!j)return;
+  if(/^\/api\/doc\/[a-z]+$/.test(url))await setVer(url,"seen",j.data);
+  else if(url==="/api/loads"&&Array.isArray(j.loads)){for(const l of j.loads)if(l&&l.mine!==false&&l.id)await setVer("/api/loads/"+l.id,"seen",l.data);}}
 function syncBadge(n,state){
   const el=document.getElementById("syncState");if(!el)return;
   if(state==="offline"){el.hidden=false;el.className="syncstate off";el.textContent="Offline"+(n?" · "+n+" change"+(n===1?"":"s")+" waiting":"");}
@@ -7149,8 +7183,10 @@ async function flushQueue(){
     for(const e of q){
       let url=e.url;Object.keys(idMap).forEach(t=>{url=url.split(t).join(idMap[t]);});
       let r;
-      try{r=await fetch(url,{method:e.method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:e.body===undefined?undefined:JSON.stringify(e.body)});}
+      const wire=e.method==="PUT"?await wireBody(url,e.body,{t:e.t,times:e.times}):e.body;
+      try{r=await fetch(url,{method:e.method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:wire===undefined?undefined:JSON.stringify(wire)});}
       catch(err){lastOffline=true;break;}
+      if(r.ok&&e.method==="PUT"&&MERGE_RE.test(url)&&e.body&&("data" in e.body))await setVer(url,"sent",e.body.data);
       if(r.status===401){lastOffline=false;break;}
       let j=null;try{j=await r.json();}catch(x){}
       if(e.tmp&&j&&j.photo&&j.photo.id){idMap[e.tmp]=j.photo.id;
@@ -7170,7 +7206,11 @@ async function enqueue(method,url,body){
   const q=await OFF.queue();
   const e={method,url,body,t:Date.now()};
   if(method==="POST"&&(/\/photos$/.test(url)||url==="/api/live")){e.tmp="tmp-"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-  if(method==="PUT"){const same=q.find(x=>x.method==="PUT"&&x.url===url);if(same){same.body=body;same.t=e.t;await OFF.set(same);syncBadge(q.length,"offline");return e;}}
+  if(method==="PUT"){const same=q.find(x=>x.method==="PUT"&&x.url===url);
+    // when each piece was changed offline, so the newest edit wins when it syncs
+    if(MERGE_RE.test(url)&&body&&("data" in body)){let prev;if(same&&same.body)prev=same.body.data;else{const v=await verOf(url);prev=v.sent!==undefined?v.sent:v.seen;}
+      const times=Object.assign({},same&&same.times||{});if(prev!==undefined)rbDiffPaths(prev,body.data).forEach(p=>{times[p]=e.t;});e.times=times;}
+    if(same){same.body=body;same.t=e.t;if(e.times)same.times=e.times;await OFF.set(same);syncBadge(q.length,"offline");return e;}}
   if(method==="DELETE"&&/^\/api\/loads\/[^/]+$/.test(url)){for(const x of q)if(x.url===url&&x.method==="PUT")await OFF.del(x.k);}
   await OFF.add(e);syncBadge(q.length+1,"offline");return e;
 }
@@ -7206,9 +7246,9 @@ const API={
     const queueable=!window.GUEST&&method!=="GET"&&!NOQUEUE.test(url);
     if(queueable&&(await OFF.queue()).length){await flushQueue();if((await OFF.queue()).length)return fakeReply(await enqueue(method,url,body));}
     if(method==="GET"&&!window.GUEST&&(await OFF.queue()).length)await flushQueue();
-    let r;
+    let r;const wire=method==="PUT"&&!window.GUEST?await wireBody(url,body):body;
     try{
-      r=await fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:body===undefined?undefined:JSON.stringify(body)});
+      r=await fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:wire===undefined?undefined:JSON.stringify(wire)});
     }catch(e){
       if(queueable)return fakeReply(await enqueue(method,url,body));
       if(method==="GET"&&!window.GUEST){const c=await OFF.get(url);if(c!==undefined){syncBadge((await OFF.queue()).length,"offline");return overlay(url,c);}}
@@ -7216,7 +7256,8 @@ const API={
     }
     let j=null;try{j=await r.json();}catch(e){}
     if(!r.ok){const err=new Error((j&&j.error)||("The server answered with error "+r.status+"."));err.status=r.status;throw err;}
-    if(method==="GET"&&!window.GUEST&&!/^\/api\/export/.test(url)){OFF.put(url,j);const n=(await OFF.queue()).length;syncBadge(n,null);}
+    if(method==="PUT"&&!window.GUEST&&MERGE_RE.test(url)&&body&&("data" in body))await setVer(url,"sent",body.data);
+    if(method==="GET"&&!window.GUEST&&!/^\/api\/export/.test(url)){OFF.put(url,j);await noteSeen(url,j);const n=(await OFF.queue()).length;syncBadge(n,null);}
     return j;
   },
   get(u){return this.req("GET",u);},post(u,b){return this.req("POST",u,b||{});},put(u,b){return this.req("PUT",u,b);},
@@ -7364,7 +7405,7 @@ function changePasswordScreen(user){
 async function signOut(){
   const left=(await OFF.queue()).length;
   if(left&&!confirmSignOut){confirmSignOut=true;const b=document.getElementById("moreSignOutLbl");if(b)b.textContent="Tap again: "+left+" unsynced change"+(left===1?"":"s")+" will be lost";const s2=document.getElementById("signOut");if(s2)s2.textContent="Tap again to lose "+left+" unsynced";return;}
-  try{await API.post("/api/logout");}catch(e){}await OFF.clear();
+  try{await API.post("/api/logout");}catch(e){}await OFF.clear();VERS={};
   try{if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));}}catch(e){}
   location.reload();}
 let confirmSignOut=false;

@@ -15,6 +15,7 @@ const zlib = require("node:zlib");
 const { DatabaseSync } = require("node:sqlite");
 const { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf, zip } = require("./export.js");
 const backupKit = require("./backup.js");
+const MERGE = require("./merge.js");
 
 /* ---------------- configuration ---------------- */
 const PORT = parseInt(process.env.PORT || "9090", 10);
@@ -352,9 +353,45 @@ function canRead(user, loadId) {
 function deletePhotoFiles(rows) {
   for (const r of rows) { try { fs.unlinkSync(path.join(PHOTO_DIR, path.basename(r.file))); } catch {} }
 }
+function getDocRow(uid, key) {
+  const r = q("SELECT data, updated_at FROM user_docs WHERE user_id=? AND key=?").get(uid, key);
+  return r ? { data: JSON.parse(r.data), at: r.updated_at } : null;
+}
 function getDoc(uid, key) {
   const r = q("SELECT data FROM user_docs WHERE user_id=? AND key=?").get(uid, key);
   return r ? JSON.parse(r.data) : null;
+}
+/* Saves from several devices are merged, keeping the newest edit to each piece (see merge.js).
+   edit_times remembers when each piece of a document was last changed. */
+db.exec(`CREATE TABLE IF NOT EXISTS edit_times(
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  key TEXT NOT NULL,
+  times TEXT NOT NULL,
+  PRIMARY KEY(user_id, key)
+)`);
+const KEEP_TIMES = 90 * 24 * 3600 * 1000;
+function getTimes(uid, key) {
+  const r = q("SELECT times FROM edit_times WHERE user_id=? AND key=?").get(uid, key);
+  try { return r ? JSON.parse(r.times) || {} : {}; } catch { return {}; }
+}
+function putTimes(uid, key, times) {
+  const old = now() - KEEP_TIMES;
+  for (const k of Object.keys(times)) if (!(Number(times[k]) > old)) delete times[k];
+  q("INSERT INTO edit_times(user_id,key,times) VALUES(?,?,?) ON CONFLICT(user_id,key) DO UPDATE SET times=excluded.times").run(uid, key, JSON.stringify(times));
+}
+// what to save for a PUT: this device's version merged with what the server has now
+function mergeSave(uid, timesKey, body, theirs, theirsAt) {
+  const mine = body.data ?? null, at = now();
+  const t0 = Number(body.t) > 0 ? Math.min(Number(body.t), at) : at; // when the change was made (a queued offline change sends its own time)
+  const ct = body.times && typeof body.times === "object" ? body.times : null;
+  const tMine = (p) => Math.min(MERGE.timeAt(ct, p, t0), at);
+  const st = getTimes(uid, timesKey);
+  let data = mine;
+  if (body.base !== undefined && theirs != null && mine != null)
+    data = MERGE.merge3({ base: body.base, seen: body.seen, hasSeen: "seen" in body, mine, theirs, tMine, tTheirs: (p) => MERGE.timeAt(st, p, theirsAt || 0) });
+  const changed = MERGE.diffPaths(theirs, data);
+  if (changed.length) { for (const p of changed) st[p] = tMine(p); putTimes(uid, timesKey, st); }
+  return { data, merged: !MERGE.eq(data, mine) };
 }
 function putDoc(uid, key, data) {
   q("INSERT INTO user_docs(user_id,key,data,updated_at) VALUES(?,?,?,?) ON CONFLICT(user_id,key) DO UPDATE SET data=excluded.data, updated_at=excluded.updated_at")
@@ -520,7 +557,12 @@ async function api(req, res, url) {
   let m = /^\/api\/doc\/(calc|brass|rifles|components|prefs|trips|ammo|notes)$/.exec(p);
   if (m) {
     if (method === "GET") return send(res, 200, { data: getDoc(user.id, m[1]) });
-    if (method === "PUT") { const body = await readJson(req, 2 * 1024 * 1024); putDoc(user.id, m[1], body.data ?? null); return send(res, 200, { ok: true }); }
+    if (method === "PUT") {
+      const body = await readJson(req, 8 * 1024 * 1024), row = getDocRow(user.id, m[1]);
+      const r = mergeSave(user.id, "doc:" + m[1], body, row ? row.data : null, row ? row.at : 0);
+      putDoc(user.id, m[1], r.data);
+      return send(res, 200, { ok: true, merged: r.merged });
+    }
   }
 
   /* ---- loads ---- */
@@ -548,21 +590,24 @@ async function api(req, res, url) {
   if (m) {
     const id = m[1];
     if (!ID_RE.test(id)) throw new HttpError(400, "Bad load id.");
-    const row = q("SELECT owner_id FROM loads WHERE id=?").get(id);
+    const row = q("SELECT owner_id, data, updated_at FROM loads WHERE id=?").get(id);
     if (method === "PUT") {
-      const body = await readJson(req, 2 * 1024 * 1024);
+      const body = await readJson(req, 8 * 1024 * 1024);
       if (!body.data || typeof body.data !== "object") throw new HttpError(400, "Missing load data.");
       if (row && row.owner_id !== user.id) throw new HttpError(403, "Only the owner can change this load.");
+      let theirs = null;if (row) { try { theirs = JSON.parse(row.data); } catch {} }
+      const r = mergeSave(user.id, "load:" + id, body, theirs, row ? row.updated_at : 0);
       const t = now();
-      if (row) q("UPDATE loads SET data=?, updated_at=? WHERE id=?").run(JSON.stringify(body.data), t, id);
-      else q("INSERT INTO loads(id,owner_id,data,created_at,updated_at) VALUES(?,?,?,?,?)").run(id, user.id, JSON.stringify(body.data), t, t);
-      return send(res, 200, { ok: true, updatedAt: t });
+      if (row) q("UPDATE loads SET data=?, updated_at=? WHERE id=?").run(JSON.stringify(r.data), t, id);
+      else q("INSERT INTO loads(id,owner_id,data,created_at,updated_at) VALUES(?,?,?,?,?)").run(id, user.id, JSON.stringify(r.data), t, t);
+      return send(res, 200, { ok: true, updatedAt: t, merged: r.merged });
     }
     if (method === "DELETE") {
       if (!row) return send(res, 200, { ok: true });
       if (row.owner_id !== user.id) throw new HttpError(403, "Only the owner can delete this load.");
       deletePhotoFiles(q("SELECT file FROM photos WHERE load_id=?").all(id));
       q("DELETE FROM loads WHERE id=?").run(id);
+      q("DELETE FROM edit_times WHERE user_id=? AND key=?").run(user.id, "load:" + id);
       return send(res, 200, { ok: true });
     }
   }
