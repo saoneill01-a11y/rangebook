@@ -36,7 +36,7 @@ Free software under the [GNU AGPL-3.0](#license).
 - **Range trips and Range log:** conditions, rounds fired, the cold-bore shot (each gun keeps a cold-bore log), chronograph strings and target photos you can measure (printed targets with corner squares are measured automatically). Each trip prints as a PDF report.
 - **For everyone on your server:** a short, skippable tour the first time someone signs in, a **Help** button on each page that opens the matching part of How to Use, and an ⓘ on each card for a quick how-to; each person's data is private; loads can be shared view-only with specific people. Admins add people, reset passwords and check backups. An optional guest mode lets people try it without an account.
 - **Phone-friendly:** works offline (over https), pull to refresh, Light, Dark and Red Night themes, imperial or metric. Changes made on several devices (including offline ones) are merged when they sync, keeping the newest edit to each item.
-- **Your data is yours:** a one-file backup with photos, Excel and PDF exports, and Import to bring a backup or Excel export back in (or move to another server). **Import from a spreadsheet** adds guns, scopes, factory ammo and components from a downloadable template or your own .xlsx or .csv, asking about unrecognized columns or values and about duplicates before saving.
+- **Your data is yours:** a one-file backup with photos, Excel and PDF exports, and Import to bring a backup or Excel export back in (or move to another server). **Import from a spreadsheet** adds guns (including ones built from a lower and an upper), scopes, lowers, uppers, barrels, factory ammo and components from a downloadable template or your own .xlsx or .csv, asking about unrecognized columns or values and about duplicates before saving.
 
 ---
 
@@ -151,7 +151,7 @@ An **https** address is what lets a phone use Range Book **offline**, share its 
 
 ## Backups
 
-**Your own copy:** everyone can tap **Account → Download backup** for a .zip of everything in their account, photos included, and bring it back with **Account → Import** on this or any other Range Book. Import adds to the account and skips anything already there, so it never deletes or doubles anything. Excel exports can be imported too (without photos). To add guns, scopes, factory ammo or components from your own spreadsheet, use **Account → Import from a spreadsheet** (there's a template to download). Admins can download any person's backup from the Admin page.
+**Your own copy:** everyone can tap **Account → Download backup** for a .zip of everything in their account, photos included, and bring it back with **Account → Import** on this or any other Range Book. Import adds to the account and skips anything already there, so it never deletes or doubles anything. Excel exports can be imported too (without photos). To add guns, scopes, lowers, uppers, barrels, factory ammo or components from your own spreadsheet, use **Account → Import from a spreadsheet** (there's a template to download). Admins can download any person's backup from the Admin page.
 
 **The whole server:** everything is in your data folder: the database `rangebook.db` and the `photos` folder.
 

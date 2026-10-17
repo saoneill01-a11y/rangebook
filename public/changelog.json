@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.15.0",
+      "version": "2.15.1",
       "date": "2026-10-17",
       "title": "Lowers, uppers, built guns and barrels",
       "items": [
@@ -10,7 +10,8 @@
         "Put a lower and an upper together to make a gun: on a gun's page choose Made as: A lower + an upper and pick them (or tap Make a gun with this lower or upper). The gun uses the upper's specs and the lower's serial number. One lower can be in several guns, so you set up each combination once and just pick the gun on Shooting, Reloading or a range day.",
         "Barrels for complete guns: add them under Barrels or on the gun's page, with their own cartridge, length, twist, sight height and scope (blank boxes use the gun's). When you pick a gun that has barrels on a Shooting load, a Reloading recipe or Start a range day, Range Book asks which barrel you're using.",
         "Lowers, uppers and barrels each keep their own round count (uppers and barrels also barrel life), and cleaning reminder. Range trips and ladders remember what they were shot with, so changing a gun later doesn't move old rounds. Worn or due-for-cleaning parts show on Home.",
-        "The guns Excel export and the full Excel export have a Lowers uppers barrels tab, and a Built from column for guns made of a lower and an upper."
+        "The guns Excel export and the full Excel export have a Lowers uppers barrels tab, and a Built from column for guns made of a lower and an upper.",
+        "Import from a spreadsheet has Lowers, Uppers and Barrels tabs, and Lower and Upper columns on the Guns tab, so you can bring in built guns and barrels too. Download the template again to get the new tabs."
       ]
     },
     {
