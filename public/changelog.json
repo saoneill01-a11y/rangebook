@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.11.1",
+      "version": "2.11.2",
       "date": "2026-10-16",
       "title": "Cartridges",
       "items": [
@@ -16,7 +16,11 @@
         "Dope card: smaller From, To and Every boxes with Reticle: elevation beside them, the Zeroed at line just above the card, and the card and reticle line up at the top.",
         "Picking a gun whose scope has MOA or MIL turrets ticks the matching Adjust column in the range table (and the wind column follows). The range table has a bar under it to make it taller or shorter.",
         "Wind starts at 0 on a new load.",
-        "The Point-blank range card no longer has Show it on the chart or Set my scope to this zero: the point-blank zero is always on the chart, and you pick it with the circle in its zero box."
+        "The Point-blank range card no longer has Show it on the chart or Set my scope to this zero: the point-blank zero is always on the chart, and you pick it with the circle in its zero box.",
+        "When spin drift can't be worked out, a Spin drift is off note shows above the range table and the dope card saying what's missing (bullet length, twist or diameter), with a button that takes you to it.",
+        "Picking ammo on the Shooting tab fills in the bullet length from the ammo, or from its reloading recipe or its saved bullet under Components when the ammo doesn't have one. Refill from recipe on reloaded ammo now copies the bullet length too.",
+        "With the Cartridge filled in on a Shooting load, the ammo picker shows only ammo for that cartridge (and ammo that's safe in it). Show all cartridges at the top of the list shows everything.",
+        "Dope card: MOA / MIL is now one button that shows the unit and switches when you tap it, so it fits beside Reticle: elevation."
       ]
     },
     {
