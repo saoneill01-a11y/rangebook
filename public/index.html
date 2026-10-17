@@ -3605,13 +3605,13 @@ async function uploadRetPic(sc,file){
   try{const {data,w,h}=await retJpeg(file);const old=gunPhotos.filter(q=>q.rifle===sc.id);
     const res=await API.post("/api/gunphotos",{data,w,h,rifle:sc.id});
     if(res&&res.photo){gunPhotos.push(res.photo);old.forEach(q=>{gunPhotos=gunPhotos.filter(z=>z!==q);API.del("/api/gunphotos/"+q.id).catch(()=>{});});
-      sc.pic=null;sc.retMode="pic";scopesChanged();retUp--;renderRifles();calScope(sc);return;}
+      const now=scopes.find(y=>y.id===sc.id)||sc;now.pic=null;now.retMode="pic";scopesChanged();retUp--;renderRifles();calScope(now);return;}
     else if(res&&res.queued)banner("No signal: the picture will upload when you're back online. Set its scale after that.",false);}
   catch(e){if(e&&(e.status||e.network))onWriteError(e);else banner("That picture couldn't be read. Try a JPEG or PNG.",true);}
   retUp--;renderRifles();
 }
 function calScope(sc){const ph=RB_RETPIC(sc.id);if(!ph)return;
-  const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{sc.pic=cal;sc.retMode="pic";scopesChanged();renderRifles();}});
+  const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{const now=scopes.find(y=>y.id===sc.id);if(now){now.pic=cal;now.retMode="pic";}else{sc.pic=cal;sc.retMode="pic";scopes.push(sc);}scopesChanged();renderRifles();}});
   if(ph.w&&ph.h)go(ph.w,ph.h);else{const im=new Image();im.onload=()=>go(im.naturalWidth,im.naturalHeight);im.src=ph.url;}}
 function renderScopes(root){
   if(scopeOpen&&!scopes.some(x=>x.id===scopeOpen))scopeOpen=null;
@@ -6823,6 +6823,7 @@ function applyLoads(list){
   [...loads.keys()].forEach(id=>{if(!seen.has(id)&&!ver[id]){loads.delete(id);meta.delete(id);}});
 }
 async function refresh(first){
+  const rv0=riflesVer;
   try{
     const [L,B,U,R,CP,TR,AM,NT]=await Promise.all([API.get("/api/loads"),API.get("/api/doc/brass"),API.get("/api/users"),API.get("/api/doc/rifles"),API.get("/api/doc/components").catch(()=>({data:null})),API.get("/api/doc/trips").catch(()=>null),API.get("/api/doc/ammo").catch(()=>null),window.GUEST?Promise.resolve(null):API.get("/api/doc/notes").catch(()=>null)]);
     if(NT&&!notesDirty&&!notesEditing()){notes=NT.data&&Array.isArray(NT.data.rows)?NT.data.rows:[];renderNotes();}
@@ -6835,7 +6836,7 @@ async function refresh(first){
       renderComps();}
     if(AM&&!ammoDirty&&!ammoEditing()){ammo=AM.data&&Array.isArray(AM.data.rows)?AM.data.rows:[];if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
-    if(!riflesDirty&&!riflesEditing()){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+    if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
     if(!$("panel-home").hidden)renderHome();
