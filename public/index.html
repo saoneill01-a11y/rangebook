@@ -945,7 +945,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .unitin input{padding-left:7px!important;padding-right:4px!important}
 .unitin select{max-width:52px}
 
-.chip.lrchip{font-family:var(--body);vertical-align:2px;margin-left:4px}
+.chip.lrchip,.chip.subchip{font-family:var(--body);vertical-align:2px;margin-left:4px}
+.chip.subchip{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.cartrow{display:flex;gap:8px;align-items:stretch}.cartrow input{flex:1 1 auto;min-width:0;width:auto}
+.btn.sonicbtn{flex:none;white-space:nowrap;min-width:7.6em}.btn.sonicbtn.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 
 .tfmt{margin:14px 0 6px;font-size:15px}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
@@ -1245,7 +1248,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h2>Shooting</h2>
       <p>The <b>Shooting</b> tab is the trajectory calculator plus your range trips and printable targets.</p>
       <h3>Pick or make a load</h3>
-      <p>The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your loads, grouped by cartridge and sorted by name (long-range loads are tagged). Set a load's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Loads</b> to go back. To add your own, tap <b>+ New load</b> (chart to 400 yd) or <b>+ New long-range load</b> (chart to 1,000 yd, table to 2,000 yd). It starts as a copy of the load you were looking at. Your loads are saved to your account. To remove a load, open it and tap <b>Delete load</b> at the very bottom (<b>Undo</b> brings it back). That works for the sample load too, which also has <b>Reset to defaults</b> if you've changed it and want the original back.</p>
+      <p>The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your loads, grouped by cartridge and sorted by name (long-range loads are tagged, and so are loads whose ammo is marked <b>Subsonic</b>). Set a load's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Loads</b> to go back. To add your own, tap <b>+ New load</b> (chart to 400 yd) or <b>+ New long-range load</b> (chart to 1,000 yd, table to 2,000 yd). It starts as a copy of the load you were looking at. Your loads are saved to your account. To remove a load, open it and tap <b>Delete load</b> at the very bottom (<b>Undo</b> brings it back). That works for the sample load too, which also has <b>Reset to defaults</b> if you've changed it and want the original back.</p>
       <p>A new account's Shooting list starts with a single <b>SAMPLE · 6.5 Creedmoor</b> load, and on a new Range Book the first account also gets a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
       <h3>Fill in the fields</h3>
       <ul>
@@ -1314,7 +1317,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h2>Reloading</h2>
       <h3>Add a load</h3>
       <ol>
-        <li>On the <b>Reloading</b> tab, tap <b>+ New load</b>. Enter the cartridge, pick the gun, and pick the bullet, powder, primer and brass from your Components (anything not saved yet can be typed into the recipe afterward). Add the <b>Max charge</b> from your load manual, then tap <b>Create and plan a ladder</b> to go straight to the ladder planner, or <b>Create</b>.</li>
+        <li>On the <b>Reloading</b> tab, tap <b>+ New load</b>. Enter the cartridge (tap <b>Supersonic</b> next to it to mark a subsonic load), pick the gun, and pick the bullet, powder, primer and brass from your Components (anything not saved yet can be typed into the recipe afterward). Add the <b>Max charge</b> from your load manual, then tap <b>Create and plan a ladder</b> to go straight to the ladder planner, or <b>Create</b>.</li>
         <li>Any group at the max charge gets an <b>At max</b> tag, and any group over it gets a red <b>Over max</b> warning.</li>
         <li>Pick the <b>Rifle</b> you shot it in (add guns on the <b>Gear &amp; Ranges</b> tab first).</li>
         <li>Under <b>Ladder tests</b>, tap <b>+ Add group</b> in a ladder for each charge weight you test and enter the charge (or let the ladder planner make them all).</li>
@@ -1414,6 +1417,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
       <h3>Ammunition</h3>
       <p><b>Gear &amp; Ranges → Ammo</b> keeps the ammo you shoot, in two lists: <b>Reloaded ammo</b> and <b>Factory ammo</b>. Each one counts the rounds you have on hand (loaded or bought, minus what your range trips fire) and can warn you when you're running low.</p>
+      <p><b>Subsonic ammo:</b> the button next to <b>Cartridge</b> says <b>Supersonic</b>; tap it and it changes to <b>Subsonic</b> (tap again to switch back). Do the same on a reloading recipe, next to its <b>Cartridge</b>. Subsonic recipes and ammo get a <b>Subsonic</b> tag in the Reloading and Ammo lists, and so does any Shooting load that uses that ammo. Reloaded ammo made from a recipe follows the recipe's setting.</p>
       <h3>Reloaded ammo</h3>
       <p>Each batch in the batch history has a <b>Label</b> button (and one appears right after you log a batch): it shows a label with the load name, bullet, powder and charge, primer, brass lot, COAL, velocity, date and round count. Pick how many copies and tap <b>Print labels</b>; they print 3.5 × 2 in (business-card size), ten to a page, on plain paper or Avery 5371/5376-style card stock or labels.</p>
       <p>To compare loads, tap <b>Compare loads</b> at the top of the Reloading list and pick up to three. A table shows the components, the working charge (or the last one used) with its velocity, SD, ES and group, the best group and lowest SD at any charge, cost per round and rounds loaded. The lowest SD, ES, group size and cost are highlighted. Tap a load's name to open it.</p>
@@ -1841,8 +1845,9 @@ function fillSelect(){
     const d=[l.w>0?l.w+" gr":"",l.mv>0?U.s("fps",l.mv,0,true):"",l.bc>0?"BC "+l.bc:""].filter(Boolean).join(" · ");
     const zs=(l.z||[]).filter(z=>z!=null);
     const nt=window.RB_TRIPS?RB_TRIPS.count(l.id):0;
-    const m=[zs.length?"Zeros "+zs.map(z=>U.n("yd",z,0)).join(", ")+" "+U.u("yd"):"No zeros",l.rifleName?l.rifleName:"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ");
-    return '<button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled load")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>';
+    const pbz=num((l.z||[])[3]),uz=(l.z||[]).slice(0,3).map(num).filter(z=>z>0);
+    const m=[[pbz>0?"Point-blank "+U.s("yd",pbz,0):"",uz.length?"zeros "+uz.map(z=>U.n("yd",z,0)).join(", ")+" "+U.u("yd"):""].filter(Boolean).join(", ").replace(/^z/,"Z")||"No zeros",l.rifleName?l.rifleName:"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ");
+    return '<button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled load")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>';
   };
   const coll=new Intl.Collator(undefined,{numeric:false,sensitivity:"base"});
   const groups=new Map();
@@ -2737,6 +2742,8 @@ function applyAmmo(v){
   save();fillAmmo();render();
 }
 window.RB_PICK_AMMO=applyAmmo;
+// the load list again (its Subsonic tags come from the ammo and recipes)
+window.RB_TRAJ_LIST=()=>{if(TVIEW==="list")fillSelect();};
 window.TRAJ_AMMO=function(list){AMMO=Array.isArray(list)?list:[];
   let changed=false,curHit=false;
   state.loads.forEach(L=>{if(!L.ammoId)return;const a=AMMO.find(x=>x.id===L.ammoId);if(!a)return;
@@ -3003,7 +3010,7 @@ function renderList(){
       gs.forEach((g,i)=>{const mo=groupMoa(g);if(mo!=null&&(!best||mo<best.v))best={v:mo,g,i};const st=stats(g,L);if(st&&st.n>=3&&(!bestSd||st.sd<bestSd.sd))bestSd={sd:st.sd,g,i};});
       const bestTxt=[best?'<b>'+best.v.toFixed(2)+' MOA</b> at '+esc(gName(best.g,best.i)):'',bestSd?'<b>SD '+bestSd.sd.toFixed(1)+'</b> at '+esc(gName(bestSd.g,bestSd.i)):''].filter(Boolean).join(' · ');
       const thumb=(m.photoUrl||m.photoId)?'<img alt="" loading="lazy" src="'+esc(m.photoUrl||("/api/photos/"+m.photoId))+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>';
-      return '<button class="loaditem withthumb" type="button" data-open="'+esc(id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(L.title||"Untitled load")+'</span>'+
+      return '<button class="loaditem withthumb" type="button" data-open="'+esc(id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(L.title||"Untitled load")+(L.subsonic?' <span class="chip subchip">Subsonic</span>':'')+'</span>'+
         (comp?'<span class="d">'+esc(comp)+'</span>':'')+
         (bestTxt?'<span class="best">Best: '+bestTxt+'</span>':'')+
         '<span class="m">'+gs.length+' group'+(gs.length===1?'':'s')+' · '+shot.length+' with velocities'+(dates.length?' · last '+esc(fmtDate(dates[dates.length-1])):'')+tag+'</span></span></button>';
@@ -3194,6 +3201,8 @@ function velAt(L,ch){const v=[];(L.groups||[]).forEach(g=>{if(Math.abs((num(g.ch
   return v.length?{avg:Math.round(v.reduce((a,b)=>a+b,0)/v.length),n:v.length}:null;}
 function recipeCharges(L){const s=new Set();(L.groups||[]).forEach(g=>{const c=num(g.charge);if(c>0)s.add(c);});(L.batches||[]).forEach(b=>{const c=num(b.charge);if(c>0)s.add(c);});return [...s].sort((a,b)=>a-b);}
 // what a recipe fills in on a reloaded-ammo entry
+function ammoSub(a){if(!a)return false;if(a.kind==="reload"&&a.loadId&&loads.has(a.loadId))return !!loads.get(a.loadId).subsonic;return !!a.subsonic;}
+window.RB_AMMO_SUB=id=>ammoSub((ammo||[]).find(a=>a.id===id));
 function reloadFromRecipe(L,lid,ch,lotId){
   const lot=lotId&&(comps.brass||[]).find(c=>c.id===lotId),va=ch>0?velAt(L,ch):null;
   const o={kind:"reload",loadId:lid,name:L.title||"",cartridge:L.cartridge||"",bullet:compText(L.bullet),weight:num(L.bulletGrains),bc:num(L.bc),bcm:L.bcm==="G7"?"G7":"G1",
@@ -3338,7 +3347,7 @@ function renderAmmo(root){
         const m=[a.locked?'<span class="sharetag">Locked</span>':'',a.shared?'<span class="sharetag">Shared</span>':'',u.onHand!=null?(u.low?'<span class="lowtag">Low: '+u.onHand.toLocaleString()+' left</span>':u.onHand.toLocaleString()+' rounds on hand'):"",u.ppr!=null?"$"+u.ppr.toFixed(2)+"/round":"",u.loadsUsing.length?"in "+u.loadsUsing.length+" Shooting load"+(u.loadsUsing.length===1?"":"s"):""].filter(Boolean).join(" · ");
         const tu=rl?null:thumbOf(a);
         const icon=rl?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l3-5 3 5v12z"/><path d="M9 15h6"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="13" rx="1.5"/><path d="M4 10h16M9 6v4M15 6v4"/></svg>';
-        return '<button class="loaditem withthumb" type="button" data-aopen="'+esc(a.id)+'"><span class="lthumb">'+(tu?'<img alt="" loading="lazy" src="'+esc(tu)+'">':icon)+'</span><span class="ltext"><span class="t">'+esc(ammoLabel(a))+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+m+'</span>':'')+'</span></button>';};
+        return '<button class="loaditem withthumb" type="button" data-aopen="'+esc(a.id)+'"><span class="lthumb">'+(tu?'<img alt="" loading="lazy" src="'+esc(tu)+'">':icon)+'</span><span class="ltext"><span class="t">'+esc(ammoLabel(a))+(ammoSub(a)?' <span class="chip subchip">Subsonic</span>':'')+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+m+'</span>':'')+'</span></button>';};
     const bySort=(x,y)=>ammoLabel(x).localeCompare(ammoLabel(y),undefined,{numeric:true});
     const relA=ammo.filter(isReload).sort(bySort),facA=ammo.filter(a=>!isReload(a)).sort(bySort);
     if(relA.length)h+='<section class="card" aria-label="Reloaded ammo"><h2>Reloaded ammo</h2><div class="cartgroup">'+relA.map(ammoRow).join("")+'</div></section>';
@@ -3389,7 +3398,9 @@ function renderAmmo(root){
     if(t==="group")h+='<div class="group">'+lab+'</div>';
     else if(t==="area")h+='<div class="field wide"><label for="af_'+k+'">'+lab+'</label><textarea id="af_'+k+'" style="min-height:70px">'+esc(a[k]||"")+'</textarea></div>';
     else if(t==="bcm")h+='<div class="field"><label for="af_'+k+'">'+lab+'</label><select id="af_'+k+'" class="fieldselect"><option value="G1">G1</option><option value="G7"'+(a[k]==="G7"?' selected':'')+'>G7</option></select></div>';
-    else h+=field("af_"+k,lab,a[k],t,k==="name"||k==="bullet"||k==="cartridge"?" wide":"").replace('autocomplete="off"','autocomplete="off"'+(ph?' placeholder="'+esc(ph)+'"':'')+(k==="cartridge"?' list="dl_cart"':''));
+    else{let f=field("af_"+k,lab,a[k],t,k==="name"||k==="bullet"||k==="cartridge"?" wide":"").replace('autocomplete="off"','autocomplete="off"'+(ph?' placeholder="'+esc(ph)+'"':'')+(k==="cartridge"?' list="dl_cart"':''));
+      if(k==="cartridge"){const fromRec=RL&&a.loadId&&loads.has(a.loadId);f=withSonic(f,sonicBtn("af_sonic",ammoSub(a),fromRec||ALOCK,fromRec?"Set on its reloading recipe":""));}
+      h+=f;}
   });
   h+='</div>'+(a.src?'<p class="note">Filled in from the catalog. <a href="'+esc(a.src)+'" target="_blank" rel="noopener">'+((AMMO_CATALOG.find(x=>x.item===a.catItem)||{}).dealer?"See the dealer\'s listing</a> (the velocity isn\'t from "+esc(a.mfr)+" directly)":"See it on the maker\'s site</a>")+'.</p>':'')+
     (RL?reloadSrcHtml(a):'')+
@@ -3418,6 +3429,7 @@ function renderAmmo(root){
     $("ammoLoads").querySelectorAll("[data-atraj]").forEach(b=>b.addEventListener("click",()=>RB_TRAJ.open(b.dataset.atraj)));};
   draw();
   unitize("af_",a,FIELD_U);
+  bindSonic("af_sonic",()=>!!a.subsonic,on=>{a.subsonic=on;queueAmmo();if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);});
   FIELDS.forEach(([k,lab,t])=>{const el=$("af_"+k);if(!el)return;
     el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{a[k]=t==="number"?readU(el,k,FIELD_U,a[k]):el.value;queueAmmo();if(a.shared&&SHARE_KEYS.includes(k))pushShared(a);$("rifTitle").textContent=ammoLabel(a);if(k==="bought"||k==="lowAt"||k==="price"||k==="perBox"||k==="cpr"||k==="charge")draw();});});
   if(RL){bindReloadSrc(a);
@@ -5649,6 +5661,10 @@ function arm(btn,key,label,fn){
   setTimeout(()=>{if(armed===key){armed=null;btn.textContent=old;}},4000);
 }
 
+// one button beside the cartridge: Supersonic until you tap it, then Subsonic
+function sonicBtn(id,on,dis,title){return '<button type="button" class="btn sonicbtn'+(on?' on':'')+'" id="'+id+'" aria-pressed="'+(on?'true':'false')+'"'+(dis?' disabled':'')+' title="'+esc(title||"Tap if this load is subsonic")+'">'+(on?'Subsonic':'Supersonic')+'</button>';}
+const withSonic=(html,btn)=>html.replace('<input','<div class="cartrow"><input').replace(/<\/div>$/,btn+'</div></div>');
+function bindSonic(id,get,set){const b=$(id);if(!b||b.disabled)return;b.addEventListener("click",()=>{const on=!get();set(on);b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");b.textContent=on?"Subsonic":"Supersonic";});}
 function field(id,label,val,type,extra){
   type=type||"text";
   const cls=type==="text"?' class="text"':"";
@@ -5701,7 +5717,7 @@ function renderDetail(){
   h+='<div class="cols relcols"><div class="col colL"><!--MAKE-->';
   h+='<section class="card collapsible o1" aria-label="Recipe" id="secRecipe"'+(DEV?'':' hidden')+'><button class="sechead" type="button" id="recipeToggle" aria-expanded="'+(ropen?"true":"false")+'" aria-controls="recipeBody"><h2>Recipe</h2><span class="secsum" id="recipeSum">'+esc(recipeSummary(L))+'</span><span class="chev" aria-hidden="true"></span></button><div class="secbody" id="recipeBody"'+(ropen?'':' hidden')+'><div class="grid">';
   h+=field("ld_title","Load name",L.title,"text"," wide");
-  h+=field("ld_cartridge","Cartridge",L.cartridge,"text"," wide");
+  h+=withSonic(field("ld_cartridge","Cartridge",L.cartridge,"text"," wide"),sonicBtn("ld_sonic",!!L.subsonic,!canEdit));
   COMPS.forEach(([k,lab])=>{
     const c=L[k]||blankComp(),pw=k==="powder";
     const ckind={bullet:"bullets",powder:"powders",primer:"primers",case:"brass"}[k];
@@ -5838,6 +5854,7 @@ function renderDetail(){
   const bindTop=(id,fn)=>{const el=$(id);if(el)el.addEventListener("input",()=>{fn(el.value);touched();});};
   bindTop("ld_title",v=>{L.title=v;$("relTitle").textContent=v||"Untitled load";const jn=$("relJumpName");if(jn){jn.textContent=v||"Untitled load";jn.title=jn.textContent;}});
   bindTop("ld_cartridge",v=>L.cartridge=v);
+  bindSonic("ld_sonic",()=>!!L.subsonic,on=>{L.subsonic=on;touched();});
   {const ce=$("ld_cartridge");if(ce)ce.addEventListener("change",()=>rememberCartridge(ce.value));}
   DIA.bind("ld_bdia",()=>L.bulletDia,(inch,u)=>{L.bulletDia=inch;L.bulletDiaUnit=u;touched();});
   buildDatalists();
@@ -7161,7 +7178,7 @@ function showTab(t,remember){
   $("tab-more").classList.toggle("on",["help","admin","account","tools","targets"].includes(t));closeMore();
   if(remember!==false)window.scrollTo(0,0);
   if(remember!==false&&!GUEST){try{localStorage.setItem("rangebook.tab",t);}catch(e){}}
-  if(t==="traj")window.dispatchEvent(new Event("resize"));
+  if(t==="traj"){window.dispatchEvent(new Event("resize"));try{if(window.RB_TRAJ_LIST)RB_TRAJ_LIST();}catch(e){}}
   if(t==="help"){const b=document.querySelector("#hNew>.sechead");if(b&&b.getAttribute("aria-expanded")==="true")b.click();}
   if(t==="rel"&&REL)REL.onShow();
   if(t==="home"&&REL)REL.onHome();
