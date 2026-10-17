@@ -1307,6 +1307,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Guest mode</h3>
       <p>If the admin has turned it on, the sign-in page has a <b>Try it as a guest</b> button. Guests can use everything, but nothing is saved: it's all gone when the page is closed or reloaded.</p>
     <p><b>Feedback and ideas:</b> found something wrong, or have an idea? <b>More → Account → Feedback and ideas</b> opens your own email app (or GitHub) addressed to the person who makes Range Book, with the version filled in. Nothing is sent from this server.</p>
+      <p><b>Printing from the home-screen app on an iPhone or iPad:</b> a PDF (a target, a trip report or an export) opens a small panel instead of a new page. Tap <b>Print or save…</b>, then <b>Print</b> (or <b>Save to Files</b>) in the share sheet. In a browser, PDFs open in a new tab as before.</p>
     </section>
     <section class="card guide" aria-label="Shooting" id="hShoot">
       <h2>Shooting</h2>
@@ -1701,6 +1702,32 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 </div>
 
 <script>
+/* PDFs on an iPhone or iPad home-screen app (2.18.2): iOS opens a same-site PDF inside the app with no Back, Share or Print,
+   so the app gets stuck. There we fetch the PDF and offer the share sheet (Print, Save to Files, AirDrop…) instead.
+   Everywhere else a PDF opens in a new tab as before. RB_PDF(url, filename) does either; PDF links are caught below. */
+window.RB_IOS_PWA=()=>window.navigator.standalone===true||window.RB_FORCE_IOS_PWA===true;
+window.RB_PDF=function(url,name){
+  if(!RB_IOS_PWA()){const w=window.open(url,"_blank");if(!w)location.href=url;return;}
+  name=name||(String(url).split("?")[0].split("/").pop()||"RangeBook.pdf");if(!/\.pdf$/i.test(name))name+=".pdf";if(!/^RangeBook/i.test(name))name="RangeBook-"+(/\/targets\//.test(url)?"target-":"")+name;
+  let sh=document.getElementById("pdfSheet");
+  if(!sh){sh=document.createElement("div");sh.id="pdfSheet";sh.className="infowrap";sh.hidden=true;
+    sh.innerHTML='<div class="infoback" data-pclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="pdfT"><div class="infohead"><h2 id="pdfT">PDF</h2><button class="infox" type="button" data-pclose aria-label="Close">✕</button></div><p id="pdfMsg" class="note"></p><div class="row"><button class="btn primary" type="button" id="pdfShare" hidden>Print or save…</button><button class="btn" type="button" data-pclose>Close</button></div></div>';
+    document.body.appendChild(sh);
+    sh.addEventListener("click",e=>{if(e.target.closest("[data-pclose]")){sh.classList.remove("on");setTimeout(()=>{sh.hidden=true;},180);}});}
+  const msg=document.getElementById("pdfMsg"),btn=document.getElementById("pdfShare");
+  document.getElementById("pdfT").textContent=/target/i.test(name)?"Print the target":"Print or save the PDF";
+  msg.textContent="Getting the PDF…";btn.hidden=true;btn.onclick=null;sh.hidden=false;requestAnimationFrame(()=>sh.classList.add("on"));
+  fetch(url,{credentials:"same-origin",cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.blob();}).then(b=>{
+    const f=new File([b],name,{type:"application/pdf"});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){
+      msg.innerHTML='Ready. Tap <b>Print or save…</b>, then <b>Print</b> (or <b>Save to Files</b>) in the share sheet.';btn.hidden=false;
+      btn.onclick=()=>{navigator.share({files:[f],title:name}).catch(()=>{});};}
+    else msg.textContent="This phone can't share the PDF from the app. Open Range Book in Safari to print it.";
+  }).catch(()=>{msg.textContent="The PDF couldn't be loaded. Check your connection and try again.";});
+};
+// links to PDFs (targets, exports, trip reports): handled by RB_PDF in the iOS home-screen app
+document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("a[href]");if(!a||!RB_IOS_PWA())return;
+  const h=a.getAttribute("href")||"";if(!/\.pdf(\?|$)/i.test(h))return;e.preventDefault();RB_PDF(h);},true);
 /* Gun pickers: guns built on the same lower are its variations (one per upper, 2.16). They're grouped under the lower's
    gun name in an <optgroup>; everything else is listed by name. Each option keeps the full name, so a closed picker
    still shows which variation is chosen. */
@@ -7228,14 +7255,14 @@ function renderTrips(){
     $("tripTgtGo").addEventListener("click",()=>{const id=sel.value||"rb5";try{localStorage.setItem("rb.tripTgt",id);}catch(e){}
       const T0=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId)||{},g=rifles.find(r=>r.id===T0.rifleId);
       const q=new URLSearchParams();if(T0.name)q.set("load",T0.name);if(t.date)q.set("date",fmtDate(t.date));if(num(t.distance))q.set("dist",String(U.n("yd",num(t.distance),0)));if(g&&g.name)q.set("gun",g.name);
-      window.open("/api/targets/"+id+".pdf?"+q.toString(),"_blank");});}
+      RB_PDF("/api/targets/"+id+".pdf?"+q.toString(),"RangeBook-target-"+id+".pdf");});}
   const pr=$("tripPrint");
   if(pr)pr.addEventListener("click",()=>{
     // make sure the latest changes are on the server first, then open the PDF
-    const w=window.open("about:blank","_blank");const url="/api/trips/"+encodeURIComponent(t.id)+"/report.pdf";
+    const ios=RB_IOS_PWA(),w=ios?null:window.open("about:blank","_blank");const url="/api/trips/"+encodeURIComponent(t.id)+"/report.pdf";
     clearTimeout(tripsTimer);
     tripsSaving=tripsSaving.then(()=>API.put("/api/doc/trips",{data:{trips:JSON.parse(JSON.stringify(trips))}})).then(()=>{tripsDirty=false;const el=$("tripState");if(el)el.textContent="Saved";});
-    tripsSaving.then(()=>{if(w)w.location.href=url;else location.href=url;},e=>{if(w)w.close();onWriteError(e);});
+    tripsSaving.then(()=>{if(ios)RB_PDF(url,"RangeBook-trip-"+String(t.date||"").replace(/[^0-9-]/g,"")+".pdf");else if(w)w.location.href=url;else location.href=url;},e=>{if(w)w.close();onWriteError(e);});
   });
   const del=$("tripDel");
   del.addEventListener("click",()=>{
