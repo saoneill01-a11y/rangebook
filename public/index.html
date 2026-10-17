@@ -1688,10 +1688,10 @@ window.DIA={
     const has=o.dx!=null&&o.dy!=null;
     const view=o.view||Math.min(span,Math.max(minV,has?Math.abs(o.dx)*1.35:0,has?Math.abs(o.dy)*1.35:0)),k=(W/2-14)/view;
     const P=(u,v)=>[c+u*k,c+v*k],f=n=>n.toFixed(1),wt=lk.weight==="thin"?.7:lk.weight==="thick"?1.7:1;
-    let g='<svg class="retsvg" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="'+escR(o.label||"Reticle")+'"><defs><clipPath id="'+id+'"><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'"/></clipPath></defs>';
+    let g='<svg class="retsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="'+escR(o.label||"Reticle")+'"><defs><clipPath id="'+id+'"><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'"/></clipPath></defs>';
     if(o.pic&&o.pic.url&&o.pic.ppu>0){
       const s=k/o.pic.ppu;
-      g+='<circle class="retpicbg" cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="#fff"/><g clip-path="url(#'+id+')"><image class="retpic" href="'+escR(o.pic.url)+'" x="'+f(c-o.pic.cx*s)+'" y="'+f(c-o.pic.cy*s)+'" width="'+f(o.pic.w*s)+'" height="'+f(o.pic.h*s)+'" preserveAspectRatio="none"/></g><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="none" stroke="var(--line)" stroke-width="2"/>';
+      g+='<circle class="retpicbg" cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="#fff"/><g clip-path="url(#'+id+')"><image class="retpic" href="'+escR(o.pic.url)+'" xlink:href="'+escR(o.pic.url)+'" x="'+f(c-o.pic.cx*s)+'" y="'+f(c-o.pic.cy*s)+'" width="'+f(o.pic.w*s)+'" height="'+f(o.pic.h*s)+'" preserveAspectRatio="none"/></g><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="none" stroke="var(--line)" stroke-width="2"/>';
     }else{
       g+='<circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="var(--sunk)" stroke="var(--line)" stroke-width="2"/><g clip-path="url(#'+id+')" stroke="var(--fg)">';
       const M=lk.main,sub=lk.sub|0,st=M/(sub+1),gap=lk.center==="cross"?0:Math.min(M*.6,view*.2)*k;
@@ -2220,6 +2220,8 @@ function renderReticle(L,S,zs,path){
     else pwr='<p class="note sfpnote">Second focal plane: enter the power the reticle is true at on the scope\'s page (Gear &amp; Ranges → Scopes) to get holds at other powers. Until then the holds are only right at that power.</p>';
   }
   const lookBtn=pic?'':'<button class="btn small" type="button" id="rtLook">Change how it looks</button>';
+  if(sc&&sc.retMode==="pic"&&!pic){const why=!(sc.pic&&sc.pic.ppu>0)?'its scale isn\'t set yet. On the scope\'s page (Gear &amp; Ranges → Scopes), tap <b>Set the scale</b>.':!(window.RB_RETPIC&&RB_RETPIC(sc.id))?'the picture hasn\'t loaded on this device yet. Pull down to refresh, or check your connection.':'';
+    if(why)pwr='<p class="err retwhy">Your scope is set to use your reticle picture, but '+why+' Until then this is the plain reticle.</p>'+pwr;}
   box.innerHTML=pwr+'<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+
     '<div class="row retbtns">'+lookBtn+(sc?'<span class="note">'+(pic?'Your reticle picture · ':'')+escL(scopeName(sc))+'</span>':'')+'</div></div></div>';
   const lb=$("rtLook");if(lb)lb.addEventListener("click",()=>RB_RET.editLook({unit:RU,look:sc?sc.look:R0.look,onSave:lk=>{
@@ -3153,7 +3155,7 @@ async function uploadBox(a,files){
     finally{boxUp--;renderRifles();}
   }
 }
-function loadBoxes(){if(window.GUEST)return Promise.resolve();return Promise.all([API.get("/api/gunphotos").then(r=>{gunPhotos=(r&&r.photos)||[];},()=>{}),API.get("/api/boxphotos").then(r=>{boxes=(r&&r.photos)||[];},()=>{}),loadShared()]);}
+function loadBoxes(){if(window.GUEST)return Promise.resolve();return Promise.all([API.get("/api/gunphotos").then(r=>{gunPhotos=(r&&r.photos)||[];try{if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}catch(e){}},()=>{}),API.get("/api/boxphotos").then(r=>{boxes=(r&&r.photos)||[];},()=>{}),loadShared()]);}
 const AMMO_FIELDS=[["mfr","Manufacturer","text"],["name","Product line","text","e.g. Precision Hunter, Gold Medal Match"],["cartridge","Cartridge","text"],["bullet","Bullet","text","e.g. 178 gr ELD-X"],
   ["weight","Bullet weight (gr)","number"],["bc","Ballistic coefficient","number"],["bcm","BC type","bcm"],["dia","Bullet diameter (in)","number","optional"],["blen","Bullet length (in)","number","optional, for spin drift"],
   ["_v","Velocity","group"],["boxVel","Velocity on the box (fps)","number"],["testBarrel","Box test barrel (in)","number","optional"],["measVel","Your measured velocity (fps)","number","optional"],
