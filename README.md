@@ -7,14 +7,21 @@ Free software under the [GNU AGPL-3.0](#license).
 > **Beta:** Range Book is still in beta, and not everything has been tested thoroughly. Double-check anything that matters (charges, load data, dope) against your load manual and your own results. Each new version shows this notice once in the app, and it has to be dismissed.
 
 <p>
-  <img src="docs/screenshots/shooting-desktop.png" alt="Shooting: trajectory chart and zeros" width="49%">
-  <img src="docs/screenshots/reloading-desktop.png" alt="Reloading: a ladder test with its summary" width="49%">
+  <img src="docs/screenshots/shooting-desktop.png" alt="Shooting: a load with its gun picked, the trajectory chart and zeros (Dark theme)" width="49%">
+  <img src="docs/screenshots/reloading-desktop.png" alt="Reloading: a ladder test with its summary and velocity chart" width="49%">
 </p>
 <p>
-  <img src="docs/screenshots/phone-home.png" alt="Home on a phone" width="32%">
-  <img src="docs/screenshots/phone-dope.png" alt="Dope card in the Red Night theme" width="32%">
-  <img src="docs/screenshots/phone-ladder.png" alt="Velocity by charge chart" width="32%">
+  <img src="docs/screenshots/phone-home.png" alt="Home on a phone: rounds fired and recent range trips" width="32%">
+  <img src="docs/screenshots/phone-dope.png" alt="Dope card with its MOA / MIL button, set by the gun's scope (Red Night theme)" width="32%">
+  <img src="docs/screenshots/phone-reticle.png" alt="The hold for 600 yards drawn on the scope's reticle (Red Night theme)" width="32%">
 </p>
+<p>
+  <img src="docs/screenshots/phone-ladder.png" alt="Velocity by charge with group sizes (Dark theme)" width="32%">
+  <img src="docs/screenshots/phone-gun.png" alt="A gun's round count, barrel life and cleaning reminder" width="32%">
+  <img src="docs/screenshots/phone-import.png" alt="Import from a spreadsheet: a gun that's already in Range Book, shown side by side" width="32%">
+</p>
+
+<sub>Screenshots use made-up data, including the built-in SAMPLE load.</sub>
 
 > **Safety first.** Range Book is a notebook and a calculator, not a load manual. A new install comes with a made-up **SAMPLE** 6.5 Creedmoor load to show how things work. Its numbers aren't real load data. Always work from a current published load manual for your exact components.
 
@@ -144,7 +151,7 @@ An **https** address is what lets a phone use Range Book **offline**, share its 
 
 ## Backups
 
-**Your own copy:** everyone can tap **Account → Download backup** for a .zip of everything in their account, photos included, and bring it back with **Account → Import** on this or any other Range Book. Import adds to the account and skips anything already there, so it never deletes or doubles anything. Excel exports can be imported too (without photos). Admins can download any person's backup from the Admin page.
+**Your own copy:** everyone can tap **Account → Download backup** for a .zip of everything in their account, photos included, and bring it back with **Account → Import** on this or any other Range Book. Import adds to the account and skips anything already there, so it never deletes or doubles anything. Excel exports can be imported too (without photos). To add guns, scopes, factory ammo or components from your own spreadsheet, use **Account → Import from a spreadsheet** (there's a template to download). Admins can download any person's backup from the Admin page.
 
 **The whole server:** everything is in your data folder: the database `rangebook.db` and the `photos` folder.
 

@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.13.0",
+      "version": "2.13.1",
       "date": "2026-10-17",
       "title": "Import from a spreadsheet",
       "items": [
@@ -10,7 +10,8 @@
         "Download the template: a tab for each kind of gear, an example row on each, drop-down lists for cartridges, BC type, focal plane, MIL/MOA and primer sizes, and tips on columns like Twist. Or download it with your gear already filled in, change things in the spreadsheet and import it back as updates.",
         "Your own spreadsheets work too: columns are matched by their headings, and you're asked about any column it doesn't recognize (pick what it is, add it to Notes, or leave it out).",
         "Cartridges, BC types, primer sizes and scopes it doesn't know are listed once each so you can pick the right one or keep what you typed. A scope it doesn't know can be added as a new one. Numbers and dates it can't read are shown so you can fix them. Units like 610 mm, 2,700 fps, $32.99 and 1:8 twist are understood.",
-        "Anything already in Range Book is shown side by side with what's different, and you choose Skip, Update it or Add as new (or the same for all). Rows that match exactly are left alone. Nothing is saved until you tap Import."
+        "Anything already in Range Book is shown side by side with what's different, and you choose Skip, Update it or Add as new (or the same for all). Rows that match exactly are left alone. Nothing is saved until you tap Import.",
+        "Import from a spreadsheet: the side-by-side table for things already in Range Book no longer shades every other row unevenly."
       ]
     },
     {

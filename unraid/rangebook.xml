@@ -8,7 +8,7 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/saoneill01-a11y/rangebook/issues</Support>
   <Project>https://github.com/saoneill01-a11y/rangebook</Project>
-  <Overview>Range Book: a self-hosted ballistics calculator and reloading log with a sign-in for each person. Trajectory tables, dope cards and field mode; reloading recipes with ladder tests, chronograph imports (LabRadar, Garmin, MagnetoSpeed, RangeCraft) and target photos you can measure; gun, ammo and component inventory with cost per round; range trips and a range log. Works as a home-screen app on a phone, including with no signal when reached over https. After the first start, open the WebUI and create your admin account right away.</Overview>
+  <Overview>Range Book: a self-hosted ballistics calculator and reloading log with a sign-in for each person. Trajectory tables, dope cards and field mode; reloading recipes with ladder tests, chronograph imports (LabRadar, Garmin, MagnetoSpeed, RangeCraft) and target photos you can measure; gun, scope, ammo and component inventory with cost per round, and import from a spreadsheet; scopes with a reticle that shows your hold; range trips and a range log. Works as a home-screen app on a phone, including with no signal when reached over https, and changes made on several devices are merged when they sync. After the first start, open the WebUI and create your admin account right away.</Overview>
   <Category>Tools: Productivity:</Category>
   <WebUI>http://[IP]:[PORT:9090]/</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/saoneill01-a11y/rangebook/main/unraid/rangebook.xml</TemplateURL>
