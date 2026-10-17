@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.11.0",
+      "version": "2.11.1",
       "date": "2026-10-16",
       "title": "Cartridges",
       "items": [
@@ -10,7 +10,13 @@
         "Guns have a Cartridge (the one it's chambered for).",
         "Warnings when ammo doesn't fit its gun: a banner on the Shooting load and a Check cartridge tag in the lists. Safe one-way pairs pass (38 Special in a 357 Magnum, 223 in a 5.56, 44 Special in a 44 Magnum and more); the reverse is flagged as dangerous, and so is 300 Blackout with a 5.56/.223 gun.",
         "Recipes and ammo warn when the bullet's diameter doesn't match the cartridge, the case length is over the maximum, or the COAL is longer than the SAAMI maximum.",
-        "Cartridges you'd typed with another name for a listed one now use its standard name, so loads group together. The guns export has a Cartridge column."
+        "Cartridges you'd typed with another name for a listed one now use its standard name, so loads group together. The guns export has a Cartridge column.",
+        "Tools → Cartridges shows the whole list (for reference only). Change any number or name you find wrong: changed boxes are colored, with Revert to put the original back. Add your own cartridges (✕ deletes them). Your changes are used everywhere and sync to your other devices.",
+        "The Shooting tab's ammo picker tags subsonic ammo with Sub.",
+        "Dope card: smaller From, To and Every boxes with Reticle: elevation beside them, the Zeroed at line just above the card, and the card and reticle line up at the top.",
+        "Picking a gun whose scope has MOA or MIL turrets ticks the matching Adjust column in the range table (and the wind column follows). The range table has a bar under it to make it taller or shorter.",
+        "Wind starts at 0 on a new load.",
+        "The Point-blank range card no longer has Show it on the chart or Set my scope to this zero: the point-blank zero is always on the chart, and you pick it with the circle in its zero box."
       ]
     },
     {
