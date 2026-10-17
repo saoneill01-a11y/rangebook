@@ -1025,7 +1025,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <button class="tab" role="tab" id="tab-home" aria-controls="panel-home" aria-selected="true" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></button>
     <button class="tab" role="tab" id="tab-traj" aria-controls="panel-traj" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18C7 6 15 4 21 9"/><path d="M3 20h18"/><circle cx="21" cy="9" r="1.4" fill="currentColor"/></svg><span>Shooting</span></button>
     <button class="tab" role="tab" id="tab-rel" aria-controls="panel-rel" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l3-5 3 5v12z"/><path d="M9 15h6"/></svg><span>Reloading</span></button>
-    <button class="tab" role="tab" id="tab-rifles" aria-controls="panel-rifles" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg><span>Guns &amp; Ammo</span></button>
+    <button class="tab" role="tab" id="tab-rifles" aria-controls="panel-rifles" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg><span>Gear &amp; Ranges</span></button>
     <button class="tab" role="tab" id="tab-tools" aria-controls="panel-tools" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.1L4 16.8V20h3.2l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.6-.6-.6-2.6z"/></svg><span>Tools</span></button>
     <button class="tab wideonly" role="tab" id="tab-admin" aria-controls="panel-admin" aria-selected="false" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M17 11h5M19.5 8.5v5"/></svg><span>Admin</span></button>
     <button class="tab wideonly" role="tab" id="tab-help" aria-controls="panel-help" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg><span>How to Use</span></button>
@@ -1179,14 +1179,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="dopecombo"><div id="dopeCard" class="dopecard"></div><div class="retpane" id="retPane" aria-live="polite"><div id="retBox" class="retbox"></div></div></div>
     <div class="row"><button class="btn primary" id="dopeField" type="button">Field mode</button><button class="btn" id="dopePrint" type="button">Print dope card</button></div>
     <div class="row"><button class="btn" id="hitTool" type="button">Hit chance at a distance</button></div>
-    <p class="note">A small card to tape to your stock or keep in your range bag. It uses the zero your scope is set to, the conditions above and the crosswind you entered. Up is how far to dial up; wind is how far to hold or dial into the wind. The reticle is a plain one in your scope's units (tap <b>Change how it looks</b> to make it like yours), or a picture of your own reticle if you've added one to the gun's scope under Guns &amp; Ammo → Scopes. The plain one isn't any brand's design, so count the marks on yours. Put the target on the dot. It adds spin drift when the bullet length and twist are filled in.</p>
+    <p class="note">A small card to tape to your stock or keep in your range bag. It uses the zero your scope is set to, the conditions above and the crosswind you entered. Up is how far to dial up; wind is how far to hold or dial into the wind. The reticle is a plain one in your scope's units (tap <b>Change how it looks</b> to make it like yours), or a picture of your own reticle if you've added one to the gun's scope under Gear &amp; Ranges → Scopes. The plain one isn't any brand's design, so count the marks on yours. Put the target on the dot. It adds spin drift when the bullet length and twist are filled in.</p>
   </section>
 
   <section class="card" aria-label="Saved ranges" id="secTRanges">
     <h2>Saved ranges</h2>
-    <div class="row"><select id="rg_pick" class="fieldselect" aria-label="Range" style="flex:1 1 220px;min-width:0"></select><button class="btn" id="rg_edit" type="button">Edit</button><button class="btn" id="rg_new" type="button">+ New range</button></div>
+    <div class="row"><select id="rg_pick" class="fieldselect" aria-label="Range" style="flex:1 1 220px;min-width:0"></select><button class="btn" id="rg_go" type="button">Edit ranges ›</button></div>
     <div id="rgBox"></div>
-    <p class="note">Save the places you shoot, with each target's distance and angle. Pick one and it shows the dial and wind for every target with this load and the conditions above. Ranges are shared by all your Shooting loads.</p>
+    <p class="note">Pick one of your saved ranges to see the dial and wind for each of its targets with this load and the conditions above. Add and change ranges under <b>Gear &amp; Ranges → Ranges</b>.</p>
   </section>
   </div>
   </div>
@@ -1210,7 +1210,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
 
   <div class="panel" id="panel-help" role="tabpanel" aria-labelledby="tab-help" hidden>
-    <nav class="jump helpnav" id="helpNav" aria-label="Help sections"><a href="#hNew">What's new</a><a href="#hStart">Getting started</a><a href="#hShoot">Shooting</a><a href="#hRel">Reloading</a><a href="#hGuns">Guns &amp; Ammo</a><a href="#hTools">Tools</a><a href="#hFine">Fine print</a><a href="#hLimits">Limits</a></nav>
+    <nav class="jump helpnav" id="helpNav" aria-label="Help sections"><a href="#hNew">What's new</a><a href="#hStart">Getting started</a><a href="#hShoot">Shooting</a><a href="#hRel">Reloading</a><a href="#hGuns">Gear &amp; Ranges</a><a href="#hTools">Tools</a><a href="#hFine">Fine print</a><a href="#hLimits">Limits</a></nav>
     <header><h1>How to Use</h1><p class="sub">Everything you need to get started, measure your gun and log your loads.</p><div class="row helptour"><button class="btn primary" id="tourBtnTop" type="button">Take the tour</button><span class="note">A one-minute walk through the basics.</span></div></header>
     <section class="card guide" aria-label="What's new" id="hNew"><h2>What's new</h2><div id="relNotes"><p class="note">Loading…</p></div></section>
     <section class="card guide" aria-label="Getting started" id="hStart">
@@ -1222,7 +1222,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To use metric, go to <b>More → Account → Units</b> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>Pick a color theme under <b>More → Account → Theme</b>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
-      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Guns &amp; Ammo</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Guns &amp; Ammo and Tools) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Guns &amp; Ammo and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
+      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Loads | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load or gun, <b>‹ Loads</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the load's trips, from a load to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges and Tools) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <b>Shooting → Range log</b>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting loads, or ammunition from your inventory (it makes the Shooting load for that gun the first time). It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
       <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
@@ -1245,7 +1245,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>A new account's Shooting list starts with a single <b>SAMPLE · 6.5 Creedmoor</b> load, and on a new Range Book the first account also gets a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
       <h3>Fill in the fields</h3>
       <ul>
-        <li><b>Rifle</b>: pick one from your Guns and Ammo tab and its sight height fills in. Loads sent over from Reloading come with the gun already picked. If you change the gun's sight height on the Guns and Ammo tab, the calculator follows unless you've typed in your own.</li>
+        <li><b>Rifle</b>: pick one from your Gear & Ranges tab and its sight height fills in. Loads sent over from Reloading come with the gun already picked. If you change the gun's sight height on the Gear & Ranges tab, the calculator follows unless you've typed in your own.</li>
         <li><b>Bullet weight</b>: from the ammo box.</li>
         <li><b>Muzzle velocity</b>: the box number comes from a test barrel and is often 50–150 fps faster than your gun. A chronograph reading is best.</li>
         <li><b>Velocity measured at</b> and <b>Temp sensitivity</b> (optional): powder burns faster when it's warm, so a load is faster in summer than in winter. Enter the temperature your velocity was measured at and how many fps it changes for every 10°F (often 5–20 fps), and the calculator adjusts the velocity for the temperature on the Conditions card. Under the load's <b>Range trips</b>, a <b>Velocity and temperature</b> chart can work out the sensitivity from your own trips (it needs trips with an average velocity and temperatures at least 10°F apart); tap <b>Use … in the calculator</b> to fill it in. When you use a trip's average as the muzzle velocity, its temperature is saved as "measured at".</li>
@@ -1280,9 +1280,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the switch). It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold, in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
       <h3>Reticle holds</h3>
-      <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> switch (Scope clicks in) sets both the card and the reticle; when the load's gun has a scope (Guns &amp; Ammo → Scopes), the scope sets it and the reticle can look like yours, or be a picture of it. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
+      <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> switch (Scope clicks in) sets both the card and the reticle; when the load's gun has a scope (Gear &amp; Ranges → Scopes), the scope sets it and the reticle can look like yours, or be a picture of it. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold the wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the load, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
       <h3>Saved ranges</h3>
-      <p>Save the places you shoot under <b>Saved ranges</b>: tap <b>+ New range</b>, give it a name, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Tap <b>Done</b> and it lists the dial and wind for every target with this load. The size column shows the target in MOA or MIL, so you can see how much room you have. <b>Use these conditions</b> sets the load's temperature and altitude to the range's usual ones. Ranges are shared by all your Shooting loads, and their names show up under <b>Where</b> on range trips.</p>
+      <p>Save the places you shoot under <b>Gear &amp; Ranges → Ranges</b>: tap <b>+ New range</b>, give it a name, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Changes save as you type. Under <b>Dope</b>, pick a Shooting load to see the dial and wind for every target with it; the size column shows each target in MOA or MIL, so you can see how much room you have, and <b>Use these conditions</b> sets that load's temperature and altitude to the range's usual ones. Each Shooting load also has a <b>Saved ranges</b> card: pick a range there to see the same thing for that load, and <b>Edit ranges ›</b> takes you to the range. Range names show up under <b>Where</b> on range trips.</p>
       <h3>The inputs fold up on a phone</h3>
       <p>On a phone, when you open a load the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a load (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
@@ -1312,7 +1312,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <ol>
         <li>On the <b>Reloading</b> tab, tap <b>+ New load</b>. Enter the cartridge, pick the gun, and pick the bullet, powder, primer and brass from your Components (anything not saved yet can be typed into the recipe afterward). Add the <b>Max charge</b> from your load manual, then tap <b>Create and plan a ladder</b> to go straight to the ladder planner, or <b>Create</b>.</li>
         <li>Any group at the max charge gets an <b>At max</b> tag, and any group over it gets a red <b>Over max</b> warning.</li>
-        <li>Pick the <b>Rifle</b> you shot it in (add guns on the <b>Guns &amp; Ammo</b> tab first).</li>
+        <li>Pick the <b>Rifle</b> you shot it in (add guns on the <b>Gear &amp; Ranges</b> tab first).</li>
         <li>Under <b>Ladder tests</b>, tap <b>+ Add group</b> in a ladder for each charge weight you test and enter the charge (or let the ladder planner make them all).</li>
         <li>Type each shot's FPS. Press Enter on the last box (or tap <b>+ Shot</b>) to add another shot. Average, SD, extreme spread and energy fill in as you type. Groups start with 5 boxes. To get rid of some, say if you only fired 4 or a reading is bad, tap <b>− Shot</b>, tap each shot you want gone (they turn red and crossed out), then tap <b>Delete</b>. The shots after them move up, and <b>Undo</b> puts them back. A box left blank isn't counted either. Range trips work the same way.</li>
         <li>Enter each group's size in <b>Group size</b> (center to center of the two widest holes), or measure it from a target photo (below). The <b>Distance</b> is entered once at the top of the ladder. The MOA is worked out for you, so groups shot at different distances can be compared.</li>
@@ -1395,27 +1395,27 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Tap <b>More → Account</b> (or <b>Account</b> at the top on a computer). <b>Download backup</b> saves everything in your account in one .zip file, photos included. <b>Download Excel</b> and <b>Download PDF</b> are for reading and printing (the PDF includes your target photos).</p>
       <p>To bring data back in, or move it to another Range Book, use <b>Import</b> on the same page and pick a backup or an Excel export (Excel files don't carry photos). Importing <b>adds</b> to your account: anything already there is left alone and nothing is deleted, so importing the same file twice doesn't double anything.</p>
     </section>
-    <section class="card guide" aria-label="Guns and Ammo" id="hGuns">
-      <h2>Guns &amp; Ammo</h2>
+    <section class="card guide" aria-label="Gear & Ranges" id="hGuns">
+      <h2>Gear &amp; Ranges</h2>
       <h3>Guns</h3>
-      <p>The <b>Guns &amp; Ammo</b> tab lists your guns under <b>Guns</b>. Tap <b>+ Add gun</b> or tap a gun to open it, then fill in its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the loads and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
+      <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. Tap <b>+ Add gun</b> or tap a gun to open it, then fill in its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the loads and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
       <h3>Round count and barrel life</h3>
       <p>Each gun's page has a <b>Round count</b>. It adds the rounds from range trips on Shooting loads that use that gun, the shots in your load-development groups on Reloading loads that use it, and the <b>Rounds before Range Book</b> you enter. Fill in <b>Barrel life</b> to see a bar of how much is used (it turns red at 80%, and Home warns you). Set <b>Clean every</b> and tap <b>Cleaned today</b> after cleaning to see the rounds since then; Home tells you when it's due. When you fit a new barrel, set <b>Barrel fitted on</b> to that date and <b>Rounds before Range Book</b> to 0.</p>
       <h3>Scopes</h3>
-      <p><b>Guns &amp; Ammo → Scopes</b> keeps your scopes. Tap <b>+ Add scope</b> and search the list of about 90 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting load that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
+      <p><b>Gear &amp; Ranges → Scopes</b> keeps your scopes. Tap <b>+ Add scope</b> and search the list of about 90 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting load that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
       <p><b>Second focal plane</b> scopes have marks that are only their true size at one power, often the highest (the scope's manual says). Enter it in <b>Marks true at power</b>. On the dope card's reticle a <b>Scope power</b> picker then works out the hold in marks for the power you're on; at the true power it's the same as the MIL or MOA.</p>
       <h3>Make the reticle look like yours</h3>
       <p>Range Book's reticle is a plain one, not any brand's design. Tap <b>Change how it looks</b> (on the scope's page, or under the reticle on the dope card) to open a window with a preview where you pick where the main marks are, the small marks between them, the holdover dots (a full grid, a tree that widens as it goes down, or none), the numbers, the center (lines that meet, an open center, or an open center with a dot) and the line thickness. <b>Back to the standard look</b> undoes it.</p>
       <h3>Your own reticle picture</h3>
       <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
       <h3>Ammunition</h3>
-      <p><b>Guns &amp; Ammo → Ammunition</b> keeps the ammo you shoot, in two lists: <b>Reloaded ammo</b> and <b>Factory ammo</b>. Each one counts the rounds you have on hand (loaded or bought, minus what your range trips fire) and can warn you when you're running low.</p>
+      <p><b>Gear &amp; Ranges → Ammo</b> keeps the ammo you shoot, in two lists: <b>Reloaded ammo</b> and <b>Factory ammo</b>. Each one counts the rounds you have on hand (loaded or bought, minus what your range trips fire) and can warn you when you're running low.</p>
       <h3>Reloaded ammo</h3>
       <p>Each batch in the batch history has a <b>Label</b> button (and one appears right after you log a batch): it shows a label with the load name, bullet, powder and charge, primer, brass lot, COAL, velocity, date and round count. Pick how many copies and tap <b>Print labels</b>; they print 3.5 × 2 in (business-card size), ten to a page, on plain paper or Avery 5371/5376-style card stock or labels.</p>
       <p>To compare loads, tap <b>Compare loads</b> at the top of the Reloading list and pick up to three. A table shows the components, the working charge (or the last one used) with its velocity, SD, ES and group, the best group and lowest SD at any charge, cost per round and rounds loaded. The lowest SD, ES, group size and cost are highlighted. Tap a load's name to open it.</p>
       <p>To keep count of rounds you've loaded, open a recipe on the <b>Reloading</b> tab, switch to <b>Load</b> and log a batch in <b>Loaded rounds</b>. The first batch at a charge adds the load to your ammo inventory, copying the bullet, BC, powder, primer and brass from the recipe and the velocity from your groups at that charge. Each later batch at the same charge adds to the count, removing a batch takes it back off, and range trips with it count it down. The card shows how many you have on hand, and the batch history folds away underneath. You can also start one from <b>Ammunition → + Reloaded ammo</b>: pick a recipe, or choose <b>None: I'll pick the parts myself</b>, then pick the bullet, powder, primer and brass from your Components and fill in the charge. Each part shows its details underneath (weight, BC, diameter, kind, case length, on hand, cost); tap <b>Edit</b> to change them on the Components page, then <b>‹ Back to</b> to return. <b>+ Create new</b> at the top of each list makes a new component and opens it so you can fill it in. An entry can also be linked to a recipe later with <b>Fill in from this recipe</b>. Once you've loaded it, turn on <b>Locked</b> at the top so the recipe (name, cartridge, bullet, powder, charge, primer, brass and COAL) can't be changed by accident, not even by an Update from Components; the rounds, velocity and notes stay editable. <b>Duplicate</b> at the bottom makes an unlocked copy (with no rounds yet) to start a new one from. The cost per round comes from the prices on your components, or type it in. <b>Use in calculator</b> makes a Shooting load from it, just like factory ammo.</p>
       <h3>Factory ammo</h3>
-      <p>On <b>Guns &amp; Ammo → Ammunition</b>, tap a caliber under <b>Browse by caliber</b> (they're grouped into Rifle, Handgun and Rimfire) to see what's available, or type in the search box. There are about 155 popular loads in 56 cartridges, from 17 HMR to 50 BMG (Hornady, Federal, Sig Sauer, Remington, CCI, Speer, Nosler and Barnes; rifle, rimfire and handgun) with the bullet, BC and box velocity already filled in from the maker's published data (Nosler and Barnes velocities come from gun-shop listings instead, with the BC from the makers' bullet data); tap one to add it to your list. Not listed? Tap <b>+ Enter factory ammo yourself</b> and fill in the maker, cartridge, bullet, weight, BC, the velocity on the box (and your measured velocity if you've chronographed it), plus rounds bought, price and lot number. <b>Use in calculator</b> (pick the gun first if you like) makes a load on the <b>Shooting</b> tab with those numbers. You can also pick the ammo in a Shooting load's <b>Ammunition</b> box. Tap it to open a short list: your reloaded ammo, your factory ammo, and the catalog loads for that load's cartridge. Type in its search box (a maker, powder, bullet weight or cartridge) to search everything, including the whole catalog. Picking a catalog load fills in the numbers and adds it to your Ammunition for you. The range trips you log on that load count down your rounds on hand (bought minus fired), and <b>+ Bought more</b> adds a new box. Set <b>Warn when fewer than</b> and Home tells you when you're running low. If your range trips have average velocities, it offers to use their average as your measured velocity.</p>
+      <p>On <b>Gear &amp; Ranges → Ammo</b>, tap a caliber under <b>Browse by caliber</b> (they're grouped into Rifle, Handgun and Rimfire) to see what's available, or type in the search box. There are about 155 popular loads in 56 cartridges, from 17 HMR to 50 BMG (Hornady, Federal, Sig Sauer, Remington, CCI, Speer, Nosler and Barnes; rifle, rimfire and handgun) with the bullet, BC and box velocity already filled in from the maker's published data (Nosler and Barnes velocities come from gun-shop listings instead, with the BC from the makers' bullet data); tap one to add it to your list. Not listed? Tap <b>+ Enter factory ammo yourself</b> and fill in the maker, cartridge, bullet, weight, BC, the velocity on the box (and your measured velocity if you've chronographed it), plus rounds bought, price and lot number. <b>Use in calculator</b> (pick the gun first if you like) makes a load on the <b>Shooting</b> tab with those numbers. You can also pick the ammo in a Shooting load's <b>Ammunition</b> box. Tap it to open a short list: your reloaded ammo, your factory ammo, and the catalog loads for that load's cartridge. Type in its search box (a maker, powder, bullet weight or cartridge) to search everything, including the whole catalog. Picking a catalog load fills in the numbers and adds it to your Ammunition for you. The range trips you log on that load count down your rounds on hand (bought minus fired), and <b>+ Bought more</b> adds a new box. Set <b>Warn when fewer than</b> and Home tells you when you're running low. If your range trips have average velocities, it offers to use their average as your measured velocity.</p>
       <h3>Sharing factory loads</h3>
       <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b>. It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up in their caliber's box under <b>Browse by caliber</b> and in searches, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
       <h3>Box photos</h3>
@@ -1455,8 +1455,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </section>
   </div>
   <div class="panel" id="panel-rifles" role="tabpanel" aria-labelledby="tab-rifles" hidden>
-    <header class="phead"><button class="backbtn" id="rifHeadBack" type="button" hidden aria-label="Back to the list">‹ Guns</button><h1 id="rifTitle">Guns and Ammo</h1><p class="sub" id="rifSub">Your guns (barrel, twist, sight height, round count) and the ammunition you shoot, factory and reloaded.</p></header>
-    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Guns and Ammo"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammunition</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button></div>
+    <header class="phead"><button class="backbtn" id="rifHeadBack" type="button" hidden aria-label="Back to the list">‹ Guns</button><h1 id="rifTitle">Gear & Ranges</h1><p class="sub" id="rifSub">Your guns (barrel, twist, sight height, round count) and the ammunition you shoot, factory and reloaded.</p></header>
+    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Gear & Ranges"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammo</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button><button type="button" role="tab" data-garea="ranges" aria-selected="false">Ranges</button></div>
     <div id="riflesRoot" style="display:flex;flex-direction:column;gap:14px"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-brass" role="tabpanel" aria-labelledby="tab-rel" hidden>
@@ -1896,6 +1896,15 @@ window.RB_TRAJ={
   forTools(){return state.loads.map(l=>({id:l.id,label:l.name||"Untitled load",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
   where(){return TVIEW==="detail"?state.cur:null;},
   ranges(){return (Array.isArray(state.ranges)?state.ranges:[]).map(r=>r.name).filter(Boolean);},
+  // saved ranges, for Gear & Ranges → Ranges
+  rg:{list:()=>rgList(),
+    add(){const r={id:rgId(),name:"",targets:[{id:rgId(),name:"",dist:U.metric?100/0.9144:100,angle:null,size:null}],temp:null,alt:null,notes:""};rgList().push(r);state.rangeCur=r.id;save();return r;},
+    del(id){const RS=rgList(),i=RS.findIndex(x=>x.id===id);if(i<0)return null;const r=RS.splice(i,1)[0];if(state.rangeCur===id)state.rangeCur=null;save();if(TVIEW==="detail")renderRanges();return {r,i};},
+    put(x,i){rgList().splice(Math.min(i,rgList().length),0,x);save();if(TVIEW==="detail")renderRanges();},
+    editHtml:r=>rangeEditHtml(r),bindEdit:(box,r,changed,redraw)=>bindRangeEdit(box,r,()=>{if(TVIEW==="detail")renderRanges();if(changed)changed();},redraw),
+    dopeHtml:(r,id)=>{const L=state.loads.find(l=>l.id===id);return L?rangeDopeHtml(r,L):'';},
+    bindDope:(box,r,id,after)=>{const L=state.loads.find(l=>l.id===id);if(L)bindRangeDope(box,r,L,after);},
+    pick(id){state.rangeCur=id;save();}},
   // the trajectory of a Shooting load for other screens (hit chance, saved ranges). o can change the wind, angle,
   // conditions, or add dmv (fps) to the velocity while keeping the same sight setting.
   solve(id,o){
@@ -2108,77 +2117,73 @@ function render(){
   renderDope(L,S,zs,path);renderReticle(L,S,zs,path);renderRanges();
 }
 /* ---------- saved ranges: places with targets at known distances and angles (kept with the Shooting loads) ---------- */
-let RG_EDIT=false;
 const rgList=()=>{if(!Array.isArray(state.ranges))state.ranges=[];return state.ranges;};
 const rgId=()=>"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+/* a saved range's targets with one Shooting load: how far to dial and hold for each (here and on Gear & Ranges → Ranges) */
+function rangeDopeHtml(r,L){
+  const B=window.RB_TRAJ?RB_TRAJ.solve(L.id):null;let h='';
+  if(r.notes)h+='<p class="note">'+escL(r.notes)+'</p>';
+  if(num(r.temp)!=null||num(r.alt)!=null)h+='<div class="row"><span class="note">Usual conditions: '+[num(r.temp)!=null?U.s("F",num(r.temp),0):"",num(r.alt)!=null?U.s("ft",num(r.alt),0,true):""].filter(Boolean).join(" · ")+'</span><button class="btn small" data-rguse type="button">Use these conditions on '+(L===cur()&&TVIEW==="detail"?'this load':'the load')+'</button></div>';
+  if(!B||B.err)return h+'<p class="err">'+escL(B?B.err:"")+'</p>';
+  if(!(r.targets||[]).length)return h+'<p class="note">No targets yet. Add them under <b>Gear &amp; Ranges → Ranges</b>.</p>';
+  const MIL=B.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",f1=n=>{const s2=n.toFixed(1);return s2==="-0.0"?"0.0":s2;};
+  h+='<div class="tablewrap"><table class="dope rgtbl"><thead><tr><th style="text-align:left">Target</th><th>'+U.u("yd")+'</th><th>Up<br>('+UN+')</th><th>Wind<br>('+UN+')</th><th>Size<br>('+UN+')</th></tr></thead><tbody>'+
+    r.targets.slice().sort((a,b)=>(num(a.dist)||0)-(num(b.dist)||0)).map(t=>{const d=num(t.dist),ang=num(t.angle)||0;
+      if(!(d>0))return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td colspan="4" class="note">Add its distance</td></tr>';
+      const Bt=ang?RB_TRAJ.solve(L.id,{angle:ang}):B;if(d>Bt.last)return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td>'+U.n("yd",d,0)+'</td><td colspan="3" class="note">Too far for this load</td></tr>';
+      const a2=Bt.at(d),per=d*UF/100,sz=num(t.size);
+      return '<tr><td style="text-align:left">'+escL(t.name||"Target")+(ang?' <span class="note">'+(ang>0?"↑":"↓")+Math.abs(ang)+'°</span>':'')+'</td><td>'+U.n("yd",d,0)+'</td><td><b>'+f1(-a2.path/per)+'</b></td><td>'+f1(a2.drift/per)+'</td><td>'+(sz>0?f1(sz/per):'')+'</td></tr>';}).join("")+'</tbody></table></div>'+
+    '<p class="note">Up is how far to dial from the '+U.s("yd",B.z,0)+' zero (angles included). Wind is for '+(B.wind?U.s("mph",L.wind||0,0)+' from '+B.clock+' o\'clock, hold '+B.side:'no wind (set it under the load\'s Conditions)')+'. Size is the target in '+UN+', so you can see how much room you have.</p>';
+  return h;
+}
+function bindRangeDope(box,r,L,after){const u=box.querySelector("[data-rguse]");if(u)u.addEventListener("click",()=>{if(num(r.temp)!=null)L.temp=num(r.temp);if(num(r.alt)!=null)L.alt=num(r.alt);if(L===cur())fillInputs();save();render();if(after)after();});}
+/* editing a range: its name, usual conditions, notes and targets */
+function rangeEditHtml(r){
+  return '<div class="grid"><div class="field wide"><label for="rg_name">Name</label><input id="rg_name" value="'+escL(r.name||"")+'" placeholder="e.g. Rio Salado, south steel line"></div>'+
+    '<div class="field"><label for="rg_temp">Usual temperature ('+U.u("F")+')</label><input id="rg_temp" type="number" inputmode="decimal" step="any"></div>'+
+    '<div class="field"><label for="rg_alt">Altitude ('+U.u("ft")+')</label><input id="rg_alt" type="number" inputmode="numeric" step="any"></div>'+
+    '<div class="field wide"><label for="rg_notes">Notes</label><input id="rg_notes" value="'+escL(r.notes||"")+'" placeholder="Wind flags, best time of day, rules"></div></div>'+
+    '<h3 class="rgsub">Targets</h3><div class="rgedit">'+(r.targets||[]).map((t,i)=>'<div class="rgrow" data-ti="'+i+'">'+
+      '<input data-k="name" aria-label="Target name" value="'+escL(t.name||"")+'" placeholder="Target '+(i+1)+'">'+
+      '<label>'+U.u("yd")+'<input data-k="dist" type="number" inputmode="numeric" step="any" aria-label="Distance"></label>'+
+      '<label>Angle °<input data-k="angle" type="number" inputmode="decimal" step="any" aria-label="Angle up or down, degrees" placeholder="0"></label>'+
+      '<label>Size '+U.u("in")+'<input data-k="size" type="number" inputmode="decimal" step="any" aria-label="Target size" placeholder="opt."></label>'+
+      '<button class="btn danger small" type="button" data-rgdel="'+i+'" aria-label="Delete this target">✕</button></div>').join("")+'</div>'+
+    '<div class="row"><button class="btn" id="rg_add" type="button">+ Target</button></div>'+
+    '<p class="note">Angle is how far up (+) or down (−) you shoot at that target, in degrees; your rangefinder may show it.</p>';
+}
+function bindRangeEdit(box,r,changed,redraw){
+  const ch=()=>{save();if(changed)changed();};
+  $("rg_name").addEventListener("input",e=>{r.name=e.target.value;ch();});
+  $("rg_notes").addEventListener("input",e=>{r.notes=e.target.value;ch();});
+  if(num(r.temp)!=null)U.fill($("rg_temp"),"F",num(r.temp),1,0);if(num(r.alt)!=null)U.fill($("rg_alt"),"ft",num(r.alt),0,0);
+  $("rg_temp").addEventListener("input",e=>{const v=U.read(e.target,"F",r.temp);r.temp=num(v);ch();});
+  $("rg_alt").addEventListener("input",e=>{const v=U.read(e.target,"ft",r.alt);r.alt=num(v);ch();});
+  box.querySelectorAll(".rgrow").forEach(row=>{const t=r.targets[+row.dataset.ti];
+    const di=row.querySelector('[data-k="dist"]'),an=row.querySelector('[data-k="angle"]'),sz=row.querySelector('[data-k="size"]');
+    if(num(t.dist)>0)U.fill(di,"yd",num(t.dist),0,0);if(num(t.angle))an.value=num(t.angle);if(num(t.size)>0)U.fill(sz,"in",num(t.size),1,1);
+    row.querySelector('[data-k="name"]').addEventListener("input",e=>{t.name=e.target.value;ch();});
+    di.addEventListener("input",()=>{t.dist=num(U.read(di,"yd",t.dist));ch();});
+    an.addEventListener("input",()=>{const v=num(an.value);t.angle=v!=null&&Math.abs(v)<=60?v:null;ch();});
+    sz.addEventListener("input",()=>{t.size=num(U.read(sz,"in",t.size));ch();});});
+  box.querySelectorAll("[data-rgdel]").forEach(b=>b.addEventListener("click",()=>{r.targets.splice(+b.dataset.rgdel,1);ch();redraw();}));
+  $("rg_add").addEventListener("click",()=>{r.targets=r.targets||[];const last=r.targets[r.targets.length-1];r.targets.push({id:rgId(),name:"",dist:last&&num(last.dist)?num(last.dist)+(U.metric?100/0.9144:100):null,angle:null,size:null});ch();redraw();
+    const rows=box.querySelectorAll(".rgrow");const nm=rows.length&&rows[rows.length-1].querySelector('[data-k="name"]');if(nm)nm.focus();});
+}
+// the load's card: pick a range, see its dope with this load (editing is on Gear & Ranges → Ranges)
 function renderRanges(){
   const box=$("rgBox"),pick=$("rg_pick");if(!box||!pick)return;
   const RS=rgList(),L=cur();
   if(state.rangeCur&&!RS.some(r=>r.id===state.rangeCur))state.rangeCur=null;
   if(!state.rangeCur&&RS[0])state.rangeCur=RS[0].id;
   pick.innerHTML=RS.length?RS.map(r=>'<option value="'+escL(r.id)+'">'+escL(r.name||"Unnamed range")+'</option>').join(""):'<option value="">No saved ranges yet</option>';
-  pick.value=state.rangeCur||"";pick.disabled=!RS.length;$("rg_edit").hidden=!RS.length;$("rg_edit").textContent=RG_EDIT?"Done":"Edit";
+  pick.value=state.rangeCur||"";pick.disabled=!RS.length;$("rg_go").textContent=RS.length?"Edit ranges ›":"+ Add a range ›";
   const r=RS.find(x=>x.id===state.rangeCur);
-  if(!r){box.innerHTML='<p class="note">Tap <b>+ New range</b> to save a place you shoot.</p>';return;}
-  let h='';
-  if(RG_EDIT){
-    h+='<div class="grid"><div class="field wide"><label for="rg_name">Name</label><input id="rg_name" value="'+escL(r.name||"")+'" placeholder="e.g. Rio Salado, south steel line"></div>'+
-      '<div class="field"><label for="rg_temp">Usual temperature ('+U.u("F")+')</label><input id="rg_temp" type="number" inputmode="decimal" step="any"></div>'+
-      '<div class="field"><label for="rg_alt">Altitude ('+U.u("ft")+')</label><input id="rg_alt" type="number" inputmode="numeric" step="any"></div>'+
-      '<div class="field wide"><label for="rg_notes">Notes</label><input id="rg_notes" value="'+escL(r.notes||"")+'" placeholder="Wind flags, best time of day, rules"></div></div>';
-    h+='<h3 class="rgsub">Targets</h3><div class="rgedit">'+(r.targets||[]).map((t,i)=>'<div class="rgrow" data-ti="'+i+'">'+
-      '<input data-k="name" aria-label="Target name" value="'+escL(t.name||"")+'" placeholder="Target '+(i+1)+'">'+
-      '<label>'+U.u("yd")+'<input data-k="dist" type="number" inputmode="numeric" step="any" aria-label="Distance"></label>'+
-      '<label>Angle °<input data-k="angle" type="number" inputmode="decimal" step="any" aria-label="Angle up or down, degrees" placeholder="0"></label>'+
-      '<label>Size '+U.u("in")+'<input data-k="size" type="number" inputmode="decimal" step="any" aria-label="Target size" placeholder="opt."></label>'+
-      '<button class="btn danger small" type="button" data-rgdel="'+i+'" aria-label="Delete this target">✕</button></div>').join("")+'</div>'+
-      '<div class="row"><button class="btn" id="rg_add" type="button">+ Target</button><button class="btn" id="rg_take" type="button">Use today\'s conditions as usual</button><button class="btn danger" id="rg_del" type="button" style="margin-left:auto">Delete range</button></div>'+
-      '<p class="note">Angle is how far up (+) or down (−) you shoot at that target, in degrees; your rangefinder may show it.</p>';
-  }else{
-    const B=window.RB_TRAJ?RB_TRAJ.solve(L.id):null;
-    if(r.notes)h+='<p class="note">'+escL(r.notes)+'</p>';
-    if(num(r.temp)!=null||num(r.alt)!=null)h+='<div class="row"><span class="note">Usual conditions: '+[num(r.temp)!=null?U.s("F",num(r.temp),0):"",num(r.alt)!=null?U.s("ft",num(r.alt),0,true):""].filter(Boolean).join(" · ")+'</span><button class="btn small" id="rg_use" type="button">Use these conditions</button></div>';
-    if(B&&B.err)h+='<p class="err">'+escL(B.err)+'</p>';
-    else if(!(r.targets||[]).length)h+='<p class="note">No targets yet. Tap <b>Edit</b>, then <b>+ Target</b>.</p>';
-    else{
-      const MIL=B.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",f1=n=>{const s2=n.toFixed(1);return s2==="-0.0"?"0.0":s2;};
-      h+='<div class="tablewrap"><table class="dope rgtbl"><thead><tr><th style="text-align:left">Target</th><th>'+U.u("yd")+'</th><th>Up<br>('+UN+')</th><th>Wind<br>('+UN+')</th><th>Size<br>('+UN+')</th></tr></thead><tbody>'+
-        r.targets.slice().sort((a,b)=>(num(a.dist)||0)-(num(b.dist)||0)).map(t=>{const d=num(t.dist),ang=num(t.angle)||0;
-          if(!(d>0))return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td colspan="4" class="note">Add its distance</td></tr>';
-          const Bt=ang?RB_TRAJ.solve(L.id,{angle:ang}):B;if(d>Bt.last)return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td>'+U.n("yd",d,0)+'</td><td colspan="3" class="note">Too far for this load</td></tr>';
-          const a2=Bt.at(d),per=d*UF/100,sz=num(t.size);
-          return '<tr><td style="text-align:left">'+escL(t.name||"Target")+(ang?' <span class="note">'+(ang>0?"↑":"↓")+Math.abs(ang)+'°</span>':'')+'</td><td>'+U.n("yd",d,0)+'</td><td><b>'+f1(-a2.path/per)+'</b></td><td>'+f1(a2.drift/per)+'</td><td>'+(sz>0?f1(sz/per):'')+'</td></tr>';}).join("")+'</tbody></table></div>'+
-        '<p class="note">Up is how far to dial from your '+U.s("yd",B.z,0)+' zero (angles included). Wind is for '+(B.wind?U.s("mph",L.wind||0,0)+' from '+B.clock+' o\'clock, hold '+B.side:'no wind (set it under Conditions)')+'. Size is the target in '+UN+', so you can see how much room you have.</p>';
-    }
-  }
-  box.innerHTML=h;
-  if(RG_EDIT){
-    const ch=()=>{save();};
-    $("rg_name").addEventListener("input",e=>{r.name=e.target.value;const o=pick.querySelector('option[value="'+CSS.escape(r.id)+'"]');if(o)o.textContent=r.name||"Unnamed range";ch();});
-    $("rg_notes").addEventListener("input",e=>{r.notes=e.target.value;ch();});
-    if(num(r.temp)!=null)U.fill($("rg_temp"),"F",num(r.temp),1,0);if(num(r.alt)!=null)U.fill($("rg_alt"),"ft",num(r.alt),0,0);
-    $("rg_temp").addEventListener("input",e=>{const v=U.read(e.target,"F",r.temp);r.temp=num(v);ch();});
-    $("rg_alt").addEventListener("input",e=>{const v=U.read(e.target,"ft",r.alt);r.alt=num(v);ch();});
-    box.querySelectorAll(".rgrow").forEach(row=>{const t=r.targets[+row.dataset.ti];
-      const di=row.querySelector('[data-k="dist"]'),an=row.querySelector('[data-k="angle"]'),sz=row.querySelector('[data-k="size"]');
-      if(num(t.dist)>0)U.fill(di,"yd",num(t.dist),0,0);if(num(t.angle))an.value=num(t.angle);if(num(t.size)>0)U.fill(sz,"in",num(t.size),1,1);
-      row.querySelector('[data-k="name"]').addEventListener("input",e=>{t.name=e.target.value;ch();});
-      di.addEventListener("input",()=>{t.dist=num(U.read(di,"yd",t.dist));ch();});
-      an.addEventListener("input",()=>{const v=num(an.value);t.angle=v!=null&&Math.abs(v)<=60?v:null;ch();});
-      sz.addEventListener("input",()=>{t.size=num(U.read(sz,"in",t.size));ch();});});
-    box.querySelectorAll("[data-rgdel]").forEach(b=>b.addEventListener("click",()=>{r.targets.splice(+b.dataset.rgdel,1);save();renderRanges();}));
-    $("rg_add").addEventListener("click",()=>{r.targets=r.targets||[];const last=r.targets[r.targets.length-1];r.targets.push({id:rgId(),name:"",dist:last&&num(last.dist)?num(last.dist)+(U.metric?100/0.9144:100):null,angle:null,size:null});save();renderRanges();
-      const rows=box.querySelectorAll(".rgrow");const nm=rows.length&&rows[rows.length-1].querySelector('[data-k="name"]');if(nm)nm.focus();});
-    $("rg_take").addEventListener("click",()=>{r.temp=num(L.temp);r.alt=num(L.alt);save();renderRanges();});
-    const del=$("rg_del");del.addEventListener("click",()=>{if(del.dataset.armed){state.ranges=RS.filter(x=>x.id!==r.id);state.rangeCur=null;RG_EDIT=false;save();renderRanges();return;}
-      del.dataset.armed="1";del.textContent="Tap again to delete";setTimeout(()=>{if(del.isConnected){delete del.dataset.armed;del.textContent="Delete range";}},4000);});
-  }else{
-    const u=$("rg_use");if(u)u.addEventListener("click",()=>{if(num(r.temp)!=null)L.temp=num(r.temp);if(num(r.alt)!=null)L.alt=num(r.alt);fillInputs();save();render();});
-  }
+  if(!r){box.innerHTML='<p class="note">No saved ranges yet. Add the places you shoot, with each target\'s distance and angle, under <b>Gear &amp; Ranges → Ranges</b>.</p>';return;}
+  box.innerHTML=rangeDopeHtml(r,L);bindRangeDope(box,r,L,renderRanges);
 }
 $("rg_pick").addEventListener("change",e=>{state.rangeCur=e.target.value||null;save();renderRanges();});
-$("rg_edit").addEventListener("click",()=>{RG_EDIT=!RG_EDIT;renderRanges();if(!RG_EDIT)render();});
-$("rg_new").addEventListener("click",()=>{const r={id:rgId(),name:"",targets:[{id:rgId(),name:"",dist:U.metric?100/0.9144:100,angle:null,size:null}],temp:null,alt:null,notes:""};rgList().push(r);state.rangeCur=r.id;RG_EDIT=true;save();renderRanges();const n=$("rg_name");if(n)n.focus();});
+$("rg_go").addEventListener("click",()=>{if(window.RB_GEAR_RANGES)RB_GEAR_RANGES(rgList().length?state.rangeCur:"__new");});
 // the holds for one distance drawn on a plain reticle: the dot is where the target goes
 const scopeName=sc=>[sc.mfr,sc.model].filter(Boolean).join(" ")||"Unnamed scope";
 function renderReticle(L,S,zs,path){
@@ -2212,7 +2217,7 @@ function renderReticle(L,S,zs,path){
     if(tp){const lo=Math.ceil(mag[0]||1),hi=Math.floor(mag[1]||tp),opts=[];for(let m=lo;m<=hi;m++)opts.push(m);if(!opts.includes(tp))opts.push(tp);opts.sort((a,b)=>a-b);
       pwr='<div class="retpwr"><label for="rt_pwr">Scope power</label><select id="rt_pwr" class="fieldselect">'+opts.map(m=>'<option value="'+m+'"'+(m===pw?' selected':'')+'>'+m+'x'+(m===tp?' (marks true)':'')+'</option>').join("")+'</select></div>'+
         '<p class="note sfpnote">Second focal plane: the marks are true at <b>'+tp+'x</b>.'+(kf!==1?' At '+pw+'x each mark covers '+(tp/pw).toFixed(2)+' '+UN+', so the hold is counted in marks; turn it to '+tp+'x to hold in true '+UN+'.':'')+'</p>';}
-    else pwr='<p class="note sfpnote">Second focal plane: enter the power the reticle is true at on the scope\'s page (Guns &amp; Ammo → Scopes) to get holds at other powers. Until then the holds are only right at that power.</p>';
+    else pwr='<p class="note sfpnote">Second focal plane: enter the power the reticle is true at on the scope\'s page (Gear &amp; Ranges → Scopes) to get holds at other powers. Until then the holds are only right at that power.</p>';
   }
   const lookBtn=pic?'':'<button class="btn small" type="button" id="rtLook">Change how it looks</button>';
   box.innerHTML=pwr+'<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+
@@ -2618,7 +2623,7 @@ window.TRAJ_ADD=function(spec){
 let RIFLES=[];
 function escT(t){return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function rifleOf(L){return L.rifleId?RIFLES.find(r=>r.id===L.rifleId):null;}
-// the scope on this load's gun (Guns & Ammo → Scopes), if it has one
+// the scope on this load's gun (Gear & Ranges → Scopes), if it has one
 let SCOPES=[];
 function scopeOf(L){const r=rifleOf(L);return r&&r.scopeId?SCOPES.find(x=>x.id===r.scopeId)||null:null;}
 window.TRAJ_SCOPES=function(list){SCOPES=Array.isArray(list)?list:[];if(TVIEW==="detail")render();};
@@ -2628,14 +2633,14 @@ function fillRifle(){
   if(L.rifleId&&!r)h+='<option value="'+escT(L.rifleId)+'">'+escT(L.rifleName||"Gun")+' (not in your Guns list)</option>';
   sel.innerHTML=h;sel.value=L.rifleId||"";
   const note=$("f_rifleNote");let t="";
-  // with a gun picked, its sight height and twist are used (and edited on Guns & Ammo), so their boxes below are hidden
+  // with a gun picked, its sight height and twist are used (and edited on Gear & Ranges), so their boxes below are hidden
   const rs=r?num(r.sightHeight):null,tw=r?num(r.twist):null;
   {let changed=false;if(rs>0&&L.sh!==rs){L.sh=rs;L._rifleSh=rs;U.fill($("f_sh"),"in",rs,2,3);changed=true;}if(tw>0&&L.twist!==tw){L.twist=tw;L._rifleTw=tw;U.fill($("f_twist"),"dim",tw,1,2);changed=true;}
     if(changed){save();setTimeout(()=>{try{render();}catch(e){}},0);}}
   {const a=$("f_sh").closest(".field"),b=$("f_twist").closest(".field");if(a)a.hidden=rs>0;if(b)b.hidden=tw>0;}
   if(r){const bits=[];if(r.barrel)bits.push((num(r.barrel)!=null&&/^\s*[\d.]+\s*(in|")?\s*$/.test(r.barrel)?U.s("dim",num(r.barrel),0):r.barrel+" in")+" barrel");if(tw>0)bits.push("1:"+(U.metric?U.s("dim",tw,0):tw)+" twist");if(rs>0)bits.push("sight height "+U.s("in",rs,U.metric?1:2));t=bits.join(" · ");
-    if(rs>0||tw>0)t+=(t?". ":"")+"Change these on the Guns & Ammo tab.";}
-  else if(!RIFLES.length)t="Add guns on the Guns and Ammo tab to pick one here.";
+    if(rs>0||tw>0)t+=(t?". ":"")+"Change these on the Gear & Ranges tab.";}
+  else if(!RIFLES.length)t="Add guns on the Gear & Ranges tab to pick one here.";
   note.textContent=t;note.hidden=!t;
 }
 $("f_rifle").addEventListener("change",()=>{
@@ -2645,7 +2650,7 @@ $("f_rifle").addEventListener("change",()=>{
     const tw=num(r.twist);if(tw>0){L.twist=tw;L._rifleTw=tw;$("f_twist").value=tw;}}
   save();fillRifle();render();
 });
-/* ---- ammunition picker (ammo comes from the Guns and Ammo tab): a searchable list instead of one long dropdown ---- */
+/* ---- ammunition picker (ammo comes from the Gear & Ranges tab): a searchable list instead of one long dropdown ---- */
 var AMMO; // filled in by TRAJ_AMMO; var so fillInputs can run before this line
 const ammoName=a=>a.kind==="reload"
   ?[a.name||[a.cartridge,a.weight?a.weight+" gr":"",a.bullet].filter(Boolean).join(" ")||"Reloaded ammo",num(a.charge)?num(a.charge)+" gr"+(a.powder?" "+a.powder:""):""].filter(Boolean).join(" · ")
@@ -2663,7 +2668,7 @@ function fillAmmo(){
       f("Velocity",v?U.s("fps",v,0,true)+(num(a.measVel)?" measured":" on the box"+(num(a.testBarrel)?" ("+U.s("dim",num(a.testBarrel),0)+" barrel)":"")):"")+'</div><button class="linkbtn" type="button" id="f_ammoEdit">Edit</button></div>';
     $("f_ammoEdit").addEventListener("click",()=>{if(window.RB_OPEN_AMMO)RB_OPEN_AMMO(a.id,cur().id);});
   }else info.innerHTML="";
-  const note=$("f_ammoNote");note.textContent=a?"The bullet details come from this ammo; change them on the Guns & Ammo tab (Edit). Muzzle velocity below starts from its velocity and is yours to adjust for this gun. Range trips here count down your rounds on hand.":"Pick your own ammo (factory or reloaded), anything from the factory catalog, or enter new factory ammo. A catalog pick is added to your Ammunition on the Guns & Ammo tab.";note.hidden=!note.textContent;
+  const note=$("f_ammoNote");note.textContent=a?"The bullet details come from this ammo; change them on the Gear & Ranges tab (Edit). Muzzle velocity below starts from its velocity and is yours to adjust for this gun. Range trips here count down your rounds on hand.":"Pick your own ammo (factory or reloaded), anything from the factory catalog, or enter new factory ammo. A catalog pick is added to your Ammunition on the Gear & Ranges tab.";note.hidden=!note.textContent;
   if(!$("ammoPick").hidden)drawAmmoPick();
 }
 function drawAmmoPick(){
@@ -2676,7 +2681,7 @@ function drawAmmoPick(){
   const sortMine=(x,y)=>(sameCart(y.cartridge)?1:0)-(sameCart(x.cartridge)?1:0)||ammoName(x).localeCompare(ammoName(y),undefined,{numeric:true});
   const rel=AMMO.filter(a=>a.kind==="reload"&&hit(mineS(a))).sort(sortMine),fac=AMMO.filter(a=>a.kind!=="reload"&&hit(mineS(a))).sort(sortMine);
   const CAT=(window.RB_AMMO_CATALOG||[]).filter(c=>!AMMO.some(x=>x.catItem===c.item));
-  let h='<button type="button" class="apick newammo" role="option" data-pv="__newfac">+ Enter new factory ammo<small>Opens the Guns &amp; Ammo tab to fill in its details</small></button>'+(words.length?'':row("","None","Not using ammo from the list"));
+  let h='<button type="button" class="apick newammo" role="option" data-pv="__newfac">+ Enter new factory ammo<small>Opens the Gear &amp; Ranges tab to fill in its details</small></button>'+(words.length?'':row("","None","Not using ammo from the list"));
   if(rel.length)h+='<div class="pickhead">My reloaded ammo</div>'+rel.map(a=>row(a.id,ammoName(a),mineD(a))).join("");
   if(fac.length)h+='<div class="pickhead">My factory ammo</div>'+fac.map(a=>row(a.id,ammoName(a),mineD(a))).join("");
   const catD=c=>[U.s("fps",c.v,0,true),c.bc!=null?"BC "+c.bc:""].filter(Boolean).join(" · ");
@@ -3064,11 +3069,11 @@ function syncRifleIntoLoads(r){
 function riflesEditing(){const a=document.activeElement;return a&&$("riflesRoot").contains(a)&&/INPUT|TEXTAREA/.test(a.tagName);}
 let rifleOpen=null;
 document.getElementById("rifHeadBack").addEventListener("click",()=>{if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
-  rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;renderRifles();window.scrollTo(0,0);});
+  rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
 let ammoReturnTraj=null;
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 function rifleSummary(r){return [num(r.barrel)?U.s("dim",num(r.barrel),0)+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
 /* round count: starting count + rounds from range trips (loads in the calculator using this rifle) + shots in load-development groups */
 function rifleRounds(r){
@@ -3081,7 +3086,7 @@ function rifleRounds(r){
   const pct=life>0?total/life*100:null,every=num(r.cleanEvery);
   return {base,trip,nTrips,dev,total,life,pct,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};
 }
-/* ---------- factory ammo (Guns and Ammo tab): for people who shoot store-bought ammo ---------- */
+/* ---------- factory ammo (Gear & Ranges tab): for people who shoot store-bought ammo ---------- */
 let ammo=[],ammoDirty=false,ammoTimer=null,ammoSaving=Promise.resolve(),ammoVer=0,ammoOpen=null,gunArea="guns",ammoCat=false,ammoCatQ="";
 /* Popular factory loads, copied from each maker's own product pages (checked Oct 13, 2026). BC is the maker's G1 (and G7 where published).
    Hornady BCs are their Doppler-measured Mach 2.25 values. Handgun makers don't publish BCs, so those are left blank.
@@ -3434,11 +3439,12 @@ function renderRifles(){
   const root=$("riflesRoot");if(!root)return;
   document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.setAttribute("aria-selected",b.dataset.garea===gunArea?"true":"false"));
   if(gunArea==="scopes"){renderScopes(root);return;}
+  if(gunArea==="ranges"){renderGearRanges(root);return;}
   if(gunArea==="ammo"){
     const a0=ammoOpen&&ammo.find(x=>x.id===ammoOpen);
     renderAmmo(root);
     const a1=ammoOpen&&ammo.find(x=>x.id===ammoOpen);
-    $("rifSeg").hidden=!!a1;$("rifHeadBack").hidden=!a1;$("rifHeadBack").textContent="‹ Ammunition";$("rifSub").hidden=!!a1;$("rifTitle").textContent=a1?ammoLabel(a1):"Guns and Ammo";
+    $("rifSeg").hidden=!!a1;$("rifHeadBack").hidden=!a1;$("rifHeadBack").textContent="‹ Ammo";$("rifSub").hidden=!!a1;$("rifTitle").textContent=a1?ammoLabel(a1):"Gear & Ranges";
     return;
   }
   const usedBy=id=>[...loads.entries()].filter(([lid,L])=>isMine(lid)&&L.rifleId===id);
@@ -3493,7 +3499,7 @@ function renderRifles(){
   root.innerHTML=h;
   if(rifleOpen&&window.foldAll)foldAll(root,"gun");
   if(!rifleOpen&&window.RB_FILTER)RB_FILTER(root.querySelector('[aria-label="Guns list"]'),"guns");
-  {const r0=rifleOpen&&rifles.find(x=>x.id===rifleOpen);$("rifSeg").hidden=!!r0;$("rifHeadBack").hidden=!r0;$("rifHeadBack").textContent="‹ Guns";$("rifSub").hidden=!!r0;$("rifTitle").textContent=r0?(r0.name||"Unnamed gun"):"Guns and Ammo";}
+  {const r0=rifleOpen&&rifles.find(x=>x.id===rifleOpen);$("rifSeg").hidden=!!r0;$("rifHeadBack").hidden=!r0;$("rifHeadBack").textContent="‹ Guns";$("rifSub").hidden=!!r0;$("rifTitle").textContent=r0?(r0.name||"Unnamed gun"):"Gear & Ranges";}
   if(window.TRAJ_RIFLES)window.TRAJ_RIFLES(rifles);
   const addBtn=$("rifleAdd");
   if(addBtn)addBtn.addEventListener("click",()=>{const r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:"",barrel:null,twist:null,sightHeight:null,notes:""};rifles.push(r);queueRifles();rifleOpen=r.id;renderRifles();window.scrollTo(0,0);const el=$("rf_name");if(el)el.focus();});
@@ -3532,7 +3538,47 @@ function renderRifles(){
     mountScope(v||null,r.id);renderRifles();});
   {const so=$("rfScopeOpen");if(so)so.addEventListener("click",()=>{scopeFromGun=r.id;gunArea="scopes";scopeOpen=r.scopeId;rifleOpen=null;renderRifles();window.scrollTo(0,0);});}
 }
-/* ---------- scopes (Guns & Ammo → Scopes): kept with the guns, one per gun ---------- */
+/* ---------- saved ranges (Gear & Ranges → Ranges): the places you shoot. They're kept with the Shooting loads, which use them ---------- */
+let rangeOpen=null,rangeLoad=null;
+try{rangeLoad=localStorage.getItem("rb.rangeLoad");}catch(e){}
+window.RB_GEAR_RANGES=id=>{gunArea="ranges";rifleOpen=null;ammoOpen=null;scopeOpen=null;rangeOpen=null;
+  const G=window.RB_TRAJ&&RB_TRAJ.rg;if(G){if(id==="__new"){rangeOpen=G.add().id;}else if(id&&G.list().some(r=>r.id===id))rangeOpen=id;}
+  const c=window.RB_TRAJ&&RB_TRAJ.cur();if(c)rangeLoad=c.id;
+  showTab("rifles");renderRifles();window.scrollTo(0,0);if(rangeOpen){const n=$("rg_name");if(n&&!n.value)n.focus();}};
+function renderGearRanges(root){
+  const G=window.RB_TRAJ&&RB_TRAJ.rg,RS=G?G.list():[],r=rangeOpen&&RS.find(x=>x.id===rangeOpen);if(rangeOpen&&!r)rangeOpen=null;
+  const loadsT=(window.RB_TRAJ&&RB_TRAJ.all())||[];if(!loadsT.some(l=>l.id===rangeLoad))rangeLoad=loadsT[0]?loadsT[0].id:null;
+  const span=x=>{const ds=(x.targets||[]).map(t=>num(t.dist)).filter(d=>d>0);return ds.length?(ds.length===1?U.s("yd",ds[0],0):U.n("yd",Math.min(...ds),0)+"–"+U.s("yd",Math.max(...ds),0)):"";};
+  let h;
+  if(!r){
+    h='<section class="card" aria-label="Ranges list"><div class="row"><button class="btn primary" id="rgAdd" type="button">+ New range</button></div>';
+    if(!RS.length)h+='<p class="note">No saved ranges yet. Save the places you shoot with each target\'s distance, angle and size, and see the dial and wind for every target with any of your Shooting loads. Their names also show up under <b>Where</b> on range trips.</p>';
+    else h+='<div class="cartgroup">'+[...RS].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(x=>{const n=(x.targets||[]).length;
+      return '<button class="loaditem" type="button" data-rgopen="'+esc(x.id)+'"><span class="t">'+esc(x.name||"Unnamed range")+'</span><span class="d">'+esc([n+' target'+(n===1?'':'s'),span(x)].filter(Boolean).join(" · "))+'</span>'+
+        (num(x.temp)!=null||num(x.alt)!=null?'<span class="m">Usually '+esc([num(x.temp)!=null?U.s("F",num(x.temp),0):"",num(x.alt)!=null?U.s("ft",num(x.alt),0,true):""].filter(Boolean).join(" · "))+'</span>':'')+'</button>';}).join("")+'</div>';
+    h+='</section>';
+  }else{
+    h='<div class="row"><span class="savestate" id="rifleState"></span></div>'+
+      '<section class="card" aria-label="Range"><h2>Details</h2><div id="rgEditBox">'+G.editHtml(r)+'</div></section>'+
+      '<section class="card" aria-label="Range dope"><h2>Dope</h2>'+(loadsT.length?'<div class="row"><label for="rgLoad" class="note" style="margin:0">Dope for</label><select id="rgLoad" class="fieldselect" style="flex:1 1 220px;min-width:0">'+loadsT.map(l=>'<option value="'+esc(l.id)+'"'+(l.id===rangeLoad?' selected':'')+'>'+esc(l.name)+'</option>').join("")+'</select></div><div id="rgDopeBox"></div>':'<p class="note">Add a Shooting load to see the dial and wind for these targets.</p>')+'</section>'+
+      '<div class="row endrow"><button class="btn danger" type="button" id="rgDel">Delete range</button></div>';
+  }
+  root.innerHTML=h;
+  $("rifSeg").hidden=!!r;$("rifHeadBack").hidden=!r;$("rifHeadBack").textContent="‹ Ranges";$("rifSub").hidden=!!r;$("rifTitle").textContent=r?(r.name||"Unnamed range"):"Gear & Ranges";
+  if(!r){
+    $("rgAdd").addEventListener("click",()=>{if(!G)return;rangeOpen=G.add().id;renderRifles();window.scrollTo(0,0);const n=$("rg_name");if(n)n.focus();});
+    root.querySelectorAll("[data-rgopen]").forEach(b=>b.addEventListener("click",()=>{rangeOpen=b.dataset.rgopen;G.pick(rangeOpen);renderRifles();window.scrollTo(0,0);}));
+    return;
+  }
+  if(window.foldAll)foldAll(root,"range");
+  const dope=()=>{const box=$("rgDopeBox");if(!box||!rangeLoad)return;box.innerHTML=G.dopeHtml(r,rangeLoad);G.bindDope(box,r,rangeLoad,dope);};
+  const edit=()=>{const box=$("rgEditBox");box.innerHTML=G.editHtml(r);G.bindEdit(box,r,()=>{$("rifTitle").textContent=r.name||"Unnamed range";const st=$("rifleState");if(st)st.textContent="Saved";clearTimeout(edit.t);edit.t=setTimeout(dope,350);},()=>{edit();dope();});};
+  edit();dope();
+  {const sel=$("rgLoad");if(sel)sel.addEventListener("change",()=>{rangeLoad=sel.value;try{localStorage.setItem("rb.rangeLoad",rangeLoad);}catch(e){}dope();});}
+  $("rgDel").addEventListener("click",()=>{const out=G.del(r.id);rangeOpen=null;renderRifles();window.scrollTo(0,0);
+    if(out)RB_UNDO("Deleted "+(r.name||"the range"),()=>{G.put(out.r,out.i);rangeOpen=out.r.id;if(gunArea==="ranges")renderRifles();});});
+}
+/* ---------- scopes (Gear & Ranges → Scopes): kept with the guns, one per gun ---------- */
 let scopes=[],scopeOpen=null,scopeAdding=false,scopeQ="",scopeFromGun=null,scopeForGun=null,SCOPE_CAT=null,retUp=0;
 const scopeLabel=x=>[x.mfr,x.model].filter(Boolean).join(" ")||"Unnamed scope";
 const turretU=x=>x.turret==="mil"||x.turret==="moa"?x.turret:(x.unit==="mil"?"mil":"moa");
@@ -3610,7 +3656,7 @@ function renderScopes(root){
   }
   root.innerHTML=h;
   $("rifSeg").hidden=!!(sc||scopeAdding);$("rifHeadBack").hidden=!(sc||scopeAdding);$("rifHeadBack").textContent=scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)&&sc?"‹ "+(rifles.find(r=>r.id===scopeFromGun).name||"Gun"):"‹ Scopes";$("rifSub").hidden=!!(sc||scopeAdding);
-  $("rifTitle").textContent=sc?scopeLabel(sc):scopeAdding?"Add a scope":"Guns and Ammo";
+  $("rifTitle").textContent=sc?scopeLabel(sc):scopeAdding?"Add a scope":"Gear & Ranges";
   if(scopeAdding){
     const draw=()=>{const box=$("scopeCat");if(!box||!SCOPE_CAT)return;const q=scopeQ.trim().toLowerCase().split(/\s+/).filter(Boolean);
       const hit=SCOPE_CAT.map((x,i)=>[x,i]).filter(([x])=>{const t=(x.mfr+" "+x.model+" "+x.unit+" "+(x.unit==="mil"?"mrad":"")+" "+x.fp+" "+x.reticle).toLowerCase();return q.every(w=>t.includes(w));});
@@ -4125,7 +4171,7 @@ function bindBatches(L){
   $("bt_date").value=today();
   if(!$("bt_charge").value){const lc=loadCharge(L);if(lc)$("bt_charge").value=lc;}
   const drawInv=()=>{const box=$("invList");if(!box)return;const inv=ammo.filter(a=>isReload(a)&&a.loadId===id).sort((x,y)=>(num(x.charge)||0)-(num(y.charge)||0));
-    box.innerHTML=inv.length?'<div class="invsum">'+inv.map(a=>{const u=ammoUse(a);return '<button type="button" data-invopen="'+esc(a.id)+'"><span><span class="big">'+(u.onHand!=null?u.onHand.toLocaleString():'–')+'</span> rounds on hand'+(num(a.charge)!=null?' at <b>'+num(a.charge)+' gr</b>':'')+(u.low?' <span class="lowtag">Low</span>':'')+'</span><span class="note">'+(u.ppr!=null?'$'+u.ppr.toFixed(2)+'/round · ':'')+'Open ›</span></button>';}).join("")+'</div>':'<p class="note">No loaded rounds yet. Log a batch below and they\'ll show up here and under <b>Guns &amp; Ammo → Ammunition</b>.</p>';
+    box.innerHTML=inv.length?'<div class="invsum">'+inv.map(a=>{const u=ammoUse(a);return '<button type="button" data-invopen="'+esc(a.id)+'"><span><span class="big">'+(u.onHand!=null?u.onHand.toLocaleString():'–')+'</span> rounds on hand'+(num(a.charge)!=null?' at <b>'+num(a.charge)+' gr</b>':'')+(u.low?' <span class="lowtag">Low</span>':'')+'</span><span class="note">'+(u.ppr!=null?'$'+u.ppr.toFixed(2)+'/round · ':'')+'Open ›</span></button>';}).join("")+'</div>':'<p class="note">No loaded rounds yet. Log a batch below and they\'ll show up here and under <b>Gear &amp; Ranges → Ammo</b>.</p>';
     box.querySelectorAll("[data-invopen]").forEach(b=>b.addEventListener("click",()=>{gunArea="ammo";ammoOpen=b.dataset.invopen;showTab("rifles");renderRifles();window.scrollTo(0,0);}));};
   drawInv();
   const showCost=()=>{const el=$("batchCost");if(!el)return;el.innerHTML=costText(roundCost(L,num($("bt_charge").value),$("bt_lot").value||null));};
@@ -5658,7 +5704,7 @@ function renderDetail(){
     const own=rifles.find(r=>r.id===L.rifleId);
     let opts='<option value="">No gun</option>'+rifles.map(r=>'<option value="'+esc(r.id)+'"'+(r.id===L.rifleId?' selected':'')+'>'+esc(r.name||"Unnamed gun")+'</option>').join("");
     if(L.rifleId&&!own)opts+='<option value="'+esc(L.rifleId)+'" selected>'+esc(L.rifleName||"Rifle")+'</option>';
-    h+='<div class="field wide"><label for="ld_rifle">Gun</label><select id="ld_rifle" class="fieldselect">'+opts+'</select><span class="note">Add guns on the <b>Guns &amp; Ammo</b> tab. Picking one here lets Use in calculator fill in its sight height.</span></div>';
+    h+='<div class="field wide"><label for="ld_rifle">Gun</label><select id="ld_rifle" class="fieldselect">'+opts+'</select><span class="note">Add guns on the <b>Gear &amp; Ranges</b> tab. Picking one here lets Use in calculator fill in its sight height.</span></div>';
   }
   h+='<div class="field wide"><label for="ld_notes">Notes</label><textarea id="ld_notes">'+esc(L.notes)+'</textarea></div>';
   h+='</div></div></section>';
@@ -6703,7 +6749,7 @@ function renderHome(){
       if(mine.length)h+='<div class="cartgroup">'+mine.map(t=>card('data-hpick="'+esc(t.id)+'"',t.name,t.cart)).join("")+'</div>';
       if(fa.length)h+='<p class="note rdsub">Ammunition'+(g?' (makes a Shooting load for this gun)':'')+'</p><div class="cartgroup">'+fa.map(a=>card('data-hammo="'+esc(a.id)+'"',ammoLabel(a),a.cartridge||"")).join("")+'</div>';
       if(rest.length)h+='<p class="note rdsub">Other Shooting loads</p><div class="cartgroup">'+rest.map(t=>card('data-hpick="'+esc(t.id)+'"',t.name,t.cart)).join("")+'</div>';
-      if(!mine.length&&!fa.length&&!rest.length)h+='<p class="note">Nothing to shoot yet. Add ammunition under <b>Guns &amp; Ammo</b>, or make a load on <b>Shooting</b>.</p>';
+      if(!mine.length&&!fa.length&&!rest.length)h+='<p class="note">Nothing to shoot yet. Add ammunition under <b>Gear &amp; Ranges</b>, or make a load on <b>Shooting</b>.</p>';
       h+='<p class="err" id="hPickErr" hidden></p>';
     }
   }
@@ -7121,7 +7167,7 @@ const INFO={
   secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns, and turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds.",h:"Reading the results"},
   "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
   secTDope:{t:"Dope card & reticle",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and <b>MOA</b> or <b>MIL</b>, then tap <b>Print dope card</b>. Tap any distance on the card to see where the target goes on a plain reticle; on a phone it slides up, with ‹ › to step through the distances. <b>Field mode</b> shows the holds in big numbers for the bench.",h:"Print a dope card"},
-  secTRanges:{t:"Saved ranges",b:"Save the places you shoot: tap <b>+ New range</b>, add each target's distance, angle and size, then tap <b>Done</b>. It lists the dial and wind for every target with this load. <b>Use these conditions</b> sets the range's usual temperature and altitude.",h:"Saved ranges"},
+  secTRanges:{t:"Saved ranges",b:"Pick one of your saved ranges to see the dial and wind for each of its targets with this load and its conditions. Add and change ranges under <b>Gear &amp; Ranges → Ranges</b> (<b>Edit ranges ›</b>).",h:"Saved ranges"},
   "@Range trips":{t:"Range trips",b:"A log of each day you shot this load. Tap <b>+ New range trip</b> and fill in what you like: distance, rounds, weather, chronograph strings, target photos and the cold-bore shot. Rounds fired count toward the gun's round count and come off your ammo.",h:"Range trips"},
   "@Range trip":{t:"Range trip",b:"Fill in what you like about the day. <b>Import chronograph file</b> reads your chronograph's export, and target photos are measured when you tap one (or use <b>Live target</b> on a spotting scope). <b>Cold-bore shot</b> records where your first shot landed. <b>Print trip report</b> makes a PDF of the day.",h:"Range trips"},
   secBatches:{t:"Loaded rounds",b:"Log each batch you load: how many rounds, the charge, the brass lot and the date. It takes the bullets, primers and powder out of your Components and adds the rounds to your ammo. <b>Remove</b> on a batch puts them back, and <b>Label</b> prints box labels.",h:"Inventory"},
@@ -7136,6 +7182,8 @@ const INFO={
   secTargets:{t:"Targets",b:"Target photos for each ladder. Tap <b>+ Photo</b> to add one, then tap it and <b>Measure groups</b>; printed Range Book targets are read by themselves. <b>Live target</b> marks the shots as they land through a spotting scope.",h:"Target photos"},
   "@Details":{t:"Details",b:"What this component is, how much you have and what it cost. Fill in <b>On hand</b> and <b>Warn when</b> to keep track of stock; logging a batch takes it out for you. The cost is used for each load's cost per round.",h:()=>{const k=document.querySelector("#compTabs [aria-selected=true]");return k&&k.dataset.ck==="brass"?"Brass lots":"Components: bullets, powders and primers";}},
   "@Loads using this":{t:"Loads",b:"The loads that use this. If you change the details above, loads with the old details are marked; tap <b>Update</b> to copy the new details into them.",h:"Components: bullets, powders and primers"},
+  "@Range":{t:"Range details",b:"The range's name, its usual temperature and altitude, notes, and each target's distance, angle (up or down, in degrees) and size. Changes save as you type.",h:"Saved ranges"},
+  "@Range dope":{t:"Dope",b:"Pick a Shooting load to see how far to dial and the wind hold for every target, angles included, and each target's size in MOA or MIL. <b>Use these conditions</b> sets that load's temperature and altitude to the range's usual ones.",h:"Saved ranges"},
   "@Scope":{t:"Scope details",b:"The scope's power, focal plane, units and click value. Put it on a gun with <b>On gun</b>, and every Shooting load with that gun uses its MOA or MIL. On a second focal plane scope, enter the power the marks are true at so holds work at other powers.",h:"Scopes"},
   "@Reticle":{t:"Reticle",b:"Pick the plain reticle and tap <b>Change how it looks</b> to make it like yours, or pick <b>A picture of my reticle</b>, upload one and set its scale (tap the center, then a mark a known distance away). The dope card then shows your holds on it.",h:"Your own reticle picture"},
   "@Add a scope":{t:"Add a scope",b:"Search by maker, model, or MIL or MOA, and tap yours to fill in its specs from the maker's published numbers. Not listed? Tap <b>+ Enter a scope yourself</b>.",h:"Scopes"},
@@ -7166,6 +7214,7 @@ function helpTopic(tab){
   if(tab==="brass"){const k=document.querySelector("#compTabs [aria-selected=true]");return k&&k.dataset.ck==="brass"?"Brass lots":"Components: bullets, powders and primers";}
   if(tab==="rnotes")return "Reloading notes";
   if(tab==="rifles"){const g=document.querySelector('#rifSeg [aria-selected="true"]');if(g&&g.dataset.garea==="ammo"){if(document.querySelector('#panel-rifles [aria-label="Box photo"]'))return "Factory ammo";if(document.querySelector('#panel-rifles [aria-label="Ammo details"]'))return "Reloaded ammo";return "Ammunition";}
+    if(g&&g.dataset.garea==="ranges")return "Saved ranges";
     if(g&&g.dataset.garea==="scopes")return document.querySelector('#panel-rifles [aria-label="Reticle"]')?"Your own reticle picture":"Scopes";
     return document.querySelector('#panel-rifles [aria-label="Round count"]')?"Round count and barrel life":"Guns";}
   if(tab==="tools"){const t=document.querySelector("[data-toolsec]:not([hidden])");return t&&HELP_TOOL[t.dataset.toolsec]||"#hTools";}
@@ -7175,7 +7224,7 @@ function helpTopic(tab){
 }
 let helpFrom=null;
 const curTab=()=>tabs.find(k=>{const p=$("panel-"+k);return p&&!p.hidden;})||"home";
-const TAB_NAMES={home:"Home",traj:"Shooting",log:"Range log",rel:"Reloading",brass:"Components",rnotes:"Notes",rifles:"Guns & Ammo",tools:"Tools",targets:"Printable targets",account:"Account"};
+const TAB_NAMES={home:"Home",traj:"Shooting",log:"Range log",rel:"Reloading",brass:"Components",rnotes:"Notes",rifles:"Gear & Ranges",tools:"Tools",targets:"Printable targets",account:"Account"};
 function helpFind(topic){
   const P=$("panel-help");if(!P||!topic)return null;
   if(topic[0]==="#")return P.querySelector(topic);
@@ -7543,7 +7592,7 @@ function startTour(){
     {el:()=>vis("hNewTrip"),t:"Home",b:"Start here. <b>Start a range day</b> picks your gun and load and opens a range trip with today's weather. Home also shows what needs attention, like low components or a gun due for cleaning, and your recent trips and loads."},
     {el:()=>navFor("tab-traj"),t:"Shooting",b:"Your ballistics calculator: drops and holds for each gun and load, a printable dope card, and <b>Field mode</b> for the bench. Your range trips and the <b>Range log</b> live here too."},
     {el:()=>navFor("tab-rel"),t:"Reloading",b:"Your load recipes and <b>ladder tests</b>: charges, chronograph strings (import from LabRadar, Garmin and others), velocity charts and target photos Range Book can measure. Open the <b>SAMPLE</b> load to see how it all fits together."},
-    {el:()=>navFor("tab-rifles"),t:"Guns & Ammo",b:"Your guns with round counts, barrel life and cleaning reminders, your ammunition, and your components (bullets, powder, primers and brass) with what's on hand and what it costs."},
+    {el:()=>navFor("tab-rifles"),t:"Gear & Ranges",b:"Your guns, ammo and scopes, and the ranges you shoot at. Guns keep round counts, barrel life and cleaning reminders; a gun's scope sets MOA or MIL for its loads; each saved range shows the dial for every target."},
     {el:()=>navFor("tab-tools"),t:"Tools",b:"Quick calculators, printable targets, and <b>Live target</b>: put your phone on a spotting scope and it marks each shot as it lands."+"<span class=\"tournarrow\"> On a phone, Tools is under <b>More</b>.</span>"},
     {el:()=>navFor("tab-help"),t:"How to Use",b:"Every screen explained, plus <b>What's new</b> after each update. Your theme (including <b>Red Night</b>), metric or imperial, backups and password are under <b>Account</b>."+"<span class=\"tournarrow\"> On a phone, they're all under <b>More</b>.</span>"},
     ...(ME&&ME.isAdmin&&!GUEST?[{el:()=>navFor("tab-admin"),t:"Admin",b:"You're an admin. Add the people who'll use this Range Book under <b>Admin → Add a user</b>; each gets a temporary password and their own private data. Backups and the guest button are here too."+"<span class=\"tournarrow\"> On a phone, Admin is under <b>More</b>.</span>"}]:[]),
@@ -7641,12 +7690,13 @@ function startTabTour(tab){
   if(tab==="rifles"){
     const area=a=>()=>{showTab("rifles",false);click("#rifHeadBack");click('#rifSeg [data-garea="'+a+'"]');};
     STEPS=[
-      {t:"The Guns & Ammo tab",b:"Your guns, the ammunition you shoot and the scopes on your guns.",go:area("guns")},
-      {el:()=>q("#rifSeg"),t:"Guns, Ammunition and Scopes",b:"Switch between the three here.",go:area("guns")},
+      {t:"The Gear & Ranges tab",b:"Your guns, the ammo you shoot, the scopes on your guns and the ranges you shoot at.",go:area("guns")},
+      {el:()=>q("#rifSeg"),t:"Guns, Ammo, Scopes and Ranges",b:"Switch between the four here.",go:area("guns")},
       {el:()=>q("#rifleAdd"),t:"Guns",b:"Add each gun with its serial number, barrel, twist, sight height, scope and photos. Its page counts the rounds fired, tracks barrel life and cleaning, and keeps a cold-bore log. <b>Export Excel</b> and <b>Export PDF</b> make a list for insurance.",go:area("guns")},
-      {el:()=>q("#ammoAddCard"),t:"Ammunition",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low.",go:area("ammo")},
+      {el:()=>q("#ammoAddCard"),t:"Ammo",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low.",go:area("ammo")},
       {el:()=>q("#calBrowse"),t:"Factory ammo catalog",b:"About 155 popular factory loads with their bullet, BC and box velocity. Pick a caliber or search, and tap one to add it.",go:area("ammo")},
       {el:()=>q("#scopeAdd"),t:"Scopes",b:"Add your scopes from a list of popular ones and put each on a gun. A gun's scope sets MOA or MIL on its loads, and the dope card's reticle can look like yours or be a picture of it.",go:area("scopes")},
+      {el:()=>q("#rgAdd"),t:"Ranges",b:"Save the places you shoot, with each target's distance, angle and size. A range's page shows the dial and wind for every target with any of your Shooting loads, and Shooting loads show it too.",go:area("ranges")},
       END];
   }
   if(tab==="tools"||tab==="targets"){
