@@ -2,7 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.16.1",
+      "version": "2.17.0",
+      "date": "2026-10-17",
+      "title": "Trajectory calculator in Tools, catalog ammo on a range day",
+      "items": [
+        "Tools has a Trajectory calculator: quick drops, dial and wind holds for any bullet without making a Shooting load. Fill it in from your ammo, a Shooting load or a gun's sight height, or type the numbers. Nothing is saved unless you tap Save as a Shooting load.",
+        "The Trajectory calculator button on Home now opens that tool.",
+        "Start a range day can use factory ammo you don't have yet: it lists the catalog loads for your gun's cartridge, and you can search for any other. The pick is added to your Ammunition list with no rounds on hand."
+      ]
+    },
+    {
+      "version": "2.16",
       "date": "2026-10-17",
       "title": "One gun, several uppers",
       "items": [
