@@ -1,7 +1,7 @@
 /* Copyright (C) 2026 Sean O'Neill. SPDX-License-Identifier: AGPL-3.0-or-later. See the LICENSE file. */
 /* Merging saves from more than one phone or computer.
 
-   Each kind of data (Shooting loads, guns, ammo, a reloading recipe...) is saved as one whole document.
+   Each kind of data (Shooting profiles, guns, ammo, a reloading recipe...) is saved as one whole document.
    When a device saves, it also sends the version it started from ("base": what it last saved, and
    "seen": what it last loaded). The server compares three versions, piece by piece:
      - pieces this device didn't change keep whatever the server has now (another device's edits stay);

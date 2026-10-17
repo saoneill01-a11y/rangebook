@@ -215,7 +215,7 @@ function tripRows(d) {
     return { t, load: nameById[t.trajId] || "(deleted load)", photos: ph.length, groups: gs, best };
   });
 }
-// factory ammo (Guns and Ammo tab): rounds fired come from range trips on calculator loads that use it
+// factory ammo (Guns and Ammo tab): rounds fired come from range trips on Shooting profiles that use it
 function ammoRows(d) {
   const rows = d.ammo && Array.isArray(d.ammo.rows) ? d.ammo.rows : [];
   const calc = d.calc && Array.isArray(d.calc.loads) ? d.calc.loads : [];
@@ -266,7 +266,7 @@ function exportXlsx(d) {
     { name: "Components", rows: compRows(d), cols: [{ h: "Kind", w: 9 }, { h: "Manufacturer", w: 18 }, { h: "Name", w: 24 }, { h: "Actual diameter (" + (METRIC ? "mm" : "cal") + ")", w: 18 }, { h: "Weight (gr)", w: 11 }, { h: "BC", w: 8 }, { h: "BC type", w: 8 }, { h: "Length (" + ul("dim") + ")", w: 11 }, { h: "Size / kind", w: 16 }, { h: "Used by", w: 8 }, { h: "Notes", w: 50, s: 5 }, { h: "On hand", w: 10 }, { h: "Warn below", w: 11 }] },
     ...(noteRows.length ? [{ name: "Reloading notes", rows: noteRows, cols: [{ h: "Title", w: 30 }, { h: "Last changed", w: 13 }, { h: "Pinned", w: 8 }, { h: "Note", w: 90, s: 5 }] }] : []),
     { name: "Brass", rows: brass, cols: [{ h: "Manufacturer", w: 32 }, { h: "Headstamp", w: 16 }, { h: "Rating", w: 14 }] },
-    { name: "Calculator loads", rows: calc, cols: [{ h: "Name", w: 30 }, { h: "Bullet (gr)", w: 10 }, { h: "Velocity (" + ul("fps") + ")", w: 13 }, { h: "BC", w: 8 }, { h: "BC type", w: 8 }, { h: "Diameter (" + ul("dim") + ")", w: 12 }, { h: "Sight height (" + ul("in") + ")", w: 14 }, ...[1, 2, 3, 4].map((n) => ({ h: (n === 4 ? "Point-blank zero" : "Zero " + n) + " (" + ul("yd") + ")", w: n === 4 ? 14 : 10 })), { h: "Long range", w: 10 }, { h: "Gun", w: 22 }] },
+    { name: "Shooting profiles", rows: calc, cols: [{ h: "Name", w: 30 }, { h: "Bullet (gr)", w: 10 }, { h: "Velocity (" + ul("fps") + ")", w: 13 }, { h: "BC", w: 8 }, { h: "BC type", w: 8 }, { h: "Diameter (" + ul("dim") + ")", w: 12 }, { h: "Sight height (" + ul("in") + ")", w: 14 }, ...[1, 2, 3, 4].map((n) => ({ h: (n === 4 ? "Point-blank zero" : "Zero " + n) + " (" + ul("yd") + ")", w: n === 4 ? 14 : 10 })), { h: "Long range", w: 10 }, { h: "Gun", w: 22 }] },
     { name: "Ammunition", rows: ammoRows(d), cols: [{ h: "Type", w: 10 }, { h: "Manufacturer", w: 16 }, { h: "Product line / name", w: 22 }, { h: "Cartridge", w: 18 }, { h: "Bullet", w: 20 }, { h: "Weight (gr)", w: 11 }, { h: "BC", w: 8 }, { h: "BC type", w: 8 }, { h: "Box velocity (" + ul("fps") + ")", w: 14 }, { h: "Measured velocity (" + ul("fps") + ")", w: 18 }, { h: "Rounds bought / loaded", w: 14 }, { h: "Fired on trips", w: 13 }, { h: "On hand", w: 9 }, { h: "Price per box", w: 12 }, { h: "Rounds per box", w: 13 }, { h: "Lot", w: 12 }, { h: "Powder", w: 18 }, { h: "Charge (gr)", w: 11 }, { h: "Primer", w: 14 }, { h: "Brass", w: 16 }, { h: "Notes", w: 50, s: 5 }] },
     { name: "Range trips", rows: tripRows(d).map(({ t, load, photos, groups, best }) => [t.date ? { date: t.date } : null, load, t.place || "", cv("yd", t.distance, METRIC ? 0 : null), numv(t.rounds), cv("F", t.temp, 1), t.wind || "", cv("fps", t.avgVel, 0), cv("fps", t.sd, 1), (t.strings || []).reduce((a, x) => a + (x.shots || []).filter((v) => Number(v) > 0).length, 0) || null, (() => { const all = (t.strings || []).flatMap((x) => x.shots || []).map(Number).filter((v) => v > 0); return all.length > 1 ? cv("fps", Math.max(...all) - Math.min(...all), 0) : null; })(), groups.length, best ? { v: cv("in", best.size, 4), s: 4 } : null, best && best.moa != null ? { v: best.moa, s: 4 } : null, photos, t.notes || ""]),
       cols: [{ h: "Date", w: 12 }, { h: "Load", w: 26 }, { h: "Place", w: 22 }, { h: "Distance (" + ul("yd") + ")", w: 12 }, { h: "Rounds", w: 8 }, { h: "Temp (" + ul("F") + ")", w: 9 }, { h: "Wind", w: 16 }, { h: "Avg " + (METRIC ? "m/s" : "FPS"), w: 9 }, { h: "SD", w: 7 }, { h: "Chrono shots", w: 12 }, { h: "ES", w: 7 }, { h: "Groups measured", w: 14 }, { h: "Best group (" + ul("in") + ")", w: 14 }, { h: "Best group (MOA)", w: 15 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] },
@@ -543,7 +543,7 @@ function exportPdf(d, readPhoto) {
     pdfPhotos(pdf, d.photos.filter((p) => p.load_id === id), L, readPhoto, ACC, MUTED);
   }
 
-  // brass + calculator loads
+  // brass + Shooting profiles
   const brass = d.brass && Array.isArray(d.brass.rows) ? d.brass.rows : [];
   const calc = d.calc && Array.isArray(d.calc.loads) ? d.calc.loads : [];
   const rifles = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [];
@@ -583,7 +583,7 @@ function exportPdf(d, readPhoto) {
     pdf.table([{ h: "Manufacturer", w: 250 }, { h: "Headstamp", w: 130 }, { h: "Rating", w: content - 380 }], brass.map((r) => [r.mfr, r.headstamp, r.rating]));
   }
   if (calc.length) {
-    pdf.y += 14; pdf.ensure(60); pdf.text(pdf.M, pdf.y, "Trajectory calculator loads", { size: 16, bold: true }); pdf.y += 6;
+    pdf.y += 14; pdf.ensure(60); pdf.text(pdf.M, pdf.y, "Shooting profiles", { size: 16, bold: true }); pdf.y += 6;
     pdf.table([{ h: "Name", w: 170 }, { h: "Bullet gr", w: 52, align: "right" }, { h: "Velocity", w: 55, align: "right" }, { h: "BC", w: 50, align: "right" }, { h: "Sight ht", w: 50, align: "right" }, { h: "Zeros (" + ul("yd") + ")", w: content - 377 }],
       calc.map((c) => [c.name + (calcRifle(c, d) ? " (" + calcRifle(c, d) + ")" : ""), c.w, cs("fps", c.mv, 0), c.bc != null ? c.bc + (c.bcm === "G7" ? " G7" : "") : "", numv(c.sh) != null ? cs("in", c.sh, METRIC ? 1 : 2) : "", (c.z || []).filter((x) => x != null).map((z) => cv("yd", z, 0)).join(", ") + (c.lr ? "  (long range)" : "")]));
   }

@@ -5,7 +5,7 @@
  * Range Book is free software under the GNU Affero General Public License, version 3 or later. See the LICENSE file.
  *
  * Backups and imports.
- *  - A backup (.zip) holds everything that belongs to one account: its reloading loads, its own lists (Shooting loads,
+ *  - A backup (.zip) holds everything that belongs to one account: its reloading loads, its own lists (Shooting profiles,
  *    guns, ammo, components, brass, range trips, notes, settings) and its photos, with the photo files themselves.
  *  - The Excel export carries the same data (without photos) on a hidden "RangeBook data" sheet.
  *  - Importing either one ADDS to the account: anything already there (same load, gun, trip, photo...) is left alone,
@@ -202,7 +202,7 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
     for (const r of inc) { const k = rowKey(r); if (have.has(k)) tally.skipped++; else { cur.push(r); have.add(k); tally.added++; } }
     return cur;
   }
-  // a list-of-lists document (rows, bullets/powders/…, Shooting loads): merge each list by row; keep everything else as it is
+  // a list-of-lists document (rows, bullets/powders/…, Shooting profiles): merge each list by row; keep everything else as it is
   function mergeDoc(cur, inc, tally) {
     if (inc == null || typeof inc !== "object" || Array.isArray(inc)) return cur;
     if (cur == null || typeof cur !== "object" || Array.isArray(cur)) {
