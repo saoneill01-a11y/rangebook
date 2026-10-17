@@ -76,6 +76,65 @@ function readDataSheet(files) {
   return cells.sort((a, b) => a[0] - b[0]).map((c) => c[1]).join("");
 }
 
+/* ---------- any spreadsheet's tabs, for Import from a spreadsheet ----------
+   Every visible tab as rows of cells: text, numbers, true/false, and dates as "YYYY-MM-DD" (a number formatted as a
+   date). Works on files saved by Excel, Numbers, Google Sheets, LibreOffice or Range Book. */
+const DATE_IDS = new Set([14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 45, 46, 47, 50, 51, 52, 53, 54, 55, 56, 57, 58]);
+const colIndex = (letters) => { let n = 0; for (const ch of letters) n = n * 26 + (ch.charCodeAt(0) - 64); return n - 1; };
+function readSheets(buf) {
+  let files;
+  try { files = unzip(buf); } catch { throw new Error("That isn't an .xlsx file. In Excel or Numbers, save it as an Excel workbook (.xlsx) or a .csv file and try again."); }
+  const get = (n) => (files.has(n) ? files.get(n)().toString("utf8") : null);
+  const wb = get("xl/workbook.xml");
+  if (!wb) throw new Error("That file doesn't look like a spreadsheet. Save it as an Excel workbook (.xlsx) or a .csv file and try again.");
+  const d1904 = /<workbookPr\b[^>]*date1904="(1|true)"/.test(wb);
+  const rels = get("xl/_rels/workbook.xml.rels") || "";
+  const relT = new Map([...rels.matchAll(/<Relationship\b[^>]*>/g)].map((m) => [(/Id="([^"]+)"/.exec(m[0]) || [])[1], (/Target="([^"]+)"/.exec(m[0]) || [])[1]]));
+  const sstXml = get("xl/sharedStrings.xml"), sst = sstXml ? [...sstXml.matchAll(/<si>([\s\S]*?)<\/si>/g)].map((m) => allText(m[1])) : [];
+  // which cell styles are dates
+  const st = get("xl/styles.xml") || "", custom = new Map();
+  for (const m of st.matchAll(/<numFmt\b[^>]*>/g)) { const id = +((/numFmtId="(\d+)"/.exec(m[0]) || [])[1]); const code = xmlUnesc((/formatCode="([^"]*)"/.exec(m[0]) || [])[1] || ""); custom.set(id, code); }
+  const isDateFmt = (id) => { if (DATE_IDS.has(id)) return true; const c = custom.get(id); if (!c) return false; const t = c.replace(/"[^"]*"|\[[^\]]*\]|\\./g, ""); return /[dy]/i.test(t) && !/^General$/i.test(t); };
+  const xfs = ((/<cellXfs\b[^>]*>([\s\S]*?)<\/cellXfs>/.exec(st) || [])[1] || "").match(/<xf\b[^>]*\/?>/g) || [];
+  const dateStyle = xfs.map((x) => isDateFmt(+((/numFmtId="(\d+)"/.exec(x) || [])[1] || 0)));
+  const iso = (n) => { const ms = Math.round((n + (d1904 ? 1462 : 0)) * 86400000) + Date.UTC(1899, 11, 30); const d = new Date(ms); return isNaN(d) ? null : d.toISOString().slice(0, 10); };
+  const out = [];
+  for (const m of wb.matchAll(/<sheet\b[^>]*>/g)) {
+    const tag = m[0], name = xmlUnesc((/name="([^"]*)"/.exec(tag) || [])[1] || ""), hidden = /state="(hidden|veryHidden)"/.test(tag);
+    let target = relT.get((/r:id="([^"]+)"/.exec(tag) || [])[1]);
+    if (!target) continue;
+    target = target.startsWith("/") ? target.slice(1) : "xl/" + target.replace(/^\.\//, "");
+    const x = get(target); if (!x) continue;
+    const rows = [];
+    for (const rm of x.matchAll(/<row\b([^>]*?)(?:\/>|>([\s\S]*?)<\/row>)/g)) {
+      const rn = +((/\br="(\d+)"/.exec(rm[1]) || [])[1] || rows.length + 1) - 1;
+      if (rn > 20000) break;
+      let ci = 0;
+      for (const cm of (rm[2] || "").matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
+        const a = cm[1], inner = cm[2] || "", ref = /\br="([A-Z]+)\d+"/.exec(a);
+        const col = ref ? colIndex(ref[1]) : ci; ci = col + 1;
+        if (col > 200) continue;
+        const t = (/\bt="([^"]+)"/.exec(a) || [])[1], sIdx = +((/\bs="(\d+)"/.exec(a) || [])[1] || 0);
+        const raw = (/<v>([\s\S]*?)<\/v>/.exec(inner) || [])[1];
+        let v = null;
+        if (t === "s") v = raw != null ? sst[+raw] ?? "" : "";
+        else if (t === "inlineStr") v = allText(inner);
+        else if (t === "str") v = raw != null ? xmlUnesc(raw) : "";
+        else if (t === "b") v = raw === "1";
+        else if (t === "e") v = null;
+        else if (raw != null && raw !== "") { const n = Number(raw); v = isFinite(n) ? (dateStyle[sIdx] ? iso(n) : n) : xmlUnesc(raw); }
+        if (v === null || v === "") continue;
+        (rows[rn] || (rows[rn] = []))[col] = typeof v === "string" ? v.trim() : v;
+      }
+    }
+    const dense = [];
+    for (let i = 0; i < rows.length; i++) { const r = rows[i] || []; const row = []; for (let j = 0; j < r.length; j++) row.push(r[j] === undefined ? null : r[j]); dense.push(row); }
+    while (dense.length && !dense[dense.length - 1].some((c) => c !== null && c !== "")) dense.pop();
+    out.push({ name, hidden, rows: dense });
+  }
+  return out;
+}
+
 module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, APP_VERSION, zip }) {
   const parse = (s) => { try { return s ? JSON.parse(s) : null; } catch { return null; } };
 
@@ -243,3 +302,4 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
 };
 module.exports.unzip = unzip;
 module.exports.readDataSheet = readDataSheet;
+module.exports.readSheets = readSheets;

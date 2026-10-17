@@ -13,7 +13,7 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const zlib = require("node:zlib");
 const { DatabaseSync } = require("node:sqlite");
-const { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf, zip } = require("./export.js");
+const { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf, zip, buildXlsx } = require("./export.js");
 const backupKit = require("./backup.js");
 const MERGE = require("./merge.js");
 
@@ -545,6 +545,32 @@ async function api(req, res, url) {
     try { r = backups().importInto(user.id, buf); } catch (e) { throw new HttpError(400, e && e.message ? e.message : "That file couldn't be imported."); }
     console.log(` Import into ${user.username}: ${r.kind}, ${r.loads.added} loads added, ${r.photos.added} photos added`);
     return send(res, 200, { ok: true, result: r });
+  }
+
+  /* ---- Import from a spreadsheet: read any .xlsx into rows (the app matches and adds them itself) ---- */
+  if (p === "/api/sheet/read" && method === "POST") {
+    const buf = await readBody(req, 25 * 1024 * 1024);
+    if (!buf.length) throw new HttpError(400, "Pick a file to import.");
+    let sheets;
+    try { sheets = backupKit.readSheets(buf); } catch (e) { throw new HttpError(400, e && e.message ? e.message : "That file couldn't be read."); }
+    return send(res, 200, { sheets });
+  }
+  /* ---- a spreadsheet the app lays out (the import template): tabs, columns, rows and drop-down lists ---- */
+  if (p === "/api/sheet/build" && method === "POST") {
+    const b = await readJson(req, 8 * 1024 * 1024);
+    const str = (v, n) => String(v == null ? "" : v).slice(0, n);
+    const cell = (c) => (c == null ? null : typeof c === "number" ? (isFinite(c) ? c : null) : typeof c === "object" ? ("date" in c ? { date: str(c.date, 10) } : { v: typeof c.v === "number" ? c.v : str(c.v, 32000), s: [0, 3, 4, 5, 6, 7].includes(c.s) ? c.s : 0 }) : str(c, 32000));
+    if (!Array.isArray(b.sheets) || !b.sheets.length || b.sheets.length > 30) throw new HttpError(400, "Nothing to build.");
+    const sheets = b.sheets.map((sh, i) => ({
+      name: str(sh.name, 31).replace(/[\\/?*\[\]:]/g, " ") || "Sheet" + (i + 1), hidden: !!sh.hidden, noFilter: !!sh.noFilter, selected: i === 0,
+      cols: (Array.isArray(sh.cols) ? sh.cols : []).slice(0, 60).map((c) => ({ h: str(c.h, 200), w: Math.min(120, Math.max(4, +c.w || 14)), s: [0, 3, 4, 5, 7].includes(c.s) ? c.s : 0 })),
+      rows: (Array.isArray(sh.rows) ? sh.rows : []).slice(0, 5000).map((r) => (Array.isArray(r) ? r.slice(0, 60).map(cell) : [])),
+      validations: (Array.isArray(sh.validations) ? sh.validations : []).slice(0, 60).map((v) => ({ col: Math.max(0, v.col | 0), src: Array.isArray(v.src) ? v.src.slice(0, 40).map((x) => str(x, 60)) : str(v.src, 120), to: Math.min(5000, Math.max(2, v.to | 0 || 1000)), prompt: Array.isArray(v.prompt) ? [str(v.prompt[0], 32), str(v.prompt[1], 255)] : null })),
+    })).filter((sh) => sh.cols.length);
+    if (!sheets.length) throw new HttpError(400, "Nothing to build.");
+    const buf = buildXlsx(sheets), fname = str(b.filename, 80).replace(/[^A-Za-z0-9 ._-]/g, "_") || "RangeBook.xlsx";
+    res.writeHead(200, { "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Content-Disposition": `attachment; filename="${fname}"`, "Content-Length": buf.length, "Cache-Control": "no-store", ...SECURITY_HEADERS });
+    return res.end(buf);
   }
 
   /* ---- people directory (for sharing) ---- */
