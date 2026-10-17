@@ -921,6 +921,8 @@ textarea.notebody{min-height:260px;line-height:1.5;font-size:16px;resize:vertica
 .segtabs{display:flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .segtabs button{flex:1 1 0;padding:8px 4px;border:0;border-radius:7px;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
 .segtabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
+.gtypes{max-width:360px}
+#rf_typeNote{display:block;margin-top:4px;font-size:12px}
 /* Import from a spreadsheet */
 .sxsub{margin:18px 0 2px;font-size:15px}
 #sxRoot{max-width:900px}#sxRoot .card h2{margin-bottom:8px}
@@ -1455,7 +1457,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Gear & Ranges" id="hGuns">
       <h2>Gear &amp; Ranges</h2>
       <h3>Guns</h3>
-      <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. Tap <b>+ Add gun</b> or tap a gun to open it, then fill in the <b>Cartridge</b> it's chambered for, its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the loads and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
+      <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. The list is grouped by type: rifles, then pistols, then shotguns. Tap <b>+ Add gun</b> or tap a gun to open it, pick its <b>Type</b> (Rifle, Pistol or Shotgun; when you fill in the cartridge first, Range Book guesses it, and you can tap another), then fill in the <b>Cartridge</b> it's chambered for, its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the loads and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
       <h3>Cartridges</h3>
       <p><b>Tools → Cartridges</b> shows the whole list: search it, or tap <b>Rifle</b>, <b>Handgun</b> or <b>Rimfire</b>. It's for reference only, so don't trust it over your gun's barrel stamp, a current load manual and the SAAMI drawing. Tap a cartridge to change any of its numbers or names if you find a mistake: a changed box turns your accent color and says <b>changed</b>, with <b>Revert to …</b> to put the original back (or <b>Revert all changes</b>). Tap <b>+ Add a cartridge</b> for one that isn't listed (a wildcat, say); yours are listed under <b>Yours</b> with a ✕ to delete them. Your changes and additions are used everywhere in Range Book and sync to your other devices.</p>
       <p>Range Book knows about 115 rifle, handgun and rimfire cartridges. Wherever you enter a cartridge (a gun, a reloading recipe, factory or reloaded ammo, a Shooting load), start typing any name for it, like <b>3006</b>, <b>308 Win</b>, <b>7.62 NATO</b> or <b>6.5 CM</b>, and pick it from the list. It's saved under its standard name (30-06 Springfield, 308 Winchester and so on), so loads group together, and the bullet diameter fills in if it's empty. Under the box you'll see the bullet it takes and the SAAMI (or C.I.P.) maximum case length and overall length. A cartridge that isn't in the list (a wildcat, say) can still be typed in; just enter the bullet diameter yourself. Cartridges you'd already typed with another name for a listed one were switched to its standard name.</p>
@@ -3294,6 +3296,11 @@ let ammoReturnTraj=null;
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
 document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+// gun type: rifle, pistol or shotgun. Guessed from the cartridge when not picked (handgun cartridges → pistol, gauges → shotgun)
+const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shotgun","Shotgun","Shotguns"]];
+function gunTypeGuess(cart){const t=String(cart||"").trim();if(!t)return null;if(/\b(\d+|four|eight|ten|twelve|sixteen|twenty)\s*-?\s*(ga|gauge|bore)\b|\b410\b|\.410/i.test(t))return "shotgun";
+  const c=window.RB_CARTS&&RB_CARTS.find(t);return c?(c.t==="handgun"?"pistol":"rifle"):null;}
+window.RB_GUN_TYPE_GUESS=gunTypeGuess;window.RB_GUN_TYPES=GUN_TYPES;
 function rifleSummary(r){return [r.cartridge||"",num(r.barrel)?U.s("dim",num(r.barrel),0)+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
 /* round count: starting count + rounds from range trips (loads in the calculator using this rifle) + shots in load-development groups */
 function rifleRounds(r){
@@ -3689,8 +3696,10 @@ function renderRifles(){
     h='<section class="card" aria-label="Guns list"><div class="row"><button class="btn primary" id="rifleAdd" type="button">+ Add gun</button>'+(!window.GUEST&&rifles.length?'<a class="btn" href="/api/export/guns.xlsx" download id="gunsXlsx">Export Excel</a><a class="btn" href="/api/export/guns.pdf" download id="gunsPdf">Export PDF</a>':'')+(!window.GUEST?'<button class="btn" type="button" data-sximp="rifles">Import from a spreadsheet</button>':'')+'<span class="savestate" id="rifleState"></span></div>';
     if(!rifles.length)h+='<p class="note">No guns yet. Add one, then pick it in a load\'s recipe or a Shooting load.</p>';
     else{
-      h+='<div class="cartgroup">';
-      [...rifles].sort((x,y)=>(x.name||"").localeCompare(y.name||"",undefined,{numeric:true})).forEach(r=>{
+      const groups=GUN_TYPES.map(([k,,pl])=>[k,pl]).concat([["","Type not set"]]);
+      groups.forEach(([gk,gl])=>{const list=rifles.filter(r=>(GUN_TYPES.some(t=>t[0]===r.type)?r.type:"")===gk);if(!list.length)return;
+      h+='<div class="cartgroup"><div class="cartname">'+esc(gl)+' <span class="note">'+list.length+'</span></div>';
+      list.sort((x,y)=>(x.name||"").localeCompare(y.name||"",undefined,{numeric:true})).forEach(r=>{
         const n=usedBy(r.id).length,sc0=r.scopeId&&scopes.find(x=>x.id===r.scopeId),d=[rifleSummary(r),sc0?scopeLabel(sc0):""].filter(Boolean).join(" · "),rc=rifleRounds(r);
         const rt=rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
@@ -3698,7 +3707,7 @@ function renderRifles(){
         h+='<button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
           '<span class="m">'+(n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet')+'</span></span></button>';
       });
-      h+='</div>';
+      h+='</div>';});
     }
     h+='</section>';
   }else{
@@ -3706,6 +3715,7 @@ function renderRifles(){
     h='<div class="row"><span class="savestate" id="rifleState"></span></div>'+
       '<section class="card" aria-label="Gun"><h2>Details</h2><div class="grid">'+
       field("rf_name","Name",r.name,"text"," wide")+
+      '<div class="field wide"><span class="flabel" id="rf_typeL">Type</span><div class="segtabs gtypes" role="radiogroup" aria-labelledby="rf_typeL">'+GUN_TYPES.map(([k,l])=>'<button type="button" role="radio" data-gtype="'+k+'" aria-selected="'+(r.type===k)+'" aria-checked="'+(r.type===k)+'">'+l+'</button>').join("")+'</div><span class="note" id="rf_typeNote"'+(r.typeGuessed&&r.type?'':' hidden')+'>Guessed from the cartridge. Tap another if that\'s wrong.</span></div>'+
       field("rf_cartridge","Cartridge (chambered for)",r.cartridge,"text"," wide")+'<div class="field wide cartinfo" id="rf_cartNote"></div>'+
       field("rf_serial","Serial number",r.serial,"text")+
       field("rf_barrel","Barrel length (in)",r.barrel,"number")+
@@ -3760,7 +3770,9 @@ function renderRifles(){
   unitize("rf_",r,GUN_U);
   {const ce=$("rf_cartridge"),nt=$("rf_cartNote"),draw=()=>{nt.innerHTML=esc(RB_CARTS.info(r.cartridge));};draw();
     ce.placeholder="e.g. 308 Winchester, 5.56 NATO, 9mm";
-    ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();queueRifles();syncRifleIntoLoads(r);draw();});
+    const typeUI=()=>{root.querySelectorAll("[data-gtype]").forEach(b=>{const on=b.dataset.gtype===r.type;b.setAttribute("aria-selected",on);b.setAttribute("aria-checked",on);});const tn=$("rf_typeNote");if(tn)tn.hidden=!(r.typeGuessed&&r.type);};
+    root.querySelectorAll("[data-gtype]").forEach(b=>b.addEventListener("click",()=>{r.type=b.dataset.gtype;delete r.typeGuessed;queueRifles();typeUI();}));
+    ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
     ce.addEventListener("change",()=>{if(ce.value.trim())rememberCartridge(RB_CARTS.canon(ce.value));});
     RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[]});}
   [["name",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
@@ -7101,7 +7113,8 @@ async function refresh(first){
     if(AM&&!ammoDirty&&!ammoEditing()){ammo=AM.data&&Array.isArray(AM.data.rows)?AM.data.rows:[];
       if(window.RB_CARTS&&!window.GUEST){let ch=false;ammo.forEach(a=>{if(!a.cartridge)return;const c=RB_CARTS.canon(a.cartridge);if(c!==a.cartridge){a.cartridge=c;ch=true;}});if(ch)queueAmmo();}if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
-    if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+    if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];
+      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
     if(!$("panel-home").hidden)renderHome();
@@ -8449,6 +8462,7 @@ const NOTES=F("notes","Notes","text",{w:30,alias:["notes","note","comments","com
 const KINDS=[
   {key:"guns",title:"Guns",one:"gun",sheet:"Guns",alias:["guns","gun","rifles","rifle","firearms","firearm","pistols","handguns","shotguns","weapons"],
    fields:[F("name","Name","text",{req:1,w:26,alias:["name","gun","rifle","firearm","nickname","gun name","make","manufacturer","brand","maker","model","make model","make and model"],tip:["Name","What you call it, like Tikka T3x 6.5 CM. Make and Model columns from your own spreadsheet are joined into the name."]}),
+     F("type","Type","gtype",{w:11,alias:["type","gun type","firearm type","kind","category","class"],tip:["Type","Rifle, Pistol or Shotgun. Left blank, it's guessed from the cartridge."]}),
      F("cartridge","Cartridge","cart",{w:20,alias:["cartridge","caliber","calibre","chambering","chambered","chambered for","chamber","cal","gauge"]}),
      F("serial","Serial number","text",{w:16,alias:["serial","serial number","serial no","serial num","sn","s n","serial #"]}),
      F("barrel","Barrel length","num",{unit:"dim",w:14,alias:["barrel","barrel length","bbl","bbl length","barrel len"]}),
@@ -8461,7 +8475,7 @@ const KINDS=[
      F("cleanEvery","Clean every (rounds)","int",{w:13,alias:["clean every","cleaning interval","clean every rounds"]}),
      F("cleaned","Last cleaned","date",{w:13,alias:["last cleaned","cleaned","cleaning date","date cleaned"]}),
      NOTES],
-   example:["Tikka T3x Lite 6.5 CM","6.5 Creedmoor","T12345","24","8","1.75","Vortex Viper PST Gen II 5-25x50","3000","250","","200","2026-09-01","Example: delete this row"]},
+   example:["Tikka T3x Lite 6.5 CM","Rifle","6.5 Creedmoor","T12345","24","8","1.75","Vortex Viper PST Gen II 5-25x50","3000","250","","200","2026-09-01","Example: delete this row"]},
   {key:"scopes",title:"Scopes",one:"scope",sheet:"Scopes",alias:["scopes","scope","optics","optic","sights"],
    fields:[F("mfr","Maker","text",{req:1,w:14,alias:["maker","manufacturer","mfr","make","brand"]}),
      F("model","Model","text",{req:1,w:26,alias:["model","name","scope","scope model","optic"]}),
@@ -8593,12 +8607,15 @@ function readCell(f,raw,colUnit,ctx){
     case "twist":{let t=String(raw).replace(/^\s*1\s*(:|in|\/|-|turn in)\s*/i,"");const v=numIn(t);if(v==null||v<=0)return {bad:true};
       return {v:Math.round(toImperial("dim",v,unitIn(t)||colUnit||defUnit("dim"))*100)/100};}
     case "date":{if(typeof raw==="number")return {bad:true};const d=parseDate(raw);return d?{v:d}:{bad:true};}
-    case "cart":{const c=window.RB_CARTS&&RB_CARTS.find(s);return c?{v:c.n}:{ask:true};}
+    case "cart":{const c=window.RB_CARTS&&RB_CARTS.find(s);if(c)return {v:c.n};
+      // shotgun gauges aren't in the cartridge list: 12 ga, 20-gauge, .410 are kept as "12 Gauge", ".410 Bore"
+      const g=/^(\d{1,2})\s*-?\s*(ga|ga\.|gauge)\b/i.exec(s);if(g)return {v:g[1]+" Gauge"};if(/^\.?410\b/.test(s))return {v:".410 Bore"};return {ask:true};}
     case "bcm":{if(/g\s*7/.test(n))return {v:"G7"};if(/g\s*1\b|g1/.test(n))return {v:"G1"};return {ask:true};}
     case "fp":{if(/^(ffp|first|front|1st|f)/.test(n))return {v:"FFP"};if(/^(sfp|second|rear|2nd|s)/.test(n))return {v:"SFP"};return {ask:true};}
     case "mm":case "turret":{if(/mil|mrad|milrad/.test(n))return {v:"mil"};if(/moa|minute/.test(n))return {v:"moa"};if(f.type==="turret"&&/same|reticle/.test(n))return {v:null};return {ask:true};}
     case "click":{const v=numIn(raw);if(v==null||v<=0||v>2)return {bad:true};return {v:Math.round(v*1000)/1000};}
     case "size":{const z=LISTS().PRIMER_SIZES.find(x=>norm(x)===n);if(z)return {v:z};for(const [re,v] of PSIZE)if(re.test(n))return {v};return {ask:true};}
+    case "gtype":{if(/shot\s*gun|scatter|\bsg\b/.test(n))return {v:"shotgun"};if(/pistol|handgun|revolver|hand gun|\bhg\b/.test(n))return {v:"pistol"};if(/rifle|carbine|\bsbr\b|\bar\b|bolt|lever|semi/.test(n))return {v:"rifle"};return {ask:true};}
     case "pkind":{if(/ball|spher/.test(n))return {v:"Ball"};if(/extru|stick|tubular|rod/.test(n))return {v:"Extruded"};if(/flake/.test(n))return {v:"Flake"};return {ask:true};}
     case "scope":{const hit=ctx.scopeFind(s);return hit?{v:hit}:{ask:true};}
   }
@@ -8670,6 +8687,7 @@ function build(){
         if(f.k==="bc"&&!item.bcm&&/g\s*7/i.test(String(val)))item.bcm="G7";});
       if(notes.length)item.notes=[item.notes,notes.join("; ")].filter(Boolean).join("\n");
       // what fills in by itself: a powder's maker and kind from the list, a bullet's diameter from its cartridge
+      if(K.key==="guns"&&!item.type&&item.cartridge&&window.RB_GUN_TYPE_GUESS){const g=RB_GUN_TYPE_GUESS(item.cartridge);if(g){item.type=g;item.typeGuessed=true;}}
       if(K.key==="powders"&&item.name){const p=LISTS().POWDER_LIST.find(x=>keyOf(x[1])===keyOf(item.name)&&(!item.mfr||keyOf(x[0])===keyOf(item.mfr)));if(p){if(!item.mfr)item.mfr=p[0];if(!item.kind)item.kind=p[2];}}
       if(K.key==="ammo"&&!item.dia&&item.cartridge&&window.RB_CARTS){const d=RB_CARTS.dia(item.cartridge);if(d)item.dia=d;}
       if((K.key==="ammo"||K.key==="bullets")&&item.bc&&!item.bcm)item.bcm="G1";
@@ -8710,11 +8728,11 @@ function findExisting(k,x){const L=listFor(k);
   // a gun with a serial number also matches by name when the saved one has no serial
   return L.find(e=>dupKey(k,e)===dk)||(k==="guns"&&x.serial?L.find(e=>!e.serial&&keyOf(e.name)===keyOf(x.name)&&keyOf(x.name)):null)
     ||(["powders","primers","bullets"].includes(k)&&!x.mfr?L.find(e=>keyOf(e.name)===keyOf(x.name)&&(k!=="bullets"||keyOf(e.weight)===keyOf(x.weight))):null)||null;}
-const showV=(f,v)=>{if(v==null||v==="")return "";if(f.k==="scopeId"&&String(v).startsWith("new:"))return String(v).slice(4)+" (new)";if(f.k==="scopeId"){const sc=String(v).startsWith("row:")?null:S.existing.scopes.find(x=>x.id===String(v).replace(/^id:/,""));return sc?scopeLabel(sc):String(v).startsWith("row:")?"a scope in this file":String(v);}
+const showV=(f,v)=>{if(v==null||v==="")return "";if(f.type==="gtype")return String(v).charAt(0).toUpperCase()+String(v).slice(1);if(f.k==="scopeId"&&String(v).startsWith("new:"))return String(v).slice(4)+" (new)";if(f.k==="scopeId"){const sc=String(v).startsWith("row:")?null:S.existing.scopes.find(x=>x.id===String(v).replace(/^id:/,""));return sc?scopeLabel(sc):String(v).startsWith("row:")?"a scope in this file":String(v);}
   if(f.type==="mm"||f.type==="turret")return String(v).toUpperCase();
   if(f.unit&&typeof v==="number"&&window.U&&f.unit!=="gr"){const k=f.unit==="dim"?"dim":f.unit;try{return U.s(k,v,f.unit==="fps"?0:k==="lb"?1:3);}catch(e){}}
   return String(v);};
-function diffs(K,ex,x){const out=[];K.fields.forEach(f=>{let v=x[f.k];if(v==null||v==="")return;let e=ex[f.k];
+function diffs(K,ex,x){const out=[];K.fields.forEach(f=>{let v=x[f.k];if(v==null||v==="")return;let e=ex[f.k];if(f.k==="type"&&x.typeGuessed&&e)return;
   if(f.k==="scopeId"){e=e?"id:"+e:null;}
   if(f.k==="caliber"&&K.key==="bullets"){e=ex.caliber;}
   const same=typeof v==="number"?Math.abs((+e)-v)<=Math.max(1e-6,Math.abs(v)*5e-4):keyOf(e)===keyOf(v);if(!same)out.push({f,old:e,now:v});});return out;}
@@ -8841,6 +8859,7 @@ function askPick(dk,a,d){const f=a.f;let opts=[];
   else if(f.type==="mm"||f.type==="turret")opts=[["mil","MIL (MRAD)"],["moa","MOA"]];
   else if(f.type==="size")opts=LISTS().PRIMER_SIZES.map(z=>[z,z]);
   else if(f.type==="pkind")opts=[["Ball","Ball"],["Extruded","Extruded"],["Flake","Flake"]];
+  else if(f.type==="gtype")opts=[["rifle","Rifle"],["pistol","Pistol"],["shotgun","Shotgun"]];
   else if(f.type==="scope"){opts=S.existing.scopes.map(x=>["id:"+x.id,scopeLabel(x)]);
     const B=buildScopesOnly();opts=opts.concat(B.filter(x=>!S.existing.scopes.some(e=>keyOf(scopeLabel(e))===keyOf(scopeLabel(x.item)))).map(x=>["row:"+x.rid,scopeLabel(x.item)+" (in this file)"]));opts.unshift(["__new","Add it as a new scope: "+a.raw]);}
   return '<select class="fieldselect" data-sxdec="'+esc(dk)+'">'+(d===undefined?'<option value="" selected>Pick one…</option>':'')+opts.map(([v,t])=>'<option value="'+esc(v)+'"'+(d===v?' selected':'')+'>'+esc(t)+'</option>').join("")+
@@ -8874,7 +8893,7 @@ async function apply(){
   try{
     const E=await loadExisting(),B=build(),rows=S.lastGo.map(g=>B.rows.find(r=>r.rid===g.rid)).filter(Boolean);
     const rowId={},count={};const bump=(k,w)=>{count[k]=count[k]||{a:0,u:0};count[k][w]++;};
-    const fill=(dst,src,K)=>{K.fields.forEach(f=>{const v=src[f.k];if(v==null||v==="")return;dst[f.k]=v;});if(src.caliberUnit)dst.caliberUnit=src.caliberUnit;};
+    const fill=(dst,src,K)=>{K.fields.forEach(f=>{const v=src[f.k];if(v==null||v==="")return;if(f.k==="type"&&src.typeGuessed&&dst.type)return;dst[f.k]=v;if(f.k==="type"){if(src.typeGuessed)dst.typeGuessed=true;else delete dst.typeGuessed;}});if(src.caliberUnit)dst.caliberUnit=src.caliberUnit;};
     const target=(k,r)=>{const L=k==="guns"?E.rifles:k==="scopes"?E.scopes:k==="ammo"?E.ammo:E.comps[kindBy(k).comp];return {L,ex:r.dupOf&&S.dup[r.rid]==="update"?L.find(x=>x.id===r.dupOf.id):null};};
     // scopes first, so guns can point at the new ones
     const ordered=rows.slice().sort((a,b)=>(a.kind.key==="scopes"?0:1)-(b.kind.key==="scopes"?0:1));
@@ -8916,6 +8935,7 @@ function bindIntro(){bindPick();$("sxTpl").onclick=()=>template(false);$("sxTplM
 function cellOut(f,v){if(v==null||v==="")return null;
   if(f.type==="date")return {date:v};
   if(f.type==="mm"||f.type==="turret")return String(v).toUpperCase();
+  if(f.type==="gtype")return String(v).charAt(0).toUpperCase()+String(v).slice(1);
   if(f.unit&&typeof v==="number"){const m=metric(),k=f.unit;if(!m||k==="gr")return v;
     const c=k==="dim"?v*25.4:k==="in"?v*2.54:k==="fps"?v/3.28084:k==="lb"?v/2.20462:v;return Math.round(c*1000)/1000;}
   return typeof v==="number"?v:String(v);}
@@ -8953,6 +8973,7 @@ async function template(mine){
       else if(f.type==="turret")val.push({col:i,src:["MIL","MOA"],prompt:p||["Turret units","Leave blank if the same as the reticle."]});
       else if(f.type==="size")val.push({col:i,src:listRef("sizes"),prompt:p});
       else if(f.type==="pkind")val.push({col:i,src:["Ball","Extruded","Flake"],prompt:p});
+      else if(f.type==="gtype")val.push({col:i,src:["Rifle","Pistol","Shotgun"],prompt:p});
       else if(f.type==="scope")val.push({col:i,src:listRef("scopes"),prompt:p});
       else if(p)val.push({col:i,src:[],prompt:p});});
     sheets.push({name:K.sheet,cols:fields.map(f=>({h:header(f),w:f.w||14,s:f.k==="_id"?7:0})),rows,validations:val});});
