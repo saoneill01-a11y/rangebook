@@ -634,6 +634,8 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvshot:disabled{opacity:.45;cursor:default}
 .live .btn.primary{background:var(--accent);color:var(--accent-fg,#fff);border-color:var(--accent)}
 .live .btn:disabled{opacity:.45}
+.lvgrid .lvlens{grid-column:1/-1}
+.lvlens[hidden]{display:none}
 .lvmic{display:flex;gap:10px;align-items:flex-start;color:#ccc;font-size:14px;cursor:pointer}
 .lvmic input{position:absolute;opacity:0;width:1px;height:1px}
 .lvtog{flex:none;width:42px;height:24px;border-radius:12px;background:#444;position:relative;transition:background .15s}
@@ -1442,7 +1444,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Range Book can watch a printed Range Book target through your phone's camera and mark each shot as it lands. Put the phone on the spotting scope with an adapter so it holds still, and aim the scope so the whole page and all four corner squares are in the picture. It needs Range Book's https address (the camera doesn't work on a plain http address).</p>
       <ol>
         <li>In a ladder, tap <b>Live target</b> (next to <b>+ Photo</b>). From a range trip, use <b>Live target</b> next to <b>+ Add target photo</b>. To use it without a load, open <b>Tools → Live target</b>.</li>
-        <li>Allow the camera. When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
+        <li>Allow the camera. On a phone with more than one back lens, it uses the main lens so it doesn't keep jumping between lenses up close to the eyepiece; pick another under <b>Camera lens</b> if you like (it's remembered on that phone). When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
         <li>Check <b>Charge for this aim</b>, <b>Shots</b> and <b>Distance</b>.</li>
         <li>Fire, then tap <b>Shot</b>. It compares the page with how it looked before the shot and marks the new hole, numbered, with the group size, MOA, mean radius and where the group's center is from the aim point. A hole in the black center counts too.</li>
         <li>If it misses a hole, tap the hole on the picture to add it. Tap a wrong mark to remove it. <b>Undo</b> takes back the last change.</li>
@@ -5463,7 +5465,8 @@ function openLive(o){
       '<div class="lvgrid">'+
         (groups.length?'<label>Charge for this aim<select id="lvGroup"></select></label>':'')+
         '<label>Shots<input id="lvWant" type="number" inputmode="numeric" min="1" step="1"></label>'+
-        '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label></div>'+
+        '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label>'+
+        '<label id="lvLensL" class="lvlens" hidden>Camera lens<select id="lvLens"></select></label></div>'+
       '<div class="lvstats" id="lvStats"></div>'+
       '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
@@ -5489,18 +5492,59 @@ function openLive(o){
   async function keep(on){try{if(on&&navigator.wakeLock&&document.visibilityState==="visible")wake=await navigator.wakeLock.request("screen");else if(!on&&wake){await wake.release();wake=null;}}catch(e){}}
 
   /* ----- camera ----- */
+  /* ----- camera -----
+     iPhones with two or three back lenses give the browser a combined camera that switches lenses by itself, and up close
+     to a spotting-scope eyepiece it keeps jumping to the macro/ultra-wide lens. So after the first start we list the back
+     lenses, use the main one (iOS calls it "Back Camera") unless you picked another, and remember the pick on this device. (2.18.3) */
+  const LENS_KEY="rb.liveLens";
+  const lensName=l=>{const t=String(l||"");if(/ultra\s*wide/i.test(t))return "Ultra wide (0.5×)";if(/tele/i.test(t))return "Telephoto (zoom)";if(/triple/i.test(t))return "Automatic (all lenses)";if(/dual\s*wide/i.test(t))return "Automatic (main + ultra wide)";if(/dual/i.test(t))return "Automatic (main + telephoto)";if(/^back camera$/i.test(t.trim()))return "Main (1×)";return t||"Camera";};
+  const isBack=d=>/back|rear|environment|camera2 0|facing back/i.test(d.label||"");
+  const isAuto=d=>/(dual|triple)/i.test(d.label||"");
+  let lenses=[],lensId=null;
+  async function openStream(devId){
+    const v0={width:{ideal:1920},height:{ideal:1920}};
+    return navigator.mediaDevices.getUserMedia({audio:false,video:devId?Object.assign({deviceId:{exact:devId}},v0):Object.assign({facingMode:{ideal:"environment"}},v0)});
+  }
+  function fillLenses(){
+    const sel=$("lvLens"),lab=$("lvLensL");if(!sel)return;
+    lab.hidden=lenses.length<2;
+    sel.innerHTML=lenses.map(d=>'<option value="'+esc(d.deviceId)+'"'+(d.deviceId===lensId?' selected':'')+'>'+esc(lensName(d.label))+'</option>').join("");
+  }
+  async function useStream(st){
+    if(stream)stream.getTracks().forEach(t=>t.stop());
+    stream=st;video.srcObject=stream;await video.play().catch(()=>{});
+    const tr=stream.getVideoTracks()[0];lensId=tr&&tr.getSettings?tr.getSettings().deviceId||lensId:lensId;
+    stream.getVideoTracks().forEach(t=>t.addEventListener("ended",()=>{if(!closed&&t.readyState==="ended"&&stream&&stream.getVideoTracks()[0]===t)setStat("The camera stopped. Tap Back and open Live target again.","bad");}));
+  }
   async function startCam(){
     if(!liveSupported()){setStat(location.protocol==="https:"||location.hostname==="localhost"?"This browser can't use the camera.":"The camera needs Range Book's https address. Open it that way and try again.","bad");return;}
     try{
-      stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1920}}});
-      if(closed){stream.getTracks().forEach(t=>t.stop());return;}
-      video.srcObject=stream;await video.play().catch(()=>{});
-      stream.getVideoTracks().forEach(t=>t.addEventListener("ended",()=>{if(!closed)setStat("The camera stopped. Tap Back and open Live target again.","bad");}));
+      let saved=null;try{saved=localStorage.getItem(LENS_KEY);}catch(e){}
+      let st=null;
+      if(saved){try{st=await openStream(saved);}catch(e){st=null;}}
+      if(!st)st=await openStream(null);
+      if(closed){st.getTracks().forEach(t=>t.stop());return;}
+      await useStream(st);
+      // the lens list (labels only show once the camera is allowed)
+      try{const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput");
+        lenses=all.filter(isBack);if(!lenses.length)lenses=all;
+        const rank=d=>{const t=d.label||"";return /^back camera$/i.test(t.trim())?0:/ultra\s*wide/i.test(t)?1:/tele/i.test(t)?2:isAuto(d)?4:3;};lenses.sort((a,b)=>rank(a)-rank(b));
+        // no pick yet and we got the self-switching camera: use the main lens instead
+        const curD=lenses.find(d=>d.deviceId===lensId),main=lenses.find(d=>/^back camera$/i.test((d.label||"").trim()));
+        if(!saved&&main&&main.deviceId!==lensId&&(!curD||isAuto(curD))){try{const s2=await openStream(main.deviceId);if(closed){s2.getTracks().forEach(t=>t.stop());return;}await useStream(s2);}catch(e){}}
+        fillLenses();}catch(e){}
       setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");
       keep(true);
     }catch(e){
       setStat(e&&e.name==="NotAllowedError"?"Camera access was blocked. Allow the camera for this site in your phone's or browser's settings, then try again.":"Couldn't start the camera"+(e&&e.name?" ("+e.name+")":"")+".","bad");
     }
+  }
+  async function switchLens(id){
+    if(!id||id===lensId)return;
+    try{setStat("Switching lens…","busy");const st=await openStream(id);if(closed){st.getTracks().forEach(t=>t.stop());return;}
+      await useStream(st);try{localStorage.setItem(LENS_KEY,id);}catch(e){}lock=null;fillLenses();
+      setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");}
+    catch(e){setStat("That lens couldn't start"+(e&&e.name?" ("+e.name+")":"")+". Pick another.","bad");fillLenses();}
   }
   // the newest camera frame, full size, into the work canvas
   function grab(){
@@ -5864,6 +5908,7 @@ function openLive(o){
   $("lvNext").addEventListener("click",()=>goAim(aim+1));
   $("lvWant").addEventListener("input",e=>{want=num(e.target.value)>0?Math.round(num(e.target.value)):null;renderStats();});
   U.fill($("lvDist"),"yd",dist,0,1);
+  $("lvLens").addEventListener("change",e=>switchLens(e.target.value));
   $("lvDist").addEventListener("input",e=>{const d=U.read(e.target,"yd",dist);if(d>0)dist=d;renderStats();});
   {const gs=$("lvGroup");if(gs)gs.addEventListener("change",()=>{const a=aims()[aim];if(!a)return;const id=gs.value||null;aims().forEach(x=>{if(x!==a&&x.groupId===id&&id)x.groupId=null;});a.groupId=id;fillAim();});}
   /* ----- microphone ----- */

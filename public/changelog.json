@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.18.2",
+      "version": "2.18.3",
       "date": "2026-10-17",
       "title": "Shooting profiles, and a way to send feedback",
       "items": [
@@ -12,7 +12,8 @@
         "Excel and PDF exports call the Shooting tab's list Shooting profiles.",
         "Tools → Trajectory calculator is now the full Shooting calculator (chart and zeros, point-blank range, range table, true-up, dope card, saved ranges) without making a profile. Reset clears it for new numbers; Save as a Shooting profile keeps it.",
         "Picking a gun on a profile with no cartridge yet fills in the gun's cartridge, so the ammo list shows what fits.",
-        "Fixed: on an iPhone or iPad home-screen app, opening a PDF (a target, trip report or export) no longer leaves you stuck with no way to print or go back. It opens a panel with Print or save…, which brings up the share sheet with Print and Save to Files."
+        "Fixed: on an iPhone or iPad home-screen app, opening a PDF (a target, trip report or export) no longer leaves you stuck with no way to print or go back. It opens a panel with Print or save…, which brings up the share sheet with Print and Save to Files.",
+        "Live target on an iPhone with two or three back lenses no longer keeps switching lenses at the spotting scope: it uses the main lens, and a Camera lens picker lets you choose another (remembered on that phone)."
       ]
     },
     {
