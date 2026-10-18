@@ -323,6 +323,10 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .hcdist div{flex:1 0 26px;display:flex;flex-direction:column-reverse;align-items:center;height:100%;gap:3px}
 .hcdist i{display:block;width:70%;flex:none;background:var(--accent);border-radius:3px 3px 0 0}
 .hcdist span{font-size:11px;color:var(--muted);font-family:var(--mono)}.hcdist b{font-size:11px;font-family:var(--mono)}
+.tooltile{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.sorting{position:relative;z-index:30;opacity:.92;box-shadow:0 10px 28px rgba(0,0,0,.28)!important;cursor:grabbing;transition:none!important}
+.sortingbox [data-tooltile]:not(.sorting){transition:transform .15s}
+.toolsarr{margin:10px 2px 0}
 .tooltiles{display:grid;grid-template-columns:1fr;gap:12px;margin-top:6px}
 @media(min-width:700px){.tooltiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1100px){.tooltiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -1560,7 +1564,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To see or add documents, tap <b>Unlock</b> and type the passphrase. On a computer <b>Open</b> shows the document in a new tab; on a phone it unlocks it, then a second tap opens the share sheet to view, print or save it. The vault locks itself after 15 minutes, when you tap <b>Lock</b>, or when you close Range Book. <b>Account → Document vault</b> shows how many documents you have and lets you change the passphrase (your documents stay as they are). Your backup file includes the vault, still locked: restoring it brings the documents back, and they open with the same passphrase. One caution: whoever controls the server could, in theory, change Range Book's code to capture a passphrase as it's typed, so only use the vault on a Range Book run by someone you trust.</p>
     </section>
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
-      <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. Nothing in Tools is saved: change a number and the answer updates.</p>
+      <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. To put the tiles in your own order, press and hold one and drag it where you want it (on a computer, just drag it; with a keyboard, Alt + the arrow keys move the selected tile). The order is saved to your account, so it's the same on every phone and computer; <b>Put them back in the usual order</b> under the tiles undoes it. Nothing in Tools is saved: change a number and the answer updates.</p>
       <ul>
         <li><b>Compare trajectories</b>: up to six bullets on one chart, all with the same zero, sight height, temperature and altitude. Type each one's weight, velocity and BC, or fill it in from a Shooting profile, your ammo or the factory catalog. Switch the chart between <b>Path</b> (above or below your line of sight), <b>Dial</b> (MOA or MIL to dial up), <b>Wind</b> (drift in a 10 mph crosswind), <b>Speed</b> and <b>Energy</b>, and between <b>Short</b>, <b>Medium</b> and <b>Long</b> (200, 400 or 1,000 yd). The table under the chart has each bullet's numbers. Each line has its own color and dash pattern, so they're easy to tell apart in Red Night too. It remembers your bullets on that phone or computer; <b>Reset</b> starts over.</li><li><b>Chronograph file check</b>: pick your chronograph's export to see how Range Book reads it before you import it: each string's shots, average, SD, spread and time, in the order they were shot, and which ladder charge it would go to when its name has a charge. Nothing is imported or saved. If a file doesn't read right, this is the screen to show when you report it.</li><li><b>Trajectory calculator</b> (also the <b>Trajectory calculator</b> button on Home): the whole Shooting calculator without making a profile. Pick a gun and ammo (your own, or anything from the factory catalog, which here only fills in its numbers) or type the bullet weight, velocity, BC and sight height, and every card works the same as on a profile: conditions and wind, bullet path and zeros, point-blank range, range table, true-up, dope card and saved ranges. Nothing is saved to your profiles; this device remembers the last numbers so it opens where you left off. <b>Reset</b> clears it for new numbers (<b>Undo</b> brings them back), and <b>Save as a Shooting profile</b> keeps it as a profile, so it gets range trips too, and opens it on Shooting.</li>
         <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a <b>Bullet</b> from your Components and a <b>Gun</b> (for its twist) side by side, or type the numbers in. On a Shooting profile, <b>Check barrel twist</b> (under Inputs) opens it filled in from that profile. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
@@ -1618,6 +1622,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved unless you ask.</p></header>
     <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cart"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l1.5-5h3L15 9v12z"/><path d="M9 13h6"/></svg></span><span class="t">Cartridges</span><span class="d">The cartridge list Range Book uses: bullet diameters and SAAMI case and overall lengths. Fix anything wrong, or add your own.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph file check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <p class="note toolsarr" id="toolsArr">Press and hold a tool to move it (on a computer, drag it).<span id="toolsReorder" hidden> <button class="linkbtn" type="button" id="toolsReorderGo">Put them back in the usual order</button></span></p>
     <div class="tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
       <section class="card qcbar"><p class="note toolnote">The full Shooting calculator, without making a profile: pick a gun and ammo or type the numbers, and every card below works (chart, point-blank range, range table, true-up, dope card, saved ranges). Nothing is saved to your profiles; this device remembers the last numbers until you tap <b>Reset</b>.</p>
         <div class="row"><button class="btn primary" type="button" id="qcSave">Save as a Shooting profile</button><button class="btn" type="button" id="qcReset">Reset</button></div></section>
@@ -1862,6 +1867,54 @@ window.DIA={
     el.addEventListener("input",()=>{const n=parseFloat(el.value);if(u.value==="in"&&n>=1){u.value="mm";}onChange(DIA.toIn(el.value,u.value),u.value);});
     u.addEventListener("change",()=>{el.value=DIA.show(getInches(),u.value);onChange(getInches(),u.value);});},
   label(inches,unit){return inches?(unit==="mm"?DIA.show(inches,"mm")+" mm":String(DIA.show(inches,"in")).replace(/^0\./,".")+" cal"):"";}
+};
+/* your own order for lists you arrange (Tools tiles, ...): kept with the account's preferences, and on this device until they load */
+window.RB_ORDER=(()=>{
+  let O={};try{O=JSON.parse(localStorage.getItem("rb.order")||"{}")||{};}catch(e){O={};}
+  const subs=[],keep=()=>{try{localStorage.setItem("rb.order",JSON.stringify(O));}catch(e){}};
+  return {
+    get:k=>Array.isArray(O[k])?O[k].slice():null,
+    set(k,ids){if(ids)O[k]=ids.slice();else delete O[k];keep();if(window.RB_PREFS_SAVE)RB_PREFS_SAVE();},
+    all:()=>Object.keys(O).length?JSON.parse(JSON.stringify(O)):undefined,
+    load(o){if(o&&typeof o==="object"){O=o;keep();subs.forEach(f=>{try{f();}catch(e){}});}},
+    on(f){subs.push(f);},
+    // put a container's items (each with attr) in the saved order; ones not in it keep their place after
+    apply(k,box,sel,attr){const ids=O[k];if(!box||!Array.isArray(ids))return;const items=[...box.querySelectorAll(sel)],by=new Map(items.map(el=>[el.getAttribute(attr),el]));
+      const first=items[0]&&items[0].previousSibling,frag=document.createDocumentFragment();
+      ids.forEach(id=>{const el=by.get(id);if(el){frag.appendChild(el);by.delete(id);}});items.forEach(el=>{if(by.has(el.getAttribute(attr)))frag.appendChild(el);});
+      if(first)first.after(frag);else box.prepend(frag);}
+  };
+})();
+/* drag to reorder: with a mouse, drag a few pixels; on a touch screen, press and hold, then drag. Alt + arrow keys move the focused item. */
+window.RB_SORT=function(box,sel,attr,done){
+  let st=null,drag=null,timer=null,justDragged=false;
+  const ids=()=>[...box.querySelectorAll(sel)].map(el=>el.getAttribute(attr));
+  const place=(x,y)=>{const el=drag.el;el.style.transform="";const r=el.getBoundingClientRect();el.style.transform="translate("+(x-drag.gx-r.left)+"px,"+(y-drag.gy-r.top)+"px)";};
+  const begin=()=>{clearTimeout(timer);if(!st)return;const el=st.el,r=el.getBoundingClientRect();drag={el,gx:st.x-r.left,gy:st.y-r.top,before:ids().join("|")};
+    el.classList.add("sorting");box.classList.add("sortingbox");try{if(navigator.vibrate)navigator.vibrate(12);}catch(e){}place(st.lx,st.ly);};
+  const end=()=>{clearTimeout(timer);if(drag){const el=drag.el;el.classList.remove("sorting");el.style.transform="";box.classList.remove("sortingbox");
+      const now=ids();if(now.join("|")!==drag.before){done(now);}justDragged=true;setTimeout(()=>{justDragged=false;},350);}
+    drag=null;st=null;};
+  box.addEventListener("pointerdown",e=>{const el=e.target.closest(sel);if(!el||!box.contains(el)||e.button>0)return;
+    st={el,x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,touch:e.pointerType!=="mouse"};
+    if(st.touch)timer=setTimeout(begin,420);});
+  window.addEventListener("pointermove",e=>{if(!st)return;st.lx=e.clientX;st.ly=e.clientY;const d=Math.hypot(e.clientX-st.x,e.clientY-st.y);
+    if(!drag){if(st.touch){if(d>10){clearTimeout(timer);st=null;}return;}if(d>6)begin();else return;}
+    e.preventDefault();place(e.clientX,e.clientY);
+    drag.el.style.visibility="hidden";const under=document.elementFromPoint(e.clientX,e.clientY);drag.el.style.visibility="";
+    const t=under&&under.closest(sel);if(t&&t!==drag.el&&box.contains(t)){const all=[...box.querySelectorAll(sel)];
+      if(all.indexOf(t)>all.indexOf(drag.el))t.after(drag.el);else t.before(drag.el);place(e.clientX,e.clientY);}
+    // near the top or bottom of the screen: scroll
+    const edge=60;if(e.clientY<edge)window.scrollBy(0,-12);else if(e.clientY>innerHeight-edge)window.scrollBy(0,12);},{passive:false});
+  window.addEventListener("pointerup",end);window.addEventListener("pointercancel",()=>{if(!drag)end();});
+  // a held finger mustn't scroll the page or open the long-press menu
+  box.addEventListener("touchmove",e=>{if(drag)e.preventDefault();},{passive:false});
+  box.addEventListener("touchend",()=>{if(drag)end();});
+  box.addEventListener("contextmenu",e=>{if(st||drag)e.preventDefault();});
+  box.addEventListener("click",e=>{if(justDragged){e.preventDefault();e.stopPropagation();}},true);
+  box.addEventListener("keydown",e=>{if(!e.altKey)return;const el=e.target.closest(sel);if(!el)return;const all=[...box.querySelectorAll(sel)],i=all.indexOf(el);
+    const back=e.key==="ArrowUp"||e.key==="ArrowLeft",fwd=e.key==="ArrowDown"||e.key==="ArrowRight";if(!back&&!fwd)return;e.preventDefault();
+    if(back&&i>0)all[i-1].before(el);else if(fwd&&i<all.length-1)all[i+1].after(el);else return;el.focus();done(ids());});
 };
 /* weather and places: today's weather from Open-Meteo (where you are, or at a saved range), and finding a range's address on OpenStreetMap */
 window.RB_WX=(()=>{
@@ -8906,7 +8959,7 @@ async function startApp(user,api){
   document.querySelectorAll("#themeMode [data-mode]").forEach(b=>b.addEventListener("click",()=>applyTheme({palette:THEME.palette,mode:b.dataset.mode},true)));
   // the account's preferences (theme, units) arrive with the calculator data, so the app starts in the right units
   let calc=null;{const [pr,cr]=await Promise.all([GUEST?Promise.resolve(null):A.get("/api/doc/prefs").catch(()=>null),A.get("/api/doc/calc").catch(()=>null)]);
-    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);BETA_SEEN=pr.data.betaSeen||null;}
+    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);BETA_SEEN=pr.data.betaSeen||null;if(pr.data.order)RB_ORDER.load(pr.data.order);}
     calc=cr?cr.data:null;}
   U.labels();
   // Units on Account: save it to the account, then reload so every screen redraws in the new units
@@ -8954,7 +9007,8 @@ const FEEDBACK_EMAIL="",FEEDBACK_GH="https://github.com/saoneill01-a11y/rangeboo
   const m=document.getElementById("fbMail"),g=document.getElementById("fbGh");if(!g)return;
   if(FEEDBACK_EMAIL){m.href="mailto:"+FEEDBACK_EMAIL+"?subject="+encodeURIComponent("Range Book feedback")+"&body="+encodeURIComponent("What happened, or what's your idea?"+body);m.hidden=false;}
   g.href=FEEDBACK_GH+"?body="+encodeURIComponent("What happened, or what's your idea?"+body);})();
-function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined};}
+function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined,order:RB_ORDER.all()};}
+window.RB_PREFS_SAVE=()=>{clearTimeout(window.RB_PREFS_SAVE.t);window.RB_PREFS_SAVE.t=setTimeout(()=>{if(!GUEST)API.put("/api/doc/prefs",{data:prefsData()}).catch(()=>{});},600);};
 function betaNotice(then){
   const v=appVersion();let local=null;try{local=localStorage.getItem("rangebook.betaSeen");}catch(e){}
   if(!v||BETA_SEEN===v||(GUEST||BETA_SEEN==null)&&local===v){then();return;}
@@ -9234,7 +9288,8 @@ window.RB_TOOLS=(function(){
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
   const TOOLS=["traj","twist","moa","powder","conv","live","hit","cart","cmp","chrono"];
   const TITLES={cmp:"Compare trajectories",chrono:"Chronograph file check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",cart:"Cartridges"};
-  let tool=null, pending=null, rel=null, ready=false;      // tool: the one open, or null for the tiles
+  let tool=null, pending=null, rel=null, ready=false;
+  const TILE_DEFAULT=[...document.querySelectorAll("#toolTiles [data-tooltile]")].map(b=>b.dataset.tooltile);      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   // a box in the person's units <-> the imperial value behind it
   const put=(id,kind,v,dec)=>{const e=$(id);if(e)e.value=v==null?"":String(kind?U.n(kind,v,dec):v);};
@@ -9244,7 +9299,7 @@ window.RB_TOOLS=(function(){
   // show the tiles (t = null) or one tool
   function view(t){
     tool=TOOLS.includes(t)?t:null;
-    $("toolTiles").hidden=!!tool;
+    $("toolTiles").hidden=!!tool;$("toolsArr").hidden=!!tool;
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
     if(tool==="cart"&&window.RB_CARTPAGE)RB_CARTPAGE.draw();
@@ -9419,6 +9474,13 @@ window.RB_TOOLS=(function(){
     document.querySelectorAll("[data-tooltile]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tooltile;
       if(t==="targets"){if(window.APP_showTab)APP_showTab("targets");return;}view(t);window.scrollTo(0,0);}));
     $("toolsBack").addEventListener("click",()=>{view(null);window.scrollTo(0,0);});
+    // your own order for the tiles: press and hold (or drag with a mouse) to move one
+    const tileOrder=()=>{RB_ORDER.apply("tools",$("toolTiles"),"[data-tooltile]","data-tooltile");$("toolsReorder").hidden=!RB_ORDER.get("tools");};
+    tileOrder();RB_ORDER.on(tileOrder);
+    RB_SORT($("toolTiles"),"[data-tooltile]","data-tooltile",ids=>{RB_ORDER.set("tools",ids);$("toolsReorder").hidden=false;});
+    $("toolsReorderGo").addEventListener("click",()=>{const before=RB_ORDER.get("tools");RB_ORDER.set("tools",null);
+      const box=$("toolTiles");TILE_DEFAULT.forEach(id=>{const el=box.querySelector('[data-tooltile="'+id+'"]');if(el)box.appendChild(el);});$("toolsReorder").hidden=true;
+      if(window.RB_UNDO)RB_UNDO("Tools are back in the usual order",()=>{RB_ORDER.set("tools",before);tileOrder();});});
     $("lt_go").addEventListener("click",liveGo);
     ["hc_dist","hc_w","hc_h","hc_grp","hc_sd","hc_wind","hc_rng"].forEach(id=>$(id).addEventListener("input",hitCalc));["hc_load","hc_shape"].forEach(id=>$(id).addEventListener("change",hitCalc));$("lt_print").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("targets");});
     $("targetsBack").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("tools");});
