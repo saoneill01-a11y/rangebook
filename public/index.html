@@ -1098,6 +1098,28 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .tile{background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:2px}
 .tile b{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--accent)}
 .tile span{font-size:13px;color:var(--muted)}
+.libtiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.libtile{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:10px}
+.libtile:hover{border-color:var(--accent)}
+.libtile b{font-size:22px}
+.loaditem.librow{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;text-align:left}
+.librow .ltext{flex:1;min-width:0;align-items:flex-start}
+.librow .libn{flex:none}
+.libn{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--accent)}
+.libbars{display:flex;flex-direction:column;gap:6px}
+.libbar{display:grid;grid-template-columns:minmax(80px,120px) minmax(0,1fr) 3em;gap:10px;align-items:center;font-size:14px}
+.libbar b{font-family:var(--mono);text-align:right}
+.lbtrack{height:8px;background:var(--sunk);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.lbtrack>span{display:block;height:100%;background:var(--accent)}
+.homegrid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;align-items:start}
+.homegrid.one{grid-template-columns:minmax(0,1fr)}
+.homegrid.one>.homeR{display:none}
+.homeL,.homeR{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;grid-auto-flow:row dense;align-content:start;min-width:0}
+.homeR{grid-template-columns:minmax(0,1fr)}
+.homeL>*,.homeR>*{grid-column:1/-1}
+.homeL>.half{grid-column:auto;align-self:stretch}
+.homeL>.half .cartgroup,.homeR .cartgroup{display:flex;flex-direction:column}
+@media (min-width:761px){.libtiles{grid-template-columns:repeat(6,minmax(0,1fr))}}
 .homeacts .btn{flex:1 1 auto}
 .homealerts .loaditem .t{font-weight:500}
 .lifebar.mini{height:6px;margin-top:6px;width:100%}
@@ -1373,7 +1395,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>On a phone, the bar along the bottom shows four tabs and <b>More</b>. To choose which four, and their order, go to <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a> and tap <b>Choose the tabs</b>: tick <b>In the bar</b> for up to four (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and How to Use) and drag them into order. The rest are under <b>More</b>. A computer always shows every tab along the top.</p>
       <p>Pick a color theme under <a class=goto href=#go data-go=account:theme>More › Account › Theme</a>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
-      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and your <b>Most used guns</b> (your favorites first, then the guns with the most rounds, with their photos; three rows on a computer and six guns on a phone, and <b>All guns ›</b> for the rest). Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and Account) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
+      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, <b>Recent reloading</b> (the loads you've worked on lately), your <b>Most used guns</b> (your favorites first, then the guns with the most rounds, with their photos; up to six, and <b>All guns ›</b> for the rest), and <b>Built in Library</b>: how many bullets, cartridges, powders, factory loads, scopes and primers are built in. Tap a number to open that list, or <b>Open Library ›</b> for the Library page under Reloading › Reference, which lists everything built in with its count and shows the bullets by maker. On a computer, Recent range trips and Recent reloading sit side by side, Most used guns gets its own column on the right (on a narrower screen like a tablet it goes under them), and Built in Library runs across the bottom; on a phone the cards are one under another. <b>Arrange Home</b> at the bottom puts the cards in your order and turns off the ones you don't need. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and Account) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
       <p>When a note or this page mentions another part of Range Book, the name is an underlined link in your theme's color, like <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a>. Tap it to go straight there. A path with <b>›</b> shows where it is, so you can also find it yourself.</p>
       <p><b>Arrange Home</b> at the bottom of Home lets you put its cards in your own order (drag <b>⠿</b>, or use <b>▲</b> and <b>▼</b> on a computer) and turn off the ones you don't need. <b>Usual order</b> puts everything back. It's saved to your account, so every phone and computer shows the same Home.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <a class=goto href=#go data-go=log>Shooting › Range log</a>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
@@ -2186,7 +2208,7 @@ window.RB_WX=(()=>{
   const dimT=x=>(window.U&&U.metric)?(x*25.4).toFixed(2)+" mm":x.toFixed(3)+" in";
   function info(cart,dimTxt){dimTxt=dimT;const C=find(cart);if(!C)return String(cart||"").trim()?"Not in the cartridge list, so Range Book can't check it. Enter the bullet diameter yourself (or add it under Tools → Cartridges).":"";
     return [C.d>0?dtxt(C.d)+'" bullet'+(fam(C.d)?" ("+fam(C.d)+")":""):"",C.cl?"max case length "+dimTxt(C.cl):"",C.oal?"max overall length "+dimTxt(C.oal):""].filter(Boolean).join(" · ")+((C.x||[]).length?". Also safe in this chamber: "+C.x.join(", "):"")+".";}
-  window.RB_CARTS={dimT,info,get list(){return L;},base:n=>BASE.find(c=>c.n===n)||null,setUser,user:()=>USER,key,find,canon:s=>{const c=find(s);return c?c.n:s;},dia:s=>{const c=find(s);return c?c.d:null;},fam,fits,diaOk,search,picker,desc,dtxt,TOL};
+  window.RB_CARTS={dimT,info,get list(){return L;},baseCount:()=>BASE.length,base:n=>BASE.find(c=>c.n===n)||null,setUser,user:()=>USER,key,find,canon:s=>{const c=find(s);return c?c.n:s;},dia:s=>{const c=find(s);return c?c.d:null;},fam,fits,diaOk,search,picker,desc,dtxt,TOL};
 })();
 </script>
 <script>
@@ -5365,6 +5387,17 @@ function compRetHtml(){
 let bulletsLoading=null;
 function loadBulletCat(){if(window.RB_BULLETS)return Promise.resolve(window.RB_BULLETS);
   return bulletsLoading=bulletsLoading||fetch("/bullets.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>(window.RB_BULLETS=j.bullets||[])).catch(()=>{bulletsLoading=null;return [];});}
+/* counts of the built-in lists, for Home's Built in Library card and Reloading › Reference › Library.
+   Bullets and scopes come from their own files, so load() fetches them first (once). */
+window.RB_LIB={
+  load(){return Promise.all([loadBulletCat(),loadScopeCat().catch(()=>[])]);},
+  counts(){const B=window.RB_BULLETS,R=(window.RB_REF&&RB_REF.counts&&RB_REF.counts())||{};
+    return {bullets:B?B.length:null,bulletMakers:B?new Set(B.map(b=>b.mfr)).size:null,bulletBC:B?B.filter(b=>b.g1||b.g7).length:null,
+      byMaker:B?[...B.reduce((m,b)=>m.set(b.mfr,(m.get(b.mfr)||0)+1),new Map())].sort((a,b)=>b[1]-a[1]):[],
+      cartridges:window.RB_CARTS?RB_CARTS.baseCount():null,powders:POWDER_LIST.length,powderMakers:new Set(POWDER_LIST.map(p=>p[0])).size,
+      primers:PRIMER_LIST.length,loads:AMMO_CATALOG.length,loadCarts:new Set(AMMO_CATALOG.map(a=>a.cart)).size,
+      scopes:SCOPE_CAT?SCOPE_CAT.length:null,burn:R.burn,dia:R.dia,press:R.press,gloss:R.gloss};}
+};
 function renderComps(){
   if(compKind==="bullets"&&!window.RB_BULLETS)loadBulletCat().then(b=>{if(b.length&&compKind==="bullets"&&!compOpen)renderComps();});
   const root=$("compRoot"),broot=$("brassRoot");if(!root)return;
@@ -8378,9 +8411,26 @@ function renderLog(){
 let homePick=false;
 function fitHomeGuns(){const g=$("homeGuns");if(!g)return;const items=[...g.children];
   const cols=window.matchMedia("(max-width:760px)").matches?0:(getComputedStyle(g).gridTemplateColumns||"").split(" ").filter(Boolean).length;
-  const max=cols?cols*3:6;items.forEach((el,i)=>{el.hidden=i>=max;});const mo=$("homeGunsMore");if(mo)mo.hidden=items.length<=max;}
+  const max=g.closest(".homeR")?6:cols?cols*3:6;items.forEach((el,i)=>{el.hidden=i>=max;});const mo=$("homeGunsMore");if(mo)mo.hidden=items.length<=max;}
 window.addEventListener("resize",()=>{clearTimeout(fitHomeGuns.t);fitHomeGuns.t=setTimeout(fitHomeGuns,150);});
-const HOME_SECS=[["quick","Start a range day and quick buttons"],["alerts","Needs attention","Only shows when something does"],["year","This month and year"],["trips","Recent range trips"],["reload","Reloading lately","Only shows when you have loads"],["guns","Most used guns"]];
+/* Wide screens: Most used guns gets its own column on the right (1000px and up), Built in Library runs across the bottom,
+   and Recent range trips and Recent reloading sit side by side. The other cards keep your Arrange Home order on the left.
+   Phones keep one card per row in your order. */
+const HOME_MQ=[window.matchMedia("(min-width:761px)"),window.matchMedia("(min-width:1000px)")];
+HOME_MQ.forEach(m=>{const f=()=>{if($("homeRoot")&&$("homeRoot").querySelector("[data-hsec]"))renderHome();};if(m.addEventListener)m.addEventListener("change",f);else if(m.addListener)m.addListener(f);});
+function layoutHome(root){
+  if(!HOME_MQ[0].matches)return;
+  const secs=[...root.querySelectorAll(":scope>[data-hsec]")],on=id=>secs.some(x=>x.dataset.hsec===id&&!x.hidden);
+  const grid=document.createElement("div"),L=document.createElement("div"),R=document.createElement("div");
+  grid.className="homegrid";L.className="homeL";R.className="homeR";grid.append(L,R);
+  const lib=secs.find(x=>x.dataset.hsec==="lib"),quick=secs.find(x=>x.dataset.hsec==="quick");
+  (quick?quick.after(grid):root.prepend(grid));
+  secs.forEach(x=>{const id=x.dataset.hsec;if(id==="quick"||id==="lib")return;(id==="guns"&&HOME_MQ[1].matches?R:L).appendChild(x);});
+  if(lib)grid.after(lib);
+  if(!R.querySelector("[data-hsec]:not([hidden])"))grid.classList.add("one");
+  if(on("trips")&&on("reload"))L.querySelectorAll('[data-hsec="trips"],[data-hsec="reload"]').forEach(x=>x.classList.add("half"));
+}
+const HOME_SECS=[["quick","Start a range day and quick buttons"],["alerts","Needs attention","Only shows when something does"],["year","This month and year"],["trips","Recent range trips"],["reload","Recent reloading","Only shows when you have loads"],["guns","Most used guns"],["lib","Built in Library","How many bullets, cartridges, powders and more are built in"]];
 function arrangeHome(){
   const ord=RB_ORDER.get("home")||[],ids=HOME_SECS.map(x=>x[0]).sort((a,b)=>{const i=ord.indexOf(a),j=ord.indexOf(b);return (i<0?99+HOME_SECS.findIndex(x=>x[0]===a):i)-(j<0?99+HOME_SECS.findIndex(x=>x[0]===b):j);});
   const hid=RB_ORDER.get("homeHide")||[];
@@ -8464,7 +8514,7 @@ function renderHome(){
   // reloading loads worked on lately
   const last=L=>[...(L.groups||[]).map(g=>g.date),...(L.batches||[]).map(b=>b.date)].filter(Boolean).sort().pop()||"";
   const rl=[...loads.entries()].filter(([id])=>isMine(id)).map(([id,L])=>({id,L,d:last(L)})).filter(x=>x.d).sort((a,b)=>b.d.localeCompare(a.d)).slice(0,4);
-  if(rl.length)h+='<section class="card" aria-label="Recent reloading" data-hsec="reload"><h2>Reloading lately</h2><div class="cartgroup">'+rl.map(x=>'<button class="loaditem" type="button" data-hload="'+esc(x.id)+'"><span class="t">'+esc(x.L.title||"Untitled load")+'</span><span class="d">'+esc([x.L.cartridge,(()=>{const n=(x.L.ladders||[]).length;return n>1?n+" ladders · ":"";})()+(x.L.groups||[]).length+" groups",(x.L.batches||[]).length?(x.L.batches||[]).reduce((a,b)=>a+(b.n||0),0)+" loaded":""].filter(Boolean).join(" · "))+'</span><span class="m">Last worked on '+esc(fmtDate(x.d))+'</span></button>').join("")+'</div></section>';
+  if(rl.length)h+='<section class="card" aria-label="Recent reloading" data-hsec="reload"><h2>Recent reloading</h2><div class="cartgroup">'+rl.map(x=>'<button class="loaditem" type="button" data-hload="'+esc(x.id)+'"><span class="t">'+esc(x.L.title||"Untitled load")+'</span><span class="d">'+esc([x.L.cartridge,(()=>{const n=(x.L.ladders||[]).length;return n>1?n+" ladders · ":"";})()+(x.L.groups||[]).length+" groups",(x.L.batches||[]).length?(x.L.batches||[]).reduce((a,b)=>a+(b.n||0),0)+" loaded":""].filter(Boolean).join(" · "))+'</span><span class="m">Last worked on '+esc(fmtDate(x.d))+'</span></button>').join("")+'</div></section>';
   // most used guns: favorites (starred on Gear & Ranges) first, then by rounds fired; one tile per gun (a gun with several
   // uppers is one tile). fitHomeGuns() shows 3 rows on a computer and 6 guns on a phone. (2.18.5)
   if(rifles.length){const seen=new Set(),G=[];
@@ -8478,12 +8528,19 @@ function renderHome(){
         '<span class="m">'+(x.tot||0).toLocaleString()+' rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(x.sb.length>1?' · '+x.sb.length+' uppers':'')+'</span>'+
         (life>0?'<span class="lifebar mini'+(rc.pct>=80?' warn':'')+'"><span style="width:'+Math.min(100,rc.pct).toFixed(1)+'%"></span></span>':'')+'</span></button>';}).join("")+'</div>'+
       '<div class="row" id="homeGunsMore" hidden><button class="linkbtn" type="button" data-hgo="guns">All '+G.length+' guns ›</button></div></section>';}
+  {const n=RB_LIB.counts(),f=v=>v==null?"…":v.toLocaleString();
+    h+='<section class="card" aria-label="Built in Library" data-hsec="lib"><div class="h2row"><h2>Built in Library</h2><button class="linkbtn" type="button" data-lgo="ref:lib">Open Library ›</button></div><div class="tiles libtiles">'+
+      [["bullets","bullets","brass:bullets"],["cartridges","cartridges","ref:cart"],["powders","powders","brass:powders"],["loads","factory loads","rifles:ammo"],["scopes","scopes","rifles:scopes"],["primers","primers","brass:primers"]]
+        .map(([k,l,go])=>'<button class="tile libtile" type="button" data-lgo="'+go+'"><b data-libn="'+k+'">'+f(n[k])+'</b><span>'+l+'</span></button>').join("")+'</div></section>';}
   h+='<div class="row endrow homearr"><button class="linkbtn" type="button" id="hArrange">Arrange Home</button></div>';
   root.innerHTML=h;
   // your order for Home's cards, and the ones you've hidden
   RB_ORDER.apply("home",root,"[data-hsec]","data-hsec");{const hid=RB_ORDER.get("homeHide")||[];root.querySelectorAll("[data-hsec]").forEach(x=>{if(hid.includes(x.dataset.hsec))x.hidden=true;});}
   $("hArrange").addEventListener("click",arrangeHome);
+  layoutHome(root);
   fitHomeGuns();
+  root.querySelectorAll("[data-lgo]").forEach(b=>b.addEventListener("click",()=>RB_GO(b.dataset.lgo)));
+  if(root.querySelector("[data-libn]")&&(!window.RB_BULLETS||!SCOPE_CAT))RB_LIB.load().then(()=>{const n=RB_LIB.counts();root.querySelectorAll("[data-libn]").forEach(e=>{const v=n[e.dataset.libn];if(v!=null)e.textContent=v.toLocaleString();});});
   $("hNewTrip").addEventListener("click",()=>{homePick=homePick?false:true;renderHome();});
   root.querySelectorAll("[data-hgun]").forEach(b=>b.addEventListener("click",()=>{homePick={gun:b.dataset.hgun};renderHome();}));
   root.querySelectorAll("[data-hgrp]").forEach(b=>b.addEventListener("click",()=>{homePick={grp:b.dataset.hgrp};renderHome();}));
@@ -9478,9 +9535,10 @@ function startTabTour(tab){
     {el:()=>q('#panel-home [aria-label="Needs attention"]'),t:"Needs attention",b:"Components running low, a barrel near the end of its life, a gun due for cleaning. Tap one to go take care of it."},
     {el:()=>q('#panel-home [aria-label="This year"]'),t:"This year",b:"Rounds fired this month and this year, range trips and rounds loaded."},
     {el:()=>q('#panel-home [aria-label="Recent range trips"]'),t:"Recent range trips",b:"Your latest trips with their best groups. Tap one to open it, or <b>See the whole range log</b>."},
-    {el:()=>q('#panel-home [aria-label="Recent reloading"]'),t:"Reloading lately",b:"The reloading loads you've worked on lately. Tap one to pick up where you left off."},
+    {el:()=>q('#panel-home [aria-label="Recent reloading"]'),t:"Recent reloading",b:"The reloading loads you've worked on lately. Tap one to pick up where you left off."},
     {el:()=>q('#panel-home [aria-label="Most used guns"]'),t:"Most used guns",b:"Your favorite guns first (star them on Gear & Ranges), then the ones you shoot most, with their photos and round counts. Tap one to open it."},
-    {el:()=>q("#hArrange"),t:"Arrange Home",b:"Put Home's cards in the order you want and turn off the ones you don't need. It's saved to your account."},
+    {el:()=>q('#panel-home [aria-label="Built in Library"]'),t:"Built in Library",b:"How many bullets, cartridges, powders, factory loads, scopes and primers Range Book already knows. Tap a number to open that list, or <b>Open Library</b> for everything."},
+    {el:()=>q("#hArrange"),t:"Arrange Home",b:"Put Home's cards in the order you want and turn off the ones you don't need. On a computer, Most used guns sits in its own column on the right and Built in Library across the bottom. It's saved to your account."},
     END];
   if(tab==="traj"||tab==="log"){
     const list=()=>{showTab("traj",false);click("#trajBack");click('#trajSeg [data-area="traj"]');},
@@ -9508,7 +9566,7 @@ function startTabTour(tab){
       ...(has?[{el:()=>q(".viewbar"),t:"Develop and Load",b:"Each load has two views. <b>Develop</b> is for working it up; <b>Load</b> is the finished load sheet, with the batches you've loaded.",go:open("develop")},
         card("#secRecipe","secRecipe",null,open("develop")),card("#secGroups","secGroups",null,open("develop")),card("#secSummary","secSummary",null,open("develop")),
         card("#secCharts","secCharts",null,open("develop")),card("#secTargets","secTargets",null,open("develop")),card("#secBatches","secBatches",null,open("load"))]:[]),
-      {el:()=>q("#panel-ref .refnav"),t:"Reference",b:"Pick a list here: <b>Cartridges</b>, <b>Bullet diameters</b>, <b>Powder burn rates</b>, <b>Pressure signs</b> or <b>Glossary</b>. The burn-rate order is only for orientation, never for swapping powders.",go:()=>{showTab("ref",false);}},
+      {el:()=>q("#panel-ref .refnav"),t:"Reference",b:"Pick a list here: <b>Library</b> (everything that's built in, with counts), <b>Cartridges</b>, <b>Bullet diameters</b>, <b>Powder burn rates</b>, <b>Pressure signs</b> or <b>Glossary</b>. The burn-rate order is only for orientation, never for swapping powders.",go:()=>{showTab("ref",false);}},
       END];
   }
   if(tab==="rifles"){
@@ -10141,8 +10199,8 @@ window.RB_CARTPAGE=(function(){
 window.RB_REF=(function(){
   const $=id=>document.getElementById(id),U=window.U,C=window.RB_CARTS;
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const SECS=[["cart","Cartridges"],["dia","Bullet diameters"],["burn","Powder burn rates"],["press","Pressure signs"],["gloss","Glossary"]];
-  let sec="cart",q={dia:"",burn:"",gloss:""},mk="";try{const v=localStorage.getItem("rb.refSec");if(SECS.some(s=>s[0]===v))sec=v;}catch(e){}
+  const SECS=[["lib","Library"],["cart","Cartridges"],["dia","Bullet diameters"],["burn","Powder burn rates"],["press","Pressure signs"],["gloss","Glossary"]];
+  let sec="lib",q={dia:"",burn:"",gloss:""},mk="";try{const v=localStorage.getItem("rb.refSec");if(SECS.some(s=>s[0]===v))sec=v;}catch(e){}
   // fastest to slowest, from the 2025 comparative burn-rate chart published by Wolfe Publishing (loaddata.com)
   const BURN=[["Norma","R1"],["Winchester","WAALite"],["Vihtavuori","N310"],["Alliant","Extra-Lite"],["Shooters World","Sparta 100"],["Accurate","Nitro 100 NF"],["Alliant","e3"],["Hodgdon","Perfect Pattern"],["Hodgdon","Titewad"],["Scot","Royal D"],["Ramshot","Competition"],["Reload Swiss","RS12"],["Alliant","Red Dot"],["Winchester","AA Plus"],["Alliant","Promo"],["Hodgdon","Clays"],["IMR","Red"],["Alliant","Clay Dot"],["Hodgdon","Hi-Skor 700-X"],["Alliant","Bullseye"],["IMR","Target"],["Alliant","Sport Pistol"],["Hodgdon","HighGun"],["Hodgdon","Titegroup"],["Alliant","American Select"],["Accurate","Solo 1000"],["Scot","Red Diamond"],["Alliant","Green Dot"],["IMR","Green"],["Winchester","WST"],["Hodgdon","Trail Boss"],["Winchester","Super Handicap"],["Shooters World","Clean Shot"],["Hodgdon","International"],["Accurate","Solo 1250"],["IMR","PB"],["Vihtavuori","N320"],["Accurate","No. 2"],["Ramshot","Zip"],["Reload Swiss","RS14"],["IMR","SR 7625"],["Vihtavuori","N32C Tin Star"],["Winchester","452AA"],["Scot","453"],["Hodgdon","HP-38"],["Winchester","231"],["Alliant","20/28"],["Winchester","244"],["Hodgdon","HS-5"],["Winchester","WSL"],["Alliant","Unique"],["Hodgdon","Universal"],["Alliant","Power Pistol"],["Shooters World","Ultimate Pistol"],["Vihtavuori","N330"],["Alliant","Herco"],["Reload Swiss","RS20"],["Winchester","WSF"],["Shooters World","Auto Pistol"],["Winchester","WAP"],["Vihtavuori","N340"],["Alliant","BE-86"],["Accurate","No. 5"],["Hodgdon","HS-6"],["Winchester","540"],["Winchester","AutoComp"],["Hodgdon","CFE Pistol"],["Ramshot","True Blue"],["Ramshot","Silhouette"],["Scot","Solo 1500"],["Hodgdon","Hi-Skor 800-X"],["IMR","SR 4756"],["Vihtavuori","3N37"],["Vihtavuori","N350"],["Vihtavuori","3N38"],["Winchester","571"],["Hodgdon","HS-7"],["IMR","Blue"],["Winchester","572"],["Shooters World","Major Pistol"],["Alliant","Blue Dot"],["Accurate","No. 7"],["Alliant","Pro Reach"],["Reload Swiss","RS24"],["Hodgdon","Longshot"],["Alliant","410"],["Accurate","TCM"],["Alliant","2400"],["Ramshot","Enforcer"],["Vihtavuori","N105"],["Accurate","No. 9"],["Accurate","4100"],["Scot","4100"],["Alliant","Steel"],["Norma","R123"],["Shooters World","Heavy Pistol"],["Vihtavuori","N110"],["Hodgdon","Lil'Gun"],["Hodgdon","H110"],["Winchester","296"],["Reload Swiss","RS30"],["Accurate","No. 11FS"],["IMR","4227"],["Hodgdon","H4227"],["IMR","SR 4759"],["Alliant","Power Pro 300-MP"],["Accurate","5744"],["Shooters World","Buffalo Rifle"],["Accurate","1680"],["Shooters World","Blackout"],["Accurate","LT-30"],["Hodgdon","CFE BLK"],["Winchester","680"],["Norma","200"],["Scot","Brig 3032"],["Accurate","2200"],["Alliant","Reloder 7"],["Accurate","LT-32"],["IMR","4198"],["Reload Swiss","RS36"],["Hodgdon","H4198"],["Shooters World","SOCOM"],["Vihtavuori","N120"],["Norma","201"],["Alliant","Power Pro 1200-R"],["Vihtavuori","N130"],["Hodgdon","H322"],["Rottweil","R901"],["Accurate","2015"],["Alliant","Reloder 10X"],["IMR","3031"],["Vihtavuori","N133"],["Scot","Brig 322"],["Hodgdon","Benchmark"],["Hodgdon","H335"],["Ramshot","X-Terminator"],["Shooters World","AR Plus"],["Rottweil","R902"],["Accurate","2230"],["Accurate","2460"],["IMR","8208 XBR"],["Alliant","AR-Comp"],["Reload Swiss","RS40"],["Ramshot","TAC"],["Alliant","Power Pro Varmint"],["Hodgdon","H4895"],["Vihtavuori","N530"],["IMR","4895"],["Scot","Brig 4065"],["Vihtavuori","N135"],["Alliant","Reloder 12"],["Accurate","2495"],["IMR","4166"],["IMR","4064"],["Norma","202"],["Accurate","4064"],["Rottweil","R903"],["Shooters World","Tactical Rifle"],["Accurate","2520"],["Alliant","Reloder 15"],["Norma","203B"],["Shooters World","Match Rifle"],["Reload Swiss","RS50"],["Vihtavuori","N140"],["Shooters World","Precision"],["Hodgdon","Varget"],["IMR","4320"],["Winchester","748"],["Winchester","StaBALL Match"],["Hodgdon","BL-C(2)"],["Vihtavuori","N540"],["Hodgdon","CFE 223"],["Alliant","Reloder 15.5"],["Alliant","Power Pro 2000-MR"],["Hodgdon","LEVERevolution"],["Reload Swiss","RS52"],["Hodgdon","H380"],["IMR","4007 SSC"],["Ramshot","Big Game"],["Vihtavuori","N150"],["Scot","Brig 4351"],["Shooters World","Long Rifle"],["Alliant","Power Pro 4000-MR"],["Hodgdon","H414"],["Winchester","760"],["Accurate","2700"],["Norma","URP"],["Reload Swiss","RS60"],["Vihtavuori","N550"],["Rottweil","R904"],["IMR","4350"],["Reload Swiss","RS62"],["IMR","4451"],["Alliant","Reloder 16"],["Hodgdon","H4350"],["Alliant","Reloder 17"],["Accurate","4350"],["Shooters World","4350"],["Norma","204"],["Hodgdon","Hybrid 100V"],["Winchester","StaBALL 6.5"],["Hodgdon","Superformance"],["Alliant","Reloder 19"],["IMR","4831"],["Ramshot","Hunter"],["Scot","Brig 4831"],["Vihtavuori","N160"],["Shooters World","S071"],["Vihtavuori","N555"],["Winchester","WMR"],["Norma","205"],["Accurate","3100"],["Hodgdon","H4831 / H4831SC"],["Vihtavuori","N560"],["Rottweil","R905"],["IMR","4955"],["Norma","MRP"],["Alliant","Reloder 22"],["Reload Swiss","RS70"],["Winchester","WXR"],["Norma","MRP2"],["Alliant","Reloder 23"],["Vihtavuori","N165"],["IMR","7828 SSC"],["Alliant","Reloder 25"],["Vihtavuori","N565"],["Vihtavuori","N170"],["Winchester","785"],["Reload Swiss","RS76"],["Hodgdon","H450"],["Accurate","MagPro"],["IMR","7977"],["Alliant","Reloder 26"],["Hodgdon","H1000"],["Ramshot","Grand"],["Ramshot","Magnum"],["Norma","217"],["Hodgdon","Retumbo"],["Winchester","StaBALL HD"],["IMR","8133"],["Vihtavuori","N568"],["Ramshot","LRT"],["Vihtavuori","N570"],["Accurate","8700"],["Reload Swiss","RS80"],["Alliant","Reloder 33"],["Hodgdon","H870"],["Vihtavuori","24N41"],["Hodgdon","H50BMG"],["Hodgdon","US869"],["Shooters World","BMG"],["Alliant","Reloder 50"],["Vihtavuori","20N29"]];
   const PRESS=[
@@ -10207,7 +10265,25 @@ window.RB_REF=(function(){
     // the cartridge list lives in one place: bring it here (Tools › Cartridges takes it back)
     const cr=$("cartRoot");if(cr&&cr.parentNode)cr.parentNode.removeChild(cr);
     let h=nav();
-    if(sec==="cart"){h+='<section class="card" aria-label="Cartridges" id="refCart"><h2>Cartridges</h2><p class="note">Bullet diameter, maximum case length, trim-to length, maximum overall length and primer size for each cartridge. Tap one for more, or to fix it for your own use. It\'s the same list as <a class=goto href=#go data-go=tools:cart>Tools › Cartridges</a>.</p></section>';}
+    if(sec==="lib"){
+      const n=window.RB_LIB?RB_LIB.counts():{},f=v=>v==null?"…":v.toLocaleString();
+      if(window.RB_LIB&&(n.bullets==null||n.scopes==null))RB_LIB.load().then(()=>{if(sec==="lib")draw();});
+      const row=(go,name,d,v)=>'<button class="loaditem librow" type="button" data-rgo="'+go+'"><span class="ltext"><span class="t">'+name+'</span><span class="d">'+d+'</span></span><b class="libn">'+f(v)+'</b></button>';
+      const bm=n.byMaker||[],top=bm.length?bm[0][1]:1;
+      h+='<section class="card" aria-label="Library" id="refLib"><h2>Built in Library</h2><p class="note">Everything Range Book knows before you add anything, taken from the makers\' own published data. Tap a list to open it.</p><div class="cartgroup">'+
+        row("brass:bullets","Bullets",n.bulletMakers!=null?n.bulletMakers+" makers, "+f(n.bulletBC)+" with a published BC. Pick one under Components › Bullets.":"Pick one under Components › Bullets.",n.bullets)+
+        row("ref:cart","Cartridges","Bullet diameter, case and overall length, trim-to and primer size.",n.cartridges)+
+        row("ref:dia","Bullet diameters","Which cartridges share a bullet.",n.dia)+
+        row("brass:powders","Powders",n.powderMakers+" makers. Pick one under Components › Powders.",n.powders)+
+        row("ref:burn","Powder burn order","Fastest to slowest.",n.burn)+
+        row("brass:primers","Primers","With their sizes. Pick one under Components › Primers.",n.primers)+
+        row("rifles:ammo","Factory loads","In "+n.loadCarts+" cartridges, with BC and box velocity.",n.loads)+
+        row("rifles:scopes","Scopes","Power, focal plane, click value and reticle.",n.scopes)+
+        row("ref:press","Pressure signs","What each looks like and what to do.",n.press)+
+        row("ref:gloss","Glossary","Reloading terms explained.",n.gloss)+'</div>'+
+        (bm.length?'<h3>Bullets by maker</h3><div class="libbars">'+bm.map(([m,c])=>'<div class="libbar"><span>'+esc(m)+'</span><span class="lbtrack"><span style="width:'+(c/top*100).toFixed(1)+'%"></span></span><b>'+c+'</b></div>').join("")+'</div>':'')+
+        '</section>';}
+    else if(sec==="cart"){h+='<section class="card" aria-label="Cartridges" id="refCart"><h2>Cartridges</h2><p class="note">Bullet diameter, maximum case length, trim-to length, maximum overall length and primer size for each cartridge. Tap one for more, or to fix it for your own use. It\'s the same list as <a class=goto href=#go data-go=tools:cart>Tools › Cartridges</a>.</p></section>';}
     else if(sec==="dia"){
       const L=(C?C.list:[]).filter(c=>c.d>0),k=pk(q.dia),by=new Map();
       L.forEach(c=>{const d=Math.round(c.d*1000)/1000;if(!by.has(d))by.set(d,[]);by.get(d).push(c);});
@@ -10243,10 +10319,12 @@ window.RB_REF=(function(){
     const sq=(id,key)=>{const el=$(id);if(el)el.addEventListener("input",()=>{q[key]=el.value;draw();});};
     sq("refDiaQ","dia");sq("refBurnQ","burn");sq("refGlossQ","gloss");
     {const m=$("refBurnM");if(m)m.addEventListener("change",()=>{mk=m.value;draw();});}
+    root.querySelectorAll("[data-rgo]").forEach(b=>b.addEventListener("click",()=>{const g=b.dataset.rgo;if(g.startsWith("ref:")){sec=g.slice(4);try{localStorage.setItem("rb.refSec",sec);}catch(e){}draw();window.scrollTo(0,0);}else if(window.RB_GO)RB_GO(g);}));
     root.querySelectorAll("[data-refcart]").forEach(b=>b.addEventListener("click",()=>{sec="cart";try{localStorage.setItem("rb.refSec",sec);}catch(e){}draw();if(window.RB_CARTPAGE&&RB_CARTPAGE.openOne)RB_CARTPAGE.openOne(b.dataset.refcart);}));
     if(had&&/^ref.*Q$/.test(had)){const el=$(had);if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length);}}
   }
-  return {show(s){if(s&&SECS.some(x=>x[0]===s)){sec=s;try{localStorage.setItem("rb.refSec",sec);}catch(e){}}draw();}};
+  function counts(){const C2=(C?C.list:[]).filter(c=>c.d>0);return {burn:BURN.length,press:PRESS.length,gloss:GLOSS.length,dia:new Set(C2.map(c=>Math.round(c.d*1000))).size};}
+  return {counts,show(s){if(s&&SECS.some(x=>x[0]===s)){sec=s;try{localStorage.setItem("rb.refSec",sec);}catch(e){}}draw();}};
 })();
 </script>
 
