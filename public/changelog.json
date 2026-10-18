@@ -2,7 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.18.4",
+      "version": "2.19.0",
+      "date": "2026-10-17",
+      "title": "Favorite guns, Most used guns on Home, and target photo downloads",
+      "items": [
+        "Tap the star on a gun (on the Guns list or at the top of its page) to make it a favorite. Favorites are listed first on the Guns list.",
+        "Home's Guns card is now Most used guns: favorites first, then the guns with the most rounds, with their photos. It shows three rows on a computer and six guns on a phone, with All guns › for the rest.",
+        "Open a target photo to Download photo, or Download with marks (the measured shots and groups drawn on). On a phone it opens the share sheet to save it to your photos or Files; on a computer it downloads."
+      ]
+    },
+    {
+      "version": "2.18",
       "date": "2026-10-17",
       "title": "Shooting profiles, and a way to send feedback",
       "items": [

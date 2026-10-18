@@ -851,6 +851,15 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .lthumb svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6}
 .ltext{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ltext.grow{flex:1 1 auto}
+/* favorite star on gun tiles (2.18.5) */
+.gtile{position:relative;display:flex}.gtile>.loaditem{flex:1 1 auto;padding-right:46px}
+.favstar{position:absolute;top:6px;right:6px;width:38px;height:38px;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.favstar svg,.favbtn svg{width:22px;height:22px}.favbtn svg{width:18px;height:18px;vertical-align:-3px}
+.favstar:hover{background:var(--sunk)}
+.favmark svg{width:15px;height:15px;vertical-align:-2px;color:#d9a400}:root[data-palette="night"] .favmark svg{color:var(--accent)}
+#homeGuns>[hidden]{display:none}
+.favstar[aria-pressed="true"],.favbtn[aria-pressed="true"] svg{color:#d9a400}
+:root[data-palette="night"] .favstar[aria-pressed="true"],:root[data-palette="night"] .favbtn[aria-pressed="true"] svg{color:var(--accent)}
 /* a barrel picker under the gun picker: indented with a line on the left, so it reads as part of the gun (2.16.1) */
 .field.subfield{margin-left:14px;padding-left:12px;border-left:2px solid var(--line);min-width:0}
 .loaditem .best{font-size:13px;color:var(--fg)}
@@ -1292,7 +1301,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To use metric, go to <b>More → Account → Units</b> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>Pick a color theme under <b>More → Account → Theme</b>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
-      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and each gun's round count. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges and Tools) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
+      <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and your <b>Most used guns</b> (your favorites first, then the guns with the most rounds, with their photos; three rows on a computer and six guns on a phone, and <b>All guns ›</b> for the rest). Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges and Tools) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <b>Shooting → Range log</b>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting profiles, ammunition from your inventory, or factory ammo from the catalog that you don't have yet (it lists the catalog loads for the gun's cartridge, and the search box finds any other). Picking ammo makes the Shooting profile for that gun the first time, and a catalog pick is added to your Ammunition list with no rounds on hand, so you can count what you shoot from it. It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
       <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, profiles, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, profile, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
@@ -1427,6 +1436,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Set up a group for each charge weight in the ladder first. Then tap <b>Import chronograph file</b> on the ladder's first group and pick the export from your RangeCraft (.xlsx), Garmin Xero (ShotView .csv or .xlsx) MagnetoSpeed (LOG.CSV from the V3's memory card, or the .csv from the XFR app) or LabRadar (the SR0001 Report.csv files from its SD card; pick several at once and each series fills its own group, SR0001 first). Each string fills the next empty group in that ladder in the order you shot them. If the ladder has no tested date yet, it takes the date from the file when the file has one (MagnetoSpeed's memory-card file doesn't, so set that date yourself). Check that each string landed on the right charge weight. If the chronograph caught a bad reading (a miss or an echo), tap <b>− Shot</b>, tap that shot and tap <b>Delete</b>.</p>
       <h3>Target photos</h3>
       <p>Each target photo belongs to the ladder you shot it with. Tap <b>+ Photo</b> in that ladder (or next to the ladder's name on the <b>Targets</b> card) to take a picture or choose one. The Targets card shows the photos under each ladder, and each ladder shows its own photos too. Tap a photo to see it full size, add a caption, delete it, or move it to another ladder with <b>Shot with</b>. When you measure groups on a photo, you pick from that ladder's charges. Photos added before ladders existed are linked for you when the app can tell which ladder they go with; open any that say <b>Pick a ladder</b> and choose one.</p>
+      <p>To keep a copy of a target photo, open it and tap <b>Download photo</b> (the picture as taken) or <b>Download with marks</b> (with the measured shots and groups drawn on it). On a phone it opens the share sheet, so you can <b>Save Image</b> to your photos, save it to Files or send it; on a computer it downloads.</p>
       <h3>Measure groups from a photo</h3>
       <p>One photo can hold several groups, each with its own aim point and charge weight. Measuring gives you two sizes: the <b>group size</b> (center to center of the two widest holes) and the <b>mean radius</b>, the average distance of every hole from the group's center. Mean radius uses every shot, so it's a steadier way to compare charges, especially with small groups. Both show on each group and in the Summary, along with how far the group's center is from your aim point (for a zero check). Typing a group size by hand clears the photo's mean radius, since it no longer matches.</p>
       <ol>
@@ -1477,7 +1487,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Gear & Ranges" id="hGuns">
       <h2>Gear &amp; Ranges</h2>
       <h3>Guns</h3>
-      <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. The list is grouped by type: rifles, then pistols, then shotguns. Tap <b>+ Add gun</b> or tap a gun to open it, fill in its <b>Manufacturer</b> and <b>Model</b> (the gun is listed and picked everywhere by the two together, like Tikka T3x Lite), pick its <b>Type</b> (Rifle, Pistol or Shotgun; when you fill in the cartridge first, Range Book guesses it, and you can tap another), then fill in the <b>Cartridge</b> it's chambered for, its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the Reloading loads, Shooting profiles and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
+      <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. The list is grouped by type: rifles, then pistols, then shotguns. Tap the <b>star</b> on a gun to make it a favorite: favorites are listed first, under <b>★ Favorites</b>, and come first in Home's <b>Most used guns</b> (a gun's page has the same star at the top). Tap <b>+ Add gun</b> or tap a gun to open it, fill in its <b>Manufacturer</b> and <b>Model</b> (the gun is listed and picked everywhere by the two together, like Tikka T3x Lite), pick its <b>Type</b> (Rifle, Pistol or Shotgun; when you fill in the cartridge first, Range Book guesses it, and you can tap another), then fill in the <b>Cartridge</b> it's chambered for, its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the Reloading loads, Shooting profiles and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
       <h3>Lowers, uppers and built guns</h3>
       <p>For ARs and other guns made of a lower and an upper, add each part under <b>Gear &amp; Ranges → Guns → Lowers &amp; uppers</b>. A <b>lower</b> has its manufacturer, model and serial number, with no caliber. An <b>upper</b> has its cartridge, barrel length, twist, sight height and scope. Then put a lower and an upper together to make a gun: tap <b>+ Add gun</b> and choose <b>A lower + an upper</b> under <b>Made as</b> (or tap <b>Make a gun with this lower</b> or <b>upper</b> on either one), and pick them. The gun takes the upper's specs and the lower's serial number, and you can rename it. Put more than one upper on the same lower and they become <b>variations</b> of one gun: the Guns list shows it once, with a chip for each upper's cartridge (tap a chip to open that one), and its page has an <b>Uppers</b> row to switch between them, plus <b>+ Add upper</b> to add another. The gun's name is shared by all of them, and each variation is shown as the name plus its cartridge (Aero Precision M4E1 · 300 Blackout; when two uppers have the same cartridge, the barrel length or the upper's name tells them apart). Each variation keeps its own type, notes, photos and loads. On Shooting and Reloading the gun picker groups the variations under the gun's name, and <b>Start a range day</b> asks which upper you're shooting. The Upper list starts each upper with its cartridge and is sorted by it, so you can tell them apart. In the Guns list, a lower that's already in a gun and a barrel that's on a gun are shaded, so the ones still free stand out.</p>
       <p>Each lower and upper keeps its own round count (and uppers their barrel life), from the range trips and load-development groups shot with any gun built with it. Trips and ladders remember the lower and upper they were shot with, so if you change a gun's upper later, old rounds stay where they were. The gun's own count includes everything shot as that gun.</p>
@@ -1726,6 +1736,14 @@ window.RB_PDF=function(url,name){
       btn.onclick=()=>{navigator.share({files:[f],title:name}).catch(()=>{});};}
     else msg.textContent="This phone can't share the PDF from the app. Open Range Book in Safari to print it.";
   }).catch(()=>{msg.textContent="The PDF couldn't be loaded. Check your connection and try again.";});
+};
+/* Save a file the person asked for (a target photo): on a phone, the share sheet (Save Image, Save to Files, AirDrop…);
+   on a computer, a normal download. (2.18.5) */
+window.RB_SAVE=async function(blob,name){
+  const f=new File([blob],name,{type:blob.type||"application/octet-stream"});
+  if(window.matchMedia("(pointer:coarse)").matches&&navigator.canShare&&navigator.canShare({files:[f]})){
+    try{await navigator.share({files:[f],title:name});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+  const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);
 };
 // links to PDFs (targets, exports, trip reports): handled by RB_PDF in the iOS home-screen app
 document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("a[href]");if(!a||!RB_IOS_PWA())return;
@@ -3464,6 +3482,9 @@ const gunsUsing=p=>rifles.filter(r=>r.build&&(r.build.lowerId===p.id||r.build.up
    that show r.name need nothing else. syncBuilds() keeps this true; it runs whenever the Guns list draws or a part changes. */
 const buildSibs=r=>r&&r.build&&r.build.lowerId?rifles.filter(x=>x.build&&x.build.lowerId===r.build.lowerId):(r?[r]:[]);
 const buildName=r=>gunName(r)||"Unnamed gun";
+// favorite guns (a star): first on the Guns list and on Home. A gun with several uppers is one favorite.
+const favSvg=on=>'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"'+(on?' fill="currentColor"':' fill="none"')+' stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+function toggleFav(id){const r=rifles.find(x=>x.id===id);if(!r)return;const sb=buildSibs(r),on=!sb.some(x=>x.fav);sb.forEach(x=>{if(on)x.fav=true;else delete x.fav;});queueRifles();}
 function syncBuilds(){
   const groups=new Map(),changed=new Set();
   rifles.forEach(r=>{if(r.build&&r.build.lowerId){const k=r.build.lowerId;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r);}
@@ -3983,28 +4004,30 @@ function renderRifles(){
     h='<section class="card" aria-label="Guns list"><div class="row"><button class="btn primary" id="rifleAdd" type="button">+ Add gun</button>'+(!window.GUEST&&rifles.length?'<a class="btn" href="/api/export/guns.xlsx" download id="gunsXlsx">Export Excel</a><a class="btn" href="/api/export/guns.pdf" download id="gunsPdf">Export PDF</a>':'')+(!window.GUEST?'<button class="btn" type="button" data-sximp="rifles">Import from a spreadsheet</button>':'')+'<span class="savestate" id="rifleState"></span></div>';
     if(!rifles.length)h+='<p class="note">No guns yet. Add one, then pick it in a load\'s recipe or a Shooting profile.</p>';
     else{
-      const groups=GUN_TYPES.map(([k,,pl])=>[k,pl]).concat([["","Type not set"]]);
+      // favorites (the star on each gun) come first, in their own group (2.18.5)
+      const groups=[["__fav","★ Favorites"]].concat(GUN_TYPES.map(([k,,pl])=>[k,pl]),[["","Type not set"]]);
       // guns built on the same lower show once, as one gun with a chip per upper (its variations); listed under Rifles if any variation is a rifle
       const tyOf=r=>GUN_TYPES.some(t=>t[0]===r.type)?r.type:"",seenLo=new Set(),entries=[];
       rifles.forEach(r=>{const sibs=buildSibs(r);if(r.build&&r.build.lowerId){if(seenLo.has(r.build.lowerId))return;seenLo.add(r.build.lowerId);}
-        const tys=sibs.map(tyOf);entries.push({r,sibs,ty:tys.includes("rifle")?"rifle":tys.find(Boolean)||"",n:r.build&&r.build.lowerId?buildName(r):(r.name||"")});});
+        const tys=sibs.map(tyOf);entries.push({r,sibs,ty:sibs.some(x=>x.fav)?"__fav":tys.includes("rifle")?"rifle":tys.find(Boolean)||"",n:r.build&&r.build.lowerId?buildName(r):(r.name||"")});});
+      const star=(r,sibs,nm)=>{const on=sibs.some(x=>x.fav);return '<button type="button" class="favstar" data-rfav="'+esc(r.id)+'" aria-pressed="'+on+'" aria-label="'+(on?'Remove '+esc(nm)+' from favorites':'Add '+esc(nm)+' to favorites')+'" title="'+(on?'Favorite':'Mark as a favorite')+'">'+favSvg(on)+'</button>';};
       groups.forEach(([gk,gl])=>{const list=entries.filter(e=>e.ty===gk);if(!list.length)return;
       h+='<div class="cartgroup"><div class="cartname">'+esc(gl)+' <span class="note">'+list.length+'</span></div>';
       list.sort((x,y)=>x.n.localeCompare(y.n,undefined,{numeric:true})).forEach(({r,sibs,n:gname})=>{
         if(r.build&&r.build.lowerId){const lo=partById(r.build.lowerId),lr=lo?partRounds(lo):null,nl=sibs.reduce((a,x)=>a+usedBy(x.id).length,0),gp=sibs.map(x=>gunPhotosOf(x.id)[0]).find(Boolean);
           const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-          h+='<button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
+          h+='<div class="gtile"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
             '<span class="d">'+esc([sibs.length+(sibs.length===1?' upper':' uppers'),lo&&lo.serial?'Serial '+lo.serial:''].filter(Boolean).join(' · '))+'</span>'+
             '<span class="varchips">'+sibs.map(x=>'<span class="varchip" data-rvar="'+esc(x.id)+'">'+esc(x.varLabel||"No upper yet")+'</span>').join("")+'</span>'+
             (lr&&lr.total?'<span class="best"><b>'+lr.total.toLocaleString()+'</b> rounds on the lower'+(lr.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'')+
-            '<span class="m">'+(nl?'Used by '+nl+' load'+(nl===1?'':'s'):'Not used by any loads yet')+'</span></span></button>';
+            '<span class="m">'+(nl?'Used by '+nl+' load'+(nl===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,gname)+'</div>';
           return;}
         const rs=gunSpec(r),lo0=r.build&&partById(r.build.lowerId),up0=r.build&&partById(r.build.upperId),n=usedBy(r.id).length,sc0=rs.scopeId&&scopes.find(x=>x.id===rs.scopeId),d=[r.build?"Built: "+[lo0?partName(lo0):"no lower",up0?partName(up0):"no upper"].join(" + "):"",rifleSummary(rs),sc0?scopeLabel(sc0):""].filter(Boolean).join(" · "),rc=rifleRounds(r);
         const rt=rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
         const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-        h+='<button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
-          '<span class="m">'+(n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet')+'</span></span></button>';
+        h+='<div class="gtile"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
+          '<span class="m">'+(n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,r.name||"this gun")+'</div>';
       });
       h+='</div>';});
     }
@@ -4014,7 +4037,8 @@ function renderRifles(){
     const r=rifles.find(x=>x.id===rifleOpen),ul=usedBy(r.id);
     if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;}
     const sibs=buildSibs(r),isVar=!!(r.build&&r.build.lowerId);
-    h='<div class="row"><span class="savestate" id="rifleState"></span></div>'+
+    const isFav=sibs.some(x=>x.fav);
+    h='<div class="row"><button class="btn favbtn" type="button" id="rfFav" data-id="'+esc(r.id)+'" aria-pressed="'+isFav+'">'+favSvg(isFav)+(isFav?' Favorite':' Add to favorites')+'</button><span class="savestate" id="rifleState"></span></div>'+
       (isVar?'<section class="card" aria-label="Uppers on this gun" id="secVars"><h2>Uppers</h2><div class="vartabs" role="group" aria-label="Variation">'+
         sibs.map(x=>'<button type="button" data-rvartab="'+esc(x.id)+'" aria-pressed="'+(x===r)+'">'+esc(x.varLabel||"No upper yet")+'</button>').join("")+
         '<button type="button" id="rfVarAdd">+ Add upper</button></div><p class="note">Each upper you put on this lower is a variation of the gun. Pick the one you\'re shooting on Shooting, Reloading or a range day. The name is shared; everything below is for the '+esc(r.varLabel||"selected")+' variation.</p></section>':'')+
@@ -4068,6 +4092,8 @@ function renderRifles(){
   if(window.TRAJ_RIFLES)window.TRAJ_RIFLES(rifles.map(gunSpec));
   const addBtn=$("rifleAdd");
   if(addBtn)addBtn.addEventListener("click",()=>{const r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true};rifles.push(r);queueRifles();rifleOpen=r.id;renderRifles();window.scrollTo(0,0);const el=$("rf_mfr");if(el)el.focus();});
+  root.querySelectorAll("[data-rfav]").forEach(b=>b.addEventListener("click",()=>{toggleFav(b.dataset.rfav);renderRifles();}));
+  {const fb=$("rfFav");if(fb)fb.addEventListener("click",()=>{toggleFav(fb.dataset.id);renderRifles();});}
   root.querySelectorAll("[data-ropen]").forEach(b=>b.addEventListener("click",e=>{const v=e.target.closest("[data-rvar]");rifleOpen=v?v.dataset.rvar:b.dataset.ropen;renderRifles();window.scrollTo(0,0);}));
   root.querySelectorAll("[data-ptopen]").forEach(b=>b.addEventListener("click",()=>{partFromGun=rifleOpen||null;partOpen=b.dataset.ptopen;rifleOpen=null;renderRifles();window.scrollTo(0,0);}));
   root.querySelectorAll("[data-ptnew]").forEach(b=>b.addEventListener("click",()=>newPart(b.dataset.ptnew,b.dataset.ptgun||"")));
@@ -4950,6 +4976,7 @@ function openViewer(pid,C){
       C.L.ladders.map(l=>'<option value="'+esc(l.id)+'">'+esc(ladderName(C.L,l)+(l.tested?" · "+fmtDate(l.tested):""))+'</option>').join("")+(photoLadder(p,C.L)?'':'<option value="" disabled>Pick a ladder</option>')+'</select></div>':'')+
     (C.kind==="live"?(()=>{const d=liveDest();return d.any?'<div class="vbar"><label for="vMove" style="font-size:13px">Move to</label><select id="vMove" class="fieldselect" style="width:auto;max-width:75%">'+d.html+'</select></div><p class="vres" id="vMoveMsg"></p>':'<p class="vres">Make a range trip (Shooting) or a ladder (Reloading) to add this to one.</p>';})():'')+
     '<div class="vbar">'+((!ro||p.measure)?'<button class="btn" id="vMeasure" type="button">'+(ro?'Show measurement':p.measure?'Edit measurement':'Measure groups')+'</button>':'')+
+    '<button class="btn" id="vDl" type="button">Download photo</button>'+(overlaySvg(p)?'<button class="btn" id="vDlM" type="button">Download with marks</button>':'')+
     (ro?'':'<button class="btn danger" id="vDel" type="button" style="margin-left:auto">Delete photo</button>')+'</div>';
   document.body.appendChild(v);
   $("vClose").addEventListener("click",()=>closeViewer());
@@ -4964,6 +4991,21 @@ function openViewer(pid,C){
   document.addEventListener("keydown",escClose);
   {const vl=$("vLad");if(vl){vl.value=photoLadder(p,C.L)||"";vl.addEventListener("change",()=>{if(!vl.value)return;p.ladderId=vl.value;API.patch("/api/photos/"+pid,{ladderId:p.ladderId}).catch(onWriteError);C.render();});}}
   const mb=$("vMeasure");if(mb)mb.addEventListener("click",()=>openMeasure(pid,C));
+  // downloads: fetched as soon as the photo opens, so a tap can hand them straight to the phone's share sheet
+  {const base="RangeBook-target-"+(String(p.caption||(C.L&&C.L.title)||p.id||"photo").trim().replace(/[^A-Za-z0-9.-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"photo");
+    const orig=fetch(p.url,{credentials:"same-origin"}).then(r=>{if(!r.ok)throw new Error();return r.blob();});
+    let marked=null;const mk=()=>marked||(marked=orig.then(b=>new Promise((res,rej)=>{const u=URL.createObjectURL(b),im=new Image();im.onload=()=>{
+      const W=im.naturalWidth,H=im.naturalHeight,cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d");x.drawImage(im,0,0);
+      const sv=overlaySvg(Object.assign({},p,{w:W,h:H})).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" ');
+      const si=new Image();si.onload=()=>{x.drawImage(si,0,0,W,H);URL.revokeObjectURL(u);cv.toBlob(bb=>bb?res(bb):rej(),"image/jpeg",.92);};si.onerror=rej;
+      si.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(sv);};im.onerror=rej;im.src=u;})));
+    if($("vDlM"))mk().catch(()=>{});
+    const ext=t=>/png/.test(t)?".png":/webp/.test(t)?".webp":".jpg";
+    const go=(btn,pr,suffix)=>{const was=btn.textContent;btn.disabled=true;btn.textContent="Getting it…";
+      pr.then(b=>RB_SAVE(b,base+suffix+ext(b.type))).catch(()=>{const m=$("vMsg")||document.createElement("p");m.id="vMsg";m.className="vres";m.textContent="That photo couldn't be downloaded. Check your connection and try again.";btn.parentNode.after(m);})
+        .finally(()=>{btn.disabled=false;btn.textContent=was;});};
+    $("vDl").addEventListener("click",()=>go($("vDl"),orig,""));
+    {const d2=$("vDlM");if(d2)d2.addEventListener("click",()=>go(d2,mk(),"-measured"));}}
   {const vm=$("vMove");if(vm)vm.addEventListener("change",()=>{if(!vm.value)return;vm.disabled=true;$("vMoveMsg").textContent="Moving…";
     liveMove(pid,vm.value).then(msg=>{closeViewer();const m=$("lt_msg");if(m){m.textContent=msg;m.hidden=false;}},()=>{vm.disabled=false;vm.value="";$("vMoveMsg").textContent="Couldn't move it. Check your connection.";});});}
   if(p.measure&&!(p.w&&p.h)){const im=new Image();im.onload=()=>{p.w=im.naturalWidth;p.h=im.naturalHeight;if(viewerId===pid&&$("viewer"))openViewer(pid,C);};im.src=p.url;}
@@ -7434,6 +7476,10 @@ function renderLog(){
       showTab("rel");openLoad(id);setTimeout(()=>{const g=$("secGroups");if(g){const fb=g.querySelector(":scope>.sechead[aria-expanded='false']");if(fb)fb.click();const t=(lad&&$("lad_"+lad.id))||g;t.scrollIntoView({block:"start"});}},150);}}));
 }
 let homePick=false;
+function fitHomeGuns(){const g=$("homeGuns");if(!g)return;const items=[...g.children];
+  const cols=window.matchMedia("(max-width:760px)").matches?0:(getComputedStyle(g).gridTemplateColumns||"").split(" ").filter(Boolean).length;
+  const max=cols?cols*3:6;items.forEach((el,i)=>{el.hidden=i>=max;});const mo=$("homeGunsMore");if(mo)mo.hidden=items.length<=max;}
+window.addEventListener("resize",()=>{clearTimeout(fitHomeGuns.t);fitHomeGuns.t=setTimeout(fitHomeGuns,150);});
 function renderHome(){
   const root=$("homeRoot");if(!root)return;
   const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],tname=Object.fromEntries(T.map(t=>[t.id,t.name]));
@@ -7504,9 +7550,21 @@ function renderHome(){
   const last=L=>[...(L.groups||[]).map(g=>g.date),...(L.batches||[]).map(b=>b.date)].filter(Boolean).sort().pop()||"";
   const rl=[...loads.entries()].filter(([id])=>isMine(id)).map(([id,L])=>({id,L,d:last(L)})).filter(x=>x.d).sort((a,b)=>b.d.localeCompare(a.d)).slice(0,4);
   if(rl.length)h+='<section class="card" aria-label="Recent reloading"><h2>Reloading lately</h2><div class="cartgroup">'+rl.map(x=>'<button class="loaditem" type="button" data-hload="'+esc(x.id)+'"><span class="t">'+esc(x.L.title||"Untitled load")+'</span><span class="d">'+esc([x.L.cartridge,(()=>{const n=(x.L.ladders||[]).length;return n>1?n+" ladders · ":"";})()+(x.L.groups||[]).length+" groups",(x.L.batches||[]).length?(x.L.batches||[]).reduce((a,b)=>a+(b.n||0),0)+" loaded":""].filter(Boolean).join(" · "))+'</span><span class="m">Last worked on '+esc(fmtDate(x.d))+'</span></button>').join("")+'</div></section>';
-  if(rifles.length)h+='<section class="card" aria-label="Guns"><h2>Guns</h2><div class="cartgroup">'+[...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(r=>{const rc=rifleRounds(r);
-      return '<button class="loaditem" type="button" data-hgo="rifle:'+esc(r.id)+'"><span class="t">'+esc(r.name||"Unnamed gun")+'</span><span class="m">'+rc.total.toLocaleString()+' rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+'</span>'+(rc.life>0?'<span class="lifebar mini'+(rc.pct>=80?' warn':'')+'"><span style="width:'+Math.min(100,rc.pct).toFixed(1)+'%"></span></span>':'')+'</button>';}).join("")+'</div></section>';
+  // most used guns: favorites (starred on Gear & Ranges) first, then by rounds fired; one tile per gun (a gun with several
+  // uppers is one tile). fitHomeGuns() shows 3 rows on a computer and 6 guns on a phone. (2.18.5)
+  if(rifles.length){const seen=new Set(),G=[];
+    rifles.forEach(r=>{const sb=buildSibs(r),lo=r.build&&r.build.lowerId;if(lo){if(seen.has(lo))return;seen.add(lo);}
+      const rc=lo?null:rifleRounds(r),lr=lo&&partById(lo)?partRounds(partById(lo)):null,tot=rc?rc.total:lr?lr.total:0;
+      G.push({r,sb,fav:sb.some(x=>x.fav),tot,rc:rc||lr,nm:lo?buildName(r):(r.name||"Unnamed gun"),ph:sb.map(x=>gunPhotosOf(x.id)[0]).find(Boolean)});});
+    G.sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)||b.tot-a.tot||a.nm.localeCompare(b.nm,undefined,{numeric:true}));
+    const icon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
+    h+='<section class="card" aria-label="Most used guns"><h2>Most used guns</h2><div class="cartgroup" id="homeGuns">'+G.map(x=>{const rc=x.rc||{},life=rc.life!=null?rc.life:null;
+      return '<button class="loaditem withthumb" type="button" data-hgo="rifle:'+esc(x.r.id)+'"><span class="lthumb">'+(x.ph?'<img alt="" loading="lazy" src="'+esc(x.ph.url)+'">':icon)+'</span><span class="ltext grow"><span class="t">'+(x.fav?'<span class="favmark" title="Favorite">'+favSvg(true)+'</span> ':'')+esc(x.nm)+'</span>'+
+        '<span class="m">'+(x.tot||0).toLocaleString()+' rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(x.sb.length>1?' · '+x.sb.length+' uppers':'')+'</span>'+
+        (life>0?'<span class="lifebar mini'+(rc.pct>=80?' warn':'')+'"><span style="width:'+Math.min(100,rc.pct).toFixed(1)+'%"></span></span>':'')+'</span></button>';}).join("")+'</div>'+
+      '<div class="row" id="homeGunsMore" hidden><button class="linkbtn" type="button" data-hgo="guns">All '+G.length+' guns ›</button></div></section>';}
   root.innerHTML=h;
+  fitHomeGuns();
   $("hNewTrip").addEventListener("click",()=>{homePick=homePick?false:true;renderHome();});
   root.querySelectorAll("[data-hgun]").forEach(b=>b.addEventListener("click",()=>{homePick={gun:b.dataset.hgun};renderHome();}));
   root.querySelectorAll("[data-hgrp]").forEach(b=>b.addEventListener("click",()=>{homePick={grp:b.dataset.hgrp};renderHome();}));
@@ -7545,6 +7603,7 @@ function renderHome(){
   root.querySelectorAll("[data-hload]").forEach(b=>b.addEventListener("click",()=>{showTab("rel");openLoad(b.dataset.hload);}));
   root.querySelectorAll("[data-hgo]").forEach(b=>b.addEventListener("click",()=>{const [k,a,c]=b.dataset.hgo.split(":");
     if(k==="rifle"){showTab("rifles");gunArea="guns";ammoOpen=null;rifleOpen=a;renderRifles();window.scrollTo(0,0);}
+    if(k==="guns"){showTab("rifles");gunArea="guns";ammoOpen=null;rifleOpen=null;partOpen=null;renderRifles();window.scrollTo(0,0);}
     if(k==="part"){showTab("rifles");gunArea="guns";ammoOpen=null;rifleOpen=null;partOpen=a;partFromGun=null;renderRifles();window.scrollTo(0,0);}
     if(k==="comp"&&a==="ammo"){showTab("rifles");gunArea="ammo";rifleOpen=null;ammoOpen=c;renderRifles();window.scrollTo(0,0);return;}
     if(k==="comp"){showTab("brass");compKind=a;compOpen=c;renderComps();window.scrollTo(0,0);}}));
