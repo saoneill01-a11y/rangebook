@@ -2,14 +2,22 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.30.1",
+      "version": "2.30.2",
       "date": "2026-10-18",
-      "title": "Coriolis",
+      "title": "Coriolis, and a check of the ballistics math",
       "items": [
         "Shooting: with the Long chart picked, Conditions has a Coriolis switch. Enter your latitude (or use your location or a saved range) and the direction of fire, and the Up numbers, reticle holds, range table, dope card and Field mode include it.",
         "Use phone compass reads the direction of fire from the phone (iPhones ask to allow motion access the first time).",
         "Saved ranges: each target can have its own direction (Dir °, with a compass button), and the range's latitude is used for its dope.",
-        "How to Use › Limits now says Coriolis can be turned on with the Long chart (it no longer says it's left out)."
+        "How to Use › Limits now says Coriolis can be turned on with the Long chart (it no longer says it's left out).",
+        "Coriolis is now the right size: it was coming out 20–30% too big at 1,000 yd (3.0 in instead of 2.5 in for a 6.5 Creedmoor at 45° north). The directions were always right. Checked against a full three-dimensional calculation.",
+        "An independent check of the ballistics math against a reference solver and ShootersCalculator: drops, wind, velocity and time of flight agree to within normal solver disagreement (under 0.1 MOA to 1,000 yd for rifle loads). Range Book uses the ICAO standard atmosphere for BCs; How to Use › Limits now says so, and explains the uphill/downhill rule and where the table stops.",
+        "The solver now tracks the bullet's forward and falling speeds separately, so slow bullets far out (subsonic 300 Blackout, pistol rounds) on the Long table are right too, and the table stops where the path gets steeper than 45° instead of printing numbers that mean nothing.",
+        "The 'check weight, diameter and BC' warning no longer fires on sleek match bullets entered with a G1 BC (for example the 6.5 mm 140 gr ELD-M, G1 .646); the limits now depend on G1 or G7.",
+        "A shot angle of 90° or more now shows an error instead of being quietly treated as level.",
+        "True up velocity includes the Coriolis up/down part when Coriolis is on, so an east- or west-facing hit isn't blamed on velocity.",
+        "Small consistency fixes: one energy constant everywhere (Shooting and Reloading energies now match), the temperature-sensitivity adjustment assumes 59°F when today's temperature is blank (as the solver does), and Tools fill in a profile's point-blank zero when that's the one picked.",
+        "Reference › Glossary: SD says how it's worked out (dividing by the number of shots) and how that compares with chronographs that divide by one less."
       ]
     },
     {

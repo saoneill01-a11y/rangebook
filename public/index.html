@@ -1273,7 +1273,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="field"><label for="f_alt">Altitude (<span data-unit="ft">ft</span>)</label><input id="f_alt" type="number" inputmode="decimal" step="any"></div>
       <div class="field"><label for="f_wind">Wind speed (<span data-unit="mph">mph</span>)</label><input id="f_wind" type="number" inputmode="decimal" step="any"></div>
       <div class="field"><label for="f_wclock">Wind from (o'clock)</label><select id="f_wclock" class="fieldselect"><option value="12">12 · straight at you</option><option value="1">1</option><option value="2">2</option><option value="3">3 · from the right</option><option value="4">4</option><option value="5">5</option><option value="6">6 · from behind</option><option value="7">7</option><option value="8">8</option><option value="9">9 · from the left</option><option value="10">10</option><option value="11">11</option></select></div>
-      <div class="field"><label for="f_angle">Shot angle, up or down (°)</label><input id="f_angle" type="number" inputmode="decimal" step="any" placeholder="0 = level"></div>
+      <div class="field"><label for="f_angle">Shot angle, up or down (°)</label><input id="f_angle" type="number" inputmode="decimal" step="any" min="-89" max="89" placeholder="0 = level"></div>
       <div class="field wide"><label class="switch" for="f_wbr"><input id="f_wbr" type="checkbox" role="switch"><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Wind brackets</b><span class="note" id="wbrNote">Add 5, 10 and 15 mph full-value wind holds to the range table and dope card</span></span></label></div>
       <div class="field wide corbox" id="corBox" hidden></div>
       <div class="field wide" id="wxCalcBox"><p class="note" id="wxCalc" style="margin:0"></p></div>
@@ -1693,6 +1693,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h2>Limits</h2>
       <p>Range Book uses a <b>3DOF point-mass</b> solver, like most phone and web ballistic calculators. It treats the bullet as a point that slows down and drops, with drag from your BC on the standard <b>G1</b> or <b>G7</b> curve at the bullet's speed compared with the speed of sound. It includes air density from temperature and altitude (today's weather fills in an altitude that also allows for pressure and humidity), powder temperature (when you've entered or learned its sensitivity), uphill and downhill angle, crosswind, and spin drift from the twist and bullet length.</p>
       <p>With the Long chart you can also turn on <b>Coriolis</b> (the earth turning under the bullet), which is added to that same point-mass path; it's still a 3DOF solver. It leaves out the bullet's own wobble and stability in flight. The 6DOF models that track that need measured data for each bullet. Most bullets lose stability and slow down unevenly as they near the speed of sound, so treat numbers past that point as estimates, especially with a marginal twist. A bullet's real drag also differs a little from the standard curve, so the further out you go, the more the drops can drift from what you see. Always confirm your drops on paper at known distances.</p>
+      <p>Two conventions worth knowing. BCs are taken as <b>ICAO</b> standard-atmosphere values (59°F, 29.92 inHg, dry air), the way Berger, Hornady and most modern makers publish them; older Sierra-style G1 numbers were measured against slightly thinner "Army Standard Metro" air and will show about 0.3 MOA more drop at 1,000 yd here than in a calculator built on that standard. Uphill and downhill shots use the usual cosine rule (only that share of the drop counts), which is within 0.1 MOA of the full answer to 600 yd at 30°, and about 0.5 MOA at 1,000 yd. The range table stops where a slow bullet's path gets steeper than 45°, because a table by distance stops meaning anything there.</p>
     </section>
   </div>
   <div class="panel" id="panel-rifles" role="tabpanel" aria-labelledby="tab-rifles" hidden>
@@ -2528,7 +2529,7 @@ window.RB_TRAJ={
   where(){return TVIEW==="detail"&&!SCR?state.cur:null;},
   // a Shooting profile's calculator inputs, to fill in Tools → Trajectory calculator
   spec(id){const L=state.loads.find(l=>l.id===id);if(!L)return null;if(!L.zpb)migZ(L);const ai=Math.round(L.adj||0)-1;
-    return {w:num(L.w),mv:effMV(L),bc:num(L.bc),bcm:L.bcm==="G7"?"G7":"G1",sh:num(L.sh),zero:(ai>=0&&ai<3?num(L.z[ai]):null)||(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null,
+    return {w:num(L.w),mv:effMV(L),bc:num(L.bc),bcm:L.bcm==="G7"?"G7":"G1",sh:num(L.sh),zero:(ai>=0&&ai<4?num(L.z[ai]):null)||(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null,
       temp:num(L.temp),alt:num(L.alt),wind:num(L.wind),wclock:windClock(L),cal:num(L.cal),twist:num(L.twist),blen:num(L.blen),cart:L.cart||"",rifleId:L.rifleId||null};},
   ranges(){return (Array.isArray(state.ranges)?state.ranges:[]).map(r=>r.name).filter(Boolean);},
   // your ammo with what a trajectory needs (Tools → Compare trajectories)
@@ -2690,7 +2691,7 @@ function windClock(L){const c=Math.round(+L.wclock||3);return c>=1&&c<=12?c:3;}
 function crossFactor(L){return Math.abs(Math.sin(windClock(L)*Math.PI/6));}
 function windSide(L){const c=windClock(L);return c>=1&&c<=5?"right":c>=7&&c<=11?"left":"";} // the side it comes from: hold into it
 // powder temperature sensitivity: muzzle velocity today = measured velocity + sensitivity × (today − temperature it was measured at)
-function mvAdj(L){const ts=num(L.tsens),t0=num(L.mvtemp),T=num(L.temp);return ts!=null&&t0!=null&&T!=null?ts*(T-t0)/10:0;}
+function mvAdj(L){const ts=num(L.tsens),t0=num(L.mvtemp),T=num(L.temp)==null?59:num(L.temp);return ts!=null&&t0!=null?ts*(T-t0)/10:0;} // a blank temperature means 59°F, as in simulate()
 function effMV(L){return (num(L.mv)||0)+mvAdj(L);}
 // shooting up or down hill: gravity acts across the line of sight only by cos(angle)
 function angleCos(L){const a=Math.abs(num(L.angle)||0);return a>0&&a<90?Math.cos(a*Math.PI/180):1;}
@@ -2699,21 +2700,29 @@ function simulate(L){
   const T=L.temp==null?59:L.temp, alt=L.alt==null?0:L.alt;
   const rho=Math.pow(1-6.8756e-6*alt,5.2559)*518.67/(T+459.67);
   const sos=49.0223*Math.sqrt(T+459.67);
+  // one step per yard along the line of fire. v = the bullet's speed (what the table shows), vx = its speed along the line of fire,
+  // H = how fast it's falling (ft/s). Drag works on the whole velocity, so k (deceleration ÷ speed) slows vx and H alike (2.30.2;
+  // before, v stood in for vx, which was fine for rifles but wrong for slow bullets on a steep arc far out).
   const v=new Float64Array(MR+1),t=new Float64Array(MR+1),G=new Float64Array(MR+1),H=new Float64Array(MR+1),I=new Float64Array(MR+1);
-  v[0]=L.mv;let last=MR;
+  v[0]=L.mv;let vx=L.mv,last=MR;
   for(let y=1;y<=MR;y++){
-    const p=y-1;if(!(v[p]>30)){last=p;break;}
-    const k=rho*2.08551e-4*(L.bcm==="G7"?cdTab(G7,v[p]/sos):cdG1(v[p]/sos))*v[p]/L.bc, dt=3/v[p];
-    v[y]=v[p]-k*v[p]*dt;t[y]=t[p]+dt;H[y]=H[p]+(32.174-k*H[p])*dt;G[y]=G[p]-(H[p]+H[y])/2*dt*12;
-    I[y]=I[p]+(p+0.5)*3*dt; // ∫ distance (ft) dt, for Coriolis
+    const p=y-1;
+    // stop when it's too slow, or falling more steeply than 45°: a per-yard table means nothing past that
+    if(!(vx>30)||H[p]>vx){last=p;break;}
+    const k=rho*2.08551e-4*(L.bcm==="G7"?cdTab(G7,v[p]/sos):cdG1(v[p]/sos))*v[p]/L.bc, dt=3/vx;
+    vx-=k*vx*dt;t[y]=t[p]+dt;H[y]=H[p]+(32.174-k*H[p])*dt;G[y]=G[p]-(H[p]+H[y])/2*dt*12;v[y]=Math.hypot(vx,H[y]);
+    I[y]=I[p]+(t[p]+t[y])/2*3; // ∫ t dx (ft·s), for Coriolis
   }
   // values between whole yards (metric distances fall between them)
   const at=(A,x)=>{if(x<=0)return A[0];const i=Math.floor(x);if(i>=last)return A[last];const f=x-i;return f?A[i]+(A[i+1]-A[i])*f:A[i];};
   return {MR,last,v,t,G,sos,rho,at,I};
 }
 /* Coriolis (2.30): only with the Long chart and when it's turned on. The earth turning under the bullet adds an acceleration
-   2Ω × velocity; integrating twice along the flight gives 2Ω·∫x dt. Sideways: 2Ω·sin(latitude)·∫x dt (right in the northern
-   hemisphere, whatever the direction). Up/down (Eötvös): 2Ω·cos(latitude)·sin(direction of fire)·∫x dt (up firing east, down west).
+   2Ω × velocity, which turns the bullet's heading at a steady 2Ω·sin(latitude) rad/s. Drag slows the sideways speed that builds
+   up along with everything else, so the deflection is 2Ω·∫t dx (2.30.2; ∫x dt, used before, ignored that and came out 20–30% too
+   big at 1,000 yd; checked against a full 3-D integration, which this matches to a few hundredths of an inch).
+   Sideways: 2Ω·sin(latitude)·∫t dx (right in the northern hemisphere, whatever the direction). Up/down (Eötvös):
+   2Ω·cos(latitude)·sin(direction of fire)·∫t dx (up firing east, down west).
    Both are taken relative to the zero, since zeroing at that place and direction already takes out what happens at the zero. */
 const EARTH_W=7.292115e-5;
 function corOn(L){const c=L&&L.cor;if(!c||!c.on||rngOf(L)!=="l")return null;const lat=num(c.lat);return lat!=null&&Math.abs(lat)<=90?c:null;}
@@ -2773,8 +2782,9 @@ function render(){
   if(!(L.bc>0))bad.push("ballistic coefficient");
   if(!(L.w>0))bad.push("bullet weight");
   if(L.sh==null||L.sh<0)bad.push("sight height");
-  {const td=$("trajDetail");if(td)td.classList.toggle("qcempty",bad.length>0);}
-  if(bad.length){err.hidden=false;err.textContent="Enter a positive number for "+bad.join(", ")+".";for(let i=0;i<4;i++)$("cxv"+i).innerHTML="";$("chart").innerHTML="";$("tbl").innerHTML="";$("legend").innerHTML="";$("derived").innerHTML="";return;}
+  const badAngle=num(L.angle)!=null&&Math.abs(num(L.angle))>=90; // 90° or more isn't an uphill or downhill shot (it used to be taken as level, quietly)
+  {const td=$("trajDetail");if(td)td.classList.toggle("qcempty",bad.length>0||badAngle);}
+  if(bad.length||badAngle){err.hidden=false;err.textContent=bad.length?"Enter a positive number for "+bad.join(", ")+".":"The shot angle must be less than 90° up or down (0 is level).";for(let i=0;i<4;i++)$("cxv"+i).innerHTML="";$("chart").innerHTML="";$("tbl").innerHTML="";$("legend").innerHTML="";$("derived").innerHTML="";return;}
   const S=simulate(L), MR=S.MR, sh=L.sh;
   const AC=angleCos(L);
   const path0=(x,z)=>S.at(S.G,x)*AC+x*(sh-S.at(S.G,z))/z-sh; // zeroed level; at an angle only cos(angle) of the drop counts
@@ -2784,13 +2794,15 @@ function render(){
   const pbSize=PBR?PBR.size:((num((L.pbr||{}).size)>0)?num(L.pbr.size):6);
   const zs=L.z.map(z=>(z!=null&&z>=1&&z<=Math.min(MR,S.last))?z:null);
   const badZ=L.z.some((z,i)=>i<3&&z!=null&&zs[i]==null);
-  err.hidden=!badZ;if(badZ)err.textContent="Zeros must be between 1 and "+U.s("yd",MR,0,true)+(S.last<MR?" (this profile goes subsonic-slow past "+U.s("yd",S.last,0,true)+")":"")+".";
+  err.hidden=!badZ;if(badZ)err.textContent="Zeros must be between 1 and "+U.s("yd",MR,0,true)+(S.last<MR?" (this profile's path gets too steep to follow past "+U.s("yd",S.last,0,true)+")":"")+".";
 
   // derived
-  const me=L.w*L.mv*L.mv/450240;
+  const me=L.w*L.mv*L.mv/450436;
   let d="<span>Muzzle energy <b>"+U.s("ftlb",me,0,true)+"</b></span>";
   if(L.cal>0){const sd=L.w/7000/(L.cal*L.cal), ff=sd/L.bc;
-    d+="<span>Sectional density <b>"+sd.toFixed(3)+"</b></span><span>Form factor <b>"+ff.toFixed(2)+"</b>"+((ff<.45||ff>1.3)?' <span class="err">check weight, diameter and BC</span>':"")+"</span>";}
+    // a form factor far outside what real bullets have usually means a typo. G1 form factors run about 0.38 (very sleek match bullets) to 1.3; G7 about 0.85 to 1.25.
+    const ffBad=L.bcm==="G7"?(ff<.75||ff>1.35):(ff<.36||ff>1.35);
+    d+="<span>Sectional density <b>"+sd.toFixed(3)+"</b></span><span>Form factor <b>"+ff.toFixed(2)+"</b>"+(ffBad?' <span class="err">check weight, diameter and BC</span>':"")+"</span>";}
   d+="<span>Speed of sound <b>"+U.s("fps",S.sos,0,true)+"</b></span>";
   if(mvAdj(L0))d+="<span>Muzzle velocity at "+U.s("F",num(L0.temp),0)+" <b>"+U.s("fps",L.mv,0,true)+"</b> ("+(mvAdj(L0)>0?"+":"")+U.n("fps",mvAdj(L0),0)+" from "+U.s("fps",L0.mv,0,true)+" at "+U.s("F",num(L0.mvtemp),0)+")</span>";
   else if(num(L0.tsens)!=null&&num(L0.mvtemp)==null)d+='<span>Enter the temperature your velocity was measured at to use the temperature sensitivity.</span>';
@@ -2862,7 +2874,7 @@ function render(){
   const lim=Math.min(MR,S.last);
   for(let dd=0;U.from("yd",dd)<=lim+1e-9;dd+=step){
     const x=U.from("yd",dd),v=S.at(S.v,x),tt=S.at(S.t,x);
-    h+="<tr><td>"+dd.toLocaleString()+"</td><td>"+U.n("fps",v,0).toLocaleString()+"</td><td>"+U.n("ftlb",L.w*v*v/450240,0).toLocaleString()+"</td><td>"+tt.toFixed(3)+"</td>";
+    h+="<tr><td>"+dd.toLocaleString()+"</td><td>"+U.n("fps",v,0).toLocaleString()+"</td><td>"+U.n("ftlb",L.w*v*v/450436,0).toLocaleString()+"</td><td>"+tt.toFixed(3)+"</td>";
     if(pz!=null){const t=f1(U.to("in",path(x,pz)));h+='<td'+(t[0]==="-"?' class="neg"':'')+'>'+t+"</td>";}
     {const p=za&&x>0?path(x,za):null;if(CM)h+="<td>"+(p!=null?f1(-p/(x*1.0472/100)):"")+"</td>";if(CL)h+="<td>"+(p!=null?f1(-p/(x*3.6/100)):"")+"</td>";}
     if(CW){const wd=drift(wind,x);h+="<td>"+f1(U.to("in",wd))+"</td><td>"+(x>0?f1(wd/(x*WF/100)):"")+"</td>"+BR.map(b=>"<td>"+(x>0?f1(drift(b,x)/(x*WF/100)):"")+"</td>").join("")+(SGd!=null?"<td>"+f1(U.to("in",spinIn(SGd,tt)||0))+"</td>":"");}
@@ -3093,7 +3105,7 @@ function renderDope(L,S,zs,path){
     (L.rifleName?esc(L.rifleName)+" · ":"")+(o.scope?esc(scopeName(o.scope))+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
     '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+(corOn(L)?" · Coriolis "+Math.abs(num(L.cor.lat)).toFixed(1)+"°"+(num(L.cor.lat)<0?"S":"N")+(num(L.cor.az)!=null?" firing "+Math.round(num(L.cor.az))+"°":"")+" (in Up)":"")+" · "+esc(ds)+"</div></div>"+
     (rows?'<table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+(corOn(L)?'<th>Cor R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table>"
-         :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this profile slows too much past "+U.s("yd",S.last,0)+")":"")+".</p>");
+         :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this profile's path gets too steep to follow past "+U.s("yd",S.last,0)+")":"")+".</p>");
 }
 // the units switch sets the dope card and the reticle together
 $("d_unitBtn").addEventListener("click",()=>{const d=$("d_unit");d.value=dopeOpts(cur()).unit==="mil"?"moa":"mil";d.dispatchEvent(new Event("change"));});
@@ -3146,7 +3158,7 @@ $("tuGo").addEventListener("click",()=>{
   if(!z)return out.innerHTML='<p class="err">Pick the circle on one of your zeros first (the zero boxes under the chart).</p>';
   if(!(x>z)||want==null)return out.innerHTML='<p class="err">Enter a distance past your '+U.s("yd",z,0)+' zero and the dial that hit.</p>';
   const AC=angleCos(L),adj=mvAdj(L);
-  const upAt=mv=>{const S=simulate(Object.assign({},L,{mv}));if(x>S.last)return null;const p=S.at(S.G,x)*AC+x*(L.sh-S.at(S.G,z))/z-L.sh;return -p/(x*UF/100);};
+  const upAt=mv=>{const S=simulate(Object.assign({},L,{mv}));if(x>S.last)return null;const p=S.at(S.G,x)*AC+x*(L.sh-S.at(S.G,z))/z-L.sh+corRel(L,S,x,z).v;return -p/(x*UF/100);};
   const mv0=effMV(L);let lo=mv0*.5,hi=mv0*1.5;const uLo=upAt(lo),uHi=upAt(hi);
   if(uLo==null||uHi==null||want>uLo||want<uHi)return out.innerHTML='<p class="err">That dial is too far from what this profile can do. Check the distance, the zero and the units.</p>';
   for(let i=0;i<50;i++){const m=(lo+hi)/2,u=upAt(m);if(u>want)lo=m;else hi=m;}
@@ -10135,7 +10147,7 @@ window.RB_CMP=(function(){
     const B=RB_TRAJ.solveObj({name:r.label,w:r.w,mv:r.mv,bc:r.bc,bcm:r.bcm==="G7"?"G7":"G1",sh:S.sh,z:[S.z,null,null,null],zpb:1,adj:1,temp:S.temp,alt:S.alt,wind:0,lr:S.rng>1000,cal:null,twist:null,blen:null});
     return B.err?{i,r,err:B.err}:{i,r,B};});}
   function val(x,B,w){const a=B.at(x),UF=S.unit==="mil"?3.6:1.0472;
-    switch(S.view){case "path":return U.to("in",a.path);case "dial":return x>0?-a.path/(x*UF/100):0;case "wind":return U.to("in",a.drift1*10);case "vel":return U.to("fps",a.v);default:return U.to("ftlb",w*a.v*a.v/450240);}}
+    switch(S.view){case "path":return U.to("in",a.path);case "dial":return x>0?-a.path/(x*UF/100):0;case "wind":return U.to("in",a.drift1*10);case "vel":return U.to("fps",a.v);default:return U.to("ftlb",w*a.v*a.v/450436);}}
   const yLabel=()=>({path:"Path ("+U.u("in")+")",dial:"Dial up ("+(S.unit==="mil"?"MIL":"MOA")+")",wind:"Drift in a "+U.s("mph",10,0)+" crosswind ("+U.u("in")+")",vel:"Speed ("+U.u("fps")+")",en:"Energy ("+U.u("ftlb")+")"})[S.view];
   function nice(span,n){const raw=span/n,p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p;}
   function drawOut(){
@@ -10339,7 +10351,7 @@ window.RB_REF=(function(){
     ["Compressed load","A charge that fills the case so the bullet presses on the powder when seated. Only use one when your manual lists it."],
     ["Crimp","Squeezing the case mouth onto the bullet. Roll crimps (into a cannelure) are for revolvers and tube magazines; taper crimps are for semi-auto pistols that headspace on the case mouth."],
     ["ES","Extreme spread: the fastest minus the slowest velocity in a string."],
-    ["SD","Standard deviation: how much the velocities typically vary from the average. Lower means more consistent; single digits are very good for rifle loads."],
+    ["SD","Standard deviation: how much the velocities typically vary from the average. Lower means more consistent; single digits are very good for rifle loads. Range Book divides by the number of shots (the population SD). Some chronographs and apps divide by one less, which reads a little higher on short strings: about 12% on a 5-shot string."],
     ["Free bore","The smooth part of the throat ahead of the case neck before the rifling starts."],
     ["Full-length sizing","Sizing the whole case body, neck and shoulder back to spec so it chambers in any gun of that caliber."],
     ["Neck sizing","Sizing only the neck, leaving the body fire-formed to your chamber. Cases can eventually get hard to chamber."],
