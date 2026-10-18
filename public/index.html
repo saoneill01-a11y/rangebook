@@ -60,6 +60,8 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .derived{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .derived .tipnote{flex-basis:100%}
 .magfits{display:flex;flex-wrap:wrap;gap:6px 18px}
+.magghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.magghead .linkbtn{text-transform:none;letter-spacing:0;white-space:nowrap}
+.magbulk{padding:10px 12px;margin:4px 0 8px;border-radius:8px;background:var(--sunk);border:1px solid var(--line)}
 .magissue{flex-wrap:nowrap;gap:6px;margin-bottom:6px}.magissue input{padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);color:var(--fg);font-family:var(--body);font-size:16px;min-height:42px}.magissue input:focus{background:var(--input);border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}.magissue input[type=date]{flex:0 0 auto;width:auto;max-width:150px}.magissue .grow{flex:1 1 auto;min-width:0}
 .derived b{font-family:var(--mono);font-weight:500;color:var(--fg)}
 .ingrp{border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px 12px;margin:14px 0 0;min-width:0}
@@ -1656,7 +1658,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Suppressors</h3>
       <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. <b>Add a suppressor from the list</b> has about 420 suppressors from 25 makers (type a maker, model, caliber, or "full auto"): picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
       <h3>Magazines</h3>
-      <p><a class=goto href=#go data-go=rifles:mags>Gear &amp; Ranges › Magazines</a> keeps each magazine as its own entry, so you can tell which one is causing trouble. Give each a <b>Mag #</b>: the number or mark you put on it with a paint pen or tape (1, 2, A, red tape). Add its maker and model (mags of the same maker and model are listed together, with how many you have), cartridge, capacity, which guns it <b>Fits</b>, where it's kept and photos. <b>+ Add another like this</b> copies the type, cartridge, capacity and guns to a new mag with the next number. When a mag jams, fails to feed or doesn't lock the slide back, tap <b>+ Log a problem</b> on that mag with the date and what happened; the list shows how many problems each has. Tick <b>Retired</b> to keep a bad one in the list, greyed out.</p>
+      <p><a class=goto href=#go data-go=rifles:mags>Gear &amp; Ranges › Magazines</a> keeps each magazine as its own entry, so you can tell which one is causing trouble. Give each a <b>Mag #</b>: the number or mark you put on it with a paint pen or tape (1, 2, A, red tape). Add its maker and model (mags of the same maker and model are listed together, with how many you have), cartridge, capacity, which guns it <b>Fits</b>, where it's kept and photos. <b>+ Add another like this</b> copies the type, cartridge, capacity and guns to a new mag with the next number. When a mag jams, fails to feed or doesn't lock the slide back, tap <b>+ Log a problem</b> on that mag with the date and what happened; the list shows how many problems each has. Tick <b>Retired</b> to keep a bad one in the list, greyed out. For a group of identical mags, <b>Set guns for all</b> next to the group's name ticks or unticks a gun on every mag in it at once (a dash means only some are marked). Each gun's page has a <b>Magazines</b> card (tap its title to fold it) listing the mags that fit it, with <b>+ Add a magazine for this gun</b>. To bring in a list, use the <b>Magazines</b> tab of the import spreadsheet (<a class=goto href=#go data-go=account:import>Account › Import</a>): <b>How many</b> makes that many numbered mags from one row, and <b>Fits</b> takes your guns' names separated by commas.</p>
       <h3>Inventory</h3>
       <p><a class=goto href=#go data-go=rifles:inv>Gear &amp; Ranges › Inventory</a> keeps track of the rest of your gear. <b>+ Add supplies</b> is for things that get used up (batteries, target pasters, earplugs, patches and solvent, hand warmers): give it a count and <b>Warn when at or below</b>, and use <b>− 1 used</b> and <b>+ 1</b> to keep the count right. <b>+ Add equipment</b> is for things you keep (a chronograph, rangefinder, bipod, magazines, cases) with a serial number, price, date bought and photos, handy for insurance. Either can have a category, where it's kept, a gun it goes with and a <b>Check or replace by</b> date that can repeat (a battery every year, a hunting license, a first-aid kit). Low supplies and dates within two weeks are listed first under <b>Needs attention</b>, and on Home. When you've done it, tap <b>Done</b> and a repeating date moves to the next one.</p>
       <h3>Gear notes</h3>
@@ -4001,15 +4003,16 @@ function riflesEditing(){const a=document.activeElement;return a&&$("riflesRoot"
 let rifleOpen=null;
 document.getElementById("rifHeadBack").addEventListener("click",()=>{if(partOpen){const g=partFromGun&&rifles.some(r=>r.id===partFromGun)?partFromGun:null;partOpen=null;partFromGun=null;rifleOpen=g;renderRifles();window.scrollTo(0,0);return;}
   if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
+  if(magOpen&&magFromGun&&rifles.some(r=>r.id===magFromGun)){gunArea="guns";rifleOpen=magFromGun;magOpen=null;magFromGun=null;renderRifles();window.scrollTo(0,0);return;}
   if(canOpen&&canFromGun&&rifles.some(r=>r.id===canFromGun)){gunArea="guns";rifleOpen=canFromGun;canOpen=null;canFromGun=null;renderRifles();window.scrollTo(0,0);return;}
-  canOpen=null;canFromGun=null;invOpen=null;magOpen=null;gnoteOpen=null;gnConfirm=false;
+  canOpen=null;canFromGun=null;invOpen=null;magOpen=null;magFromGun=null;gnoteOpen=null;gnConfirm=false;
   rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;gunReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
 let ammoReturnTraj=null,gunReturnTraj=null;
 // a profile's Edit button on its gun: open the gun, with a way back to the profile
 window.RB_OPEN_GUN=(id,ret)=>{if(!rifles.some(r=>r.id===id))return;gunArea="guns";rifleOpen=id;canOpen=null;scopeOpen=null;partOpen=null;gunReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;magOpen=null;gnoteOpen=null;gnConfirm=false;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;magOpen=null;magFromGun=null;magBulk=null;gnoteOpen=null;gnConfirm=false;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 // gun type: rifle, pistol or shotgun. Guessed from the cartridge when not picked (handgun cartridges → pistol, gauges → shotgun)
 const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shotgun","Shotgun","Shotguns"]];
 function gunTypeGuess(cart){const t=String(cart||"").trim();if(!t)return null;if(/\b(\d+|four|eight|ten|twelve|sixteen|twenty)\s*-?\s*(ga|gauge|bore)\b|\b410\b|\.410/i.test(t))return "shotgun";
@@ -4666,6 +4669,13 @@ function renderRifles(){
         return '<section class="card" aria-label="Shooting profiles with this gun" id="secGunTraj"><h2>Shooting profiles</h2>'+(sl.length?'<div class="cartgroup">'+sl.map(t=>'<button class="loaditem" type="button" data-gtraj="'+esc(t.id)+'"><span class="t">'+esc(t.name)+'</span>'+(t.cart?'<span class="d">'+esc(t.cart)+'</span>':'')+'</button>').join("")+'</div>':'<p class="note">No Shooting profiles use this gun yet. Pick it under <b>Gun</b> in a Shooting profile\'s inputs, or use <b>Start a range day</b> below.</p>')+
           '<div class="row"><button class="btn primary" type="button" id="gunRangeDay">Start a range day with this gun</button></div></section>'+
           coldLogHtml(rt)+'<section class="card" aria-label="Range trips with this gun" id="secGunTrips"><h2>Range trips</h2>'+(rt.length?'<p class="note">'+rt.length+' trip'+(rt.length===1?'':'s')+' · '+rt.reduce((a,t)=>a+(num(t.rounds)||0),0).toLocaleString()+' rounds logged</p><div class="cartgroup">'+rt.slice(0,6).map(t=>{const s2=t.sum||{};return '<button class="loaditem" type="button" data-gtrip="'+esc(t.id)+'"><span class="t">'+esc(t.date?fmtDate(t.date):"No date")+(t.place?' · '+esc(t.place):'')+'</span><span class="d">'+esc([tn[t.trajId],num(t.rounds)?num(t.rounds)+" rounds":"",num(t.distance)?U.s("yd",num(t.distance),0):""].filter(Boolean).join(" · "))+'</span>'+(s2.best?'<span class="best">Best: <b>'+esc(tripBestTxt(s2.best))+'</b></span>':'')+'</button>';}).join("")+'</div>'+(rt.length>6?'<p class="note">Showing the latest 6. The rest are on each Shooting profile.</p>':''):'<p class="note">No range trips with this gun yet.</p>')+'</section>';})()+
+      (()=>{const ml=mags.filter(m=>(m.gunIds||[]).includes(r.id)),types=[...new Set(ml.map(magType))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+        const tile=m=>{const n=magIssues(m).length;return '<button class="loaditem'+(m.retired?' used':'')+'" type="button" data-gmag="'+esc(m.id)+'"><span class="t">'+(magNum(m)?'#'+esc(magNum(m)):'<span class="none">No Mag #</span>')+(m.retired?' <span class="chip">Retired</span>':'')+(n?' <span class="chip warnchip">'+n+' problem'+(n===1?'':'s')+'</span>':'')+'</span>'+([m.cart,num(m.cap)?num(m.cap)+" rounds":""].filter(Boolean).length?'<span class="d">'+esc([m.cart,num(m.cap)?num(m.cap)+" rounds":""].filter(Boolean).join(" · "))+'</span>':'')+'</button>';};
+        const act=ml.filter(m=>!m.retired).length;
+        return '<section class="card" aria-label="Magazines for this gun" id="secGunMags"><h2>Magazines'+(ml.length?' <span class="note">'+act+(act!==ml.length?' + '+(ml.length-act)+' retired':'')+'</span>':'')+'</h2>'+
+          (ml.length?types.map(t=>{const L=ml.filter(m=>magType(m)===t).sort((a,b)=>(a.retired?1:0)-(b.retired?1:0)||magNum(a).localeCompare(magNum(b),undefined,{numeric:true}));return '<div class="cartgroup"><div class="cartname">'+esc(t||"Type not set")+' <span class="note">'+L.length+'</span></div>'+L.map(tile).join("")+'</div>';}).join("")
+            :'<p class="note">No magazines are marked as fitting this gun. Tick it under <b>Fits</b> on a magazine, or for a whole group under <a class=goto href=#go data-go=rifles:mags>Gear &amp; Ranges › Magazines</a>.</p>')+
+          '<div class="row"><button class="btn" type="button" id="gunMagAdd">+ Add a magazine for this gun</button></div></section>';})()+
       '<section class="card" aria-label="Reloading loads using this gun" id="secGunRel"><h2>Reloading loads</h2>'+
       (ul.length?'<div class="cartgroup">'+ul.map(([id,L])=>'<button class="loaditem" type="button" data-rload="'+esc(id)+'"><span class="t">'+esc(L.title||"Untitled load")+'</span>'+(L.cartridge?'<span class="d">'+esc(L.cartridge)+'</span>':'')+'</button>').join("")+'</div>'
         :'<p class="note">No reloading loads use this gun. Pick it in a load\'s recipe on <a class=goto href=#go data-go=rel>Reloading</a>.</p>')+'</section>'+
@@ -4736,6 +4746,10 @@ function renderRifles(){
   del.addEventListener("click",()=>{const i=rifles.indexOf(r),ph=gunPhotosOf(r.id);rifles=rifles.filter(x=>x.id!==r.id);rifleOpen=delSib?delSib.id:null;queueRifles();gunPhotos=gunPhotos.filter(p=>p.rifle!==r.id);renderRifles();window.scrollTo(0,0);
     RB_UNDO("Deleted "+(r.name||"gun"),()=>{rifles.splice(Math.min(i,rifles.length),0,r);gunPhotos=gunPhotos.concat(ph);queueRifles();renderRifles();},()=>{if(ph.length&&!window.GUEST)API.del("/api/rifles/"+r.id+"/photos").catch(()=>{});});});
   root.querySelectorAll("[data-rload]").forEach(b=>b.addEventListener("click",()=>{showTab("rel");openLoad(b.dataset.rload);}));
+  root.querySelectorAll("[data-gmag]").forEach(b=>b.addEventListener("click",()=>{magFromGun=rifleOpen;gunArea="mags";magOpen=b.dataset.gmag;rifleOpen=null;renderRifles();window.scrollTo(0,0);}));
+  {const ga=$("gunMagAdd");if(ga)ga.addEventListener("click",()=>{const g=rifles.find(x=>x.id===rifleOpen);if(!g)return;const gc=(gunSpec(g)||{}).cartridge||g.cartridge||"";
+    const n={id:gearId("m"),num:"",mfr:"",model:"",cart:gc,cap:null,gunIds:[g.id],notes:"",issues:[]};mags.push(n);freshAdd(n,{list:()=>mags,open:()=>magOpen===n.id,save:queueRifles});queueRifles();
+    magFromGun=g.id;gunArea="mags";magOpen=n.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);const e=$("mg_mfr");if(e)e.focus();});}
   root.querySelectorAll("[data-gtraj]").forEach(b=>b.addEventListener("click",()=>RB_TRAJ.open(b.dataset.gtraj)));
   root.querySelectorAll("[data-gtrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.gtrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("gunRangeDay").addEventListener("click",()=>{homePick={gun:r.id};showTab("home");window.scrollTo(0,0);});
@@ -4954,7 +4968,7 @@ function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
    A gun can carry a suppressor (gun.canId), like a scope. Each range trip records the suppressor it was shot with (trip.canId:
    copied from the gun when the trip is made, changeable on the trip), and a suppressor's round count comes from those trips.
    Photos go in the gun-photo store under the item's id. */
-let cans=[],canOpen=null,canFromGun=null,inv=[],invOpen=null,mags=[],magOpen=null;
+let cans=[],canOpen=null,canFromGun=null,inv=[],invOpen=null,mags=[],magOpen=null,magFromGun=null,magBulk=null;
 const gearId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const canName=c=>[c.mfr,c.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ")||"Unnamed suppressor";
 const canGuns=c=>rifles.filter(r=>r.canId===c.id);
@@ -5256,6 +5270,23 @@ const magIssues=m=>Array.isArray(m.issues)?m.issues:[];
 // the next Mag # in a type: one more than the highest number used, else blank
 function magNext(m){const ns=mags.filter(y=>magType(y)===magType(m)).map(y=>parseInt(magNum(y),10)).filter(n=>n>0);return ns.length?String(Math.max(...ns)+1):"";}
 let magAllGuns=false;
+// which guns a magazine (or a whole group) fits: guns chambered for the cartridge, plus any already ticked
+function magGunList(cart,ticked){const guns=[...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true}));
+  const match=g=>{const gc=(gunSpec(g)||{}).cartridge||g.cartridge||"";if(!cart||!gc)return true;if(!window.RB_CARTS)return gc===cart;const f=RB_CARTS.fits(gc,cart);return f.ok&&!f.skip;};
+  const list=magAllGuns?guns:guns.filter(g=>ticked(g.id)||match(g));return {list,hid:guns.length-list.length,all:guns.length};}
+// a group's guns, set for every mag in it at once: ticked = all have it, a dash = some do
+function drawMagBulk(t){const box=$("magBulkBox");if(!box)return;const L=mags.filter(m=>magType(m)===t);
+  const carts=L.map(m=>m.cart).filter(Boolean),cart=carts.sort((a,b)=>carts.filter(v=>v===b).length-carts.filter(v=>v===a).length)[0]||"";
+  const n=id=>L.filter(m=>(m.gunIds||[]).includes(id)).length;
+  const {list,hid}=magGunList(cart,id=>n(id)>0);
+  box.innerHTML='<p class="note" style="margin:0 0 6px">Tick the guns all '+L.length+' of these fit. A dash means only some of them are marked.</p>'+
+    (list.length?'<div class="magfits">'+list.map(g=>'<label class="toggle"><input type="checkbox" data-mbg="'+esc(g.id)+'"'+(n(g.id)===L.length?' checked':'')+'> '+esc(g.name||"Unnamed gun")+'</label>').join("")+'</div>':'<p class="note">None of your guns is chambered for '+esc(cart)+'.</p>')+
+    (hid>0||magAllGuns?'<button class="linkbtn" type="button" id="mbAll">'+(magAllGuns?'Show only guns for '+esc(cart||"this cartridge"):'Show all guns ('+hid+' more)')+'</button>':'');
+  box.querySelectorAll("[data-mbg]").forEach(cb=>{const k=n(cb.dataset.mbg);if(k>0&&k<L.length)cb.indeterminate=true;
+    cb.addEventListener("change",()=>{const id=cb.dataset.mbg,before=L.map(m=>(m.gunIds||[]).slice());
+      L.forEach(m=>{const s=new Set(m.gunIds||[]);if(cb.checked)s.add(id);else s.delete(id);m.gunIds=[...s];});queueRifles();renderRifles();
+      RB_UNDO((cb.checked?"Added ":"Removed ")+((rifles.find(g=>g.id===id)||{}).name||"the gun")+(cb.checked?" to ":" from ")+L.length+" mags",()=>{L.forEach((m,i)=>{m.gunIds=before[i];});queueRifles();renderRifles();});});});
+  const ab=$("mbAll");if(ab)ab.addEventListener("click",()=>{magAllGuns=!magAllGuns;drawMagBulk(t);});}
 function renderMags(root){
   if(magOpen&&!mags.some(x=>x.id===magOpen))magOpen=null;
   const x=magOpen&&mags.find(y=>y.id===magOpen);
@@ -5272,11 +5303,15 @@ function renderMags(root){
     let h='<section class="card" aria-label="Magazines list"><div class="row"><button class="btn primary" id="magAdd" type="button">+ Add magazine</button></div>';
     if(!mags.length)h+='<p class="note">Give each magazine a <b>Mag #</b> (the number or mark you put on it with a paint pen or tape) so you can tell them apart. When one causes a jam or a failure to feed, log it on that mag, and retire it if it keeps happening. Mags of the same maker and model are listed together.</p>';
     types.forEach(t=>{const list=mags.filter(m=>magType(m)===t).sort((a,b)=>(a.retired?1:0)-(b.retired?1:0)||byNum(a,b)),act=list.filter(m=>!m.retired).length;
-      h+='<div class="cartgroup"><div class="cartname">'+esc(t||"Type not set")+' <span class="note">'+act+(act!==list.length?' in use, '+(list.length-act)+' retired':'')+'</span></div>'+list.map(tile).join("")+'</div>';});
+      const gi=types.indexOf(t),open=magBulk===t;
+      h+='<div class="cartgroup"><div class="cartname magghead"><span>'+esc(t||"Type not set")+' <span class="note">'+act+(act!==list.length?' in use, '+(list.length-act)+' retired':'')+'</span></span>'+(list.length>1&&rifles.length?'<button class="linkbtn" type="button" data-magbulk="'+gi+'" aria-expanded="'+open+'">'+(open?'Done':'Set guns for all '+list.length)+'</button>':'')+'</div>'+
+        (open?'<div class="magbulk" id="magBulkBox"></div>':'')+list.map(tile).join("")+'</div>';});
     h+='</section>';
     root.innerHTML=h;gearHead(null);
     if(window.RB_FILTER)RB_FILTER(root.querySelector(".card"),"mags");
     $("magAdd").addEventListener("click",()=>{const n={id:gearId("m"),num:"",mfr:"",model:"",cart:"",cap:null,gunIds:[],notes:"",issues:[]};mags.push(n);freshAdd(n,{list:()=>mags,open:()=>magOpen===n.id,save:queueRifles});queueRifles();magOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("mg_mfr");if(e)e.focus();});
+    root.querySelectorAll("[data-magbulk]").forEach(b=>b.addEventListener("click",()=>{const t=types[+b.dataset.magbulk];magBulk=magBulk===t?null:t;magAllGuns=false;renderRifles();}));
+    if(magBulk!=null&&types.includes(magBulk))drawMagBulk(magBulk);
     root.querySelectorAll("[data-mago]").forEach(b=>b.addEventListener("click",()=>{magOpen=b.dataset.mago;magAllGuns=false;renderRifles();window.scrollTo(0,0);}));
     return;
   }
@@ -10693,6 +10728,18 @@ const KINDS=[
      F("cleaned","Last cleaned","date",{w:13,alias:["last cleaned","cleaned"]}),
      NOTES],
    example:["Proof Research","24 in carbon 6.5 CM","Tikka T3x Lite 6.5 CM","6.5 Creedmoor","24","8","","","3000","","","","Example: delete this row"]},
+  {key:"mags",title:"Magazines",one:"magazine",sheet:"Magazines",alias:["magazines","magazine","mags","mag","mags list"],
+   fields:[F("num","Mag #","text",{w:8,alias:["mag #","mag number","mag no","number","no","#","marking","mark","label","mag id"],tip:["Mag #","The number or mark you put on it (1, 2, A, red tape). With How many over 1, the mags are numbered from this one up (from 1 if blank)."]}),
+     F("mfr","Maker","text",{w:14,alias:["maker","manufacturer","mfr","make","brand"]}),
+     F("model","Model","text",{req:1,w:22,alias:["model","name","magazine","mag","type","description","product"],tip:["Model","Like PMAG Gen M3 30. Mags with the same maker and model are listed together."]}),
+     F("cart","Cartridge","cart",{w:18,alias:["cartridge","caliber","calibre","cal","chambering"]}),
+     F("cap","Capacity (rounds)","int",{w:10,alias:["capacity","capacity rounds","rounds","round capacity","holds","size"]}),
+     F("qty","How many","int",{w:9,alias:["how many","quantity","qty","count","number of mags","amount","on hand"],tip:["How many","For several identical mags: each becomes its own entry, numbered from Mag # up. Blank means 1."]}),
+     F("fits","Fits (guns)","guns",{w:30,alias:["fits","guns","gun","fits guns","works with","for","used in","firearm","rifle","pistol"],tip:["Fits (guns)","Your guns' names, separated by commas, like Glock 19, Glock 17."]}),
+     F("where","Where it is","text",{w:14,alias:["where","where it is","location","stored","kept"]}),
+     F("bought","Bought on","date",{w:12,alias:["bought","bought on","purchased","purchase date","date bought"]}),
+     NOTES],
+   example:["1","Magpul","PMAG Gen M3 30","5.56x45mm NATO","30","10","","Range bag","","Example: delete this row"]},
   {key:"ammo",title:"Factory ammo",one:"factory ammo",sheet:"Factory ammo",alias:["factory ammo","ammo","ammunition","factory ammunition","factory","ammo inventory"],
    fields:[F("mfr","Maker","text",{w:14,alias:["maker","manufacturer","mfr","make","brand","company"]}),
      F("name","Product line","text",{w:20,alias:["product line","line","product","name","load","ammo","description","ammunition"]}),
@@ -10822,6 +10869,7 @@ function readCell(f,raw,colUnit,ctx){
     case "pkind":{if(/ball|spher/.test(n))return {v:"Ball"};if(/extru|stick|tubular|rod/.test(n))return {v:"Extruded"};if(/flake/.test(n))return {v:"Flake"};return {ask:true};}
     case "scope":{const hit=ctx.scopeFind(s);return hit?{v:hit}:{ask:true};}
     case "ref":{const hit=ctx.refFind(f.ref,s);return hit?{v:hit}:{ask:true};}
+    case "guns":return {v:s};
   }
   return {v:s};
 }
@@ -10918,8 +10966,12 @@ function build(){
     if(ex){row.diff=diffs(K,ex,row.item);row.same=!row.diff.length;}});
   return out;
 }
-const KORDER={scopes:0,lowers:1,uppers:2,guns:3,barrels:4};
+const KORDER={scopes:0,lowers:1,uppers:2,guns:3,barrels:4,mags:5};
 const pLabel=x=>[x.mfr,x.model].map(v=>String(v||"").trim()).filter(Boolean).join(" ");
+// a magazine's Fits: gun names separated by commas (or semicolons, or " and "), matched to your guns by name or model
+function magFitsIds(t,rifles){const ids=[],miss=[];String(t||"").split(/\s*[,;\n]\s*|\s+and\s+|\s+\/\s+/i).map(v=>v.trim()).filter(Boolean).forEach(nm=>{const k=keyOf(nm);
+  const g=rifles.find(r=>keyOf(r.name)===k||keyOf(pLabel(r))===k||(r.model&&keyOf(r.model)===k));if(g){if(!ids.includes(g.id))ids.push(g.id);}else miss.push(nm);});return {ids,miss};}
+const magFitsTxt=(m,rifles)=>(m.gunIds||[]).map(id=>{const g=rifles.find(r=>r.id===id);return g?(g.name||pLabel(g)):"";}).filter(Boolean).join(", ");
 function refList(kind){const E=S.existing;return kind==="guns"?E.rifles.filter(r=>!r.build):kind==="lowers"?E.parts.filter(p=>p.kind==="lower"):kind==="uppers"?E.parts.filter(p=>p.kind==="upper"):[];}
 const refLabel=(kind,x)=>kind==="guns"?(x.name||pLabel(x)):pLabel(x);
 function labelOf(k,x){
@@ -10928,6 +10980,7 @@ function labelOf(k,x){
   if(k==="ammo")return [x.mfr,x.name,x.cartridge,x.weight?x.weight+" gr":"",x.bullet].filter(Boolean).join(" ")||"Unnamed ammo";
   if(k==="bullets")return [x.mfr,x.calname,x.name,x.weight?x.weight+" gr":""].filter(Boolean).join(" ")||"Unnamed bullet";
   if(k==="brass")return x.name||[x.mfr,x.cartridge].filter(Boolean).join(" ")||"Unnamed brass lot";
+  if(k==="mags"){const n=parseInt(x.qty,10);return ([x.mfr,x.model].filter(Boolean).join(" ")||"Magazine")+(x.num?" #"+String(x.num).replace(/^#/,""):"")+(n>1?" ×"+n:"");}
   return [x.mfr,x.name].filter(Boolean).join(" ")||"Unnamed";}
 function dupKey(k,x){const K=(...a)=>a.map(keyOf).join("/");
   if(k==="lowers")return x.serial?"sn:"+keyOf(x.serial):K(x.mfr,x.model);
@@ -10937,8 +10990,9 @@ function dupKey(k,x){const K=(...a)=>a.map(keyOf).join("/");
   if(k==="ammo")return K(x.mfr,x.name,x.cartridge,x.weight,x.bullet,x.lot);
   if(k==="bullets")return K(x.mfr,x.name,x.weight);
   if(k==="brass")return x.name?keyOf(x.name):K(x.mfr,x.cartridge);
+  if(k==="mags")return x.num?K(x.mfr,x.model,String(x.num).replace(/^#/,"")):"";
   return K(x.mfr,x.name);}
-function listFor(k){const E=S.existing;if(kindBy(k).part)return E.parts.filter(p=>p.kind===kindBy(k).part);return k==="guns"?E.rifles:k==="scopes"?E.scopes:k==="ammo"?E.ammo.filter(a=>a.kind!=="reload"):(E.comps[kindBy(k).comp]||[]);}
+function listFor(k){const E=S.existing;if(k==="mags")return E.mags||[];if(kindBy(k).part)return E.parts.filter(p=>p.kind===kindBy(k).part);return k==="guns"?E.rifles:k==="scopes"?E.scopes:k==="ammo"?E.ammo.filter(a=>a.kind!=="reload"):(E.comps[kindBy(k).comp]||[]);}
 function findExisting(k,x){const L=listFor(k);
   if(x._id){const h=L.find(e=>e.id===x._id);if(h)return h;}
   const dk=dupKey(k,x);if(!dk.replace(/\//g,""))return null;
@@ -10954,6 +11008,7 @@ function diffs(K,ex,x){const out=[];K.fields.forEach(f=>{let v=x[f.k];if(v==null
   if(f.k==="scopeId"){e=e?"id:"+e:null;}
   if(f.type==="ref"){e=f.k==="gunId"?ex.gunId:(ex.build?ex.build[f.k]:null);e=e?"id:"+e:null;if(String(v).startsWith("row:")||String(v).startsWith("new:"))e=e||null;}
   if(f.k==="caliber"&&K.key==="bullets"){e=ex.caliber;}
+  if(f.k==="qty")return;if(f.k==="fits"){e=magFitsTxt(ex,S.existing.rifles);}
   const same=typeof v==="number"?Math.abs((+e)-v)<=Math.max(1e-6,Math.abs(v)*5e-4):keyOf(e)===keyOf(v);if(!same)out.push({f,old:e,now:v});});return out;}
 
 /* ---- loading a file ---- */
@@ -10980,7 +11035,7 @@ async function loadExisting(){
   const rd=R&&R.data||{},ad=A&&A.data||{},cd=C&&C.data||{};
   const comps={bullets:[],powders:[],primers:[],brass:[],...cd};["bullets","powders","primers","brass"].forEach(k=>{if(!Array.isArray(comps[k]))comps[k]=[];});
   const rifles=Array.isArray(rd.rows)?rd.rows:[];rifles.forEach(r=>{if(r.mfr==null&&r.model==null&&window.RB_SPLIT_GUN)Object.assign(r,RB_SPLIT_GUN(r.name));});
-  return {rifles,scopes:Array.isArray(rd.scopes)?rd.scopes:[],parts:Array.isArray(rd.parts)?rd.parts:[],ammo:Array.isArray(ad.rows)?ad.rows:[],comps};}
+  return {rifles,mags:Array.isArray(rd.mags)?rd.mags:[],scopes:Array.isArray(rd.scopes)?rd.scopes:[],parts:Array.isArray(rd.parts)?rd.parts:[],ammo:Array.isArray(ad.rows)?ad.rows:[],comps};}
 async function start(file){
   const root=$("sxRoot");root.innerHTML='<section class="card"><p class="note">Reading '+esc(file.name)+'…</p></section>';
   let sheets,existing;
@@ -11118,7 +11173,7 @@ async function apply(){
     const E=await loadExisting(),B=build(),rows=S.lastGo.map(g=>B.rows.find(r=>r.rid===g.rid)).filter(Boolean);
     const rowId={},count={};const bump=(k,w)=>{count[k]=count[k]||{a:0,u:0};count[k][w]++;};
     const fill=(dst,src,K)=>{K.fields.forEach(f=>{const v=src[f.k];if(v==null||v==="")return;if(f.k==="type"&&src.typeGuessed&&dst.type)return;dst[f.k]=v;if(f.k==="type"){if(src.typeGuessed)dst.typeGuessed=true;else delete dst.typeGuessed;}});if(src.caliberUnit)dst.caliberUnit=src.caliberUnit;};
-    const target=(k,r)=>{const L=kindBy(k).part?E.parts:k==="guns"?E.rifles:k==="scopes"?E.scopes:k==="ammo"?E.ammo:E.comps[kindBy(k).comp];return {L,ex:r.dupOf&&S.dup[r.rid]==="update"?L.find(x=>x.id===r.dupOf.id):null};};
+    const target=(k,r)=>{const L=k==="mags"?E.mags:kindBy(k).part?E.parts:k==="guns"?E.rifles:k==="scopes"?E.scopes:k==="ammo"?E.ammo:E.comps[kindBy(k).comp];return {L,ex:r.dupOf&&S.dup[r.rid]==="update"?L.find(x=>x.id===r.dupOf.id):null};};
     // scopes, then lowers and uppers, then guns, then barrels, so each can point at the ones before it
     const ordered=rows.slice().sort((a,b)=>(KORDER[a.kind.key]??9)-(KORDER[b.kind.key]??9));
     // a lower, upper or gun named in a cell: "id:" one already here, "row:" one in this file, "new:" one to add now
@@ -11145,6 +11200,13 @@ async function apply(){
       if(ex){if(k==="guns"&&ex.mfr==null&&ex.model==null&&window.RB_SPLIT_GUN)Object.assign(ex,RB_SPLIT_GUN(ex.name));fill(ex,x,K);
         if(k==="guns"){if(x.scopeId)ex.scopeId=x.scopeId;if(bld){ex.build=Object.assign(ex.build||{lowerId:"",upperId:""},Object.fromEntries(Object.entries(bld).filter(([,v])=>v)));}ex.name=[ex.mfr,ex.model].filter(Boolean).join(" ");}
         if(k==="barrels"&&x.gunId)ex.gunId=x.gunId;rowId[r.rid]=ex.id;bump(k,"u");continue;}
+      if(k==="mags"){const {ids,miss}=magFitsIds(x.fits,E.rifles);const nn=Math.max(1,Math.min(200,parseInt(x.qty,10)||1));delete x.qty;delete x.fits;
+        if(miss.length)x.notes=[x.notes,"Fits (not found in your guns): "+miss.join(", ")].filter(Boolean).join("\n");if(x.num)x.num=String(x.num).replace(/^#/,"");
+        if(ex){fill(ex,x,K);if(ids.length)ex.gunIds=[...new Set((ex.gunIds||[]).concat(ids))];rowId[r.rid]=ex.id;bump(k,"u");continue;}
+        const n0=parseInt(x.num,10),numbered=nn>1;
+        for(let q=0;q<nn;q++){const m=Object.assign({id:newId("m"),num:"",mfr:"",model:"",cart:"",cap:null,gunIds:ids.slice(),notes:"",issues:[]},x);
+          if(numbered)m.num=String((n0>0?n0:1)+q);L.push(m);bump(k,"a");if(!q)rowId[r.rid]=m.id;}
+        continue;}
       let it;
       if(k==="guns"){it=Object.assign({id:newId("r"),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true},x);if(bld){it.build=bld;autoNm(it);}it.name=[it.mfr,it.model].filter(Boolean).join(" ");}
       else if(K.part){it=Object.assign({id:newId("p"),kind:K.part,mfr:"",model:"",notes:""},x);if(K.part==="barrel"&&it.gunId==null)it.gunId="";}
@@ -11154,7 +11216,7 @@ async function apply(){
       if(k==="scopes"){if(it.turret===it.unit)it.turret=null;if(it.click==null)it.click=(it.turret||it.unit)==="mil"?0.1:0.25;}
       L.push(it);rowId[r.rid]=it.id;bump(k,"a");}
     const put=[];
-    if(count.guns||count.scopes||count.lowers||count.uppers||count.barrels){const R=await API.get("/api/doc/rifles");const d=Object.assign({},R&&R.data||{},{rows:E.rifles,scopes:E.scopes,parts:E.parts});put.push(API.put("/api/doc/rifles",{data:d}));}
+    if(count.guns||count.scopes||count.lowers||count.uppers||count.barrels||count.mags){const R=await API.get("/api/doc/rifles");const d=Object.assign({},R&&R.data||{},{rows:E.rifles,scopes:E.scopes,parts:E.parts,mags:E.mags});put.push(API.put("/api/doc/rifles",{data:d}));}
     if(count.ammo){const A=await API.get("/api/doc/ammo");put.push(API.put("/api/doc/ammo",{data:Object.assign({},A&&A.data||{},{rows:E.ammo})}));}
     if(["bullets","powders","primers","brass"].some(k=>count[k]))put.push(API.put("/api/doc/components",{data:E.comps}));
     await Promise.all(put);
@@ -11167,7 +11229,7 @@ async function apply(){
 }
 
 /* ---- the template ---- */
-function introHtml(){return '<section class="card"><h2>1. Get the template</h2><p class="note">An Excel file with a tab each for guns, scopes, lowers, uppers, barrels, factory ammo, bullets, powders, primers and brass. Each tab has an example row (delete it or leave it; it isn\'t imported), and drop-down lists for things like cartridges and BC type. It opens in Excel, Numbers and Google Sheets.</p>'+
+function introHtml(){return '<section class="card"><h2>1. Get the template</h2><p class="note">An Excel file with a tab each for guns, scopes, lowers, uppers, barrels, magazines, factory ammo, bullets, powders, primers and brass. Each tab has an example row (delete it or leave it; it isn\'t imported), and drop-down lists for things like cartridges and BC type. It opens in Excel, Numbers and Google Sheets.</p>'+
   '<div class="row"><button class="btn primary" type="button" id="sxTpl">Download the template</button><button class="btn" type="button" id="sxTplMine">Download it with my gear filled in</button></div><p class="note">With your gear filled in, you can fix or add things in the spreadsheet and import it back: rows you changed are offered as updates, and rows you didn\'t touch are left alone.</p><p class="note" id="sxTplMsg" aria-live="polite"></p></section>'+
   '<section class="card"><h2>2. Import it</h2><p class="note">Pick the filled-in file, or any spreadsheet of yours (.xlsx or .csv). Range Book matches the columns by their headings and shows you everything before anything is saved: columns and values it doesn\'t recognize, and anything that\'s already here.</p><div class="row"><input id="sxFile" type="file" accept=".xlsx,.csv,.tsv,.txt,.xls,.numbers,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" hidden><button class="btn primary" type="button" id="sxPick">Choose a file to import</button></div></section>';}
 function bindIntro(){bindPick();$("sxTpl").onclick=()=>template(false);$("sxTplMine").onclick=()=>template(true);}
@@ -11189,7 +11251,7 @@ async function template(mine){
   const listCol={carts:"A",sizes:"B",scopes:"C",lowers:"D",uppers:"E",guns:"F"},listRef=k=>"Lists!$"+listCol[k]+"$2:$"+listCol[k]+"$"+(lists[k].length+1);
   const sheets=[];
   const readme=["How to use this file",
-    "1. Each tab is one kind of gear: Guns, Scopes, Lowers, Uppers, Barrels, Factory ammo, Bullets, Powders, Primers and Brass. Fill in the ones you need and leave the rest empty.",
+    "1. Each tab is one kind of gear: Guns, Scopes, Lowers, Uppers, Barrels, Magazines, Factory ammo, Bullets, Powders, Primers and Brass. Fill in the ones you need and leave the rest empty.",
     "   For an AR or any gun made of a lower and an upper: put the lower on the Lowers tab and the upper on the Uppers tab, then add a row on the Guns tab with that Lower and Upper picked (the name can be left blank). One lower can be in several guns. Barrels go on complete guns: pick the gun under On gun.",
     "2. One row per thing. Only the columns marked * are needed; leave anything you don't know blank.",
     "3. The grey row on each tab is an example. Delete it or leave it; it's never imported.",
@@ -11202,10 +11264,10 @@ async function template(mine){
     "Units in the headings are "+(metric()?"metric":"imperial")+", following your Range Book setting. Other units are fine if you put them in the heading or after the number."].filter(Boolean);
   sheets.push({name:"Read me",noFilter:true,cols:[{h:"Range Book import template",w:110,s:5}],rows:readme.map((t,i)=>[i===0?{v:t,s:6}:{v:t,s:5}])});
   KINDS.forEach(K=>{const fields=K.fields.concat(mine?[IDF]:[]);
-    const have=!mine?[]:K.part?P.filter(p=>p.kind===K.part):K.key==="guns"?E.rifles:K.key==="scopes"?E.scopes:K.key==="ammo"?E.ammo.filter(a=>a.kind!=="reload"):(E.comps[K.comp]||[]);
+    const have=!mine?[]:K.key==="mags"?(E.mags||[]):K.part?P.filter(p=>p.kind===K.part):K.key==="guns"?E.rifles:K.key==="scopes"?E.scopes:K.key==="ammo"?E.ammo.filter(a=>a.kind!=="reload"):(E.comps[K.comp]||[]);
     const rows=mine?have.map(x=>fields.map(f=>{if(f.k==="_id")return {v:x.id,s:7};if(f.k==="scopeId"){const sc=E.scopes.find(s=>s.id===x.scopeId);return sc?scopeLabel(sc):null;}
       if(f.k==="lowerId"||f.k==="upperId"){const q=x.build&&P.find(p=>p.id===x.build[f.k]);return q?nm(q):null;}
-      if(f.k==="gunId"){const g=E.rifles.find(r=>r.id===x.gunId);return g?g.name||nm(g):null;}return cellOut(f,x[f.k]);}))
+      if(f.k==="gunId"){const g=E.rifles.find(r=>r.id===x.gunId);return g?g.name||nm(g):null;}if(f.k==="fits")return magFitsTxt(x,E.rifles)||null;if(f.k==="qty")return null;return cellOut(f,x[f.k]);}))
       :[K.example.map((v,i)=>{if(v==="")return null;const f=K.fields[i];let x=/^\d+(\.\d+)?$/.test(v)?+v:v;if(typeof x==="number"&&f&&f.unit)x=cellOut(f,x);return {v:x,s:7};})];
     const val=[];fields.forEach((f,i)=>{
       const p=f.tip||(f.type==="date"?[f.h,"A date, like 2025-05-31."]:null);

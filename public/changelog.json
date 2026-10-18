@@ -2,14 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.31.0",
+      "version": "2.31.1",
       "date": "2026-10-18",
       "title": "Magazines",
       "items": [
         "New Gear & Ranges › Magazines tab. Each magazine is its own entry with a Mag # (the number or mark you put on it with a paint pen or tape), maker and model, cartridge, capacity, the guns it fits, where it's kept, when you bought it, notes and photos.",
         "Mags of the same maker and model are listed together with how many you have. + Add another like this copies the type, cartridge, capacity and guns to a new mag with the next number.",
         "+ Log a problem records a jam, failure to feed or other trouble on the mag that caused it, with the date; the list shows how many problems each mag has. Retired keeps a bad mag in the list, greyed out.",
-        "The guns Excel export has a Magazines sheet, and backups include your magazines."
+        "The guns Excel export has a Magazines sheet, and backups include your magazines.",
+        "Set guns for all, next to a group of magazines, ticks the guns they fit on every mag in the group at once.",
+        "Each gun's page has a Magazines card (it folds) listing the mags that fit it, grouped by type, with + Add a magazine for this gun.",
+        "Import from a spreadsheet has a Magazines tab: one row per mag, or How many to make several numbered mags from one row; Fits takes your guns' names separated by commas. Download it with my gear filled in includes your magazines."
       ]
     },
     {
