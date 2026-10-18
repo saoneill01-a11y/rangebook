@@ -848,6 +848,9 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .tstrshots{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
 .shotadd input{flex:1 1 200px;min-width:0}
 .triphead{margin-bottom:6px}
+.picrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.picbox{width:140px;height:105px;border-radius:10px;overflow:hidden;flex:none;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent);border:1px solid var(--line)}
+.picbox img{width:100%;height:100%;object-fit:cover;display:block}.picbox svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.4}
+.picbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1 1 160px;min-width:0}.picbtns .note{flex:1 0 100%;margin:0}
 .lthumb svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6}
 .ltext{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ltext.grow{flex:1 1 auto}
@@ -905,7 +908,7 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 
 .wxrow{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .wxrow .note{flex:1 1 200px}
-.rgloc .row{margin:0 0 4px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
+.rgloc .row{margin:0 0 4px}.rgpick{display:flex;flex-direction:column;gap:8px;margin:6px 0}.rgopt{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}.rgopt .t{color:var(--fg);overflow-wrap:anywhere}.rgopt .row{margin:0;align-items:center;gap:6px 12px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
 .wxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0 6px}.wxgrid div{background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
 .wxgrid dt{font-size:12.5px;color:var(--muted)}.wxgrid dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
 @media (max-width:420px){.wxgrid{grid-template-columns:1fr 1fr}}
@@ -944,6 +947,8 @@ textarea.notebody{min-height:260px;line-height:1.5;font-size:16px;resize:vertica
 .segtabs{display:flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .segtabs button{flex:1 1 0;padding:8px 4px;border:0;border-radius:7px;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
 .segtabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
+.selbtn{display:flex;gap:8px;align-items:center}.selbtn select{flex:1 1 auto;min-width:0}.selbtn .btn{flex:none}
+.rngrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 8px}.rngrow .segtabs{flex:0 1 300px;min-width:0}.rngrow .note{flex:1 1 180px;margin:0}
 .gtypes{max-width:360px}
 #rf_typeNote{display:block;margin-top:4px;font-size:12px}
 /* Import from a spreadsheet */
@@ -1149,11 +1154,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <button class="sechead" type="button" id="inToggle" aria-expanded="true" aria-controls="inBody"><h2>Inputs</h2><span class="secsum" id="inSum"></span><span class="chev" aria-hidden="true"></span></button>
     <div class="secbody" id="inBody">
     <div class="grid">
-      <div class="field wide"><button class="btn favbtn" type="button" id="trajFav" aria-pressed="false" style="justify-self:start"></button></div><div class="field wide"><label for="f_name">Profile name</label><input id="f_name" class="name" type="text" autocomplete="off"></div>
+      <div class="field wide"><button class="btn favbtn" type="button" id="trajFav" aria-pressed="false" style="justify-self:start"></button></div><div class="field wide"><label for="f_name">Profile name</label><input id="f_name" class="name" type="text" autocomplete="off" placeholder="Leave blank to name it after the gun and ammo"><span class="note">Left blank, it's named after the gun and ammo, like "Tikka T3x - Hornady 6.5 Creedmoor 143 gr ELD-X".</span></div>
       <div class="field wide"><label for="f_cart">Cartridge</label><input id="f_cart" class="name" type="text" autocomplete="off" list="dl_cart" placeholder="e.g. 308 Winchester"></div>
     </div>
     <fieldset class="ingrp"><legend>Gun &amp; ammo</legend><div class="grid">
-      <div class="field wide"><label for="f_rifle">Gun</label><select id="f_rifle" class="fieldselect"></select><span class="note" id="f_rifleNote"></span></div>
+      <div class="field wide"><label for="f_rifle">Gun</label><div class="selbtn"><select id="f_rifle" class="fieldselect"></select><button class="btn" type="button" id="f_rifleEdit" hidden>Edit</button></div><span class="note" id="f_rifleNote"></span></div>
       <div class="field wide subfield" id="f_partBox" hidden><label for="f_part">Barrel</label><select id="f_part" class="fieldselect"></select><span class="note" id="f_partNote"></span></div>
       <div class="field wide"><label for="f_ammoBtn">Ammunition</label><button type="button" id="f_ammoBtn" class="ammobtn" aria-expanded="false" aria-controls="ammoPick"><span id="f_ammoLbl"></span></button>
         <div class="ammopick" id="ammoPick" hidden><input id="f_ammoQ" type="search" placeholder="Search: varget, hornady 168, 6.5 creed…" autocomplete="off" aria-label="Search ammunition"><div id="ammoPickList" class="ammopicklist" role="listbox" aria-label="Ammunition"></div></div><div id="f_ammoInfo"></div><span class="note" id="f_ammoNote"></span></div>
@@ -1194,7 +1199,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="col colR">
   <section class="card" aria-label="Chart" id="secTChart">
     <h2 id="chartTitle">Bullet path</h2>
-    <label class="switch" for="f_lr"><input id="f_lr" type="checkbox" role="switch"><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Long range</b><span class="note" id="lrNote">Chart to 1,000 yd, table to 2,000 yd</span></span></label>
+    <div class="rngrow"><div class="segtabs" id="f_rng" role="radiogroup" aria-label="How far the chart goes"><button type="button" role="radio" data-rng="s">Short</button><button type="button" role="radio" data-rng="m">Medium</button><button type="button" role="radio" data-rng="l">Long</button></div><span class="note" id="lrNote"></span></div>
     <div class="legend" id="legend"></div>
     <div class="chartbox" id="chart"></div>
     <div class="chgrip" id="chartGrip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Chart height. Drag up or down, or use the arrow keys." title="Drag to make the chart taller or shorter. Double-tap to reset."><span></span></div>
@@ -1330,11 +1335,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h2>Shooting</h2>
       <p>The <b>Shooting</b> tab is the trajectory calculator plus your range trips and printable targets.</p>
       <h3>Pick or make a profile</h3>
-      <p>A <b>profile</b> is one gun and the ammo you shoot in it, with its zero, scope and conditions: everything the calculator needs. (On Reloading, a load is still a load.) The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your profiles, grouped by cartridge and sorted by name (long-range profiles are tagged, and so are profiles whose ammo is marked <b>Subsonic</b>). Set a profile's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Profiles</b> to go back. Tap the <b>star</b> on a profile (or <b>Add to favorites</b> at the top of its inputs) to make it a favorite: favorites are listed first, under <b>★ Favorites</b>, and come first when <b>Start a range day</b> asks what you're shooting. To add your own, tap <b>+ New profile</b>. It starts as a copy of the profile you were looking at; turn on <b>Long range</b> on its chart to chart it to 1,000 yd and table it to 2,000 yd (off, it charts to 400 yd). Your profiles are saved to your account. To remove a profile, open it and tap <b>Delete profile</b> at the very bottom (<b>Undo</b> brings it back). That works for the sample profile too, which also has <b>Reset to defaults</b> if you've changed it and want the original back.</p>
+      <p>A <b>profile</b> is one gun and the ammo you shoot in it, with its zero, scope and conditions: everything the calculator needs. (On Reloading, a load is still a load.) The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your profiles, grouped by cartridge and sorted by name (long-range profiles are tagged, and so are profiles whose ammo is marked <b>Subsonic</b>). Set a profile's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Profiles</b> to go back. Tap the <b>star</b> on a profile (or <b>Add to favorites</b> at the top of its inputs) to make it a favorite: favorites are listed first, under <b>★ Favorites</b>, and come first when <b>Start a range day</b> asks what you're shooting. To add your own, tap <b>+ New profile</b>. It starts blank: pick the gun and ammo (or type the numbers). Leave <b>Profile name</b> blank and it's named after the gun and ammo, like "Tikka T3x - Hornady 6.5 Creedmoor 143 gr ELD-X", and it follows if you change either; type a name to use your own. On the <b>Bullet path</b> card, <b>Short</b> charts to 200 yd, <b>Medium</b> to 400 yd and <b>Long</b> to 1,000 yd (and the range table to 2,000 yd). Your profiles are saved to your account. To remove a profile, open it and tap <b>Delete profile</b> at the very bottom (<b>Undo</b> brings it back). That works for the sample profile too, which also has <b>Reset to defaults</b> if you've changed it and want the original back.</p>
       <p>A new account's Shooting list starts with a single <b>SAMPLE · 6.5 Creedmoor</b> profile, and on a new Range Book the first account also gets a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
       <h3>Fill in the fields</h3>
       <ul>
-        <li><b>Rifle</b>: pick one from your Gear & Ranges tab and its sight height fills in. Profiles sent over from Reloading come with the gun already picked. If you change the gun's sight height on the Gear & Ranges tab, the calculator follows unless you've typed in your own.</li>
+        <li><b>Gun</b>: pick one from your Gear & Ranges tab and its sight height fills in. <b>Edit</b> beside it opens that gun on Gear &amp; Ranges, with a <b>‹ Back to</b> button to return to the profile. Profiles sent over from Reloading come with the gun already picked. If you change the gun's sight height on the Gear & Ranges tab, the calculator follows unless you've typed in your own.</li>
         <li><b>Ammunition</b>: tap it to pick your own factory or reloaded ammo, or a load from the factory catalog. Fill in the <b>Cartridge</b> first and the list shows only ammo for that cartridge (and ammo that's safe in it, like 223 Remington for a 5.56 gun); tap <b>Show all cartridges</b> at the top of the list to see everything. The bullet weight, BC, diameter and length fill in from the ammo. If the ammo has no bullet length, Range Book uses its reloading recipe's, or the length saved on its bullet under Components.</li>
         <li><b>Bullet weight</b>: from the ammo box.</li>
         <li><b>Muzzle velocity</b>: the box number comes from a test barrel and is often 50–150 fps faster than your gun. A chronograph reading is best.</li>
@@ -1375,7 +1380,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Saved ranges</h3>
       <p>Save the places you shoot under <b>Gear &amp; Ranges → Ranges</b>: tap <b>+ New range</b>, give it a name, its address, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Changes save as you type. Under <b>Dope</b>, pick a Shooting profile to see the dial and wind for every target with it; the size column shows each target in MOA or MIL, so you can see how much room you have, and <b>Use these conditions</b> sets that profile's temperature and altitude to the range's usual ones. Each Shooting profile also has a <b>Saved ranges</b> card: pick a range there to see the same thing for that profile, and <b>Edit ranges ›</b> takes you to the range. Range names show up under <b>Where</b> on range trips.</p>
       <h3>A range's address and weather</h3>
-      <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>, or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then the range's <b>Weather</b> card shows today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there; tap <b>Refresh</b> for the latest. Under <b>Dope</b>, and on a profile's <b>Saved ranges</b> card, <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
+      <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>. Range Book shows what it found (up to five places, each with <b>See it on a map</b>) and asks which one is right: tap <b>Yes, use it</b> or <b>Use this one</b> and the full address goes into the Address box; <b>No</b> keeps what you had. Or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then the range's <b>Weather</b> card shows today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there; tap <b>Refresh</b> for the latest. Under <b>Dope</b>, and on a profile's <b>Saved ranges</b> card, <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
       <h3>The inputs fold up on a phone</h3>
       <p>On a phone, when you open a profile the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a profile (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
@@ -1515,7 +1520,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Round count and barrel life</h3>
       <p>Each gun's page has a <b>Round count</b>. It adds the rounds from range trips on Shooting profiles that use that gun, the shots in your load-development groups on Reloading loads that use it, and the <b>Rounds before Range Book</b> you enter. Fill in <b>Barrel life</b> to see a bar of how much is used (it turns red at 80%, and Home warns you). Set <b>Clean every</b> and tap <b>Cleaned today</b> after cleaning to see the rounds since then; Home tells you when it's due. When you fit a new barrel, set <b>Barrel fitted on</b> to that date and <b>Rounds before Range Book</b> to 0.</p>
       <h3>Scopes</h3>
-      <p><b>Gear &amp; Ranges → Scopes</b> keeps your scopes. Tap <b>+ Add scope</b> and search the list of about 90 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting profile that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
+      <p><b>Gear &amp; Ranges → Scopes</b> keeps your scopes. Each scope and suppressor has a <b>Picture</b> at the top of its Details: tap <b>+ Add picture</b> (or <b>Replace picture</b>, or <b>Remove</b>), and it shows on the list. A scope's picture is separate from the picture of its reticle. Tap <b>+ Add scope</b> and search the list of about 90 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting profile that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
       <p><b>Second focal plane</b> scopes have marks that are only their true size at one power, often the highest (the scope's manual says). Enter it in <b>Marks true at power</b>. On the dope card's reticle a <b>Scope power</b> picker then works out the hold in marks for the power you're on; at the true power it's the same as the MIL or MOA.</p>
       <h3>Make the reticle look like yours</h3>
       <p>Range Book's reticle is a plain one, not any brand's design. Tap <b>Change how it looks</b> (on the scope's page, or under the reticle on the dope card) to open a window with a preview where you pick where the main marks are, the small marks between them, the holdover dots (a full grid, a tree that widens as it goes down, or none), the numbers, the center (lines that meet, an open center, or an open center with a dot) and the line thickness. <b>Back to the standard look</b> undoes it.</p>
@@ -1854,15 +1859,20 @@ window.RB_WX=(()=>{
     },
     // the ground's height at a spot (ft)
     async elev(lat,lon){try{const r=await fetch("https://api.open-meteo.com/v1/elevation?latitude="+f4(lat)+"&longitude="+f4(lon));if(!r.ok)return null;const j=await r.json(),e=j.elevation&&j.elevation[0];return isFinite(e)?e*3.28084:null;}catch(e){return null;}},
-    // an address or place name to a spot on the map: OpenStreetMap first, then Open-Meteo's town lookup
+    // an address or place name to places on the map (up to 5): OpenStreetMap first, then Open-Meteo's town lookup
     async find(q){
-      q=String(q||"").trim();if(!q)return null;let net=false;
-      try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q="+encodeURIComponent(q));
-        if(r.ok){const a=await r.json();if(a&&a[0]&&isFinite(+a[0].lat))return {lat:+a[0].lat,lon:+a[0].lon,label:a[0].display_name||q};}}catch(e){net=true;}
-      try{const r=await fetch("https://geocoding-api.open-meteo.com/v1/search?count=1&name="+encodeURIComponent(q.split(",")[0].trim()));
-        if(r.ok){const j=await r.json(),g=j.results&&j.results[0];if(g)return {lat:g.latitude,lon:g.longitude,label:[g.name,g.admin1,g.country].filter(Boolean).join(", "),rough:true};}}catch(e){net=true;}
-      if(net)throw new Error("network");return null;
+      q=String(q||"").trim();if(!q)return [];let net=false;
+      const fmt=a=>{if(!a)return "";const town=a.city||a.town||a.village||a.hamlet||a.municipality||"",st=a.state||a.province||a.region||"";
+        return [[a.house_number,a.road].filter(Boolean).join(" ")||a.amenity||a.leisure||"",town||a.county||"",[st,a.postcode].filter(Boolean).join(" "),a.country_code==="us"?"":a.country||""].filter(Boolean).join(", ");};
+      try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q="+encodeURIComponent(q));
+        if(r.ok){const a=await r.json();const out=(a||[]).filter(x=>isFinite(+x.lat)).map(x=>{const nm=x.name&&!(x.address&&x.address.house_number)?x.name:"",ad=fmt(x.address);
+          return {lat:+x.lat,lon:+x.lon,label:[nm,ad].filter(Boolean).join(", ")||x.display_name||q,full:x.display_name||""};});if(out.length)return out;}}catch(e){net=true;}
+      try{const r=await fetch("https://geocoding-api.open-meteo.com/v1/search?count=5&name="+encodeURIComponent(q.split(",")[0].trim()));
+        if(r.ok){const j=await r.json();const out=(j.results||[]).map(g=>({lat:g.latitude,lon:g.longitude,label:[g.name,g.admin1,g.country].filter(Boolean).join(", "),rough:true}));if(out.length)return out;}}catch(e){net=true;}
+      if(net)throw new Error("network");return [];
     },
+    // the spot on OpenStreetMap, to check it's the right place
+    osmUrl(p){return "https://www.openstreetmap.org/?mlat="+f4(p.lat)+"&mlon="+f4(p.lon)+"#map=16/"+f4(p.lat)+"/"+f4(p.lon);},
     // miles between two spots
     mi(a,b){const R=3958.8,rad=Math.PI/180,dLa=(b.lat-a.lat)*rad,dLo=(b.lon-a.lon)*rad,h=Math.sin(dLa/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));},
     // the closest saved range within about 2 miles of a spot
@@ -2114,7 +2124,12 @@ const KEY="trajcalc.v1";
 // notes that mention units
 if(U.metric){const t=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   t("wbrNote","Add 10, 20 and 30 km/h full-value wind holds to the range table and dope card");
-  t("lrNote","Chart to about 900 m, table to about 1,800 m");t("tuFar","275 m");}
+  t("tuFar","275 m");}
+// how far the chart goes: short (200 yd), medium (400 yd) or long (1,000 yd, and the table to 2,000 yd). L.lr stays for long, as before.
+const rngOf=L=>L.lr?"l":L.rng==="s"?"s":"m";
+const RNG_X={s:200,m:400,l:1000};
+function rngNote(r){return U.metric?{s:"Chart to about 180 m",m:"Chart to about 370 m",l:"Chart to about 900 m, table to about 1,800 m"}[r]:{s:"Chart to 200 yd",m:"Chart to 400 yd",l:"Chart to 1,000 yd, table to 2,000 yd"}[r];}
+function fillRng(L){const r=rngOf(L);document.querySelectorAll("#f_rng [data-rng]").forEach(b=>{const on=b.dataset.rng===r;b.setAttribute("aria-selected",String(on));b.setAttribute("aria-checked",String(on));});$("lrNote").textContent=rngNote(r);}
 function clone(o){return JSON.parse(JSON.stringify(o));}
 let state={loads:clone(DEFAULTS),cur:DEFAULTS[0].id};
 if(SAVED&&SAVED.guestFresh){/* guest: built-in defaults */}
@@ -2147,7 +2162,7 @@ function guessCart(l){
   return "";
 }
 function fillSelect(){
-  const root=$("trajList");
+  const root=$("trajList");try{syncAutoNames();}catch(e){}
   let fixed=false;state.loads.forEach(l=>{if(l.cart===undefined){l.cart=guessCart(l);fixed=true;}if(!l.zpb){migZ(l);fixed=true;}if(l.cart&&window.RB_CARTS){const c=RB_CARTS.canon(l.cart);if(c!==l.cart){l.cart=c;fixed=true;}}});if(fixed)save();
   let h='<div class="card"><div class="row"><button class="btn primary" id="newBtn" type="button">+ New profile</button></div>';
   const item=l=>{
@@ -2172,7 +2187,7 @@ function fillSelect(){
   h+='</div>';
   root.innerHTML=h;
   if(window.RB_FILTER)RB_FILTER(root.querySelector(".card"),"traj");
-  $("newBtn").addEventListener("click",()=>newLoad(false));
+  $("newBtn").addEventListener("click",()=>newLoad());
   root.querySelectorAll("[data-tfav]").forEach(b=>b.addEventListener("click",()=>{const L=state.loads.find(x=>x.id===b.dataset.tfav);if(!L)return;if(L.fav)delete L.fav;else L.fav=true;save();fillSelect();if(window.RB_TRIPS&&RB_TRIPS.changed)RB_TRIPS.changed();}));
   root.querySelectorAll("[data-topen]").forEach(bt=>bt.addEventListener("click",()=>openTraj(bt.dataset.topen)));
 }
@@ -2213,6 +2228,15 @@ window.foldAll=(root,prefix)=>{if(!root)return;root.querySelectorAll("section.ca
   foldCard(sec,prefix+"_"+String(sec.id||sec.getAttribute("aria-label")||h.textContent).replace(/[^A-Za-z0-9]+/g,"_"));});};
 [["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
 function openTraj(id){state.cur=id;save();showTrajView("detail");fillInputs();trajHead();try{scopeCols(cur());}catch(e){}render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
+/* a profile left without a name is named after its gun and ammo ("gun - ammo"), and keeps up as they change */
+function profAuto(L){let g="",a="";
+  try{const r=rifleOf(L);g=(r&&r.name)||L.rifleName||"";}catch(e){g=L.rifleName||"";}
+  try{const x=L.ammoId&&AMMO&&AMMO.find(y=>y.id===L.ammoId);a=x?ammoName(x):L.qcCat||"";}catch(e){a=L.qcCat||"";}
+  if(!a)a=[L.cart||"",num(L.w)>0?num(L.w)+" gr":""].filter(Boolean).join(" ");
+  return [g,a].filter(Boolean).join(" - ")||"New profile";}
+function syncAutoNames(){let ch=false;state.loads.forEach(l=>{if(!l.nameAuto)return;const n=profAuto(l);if(l.name!==n){l.name=n;ch=true;}});
+  const f=$("f_name");if(f&&TVIEW==="detail"&&!SCR){const L=cur();f.placeholder=L.nameAuto?"Leave blank: "+L.name:"Leave blank to name it after the gun and ammo";}
+  if(ch){save();try{trajHead();}catch(e){}}return ch;}
 function freshScratch(){const L=clone(DEFAULTS[0]);delete L.sample;delete L.builtin;
   Object.assign(L,{id:"quickcalc",name:"Trajectory calculator",cart:"",w:null,mv:null,bc:null,bcm:"G1",cal:null,blen:null,twist:null,sh:null,z:[100,null,null,null],zpb:1,adj:1,lr:false,wind:0,temp:null,alt:null,angle:null});
   ["rifleId","rifleName","partId","ammoId","mvSrc","mvtemp","tsens","_rifleSh","_rifleTw","qcCat"].forEach(k=>delete L[k]);return L;}
@@ -2293,14 +2317,14 @@ function readZero(i,old){const el=$("f_z"+i);if(el.dataset.shown!=null&&el.value
 function fillInputs(){
   const L=cur();
   {const fb=$("trajFav");if(fb){fb.setAttribute("aria-pressed",!!L.fav);fb.innerHTML=TSTAR(!!L.fav)+(L.fav?" Favorite":" Add to favorites");}}
-  $("f_name").value=L.name;
+  $("f_name").value=L.nameAuto?"":(L.name||"");
   $("f_cart").value=L.cart||"";
   F.forEach(k=>{const el=$("f_"+k);if(k==="step"){el.value=(U.metric?L.stepM:L.step)==null?(U.metric?50:""):(U.metric?L.stepM:L.step);return;}
     if(FU[k])U.fill(el,FU[k][0],L[k],FU[k][1],FU[k][2]);else el.value=L[k]==null?"":L[k];});
   $("f_bcm").value=L.bcm==="G7"?"G7":"G1";
   $("f_cal_u").value=L.calUnit==="mm"?"mm":"in";$("f_cal").value=DIA.show(L.cal,$("f_cal_u").value);
   for(let i=0;i<3;i++)fillZero(i,L.z[i]);
-  $("f_lr").checked=!!L.lr;
+  fillRng(L);
   $("f_wclock").value=String(windClock(L));$("f_wbr").checked=!!L.wbr;
   {const pb=L.pbr||{};U.fill($("pb_size"),"in",pb.size,1,2);}
   fillDope();
@@ -2316,13 +2340,12 @@ function num(v){const n=parseFloat(v);return isFinite(n)?n:null;}
 function readInputs(){
   const L=cur();
   setTimeout(()=>{try{fillRifle();}catch(e){}},0);
-  L.name=$("f_name").value;
+  {const v=$("f_name").value;if(!SCR&&!v.trim()){L.nameAuto=true;L.name=profAuto(L);}else{delete L.nameAuto;L.name=v;}}
   L.cart=$("f_cart").value;
   F.forEach(k=>{const el=$("f_"+k);if(k==="step"){L[U.metric?"stepM":"step"]=num(el.value);return;}
     if(FU[k]){const v=U.read(el,FU[k][0],L[k]);L[k]=v==null?null:(U.metric?Math.round(v*1000)/1000:v);}else L[k]=num(el.value);});
   // zeros: whole yards, or whole metres in metric (kept in yards, so a 100 m zero is 109.361 yd)
   L.z=[0,1,2].map(i=>readZero(i,L.z[i])).concat([L.z[3]!=null?L.z[3]:null]);
-  L.lr=$("f_lr").checked;
   L.wclock=+$("f_wclock").value||3;L.wbr=$("f_wbr").checked;
   L.bcm=$("f_bcm").value;
   L.pbr={size:U.read($("pb_size"),"in",(L.pbr||{}).size)};
@@ -2399,6 +2422,7 @@ function spinNote(L0,L,SG){
       setInOpen(true);const f=$(miss[0][0]);if(!f)return;f.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>f.focus({preventScroll:true}),350);};});
 }
 function render(){
+  syncAutoNames();
   const L0=cur(), err=$("err");
   {const fb=$("trajFit"),f=fitCheck(L0);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.join("<br>")+' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <b>Gear &amp; Ranges</b>.</span>';}}
   const L=Object.assign({},L0,{mv:effMV(L0)}); // what the bullet actually does today
@@ -2575,11 +2599,17 @@ function bindRangeEdit(box,r,changed,redraw){
     // a new spot: also its ground height, which fills in the altitude if it's empty
     const setSpot=async(p,how)=>{r.lat=Math.round(p.lat*1e5)/1e5;r.lon=Math.round(p.lon*1e5)/1e5;delete RWX[r.id];const e=await RB_WX.elev(r.lat,r.lon);r.elev=e!=null?Math.round(e):null;
       if(num(r.alt)==null&&r.elev!=null)r.alt=r.elev;ch();redraw();const n=$("rg_locNote");if(n)n.insertAdjacentHTML("afterbegin",escL(how)+' ');};
+    // look it up, then ask which (if any) is the right place before saving it
     fb.addEventListener("click",async()=>{const q=$("rg_addr").value.trim()||r.name||"";if(!q){note.textContent="Type the address first.";$("rg_addr").focus();return;}
       fb.disabled=hb.disabled=true;note.textContent="Looking it up…";
-      try{const p=await RB_WX.find(q);if(!p){note.textContent="Couldn't find that address. Try the street and town, or tap I'm here now when you're at the range.";fb.disabled=hb.disabled=false;return;}
-        await setSpot(p,"Found "+(p.label||q)+(p.rough?" (the town only: tap I'm here now at the range for its exact spot)":"")+".");}
-      catch(e){note.textContent="Couldn't look it up. You need a signal for this.";fb.disabled=hb.disabled=false;}});
+      let ps;try{ps=await RB_WX.find(q);}catch(e){note.textContent="Couldn't look it up. You need a signal for this.";fb.disabled=hb.disabled=false;return;}
+      fb.disabled=hb.disabled=false;
+      if(!ps.length){note.textContent="Couldn't find that address. Try the street and town, or tap I'm here now when you're at the range.";return;}
+      note.innerHTML='<b>'+(ps.length===1?'Is this the right place?':'Which one is it?')+'</b>'+'<span class="rgpick">'+ps.map((p,i)=>'<span class="rgopt"><span class="t">'+escL(p.label)+(p.rough?' <i>(the town only)</i>':'')+'</span><span class="row"><button class="btn small'+(i===0?' primary':'')+'" type="button" data-rgok="'+i+'">'+(ps.length===1?'Yes, use it':'Use this one')+'</button><a href="'+escL(RB_WX.osmUrl(p))+'" target="_blank" rel="noopener">See it on a map</a></span></span>').join("")+'</span>'+
+        '<span class="row"><button class="btn small" type="button" id="rg_none">'+(ps.length===1?'No':'None of these')+'</button></span>';
+      note.querySelectorAll("[data-rgok]").forEach(b=>b.addEventListener("click",async()=>{const p=ps[+b.dataset.rgok];r.address=p.label;$("rg_addr").value=p.label;note.textContent="Saving…";
+        await setSpot(p,p.rough?"Saved the town only: tap I'm here now at the range for its exact spot.":"Saved.");}));
+      $("rg_none").addEventListener("click",()=>{note.innerHTML=RB_WX.ok(r)?rangeLocTxt(r):'Try adding the street number, town and state, or tap <b>I\'m here now</b> when you\'re at the range.';bindForget();});});
     hb.addEventListener("click",async()=>{fb.disabled=hb.disabled=true;note.textContent="Finding you…";
       try{const p=await RB_WX.here();await setSpot(p,"Saved where you are now.");}catch(e){note.textContent=e.message;fb.disabled=hb.disabled=false;}});}
   if(num(r.temp)!=null)U.fill($("rg_temp"),"F",num(r.temp),1,0);if(num(r.alt)!=null)U.fill($("rg_alt"),"ft",num(r.alt),0,0);
@@ -2657,7 +2687,8 @@ function renderReticle(L,S,zs,path){
 }
 // the dope card's distances are kept separately for yards and metres, so each stays in round numbers
 function dopeOpts(L){const d=L.dope||{},M=U.metric?"M":"";const MRx=L.lr?1000:400,sc=scopeOf(L);
-  return {from:d["from"+M]!=null?d["from"+M]:100,to:d["to"+M]!=null?d["to"+M]:(L.lr?1000:400),step:d["step"+M]!=null?d["step"+M]:(L.lr?50:25),unit:sc?(sc.turret==="mil"||sc.turret==="moa"?sc.turret:sc.unit==="mil"?"mil":"moa"):(d.unit==="mil"?"mil":"moa"),MRx,scope:sc};}
+  const sh=rngOf(L)==="s";
+  return {from:d["from"+M]!=null?d["from"+M]:(sh?25:100),to:d["to"+M]!=null?d["to"+M]:(L.lr?1000:sh?200:400),step:d["step"+M]!=null?d["step"+M]:(L.lr?50:25),unit:sc?(sc.turret==="mil"||sc.turret==="moa"?sc.turret:sc.unit==="mil"?"mil":"moa"):(d.unit==="mil"?"mil":"moa"),MRx,scope:sc};}
 function fillDope(){const o=dopeOpts(cur());$("d_from").value=o.from;$("d_to").value=o.to;$("d_step").value=o.step;$("d_unit").value=o.unit;}
 // a line on the range table and dope card saying which zero they use
 function zeroNotes(L,zs){
@@ -2732,6 +2763,7 @@ $("hitTool").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("hit
 ["d_from","d_to","d_step","d_unit"].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener(id==="d_unit"?"change":"input",()=>{
   const L=cur(),M=U.metric?"M":"";L.dope=Object.assign({},L.dope||{},{["from"+M]:num($("d_from").value),["to"+M]:num($("d_to").value),["step"+M]:num($("d_step").value),unit:$("d_unit").value});save();render();});});
 $("f_bcm").addEventListener("change",()=>{readInputs();render();});
+document.querySelectorAll("#f_rng [data-rng]").forEach(b=>b.addEventListener("click",()=>{const L=cur(),r=b.dataset.rng;L.rng=r;L.lr=r==="l";fillRng(L);fillDope();save();render();}));
 $("f_wclock").addEventListener("change",()=>{readInputs();render();});
 $("f_cal_u").addEventListener("change",()=>{const L=cur();$("f_cal").value=DIA.show(L.cal,$("f_cal_u").value);L.calUnit=$("f_cal_u").value;save();});
 $("wxBtn").addEventListener("click",async()=>{
@@ -2815,7 +2847,7 @@ function autoChartH(lr,W){return Math.round(Math.min(600,Math.max(lr?390:440,W*0
 function chartW(){const b=$("chart");return Math.max(300,Math.round((b&&b.clientWidth)||600));}
 // the normal view; when the chart has been made taller or shorter, show more or fewer inches
 // (same inches per pixel) instead of stretching the picture. The line of sight stays put.
-function defView(L,raw){const lr=!!L.lr;const d={lr,x0:0,x1:lr?1000:400,y0:lr?-450:-30,y1:lr?50:16,XU:lr?100:50,YU:lr?25:2};
+function defView(L,raw){const lr=!!L.lr,r=rngOf(L);const d={lr,x0:0,x1:RNG_X[r],y0:lr?-450:r==="s"?-12:-30,y1:lr?50:r==="s"?6:16,XU:lr?100:r==="s"?25:50,YU:lr?25:r==="s"?1:2};
   if(!raw&&TRUESCALE){const c=chartDims(lr),span=(d.x1-d.x0)*36*c.ph/c.pw;d.y1=span*0.08;d.y0=d.y1-span;d.YU=niceStep(span,Math.max(4,c.ph/30),YSTEPS_FT);return d;}
   if(!raw&&CHART_H){const f=(CHART_H-50)/(autoChartH(lr,chartW())-50);d.y0=d.y1-(d.y1-d.y0)*f;}return d;}
 function niceStep(span,maxN,c){for(const v of c){if(span/v<=maxN)return v;}return c[c.length-1];}
@@ -2824,7 +2856,7 @@ const XSTEPS=[1,2,5,10,20,25,50,100,200,250,500];
 const fmtN=n=>String(Math.round(n*100)/100);
 function drawChart(L,S,zs,cr,path){
   LAST={L,S,zs,cr,path};
-  const key=L.id+"|"+(L.lr?1:0);if(key!==VIEWKEY){VIEW=null;VIEWKEY=key;}
+  const key=L.id+"|"+rngOf(L);if(key!==VIEWKEY){VIEW=null;VIEWKEY=key;}
   const D=defView(L), V=VIEW||D, zoomed=!!VIEW, lr=D.lr;
   const XMAX=Math.min(D.x1,S.last);
   const box=$("chart"), {W,H}=chartDims(lr);
@@ -2832,7 +2864,7 @@ function drawChart(L,S,zs,cr,path){
   CH={m,pw,ph,W,H};
   const X=x=>m.l+(x-V.x0)/(V.x1-V.x0)*pw, Y=y=>m.t+(V.y1-y)/(V.y1-V.y0)*ph;
   const rng=(a,b)=>U.n("yd",a,0).toLocaleString()+"–"+U.n("yd",b,0).toLocaleString()+" "+U.u("yd");
-  $("chartTitle").textContent=(zoomed?"Bullet path, "+rng(V.x0,V.x1)+" (zoomed)":"Bullet path, "+rng(0,lr?1000:400))+"";if(TRUESCALE)$("chartTitle").textContent=zoomed?"True scale, "+rng(V.x0,V.x1):"Bullet path, true scale";
+  $("chartTitle").textContent=(zoomed?"Bullet path, "+rng(V.x0,V.x1)+" (zoomed)":"Bullet path, "+rng(0,D.x1))+"";if(TRUESCALE)$("chartTitle").textContent=zoomed?"True scale, "+rng(V.x0,V.x1):"Bullet path, true scale";
   {const t=$("trueScale");t.setAttribute("aria-pressed",TRUESCALE?"true":"false");}
   $("zoomReset").disabled=!zoomed;$("zoomOut").disabled=!zoomed;
   {const d=$("declutter");d.setAttribute("aria-pressed",DECLUTTER?"true":"false");}
@@ -3017,12 +3049,11 @@ function zoomAbout(fx,fy,px,py){ // fx,fy <1 zooms in; px,py plot-pixel anchor
   g.addEventListener("keydown",e=>{const h=w.getBoundingClientRect().height;if(e.key==="ArrowUp"){e.preventDefault();set(h-40);}else if(e.key==="ArrowDown"){e.preventDefault();set(h+40);}else if(e.key==="Home"||e.key==="Escape")set(null);});
 })();
 
-function newLoad(lr){
-  const src=cur();
-  const L=clone(src);L.id="u"+Date.now().toString(36);L.builtin=false;delete L.sample;L.lr=lr;L.name="New profile";L.wind=0;
-  if(lr&&src.lr!==lr)L.z=[100,300,500,null];
+// + New profile: a blank one (pick the gun and ammo, or type the numbers)
+function newLoad(){
+  const L=freshScratch();L.id="u"+Date.now().toString(36);L.builtin=false;L.nameAuto=true;L.name="New profile";L.temp=59;L.alt=0;
   state.loads.push(L);state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
-  $("f_name").focus();$("f_name").select();
+  try{$("f_rifle").focus({preventScroll:true});}catch(e){}
 }
 RB_CARTS.picker($("f_cart"),{extra:()=>[...new Set(state.loads.map(l=>l.cart).filter(Boolean))],onPick:c=>{const L=cur();if(c&&!(num(L.cal)>0)){L.cal=c.d;L.calUnit="in";$("f_cal_u").value="in";$("f_cal").value=DIA.show(c.d,"in");save();}render();}});
 $("twistCheck").addEventListener("click",()=>{readInputs();if(window.RB_TOOLS)RB_TOOLS.open("twist",{traj:cur().id});});
@@ -3088,6 +3119,7 @@ function fillRifle(){
     if(rs>0||tw>0)t+=(t?". ":"")+"Change these on the Gear & Ranges tab.";}
   else if(!RIFLES.length)t="Add guns on the Gear & Ranges tab to pick one here.";
   note.textContent=t;note.hidden=!t;
+  $("f_rifleEdit").hidden=!r;
   // this gun's barrels and uppers: ask which one until one (or "the gun as it is") is picked
   {const ps=gunParts(L),box=$("f_partBox"),ps2=$("f_part"),pn=$("f_partNote"),ban=$("trajPart");box.hidden=!ps.length;
     const ask=ps.length>0&&(L.partId===undefined||(L.partId&&!ps.some(p=>p.id===L.partId)));
@@ -3097,6 +3129,7 @@ function fillRifle(){
     if(ban){ban.hidden=!ask;if(ask){ban.innerHTML='<b>Which barrel?</b> '+escT(L.rifleName||"This gun")+' has '+ps.length+'. <button class="linkbtn" type="button" id="trajPartGo">Pick it</button>';
       $("trajPartGo").onclick=()=>{setInOpen(true);const f=$("f_part");f.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>f.focus({preventScroll:true}),350);};}}}
 }
+$("f_rifleEdit").addEventListener("click",()=>{const L=cur();if(L.rifleId&&window.RB_OPEN_GUN)RB_OPEN_GUN(L.rifleId,SCR&&SCRATCH?null:L.id);});
 $("f_part").addEventListener("change",()=>{const L=cur(),v=$("f_part").value;if(v==="__ask")return;L.partId=v;const r=rifleOf(L);L.rifleName=r?r.name||"":L.rifleName;
   const rs=r?num(r.sightHeight):null,tw=r?num(r.twist):null;if(rs>0){L.sh=rs;L._rifleSh=rs;}if(tw>0){L.twist=tw;L._rifleTw=tw;}
   save();fillInputs();fillRifle();scopeCols(L);render();});
@@ -3553,11 +3586,13 @@ document.getElementById("rifHeadBack").addEventListener("click",()=>{if(partOpen
   if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
   if(canOpen&&canFromGun&&rifles.some(r=>r.id===canFromGun)){gunArea="guns";rifleOpen=canFromGun;canOpen=null;canFromGun=null;renderRifles();window.scrollTo(0,0);return;}
   canOpen=null;canFromGun=null;invOpen=null;
-  rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
-let ammoReturnTraj=null;
+  rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;gunReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
+let ammoReturnTraj=null,gunReturnTraj=null;
+// a profile's Edit button on its gun: open the gun, with a way back to the profile
+window.RB_OPEN_GUN=(id,ret)=>{if(!rifles.some(r=>r.id===id))return;gunArea="guns";rifleOpen=id;canOpen=null;scopeOpen=null;partOpen=null;gunReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;canOpen=null;canFromGun=null;invOpen=null;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 // gun type: rifle, pistol or shotgun. Guessed from the cartridge when not picked (handgun cartridges → pistol, gauges → shotgun)
 const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shotgun","Shotgun","Shotguns"]];
 function gunTypeGuess(cart){const t=String(cart||"").trim();if(!t)return null;if(/\b(\d+|four|eight|ten|twelve|sixteen|twenty)\s*-?\s*(ga|gauge|bore)\b|\b410\b|\.410/i.test(t))return "shotgun";
@@ -4154,7 +4189,8 @@ function renderRifles(){
     if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;}
     const sibs=buildSibs(r),isVar=!!(r.build&&r.build.lowerId);
     const isFav=sibs.some(x=>x.fav);
-    h='<div class="row"><button class="btn favbtn" type="button" id="rfFav" data-id="'+esc(r.id)+'" aria-pressed="'+isFav+'">'+favSvg(isFav)+(isFav?' Favorite':' Add to favorites')+'</button><span class="savestate" id="rifleState"></span></div>'+
+    {const T=gunReturnTraj&&window.RB_TRAJ&&RB_TRAJ.all().find(x=>x.id===gunReturnTraj);h=T?'<div class="row"><button class="btn" type="button" id="gunRetTraj">‹ Back to '+esc(T.name)+'</button></div>':'';}
+    h+='<div class="row"><button class="btn favbtn" type="button" id="rfFav" data-id="'+esc(r.id)+'" aria-pressed="'+isFav+'">'+favSvg(isFav)+(isFav?' Favorite':' Add to favorites')+'</button><span class="savestate" id="rifleState"></span></div>'+
       (isVar?'<section class="card" aria-label="Uppers on this gun" id="secVars"><h2>Uppers</h2><div class="vartabs" role="group" aria-label="Variation">'+
         sibs.map(x=>'<button type="button" data-rvartab="'+esc(x.id)+'" aria-pressed="'+(x===r)+'">'+esc(x.varLabel||"No upper yet")+'</button>').join("")+
         '<button type="button" id="rfVarAdd">+ Add upper</button></div><p class="note">Each upper you put on this lower is a variation of the gun. Pick the one you\'re shooting on Shooting, Reloading or a range day. The name is shared; everything below is for the '+esc(r.varLabel||"selected")+' variation.</p></section>':'')+
@@ -4212,6 +4248,7 @@ function renderRifles(){
   if(addBtn)addBtn.addEventListener("click",()=>{const r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true};rifles.push(r);queueRifles();rifleOpen=r.id;renderRifles();window.scrollTo(0,0);const el=$("rf_mfr");if(el)el.focus();});
   root.querySelectorAll("[data-rfav]").forEach(b=>b.addEventListener("click",()=>{toggleFav(b.dataset.rfav);renderRifles();}));
   {const fb=$("rfFav");if(fb)fb.addEventListener("click",()=>{toggleFav(fb.dataset.id);renderRifles();});}
+  {const rt=$("gunRetTraj");if(rt)rt.addEventListener("click",()=>{const id=gunReturnTraj;gunReturnTraj=null;if(window.RB_TRAJ)RB_TRAJ.open(id);});}
   root.querySelectorAll("[data-ropen]").forEach(b=>b.addEventListener("click",e=>{const v=e.target.closest("[data-rvar]");rifleOpen=v?v.dataset.rvar:b.dataset.ropen;renderRifles();window.scrollTo(0,0);}));
   root.querySelectorAll("[data-ptopen]").forEach(b=>b.addEventListener("click",()=>{partFromGun=rifleOpen||null;partOpen=b.dataset.ptopen;rifleOpen=null;renderRifles();window.scrollTo(0,0);}));
   root.querySelectorAll("[data-ptnew]").forEach(b=>b.addEventListener("click",()=>newPart(b.dataset.ptnew,b.dataset.ptgun||"")));
@@ -4512,11 +4549,31 @@ function bindGearPhotos(root,id){
   {const gi=$("gearIn");if(gi)gi.addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadGun({id},f);});}
   root.querySelectorAll("[data-gdel]").forEach(b=>b.addEventListener("click",()=>{const pid=b.dataset.gdel,i=gunPhotos.findIndex(p=>p.id===pid),ph=gunPhotos[i];gunPhotos=gunPhotos.filter(p=>p.id!==pid);renderRifles();
     RB_UNDO("Deleted photo",()=>{if(ph){gunPhotos.splice(i,0,ph);renderRifles();}},()=>API.del("/api/gunphotos/"+pid).catch(onWriteError));}));}
-const gearThumb=id=>{const p=gunPhotosOf(id)[0];return p?'<img alt="" loading="lazy" src="'+esc(p.url)+'">':null;};
+const gearThumb=id=>{const p=picOf(id)||gunPhotosOf(id)[0];return p?'<img alt="" loading="lazy" src="'+esc(p.url)+'">':null;};
+/* one Picture for a scope or suppressor (kept with the gun photos under "pic-" and its id, so a scope's reticle picture stays separate) */
+const picKey=id=>"pic-"+id;
+const picOf=id=>{const ps=gunPhotosOf(picKey(id));return ps.length?ps[ps.length-1]:null;};
+let picUp=0;
+function picFieldHtml(id,what,icon){const p=picOf(id);
+  return '<div class="field wide picfield"><span class="flabel">Picture</span><div class="picrow">'+
+    (p?'<a class="picbox" href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Picture of '+esc(what)+'"></a>':'<span class="picbox empty">'+icon+'</span>')+
+    '<div class="picbtns">'+(window.GUEST?'<span class="note">Pictures need an account.</span>':
+      '<label class="btn" for="picIn" style="cursor:pointer">'+(p?'Replace picture':'+ Add picture')+'</label><input id="picIn" type="file" accept="image/*" hidden>'+
+      (p?'<button class="btn danger" type="button" id="picDel">Remove</button>':'')+(picUp?'<span class="savestate">Uploading…</span>':'')+'<span class="note">Shows on the list. Only you can see it.</span>')+'</div></div></div>';}
+function bindPicField(id){
+  const inp=$("picIn");if(inp)inp.addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;picUp++;renderRifles();
+    try{const {data,w,h}=await gunJpeg(f),old=gunPhotosOf(picKey(id)),res=await API.post("/api/gunphotos",{data,w,h,rifle:picKey(id)});
+      if(res&&res.photo){gunPhotos.push(res.photo);old.forEach(q=>{gunPhotos=gunPhotos.filter(z=>z!==q);API.del("/api/gunphotos/"+q.id).catch(()=>{});});}
+      else if(res&&res.queued)banner("No signal: the picture will upload when you're back online.",false);}
+    catch(err){if(err&&(err.status||err.network))onWriteError(err);else banner("That picture couldn't be read. Try a JPEG or PNG photo.",true);}
+    finally{picUp--;renderRifles();}});
+  const d=$("picDel");if(d)d.addEventListener("click",()=>{const old=gunPhotosOf(picKey(id));gunPhotos=gunPhotos.filter(q=>!old.includes(q));renderRifles();
+    RB_UNDO("Removed the picture",()=>{gunPhotos=gunPhotos.concat(old);renderRifles();},()=>old.forEach(q=>API.del("/api/gunphotos/"+q.id).catch(onWriteError)));});}
 const selHtml=(id,opts,v)=>'<select id="'+id+'" class="fieldselect">'+opts.map(([a,b])=>'<option value="'+esc(a)+'"'+(String(a)===String(v==null?"":v)?' selected':'')+'>'+esc(b)+'</option>').join("")+'</select>';
 function gearHead(title,back){$("rifSeg").hidden=!!title;$("rifHeadBack").hidden=!title;if(back)$("rifHeadBack").textContent=back;$("rifSub").hidden=!!title;$("rifTitle").textContent=title||"Gear & Ranges";}
 
 /* ----- Suppressors ----- */
+const SCOPE_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="10" width="20" height="4" rx="1.5"/><path d="M5 10V8h3v2M16 10V7h4v3M10 10V8.5h3V10"/></svg>';
 const CAN_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="15" height="6" rx="1.5"/><path d="M18 11h3v2h-3M7 9v6M11 9v6M15 9v6"/></svg>';
 function renderCans(root){
   if(canOpen&&!cans.some(c=>c.id===canOpen))canOpen=null;
@@ -4539,7 +4596,7 @@ function renderCans(root){
   const g0=canGuns(c)[0],rc=canRounds(c),tr=trips.filter(t=>t.canId===c.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
   const tname=new Map(((window.RB_TRAJ&&RB_TRAJ.all())||[]).map(x=>[x.id,x.name]));
   h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Suppressor"><h2>Details</h2><div class="grid">'+
-    field("cn_mfr","Maker",c.mfr,"text")+field("cn_model","Model",c.model,"text")+
+    picFieldHtml(c.id,canName(c),CAN_ICON)+field("cn_mfr","Maker",c.mfr,"text")+field("cn_model","Model",c.model,"text")+
     field("cn_caliber","Rated for (caliber)",c.caliber,"text")+field("cn_serial","Serial number",c.serial,"text")+
     field("cn_approved","Tax stamp approved",c.approved,"date")+
     '<div class="field"><label for="cn_gun">On gun</label>'+selHtml("cn_gun",[["","None: I pick it on each range trip"]].concat([...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(g=>[g.id,g.name||"Unnamed gun"])),g0?g0.id:"")+'</div>'+
@@ -4548,7 +4605,7 @@ function renderCans(root){
     '<section class="card" aria-label="Round count"><h2>Round count</h2><div id="cnRc"></div><div class="grid">'+
     field("cn_roundsBase","Rounds before Range Book",c.roundsBase,"number")+field("cn_cleanEvery","Clean every (rounds)",c.cleanEvery,"number")+
     field("cn_cleaned","Last cleaned",c.cleaned,"date")+'<div class="field"><span class="flabel">&nbsp;</span><button class="btn" type="button" id="cnCleaned">Cleaned today</button></div></div></section>'+
-    vaultCardHtml(c.id)+gearPhotosHtml(c.id,canName(c))+
+    vaultCardHtml(c.id)+gearPhotosHtml(c.id,canName(c)).replace('<h2>Photos</h2>','<h2>More photos</h2>')+
     '<section class="card" aria-label="Range trips with this suppressor"><h2>Range trips</h2>'+(tr.length?'<div class="cartgroup">'+tr.slice(0,12).map(t=>'<button class="loaditem" type="button" data-cantrip="'+esc(t.id)+'"><span class="t">'+esc(t.date?fmtDate(t.date):"No date")+(t.place?' · '+esc(t.place):'')+'</span><span class="d">'+esc([tname.get(t.trajId)||"",num(t.rounds)?num(t.rounds)+" rounds":""].filter(Boolean).join(" · "))+'</span></button>').join("")+'</div>':'<p class="note">No range trips with it yet. Pick it under <b>Suppressor</b> on a range trip.</p>')+'</section>'+
     '<div class="row endrow"><button class="btn danger" type="button" id="canDel">Delete suppressor</button></div>';
   root.innerHTML=h;
@@ -4556,7 +4613,7 @@ function renderCans(root){
   const drawRc=()=>{const r2=canRounds(c),parts2=[r2.base?r2.base.toLocaleString()+" before Range Book":"",r2.trip?r2.trip.toLocaleString()+" from "+r2.nTrips+" range trip"+(r2.nTrips===1?"":"s"):""].filter(Boolean);
     $("cnRc").innerHTML='<div class="rcount"><b>'+r2.total.toLocaleString()+'</b><span>rounds through it</span></div>'+(parts2.length?'<p class="note">'+parts2.join(" · ")+'</p>':'')+
       (r2.since!=null?'<p class="'+(r2.due?'err':'note')+'">'+r2.since.toLocaleString()+' round'+(r2.since===1?'':'s')+' since cleaning on '+esc(fmtDate(c.cleaned))+(r2.due?' — due for cleaning.':'.')+'</p>':'');};
-  drawRc();
+  drawRc();bindPicField(c.id);
   [["mfr",0],["model",0],["caliber",0],["serial",0],["approved",0],["notes",0],["roundsBase",1],["cleanEvery",1],["cleaned",0]].forEach(([k,isNum])=>{const el=$("cn_"+k);if(!el)return;
     el.addEventListener("input",()=>{c[k]=isNum?num(el.value):el.value;queueRifles();if(k==="mfr"||k==="model")$("rifTitle").textContent=canName(c);if(isNum||k==="cleaned")drawRc();});});
   $("cnCleaned").addEventListener("click",()=>{c.cleaned=todayStr();$("cn_cleaned").value=c.cleaned;queueRifles();drawRc();});
@@ -4565,7 +4622,9 @@ function renderCans(root){
   root.querySelectorAll("[data-cantrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.cantrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("canDel").addEventListener("click",()=>{const i=cans.indexOf(c),on=canGuns(c).map(g=>g.id),tr2=trips.filter(t=>t.canId===c.id).map(t=>t.id);
     cans=cans.filter(x=>x!==c);rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;});canOpen=null;queueRifles();renderRifles();window.scrollTo(0,0);
-    RB_UNDO("Deleted "+canName(c),()=>{cans.splice(Math.min(i,cans.length),0,c);rifles.forEach(g=>{if(on.includes(g.id))g.canId=c.id;});queueRifles();renderRifles();});});
+    const ps=gunPhotos.filter(q=>q.rifle===c.id||q.rifle===picKey(c.id));gunPhotos=gunPhotos.filter(q=>!ps.includes(q));
+    RB_UNDO("Deleted "+canName(c),()=>{cans.splice(Math.min(i,cans.length),0,c);rifles.forEach(g=>{if(on.includes(g.id))g.canId=c.id;});gunPhotos=gunPhotos.concat(ps);queueRifles();renderRifles();},
+      ()=>{if(window.GUEST)return;[c.id,picKey(c.id)].forEach(k=>{if(ps.some(q=>q.rifle===k))API.del("/api/rifles/"+k+"/photos").catch(()=>{});});});});
 }
 
 /* ----- Inventory ----- */
@@ -4637,14 +4696,15 @@ function renderScopes(root){
     h='<section class="card" aria-label="Scopes list"><div class="row"><button class="btn primary" id="scopeAdd" type="button">+ Add scope</button></div>';
     if(!scopes.length)h+='<p class="note">No scopes yet. Add the scope on each gun: its units and click value then set the dope card for every profile that uses that gun, and the reticle on the card can look like yours.</p>';
     else h+='<div class="cartgroup">'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true})).map(x=>{const gs=onGun(x);
-      return '<button class="loaditem" type="button" data-sopen="'+esc(x.id)+'"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc(scopeSpec(x))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></button>';}).join("")+'</div>';
+      const sp=picOf(x.id);
+      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc(scopeSpec(x))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';}).join("")+'</div>';
     h+='</section>';
   }else{
     const gs=onGun(sc),MIL=sc.unit==="mil",ph=RB_RETPIC(sc.id),usePic=sc.retMode==="pic";
     const TMIL=turretU(sc)==="mil",clicks=[["","Not published: check your turrets"]].concat(TMIL?[[0.1,"0.1 MIL"],[0.05,"0.05 MIL"],[0.2,"0.2 MIL"],[0.5,"0.5 MIL"]]:[[0.25,"¼ MOA"],[0.125,"⅛ MOA"],[0.5,"½ MOA"],[1,"1 MOA"]]);
     const sel=(id,opts,v)=>'<select id="'+id+'" class="fieldselect">'+opts.map(([a,b])=>'<option value="'+a+'"'+(String(a)===String(v)?' selected':'')+'>'+b+'</option>').join("")+'</select>';
     h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Scope"><h2>Details</h2><div class="grid">'+
-      field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+
+      picFieldHtml(sc.id,scopeLabel(sc),SCOPE_ICON)+field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+
       field("sc_magMin","Power from (x)",sc.magMin,"number")+field("sc_magMax","Power to (x)",sc.magMax,"number")+field("sc_obj","Objective (mm)",sc.obj,"number")+
       '<div class="field"><label for="sc_fp">Focal plane</label>'+sel("sc_fp",[["FFP","First (FFP)"],["SFP","Second (SFP)"]],sc.fp)+'</div>'+
       (sc.fp==="SFP"?field("sc_sfpTrue","Marks true at power (x)",sc.sfpTrue,"number"):'')+
@@ -4694,7 +4754,7 @@ function renderScopes(root){
   const prev=()=>{const ph=RB_RETPIC(sc.id),pic=sc.retMode==="pic"&&ph&&sc.pic&&sc.pic.ppu>0?Object.assign({url:ph.url},sc.pic):null,box=$("scPrev");if(!box)return;
     if(sc.retMode==="pic"&&ph&&!pic){box.innerHTML='<img class="scraw" src="'+esc(ph.url)+'" alt="Your reticle picture">';return;}
     box.innerHTML=RB_RET.svg({unit:sc.unit,look:sc.look,pic,view:sc.unit==="mil"?5:16,label:"Preview of this scope's reticle"});};
-  prev();
+  prev();bindPicField(sc.id);
   [["mfr",false],["model",false],["magMin",true],["magMax",true],["obj",true],["sfpTrue",true],["reticle",false],["notes",false]].forEach(([k,isNum])=>{const el=$("sc_"+k);if(!el)return;
     el.addEventListener("input",()=>{sc[k]=isNum?num(el.value):el.value;scopesChanged();if(k==="mfr"||k==="model")$("rifTitle").textContent=scopeLabel(sc);});});
   $("sc_fp").addEventListener("change",e=>{sc.fp=e.target.value;scopesChanged();renderRifles();});
@@ -4709,9 +4769,9 @@ function renderScopes(root){
   {const b=$("scPicDel");if(b)b.addEventListener("click",()=>{const ps=gunPhotos.filter(q=>q.rifle===sc.id),pic0=sc.pic;gunPhotos=gunPhotos.filter(q=>q.rifle!==sc.id);sc.pic=null;sc.retMode="plain";scopesChanged();renderRifles();
     RB_UNDO("Removed the reticle picture",()=>{gunPhotos=gunPhotos.concat(ps);sc.pic=pic0;sc.retMode="pic";scopesChanged();renderRifles();},()=>{ps.forEach(q=>API.del("/api/gunphotos/"+q.id).catch(()=>{}));});});}
   root.querySelectorAll("[data-sgun]").forEach(b=>b.addEventListener("click",()=>{gunArea="guns";rifleOpen=b.dataset.sgun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);}));
-  $("scopeDel").addEventListener("click",()=>{const i=scopes.indexOf(sc),on=rifles.filter(g=>g.scopeId===sc.id).map(g=>g.id),ps=gunPhotos.filter(q=>q.rifle===sc.id);
-    scopes=scopes.filter(x=>x!==sc);rifles.forEach(g=>{if(g.scopeId===sc.id)g.scopeId=null;});gunPhotos=gunPhotos.filter(q=>q.rifle!==sc.id);scopeOpen=null;scopesChanged();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));renderRifles();window.scrollTo(0,0);
-    RB_UNDO("Deleted "+scopeLabel(sc),()=>{scopes.splice(Math.min(i,scopes.length),0,sc);rifles.forEach(g=>{if(on.includes(g.id))g.scopeId=sc.id;});gunPhotos=gunPhotos.concat(ps);scopesChanged();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));renderRifles();},()=>{if(ps.length&&!window.GUEST)API.del("/api/rifles/"+sc.id+"/photos").catch(()=>{});});});
+  $("scopeDel").addEventListener("click",()=>{const i=scopes.indexOf(sc),on=rifles.filter(g=>g.scopeId===sc.id).map(g=>g.id),ps=gunPhotos.filter(q=>q.rifle===sc.id||q.rifle===picKey(sc.id));
+    scopes=scopes.filter(x=>x!==sc);rifles.forEach(g=>{if(g.scopeId===sc.id)g.scopeId=null;});gunPhotos=gunPhotos.filter(q=>!ps.includes(q));scopeOpen=null;scopesChanged();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));renderRifles();window.scrollTo(0,0);
+    RB_UNDO("Deleted "+scopeLabel(sc),()=>{scopes.splice(Math.min(i,scopes.length),0,sc);rifles.forEach(g=>{if(on.includes(g.id))g.scopeId=sc.id;});gunPhotos=gunPhotos.concat(ps);scopesChanged();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));renderRifles();},()=>{if(window.GUEST)return;[sc.id,picKey(sc.id)].forEach(k=>{if(ps.some(q=>q.rifle===k))API.del("/api/rifles/"+k+"/photos").catch(()=>{});});});});
 }
 
 /* ---------- components: saved bullets, powders and primers (Components tab) ---------- */
@@ -8420,7 +8480,7 @@ window.APP_showTab=showTab;
 const INFO={
   secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},
   secTWx:{t:"Conditions",b:"Temperature, altitude and wind change where the bullet lands. Wind starts at 0 on a new profile. <b>Use the weather where I am</b> fills in today's temperature and air pressure. Enter the wind's speed and the o'clock it comes from (3 is from the right, 9 from the left), and the shot angle for uphill or downhill shots.",h:"Weather where you are"},
-  secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size in the Point-blank range card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
+  secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size in the Point-blank range card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. <b>Short</b>, <b>Medium</b> and <b>Long</b> chart it to 200, 400 or 1,000 yd. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
   secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), and it becomes the first (purple) zero box under the chart; tap its circle to use it for the range table and dope card. Wind isn't included.",h:"Point-blank range"},
   secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns (a gun's scope picks MOA or MIL for you), turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds, and drag the bar under the table to change its height.",h:"Reading the results"},
   "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
@@ -8935,7 +8995,7 @@ function startTabTour(tab){
     const has=!!document.querySelector("#trajList .loaditem");
     STEPS=[
       {t:"The Shooting tab",b:"Your ballistics calculator: where the bullet goes, how far to dial or hold, printable dope cards, and the range trips you log with each profile.",go:list},
-      {el:()=>q("#newBtn"),t:"Your profiles",b:"Each profile is a gun and the ammo you shoot in it, with its zero and conditions. <b>+ New profile</b> starts one; turn on <b>Long range</b> on its chart to go past 400 yd. Tap a profile in the list to open it.",go:list},
+      {el:()=>q("#newBtn"),t:"Your profiles",b:"Each profile is a gun and the ammo you shoot in it, with its zero and conditions. <b>+ New profile</b> starts a blank one; pick <b>Short</b>, <b>Medium</b> or <b>Long</b> on its chart for 200, 400 or 1,000 yd. Tap a profile in the list to open it.",go:list},
       {el:()=>q('#trajSeg [data-area="log"]'),t:"Range log",b:"Every range trip from every profile in one place, with the rounds you've fired.",go:list},
       ...(has?[card("#secTInputs","secTInputs",null,open),card("#secTWx","secTWx",null,open),card("#secTChart","secTChart",null,open),card("#secTPbr","secTPbr",null,open),card("#secTTable","secTTable",null,open),
         card("#secTDope","secTDope",null,open),card("#secTRanges","secTRanges",null,open),card('#trajDetail [aria-label="Range trips"]',"@Range trips",null,open)]:[]),
