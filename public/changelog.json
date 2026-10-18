@@ -2,14 +2,15 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.27.1",
+      "version": "2.27.2",
       "date": "2026-10-18",
       "title": "Gear notes",
       "items": [
         "Gear & Ranges has a Notes tab: notes about your gear with a title, text, pictures and files (PDFs, manuals, receipts, spreadsheets up to 20 MB). Pin one to the top and search them all.",
         "Lock in the vault: tick it on a note to encrypt its title, text, pictures and files with your vault passphrase. Locked notes show as \"Locked note\" until the vault is unlocked. Untick it to take a note back out.",
         "Note files and pictures are included in Download backup and restored by Import.",
-        "Reloading › Components › Primers: pick from a list of 46 common primers (CCI, Federal, Winchester, Remington, Fiocchi, Murom) with their sizes, the same way as powders."
+        "Reloading › Components › Primers: pick from a list of 46 common primers (CCI, Federal, Winchester, Remington, Fiocchi, Murom) with their sizes, the same way as powders.",
+        "Reloading › Components › Bullets: pick from a list of about 750 bullets from Berger, Hornady, Sierra, Nosler, Barnes, Speer and Lapua. Search by caliber, weight and type (\"6.5 147 eld\", \"30 175 smk\"), and picking one fills in the diameter, weight, BC and length from the maker's own data."
       ]
     },
     {
