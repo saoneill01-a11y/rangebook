@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.29.2",
+      "version": "2.29.3",
       "date": "2026-10-18",
       "title": "Suppressor list",
       "items": [
@@ -10,7 +10,8 @@
         "Picking one fills in the maker, model and caliber rating, and puts the maker's length, weight, diameter, mount, full auto rating, barrel-length minimums and other limits in its notes. The full auto rating and barrel minimum also show under Details.",
         "Reloading › Reference › Library counts the suppressors too.",
         "Added Energetic Armament, Rex Silentium and Sig's SLX and SLH to the suppressor list.",
-        "Added six more Otter Creek Labs suppressors (Polonium, Polonium K, Polonium 30, Infinity 556K, Titanium 22 and OCM6)."
+        "Added six more Otter Creek Labs suppressors (Polonium, Polonium K, Polonium 30, Infinity 556K, Titanium 22 and OCM6).",
+        "How to Use › Limits now describes the trajectory solver as it is: a 3DOF point-mass model with G1 or G7, what it includes (weather, powder temperature, angle, wind, spin drift) and what it leaves out (Coriolis, and the bullet's stability near the speed of sound)."
       ]
     },
     {
