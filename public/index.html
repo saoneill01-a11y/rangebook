@@ -327,6 +327,13 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sorting{position:relative;z-index:30;opacity:.92;box-shadow:0 10px 28px rgba(0,0,0,.28)!important;cursor:grabbing;transition:none!important}
 .sortingbox [data-tooltile]:not(.sorting){transition:transform .15s}
 .toolsarr{margin:10px 2px 0}
+.arrlist{display:flex;flex-direction:column;gap:6px;max-height:min(60vh,520px);overflow:auto;padding:2px}
+.arrrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--sunk);min-height:46px}
+.arrrow.off .t{opacity:.55}.arrrow .t{flex:1 1 auto;min-width:0;font-weight:600;overflow-wrap:anywhere}.arrrow .t .note{display:block;font-weight:400;margin:0}
+.arrrow .toggle{flex:none;font-size:13.5px}.arrmv{display:flex;gap:4px;flex:none}.arrmv .btn{min-width:34px;padding:4px 6px}
+.arrgrip{flex:none;width:30px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:grab;touch-action:none}.arrgrip svg{width:20px;height:20px;fill:currentColor}
+.arrrow.sorting{background:var(--surface)}
+@media(max-width:420px){.arrmv{display:none}}
 .tooltiles{display:grid;grid-template-columns:1fr;gap:12px;margin-top:6px}
 @media(min-width:700px){.tooltiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1100px){.tooltiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -474,10 +481,12 @@ select.fieldselect{flex:0 0 auto;width:100%;padding:9px 10px;border-radius:7px;b
 @media(max-width:480px){.coldwrap{grid-template-columns:1fr}.coldsvg{margin:0 auto}}
 .rgsub{font-size:15px;margin:14px 0 6px}
 .rgedit{display:flex;flex-direction:column;gap:8px}
-.rgrow{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr)) auto;gap:6px;align-items:end}
+@media(max-width:560px){.rgedit{gap:14px}.rgrow{padding-bottom:12px;border-bottom:1px solid var(--line);border-radius:0}}
+.rgrow{display:grid;grid-template-columns:auto minmax(0,1.6fr) repeat(3,minmax(0,1fr)) auto;gap:6px;align-items:end;background:var(--surface);border-radius:8px}
+.rggrip{align-self:center;width:26px}.rgrow.sorting{box-shadow:0 8px 22px rgba(0,0,0,.25)}
 .rgrow label{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted)}
 .rgrow input{width:100%;min-width:0;padding:7px 8px;border-radius:7px;border:1px solid var(--line);background:var(--input,var(--sunk));color:var(--input-fg,var(--fg));font:inherit;font-size:16px}
-@media(max-width:560px){.rgrow{grid-template-columns:repeat(3,minmax(0,1fr)) auto}.rgrow>input[data-k="name"]{grid-column:1/-1}}
+@media(max-width:560px){.rgrow{grid-template-columns:auto repeat(3,minmax(0,1fr)) auto}.rgrow>.rggrip{grid-row:span 2}.rgrow>input[data-k="name"]{grid-column:2/-1}}
 table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
 .flabel{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
 .unitbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;min-width:5.6em;padding:0 12px;background:var(--accent);color:var(--accent-fg,#fff);border:1px solid var(--accent);border-radius:9px;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
@@ -770,6 +779,8 @@ header.hashelp>h1{padding-right:180px}
   body{padding-bottom:calc(var(--tabh) + 28px + env(safe-area-inset-bottom,0px))}
 }
 @media (min-width:761px){.moresheet{display:none!important}}
+@media (max-width:760px){.tabs .tab{order:var(--po,50)}.tabs #tab-more{order:99}.tabs .tab.phoneoff{display:none!important}.tabs #tab-tools.phoneon,.tabs #tab-help.phoneon{display:flex!important}
+  .moreitem[hidden]{display:none!important}}
 /* jump links on a load */
 #relRoot{display:flex;flex-direction:column;gap:14px}
 .jump{position:sticky;top:var(--jtop,52px);z-index:15;display:flex;gap:6px;align-items:center;overflow-x:auto;padding:6px 0 8px;margin:0 0 -6px;background:var(--bg);scrollbar-width:none;box-shadow:0 -10px 0 var(--bg),0 4px 6px -4px rgba(60,45,20,.25)}
@@ -807,12 +818,14 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 /* columns: one on phones, two on big screens */
 .cols,.col{display:flex;flex-direction:column;gap:14px;min-width:0}
 .relcols .col{display:contents}
+.tcols .col{display:contents}.tarrrow{margin:10px 2px 0}
 .o0{order:0}.o1{order:1}.o2{order:2}.o3{order:3}.o4{order:4}.o5{order:5}.o6{order:6}.o7{order:7}.o8{order:8}
 @media (min-width:1100px){
   .wrap{max-width:1280px}
   .cols{display:grid;grid-template-columns:minmax(360px,440px) minmax(0,1fr);gap:16px;align-items:start}
   .relcols{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .relcols .col{display:flex}
+  .tcols .col{display:flex}
   .cartgroup{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px}
   .cartgroup .cartname{grid-column:1/-1}
   .relcols .sumtbl th:nth-child(2),.relcols .sumtbl td:nth-child(2){display:none}
@@ -1134,6 +1147,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="moreback" id="moreBack"></div>
     <div class="morepanel" role="menu" aria-label="More">
       <div class="morewho" id="moreWho"></div>
+      <button class="moreitem" role="menuitem" id="more-home" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Home</button>
+      <button class="moreitem" role="menuitem" id="more-traj" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18C7 6 15 4 21 9"/><path d="M3 20h18"/></svg>Shooting</button>
+      <button class="moreitem" role="menuitem" id="more-rel" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l3-5 3 5v12z"/><path d="M9 15h6"/></svg>Reloading</button>
+      <button class="moreitem" role="menuitem" id="more-rifles" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg>Gear &amp; Ranges</button>
       <button class="moreitem" role="menuitem" id="more-tools" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.1L4 16.8V20h3.2l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.6-.6-.6-2.6z"/></svg>Tools</button>
       <button class="moreitem" role="menuitem" id="more-help" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>How to Use</button>
       <button class="moreitem" role="menuitem" id="more-tour" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>Take the tour</button>
@@ -1163,7 +1180,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="banner twistbanner" id="trajTwist" role="note" hidden></div>
   <div class="banner twistbanner" id="trajPart" role="note" hidden></div>
   <div class="banner samplebanner" id="trajSample" role="note" hidden><b>Sample data.</b> This profile is a made-up example to show how Range Book works. Its velocity and conditions are not real load data. Don't load or shoot anything from it without checking it against a current published load manual for your exact components, and work up safely on your own. Delete it whenever you like.</div>
-  <div class="cols">
+  <div class="cols tcols">
   <div class="col colL">
   <section class="card" aria-label="Inputs" id="secTInputs">
     <button class="sechead" type="button" id="inToggle" aria-expanded="true" aria-controls="inBody"><h2>Inputs</h2><span class="secsum" id="inSum"></span><span class="chev" aria-hidden="true"></span></button>
@@ -1256,7 +1273,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <p class="note">Path is how far above (+) or below (−) your line of sight the bullet is, for the zero you picked (the circle in its zero box). Adjust is how far to dial <b>up</b> from the zero your scope is set to. Wind drift is for a full-value crosswind; hold or dial into the wind.</p>
   </section>
 
-  <section class="card" aria-label="True up">
+  <section class="card" aria-label="True up" id="secTTrue">
     <h2>True up velocity</h2>
     <p class="note">Shot at long range and needed a different dial than the table shows? Enter what actually hit, and it works out the muzzle velocity that matches, so the table and dope card line up with your real hits. Use a distance well past your zero (<span id="tuFar">300 yd</span> or more) and a solid group.</p>
     <div class="grid">
@@ -1295,6 +1312,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </section>
   </div>
   </div>
+  <div class="row tarrrow"><button class="linkbtn" type="button" id="trajArrange">Arrange these cards</button></div>
   <div id="tripsRoot" class="tripsroot"></div>
   <div class="row endrow"><button class="btn" id="resetBtn" type="button" hidden>Reset to defaults</button><button class="btn danger" id="delBtn" type="button">Delete profile</button></div>
   <p class="note endnote" id="delNote" hidden>This is your only profile. Add another one before deleting it.</p>
@@ -1325,9 +1343,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The admin makes your account and gives you a temporary password. The first time you sign in you'll choose your own. To change it later, tap <b>More</b> at the bottom right, then <b>Account</b> (on a computer, <b>Account</b> is at the top right). Want a different name shown (on shared loads, box photos and the greeting on Home)? Ask the admin; they can change it with <b>Edit name</b> on the Admin page.</p>
       <h3>Colors</h3>
       <p>To use metric, go to <b>More → Account → Units</b> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
+      <p>On a phone, the bar along the bottom shows four tabs and <b>More</b>. To choose which four, and their order, go to <b>More → Account → Phone tab bar</b> and tap <b>Choose the tabs</b>: tick <b>In the bar</b> for up to four (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and How to Use) and drag them into order. The rest are under <b>More</b>. A computer always shows every tab along the top.</p>
       <p>Pick a color theme under <b>More → Account → Theme</b>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange or Red Night. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
       <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, the reloading loads you've worked on lately, and your <b>Most used guns</b> (your favorites first, then the guns with the most rounds, with their photos; three rows on a computer and six guns on a phone, and <b>All guns ›</b> for the rest). Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges and Tools) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
+      <p><b>Arrange Home</b> at the bottom of Home lets you put its cards in your own order (drag <b>⠿</b>, or use <b>▲</b> and <b>▼</b> on a computer) and turn off the ones you don't need. <b>Usual order</b> puts everything back. It's saved to your account, so every phone and computer shows the same Home.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <b>Shooting → Range log</b>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting profiles, ammunition from your inventory, or factory ammo from the catalog that you don't have yet (it lists the catalog loads for the gun's cartridge, and the search box finds any other). Picking ammo makes the Shooting profile for that gun the first time, and a catalog pick is added to your Ammunition list with no rounds on hand, so you can count what you shoot from it. It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
       <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, profiles, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, profile, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
@@ -1394,8 +1414,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> button shows the unit in use; tap it to switch. It sets both the card and the reticle. When the profile's gun has a scope (Gear &amp; Ranges → Scopes), the scope sets it (the button is greyed out) and the reticle can look like yours, or be a picture of it. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the profile, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
       <h3>Saved ranges</h3>
       <p>Save the places you shoot under <b>Gear &amp; Ranges → Ranges</b>: tap <b>+ New range</b>, give it a name, its address, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Changes save as you type. Under <b>Dope</b>, pick a Shooting profile to see the dial and wind for every target with it; the size column shows each target in MOA or MIL, so you can see how much room you have, and <b>Use these conditions</b> sets that profile's temperature and altitude to the range's usual ones. Each Shooting profile also has a <b>Saved ranges</b> card: pick a range there to see the same thing for that profile, and <b>Edit ranges ›</b> takes you to the range. Range names show up under <b>Where</b> on range trips.</p>
+      <p>A range's targets are listed nearest first. If you walk or shoot them in another order, drag <b>⠿</b> beside a target to move it; the dope follows your order. <b>Sort by distance</b> puts them back nearest first.</p>
       <h3>A range's address and weather</h3>
       <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>. Range Book shows what it found (up to five places, each with <b>See it on a map</b>) and asks which one is right: tap <b>Yes, use it</b> or <b>Use this one</b> and the full address goes into the Address box; <b>No</b> keeps what you had. Or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then the range's <b>Weather</b> card shows today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there; tap <b>Refresh</b> for the latest. Under <b>Dope</b>, and on a profile's <b>Saved ranges</b> card, <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
+      <h3>Put the cards in your order</h3>
+      <p><b>Arrange these cards</b>, under the last card on a profile, lets you drag the cards (Inputs, Conditions, Bullet path, Point-blank range, Range table, True up velocity, Dope card &amp; reticle, Saved ranges) into the order you want, for example the dope card first. It's one order for every profile and the Tools trajectory calculator, and the links along the top follow it. On a big screen, Inputs and Conditions keep the left column and the rest the right, each in your order. <b>Usual order</b> puts them back.</p>
       <h3>The inputs fold up on a phone</h3>
       <p>On a phone, when you open a profile the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a profile (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
@@ -1757,6 +1780,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="segtabs" id="themeMode" role="group" aria-label="Light or dark"><button type="button" data-mode="auto">Match my phone</button><button type="button" data-mode="light">Light</button><button type="button" data-mode="dark">Dark</button></div>
       <p class="note" id="themeNote">Your choice follows your account to your other devices. Red Night is always dark and keeps your eyes adjusted for low light.</p>
     </section>
+    <section class="card" aria-label="Phone tab bar"><h2>Phone tab bar</h2>
+      <p class="note" id="ptNote"></p>
+      <div class="row"><button class="btn" type="button" id="ptGo">Choose the tabs</button></div>
+    </section>
     <section class="card" aria-label="Units"><h2>Units</h2>
       <div class="segtabs" id="unitMode" role="group" aria-label="Imperial or metric"><button type="button" data-units="imperial">Imperial</button><button type="button" data-units="metric">Metric</button></div>
       <p class="note" id="unitNote">Imperial: yards, fps, inches, ft-lb, °F, mph, feet and pounds. Metric: metres, m/s, centimetres (millimetres for cartridge sizes), joules, °C, km/h and kilograms. Bullet weights and powder charges stay in grains either way. Your data doesn't change; only how it's shown. The choice follows your account to your other devices, and the exports use it too.</p>
@@ -1886,7 +1913,8 @@ window.RB_ORDER=(()=>{
   };
 })();
 /* drag to reorder: with a mouse, drag a few pixels; on a touch screen, press and hold, then drag. Alt + arrow keys move the focused item. */
-window.RB_SORT=function(box,sel,attr,done){
+window.RB_SORT=function(box,sel,attr,done,opt){
+  opt=opt||{};// opt.handle: only that part starts a drag, and right away (no press and hold)
   let st=null,drag=null,timer=null,justDragged=false;
   const ids=()=>[...box.querySelectorAll(sel)].map(el=>el.getAttribute(attr));
   const place=(x,y)=>{const el=drag.el;el.style.transform="";const r=el.getBoundingClientRect();el.style.transform="translate("+(x-drag.gx-r.left)+"px,"+(y-drag.gy-r.top)+"px)";};
@@ -1896,10 +1924,11 @@ window.RB_SORT=function(box,sel,attr,done){
       const now=ids();if(now.join("|")!==drag.before){done(now);}justDragged=true;setTimeout(()=>{justDragged=false;},350);}
     drag=null;st=null;};
   box.addEventListener("pointerdown",e=>{const el=e.target.closest(sel);if(!el||!box.contains(el)||e.button>0)return;
-    st={el,x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,touch:e.pointerType!=="mouse"};
+    if(opt.handle){const hd=e.target.closest(opt.handle);if(!hd||!el.contains(hd))return;e.preventDefault();}
+    st={el,x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,touch:!opt.handle&&e.pointerType!=="mouse"};
     if(st.touch)timer=setTimeout(begin,420);});
   window.addEventListener("pointermove",e=>{if(!st)return;st.lx=e.clientX;st.ly=e.clientY;const d=Math.hypot(e.clientX-st.x,e.clientY-st.y);
-    if(!drag){if(st.touch){if(d>10){clearTimeout(timer);st=null;}return;}if(d>6)begin();else return;}
+    if(!drag){if(st.touch){if(d>10){clearTimeout(timer);st=null;}return;}if(d>(opt.handle?2:6))begin();else return;}
     e.preventDefault();place(e.clientX,e.clientY);
     drag.el.style.visibility="hidden";const under=document.elementFromPoint(e.clientX,e.clientY);drag.el.style.visibility="";
     const t=under&&under.closest(sel);if(t&&t!==drag.el&&box.contains(t)){const all=[...box.querySelectorAll(sel)];
@@ -1915,6 +1944,39 @@ window.RB_SORT=function(box,sel,attr,done){
   box.addEventListener("keydown",e=>{if(!e.altKey)return;const el=e.target.closest(sel);if(!el)return;const all=[...box.querySelectorAll(sel)],i=all.indexOf(el);
     const back=e.key==="ArrowUp"||e.key==="ArrowLeft",fwd=e.key==="ArrowDown"||e.key==="ArrowRight";if(!back&&!fwd)return;e.preventDefault();
     if(back&&i>0)all[i-1].before(el);else if(fwd&&i<all.length-1)all[i+1].after(el);else return;el.focus();done(ids());});
+};
+/* the Arrange sheet: drag (or ▲ ▼) a list into your order, and optionally switch items on or off.
+   o = {title, note, items:[{id,label,on}], toggle:{label,max,min,maxMsg}?, onChange(ids,onIds), onReset()} */
+window.RB_ARRANGE=function(o){
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const GRIP='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>';
+  let items=o.items.map(x=>Object.assign({},x));
+  const sh=document.createElement("div");sh.className="infowrap arrwrap";
+  const T=o.toggle;
+  const draw=()=>{const L=sh.querySelector(".arrlist");
+    L.innerHTML=items.map((x,i)=>'<div class="arrrow'+(T&&!x.on?' off':'')+'" data-aid="'+esc(x.id)+'" tabindex="0" aria-label="'+esc(x.label)+', '+(i+1)+' of '+items.length+'"><span class="arrgrip" title="Drag to move">'+GRIP+'</span><span class="t">'+esc(x.label)+(x.sub?'<span class="note">'+esc(x.sub)+'</span>':'')+'</span>'+
+      (T?'<label class="toggle"><input type="checkbox" data-aon'+(x.on?' checked':'')+(x.lock?' disabled':'')+'> '+esc(T.label)+'</label>':'')+
+      '<span class="arrmv"><button type="button" class="btn small" data-aup aria-label="Move '+esc(x.label)+' up"'+(i===0?' disabled':'')+'>▲</button><button type="button" class="btn small" data-adn aria-label="Move '+esc(x.label)+' down"'+(i===items.length-1?' disabled':'')+'>▼</button></span></div>').join("");};
+  const msg=t=>{const m=sh.querySelector(".arrmsg");m.textContent=t||"";m.hidden=!t;};
+  const fire=()=>{o.onChange(items.map(x=>x.id),items.filter(x=>!T||x.on).map(x=>x.id));};
+  sh.innerHTML='<div class="infoback" data-ax></div><div class="infosheet arrsheet" role="dialog" aria-modal="true" aria-label="'+esc(o.title)+'"><div class="infohead"><h2>'+esc(o.title)+'</h2><button class="infox" type="button" data-ax aria-label="Close">✕</button></div>'+
+    (o.note?'<p class="note" style="margin:0 0 8px">'+o.note+'</p>':'')+'<div class="arrlist"></div><p class="err arrmsg" hidden></p>'+
+    '<div class="row" style="margin-top:10px"><button class="btn primary" type="button" data-ax>Done</button>'+(o.onReset?'<button class="btn" type="button" data-areset>Usual order</button>':'')+'</div></div>';
+  document.body.appendChild(sh);draw();requestAnimationFrame(()=>sh.classList.add("on"));
+  const close=()=>{sh.classList.remove("on");setTimeout(()=>sh.remove(),180);};
+  RB_SORT(sh.querySelector(".arrlist"),".arrrow","data-aid",ids=>{items=ids.map(id=>items.find(x=>x.id===id));draw();fire();},{handle:".arrgrip"});
+  sh.addEventListener("click",e=>{
+    if(e.target.closest("[data-ax]")){close();return;}
+    if(e.target.closest("[data-areset]")){o.onReset();items=o.items0?o.items0():items;close();return;}
+    const row=e.target.closest(".arrrow");if(!row)return;const i=items.findIndex(x=>x.id===row.dataset.aid);
+    const mv=d=>{const j=i+d;if(j<0||j>=items.length)return;const [x]=items.splice(i,1);items.splice(j,0,x);draw();fire();const b=sh.querySelector('[data-aid="'+CSS.escape(x.id)+'"] '+(d<0?"[data-aup]":"[data-adn]"));if(b&&!b.disabled)b.focus();else{const r=sh.querySelector('[data-aid="'+CSS.escape(x.id)+'"]');if(r)r.focus();}};
+    if(e.target.closest("[data-aup]"))mv(-1);else if(e.target.closest("[data-adn]"))mv(1);});
+  sh.addEventListener("change",e=>{const cb=e.target.closest("[data-aon]");if(!cb)return;const row=cb.closest(".arrrow"),x=items.find(y=>y.id===row.dataset.aid);
+    const n=items.filter(y=>y.on).length;
+    if(cb.checked&&T.max&&n>=T.max){cb.checked=false;msg(T.maxMsg||("Pick up to "+T.max+"."));return;}
+    if(!cb.checked&&T.min&&n<=T.min){cb.checked=true;msg(T.minMsg||("Keep at least "+T.min+"."));return;}
+    msg("");x.on=cb.checked;row.classList.toggle("off",!x.on);fire();});
+  sh.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
 };
 /* weather and places: today's weather from Open-Meteo (where you are, or at a saved range), and finding a range's address on OpenStreetMap */
 window.RB_WX=(()=>{
@@ -2391,6 +2453,16 @@ window.RB_TRAJ={
       at(x){return {path:Sd.at(Sd.G,x)*AC+sight(x),drift1:dr(1,x),drift:dr((L.wind||0)*crossFactor(L),x),spin:sg!=null?(spinIn(sg,S.at(S.t,x))||0):0,v:Sd.at(Sd.v,x),t:Sd.at(Sd.t,x)};}};
   }
 };
+/* your own order for a profile's cards (one order for every profile and the Tools calculator). On a phone or tablet the cards
+   are one list; on a big screen Inputs and Conditions keep the left column and the rest the right, each in your order. */
+const TCARDS=[["secTInputs","Inputs"],["secTWx","Conditions"],["secTChart","Bullet path"],["secTPbr","Point-blank range"],["secTTable","Range table"],["secTTrue","True up velocity"],["secTDope","Dope card & reticle"],["secTRanges","Saved ranges"]];
+const tcardIds=()=>{const o=RB_ORDER.get("tcards")||[],all=TCARDS.map(x=>x[0]);return o.filter(k=>all.includes(k)).concat(all.filter(k=>!o.includes(k)));};
+function applyCardOrder(){const ids=tcardIds();ids.forEach((id,i)=>{const el=$(id);if(el)el.style.order=i;});
+  const J=$("trajJump");if(J)J.querySelectorAll(".jumplinks a").forEach(a=>{const i=ids.indexOf((a.getAttribute("href")||"").slice(1));a.style.order=i>=0?i:99;});}
+applyCardOrder();RB_ORDER.on(applyCardOrder);
+$("trajArrange").addEventListener("click",()=>RB_ARRANGE({title:"Arrange cards",note:"Drag the cards into the order you want. It's the same for every profile and the Tools calculator. On a big screen, Inputs and Conditions stay in the left column, each column in your order.",
+  items:tcardIds().map(id=>({id,label:TCARDS.find(x=>x[0]===id)[1]})),
+  onChange:ids=>{RB_ORDER.set("tcards",ids);applyCardOrder();},onReset:()=>{RB_ORDER.set("tcards",null);applyCardOrder();}}));
 $("trajFav").addEventListener("click",()=>{const L=cur();if(SCR)return;if(L.fav)delete L.fav;else L.fav=true;save();fillInputs();});
 $("trajBack").addEventListener("click",()=>{showTrajView("list");window.scrollTo(0,0);});
 // common target sizes: 4, 6 and 8 in, or 10, 15 and 20 cm in metric
@@ -2625,7 +2697,7 @@ function rangeDopeHtml(r,L){
   if(!(r.targets||[]).length)return h+'<p class="note">No targets yet. Add them under <b>Gear &amp; Ranges → Ranges</b>.</p>';
   const MIL=B.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",f1=n=>{const s2=n.toFixed(1);return s2==="-0.0"?"0.0":s2;};
   h+='<div class="tablewrap"><table class="dope rgtbl"><thead><tr><th style="text-align:left">Target</th><th>'+U.u("yd")+'</th><th>Up<br>('+UN+')</th><th>Wind<br>('+UN+')</th><th>Size<br>('+UN+')</th></tr></thead><tbody>'+
-    r.targets.slice().sort((a,b)=>(num(a.dist)||0)-(num(b.dist)||0)).map(t=>{const d=num(t.dist),ang=num(t.angle)||0;
+    (r.manual?r.targets.slice():r.targets.slice().sort((a,b)=>(num(a.dist)||0)-(num(b.dist)||0))).map(t=>{const d=num(t.dist),ang=num(t.angle)||0;
       if(!(d>0))return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td colspan="4" class="note">Add its distance</td></tr>';
       const Bt=ang?RB_TRAJ.solve(L.id,{angle:ang}):B;if(d>Bt.last)return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td>'+U.n("yd",d,0)+'</td><td colspan="3" class="note">Too far for this profile</td></tr>';
       const a2=Bt.at(d),per=d*UF/100,sz=num(t.size);
@@ -2669,14 +2741,14 @@ function rangeEditHtml(r){
     '<div class="field"><label for="rg_temp">Usual temperature ('+U.u("F")+')</label><input id="rg_temp" type="number" inputmode="decimal" step="any"></div>'+
     '<div class="field"><label for="rg_alt">Altitude ('+U.u("ft")+')</label><input id="rg_alt" type="number" inputmode="numeric" step="any"></div>'+
     '<div class="field wide"><label for="rg_notes">Notes</label><input id="rg_notes" value="'+escL(r.notes||"")+'" placeholder="Wind flags, best time of day, rules"></div></div>'+
-    '<h3 class="rgsub">Targets</h3><div class="rgedit">'+(r.targets||[]).map((t,i)=>'<div class="rgrow" data-ti="'+i+'">'+
+    '<h3 class="rgsub">Targets</h3><div class="rgedit">'+(r.targets||[]).map((t,i)=>'<div class="rgrow" data-ti="'+i+'" data-tid="'+escL(t.id||("i"+i))+'"><span class="arrgrip rggrip" title="Drag to move" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></span>'+
       '<input data-k="name" aria-label="Target name" value="'+escL(t.name||"")+'" placeholder="Target '+(i+1)+'">'+
       '<label>'+U.u("yd")+'<input data-k="dist" type="number" inputmode="numeric" step="any" aria-label="Distance"></label>'+
       '<label>Angle °<input data-k="angle" type="number" inputmode="decimal" step="any" aria-label="Angle up or down, degrees" placeholder="0"></label>'+
       '<label>Size '+U.u("in")+'<input data-k="size" type="number" inputmode="decimal" step="any" aria-label="Target size" placeholder="opt."></label>'+
       '<button class="btn danger small" type="button" data-rgdel="'+i+'" aria-label="Delete this target">✕</button></div>').join("")+'</div>'+
-    '<div class="row"><button class="btn" id="rg_add" type="button">+ Target</button></div>'+
-    '<p class="note">Angle is how far up (+) or down (−) you shoot at that target, in degrees; your rangefinder may show it.</p>';
+    '<div class="row"><button class="btn" id="rg_add" type="button">+ Target</button>'+(r.manual&&(r.targets||[]).length>1?'<button class="btn" id="rg_sort" type="button">Sort by distance</button>':'')+'</div>'+
+    '<p class="note">Angle is how far up (+) or down (−) you shoot at that target, in degrees; your rangefinder may show it. '+((r.targets||[]).length>1?(r.manual?'The targets are in your own order, and the dope follows it. Drag <b>⠿</b> to move one.':'The dope lists them nearest first; drag <b>⠿</b> to put them in your own order, like the order you walk or shoot them.'):'')+'</p>';
 }
 function bindRangeEdit(box,r,changed,redraw){
   const ch=()=>{save();if(changed)changed();};
@@ -2712,6 +2784,9 @@ function bindRangeEdit(box,r,changed,redraw){
     an.addEventListener("input",()=>{const v=num(an.value);t.angle=v!=null&&Math.abs(v)<=60?v:null;ch();});
     sz.addEventListener("input",()=>{t.size=num(U.read(sz,"in",t.size));ch();});});
   box.querySelectorAll("[data-rgdel]").forEach(b=>b.addEventListener("click",()=>{r.targets.splice(+b.dataset.rgdel,1);ch();redraw();}));
+  // your own order for the targets (the dope follows it); Sort by distance goes back to nearest first
+  {const ed=box.querySelector(".rgedit");if(ed)RB_SORT(ed,".rgrow","data-tid",ids=>{const by=new Map(r.targets.map((t,i)=>[t.id||("i"+i),t]));r.targets=ids.map(id=>by.get(id)).filter(Boolean);r.manual=true;ch();redraw();},{handle:".rggrip"});}
+  {const sb=$("rg_sort");if(sb)sb.addEventListener("click",()=>{r.targets.sort((a,b)=>(num(a.dist)||0)-(num(b.dist)||0));delete r.manual;ch();redraw();});}
   $("rg_add").addEventListener("click",()=>{r.targets=r.targets||[];const last=r.targets[r.targets.length-1];r.targets.push({id:rgId(),name:"",dist:last&&num(last.dist)?num(last.dist)+(U.metric?100/0.9144:100):null,angle:null,size:null});ch();redraw();
     const rows=box.querySelectorAll(".rgrow");const nm=rows.length&&rows[rows.length-1].querySelector('[data-k="name"]');if(nm)nm.focus();});
 }
@@ -8062,6 +8137,17 @@ function fitHomeGuns(){const g=$("homeGuns");if(!g)return;const items=[...g.chil
   const cols=window.matchMedia("(max-width:760px)").matches?0:(getComputedStyle(g).gridTemplateColumns||"").split(" ").filter(Boolean).length;
   const max=cols?cols*3:6;items.forEach((el,i)=>{el.hidden=i>=max;});const mo=$("homeGunsMore");if(mo)mo.hidden=items.length<=max;}
 window.addEventListener("resize",()=>{clearTimeout(fitHomeGuns.t);fitHomeGuns.t=setTimeout(fitHomeGuns,150);});
+const HOME_SECS=[["quick","Start a range day and quick buttons"],["alerts","Needs attention","Only shows when something does"],["year","This month and year"],["trips","Recent range trips"],["reload","Reloading lately","Only shows when you have loads"],["guns","Most used guns"]];
+function arrangeHome(){
+  const ord=RB_ORDER.get("home")||[],ids=HOME_SECS.map(x=>x[0]).sort((a,b)=>{const i=ord.indexOf(a),j=ord.indexOf(b);return (i<0?99+HOME_SECS.findIndex(x=>x[0]===a):i)-(j<0?99+HOME_SECS.findIndex(x=>x[0]===b):j);});
+  const hid=RB_ORDER.get("homeHide")||[];
+  RB_ARRANGE({title:"Arrange Home",note:"Drag the cards into the order you want, and turn off any you don't need. Your order is saved to your account.",
+    items:ids.map(id=>{const d=HOME_SECS.find(x=>x[0]===id);return {id,label:d[1],sub:d[2]||"",on:!hid.includes(id),lock:id==="quick"};}),
+    toggle:{label:"Show"},
+    onChange:(order,on)=>{RB_ORDER.set("home",order);RB_ORDER.set("homeHide",HOME_SECS.map(x=>x[0]).filter(id=>!on.includes(id)));renderHome();},
+    onReset:()=>{RB_ORDER.set("home",null);RB_ORDER.set("homeHide",null);renderHome();}});
+}
+RB_ORDER.on(()=>{try{if($("homeRoot")&&!$("homeRoot").querySelector(".note:only-child"))renderHome();}catch(e){}});
 function renderHome(){
   const root=$("homeRoot");if(!root)return;
   const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],tname=Object.fromEntries(T.map(t=>[t.id,t.name]));
@@ -8072,7 +8158,7 @@ function renderHome(){
   const tripsYear=live.filter(t=>String(t.date||"").startsWith(yr)).length;
   let loaded=0;loads.forEach((L,id)=>{if(!isMine(id))return;(L.batches||[]).forEach(b=>{if(String(b.date||"").startsWith(yr))loaded+=b.n||0;});});
   $("homeTitle").textContent=ME&&ME.name&&ME.username!=="guest"?"Hi, "+(n=>n.charAt(0).toUpperCase()+n.slice(1))(ME.name.split(" ")[0]):"Range Book";
-  let h='<section class="card" aria-label="Quick start"><div class="row homeacts"><button class="btn primary" id="hNewTrip" type="button">Start a range day</button><button class="btn" id="hNewLoad" type="button">+ New reloading load</button><button class="btn" id="hCalc" type="button">Trajectory calculator</button><button class="btn" id="hLog" type="button">Range log</button><button class="btn" id="hTargets" type="button">Tools</button></div>';
+  let h='<section class="card" aria-label="Quick start" data-hsec="quick"><div class="row homeacts"><button class="btn primary" id="hNewTrip" type="button">Start a range day</button><button class="btn" id="hNewLoad" type="button">+ New reloading load</button><button class="btn" id="hCalc" type="button">Trajectory calculator</button><button class="btn" id="hLog" type="button">Range log</button><button class="btn" id="hTargets" type="button">Tools</button></div>';
   if(homePick){
     // range day: pick the gun, then what you're shooting through it; makes the trip and fills in the weather
     const used={};live.forEach(t=>{used[t.trajId]=Math.max(used[t.trajId]||0,Date.parse(t.date||0)||0);});
@@ -8120,13 +8206,13 @@ function renderHome(){
   parts.forEach(p=>{const rc=partRounds(p),nm=esc(partName(p));
     if(rc.pct>=80)alerts.push({t:'<b>'+nm+'</b> ('+partKind(p).toLowerCase()+'): '+Math.round(rc.pct)+'% of its barrel life used ('+rc.total.toLocaleString()+' rounds)',go:"part:"+p.id});
     if(rc.due)alerts.push({t:'<b>'+nm+'</b> ('+partKind(p).toLowerCase()+') is due for cleaning: '+rc.since.toLocaleString()+' rounds since '+esc(fmtDate(p.cleaned)),go:"part:"+p.id});});
-  if(alerts.length)h+='<section class="card homealerts" aria-label="Needs attention"><h2>Needs attention</h2><div class="cartgroup">'+alerts.map(a=>'<button class="loaditem" type="button" data-hgo="'+esc(a.go)+'"><span class="t">'+a.t+'</span></button>').join("")+'</div></section>';
-  h+='<section class="card" aria-label="This year"><div class="tiles">'+
+  if(alerts.length)h+='<section class="card homealerts" aria-label="Needs attention" data-hsec="alerts"><h2>Needs attention</h2><div class="cartgroup">'+alerts.map(a=>'<button class="loaditem" type="button" data-hgo="'+esc(a.go)+'"><span class="t">'+a.t+'</span></button>').join("")+'</div></section>';
+  h+='<section class="card" aria-label="This year" data-hsec="year"><div class="tiles">'+
     [[mon,"rounds fired this month"],[year,"rounds fired in "+yr],[tripsYear,"range trips in "+yr],[loaded,"rounds loaded in "+yr]].map(([v,l])=>'<div class="tile"><b>'+v.toLocaleString()+'</b><span>'+l+'</span></div>').join("")+
     '</div><p class="note">Rounds fired come from your range trips; rounds loaded from the batches you log on Reloading.</p></section>';
   // recent range trips
   const recent=[...live].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0)).slice(0,5);
-  h+='<section class="card" aria-label="Recent range trips"><div class="h2row"><h2>Recent range trips</h2><button class="linkbtn" type="button" id="hSeeLog">See the whole range log</button></div>';
+  h+='<section class="card" aria-label="Recent range trips" data-hsec="trips"><div class="h2row"><h2>Recent range trips</h2><button class="linkbtn" type="button" id="hSeeLog">See the whole range log</button></div>';
   if(!recent.length)h+='<p class="note">No range trips yet. Tap <b>+ New range trip</b>, pick the profile you\'re shooting, and log the day.</p>';
   else h+='<div class="cartgroup">'+recent.map(t=>{const s=t.sum||{};const thumb=s.photoId?'<img alt="" loading="lazy" src="'+esc("/api/photos/"+s.photoId)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>';
       const d=[num(t.rounds)?num(t.rounds)+" rounds":"",num(t.distance)?U.s("yd",num(t.distance),0):"",num(t.avgVel)?U.s("fps",num(t.avgVel),0,true):""].filter(Boolean).join(" · ");
@@ -8135,7 +8221,7 @@ function renderHome(){
   // reloading loads worked on lately
   const last=L=>[...(L.groups||[]).map(g=>g.date),...(L.batches||[]).map(b=>b.date)].filter(Boolean).sort().pop()||"";
   const rl=[...loads.entries()].filter(([id])=>isMine(id)).map(([id,L])=>({id,L,d:last(L)})).filter(x=>x.d).sort((a,b)=>b.d.localeCompare(a.d)).slice(0,4);
-  if(rl.length)h+='<section class="card" aria-label="Recent reloading"><h2>Reloading lately</h2><div class="cartgroup">'+rl.map(x=>'<button class="loaditem" type="button" data-hload="'+esc(x.id)+'"><span class="t">'+esc(x.L.title||"Untitled load")+'</span><span class="d">'+esc([x.L.cartridge,(()=>{const n=(x.L.ladders||[]).length;return n>1?n+" ladders · ":"";})()+(x.L.groups||[]).length+" groups",(x.L.batches||[]).length?(x.L.batches||[]).reduce((a,b)=>a+(b.n||0),0)+" loaded":""].filter(Boolean).join(" · "))+'</span><span class="m">Last worked on '+esc(fmtDate(x.d))+'</span></button>').join("")+'</div></section>';
+  if(rl.length)h+='<section class="card" aria-label="Recent reloading" data-hsec="reload"><h2>Reloading lately</h2><div class="cartgroup">'+rl.map(x=>'<button class="loaditem" type="button" data-hload="'+esc(x.id)+'"><span class="t">'+esc(x.L.title||"Untitled load")+'</span><span class="d">'+esc([x.L.cartridge,(()=>{const n=(x.L.ladders||[]).length;return n>1?n+" ladders · ":"";})()+(x.L.groups||[]).length+" groups",(x.L.batches||[]).length?(x.L.batches||[]).reduce((a,b)=>a+(b.n||0),0)+" loaded":""].filter(Boolean).join(" · "))+'</span><span class="m">Last worked on '+esc(fmtDate(x.d))+'</span></button>').join("")+'</div></section>';
   // most used guns: favorites (starred on Gear & Ranges) first, then by rounds fired; one tile per gun (a gun with several
   // uppers is one tile). fitHomeGuns() shows 3 rows on a computer and 6 guns on a phone. (2.18.5)
   if(rifles.length){const seen=new Set(),G=[];
@@ -8144,12 +8230,16 @@ function renderHome(){
       G.push({r,sb,fav:sb.some(x=>x.fav),tot,rc:rc||lr,nm:lo?buildName(r):(r.name||"Unnamed gun"),ph:sb.map(x=>gunPhotosOf(x.id)[0]).find(Boolean)});});
     G.sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)||b.tot-a.tot||a.nm.localeCompare(b.nm,undefined,{numeric:true}));
     const icon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-    h+='<section class="card" aria-label="Most used guns"><h2>Most used guns</h2><div class="cartgroup" id="homeGuns">'+G.map(x=>{const rc=x.rc||{},life=rc.life!=null?rc.life:null;
+    h+='<section class="card" aria-label="Most used guns" data-hsec="guns"><h2>Most used guns</h2><div class="cartgroup" id="homeGuns">'+G.map(x=>{const rc=x.rc||{},life=rc.life!=null?rc.life:null;
       return '<button class="loaditem withthumb" type="button" data-hgo="rifle:'+esc(x.r.id)+'"><span class="lthumb">'+(x.ph?'<img alt="" loading="lazy" src="'+esc(x.ph.url)+'">':icon)+'</span><span class="ltext grow"><span class="t">'+(x.fav?'<span class="favmark" title="Favorite">'+favSvg(true)+'</span> ':'')+esc(x.nm)+'</span>'+
         '<span class="m">'+(x.tot||0).toLocaleString()+' rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(x.sb.length>1?' · '+x.sb.length+' uppers':'')+'</span>'+
         (life>0?'<span class="lifebar mini'+(rc.pct>=80?' warn':'')+'"><span style="width:'+Math.min(100,rc.pct).toFixed(1)+'%"></span></span>':'')+'</span></button>';}).join("")+'</div>'+
       '<div class="row" id="homeGunsMore" hidden><button class="linkbtn" type="button" data-hgo="guns">All '+G.length+' guns ›</button></div></section>';}
+  h+='<div class="row endrow homearr"><button class="linkbtn" type="button" id="hArrange">Arrange Home</button></div>';
   root.innerHTML=h;
+  // your order for Home's cards, and the ones you've hidden
+  RB_ORDER.apply("home",root,"[data-hsec]","data-hsec");{const hid=RB_ORDER.get("homeHide")||[];root.querySelectorAll("[data-hsec]").forEach(x=>{if(hid.includes(x.dataset.hsec))x.hidden=true;});}
+  $("hArrange").addEventListener("click",arrangeHome);
   fitHomeGuns();
   $("hNewTrip").addEventListener("click",()=>{homePick=homePick?false:true;renderHome();});
   root.querySelectorAll("[data-hgun]").forEach(b=>b.addEventListener("click",()=>{homePick={gun:b.dataset.hgun};renderHome();}));
@@ -8570,12 +8660,19 @@ let confirmSignOut=false;
 let started=false, REL=null, ME=null;
 const tabs=["home","traj","rel","help","brass","rnotes","targets","log","rifles","tools","admin","account","sheetimp"];
 const TAB_PARENT={brass:"rel",rnotes:"rel",targets:"tools",log:"traj",sheetimp:"account"};
+// the phone's bottom bar: your choice of up to four tabs (the rest go under More)
+const PHONE_TABS=[["home","Home"],["traj","Shooting"],["rel","Reloading"],["rifles","Gear & Ranges"],["tools","Tools"],["help","How to Use"]];
+const phoneTabs=()=>{const v=RB_ORDER.get("phonetabs");const ok=Array.isArray(v)?v.filter(k=>PHONE_TABS.some(x=>x[0]===k)).slice(0,4):[];return ok.length?ok:["home","traj","rel","rifles"];};
+function applyPhoneTabs(){const on=phoneTabs();
+  PHONE_TABS.forEach(([k])=>{const b=$("tab-"+k),i=on.indexOf(k);if(b){b.classList.toggle("phoneon",i>=0);b.classList.toggle("phoneoff",i<0);b.style.setProperty("--po",i>=0?i:50);}
+    const m=$("more-"+k);if(m)m.hidden=i>=0;});
+  const n=$("ptNote");if(n)n.textContent="On your phone the bar shows "+on.map(k=>PHONE_TABS.find(x=>x[0]===k)[1]).join(", ")+" and More.";}
 function showTab(t,remember){
   if(t==="admin"&&!(ME&&ME.isAdmin))t="home";
   if(t==="traj"&&window.RB_TRAJ&&RB_TRAJ.scratchOff)RB_TRAJ.scratchOff(); // the calculator's cards go back to Shooting
   {const hb=$("helpBackBtn");if(hb&&t!=="help")hb.hidden=true;}
   tabs.forEach(k=>{const on=k===t;const b=$("tab-"+k);if(b)b.setAttribute("aria-selected",(on||TAB_PARENT[t]===k)?"true":"false");$("panel-"+k).hidden=!on;});
-  $("tab-more").classList.toggle("on",["help","admin","account","tools","targets","sheetimp"].includes(t));closeMore();
+  $("tab-more").classList.toggle("on",["admin","account","sheetimp"].includes(t)||PHONE_TABS.some(([k])=>(k===t||TAB_PARENT[t]===k)&&!phoneTabs().includes(k)));closeMore();
   if(remember!==false)window.scrollTo(0,0);
   if(remember!==false&&!GUEST){try{localStorage.setItem("rangebook.tab",t);}catch(e){}}
   if(t==="traj"){window.dispatchEvent(new Event("resize"));try{if(window.RB_TRAJ_LIST)RB_TRAJ_LIST();}catch(e){}}
@@ -8939,7 +9036,13 @@ async function startApp(user,api){
   $("moreBack").addEventListener("click",closeMore);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMore();});
   setupGoUp();setupPullRefresh();
-  ["help","admin","account","tools"].forEach(k=>$("more-"+k).addEventListener("click",()=>showTab(k)));
+  ["help","admin","account","tools","home","traj","rel","rifles"].forEach(k=>$("more-"+k).addEventListener("click",()=>showTab(k)));
+  applyPhoneTabs();RB_ORDER.on(applyPhoneTabs);
+  $("ptGo").addEventListener("click",()=>{const cur=phoneTabs(),all=PHONE_TABS.map(x=>x[0]),ids=cur.concat(all.filter(k=>!cur.includes(k)));
+    RB_ARRANGE({title:"Phone tab bar",note:"Pick up to four tabs for the bar along the bottom of your phone, and drag them into order. The rest are under <b>More</b>. On a computer every tab shows at the top.",
+      items:ids.map(id=>({id,label:PHONE_TABS.find(x=>x[0]===id)[1],on:cur.includes(id)})),toggle:{label:"In the bar",max:4,min:1,maxMsg:"The bar holds four tabs plus More. Turn one off first.",minMsg:"Keep at least one tab in the bar."},
+      onChange:(order,on)=>{RB_ORDER.set("phonetabs",order.filter(k=>on.includes(k)));applyPhoneTabs();},
+      onReset:()=>{RB_ORDER.set("phonetabs",null);applyPhoneTabs();}});});
   $("more-new").addEventListener("click",showWhatsNew);$("updSee").addEventListener("click",showWhatsNew);$("updReload").addEventListener("click",reloadForUpdate);
   setupImport();
   $("updX").addEventListener("click",()=>{$("updBanner").hidden=true;if(UPD_VER)updDismissed=UPD_VER;try{localStorage.setItem("rb.seenVer",CHANGELOG.releases[0].version);}catch(e){}});
@@ -9008,7 +9111,10 @@ const FEEDBACK_EMAIL="",FEEDBACK_GH="https://github.com/saoneill01-a11y/rangeboo
   if(FEEDBACK_EMAIL){m.href="mailto:"+FEEDBACK_EMAIL+"?subject="+encodeURIComponent("Range Book feedback")+"&body="+encodeURIComponent("What happened, or what's your idea?"+body);m.hidden=false;}
   g.href=FEEDBACK_GH+"?body="+encodeURIComponent("What happened, or what's your idea?"+body);})();
 function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined,order:RB_ORDER.all()};}
-window.RB_PREFS_SAVE=()=>{clearTimeout(window.RB_PREFS_SAVE.t);window.RB_PREFS_SAVE.t=setTimeout(()=>{if(!GUEST)API.put("/api/doc/prefs",{data:prefsData()}).catch(()=>{});},600);};
+{let pt=null;const go=()=>{clearTimeout(pt);pt=null;if(!GUEST)API.put("/api/doc/prefs",{data:prefsData()}).catch(()=>{});};
+  window.RB_PREFS_SAVE=()=>{clearTimeout(pt);pt=setTimeout(go,300);};
+  // leaving the page with a change still waiting: send it now
+  window.addEventListener("pagehide",()=>{if(pt)go();});document.addEventListener("visibilitychange",()=>{if(document.hidden&&pt)go();});}
 function betaNotice(then){
   const v=appVersion();let local=null;try{local=localStorage.getItem("rangebook.betaSeen");}catch(e){}
   if(!v||BETA_SEEN===v||(GUEST||BETA_SEEN==null)&&local===v){then();return;}

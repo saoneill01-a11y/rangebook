@@ -2,7 +2,19 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.23.1",
+      "version": "2.24.0",
+      "date": "2026-10-17",
+      "title": "Arrange things your way",
+      "items": [
+        "Arrange Home (bottom of Home): drag its cards into your order and turn off the ones you don't need.",
+        "Phone tab bar (More → Account): pick which four tabs are in the bar along the bottom (Home, Shooting, Reloading, Gear & Ranges, Tools or How to Use) and their order; the rest are under More.",
+        "Arrange these cards on a Shooting profile: put the cards in your order (dope card first, say). One order for every profile and the Tools calculator; the links at the top follow it.",
+        "A saved range's targets can be dragged into your own order (the order you walk or shoot them); the dope follows it, and Sort by distance puts them back.",
+        "Your layout is saved to your account, so every phone and computer matches."
+      ]
+    },
+    {
+      "version": "2.23",
       "date": "2026-10-17",
       "title": "Compare trajectories and check a chronograph file",
       "items": [
