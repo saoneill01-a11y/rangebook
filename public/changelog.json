@@ -2,7 +2,16 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.24.2",
+      "version": "2.25.0",
+      "date": "2026-10-17",
+      "title": "Links to the rest of Range Book",
+      "items": [
+        "When a note or How to Use mentions another part of Range Book, the name is now an underlined link (like Gear & Ranges › Ranges). Tap it to go straight there: the right tab, Gear & Ranges area, Components list, tool, Account card or How to Use section.",
+        "Paths use › instead of →, and awkward notes were reworded, like \"Measure sight height as How to Use explains\" and \"When you pick this gun on Shooting or Reloading, you'll be asked which barrel you're using.\""
+      ]
+    },
+    {
+      "version": "2.24",
       "date": "2026-10-17",
       "title": "Arrange things your way",
       "items": [
