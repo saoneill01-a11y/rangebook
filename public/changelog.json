@@ -2,14 +2,15 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.28.0",
+      "version": "2.28.1",
       "date": "2026-10-18",
       "title": "Built in Library",
       "items": [
-        "Home has a Built in Library card: how many bullets, cartridges, powders, factory loads, scopes and primers are built in. Tap a number to open that list.",
+        "Home has a Built in Library card: how many bullets, cartridges, powders, factory ammo, scopes and primers are built in. Tap a number to open that list.",
         "Reloading › Reference opens on a new Library page that lists everything built in with its count, plus the bullets by maker.",
         "On a computer, Home puts Recent range trips and Recent reloading side by side, gives Most used guns its own column on the right, and runs Built in Library across the bottom. Tablets get the side-by-side cards; phones are unchanged.",
-        "Reloading lately is now called Recent reloading."
+        "Reloading lately is now called Recent reloading.",
+        "The Library's \"factory loads\" count is now called factory ammo, to match Gear & Ranges › Ammo."
       ]
     },
     {
