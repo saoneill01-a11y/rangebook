@@ -2,9 +2,9 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.30.2",
+      "version": "2.30.3",
       "date": "2026-10-18",
-      "title": "Coriolis, and a check of the ballistics math",
+      "title": "Coriolis, and a check of the ballistics math and cartridge safety",
       "items": [
         "Shooting: with the Long chart picked, Conditions has a Coriolis switch. Enter your latitude (or use your location or a saved range) and the direction of fire, and the Up numbers, reticle holds, range table, dope card and Field mode include it.",
         "Use phone compass reads the direction of fire from the phone (iPhones ask to allow motion access the first time).",
@@ -17,7 +17,15 @@
         "A shot angle of 90° or more now shows an error instead of being quietly treated as level.",
         "True up velocity includes the Coriolis up/down part when Coriolis is on, so an east- or west-facing hit isn't blamed on velocity.",
         "Small consistency fixes: one energy constant everywhere (Shooting and Reloading energies now match), the temperature-sensitivity adjustment assumes 59°F when today's temperature is blank (as the solver does), and Tools fill in a profile's point-blank zero when that's the one picked.",
-        "Reference › Glossary: SD says how it's worked out (dividing by the number of shots) and how that compares with chronographs that divide by one less."
+        "Reference › Glossary: SD says how it's worked out (dividing by the number of shots) and how that compares with chronographs that divide by one less.",
+        "Field mode and a saved range's dope now have a Spin R column, like the dope card. Before, they left spin drift out of the wind hold (2 to 5 clicks at 600–1,000 yd for many rifles).",
+        "Spin drift is now measured from your zero, the same way as Coriolis. With a 100 yd zero this changes it by less than 0.1 MOA; with a 300 yd zero, about one click at 1,000 yd.",
+        "New Plastic tip length box (Shooting and Tools › Twist and stability). A plastic tip adds length but almost no weight, so tipped bullets (ELD-M, A-Tip, Tipped MatchKing…) are more stable than the plain Miller formula says, and drift a little more: up to about 0.4 MOA at 1,000 yd.",
+        "Stability uses one limit everywhere: 1.5 or more is fully stable, 1.0 to 1.5 is marginal (the stability line and How to Use said 1.4).",
+        "Cartridge checks, from an independent check against SAAMI's list of unsafe gun and ammo combinations: 9mm NATO is now its own cartridge, with a Check first note in a 9mm Luger gun (SAAMI lists it as unsafe; many makers allow it).",
+        "+P and +P+ stay in the cartridge name (38 Special +P used to be saved as plain 38 Special) and get a Check first note: only in guns rated for it. Names saved before this version that already lost their +P can't be told apart, so check your +P records.",
+        "Ammo with a bigger bullet than the barrel's bore (8mm Mauser in a 30-06, 300 Blackout in a 6.5 Grendel) now says Don't shoot this, not just Wrong cartridge. The 308 / 7.62 NATO check-your-manual note now shows. The message no longer says two cartridges use the same bullet when the sizes differ a little (22 LR and 22 WMR).",
+        "Fixes in the cartridge list: 30 Super Carry's maximum overall length is 1.169 in (1.100 is SAAMI's minimum); 7mm Backcountry no longer shows a trim-to length (Federal says don't trim); '32 Long' no longer counts as 32 S&W Long (it can mean 32 Long Colt, which isn't safe in a 32 H&R); 308 Winchester notes that some brass (Lapua's Palma) takes small rifle primers; a bullet exactly .0025 in off now counts as a match, as intended."
       ]
     },
     {
