@@ -1640,7 +1640,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
       <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
-      <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
+      <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. <b>Add a suppressor from the list</b> has suppressors from the main makers (type a maker, model, caliber, or "full auto"): picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
       <h3>Inventory</h3>
       <p><a class=goto href=#go data-go=rifles:inv>Gear &amp; Ranges › Inventory</a> keeps track of the rest of your gear. <b>+ Add supplies</b> is for things that get used up (batteries, target pasters, earplugs, patches and solvent, hand warmers): give it a count and <b>Warn when at or below</b>, and use <b>− 1 used</b> and <b>+ 1</b> to keep the count right. <b>+ Add equipment</b> is for things you keep (a chronograph, rangefinder, bipod, magazines, cases) with a serial number, price, date bought and photos, handy for insurance. Either can have a category, where it's kept, a gun it goes with and a <b>Check or replace by</b> date that can repeat (a battery every year, a hunting license, a first-aid kit). Low supplies and dates within two weeks are listed first under <b>Needs attention</b>, and on Home. When you've done it, tap <b>Done</b> and a repeating date moves to the next one.</p>
       <h3>Gear notes</h3>
@@ -4848,7 +4848,8 @@ function renderCans(root){
   const c=canOpen&&cans.find(x=>x.id===canOpen);
   let h;
   if(!c){
-    h='<section class="card" aria-label="Suppressors list"><div class="row"><button class="btn primary" id="canAdd" type="button">+ Add suppressor</button></div>';
+    if(!window.RB_CANS)loadCanCat().then(l=>{if(l.length&&gunArea==="cans"&&!canOpen)renderRifles();});
+    h='<section class="card" aria-label="Suppressors list">'+(window.RB_CANS&&RB_CANS.length?'<div class="grid">'+catPickHtml("cans")+'</div>':'')+'<div class="row"><button class="btn primary" id="canAdd" type="button">+ Add suppressor</button></div>';
     if(!cans.length)h+='<p class="note">No suppressors yet. Add each one with its serial number and approval date. Put one on a gun if it lives there; leave it off if it moves between guns, and pick it on each range trip. Its round count comes from the range trips shot with it.</p>';
     else h+='<div class="cartgroup">'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(x=>{const gs=canGuns(x),rc=canRounds(x),th=gearThumb(x.id);
       return '<button class="loaditem withthumb" type="button" data-canopen="'+esc(x.id)+'"><span class="lthumb">'+(th||CAN_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(canName(x))+'</span>'+
@@ -4859,6 +4860,7 @@ function renderCans(root){
     root.innerHTML=h;gearHead(null);
     $("canAdd").addEventListener("click",()=>{const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("cn_mfr");if(e)e.focus();});
     root.querySelectorAll("[data-canopen]").forEach(b=>b.addEventListener("click",()=>{canOpen=b.dataset.canopen;canFromGun=null;renderRifles();window.scrollTo(0,0);}));
+    bindCatPick("cans",i=>{const x=(window.RB_CANS||[])[i];if(!x)return;const n=canFromCat(x);cans.push(n);queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);});
     return;
   }
   const g0=canGuns(c)[0],rc=canRounds(c),tr=trips.filter(t=>t.canId===c.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
@@ -4869,6 +4871,7 @@ function renderCans(root){
     field("cn_approved","Tax stamp approved",c.approved,"date")+
     '<div class="field"><label for="cn_gun">On gun</label>'+selHtml("cn_gun",[["","None: I pick it on each range trip"]].concat([...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(g=>[g.id,g.name||"Unnamed gun"])),g0?g0.id:"")+'</div>'+
     '<div class="field wide"><label for="cn_notes">Notes</label><textarea id="cn_notes" style="min-height:70px">'+esc(c.notes||"")+'</textarea></div></div>'+
+    (c.cat&&(c.cat.fa!=null||c.cat.minbarrel)?'<p class="note canlim">'+[c.cat.fa===true?"<b>Full auto rated.</b>":c.cat.fa===false?"<b>Not full auto rated.</b>":"",c.cat.minbarrel?"<b>Barrel minimum: "+c.cat.minbarrel+" in.</b>":""].filter(Boolean).join(" ")+' See the notes for the maker\'s other limits.</p>':'')+
     '<p class="note">On a gun, it\'s filled in on that gun\'s new range trips. Either way you can change it on each trip, and the trip\'s rounds count toward it.</p></section>'+
     '<section class="card" aria-label="Round count"><h2>Round count</h2><div id="cnRc"></div><div class="grid">'+
     field("cn_roundsBase","Rounds before Range Book",c.roundsBase,"number")+field("cn_cleanEvery","Clean every (rounds)",c.cleanEvery,"number")+
@@ -5278,7 +5281,22 @@ const CAT_PICK={
   powders:{noun:"powder",ph:"Search: varget, h4350, alliant, ball…",items:()=>POWDER_LIST.map((p,i)=>({i,mfr:p[0],t:p[1],sub:p[2],g:p[0],key:powderKey(p[0],p[1])})),have:c=>powderKey(c.mfr,c.name)},
   primers:{noun:"primer",ph:"Search: cci 200, 205m, large rifle magnum…",items:()=>PRIMER_LIST.map((p,i)=>({i,mfr:p[0],t:p[0]+" "+p[1],sub:p[2],g:p[2],key:powderKey(p[0],p[1])})),have:c=>powderKey(c.mfr,c.name)},
   bullets:{noun:"bullet",ph:"Search: 6.5 147 eld, 30 cal 175 smk, berger hybrid…",items:()=>(window.RB_BULLETS||[]).map((b,i)=>({i,mfr:b.mfr,t:b.mfr+" "+b.line+" "+b.w+" gr",sub:[b.f?"for "+b.f:"",b.g7?"G7 "+b.g7:"",b.g1?"G1 "+b.g1:""].filter(Boolean).join(" · "),
-      g:b.cal+" ("+String(b.d).replace(/^0\./,".")+'")',d:b.d,key:bulletKey(b.mfr,b.line,b.w,b.d),words:[b.cal,String(b.d),String(b.d).replace(/^0\./,""),b.item||"",b.k||"",b.f?b.f.replace(/[./]/g," "):""].join(" ")})),have:c=>bulletKey(c.mfr,c.name,c.weight,c.caliber)}};
+      g:b.cal+" ("+String(b.d).replace(/^0\./,".")+'")',d:b.d,key:bulletKey(b.mfr,b.line,b.w,b.d),words:[b.cal,String(b.d),String(b.d).replace(/^0\./,""),b.item||"",b.k||"",b.f?b.f.replace(/[./]/g," "):""].join(" ")})),have:c=>bulletKey(c.mfr,c.name,c.weight,c.caliber)},
+  // suppressors: you can own two of the same, so none are hidden once added
+  cans:{noun:"suppressor",ph:"Search: omega, rc3, 30 cal, 9mm, full auto, rimfire…",items:()=>(window.RB_CANS||[]).map((x,i)=>({i,mfr:x.mfr,t:x.mfr+" "+x.model,
+      sub:[x.cal,x.fa===true?"Full auto rated":"",x.minbarrel?x.minbarrel+" in barrel minimum":"",x.disc?"Discontinued":""].filter(Boolean).join(" · "),g:x.mfr,key:"cancat"+i,
+      words:[CAN_TYPE[x.type]||"",x.fa===true?"full auto fa":"",x.notes||""].join(" ")})),have:()=>""}};
+const CAN_TYPE={rifle:"Rifle",pistol:"Pistol",rimfire:"Rimfire",multi:"Multi-caliber",shotgun:"Shotgun"};
+let cansLoading=null;
+function loadCanCat(){if(window.RB_CANS)return Promise.resolve(window.RB_CANS);
+  return cansLoading=cansLoading||fetch("/suppressors.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>(window.RB_CANS=j.suppressors||[])).catch(()=>{cansLoading=null;return [];});}
+// a suppressor picked from the list: the maker's specs and limits go in its notes
+function canFromCat(x){const U2=v=>v==null?"":v;
+  const spec=[x.len?x.len+" in long":"",x.wt?x.wt+" oz":"",x.dia?x.dia+" in diameter":""].filter(Boolean).join(", ");
+  const lines=[spec?"From "+x.mfr+"'s published specs: "+spec+".":"From "+x.mfr+"'s published specs.",x.mount?"Mount: "+x.mount+".":"",
+    x.fa===true?"Full auto rated.":x.fa===false?"Not full auto rated.":"",x.minbarrel?"Barrel minimum: "+x.minbarrel+" in.":"",x.notes?U2(x.notes).replace(/\.?$/,"."):"",x.disc?"Discontinued model.":"","Check the manual for your exact model."].filter(Boolean);
+  return {id:gearId("c"),mfr:x.mfr,model:x.model,caliber:x.cal||"",serial:"",approved:"",notes:lines.join(" "),
+    cat:{type:x.type||null,len:x.len||null,wt:x.wt||null,dia:x.dia||null,fa:x.fa==null?null:x.fa,minbarrel:x.minbarrel||null}};}
 function catPickHtml(kind){const P=CAT_PICK[kind];if(!P)return "";
   const have=new Set((comps[kind]||[]).map(P.have)),n=P.items().filter(x=>!have.has(x.key)).length;if(!n&&!P.items().length)return "";
   return '<div class="field wide"><label for="catBtn">Add a '+P.noun+' from the list</label><button type="button" id="catBtn" class="ammobtn" aria-expanded="false" aria-controls="catPanel"><span class="none">Pick one ('+n.toLocaleString()+' '+P.noun+'s)…</span></button>'+
@@ -5390,13 +5408,13 @@ function loadBulletCat(){if(window.RB_BULLETS)return Promise.resolve(window.RB_B
 /* counts of the built-in lists, for Home's Built in Library card and Reloading › Reference › Library.
    Bullets and scopes come from their own files, so load() fetches them first (once). */
 window.RB_LIB={
-  load(){return Promise.all([loadBulletCat(),loadScopeCat().catch(()=>[])]);},
+  load(){return Promise.all([loadBulletCat(),loadScopeCat().catch(()=>[]),loadCanCat()]);},
   counts(){const B=window.RB_BULLETS,R=(window.RB_REF&&RB_REF.counts&&RB_REF.counts())||{};
     return {bullets:B?B.length:null,bulletMakers:B?new Set(B.map(b=>b.mfr)).size:null,bulletBC:B?B.filter(b=>b.g1||b.g7).length:null,
       byMaker:B?[...B.reduce((m,b)=>m.set(b.mfr,(m.get(b.mfr)||0)+1),new Map())].sort((a,b)=>b[1]-a[1]):[],
       cartridges:window.RB_CARTS?RB_CARTS.baseCount():null,powders:POWDER_LIST.length,powderMakers:new Set(POWDER_LIST.map(p=>p[0])).size,
       primers:PRIMER_LIST.length,loads:AMMO_CATALOG.length,loadCarts:new Set(AMMO_CATALOG.map(a=>a.cart)).size,
-      scopes:SCOPE_CAT?SCOPE_CAT.length:null,burn:R.burn,dia:R.dia,press:R.press,gloss:R.gloss};}
+      scopes:SCOPE_CAT?SCOPE_CAT.length:null,cans:window.RB_CANS?RB_CANS.length:null,canMakers:window.RB_CANS?new Set(RB_CANS.map(x=>x.mfr)).size:null,burn:R.burn,dia:R.dia,press:R.press,gloss:R.gloss};}
 };
 function renderComps(){
   if(compKind==="bullets"&&!window.RB_BULLETS)loadBulletCat().then(b=>{if(b.length&&compKind==="bullets"&&!compOpen)renderComps();});
@@ -10267,7 +10285,7 @@ window.RB_REF=(function(){
     let h=nav();
     if(sec==="lib"){
       const n=window.RB_LIB?RB_LIB.counts():{},f=v=>v==null?"…":v.toLocaleString();
-      if(window.RB_LIB&&(n.bullets==null||n.scopes==null))RB_LIB.load().then(()=>{if(sec==="lib")draw();});
+      if(window.RB_LIB&&(n.bullets==null||n.scopes==null||n.cans==null))RB_LIB.load().then(()=>{if(sec==="lib")draw();});
       const row=(go,name,d,v)=>'<button class="loaditem librow" type="button" data-rgo="'+go+'"><span class="ltext"><span class="t">'+name+'</span><span class="d">'+d+'</span></span><b class="libn">'+f(v)+'</b></button>';
       const bm=n.byMaker||[],top=bm.length?bm[0][1]:1;
       h+='<section class="card" aria-label="Library" id="refLib"><h2>Built in Library</h2><p class="note">Everything Range Book knows before you add anything, taken from the makers\' own published data. Tap a list to open it.</p><div class="cartgroup">'+
@@ -10279,6 +10297,7 @@ window.RB_REF=(function(){
         row("brass:primers","Primers","With their sizes. Pick one under Components › Primers.",n.primers)+
         row("rifles:ammo","Factory ammo","In "+n.loadCarts+" cartridges, with BC and box velocity.",n.loads)+
         row("rifles:scopes","Scopes","Power, focal plane, click value and reticle.",n.scopes)+
+        row("rifles:cans","Suppressors",(n.canMakers!=null?n.canMakers+" makers. ":"")+"Caliber rating, size, full auto and barrel-length limits.",n.cans)+
         row("ref:press","Pressure signs","What each looks like and what to do.",n.press)+
         row("ref:gloss","Glossary","Reloading terms explained.",n.gloss)+'</div>'+
         (bm.length?'<h3>Bullets by maker</h3><div class="libbars">'+bm.map(([m,c])=>'<div class="libbar"><span>'+esc(m)+'</span><span class="lbtrack"><span style="width:'+(c/top*100).toFixed(1)+'%"></span></span><b>'+c+'</b></div>').join("")+'</div>':'')+
