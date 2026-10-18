@@ -1444,7 +1444,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Range Book can watch a printed Range Book target through your phone's camera and mark each shot as it lands. Put the phone on the spotting scope with an adapter so it holds still, and aim the scope so the whole page and all four corner squares are in the picture. It needs Range Book's https address (the camera doesn't work on a plain http address).</p>
       <ol>
         <li>In a ladder, tap <b>Live target</b> (next to <b>+ Photo</b>). From a range trip, use <b>Live target</b> next to <b>+ Add target photo</b>. To use it without a load, open <b>Tools → Live target</b>.</li>
-        <li>Allow the camera. On a phone with more than one back lens, it uses the main lens so it doesn't keep jumping between lenses up close to the eyepiece; pick another under <b>Camera lens</b> if you like (it's remembered on that phone). When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
+        <li>Allow the camera. On a phone with more than one back lens, it uses the main lens so it doesn't keep jumping between lenses up close to the eyepiece; pick another under <b>Camera lens</b> if you like (it's remembered on that phone). Through a spotting scope the page often looks gray and washed out; Range Book allows for that, but zoom the scope so the page fills more of the view if it can't find the corner squares. When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
         <li>Check <b>Charge for this aim</b>, <b>Shots</b> and <b>Distance</b>.</li>
         <li>Fire, then tap <b>Shot</b>. It compares the page with how it looked before the shot and marks the new hole, numbered, with the group size, MOA, mean radius and where the group's center is from the aim point. A hole in the black center counts too.</li>
         <li>If it misses a hole, tap the hole on the picture to add it. Tap a wrong mark to remove it. <b>Undo</b> takes back the last change.</li>
@@ -5023,17 +5023,35 @@ function homography(src,dst){
   const h=b.map((v,i)=>v/A[i][i]);return [...h,1];
 }
 const applyH=(h,x,y)=>{const w=h[6]*x+h[7]*y+h[8];return [(h[0]*x+h[1]*y+h[2])/w,(h[3]*x+h[4]*y+h[5])/w];};
+// Through a spotting scope the page is washed out (the corner squares come out mid-gray, not black), so if the normal
+// pass finds nothing, look again with looser "dark" thresholds; the checks after it (shape, one hollow square, the aim
+// rings) still have to pass. (2.18.4)
+// [darkest-allowed cap, fraction of the local mean] or ["w", fraction of the local paper white]
+const RB_DARK=[[130,.6],["w",.72],["w",.8]];
+let RB_DARK_LAST=0; // try whichever pass worked last time first (Live target runs this a few times a second)
 function detectRBTarget(img,T){
+  const order=[RB_DARK_LAST,...RB_DARK.keys()].filter((v,i,a)=>a.indexOf(v)===i);
+  for(const j of order){const r=detectRBTarget1(img,T,RB_DARK[j]);if(r){RB_DARK_LAST=j;return r;}}
+  return null;
+}
+function detectRBTarget1(img,T,P){
   const NW=img.naturalWidth,NH=img.naturalHeight,k=Math.min(1,1000/Math.max(NW,NH));
   const W=Math.round(NW*k),H=Math.round(NH*k),N=W*H;
   const c=document.createElement("canvas");c.width=W;c.height=H;const cx=c.getContext("2d",{willReadFrequently:true});cx.drawImage(img,0,0,W,H);
   const D=cx.getImageData(0,0,W,H).data,g=new Float32Array(N);
   for(let i=0;i<N;i++)g[i]=.299*D[i*4]+.587*D[i*4+1]+.114*D[i*4+2];
-  const R=Math.max(10,Math.round(Math.max(W,H)/12)),I=new Float64Array((W+1)*(H+1));
-  for(let y=0;y<H;y++){let row=0;for(let x=0;x<W;x++){row+=g[y*W+x];I[(y+1)*(W+1)+x+1]=I[y*(W+1)+x+1]+row;}}
+  let R=Math.max(10,Math.round(Math.max(W,H)/12));const I=new Float64Array((W+1)*(H+1));
+  const integ=()=>{for(let y=0;y<H;y++){let row=0;for(let x=0;x<W;x++){row+=g[y*W+x];I[(y+1)*(W+1)+x+1]=I[y*(W+1)+x+1]+row;}}};integ();
   const mean=(x,y)=>{const x0=Math.max(0,x-R),y0=Math.max(0,y-R),x1=Math.min(W,x+R+1),y1=Math.min(H,y+R+1);return (I[y1*(W+1)+x1]-I[y0*(W+1)+x1]-I[y1*(W+1)+x0]+I[y0*(W+1)+x0])/((x1-x0)*(y1-y0));};
   const dark=new Uint8Array(N);
-  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x;if(g[i]<Math.min(130,mean(x,y)*.6))dark[i]=1;}
+  if(P[0]==="w"){
+    // the brightest nearby paper (a lightly smoothed max over blocks about a sixth of the picture across)
+    const B=Math.max(8,Math.round(R/2)),bx=Math.ceil(W/B),by=Math.ceil(H/B),bm=new Float32Array(bx*by);
+    const box=(x,y)=>{const x0=Math.max(0,x-2),y0=Math.max(0,y-2),x1=Math.min(W,x+3),y1=Math.min(H,y+3);return (I[y1*(W+1)+x1]-I[y0*(W+1)+x1]-I[y1*(W+1)+x0]+I[y0*(W+1)+x0])/((x1-x0)*(y1-y0));};
+    for(let y=0;y<H;y+=2)for(let x=0;x<W;x+=2){const v=box(x,y),j=((y/B)|0)*bx+((x/B)|0);if(v>bm[j])bm[j]=v;}
+    const wh=new Float32Array(bx*by);for(let j=0;j<by;j++)for(let i=0;i<bx;i++){let m=0;for(let dj=-1;dj<=1;dj++)for(let di=-1;di<=1;di++){const a=i+di,b2=j+dj;if(a>=0&&b2>=0&&a<bx&&b2<by&&bm[b2*bx+a]>m)m=bm[b2*bx+a];}wh[j*bx+i]=m;}
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x,w0=wh[((y/B)|0)*bx+((x/B)|0)];if(w0>90&&g[i]<w0*P[1])dark[i]=1;}
+  }else for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x;if(g[i]<Math.min(P[0],mean(x,y)*P[1]))dark[i]=1;}
   // the squares are the big, solid, square dark blobs
   const lab=new Int32Array(N).fill(-1),st=new Int32Array(N),comps=[];
   for(let i=0;i<N;i++){if(!dark[i]||lab[i]>=0)continue;let sp=0;st[sp++]=i;lab[i]=comps.length;let a=0,sx=0,sy=0,x0=W,y0=H,x1=0,y1=0;
@@ -5041,7 +5059,9 @@ function detectRBTarget(img,T){
       if(x>0&&dark[j-1]&&lab[j-1]<0){lab[j-1]=comps.length;st[sp++]=j-1;}if(x<W-1&&dark[j+1]&&lab[j+1]<0){lab[j+1]=comps.length;st[sp++]=j+1;}
       if(y>0&&dark[j-W]&&lab[j-W]<0){lab[j-W]=comps.length;st[sp++]=j-W;}if(y<H-1&&dark[j+W]&&lab[j+W]<0){lab[j+W]=comps.length;st[sp++]=j+W;}}
     const bw=x1-x0+1,bh=y1-y0+1;comps.push({a,cx:sx/a,cy:sy/a,bw,bh,fill:a/(bw*bh),asp:Math.max(bw,bh)/Math.min(bw,bh)});}
-  const cand=comps.filter(q=>q.a>N*0.0003&&q.a<N*0.03&&q.asp<1.7&&q.fill>0.55).sort((p,q)=>q.a-p.a).slice(0,10);
+  // (through a scope the page is often small in the picture, so smaller squares count then)
+  const amin=P[0]==="w"?N*0.0001:N*0.0003;
+  const cand=comps.filter(q=>q.a>amin&&q.a<N*0.03&&q.asp<1.7&&q.fill>0.55).sort((p,q)=>q.a-p.a).slice(0,P[0]==="w"?14:10);
   if(cand.length<4)return null;
   let best=null,bestScore=0;
   const quadArea=P=>{const c0=[P.reduce((s,p)=>s+p.cx,0)/4,P.reduce((s,p)=>s+p.cy,0)/4];const o=[...P].sort((p,q)=>Math.atan2(p.cy-c0[1],p.cx-c0[0])-Math.atan2(q.cy-c0[1],q.cx-c0[0]));
@@ -5062,6 +5082,19 @@ function detectRBTarget(img,T){
   start=hollow.indexOf(true);
   ord=[0,1,2,3].map(i=>best[(start+i)%4]);
   const img4=ord.map(p=>[p.cx/k,p.cy/k]);
+  // washed out (through a scope): stretch the page's gray so its squares are black and its paper white, and measure
+  // "dark" against a neighbourhood sized to the page, not the whole picture
+  if(P[0]==="w"){
+    const at=(x,y)=>g[Math.max(0,Math.min(H-1,Math.round(y)))*W+Math.max(0,Math.min(W-1,Math.round(x)))];
+    const blk=ord.filter((p,i)=>i!==0).map(p=>at(p.cx,p.cy)).sort((a,b)=>a-b)[1];
+    const mx=(ord[0].cx+ord[1].cx+ord[2].cx+ord[3].cx)/4,my=(ord[0].cy+ord[1].cy+ord[2].cy+ord[3].cy)/4,wv=[];
+    for(let i=0;i<4;i++){const p=ord[i],q=ord[(i+1)%4];for(const f of [.3,.5,.7]){const x=p.cx+(q.cx-p.cx)*f,y=p.cy+(q.cy-p.cy)*f;wv.push(at(x+(mx-x)*.08,y+(my-y)*.08));}}
+    wv.sort((a,b)=>a-b);const wht=wv[Math.floor(wv.length*.75)];
+    if(!(wht-blk>25))return null;
+    for(let i=0;i<N;i++)g[i]=Math.max(0,Math.min(255,(g[i]-blk)/(wht-blk)*230));
+    const edge=Math.min(...[0,1,2,3].map(i=>Math.hypot(ord[i].cx-ord[(i+1)%4].cx,ord[i].cy-ord[(i+1)%4].cy)));
+    R=Math.max(4,Math.round(edge/8));integ();
+  }
   // try each paper size (Letter, 11 x 17, two Letter pages): map the page with its corner squares and see whose aim rings are really there
   const fmts=T.formats?Object.entries(T.formats):[["letter",{fid:T.fid,grid:T.grid,page:T.page}]];
   let pick=null;
@@ -5073,7 +5106,8 @@ function detectRBTarget(img,T){
       let s=1e9;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)s=Math.min(s,mean(X+dx,Y+dy)-g[(Y+dy)*W+X+dx]);return s;};
     // two-page targets have a black square partway down each side, between the corner squares; other pages are blank there
     if(T.mark){const F0=Fm.fid,ms=T.mark.size*.25,ref=darkAt0(F0[1][0],F0[1][1]);
-      const mk=Math.min(...T.mark.uv.map(([u,v])=>{const mx=F0[0][0]+u*(F0[1][0]-F0[0][0]),my=F0[0][1]+v*(F0[3][1]-F0[0][1]);return Math.min(darkAt0(mx,my),darkAt0(mx-ms,my-ms),darkAt0(mx+ms,my+ms),darkAt0(mx+ms,my-ms),darkAt0(mx-ms,my+ms));}));
+      const mk=Math.min(...T.mark.uv.map(([u,v])=>{const mx=F0[0][0]+u*(F0[1][0]-F0[0][0]),my=F0[0][1]+v*(F0[3][1]-F0[0][1]);const v5=[darkAt0(mx,my),darkAt0(mx-ms,my-ms),darkAt0(mx+ms,my+ms),darkAt0(mx+ms,my-ms),darkAt0(mx-ms,my+ms)].sort((a,b)=>a-b);return v5[2];}));
+      // (the middle of five samples, not the lowest: two taped pages are rarely lined up exactly, so one sample can land just off the mark)
       if(!!Fm.marked!==(mk>Math.max(25,ref*.4)))continue;}
     // which layout? look for the dark ring around each layout's aim points
     const darkAt=(tx,ty)=>{const [x,y]=applyH(Hti,tx,ty);const X=Math.round(x*k),Y=Math.round(y*k);if(X<1||Y<1||X>=W-1||Y>=H-1)return 0;
