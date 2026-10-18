@@ -1663,6 +1663,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><a class=goto href=#go data-go=rifles:inv>Gear &amp; Ranges › Inventory</a> keeps track of the rest of your gear. <b>+ Add supplies</b> is for things that get used up (batteries, target pasters, earplugs, patches and solvent, hand warmers): give it a count and <b>Warn when at or below</b>, and use <b>− 1 used</b> and <b>+ 1</b> to keep the count right. <b>+ Add equipment</b> is for things you keep (a chronograph, rangefinder, bipod, magazines, cases) with a serial number, price, date bought and photos, handy for insurance. Either can have a category, where it's kept, a gun it goes with and a <b>Check or replace by</b> date that can repeat (a battery every year, a hunting license, a first-aid kit). Low supplies and dates within two weeks are listed first under <b>Needs attention</b>, and on Home. When you've done it, tap <b>Done</b> and a repeating date moves to the next one.</p>
       <h3>Gear notes</h3>
       <p><a class=goto href=#go data-go=rifles:notes>Gear &amp; Ranges › Notes</a> is for notes about your gear that don't belong to one gun: where things are stored, a gunsmith's work, part numbers, warranty details. Tap <b>+ New note</b>, give it a title and type. Add <b>Pictures</b> and <b>Files</b> (PDFs, manuals, receipts, spreadsheets, up to 20 MB each) to a note. Notes save as you type, <b>Pin to the top</b> keeps one first, and the search box looks through titles and text.</p>
+      <p>The vault needs Range Book's <b>https</b> address (or localhost on the server itself): browsers don't allow encryption on a plain http page, so over http the vault cards say so instead.</p>
       <p>Tick <b>Lock in the vault</b> to encrypt a note: its title, text, pictures and files are locked on your device with your vault passphrase before they're saved, and its pictures and files move into the vault. Nobody can read it without the passphrase, not even the server's admin. Until you unlock the vault, the list just shows <b>Locked note</b> and searching skips it. Untick it to take the note back out of the vault (Range Book asks first). Pictures and files on a note that isn't locked are private to you but not encrypted.</p>
       <h3>Document vault</h3>
       <p>Suppressors, guns and inventory items have a <b>Documents</b> card for papers like a tax stamp, a receipt or a manual (PDFs or pictures, up to 15 MB). The first time, tap <b>Set up the vault</b> and choose a vault passphrase. It isn't your sign-in password: use something long you don't use anywhere else, like four or five random words. Every document is locked (encrypted) on your phone or computer with that passphrase before it's uploaded, so the server only ever holds scrambled data. Nobody can open your documents without the passphrase: not the person who runs this server, not an admin (even one who resets your password), not someone with your backup file, and not Range Book's maker. <b>That also means a forgotten passphrase can't be recovered</b>, and neither can the documents, so keep the originals somewhere too.</p>
@@ -4934,9 +4935,13 @@ function vDelete(id){const nm=(VLT.names.get(id)||{}).name||"document",i=VLT.doc
 const vSize=n=>n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB";
 // the Documents card on a suppressor, gun or inventory item
 const vaultCardHtml=item=>'<section class="card" aria-label="Documents"><h2>Documents <span class="note">locked in your vault</span></h2><div data-vault="'+esc(item)+'"><p class="note">Loading…</p></div></section>';
+// the browser only offers encryption (crypto.subtle) on https pages (and localhost): over plain http the vault can't work, so say so (2.31.2)
+const vNoCrypto=()=>!(window.crypto&&window.crypto.subtle);
+const VNOSEC='<p class="note">The document vault needs a secure connection. Open Range Book through its <b>https</b> address (or on the server itself as localhost): browsers only allow encryption there, so the vault can\'t be set up, unlocked or used over plain http.</p>';
 function vDraw(el){
   const item=el.dataset.vault;
   if(window.GUEST){el.innerHTML='<p class="note">The document vault needs an account.</p>';return;}
+  if(vNoCrypto()){el.innerHTML=VNOSEC;return;}
   if(VLT.cfg===undefined){el.innerHTML='<p class="note">Loading…</p>';vLoad().then(()=>vDraw(el),()=>{el.innerHTML='<p class="err">The vault couldn\'t be reached. Check your connection.</p>';});return;}
   const mine=VLT.docs.filter(d=>d.item===item);let h;
   if(!VLT.cfg)h='<p class="note">Keep a copy of the tax stamp, a receipt or a manual here. Documents are locked on your device with a vault passphrase before they\'re uploaded, so nobody else can open them: not the person who runs this server, an admin, or a backup.</p><div class="row"><button class="btn" type="button" data-vsetup>Set up the vault</button></div>';
@@ -4954,6 +4959,7 @@ function vDraw(el){
 window.RB_VAULT_ACCT=()=>vAccountDraw();
 function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
   if(window.GUEST){el.innerHTML='<p class="note">The document vault needs an account.</p>';return;}
+  if(vNoCrypto()){el.innerHTML=VNOSEC;return;}
   if(VLT.cfg===undefined){el.innerHTML='<p class="note">Loading…</p>';vLoad().then(vAccountDraw,()=>{el.innerHTML='<p class="err">The vault couldn\'t be reached.</p>';});return;}
   const msg='<p class="vmsg" hidden></p>';
   el.innerHTML=msg+(VLT.cfg?'<p class="note">'+VLT.docs.length+' document'+(VLT.docs.length===1?'':'s')+' in your vault. It\'s '+(VLT.key?'<b>unlocked</b> on this device.':'locked.')+' Add documents on a suppressor, gun or inventory item, or lock a note under Gear &amp; Ranges › Notes.</p><div class="row">'+(VLT.key?'<button class="btn" type="button" id="vaLock">Lock now</button>':'<button class="btn" type="button" id="vaUnlock">Unlock</button>')+'<button class="btn" type="button" id="vaChange">Change passphrase</button></div>'
@@ -5113,6 +5119,7 @@ function gnPurge(id){
 async function gnVault(){await vLoad();if(!VLT.cfg)await vSetup();else if(!VLT.key)await vUnlock();return !!VLT.key;}
 // lock: the text into enc, pictures and files into the vault
 async function gnLock(n){
+  if(vNoCrypto()){renderRifles();return;}
   if(!(await gnVault())){renderRifles();return;}
   gnBusy="Locking the note…";renderRifles();
   try{const t={title:n.title||"",body:n.body||""};await gnEncrypt(n,t);GN_DEC.set(n.id,t);n.title="";n.body="";n.locked=true;n.updated=Date.now();queueRifles();
@@ -5179,7 +5186,7 @@ function renderGearNotes(root){
       '<div class="field wide"><label for="gn_title">Title</label><input id="gn_title" class="text" type="text" value="'+esc(t.title||"")+'" placeholder="e.g. Safe inventory, gunsmith work" autocomplete="off"></div>'+
       '<div class="field wide"><label for="gn_body">Note</label><textarea id="gn_body" class="notebody" rows="12">'+esc(t.body||"")+'</textarea></div></div>'+
       '<div class="row gnopts"><label class="toggle"><input type="checkbox" id="gn_pin"'+(n.pinned?' checked':'')+'> Pin to the top</label>'+
-      (window.GUEST?'':'<label class="toggle"><input type="checkbox" id="gn_lock"'+(n.locked?' checked':'')+(gnBusy?' disabled':'')+'> Lock in the vault</label>')+'</div>'+
+      (window.GUEST?'':'<label class="toggle"><input type="checkbox" id="gn_lock"'+(n.locked?' checked':'')+(gnBusy||vNoCrypto()?' disabled':'')+'> Lock in the vault</label>')+'</div>'+(vNoCrypto()&&!window.GUEST?VNOSEC:'')+
       (gnConfirm?'<div class="banner twistbanner" role="alert"><b>Take this note out of the vault?</b> Its text, pictures and files will be stored without encryption, like your other notes. <div class="row" style="margin-top:8px"><button class="btn primary" type="button" id="gnUnOk">Yes, take it out</button><button class="btn" type="button" id="gnUnNo">Keep it locked</button></div></div>':'')+
       '<p class="note">'+(n.locked?GN_LOCK.replace('<svg','<svg class="inlock"')+' Locked: the title, text, pictures and files are encrypted on this device with your vault passphrase before they\'re saved. The note list shows "Locked note" until the vault is unlocked.':'Tick <b>Lock in the vault</b> to encrypt this note, its pictures and its files with your vault passphrase.')+'</p>'+busy+
       '<p class="note">'+(n.created?'Started '+esc(fmtDate(new Date(n.created).toISOString().slice(0,10))):'')+(n.updated&&n.updated!==n.created?' · last changed '+esc(fmtDate(new Date(n.updated).toISOString().slice(0,10))):'')+'</p></section>'+

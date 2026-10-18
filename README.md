@@ -119,7 +119,7 @@ Range Book needs a computer that's always on, to keep your database and target p
 3. **A Raspberry Pi 5 (a one-time cost, roughly $100 for the board, power supply and storage).** It sits on a shelf, uses very little power, and runs Range Book easily. Install Raspberry Pi OS (64-bit) and Docker, then use the same `docker run` command and a tunnel. This is the best "set it and forget it" choice.
 4. **A small rented server in the cloud (about $5–8 a month as of 2026).** Any provider that rents a small Linux server with Docker works; 1 GB of memory and 10 GB of disk is plenty for one family. Choose a provider with a disk that keeps your files (services like Netlify or Vercel won't work: Range Book has to keep files and run all the time). Some providers have free tiers, but their limits change often, so check before you rely on one.
 
-Whichever you choose, turn on an https address (a tunnel or a reverse proxy, below) so the app works offline on your phone and the camera works for Live target, and keep a copy of your backups somewhere else.
+Whichever you choose, turn on an https address (a tunnel or a reverse proxy, below) so the app works offline on your phone, the camera works for Live target and the document vault can encrypt (browsers only allow it over https or on localhost), and keep a copy of your backups somewhere else.
 
 ---
 
