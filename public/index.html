@@ -327,6 +327,13 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sorting{position:relative;z-index:30;opacity:.92;box-shadow:0 10px 28px rgba(0,0,0,.28)!important;cursor:grabbing;transition:none!important}
 .sortingbox [data-tooltile]:not(.sorting){transition:transform .15s}
 .toolsarr{margin:10px 2px 0}
+.shot.flyer input{border-color:var(--warn)!important;color:var(--warn)!important;box-shadow:0 0 0 2px var(--warn);font-weight:700}
+.shot.flyer label{color:var(--warn);font-weight:700}
+.flynote{position:relative;margin:10px 0 4px;padding:9px 12px;border:1.5px solid var(--warn);border-radius:10px;background:var(--surface);color:var(--warn);font-size:14px;line-height:1.4;animation:flypop .25s ease-out}
+.flynote::before{content:"";position:absolute;top:-7px;left:var(--ax,18px);width:12px;height:12px;background:var(--surface);border-left:1.5px solid var(--warn);border-top:1.5px solid var(--warn);transform:rotate(45deg)}
+@keyframes flypop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.flynote{animation:none}}
+.chshots span.flyer{border-color:var(--warn);color:var(--warn);font-weight:700;box-shadow:0 0 0 1.5px var(--warn)}
 .arrlist{display:flex;flex-direction:column;gap:6px;max-height:min(60vh,520px);overflow:auto;padding:2px}
 .arrrow{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--sunk);min-height:46px}
 .arrrow.off .t{opacity:.55}.arrrow .t{flex:1 1 auto;min-width:0;font-weight:600;overflow-wrap:anywhere}.arrrow .t .note{display:block;font-weight:400;margin:0}
@@ -1485,6 +1492,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Each group in a ladder has <b>Pressure signs</b>: tap any you saw on that charge's cases or bolt (flat or cratered primers, ejector marks, a heavy bolt lift, sticky extraction, loose primer pockets), and enter case head expansion if you measure it. A charge with any of them gets a <b>!</b> triangle on the <b>Velocity by charge</b> chart and a <b>pressure signs</b> tag in the Summary, and they're listed in the Excel and PDF exports. This is a notebook, not a pressure gauge: pressure can be dangerous with no visible signs at all, so always stay within your load manual.</p>
       <h3>Import from your chronograph</h3>
       <p>Set up a group for each charge weight in the ladder first. Then tap <b>Import chronograph file</b> on the ladder's first group and pick the export from your RangeCraft (.xlsx), Garmin Xero (ShotView .csv or .xlsx) MagnetoSpeed (LOG.CSV from the V3's memory card, or the .csv from the XFR app) or LabRadar (the SR0001 Report.csv files from its SD card; pick several at once and each series fills its own group, SR0001 first). Each string fills the next empty group in that ladder in the order you shot them (Range Book puts the strings in time order, since some chronographs, like Garmin's, list the newest first). If you named each string with its charge weight on the chronograph (like "25.9gr N140"), it goes straight to the group with that charge instead, wherever it is in the ladder. If the ladder has no tested date yet, it takes the date from the file when the file has one (MagnetoSpeed's memory-card file doesn't, so set that date yourself). Check that each string landed on the right charge weight. If the chronograph caught a bad reading (a miss or an echo), tap <b>− Shot</b>, tap that shot and tap <b>Delete</b>.</p>
+      <p>Range Book checks every string as the velocities come in, from a file or typed in, here and on range trips. A shot that's way off from the rest of its string (a chronograph misread, an echo or a typo, like 1,312 in a string of 2,800s) turns red, with a note saying it might not be correct. Check it against your chronograph, fix the number, or delete it with <b>− Shot</b>. It only flags shots far outside the string's normal spread (needs at least 3 shots), so an ordinary flyer isn't marked. Tools → Chronograph file check marks them too.</p>
       <h3>Target photos</h3>
       <p>Each target photo belongs to the ladder you shot it with. Tap <b>+ Photo</b> in that ladder (or next to the ladder's name on the <b>Targets</b> card) to take a picture or choose one. The Targets card shows the photos under each ladder, and each ladder shows its own photos too. Tap a photo to see it full size, add a caption, delete it, or move it to another ladder with <b>Shot with</b>. When you measure groups on a photo, you pick from that ladder's charges. Photos added before ladders existed are linked for you when the app can tell which ladder they go with; open any that say <b>Pick a ladder</b> and choose one.</p>
       <p>To keep a copy of a target photo, open it and tap <b>Download photo</b> (the picture as taken) or <b>Download with marks</b> (with the measured shots and groups drawn on it). On a phone it opens the share sheet, so you can <b>Save Image</b> to your photos, save it to Files or send it; on a computer it downloads.</p>
@@ -1978,6 +1986,35 @@ window.RB_ARRANGE=function(o){
     msg("");x.on=cb.checked;row.classList.toggle("off",!x.on);fire();});
   sh.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
 };
+/* a velocity far from the rest of its string (a chronograph misread or a typo): highlight it in red with a note.
+   The middle of the string and its typical spread are worked out so one bad shot can't hide itself; it's flagged when it's
+   more than 5 typical spreads, 75 fps and 2.5% from the middle (real strings rarely come close; a misread is usually hundreds off). Needs 3 shots. */
+window.RB_FLY=(()=>{
+  const mid=a=>{const s=a.slice().sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;};
+  const find=vals=>{const v=vals.map((x,i)=>[Number(x),i]).filter(([x])=>x>0);if(v.length<3)return [];
+    const m=mid(v.map(x=>x[0])),mad=mid(v.map(([x])=>Math.abs(x-m))),lim=Math.max(5*Math.max(8,1.4826*mad),75,0.025*m);
+    return v.filter(([x])=>Math.abs(x-m)>lim).map(([,i])=>i);};
+  const say=(list,vals,pre)=>{const U=window.U,f=v=>U?U.s("fps",v,0,true):Math.round(v)+" fps";
+    return (list.length===1?"Shot "+(list[0]+1)+" ("+f(vals[list[0]])+") is":"Shots "+list.map(i=>i+1).join(", ").replace(/, (\d+)$/," and $1")+" are")+
+      " way off from the rest of the string, so "+(list.length===1?"it":"they")+" might not be correct (a chronograph misread or a typo)."+(pre?" Check "+(list.length===1?"it":"them")+"; after you import, you can delete "+(list.length===1?"it":"them")+" with − Shot.":" Check "+(list.length===1?"it":"them")+", or delete "+(list.length===1?"it":"them")+" with − Shot.");};
+  // a set of shot boxes (.shots with .shot inputs, shown in the account's units)
+  function check(box){
+    const ins=[...box.querySelectorAll(".shot input")],U=window.U;if(!ins.length&&!box.nextElementSibling)return;
+    const vals=ins.map(i=>{const n=parseFloat(i.value);return isFinite(n)&&n>0?(U?U.from("fps",n):n):null;}),bad=find(vals);
+    ins.forEach((i,k)=>{const sh=i.closest(".shot"),on=bad.includes(k);if(sh&&sh.classList.contains("flyer")!==on)sh.classList.toggle("flyer",on);
+      const t=on?"This shot might not be correct: it's far from the others":"";if((i.getAttribute("title")||"")!==t){if(t)i.setAttribute("title",t);else i.removeAttribute("title");}});
+    let n=box.nextElementSibling;if(!(n&&n.classList.contains("flynote"))){if(!bad.length)return;n=document.createElement("p");n.className="flynote";n.setAttribute("role","status");box.after(n);}
+    const txt=bad.length?say(bad,vals):"";if(n.textContent!==txt)n.textContent=txt;if(n.hidden!==!bad.length)n.hidden=!bad.length;
+    // the note's arrow points at the (first) flagged shot
+    if(bad.length){const sh=ins[bad[0]].closest(".shot"),x=sh?Math.max(8,Math.round(sh.offsetLeft-box.offsetLeft+sh.offsetWidth/2-7)):18;if(n.style.getPropertyValue("--ax")!==x+"px")n.style.setProperty("--ax",x+"px");}
+  }
+  let q=0;const all=()=>{q=0;document.querySelectorAll(".shots[data-shotset]").forEach(check);};
+  const later=()=>{if(!q)q=requestAnimationFrame(all);};
+  document.addEventListener("input",e=>{const b=e.target.closest&&e.target.closest(".shots[data-shotset]");if(b)check(b);},true);
+  const start=()=>{new MutationObserver(later).observe(document.body,{childList:true,subtree:true});later();};
+  if(document.body)start();else document.addEventListener("DOMContentLoaded",start);
+  return {find,say,check};
+})();
 /* weather and places: today's weather from Open-Meteo (where you are, or at a saved range), and finding a range's address on OpenStreetMap */
 window.RB_WX=(()=>{
   const dirs=["N","NE","E","SE","S","SW","W","NW"],f4=n=>(+n).toFixed(4);
@@ -9744,7 +9781,7 @@ window.RB_CHTOOL=(function(){
     S.forEach((x,i)=>{const st=stats(x.shots),c=S.length>1&&RB_CHRONO.charge(x.name);
       h+='<div class="chstr"><h4>'+(i+1)+'. '+esc(x.name||("String "+(i+1)))+'</h4>'+
         '<div class="chstats"><span>Shots <b>'+st.n+'</b></span><span>Average <b>'+f1(st.av).toLocaleString()+' '+uu+'</b></span>'+(st.sd!=null?'<span>SD <b>'+U.n("fps",st.sd,1)+'</b></span>':'')+'<span>ES <b>'+f1(st.es)+'</b></span><span>Low–high <b>'+f1(st.lo).toLocaleString()+'–'+f1(st.hi).toLocaleString()+'</b></span>'+(x.at!=null?'<span>At <b>'+esc(new Date(x.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit",timeZone:"UTC"}))+'</b></span>':'')+'</div>'+
-        '<div class="chshots">'+x.shots.map((v,k)=>'<span><i>'+(k+1)+'</i>'+f1(v)+'</span>').join("")+'</div>'+
+        (()=>{const bad=RB_FLY.find(x.shots);return '<div class="chshots">'+x.shots.map((v,k)=>'<span'+(bad.includes(k)?' class="flyer" title="This shot might not be correct"':'')+'><i>'+(k+1)+'</i>'+f1(v)+'</span>').join("")+'</div>'+(bad.length?'<p class="flynote" role="status">'+esc(RB_FLY.say(bad,x.shots,true))+'</p>':'');})()+
         (c?'<p class="note">Its name has a charge of <b>'+c+' gr</b>: imported into a ladder, it goes to the '+c+' gr group if the ladder has one.</p>':S.length>1?'<p class="note">No charge in its name: imported into a ladder, it fills the next empty group in order.</p>':'')+'</div>';});
     h+='<p class="note">This is exactly what a ladder or range trip import would get. If a shot is wrong (a miss or an echo), you can delete it after importing. Nothing here was saved.</p>';
     out.innerHTML=h;
