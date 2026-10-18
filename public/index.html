@@ -2474,7 +2474,13 @@ function fillSelect(){
 }
 function trajHead(){const d=TVIEW==="detail",nm=d?(cur().name||"Untitled profile"):"";{const sb=$("trajSample");if(sb)sb.hidden=!(d&&cur().sample);}$("trajBack").hidden=!d;$("trajSub").hidden=d;
   $("trajTitle").textContent=d?nm:"Shooting";$("trajTitle").classList.toggle("sr",d);const jn=$("trajJumpName");if(jn){jn.textContent=nm;jn.title=nm;}}
+// + New profile that's left without a gun, ammo, cartridge or any numbers is dropped when you go back to the list or open another (2.30.4)
+let NEWPROF=null;
+function sweepNewProf(keepId){const id=NEWPROF;if(!id||id===keepId)return;NEWPROF=null;const i=state.loads.findIndex(l=>l.id===id);if(i<0||state.loads.length<2)return;const L=state.loads[i];
+  if(L.rifleId||L.ammoId||L.qcCat||String(L.cart||"").trim()||!L.nameAuto||["w","mv","bc","sh","twist","blen","tip"].some(k=>num(L[k])!=null))return;
+  state.loads.splice(i,1);if(state.cur===id)state.cur=(state.loads[0]||{}).id;save();}
 function showTrajView(v){
+  if(v==="list")sweepNewProf();
   TVIEW=v;$("trajJump").hidden=v!=="detail";$("trajSeg").hidden=v!=="list";$("trajList").hidden=v!=="list";$("trajDetail").hidden=v!=="detail";
   if(v==="list")fillSelect();
   trajHead();
@@ -2508,7 +2514,7 @@ window.foldCard=foldCard;
 window.foldAll=(root,prefix)=>{if(!root)return;root.querySelectorAll("section.card:not(.collapsible)").forEach(sec=>{if(sec.id==="shareSec")return;const h=sec.querySelector(":scope>h2");if(!h)return;
   foldCard(sec,prefix+"_"+String(sec.id||sec.getAttribute("aria-label")||h.textContent).replace(/[^A-Za-z0-9]+/g,"_"));});};
 [["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
-function openTraj(id){state.cur=id;save();showTrajView("detail");fillInputs();trajHead();try{scopeCols(cur());}catch(e){}render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
+function openTraj(id){sweepNewProf(id);state.cur=id;save();showTrajView("detail");fillInputs();trajHead();try{scopeCols(cur());}catch(e){}render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
 /* a profile left without a name is named after its gun and ammo ("gun - ammo"), and keeps up as they change */
 function profAuto(L){let g="",a="";
   try{const r=rifleOf(L);g=(r&&r.name)||L.rifleName||"";}catch(e){g=L.rifleName||"";}
@@ -3449,8 +3455,8 @@ function zoomAbout(fx,fy,px,py){ // fx,fy <1 zooms in; px,py plot-pixel anchor
 
 // + New profile: a blank one (pick the gun and ammo, or type the numbers)
 function newLoad(){
-  const L=freshScratch();L.id="u"+Date.now().toString(36);L.builtin=false;L.nameAuto=true;L.name="New profile";L.temp=59;L.alt=0;
-  state.loads.push(L);state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
+  sweepNewProf();const L=freshScratch();L.id="u"+Date.now().toString(36);L.builtin=false;L.nameAuto=true;L.name="New profile";L.temp=59;L.alt=0;
+  state.loads.push(L);NEWPROF=L.id;state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
   try{$("f_rifle").focus({preventScroll:true});}catch(e){}
 }
 RB_CARTS.picker($("f_cart"),{extra:()=>[...new Set(state.loads.map(l=>l.cart).filter(Boolean))],onPick:c=>{const L=cur();if(c&&!(num(L.cal)>0)){L.cal=c.d;L.calUnit="in";$("f_cal_u").value="in";$("f_cal").value=DIA.show(c.d,"in");save();}render();}});
@@ -4070,7 +4076,7 @@ function partRounds(p){
 function partsChanged(){syncBuilds();queueRifles();if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));}
 function newPart(kind,gid,linkTo){const g=rifles.find(r=>r.id===gid);const p={id:"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:["lower","upper","barrel"].includes(kind)?kind:"barrel",mfr:"",model:"",notes:""};
   if(p.kind==="barrel")p.gunId=g?g.id:"";if(p.kind==="lower")p.serial="";else Object.assign(p,{cartridge:"",barrel:null,twist:null,sightHeight:null,scopeId:""});
-  parts.push(p);if(linkTo&&linkTo.build)linkTo.build[p.kind+"Id"]=p.id;partsChanged();partOpen=p.id;partFromGun=g?g.id:(linkTo?linkTo.id:null);rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("pt_mfr");if(el)el.focus();}
+  parts.push(p);freshAdd(p,{list:()=>parts,open:()=>partOpen===p.id,save:partsChanged});if(linkTo&&linkTo.build)linkTo.build[p.kind+"Id"]=p.id;partsChanged();partOpen=p.id;partFromGun=g?g.id:(linkTo?linkTo.id:null);rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("pt_mfr");if(el)el.focus();}
 // a new gun built from this lower or upper
 function makeGun(p){const r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true,build:{lowerId:"",upperId:""}};
   r.build[p.kind+"Id"]=p.id;rifles.push(r);queueRifles();partOpen=null;partFromGun=null;rifleOpen=r.id;renderRifles();window.scrollTo(0,0);}
@@ -4429,7 +4435,7 @@ function renderAmmo(root){
     bindPicks(root);
     root.querySelectorAll("[data-cal]").forEach(b=>b.addEventListener("click",()=>{ammoCal=ammoCal===b.dataset.cal?null:b.dataset.cal;renderRifles();const t=root.querySelector('[data-cal="'+CSS.escape(b.dataset.cal)+'"]');if(t&&ammoCal)t.scrollIntoView({block:"start",behavior:"smooth"});}));
     const cc=$("calClose");if(cc)cc.addEventListener("click",()=>{ammoCal=null;renderRifles();});
-    const co=$("calOwn");if(co)co.addEventListener("click",()=>{const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",bcm:"G1",cartridge:ammoCal};ammo.push(a);queueAmmo();ammoOpen=a.id;ammoCal=null;renderRifles();window.scrollTo(0,0);const el=$("af_mfr");if(el)el.focus();});
+    const co=$("calOwn");if(co)co.addEventListener("click",()=>{const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",bcm:"G1",cartridge:ammoCal};ammo.push(a);freshAdd(a,{list:()=>ammo,open:()=>ammoOpen===a.id,save:queueAmmo});queueAmmo();ammoOpen=a.id;ammoCal=null;renderRifles();window.scrollTo(0,0);const el=$("af_mfr");if(el)el.focus();});
     // search across everything, flat results by caliber
     const drawSearch=()=>{const box=$("ammoSearch"),words=norm(ammoCatQ).split(" ").filter(Boolean);$("calBrowse").hidden=!!words.length;
       if(!words.length){box.innerHTML="";return;}
@@ -4439,7 +4445,7 @@ function renderAmmo(root){
       bindPicks(box);};
     drawSearch();$("ammoCatQ").addEventListener("input",e=>{ammoCatQ=e.target.value;drawSearch();});
     $("ammoAddRel").addEventListener("click",()=>{const b=$("relAddBox");b.hidden=!b.hidden;if(!b.hidden)drawRelAdd(b,null,a=>{ammoOpen=a.id;renderRifles();window.scrollTo(0,0);});});
-    $("ammoAdd").addEventListener("click",()=>{const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",bcm:"G1"};ammo.push(a);queueAmmo();ammoOpen=a.id;renderRifles();window.scrollTo(0,0);const el=$("af_mfr");if(el)el.focus();});
+    $("ammoAdd").addEventListener("click",()=>{const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",bcm:"G1"};ammo.push(a);freshAdd(a,{list:()=>ammo,open:()=>ammoOpen===a.id,save:queueAmmo});queueAmmo();ammoOpen=a.id;renderRifles();window.scrollTo(0,0);const el=$("af_mfr");if(el)el.focus();});
     root.querySelectorAll("[data-aopen]").forEach(b=>b.addEventListener("click",()=>{ammoOpen=b.dataset.aopen;renderRifles();window.scrollTo(0,0);}));
     return;
   }
@@ -4528,8 +4534,21 @@ function renderAmmo(root){
   if(del)del.addEventListener("click",()=>{const i=ammo.indexOf(a);ammo=ammo.filter(x=>x.id!==a.id);ammoOpen=null;queueAmmo();renderRifles();window.scrollTo(0,0);
     RB_UNDO("Deleted "+ammoLabel(a),()=>{ammo.splice(Math.min(i,ammo.length),0,a);queueAmmo();renderRifles();},()=>{if(a.shared)unshare(a.id);});});
 }
+// a new item that's still empty when you leave it is dropped, so a stray tap on + Add doesn't leave a blank row (2.30.4).
+// FRESH: id -> {snap (the item as it was made), list(), open(), save(), remove(id)?}; checked by sweepFresh() each time a list draws.
+const FRESH=new Map();
+const FRESH_IGN=new Set(["id","created","updated","typeChecked","typeGuessed","nameAuto","varLabel","sum"]);
+const freshEmpty=v=>v==null||v===""||v===false||(Array.isArray(v)&&!v.length)||(typeof v==="object"&&!Array.isArray(v)&&!Object.keys(v).length);
+function freshAdd(x,o){FRESH.set(x.id,Object.assign({snap:JSON.parse(JSON.stringify(x))},o));return x;}
+function freshKeep(id){if(id)FRESH.delete(id);}
+function freshSame(x,snap){return Object.keys(x).every(k=>FRESH_IGN.has(k)||freshEmpty(x[k])||JSON.stringify(x[k])===JSON.stringify(snap[k]));}
+function freshMedia(id){return gunPhotosOf(id).length>0||gunPhotosOf(picKey(id)).length>0||gnFiles(id).length>0||VLT.docs.some(d=>d.item===id);}
+function freshUnlink(id){let ch=false;rifles.forEach(g=>{if(g.scopeId===id){g.scopeId=null;ch=true;}if(g.canId===id){g.canId=null;ch=true;}if(g.build){["lowerId","upperId"].forEach(k=>{if(g.build[k]===id){g.build[k]="";ch=true;}});}});return ch;}
+function sweepFresh(){FRESH.forEach((f,id)=>{if(f.open())return;FRESH.delete(id);const A=f.list()||[],x=A.find(y=>y.id===id);if(!x||!freshSame(x,f.snap)||freshMedia(id))return;
+  if(f.remove)f.remove(id);else{A.splice(A.indexOf(x),1);if(freshUnlink(id))queueRifles();f.save();}});}
 function renderRifles(){
   const root=$("riflesRoot");if(!root)return;
+  sweepFresh();
   syncBuilds();
   setTimeout(()=>root.querySelectorAll("[data-vault]").forEach(el=>vDraw(el)),0);
   document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>{const on=b.dataset.garea===gunArea;b.setAttribute("aria-selected",on?"true":"false");
@@ -4646,7 +4665,7 @@ function renderRifles(){
   {const r0=rifleOpen&&rifles.find(x=>x.id===rifleOpen);$("rifSeg").hidden=!!r0;$("rifHeadBack").hidden=!r0;$("rifHeadBack").textContent="‹ Guns";$("rifSub").hidden=!!r0;$("rifTitle").textContent=r0?(r0.build&&r0.build.lowerId?buildName(r0):(r0.name||"Unnamed gun")):"Gear & Ranges";}
   if(window.TRAJ_RIFLES)window.TRAJ_RIFLES(rifles.map(gunSpec));
   const addBtn=$("rifleAdd");
-  if(addBtn)addBtn.addEventListener("click",()=>{const r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true};rifles.push(r);queueRifles();rifleOpen=r.id;renderRifles();window.scrollTo(0,0);const el=$("rf_mfr");if(el)el.focus();});
+  if(addBtn)addBtn.addEventListener("click",()=>{const r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true};rifles.push(r);freshAdd(r,{list:()=>rifles,open:()=>rifleOpen===r.id,save:queueRifles});queueRifles();rifleOpen=r.id;renderRifles();window.scrollTo(0,0);const el=$("rf_mfr");if(el)el.focus();});
   root.querySelectorAll("[data-rfav]").forEach(b=>b.addEventListener("click",()=>{toggleFav(b.dataset.rfav);renderRifles();}));
   {const fb=$("rfFav");if(fb)fb.addEventListener("click",()=>{toggleFav(fb.dataset.id);renderRifles();});}
   {const rt=$("gunRetTraj");if(rt)rt.addEventListener("click",()=>{const id=gunReturnTraj;gunReturnTraj=null;if(window.RB_TRAJ)RB_TRAJ.open(id);});}
@@ -4709,7 +4728,7 @@ function renderRifles(){
   root.querySelectorAll("[data-gtrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.gtrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("gunRangeDay").addEventListener("click",()=>{homePick={gun:r.id};showTab("home");window.scrollTo(0,0);});
   $("rf_can").addEventListener("change",e=>{const v=e.target.value;
-    if(v==="__new"){const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);mountCan(n.id,r.id);canFromGun=r.id;gunArea="cans";canOpen=n.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("cn_mfr");if(el)el.focus();return;}
+    if(v==="__new"){const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);freshAdd(n,{list:()=>cans,open:()=>canOpen===n.id,save:queueRifles});mountCan(n.id,r.id);canFromGun=r.id;gunArea="cans";canOpen=n.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("cn_mfr");if(el)el.focus();return;}
     if(v)mountCan(v,r.id);else{r.canId=null;queueRifles();}renderRifles();});
   {const co=$("rfCanOpen");if(co)co.addEventListener("click",()=>{canFromGun=r.id;gunArea="cans";canOpen=r.canId;rifleOpen=null;renderRifles();window.scrollTo(0,0);});}
   $("rf_scope").addEventListener("change",e=>{const v=e.target.value;
@@ -4746,7 +4765,7 @@ function renderGearRanges(root){
   root.innerHTML=h;
   $("rifSeg").hidden=!!r;$("rifHeadBack").hidden=!r;$("rifHeadBack").textContent="‹ Ranges";$("rifSub").hidden=!!r;$("rifTitle").textContent=r?(r.name||"Unnamed range"):"Gear & Ranges";
   if(!r){
-    $("rgAdd").addEventListener("click",()=>{if(!G)return;rangeOpen=G.add().id;renderRifles();window.scrollTo(0,0);const n=$("rg_name");if(n)n.focus();});
+    $("rgAdd").addEventListener("click",()=>{if(!G)return;const nr=G.add();freshAdd(nr,{list:()=>G.list(),open:()=>rangeOpen===nr.id,remove:id=>G.del(id)});rangeOpen=nr.id;renderRifles();window.scrollTo(0,0);const n=$("rg_name");if(n)n.focus();});
     root.querySelectorAll("[data-rgopen]").forEach(b=>b.addEventListener("click",()=>{rangeOpen=b.dataset.rgopen;G.pick(rangeOpen);renderRifles();window.scrollTo(0,0);}));
     return;
   }
@@ -4991,7 +5010,7 @@ function renderCans(root){
         '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun: picked on each range trip')+'</span></span></button>';}).join("")+'</div>';
     h+='</section>';
     root.innerHTML=h;gearHead(null);
-    $("canAdd").addEventListener("click",()=>{const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("cn_mfr");if(e)e.focus();});
+    $("canAdd").addEventListener("click",()=>{const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);freshAdd(n,{list:()=>cans,open:()=>canOpen===n.id,save:queueRifles});queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("cn_mfr");if(e)e.focus();});
     root.querySelectorAll("[data-canopen]").forEach(b=>b.addEventListener("click",()=>{canOpen=b.dataset.canopen;canFromGun=null;renderRifles();window.scrollTo(0,0);}));
     bindCatPick("cans",i=>{const x=(window.RB_CANS||[])[i];if(!x)return;const n=canFromCat(x);cans.push(n);queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);});
     return;
@@ -5114,7 +5133,7 @@ function renderGearNotes(root){
         return '<button class="loaditem withthumb" type="button" data-gno="'+esc(x.id)+'"><span class="lthumb">'+(ph?'<img alt="" loading="lazy" src="'+esc(ph.url)+'">':(x.locked?GN_LOCK:GN_ICON))+'</span><span class="ltext grow"><span class="t">'+(x.pinned?'<span class="pintag">Pinned</span> ':'')+esc(gnTitle(x))+(x.locked?' <span class="chip">Locked</span>':'')+'</span>'+
           (body?'<span class="d">'+esc(body.slice(0,140))+'</span>':'')+'<span class="m">'+esc([x.updated?"Changed "+fmtDate(new Date(x.updated).toISOString().slice(0,10)):"",na?na+" attachment"+(na===1?"":"s"):"",x.locked&&!t?"Unlock the vault to read it":""].filter(Boolean).join(" · "))+'</span></span></button>';}).join("")+'</div>';
     root.innerHTML=h+'</section>';gearHead(null);
-    $("gnAdd").addEventListener("click",()=>{const t=Date.now(),x={id:gearId("g"),title:"",body:"",created:t,updated:t};gnotes.push(x);queueRifles();gnoteOpen=x.id;renderRifles();window.scrollTo(0,0);const el=$("gn_title");if(el)el.focus();});
+    $("gnAdd").addEventListener("click",()=>{const t=Date.now(),x={id:gearId("g"),title:"",body:"",created:t,updated:t};gnotes.push(x);freshAdd(x,{list:()=>gnotes,open:()=>gnoteOpen===x.id,save:queueRifles});queueRifles();gnoteOpen=x.id;renderRifles();window.scrollTo(0,0);const el=$("gn_title");if(el)el.focus();});
     const q=$("gnQ");if(q)q.addEventListener("input",()=>{gnoteQ=q.value;const pos=q.selectionStart;renderRifles();const q2=$("gnQ");if(q2){q2.focus();try{q2.setSelectionRange(pos,pos);}catch(e){}}});
     {const u=$("gnUnlockAll");if(u)u.addEventListener("click",async()=>{if(await gnVault()){await Promise.all(gnotes.filter(x=>x.locked).map(gnDecrypt));renderRifles();}});}
     root.querySelectorAll("[data-gno]").forEach(b=>b.addEventListener("click",()=>{gnoteOpen=b.dataset.gno;gnConfirm=false;renderRifles();window.scrollTo(0,0);}));
@@ -5178,7 +5197,7 @@ function renderInv(root){
     h+=grp("Needs attention",att)+grp("Supplies",cons)+grp("Equipment",eq)+'</section>';
     root.innerHTML=h;gearHead(null);
     if(window.RB_FILTER)RB_FILTER(root.querySelector(".card"),"inv");
-    const add=kind=>{const n={id:gearId("i"),kind,name:"",cat:"",notes:""};inv.push(n);queueRifles();invOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("iv_name");if(e)e.focus();};
+    const add=kind=>{const n={id:gearId("i"),kind,name:"",cat:"",notes:""};inv.push(n);freshAdd(n,{list:()=>inv,open:()=>invOpen===n.id,save:queueRifles});queueRifles();invOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("iv_name");if(e)e.focus();};
     $("invAddC").addEventListener("click",()=>add("consumable"));$("invAddE").addEventListener("click",()=>add("equipment"));
     root.querySelectorAll("[data-invo]").forEach(b=>b.addEventListener("click",()=>{invOpen=b.dataset.invo;renderRifles();window.scrollTo(0,0);}));
     return;
@@ -5272,7 +5291,7 @@ function renderScopes(root){
         newScope({mfr:x.mfr,model:x.model,magMin:x.mag[0],magMax:x.mag[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src});renderRifles();window.scrollTo(0,0);}));};
     loadScopeCat().then(draw).catch(()=>{const b=$("scopeCat");if(b)b.innerHTML='<p class="err">Couldn\'t load the list. Check your connection, or enter the scope yourself.</p>';});
     $("scopeQ").addEventListener("input",e=>{scopeQ=e.target.value;draw();});
-    $("scopeOwn").addEventListener("click",()=>{newScope({});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();});
+    $("scopeOwn").addEventListener("click",()=>{const x=newScope({});if(x)freshAdd(x,{list:()=>scopes,open:()=>scopeOpen===x.id,save:scopesChanged});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();});
     return;
   }
   if(!sc){
@@ -5550,6 +5569,7 @@ window.RB_LIB={
       scopes:SCOPE_CAT?SCOPE_CAT.length:null,cans:window.RB_CANS?RB_CANS.length:null,canMakers:window.RB_CANS?new Set(RB_CANS.map(x=>x.mfr)).size:null,burn:R.burn,dia:R.dia,press:R.press,gloss:R.gloss};}
 };
 function renderComps(){
+  sweepFresh();
   if(compKind==="bullets"&&!window.RB_BULLETS)loadBulletCat().then(b=>{if(b.length&&compKind==="bullets"&&!compOpen)renderComps();});
   const root=$("compRoot"),broot=$("brassRoot");if(!root)return;
   document.querySelectorAll("#compTabs [data-ck]").forEach(b=>b.setAttribute("aria-selected",b.dataset.ck===compKind?"true":"false"));
@@ -5603,7 +5623,7 @@ function renderComps(){
   root.innerHTML=h;
   if(!compOpen&&window.RB_FILTER)RB_FILTER(root.querySelector("section.card"),"comp_"+compKind);
   const add=$("compAdd");
-  if(add)add.addEventListener("click",()=>{const c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",notes:""};if(compKind==="bullets")c.bcm="G1";comps[compKind].push(c);queueComps();compOpen=c.id;renderComps();window.scrollTo(0,0);const el=$("cf_"+K.fields[0][0]);if(el)el.focus();});
+  if(add)add.addEventListener("click",()=>{const c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",notes:""};if(compKind==="bullets")c.bcm="G1";comps[compKind].push(c);{const k=compKind;freshAdd(c,{list:()=>comps[k],open:()=>compOpen===c.id,save:queueComps});}queueComps();compOpen=c.id;renderComps();window.scrollTo(0,0);const el=$("cf_"+K.fields[0][0]);if(el)el.focus();});
   const cr=$("compRet");if(cr)cr.addEventListener("click",()=>{
     if(compReturnAmmo){const id=compReturnAmmo;compReturnAmmo=null;compOpen=null;gunArea="ammo";ammoOpen=ammo.some(x=>x.id===id)?id:null;showTab("rifles");renderRifles();window.scrollTo(0,0);return;}
     const id=compReturn;compReturn=null;showTab("rel");openLoad(id);});
@@ -5664,6 +5684,7 @@ const noteTitle=n=>(n.title||"").trim()||((n.body||"").trim().split("\n")[0]||""
 const noteWhen=t=>{if(!t)return "";const d=new Date(t);return d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});};
 function renderNotes(){
   const root=$("rnRoot");if(!root)return;
+  sweepFresh();
   if(noteOpen&&!notes.some(n=>n.id===noteOpen))noteOpen=null;
   const n=noteOpen&&notes.find(x=>x.id===noteOpen);
   $("rnBack").hidden=!n;$("rnSeg").hidden=!!n;$("rnSub").hidden=!!n;$("rnTitle").textContent=n?noteTitle(n):"Reloading";
@@ -5678,7 +5699,7 @@ function renderNotes(){
     else h+='<div class="cartgroup">'+list.map(x=>{const body=(x.body||"").trim(),first=(x.title||"").trim()?body:body.split("\n").slice(1).join(" ");
       return '<button class="loaditem" type="button" data-nopen="'+esc(x.id)+'"><span class="t">'+(x.pinned?'<span class="pintag">Pinned</span> ':'')+esc(noteTitle(x))+'</span>'+(first.trim()?'<span class="d">'+esc(first.replace(/\s+/g," ").slice(0,140))+'</span>':'')+'<span class="m">'+esc(noteWhen(x.updated||x.created))+'</span></button>';}).join("")+'</div>';
     root.innerHTML=h+'</section>';
-    $("rnAdd").addEventListener("click",()=>{const t=Date.now(),x={id:"n"+t.toString(36)+Math.random().toString(36).slice(2,6),title:"",body:"",created:t,updated:t};notes.push(x);queueNotes();noteOpen=x.id;renderNotes();window.scrollTo(0,0);const el=$("rn_title");if(el)el.focus();});
+    $("rnAdd").addEventListener("click",()=>{const t=Date.now(),x={id:"n"+t.toString(36)+Math.random().toString(36).slice(2,6),title:"",body:"",created:t,updated:t};notes.push(x);freshAdd(x,{list:()=>notes,open:()=>noteOpen===x.id,save:queueNotes});queueNotes();noteOpen=x.id;renderNotes();window.scrollTo(0,0);const el=$("rn_title");if(el)el.focus();});
     const q=$("rnQ");if(q)q.addEventListener("input",()=>{notesQ=q.value;const pos=q.selectionStart;renderNotes();const q2=$("rnQ");if(q2){q2.focus();try{q2.setSelectionRange(pos,pos);}catch(e){}}});
     root.querySelectorAll("[data-nopen]").forEach(b=>b.addEventListener("click",()=>{noteOpen=b.dataset.nopen;renderNotes();window.scrollTo(0,0);}));
     return;
@@ -7204,7 +7225,7 @@ async function liveMove(pid,v){
   const [k,a,b]=v.split(":"),body=k==="t"?{tripId:a}:{loadId:a,ladderId:b};
   const item=liveSaved.find(x=>x.id===pid),r=await API.post("/api/live/"+pid+"/move",body),ph=(r&&r.photo)||(item&&Object.assign({},item,k==="l"?{ladderId:b}:{}));
   liveSaved=liveSaved.filter(x=>x.id!==pid);
-  if(k==="t"&&tripOpen===a&&ph){tripPhotos.push(ph);renderTripPhotos();}
+  if(k==="t"&&tripOpen===a&&ph){freshKeep(a);tripPhotos.push(ph);renderTripPhotos();}
   if(k==="l"&&openId===a&&ph){photos.push(ph);renderPhotos();}
   renderLiveSaved();
   if(k==="t"){const t=trips.find(x=>x.id===a);return "Added to the range trip"+(t&&t.date?" on "+fmtDate(t.date):"")+".";}
@@ -8203,7 +8224,7 @@ async function uploadTripPhotos(files){
     try{
       const {data,w,h}=await compress(f);
       const r=await API.post("/api/trips/"+id+"/photos",{data,w,h,caption:""});
-      if(tripOpen===id&&r&&r.photo)tripPhotos.push(r.photo);
+      if(tripOpen===id&&r&&r.photo)freshKeep(id),tripPhotos.push(r.photo);
     }catch(e){
       if(e&&(e.status||e.network))onWriteError(e);
       else banner("That picture couldn't be read. Try a JPEG or PNG photo.",true);
@@ -8221,7 +8242,7 @@ function newTrip(){
   const TL=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===T.id)||T,tp=TL.partId;
   const g0=rifles.find(r=>r.id===TL.rifleId),cn=g0&&g0.canId&&cans.some(c=>c.id===g0.canId)?g0.canId:"";
   const t={id:newId(),trajId:T.id,partId:tp&&parts.some(p=>p.id===tp)?tp:"",canId:cn,...gunBuild(TL.rifleId),date:todayISO(),place:prev?prev.place||"":"",distance:prev?prev.distance:null,rounds:null,temp:null,wind:"",avgVel:null,sd:null,notes:"",created:Date.now()};
-  trips.push(t);queueTrips();openTrip(t.id);
+  trips.push(t);freshAdd(t,{list:()=>trips,open:()=>tripOpen===t.id,save:queueTrips});queueTrips();openTrip(t.id);
   setTimeout(()=>{const f=$("tp_place");if(f&&!f.value)f.focus();},50);
 }
 /* ---------- cold-bore shot: where the first shot of the day landed, from the aim point ---------- */
@@ -8326,6 +8347,7 @@ function bindVelTemp(T){const b=$("vtUse");if(!b||!VT_FIT)return;
     b.disabled=true;});}
 function renderTrips(){
   const root=$("tripsRoot");if(!root)return;
+  sweepFresh();
   const T=window.RB_TRAJ&&RB_TRAJ.cur();
   if(!T){root.innerHTML="";return;}
   if(!tripTraj||tripTraj.id!==T.id){tripOpen=null;tripPhotos=[];}
@@ -8456,7 +8478,7 @@ function renderTrips(){
     openLive({title:(t.place||"Range trip")+(t.date?" · "+fmtDate(t.date):""),groups:[],dist:num(t.distance)||100,dia:C.dia,
       async save(data,w,h,M){const r=await API.post("/api/trips/"+id+"/photos",{data,w,h,caption:""});const ph=r&&r.photo;if(!ph)throw new Error("save");
         const txt=measureText(M,null);await API.patch("/api/photos/"+ph.id,{measure:M,caption:txt});Object.assign(ph,{measure:M,caption:txt,w,h});
-        if(tripOpen===id){tripPhotos.push(ph);renderTripPhotos();openViewer(ph.id,tripCtx(t));}}});});
+        if(tripOpen===id){freshKeep(id);tripPhotos.push(ph);renderTripPhotos();openViewer(ph.id,tripCtx(t));}}});});
   {const sel=$("tripTgt");let last="rb5";try{last=localStorage.getItem("rb.tripTgt")||"rb5";}catch(e){}
     fetch(targetsUrl(),{cache:"no-cache"}).then(r=>r.json()).then(T=>{if(!$("tripTgt"))return;const FO=Object.keys(T.formats||{letter:1});sel.innerHTML=T.layouts.filter(L=>!L.legacy).sort((x,y)=>(FO.indexOf(x.fmt||"letter")-FO.indexOf(y.fmt||"letter"))||(x.aims.length-y.aims.length)).map(L=>'<option value="'+esc(L.id)+'"'+(L.id===last?' selected':'')+'>'+esc(L.name)+' ('+esc(((T.formats||{})[L.fmt||"letter"]||{}).label||((L.fmt||"letter")==="tabloid"?"11 × 17":"Letter"))+')</option>').join("");}).catch(()=>{});
     $("tripTgtGo").addEventListener("click",()=>{const id=sel.value||"rb5";try{localStorage.setItem("rb.tripTgt",id);}catch(e){}
@@ -8854,7 +8876,9 @@ function rbDiffPaths(a,b,p="",out=[]){if(rbEq(a,b))return out;
 let VERS=null,versT=null;
 async function versAll(){if(!VERS){const v=await OFF.get("rb-vers");if(!VERS)VERS=rbPlain(v)?v:{};}return VERS;}
 async function verOf(url){const all=await versAll();return all[url]||(all[url]={});}
-async function setVer(url,k,data){const v=await verOf(url);v[k]=data===undefined?null:JSON.parse(JSON.stringify(data));
+// a successful save makes "sent" newer than anything loaded before it, so the older "seen" is dropped: otherwise the server
+// read "this device didn't change it" for something added and then removed before the next load, and brought it back (2.30.4)
+async function setVer(url,k,data){const v=await verOf(url);v[k]=data===undefined?null:JSON.parse(JSON.stringify(data));if(k==="sent")delete v.seen;
   clearTimeout(versT);versT=setTimeout(()=>{OFF.put("rb-vers",VERS);},400);}
 // a save as it goes to the server: the data plus the versions it started from
 async function wireBody(url,body,extra){
@@ -10306,6 +10330,8 @@ window.RB_CARTPAGE=(function(){
     h+='<p class="note">'+(c.own?'Your own cartridge: it shows up in every cartridge picker and its checks work like the listed ones.':'Changed boxes turn '+'colored. Your changes are used everywhere in Range Book (the picker, bullet diameters and warnings); <b>Revert</b> puts the original back.')+'</p></div>';
     return h;}
   function draw(){const root=$("cartRoot");if(!root)return;
+  // an added cartridge left with no name or numbers is dropped once it's closed (2.30.4)
+  {const u0=user(),bl=(u0.add||[]).filter(c=>c.id!==open&&blankCart(c));if(bl.length){u0.add=u0.add.filter(c=>!bl.includes(c));save(u0);}}
     const R=rows(),n=C.list.filter(c=>!c.own).length;
     let h='<div class="banner twistbanner" role="note"><b>For reference only. Don\'t trust it.</b> These numbers came from SAAMI and C.I.P. specifications and were double-checked, but they can still be wrong, and your gun, brass or bullets may differ. Never rely on them for load development or safety: check your gun\'s barrel stamp, a current load manual and the SAAMI drawing. If you find a mistake, tap the cartridge and fix it.</div>'+
       '<div class="row crtools"><input id="crQ" type="search" placeholder="Search: 308, 30-06, 7.62 NATO, 9mm…" aria-label="Search cartridges" value="'+esc(q)+'"><button type="button" class="btn primary" id="crAdd">+ Add a cartridge</button></div>'+
@@ -10340,8 +10366,11 @@ window.RB_CARTPAGE=(function(){
       if(window.RB_UNDO&&keep){const name=open;RB_UNDO("Reverted "+name,()=>{const v=user();v.ed[name]=keep;save(v);draw();});}});
   }
   // open one cartridge (from Reference › Bullet diameters)
+  function blankCart(c){return !String(c.n||"").trim()&&!(c.d>0)&&!(c.cl>0)&&!(c.oal>0);}
+  // shown again from Tools or Reference: a still-empty cartridge you'd just added is closed (and so dropped)
+  function show(){if(open&&(user().add||[]).some(c=>c.id===open&&blankCart(c)))open=null;draw();}
   function openOne(id){open=id;q="";type="";draw();const r=document.querySelector('[data-crow="'+CSS.escape(id)+'"]');if(r)r.scrollIntoView({block:"center"});}
-  return {draw,openOne,editing:()=>{const a=document.activeElement,r=$("cartRoot");return !!(a&&r&&r.contains(a)&&/INPUT|SELECT/.test(a.tagName));}};
+  return {draw:show,openOne,editing:()=>{const a=document.activeElement,r=$("cartRoot");return !!(a&&r&&r.contains(a)&&/INPUT|SELECT/.test(a.tagName));}};
 })();
 </script>
 <script>

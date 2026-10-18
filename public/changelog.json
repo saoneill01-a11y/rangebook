@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.30.3",
+      "version": "2.30.4",
       "date": "2026-10-18",
       "title": "Coriolis, and a check of the ballistics math and cartridge safety",
       "items": [
@@ -25,7 +25,9 @@
         "Cartridge checks, from an independent check against SAAMI's list of unsafe gun and ammo combinations: 9mm NATO is now its own cartridge, with a Check first note in a 9mm Luger gun (SAAMI lists it as unsafe; many makers allow it).",
         "+P and +P+ stay in the cartridge name (38 Special +P used to be saved as plain 38 Special) and get a Check first note: only in guns rated for it. Names saved before this version that already lost their +P can't be told apart, so check your +P records.",
         "Ammo with a bigger bullet than the barrel's bore (8mm Mauser in a 30-06, 300 Blackout in a 6.5 Grendel) now says Don't shoot this, not just Wrong cartridge. The 308 / 7.62 NATO check-your-manual note now shows. The message no longer says two cartridges use the same bullet when the sizes differ a little (22 LR and 22 WMR).",
-        "Fixes in the cartridge list: 30 Super Carry's maximum overall length is 1.169 in (1.100 is SAAMI's minimum); 7mm Backcountry no longer shows a trim-to length (Federal says don't trim); '32 Long' no longer counts as 32 S&W Long (it can mean 32 Long Colt, which isn't safe in a 32 H&R); 308 Winchester notes that some brass (Lapua's Palma) takes small rifle primers; a bullet exactly .0025 in off now counts as a match, as intended."
+        "Fixes in the cartridge list: 30 Super Carry's maximum overall length is 1.169 in (1.100 is SAAMI's minimum); 7mm Backcountry no longer shows a trim-to length (Federal says don't trim); '32 Long' no longer counts as 32 S&W Long (it can mean 32 Long Colt, which isn't safe in a 32 H&R); 308 Winchester notes that some brass (Lapua's Palma) takes small rifle primers; a bullet exactly .0025 in off now counts as a match, as intended.",
+        "Tapping + Add (a gun, scope, suppressor, ammo, inventory item, note, range, component, cartridge, Shooting profile or range trip) and going back without filling anything in no longer leaves an empty item in the list.",
+        "Fixed: something you added and then deleted (or left empty) before the app next loaded from the server could come back. Deletes now stick."
       ]
     },
     {
