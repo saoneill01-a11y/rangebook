@@ -58,6 +58,7 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .field input.name{font-family:var(--body);font-weight:600;color:var(--fg);background:var(--sunk)}
 .field.wide{grid-column:1/-1}
 .derived{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.derived .tipnote{flex-basis:100%}
 .derived b{font-family:var(--mono);font-weight:500;color:var(--fg)}
 .ingrp{border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px 12px;margin:14px 0 0;min-width:0}
 .ingrp>legend{font-family:var(--display);font-weight:700;font-size:16.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);padding:0 6px;margin-left:-4px}
@@ -1462,7 +1463,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Coriolis</h3>
       <p>With the <b>Long</b> chart picked, the Conditions card has a <b>Coriolis</b> switch. Coriolis is the earth turning under the bullet while it flies. It pushes the bullet a little right in the northern hemisphere (left in the southern), whatever direction you shoot, and a little high shooting east or low shooting west. It's tiny up close and a few inches at 1,000 yd, so it's off until you turn it on. Enter your <b>latitude</b> (or tap <b>Use my location</b>, or pick a saved range) and the <b>direction of fire</b> in degrees from north (0 north, 90 east, 180 south, 270 west). On a phone, <b>Use phone compass</b> reads it for you: hold the phone flat with its top edge pointing at the target, away from the rifle, the truck and steel benches. On an iPhone you'll be asked to allow motion and orientation access the first time. The compass gives a magnetic heading, which is close enough here. Once it's on, the Up numbers, the reticle holds, the range table (with a Coriolis column), the dope card (a Cor R column) and Field mode all include it. On a saved range, give each target its own direction (<b>Dir °</b>, with a compass button) and the range's latitude is used for that range's dope.</p>
       <h3>Stability and spin drift</h3>
-      <p>Enter the barrel <b>twist</b> (1 turn in so many inches; it fills in from your gun) and the <b>bullet length</b> (measure one with calipers, tip to base). You then see the stability number (SG: 1.5 or more is fully stable, 1.0 to 1.5 is marginal, under 1.0 the bullet won't fly straight) and a spin drift column. If the bullet has a plastic tip (ELD-M, A-Tip, Tipped MatchKing, Ballistic Tip and the like), also enter the <b>Plastic tip length</b>: the tip adds length but almost no weight, so it raises the stability number and the spin drift (Courtney and Miller's correction to the Miller formula; about 0.1 to 0.4 MOA of spin drift at 1,000 yd). Measure it from the tip to where the copper starts. With a normal right-hand twist the bullet drifts right, so hold or dial that much left on top of the wind. Spin drift is measured from your zero, the same way as Coriolis: zeroing there already took out its share.</p>
+      <p>Enter the barrel <b>twist</b> (1 turn in so many inches; it fills in from your gun) and the <b>bullet length</b> (measure one with calipers, tip to base). You then see the stability number (SG: 1.5 or more is fully stable, 1.0 to 1.5 is marginal, under 1.0 the bullet won't fly straight) and a spin drift column. If the bullet has a plastic tip (ELD-M, A-Tip, Tipped MatchKing, Ballistic Tip and the like), also enter the <b>Plastic tip length</b>: the tip adds length but almost no weight, so it raises the stability number and the spin drift (Courtney and Miller's correction to the Miller formula; about 0.1 to 0.4 MOA of spin drift at 1,000 yd). Measure it from the tip to where the copper starts. Makers don't publish tip lengths, so when the profile's ammo has a tipped bullet and the box is empty, a note under the stability number reminds you, with an <b>Enter it</b> button. With a normal right-hand twist the bullet drifts right, so hold or dial that much left on top of the wind. Spin drift is measured from your zero, the same way as Coriolis: zeroing there already took out its share.</p>
       <h3>True up the velocity</h3>
       <p>Once you've shot at long range, enter the distance and the dial that actually hit under <b>True up velocity</b>. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> and the table and dope card will line up with what you saw. Use a distance well past your zero and a good group.</p>
       <h3>Weather where you are</h3>
@@ -2764,6 +2765,9 @@ function stability(L,S){
   const t=L.twist/L.cal,l=L.blen/L.cal,lm=(L.blen-tipLen(L))/L.cal;
   return 30*L.w/(t*t*Math.pow(L.cal,3)*l*(1+lm*lm))*Math.cbrt(L.mv/2800)/S.rho;
 }
+// is this profile's bullet a plastic-tipped one? (from its ammo, the catalog load, or its name; "Open Tip Match" is a hollow point, not plastic)
+const TIP_RE=/\b(ELD[- ]?(M|X|VT)\b|ELD Match|A-?Tip|Tipped|TMK|Ballistic Tip|AccuBond|V-?MAX|SST|TTSX|Terminal Ascent|Scirocco|Varmageddon|Edge TLR|CX\b|FTX\b|Flex ?Tip|Polymer Tip)/i;
+function tippedBullet(L){const a=L&&L.ammoId&&(AMMO||[]).find(x=>x.id===L.ammoId);const t=[a&&a.bullet,a&&a.name,a&&a.line,L&&L.qcCat,L&&L.name].filter(Boolean).join(" ");return TIP_RE.test(t);}
 const tipLen=L=>{const p=num(L.tip);return p>0&&L.blen>0?Math.min(p,L.blen*.5):0;};
 const spinIn=(SG,t)=>SG!=null&&t>0?1.25*(SG+1.2)*Math.pow(t,1.83):null;
 // spin drift at x compared with the zero z (zeroing there already took out its share, like Coriolis)
@@ -2844,7 +2848,10 @@ function render(){
     const b=$("twistTool");if(b)b.onclick=()=>{if(window.RB_TOOLS)RB_TOOLS.open("twist",{traj:L0.id});};}}
   if(SG!=null)d+="<span>Stability (SG) <b>"+SG.toFixed(2)+"</b>"+(tipLen(L)?" (with a "+U.s("dim",tipLen(L),U.metric?1:2)+" plastic tip)":"")+(SG<1?' <span class="err">unstable: faster twist needed</span>':SG<1.5?' <span class="err">marginal</span>':"")+"</span>";
   else if(L.twist>0&&!(L.blen>0))d+='<span>Enter the bullet length to see stability and spin drift.</span>';
+  // a bullet with a plastic tip but no tip length entered: say so, with a button to the box (2.30.5)
+  if(!tipLen(L)&&tippedBullet(L0))d+='<span class="tipnote">This bullet has a plastic tip: enter its tip length'+(L.blen>0?'':' (and the bullet length)')+' for an accurate stability number and spin drift. <button class="linkbtn" type="button" id="tipGo">Enter it</button></span>';
   $("derived").innerHTML=d;
+  {const tg=$("tipGo");if(tg)tg.onclick=()=>{setInOpen(true);const e=$(L.blen>0?"f_tip":($("f_blen").closest(".field").hidden?"f_tip":"f_blen"));if(e){e.scrollIntoView({block:"center"});e.focus({preventScroll:true});}};}
   spinNote(L0,L,SG);
 
   // crossings
