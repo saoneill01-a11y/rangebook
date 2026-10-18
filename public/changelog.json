@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.26.0",
+      "version": "2.26.1",
       "date": "2026-10-17",
       "title": "Reloading › Reference",
       "items": [
@@ -11,7 +11,8 @@
         "Bullet diameters: cartridges grouped by the bullet they actually use, with the common mix-ups (.308 vs .311, .355 vs .357, .452 vs .458).",
         "Powder burn rates: about 250 powders from fastest to slowest, searchable and filterable by maker, with the powders in your Components marked. It's for orientation only, never for substituting powders.",
         "Pressure signs: what each sign on the ladder checklist looks like, what it means and what to do.",
-        "Glossary: reloading terms, searchable."
+        "Glossary: reloading terms, searchable.",
+        "The tours are up to date: the welcome tour and each tab's tour now cover profiles, Reference, suppressors, inventory, lowers and uppers, range weather, the new tools, arranging Home and profile cards, and links. Account has its own tour now too."
       ]
     },
     {
