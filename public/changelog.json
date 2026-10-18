@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.22.0",
+      "version": "2.22.1",
       "date": "2026-10-17",
       "title": "Pictures for scopes and suppressors, and a short-range chart",
       "items": [
@@ -11,7 +11,8 @@
         "A profile's Gun has an Edit button that opens the gun, with a Back button to return to the profile.",
         "Leave a profile's name blank and it's named \"gun - ammo\", and keeps up when you change either.",
         "+ New profile starts blank instead of copying the profile you were on.",
-        "Find on the map shows the places it found (with a link to see each on a map) and asks which is right, then puts the full address in the Address box."
+        "Find on the map shows the places it found (with a link to see each on a map) and asks which is right, then puts the full address in the Address box.",
+        "Chronograph import: strings are put in the order they were shot (the Garmin ShotView Excel export lists the newest first), and a string named with its charge weight (like \"25.9gr N140\") goes to the group with that charge. Garmin's sheet names are cleaned up to the session name."
       ]
     },
     {

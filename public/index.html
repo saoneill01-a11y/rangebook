@@ -1446,7 +1446,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Pressure signs</h3>
       <p>Each group in a ladder has <b>Pressure signs</b>: tap any you saw on that charge's cases or bolt (flat or cratered primers, ejector marks, a heavy bolt lift, sticky extraction, loose primer pockets), and enter case head expansion if you measure it. A charge with any of them gets a <b>!</b> triangle on the <b>Velocity by charge</b> chart and a <b>pressure signs</b> tag in the Summary, and they're listed in the Excel and PDF exports. This is a notebook, not a pressure gauge: pressure can be dangerous with no visible signs at all, so always stay within your load manual.</p>
       <h3>Import from your chronograph</h3>
-      <p>Set up a group for each charge weight in the ladder first. Then tap <b>Import chronograph file</b> on the ladder's first group and pick the export from your RangeCraft (.xlsx), Garmin Xero (ShotView .csv or .xlsx) MagnetoSpeed (LOG.CSV from the V3's memory card, or the .csv from the XFR app) or LabRadar (the SR0001 Report.csv files from its SD card; pick several at once and each series fills its own group, SR0001 first). Each string fills the next empty group in that ladder in the order you shot them. If the ladder has no tested date yet, it takes the date from the file when the file has one (MagnetoSpeed's memory-card file doesn't, so set that date yourself). Check that each string landed on the right charge weight. If the chronograph caught a bad reading (a miss or an echo), tap <b>− Shot</b>, tap that shot and tap <b>Delete</b>.</p>
+      <p>Set up a group for each charge weight in the ladder first. Then tap <b>Import chronograph file</b> on the ladder's first group and pick the export from your RangeCraft (.xlsx), Garmin Xero (ShotView .csv or .xlsx) MagnetoSpeed (LOG.CSV from the V3's memory card, or the .csv from the XFR app) or LabRadar (the SR0001 Report.csv files from its SD card; pick several at once and each series fills its own group, SR0001 first). Each string fills the next empty group in that ladder in the order you shot them (Range Book puts the strings in time order, since some chronographs, like Garmin's, list the newest first). If you named each string with its charge weight on the chronograph (like "25.9gr N140"), it goes straight to the group with that charge instead, wherever it is in the ladder. If the ladder has no tested date yet, it takes the date from the file when the file has one (MagnetoSpeed's memory-card file doesn't, so set that date yourself). Check that each string landed on the right charge weight. If the chronograph caught a bad reading (a miss or an echo), tap <b>− Shot</b>, tap that shot and tap <b>Delete</b>.</p>
       <h3>Target photos</h3>
       <p>Each target photo belongs to the ladder you shot it with. Tap <b>+ Photo</b> in that ladder (or next to the ladder's name on the <b>Targets</b> card) to take a picture or choose one. The Targets card shows the photos under each ladder, and each ladder shows its own photos too. Tap a photo to see it full size, add a caption, delete it, or move it to another ladder with <b>Shot with</b>. When you measure groups on a photo, you pick from that ladder's charges. Photos added before ladders existed are linked for you when the app can tell which ladder they go with; open any that say <b>Pick a ladder</b> and choose one.</p>
       <p>To keep a copy of a target photo, open it and tap <b>Download photo</b> (the picture as taken) or <b>Download with marks</b> (with the measured shots and groups drawn on it). On a phone it opens the share sheet, so you can <b>Save Image</b> to your photos, save it to Files or send it; on a computer it downloads.</p>
@@ -7156,21 +7156,34 @@ function renderDetail(){
       const fileDate=(strings.find(x=>x.date)||{}).date;
       if(!lad.tested&&fileDate)lad.tested=fileDate;
       const mk=()=>{const g=newGroup(null);g.ladderId=lad.id;L.groups.push(g);return g;};
+      let byCharge=0;
       if(importTarget&&importTarget.lad){
-        strings.forEach(x=>{const g=mk();g.shots=x.shots.slice();if(strings.length>1&&x.name)g.label=x.name;});
+        // an empty group already planned at the charge in the string's name is filled; otherwise a new group (with that charge) is added
+        const lg0=ladderGroups(L,lad),used=new Set();
+        strings.forEach(x=>{let g=null;for(const c of chargeNums(x.name)){g=lg0.find(y=>!used.has(y)&&sameCharge(num(y.charge),c)&&!(y.shots||[]).some(v=>v!=null));if(g)break;}
+          if(g){used.add(g);byCharge++;}else{g=mk();used.add(g);const c=strings.length>1?chargeFromName(x.name):null;if(c!=null){g.charge=c;byCharge++;}else if(strings.length>1&&x.name)g.label=x.name;}
+          g.shots=x.shots.slice();});
       }else{
         const lg=ladderGroups(L,lad);let gi=lg.findIndex(x=>x.id===importTarget);if(gi<0)return;
-        strings.forEach((x,k)=>{
-          let g=null;
-          if(k===0)g=lg[gi];
-          else{while(++gi<lg.length){const c=lg[gi];if(!(c.shots||[]).some(v=>v!=null)){g=c;break;}}
+        const empty=g=>!(g.shots||[]).some(v=>v!=null);
+        // a string named with a charge weight goes to the group with that charge (if it's empty, or the one tapped)
+        const taken=new Set(),home=new Map();
+        if(strings.length>1)strings.forEach(x=>{for(const c of chargeNums(x.name)){
+          const g=lg.find(y=>sameCharge(num(y.charge),c)&&!taken.has(y)&&(empty(y)||y.id===importTarget));if(g){taken.add(g);home.set(x,g);return;}}});
+        let first=true;
+        strings.forEach(x=>{
+          let g=home.get(x)||null;
+          if(g)byCharge++;
+          else if(first&&!taken.has(lg[gi]))g=lg[gi];
+          else{while(++gi<lg.length){const c=lg[gi];if(empty(c)&&!taken.has(c)){g=c;break;}}
                if(!g){g=mk();lg.push(g);gi=lg.length-1;}}
-          g.shots=x.shots.slice();
+          if(!home.has(x))first=false;
+          taken.add(g);g.shots=x.shots.slice();
           if(!g.label&&g.charge==null&&x.name)g.label=x.name;
         });
       }
       syncLadder(L,lad);
-      importMsg={text:"Imported "+total+" shot"+(total===1?"":"s")+" from "+f.name+(strings.length>1?" ("+strings.length+" strings)":"")+" into "+ladderName(L,lad)+". Check that each string landed on the right charge weight.",bad:false};
+      importMsg={text:"Imported "+total+" shot"+(total===1?"":"s")+" from "+f.name+(strings.length>1?" ("+strings.length+" strings)":"")+" into "+ladderName(L,lad)+"."+(byCharge?" "+(byCharge===strings.length?"Each string":byCharge+" of them")+" went to the charge weight in its name.":"")+" Check that each string landed on the right charge weight.",bad:false};
       touched(true);
     }catch(err){say(err&&err.message==="load"?"The spreadsheet reader couldn't load. Check your internet connection and try again.":"That file couldn't be read. Make sure it's the export from RangeCraft, Garmin ShotView, MagnetoSpeed or LabRadar.",true);}
   });
@@ -7324,15 +7337,23 @@ async function readChronoFile(file){
   wb.SheetNames.forEach(name=>{
     const rows=X.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:true,blankrows:true,defval:null});
     if(isMagnetoSpeed(rows)){out.push(...readMagnetoSpeed(rows));return;}
-    let date=null,time="";
+    let date=null,time="",at=null,label=String(name).trim();
     const sm=/^(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\d{2,}$/.exec(String(name).trim());
-    if(sm&&+sm[2]>=1&&+sm[2]<=12&&+sm[3]>=1&&+sm[3]<=31){date="20"+sm[1]+"-"+sm[2]+"-"+sm[3];const hh=+sm[4];time=((hh%12)||12)+":"+sm[5]+(hh<12?" AM":" PM");}
+    if(sm&&+sm[2]>=1&&+sm[2]<=12&&+sm[3]>=1&&+sm[3]<=31){date="20"+sm[1]+"-"+sm[2]+"-"+sm[3];const hh=+sm[4];time=((hh%12)||12)+":"+sm[5]+(hh<12?" AM":" PM");at=Date.UTC(2000+ +sm[1],+sm[2]-1,+sm[3],hh,+sm[5]);}
+    // Garmin ShotView .xlsx: one sheet per string, named "<session name>_YYYY-MM-DD_HH-MM_<n>", newest first
+    {const gm=/^(.*?)[ _]*_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})_\d+$/.exec(String(name).trim());
+      if(gm){date=date||gm[2]+"-"+gm[3]+"-"+gm[4];at=Date.UTC(+gm[2],+gm[3]-1,+gm[4],+gm[5],+gm[6]);label=gm[1].trim();
+        // the sheet name is cut short; the full session name is in the top-left cell
+        const t0=rows[0]&&rows[0][0];if(typeof t0==="string"&&t0.trim()&&!/speed|fps|^#$/i.test(t0)&&t0.replace(/\s+/g,"").toLowerCase().startsWith(label.replace(/\s+/g,"").toLowerCase().slice(0,6)))label=t0.trim();}}
     for(let r=0;r<rows.length&&!date;r++){const row=rows[r]||[];for(let c=0;c<row.length;c++){
       const v=row[c];
       if(v instanceof Date){date=toISO(v);break;}
       if(typeof v==="string"&&/^\s*(date|session date|date\/time)\b/i.test(v)){
         const right=row[c+1],below=(rows[r+1]||[])[c];
-        date=toISO(right)||toISO(below)||toISO(v.replace(/^\s*(date|session date|date\/time)\s*:?\s*/i,""));if(date)break;
+        date=toISO(right)||toISO(below)||toISO(v.replace(/^\s*(date|session date|date\/time)\s*:?\s*/i,""));
+        // a date with a time ("June 15, 2026 at 1:55 PM") also says when the string was shot
+        if(date&&at==null){const txt=String(typeof right==="string"?right:typeof below==="string"?below:"").replace(/[\u202f\u00a0]/g," ").replace(/\s+at\s+/i," ");const t=Date.parse(txt);if(!isNaN(t)&&/\d:\d\d/.test(txt))at=t;}
+        if(date)break;
       }}}
     const isHead=v=>typeof v==="string"&&/speed|velocity|fps|m\/s/i.test(v)&&!/(avg|average|mean|max|min|sd|std|dev|spread|es\b|energy|power|\bke\b|Δ)/i.test(v);
     const heads=[];
@@ -7355,11 +7376,18 @@ async function readChronoFile(file){
         if(v==null||v===""){if(started)break;else continue;}
         if(started)break;
       }
-      if(shots.length){usedCols.add(h.c);out.push({name:time?("String at "+time):(wb.SheetNames.length>1?name:""),date,shots});}
+      if(shots.length){usedCols.add(h.c);out.push({name:time?("String at "+time):(wb.SheetNames.length>1?label:""),date,shots,at});}
     });
   });
+  // some chronographs (Garmin) list the newest string first: put them in the order they were shot
+  if(out.length>1&&out.every(x=>x.at!=null)){out.forEach((x,i)=>x._i=i);out.sort((a,b)=>a.at-b.at||a._i-b._i);out.forEach(x=>delete x._i);}
   return out;
 }
+// the numbers in a string's name that could be its charge weight ("25.9grn N140 69gr" → 25.9, 69; "N140" isn't one)
+function chargeNums(n){n=String(n||"");if(/^\s*(series|string at|sr\d)/i.test(n))return [];return [...n.replace(/\d{1,2}:\d{2}/g,"").matchAll(/(^|[^A-Za-z\d.])(\d{1,3}(?:\.\d+)?)(?![\d])/g)].map(m=>parseFloat(m[2])).filter(v=>v>0&&v<200);}
+// its likely charge on its own: the first number with a decimal point ("23.2 N140 69 gr" → 23.2), or else the first marked gr
+function chargeFromName(n){const s=String(n||""),d=/(^|[^A-Za-z\d.])(\d{1,3}\.\d+)(?!\d)/.exec(s);if(d)return parseFloat(d[2]);
+  const m=/(^|[^A-Za-z\d.])(\d{1,3}(?:\.\d+)?)\s*(?:gr|grn|grs|grains?)\b/i.exec(s);const v=m?parseFloat(m[2]):NaN;return v>0&&v<200?v:null;}
 
 // make a Shooting profile from a recipe and a set of velocities
 function sendToCalc(L,s,what){
