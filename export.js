@@ -793,7 +793,16 @@ function invSheet(d) {
     return [x.kind === "equipment" ? "Equipment" : "Supplies", x.name || "", x.cat || "", x.kind === "equipment" ? "" : numv(x.qty) ?? "", x.kind === "equipment" ? "" : numv(x.warnAt) ?? "", x.where || "", g ? g.name || "" : "", x.serial || "", x.price || "", x.bought || "", x.due || "", x.notes || ""]; }),
     cols: [{ h: "Kind", w: 11 }, { h: "Name", w: 26 }, { h: "Category", w: 16 }, { h: "On hand", w: 9 }, { h: "Warn at", w: 9 }, { h: "Where", w: 16 }, { h: "Goes with", w: 22 }, { h: "Serial number", w: 16 }, { h: "Price", w: 12 }, { h: "Bought", w: 12 }, { h: "Check or replace by", w: 14 }, { h: "Notes", w: 40, s: 5 }] };
 }
-const gearSheets = (d) => [...(canList(d).length ? [canSheet(d)] : []), ...(invList(d).length ? [invSheet(d)] : [])];
+// magazines (2.31): one row per mag, sorted by type then Mag #
+const magList = (d) => (d.rifles && Array.isArray(d.rifles.mags) ? d.rifles.mags : []);
+function magSheet(d) {
+  const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], ty = (m) => [m.mfr, m.model].filter(Boolean).join(" "), mn = (m) => String(m.num || "").replace(/^#/, "");
+  return { name: "Magazines", rows: magList(d).slice().sort((a, b) => ty(a).localeCompare(ty(b), undefined, { numeric: true }) || mn(a).localeCompare(mn(b), undefined, { numeric: true })).map((m) => {
+    const iss = Array.isArray(m.issues) ? m.issues : [], last = iss.slice().sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))[0];
+    return [mn(m), m.mfr || "", m.model || "", m.cart || "", numv(m.cap) ?? "", (m.gunIds || []).map((id) => (rows.find((r) => r.id === id) || {}).name || "").filter(Boolean).join(", "), m.where || "", m.bought || "", iss.length || null, last ? [last.date || "", last.note || ""].filter(Boolean).join(": ") : "", m.retired ? "Yes" : "", m.notes || ""]; }),
+    cols: [{ h: "Mag #", w: 8 }, { h: "Maker", w: 14 }, { h: "Model", w: 20 }, { h: "Cartridge", w: 16 }, { h: "Capacity", w: 9 }, { h: "Fits", w: 26 }, { h: "Where", w: 14 }, { h: "Bought", w: 12 }, { h: "Problems", w: 9 }, { h: "Last problem", w: 30 }, { h: "Retired", w: 8 }, { h: "Notes", w: 40, s: 5 }] };
+}
+const gearSheets = (d) => [...(canList(d).length ? [canSheet(d)] : []), ...(magList(d).length ? [magSheet(d)] : []), ...(invList(d).length ? [invSheet(d)] : [])];
 function partSheet(d) {
   const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], ord = { lower: 0, upper: 1, barrel: 2 };
   return { name: "Lowers uppers barrels", rows: partList(d).slice().sort((a, b) => (ord[a.kind] ?? 2) - (ord[b.kind] ?? 2) || partNm(a).localeCompare(partNm(b), undefined, { numeric: true })).map((p) => { const rc = partRoundsX(p, d);

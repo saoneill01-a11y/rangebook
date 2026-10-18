@@ -59,6 +59,8 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .field.wide{grid-column:1/-1}
 .derived{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .derived .tipnote{flex-basis:100%}
+.magfits{display:flex;flex-wrap:wrap;gap:6px 18px}
+.magissue{flex-wrap:nowrap;gap:6px;margin-bottom:6px}.magissue input{padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);color:var(--fg);font-family:var(--body);font-size:16px;min-height:42px}.magissue input:focus{background:var(--input);border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}.magissue input[type=date]{flex:0 0 auto;width:auto;max-width:150px}.magissue .grow{flex:1 1 auto;min-width:0}
 .derived b{font-family:var(--mono);font-weight:500;color:var(--fg)}
 .ingrp{border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px 12px;margin:14px 0 0;min-width:0}
 .ingrp>legend{font-family:var(--display);font-weight:700;font-size:16.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);padding:0 6px;margin-left:-4px}
@@ -1650,9 +1652,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b>. It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up in their caliber's box under <b>Browse by caliber</b> and in searches, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
       <h3>Box photos</h3>
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
-      <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
+      <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
       <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. <b>Add a suppressor from the list</b> has about 420 suppressors from 25 makers (type a maker, model, caliber, or "full auto"): picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
+      <h3>Magazines</h3>
+      <p><a class=goto href=#go data-go=rifles:mags>Gear &amp; Ranges › Magazines</a> keeps each magazine as its own entry, so you can tell which one is causing trouble. Give each a <b>Mag #</b>: the number or mark you put on it with a paint pen or tape (1, 2, A, red tape). Add its maker and model (mags of the same maker and model are listed together, with how many you have), cartridge, capacity, which guns it <b>Fits</b>, where it's kept and photos. <b>+ Add another like this</b> copies the type, cartridge, capacity and guns to a new mag with the next number. When a mag jams, fails to feed or doesn't lock the slide back, tap <b>+ Log a problem</b> on that mag with the date and what happened; the list shows how many problems each has. Tick <b>Retired</b> to keep a bad one in the list, greyed out.</p>
       <h3>Inventory</h3>
       <p><a class=goto href=#go data-go=rifles:inv>Gear &amp; Ranges › Inventory</a> keeps track of the rest of your gear. <b>+ Add supplies</b> is for things that get used up (batteries, target pasters, earplugs, patches and solvent, hand warmers): give it a count and <b>Warn when at or below</b>, and use <b>− 1 used</b> and <b>+ 1</b> to keep the count right. <b>+ Add equipment</b> is for things you keep (a chronograph, rangefinder, bipod, magazines, cases) with a serial number, price, date bought and photos, handy for insurance. Either can have a category, where it's kept, a gun it goes with and a <b>Check or replace by</b> date that can repeat (a battery every year, a hunting license, a first-aid kit). Low supplies and dates within two weeks are listed first under <b>Needs attention</b>, and on Home. When you've done it, tap <b>Done</b> and a repeating date moves to the next one.</p>
       <h3>Gear notes</h3>
@@ -1701,7 +1705,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-rifles" role="tabpanel" aria-labelledby="tab-rifles" hidden>
     <header class="phead"><button class="backbtn" id="rifHeadBack" type="button" hidden aria-label="Back to the list">‹ Guns</button><h1 id="rifTitle">Gear & Ranges</h1><p class="sub" id="rifSub">Your guns (barrel, twist, sight height, round count) and the ammunition you shoot, factory and reloaded.</p></header>
-    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Gear & Ranges"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button><button type="button" role="tab" data-garea="cans" aria-selected="false">Suppressors</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammo</button><button type="button" role="tab" data-garea="inv" aria-selected="false">Inventory</button><button type="button" role="tab" data-garea="ranges" aria-selected="false">Ranges</button><button type="button" role="tab" data-garea="notes" aria-selected="false">Notes</button></div>
+    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Gear & Ranges"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button><button type="button" role="tab" data-garea="cans" aria-selected="false">Suppressors</button><button type="button" role="tab" data-garea="mags" aria-selected="false">Magazines</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammo</button><button type="button" role="tab" data-garea="inv" aria-selected="false">Inventory</button><button type="button" role="tab" data-garea="ranges" aria-selected="false">Ranges</button><button type="button" role="tab" data-garea="notes" aria-selected="false">Notes</button></div>
     <div id="riflesRoot" style="display:flex;flex-direction:column;gap:14px"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-brass" role="tabpanel" aria-labelledby="tab-rel" hidden>
@@ -3984,7 +3988,7 @@ function queueRifles(){
   riflesDirty=true;riflesVer++;const my=riflesVer;
   clearTimeout(riflesTimer);
   riflesTimer=setTimeout(()=>{
-    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts)),cans:JSON.parse(JSON.stringify(cans)),inventory:JSON.parse(JSON.stringify(inv)),gnotes:JSON.parse(JSON.stringify(gnotes))}}))
+    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts)),cans:JSON.parse(JSON.stringify(cans)),inventory:JSON.parse(JSON.stringify(inv)),mags:JSON.parse(JSON.stringify(mags)),gnotes:JSON.parse(JSON.stringify(gnotes))}}))
       .then(()=>{if(riflesVer===my){riflesDirty=false;const el=$("rifleState");if(el)el.textContent="Saved";}},e=>{riflesDirty=false;onWriteError(e);});
   },600);
   const el=$("rifleState");if(el)el.textContent="Saving…";
@@ -3998,14 +4002,14 @@ let rifleOpen=null;
 document.getElementById("rifHeadBack").addEventListener("click",()=>{if(partOpen){const g=partFromGun&&rifles.some(r=>r.id===partFromGun)?partFromGun:null;partOpen=null;partFromGun=null;rifleOpen=g;renderRifles();window.scrollTo(0,0);return;}
   if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
   if(canOpen&&canFromGun&&rifles.some(r=>r.id===canFromGun)){gunArea="guns";rifleOpen=canFromGun;canOpen=null;canFromGun=null;renderRifles();window.scrollTo(0,0);return;}
-  canOpen=null;canFromGun=null;invOpen=null;gnoteOpen=null;gnConfirm=false;
+  canOpen=null;canFromGun=null;invOpen=null;magOpen=null;gnoteOpen=null;gnConfirm=false;
   rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;gunReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
 let ammoReturnTraj=null,gunReturnTraj=null;
 // a profile's Edit button on its gun: open the gun, with a way back to the profile
 window.RB_OPEN_GUN=(id,ret)=>{if(!rifles.some(r=>r.id===id))return;gunArea="guns";rifleOpen=id;canOpen=null;scopeOpen=null;partOpen=null;gunReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;gnoteOpen=null;gnConfirm=false;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;magOpen=null;gnoteOpen=null;gnConfirm=false;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 // gun type: rifle, pistol or shotgun. Guessed from the cartridge when not picked (handgun cartridges → pistol, gauges → shotgun)
 const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shotgun","Shotgun","Shotguns"]];
 function gunTypeGuess(cart){const t=String(cart||"").trim();if(!t)return null;if(/\b(\d+|four|eight|ten|twelve|sixteen|twenty)\s*-?\s*(ga|gauge|bore)\b|\b410\b|\.410/i.test(t))return "shotgun";
@@ -4564,6 +4568,7 @@ function renderRifles(){
   if(gunArea==="scopes"){renderScopes(root);return;}
   if(gunArea==="cans"){renderCans(root);return;}
   if(gunArea==="inv"){renderInv(root);return;}
+  if(gunArea==="mags"){renderMags(root);return;}
   if(gunArea==="ranges"){renderGearRanges(root);return;}
   if(gunArea==="notes"){renderGearNotes(root);return;}
   if(gunArea==="ammo"){
@@ -4949,7 +4954,7 @@ function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
    A gun can carry a suppressor (gun.canId), like a scope. Each range trip records the suppressor it was shot with (trip.canId:
    copied from the gun when the trip is made, changeable on the trip), and a suppressor's round count comes from those trips.
    Photos go in the gun-photo store under the item's id. */
-let cans=[],canOpen=null,canFromGun=null,inv=[],invOpen=null;
+let cans=[],canOpen=null,canFromGun=null,inv=[],invOpen=null,mags=[],magOpen=null;
 const gearId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const canName=c=>[c.mfr,c.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ")||"Unnamed suppressor";
 const canGuns=c=>rifles.filter(r=>r.canId===c.id);
@@ -5199,7 +5204,7 @@ function renderInv(root){
     const att=inv.filter(it=>invLow(it)||invDue(it)).sort((a,b)=>(invDays(a)==null?1e9:invDays(a))-(invDays(b)==null?1e9:invDays(b))||by(a,b));
     const rest=inv.filter(it=>!att.includes(it)),cons=rest.filter(it=>it.kind!=="equipment").sort(by),eq=rest.filter(it=>it.kind==="equipment").sort(by);
     let h='<section class="card" aria-label="Inventory list"><div class="row"><button class="btn primary" id="invAddC" type="button">+ Add supplies</button><button class="btn" id="invAddE" type="button">+ Add equipment</button></div>';
-    if(!inv.length)h+='<p class="note">Keep track of the rest of your gear. <b>Supplies</b> get used up and have a count with a warning when you\'re low: batteries, target pasters, earplugs, patches and solvent, hand warmers. <b>Equipment</b> keeps a serial number, price and photos for insurance: a chronograph, rangefinder, bipod, magazines, cases. Either can have a <b>Check or replace by</b> date (a battery, a hunting tag or license, a first-aid kit) that shows up on Home when it\'s near.</p>';
+    if(!inv.length)h+='<p class="note">Keep track of the rest of your gear. <b>Supplies</b> get used up and have a count with a warning when you\'re low: batteries, target pasters, earplugs, patches and solvent, hand warmers. <b>Equipment</b> keeps a serial number, price and photos for insurance: a chronograph, rangefinder, bipod, cases. (Magazines have their own tab.) Either can have a <b>Check or replace by</b> date (a battery, a hunting tag or license, a first-aid kit) that shows up on Home when it\'s near.</p>';
     const grp=(t,list)=>list.length?'<div class="cartgroup"><div class="cartname">'+t+' <span class="note">'+list.length+'</span></div>'+list.map(tile).join("")+'</div>':'';
     h+=grp("Needs attention",att)+grp("Supplies",cons)+grp("Equipment",eq)+'</section>';
     root.innerHTML=h;gearHead(null);
@@ -5241,6 +5246,86 @@ function renderInv(root){
     RB_UNDO("Deleted "+invName(x),()=>{inv.splice(Math.min(i,inv.length),0,x);queueRifles();renderRifles();});});
 }
 
+/* ---------- magazines (2.31): each mag its own row, grouped by type (maker + model). "Mag #" is the number or mark you put on it.
+   mags in the rifles doc: [{id,num,mfr,model,cart,cap,gunIds:[],where,bought,notes,retired,issues:[{id,date,note}]}] ---------- */
+const MAG_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h7l-1 4 3 13H8l1-13z"/><path d="M9 7h5M10.5 11h3"/></svg>';
+const magType=m=>[m.mfr,m.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ");
+const magName=m=>(magType(m)||"Magazine")+(String(m.num||"").trim()?" · #"+String(m.num).trim().replace(/^#/,""):"");
+const magNum=m=>String(m.num||"").trim().replace(/^#/,"");
+const magIssues=m=>Array.isArray(m.issues)?m.issues:[];
+// the next Mag # in a type: one more than the highest number used, else blank
+function magNext(m){const ns=mags.filter(y=>magType(y)===magType(m)).map(y=>parseInt(magNum(y),10)).filter(n=>n>0);return ns.length?String(Math.max(...ns)+1):"";}
+let magAllGuns=false;
+function renderMags(root){
+  if(magOpen&&!mags.some(x=>x.id===magOpen))magOpen=null;
+  const x=magOpen&&mags.find(y=>y.id===magOpen);
+  const gunNm=id=>{const g=rifles.find(r=>r.id===id);return g?(g.name||"Unnamed gun"):"";};
+  if(!x){
+    const byNum=(a,b)=>magNum(a).localeCompare(magNum(b),undefined,{numeric:true});
+    const tile=m=>{const th=gearThumb(m.id),n=magIssues(m).length;
+      const chips=(m.retired?' <span class="chip">Retired</span>':'')+(n?' <span class="chip warnchip">'+n+' problem'+(n===1?'':'s')+'</span>':'');
+      const d=[m.cart||"",num(m.cap)?num(m.cap)+" rounds":"",(m.gunIds||[]).map(gunNm).filter(Boolean).join(", ")].filter(Boolean).join(" · ");
+      const last=n?magIssues(m).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")))[0]:null;
+      const mm=[m.where||"",last?"Last problem "+(last.date?fmtDate(last.date):"")+(last.note?": "+last.note:""):""].filter(Boolean).join(" · ");
+      return '<button class="loaditem withthumb'+(m.retired?' used':'')+'" type="button" data-mago="'+esc(m.id)+'"><span class="lthumb">'+(th||MAG_ICON)+'</span><span class="ltext grow"><span class="t">'+(magNum(m)?'#'+esc(magNum(m)):'<span class="none">No Mag #</span>')+chips+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(mm?'<span class="m">'+esc(mm)+'</span>':'')+'</span></button>';};
+    const types=[...new Set(mags.map(magType))].sort((a,b)=>(a?0:1)-(b?0:1)||a.localeCompare(b,undefined,{numeric:true}));
+    let h='<section class="card" aria-label="Magazines list"><div class="row"><button class="btn primary" id="magAdd" type="button">+ Add magazine</button></div>';
+    if(!mags.length)h+='<p class="note">Give each magazine a <b>Mag #</b> (the number or mark you put on it with a paint pen or tape) so you can tell them apart. When one causes a jam or a failure to feed, log it on that mag, and retire it if it keeps happening. Mags of the same maker and model are listed together.</p>';
+    types.forEach(t=>{const list=mags.filter(m=>magType(m)===t).sort((a,b)=>(a.retired?1:0)-(b.retired?1:0)||byNum(a,b)),act=list.filter(m=>!m.retired).length;
+      h+='<div class="cartgroup"><div class="cartname">'+esc(t||"Type not set")+' <span class="note">'+act+(act!==list.length?' in use, '+(list.length-act)+' retired':'')+'</span></div>'+list.map(tile).join("")+'</div>';});
+    h+='</section>';
+    root.innerHTML=h;gearHead(null);
+    if(window.RB_FILTER)RB_FILTER(root.querySelector(".card"),"mags");
+    $("magAdd").addEventListener("click",()=>{const n={id:gearId("m"),num:"",mfr:"",model:"",cart:"",cap:null,gunIds:[],notes:"",issues:[]};mags.push(n);freshAdd(n,{list:()=>mags,open:()=>magOpen===n.id,save:queueRifles});queueRifles();magOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("mg_mfr");if(e)e.focus();});
+    root.querySelectorAll("[data-mago]").forEach(b=>b.addEventListener("click",()=>{magOpen=b.dataset.mago;magAllGuns=false;renderRifles();window.scrollTo(0,0);}));
+    return;
+  }
+  const uniq=k=>[...new Set(mags.map(y=>String(y[k]||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  const dl=(id,list)=>'<datalist id="'+id+'">'+list.map(v=>'<option value="'+esc(v)+'">').join("")+'</datalist>';
+  const guns=[...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true}));
+  const sib=mags.filter(y=>y!==x&&magType(y)&&magType(y)===magType(x)&&magNum(y)&&magNum(y)===magNum(x));
+  const issues=magIssues(x).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+  const h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Magazine"><h2>Magazine</h2><div class="grid">'+
+    field("mg_num","Mag #",x.num,"text").replace('autocomplete="off"','autocomplete="off" placeholder="e.g. 3, A or red tape"')+
+    field("mg_cap","Capacity (rounds)",x.cap,"number")+
+    field("mg_mfr","Maker",x.mfr,"text").replace('autocomplete="off"','autocomplete="off" list="dl_magmfr" placeholder="e.g. Magpul"')+dl("dl_magmfr",uniq("mfr"))+
+    field("mg_model","Model",x.model,"text").replace('autocomplete="off"','autocomplete="off" list="dl_magmodel" placeholder="e.g. PMAG Gen M3"')+dl("dl_magmodel",uniq("model"))+
+    field("mg_cart","Cartridge",x.cart,"text")+
+    field("mg_where","Where it is",x.where,"text").replace('autocomplete="off"','autocomplete="off" placeholder="e.g. Range bag"')+
+    field("mg_bought","Bought on",x.bought,"date")+
+    '<div class="field wide"><span class="flabel">Fits</span><div id="mg_fits"></div></div>'+
+    '<div class="field wide"><label for="mg_notes">Notes</label><textarea id="mg_notes" style="min-height:70px">'+esc(x.notes||"")+'</textarea></div>'+
+    '<div class="field wide"><label class="toggle"><input type="checkbox" id="mg_retired"'+(x.retired?' checked':'')+'> Retired (keep it in the list, greyed out, but don\'t use it)</label></div></div>'+
+    (sib.length?'<p class="err">Another '+esc(magType(x))+' is already #'+esc(magNum(x))+'.</p>':'')+
+    '<div class="row"><button class="btn" type="button" id="mgLike">+ Add another like this</button></div></section>'+
+    '<section class="card" aria-label="Problems"><h2>Problems</h2><p class="note" style="margin-top:0">Log a jam, failure to feed, a slide that didn\'t lock back, a bent feed lip… with the date. A mag that keeps showing up here is the one to retire or fix.</p>'+
+    (issues.length?'<div class="maglog">'+issues.map(i=>'<div class="row magissue"><input type="date" data-mgid="'+esc(i.id)+'" data-mgk="date" value="'+esc(i.date||"")+'" aria-label="Date"><input type="text" class="text grow" data-mgid="'+esc(i.id)+'" data-mgk="note" value="'+esc(i.note||"")+'" placeholder="What happened" aria-label="What happened"><button class="btn small" type="button" data-mgdel="'+esc(i.id)+'" aria-label="Remove">×</button></div>').join("")+'</div>':'<p class="note">None logged.</p>')+
+    '<div class="row"><button class="btn" type="button" id="mgIssue">+ Log a problem</button></div></section>'+
+    gearPhotosHtml(x.id,magName(x))+
+    '<div class="row endrow"><button class="btn danger" type="button" id="magDel">Delete magazine</button></div>';
+  root.innerHTML=h;gearHead(magName(x),"‹ Magazines");
+  [["num",0],["cap",1],["mfr",0],["model",0],["cart",0],["where",0],["bought",0],["notes",0]].forEach(([k,isNum])=>{const el=$("mg_"+k);if(!el)return;
+    el.addEventListener("input",()=>{x[k]=isNum?num(el.value):el.value;queueRifles();$("rifTitle").textContent=magName(x);});});
+  if(window.RB_CARTS)RB_CARTS.picker($("mg_cart"),{onPick:c=>{x.cart=c?c.n:$("mg_cart").value;queueRifles();drawFits();}});
+  // Fits: the guns chambered for this mag's cartridge (and any already ticked); Show all guns lists the rest
+  const drawFits=()=>{const box=$("mg_fits");if(!box)return;const on=new Set(x.gunIds||[]);
+    const match=g=>{const gc=(gunSpec(g)||{}).cartridge||g.cartridge||"";if(!x.cart||!gc)return true;if(!window.RB_CARTS)return gc===x.cart;const f=RB_CARTS.fits(gc,x.cart);return f.ok&&!f.skip;};
+    const list=magAllGuns?guns:guns.filter(g=>on.has(g.id)||match(g)),hid=guns.length-list.length;
+    box.innerHTML=(list.length?'<div class="magfits">'+list.map(g=>'<label class="toggle"><input type="checkbox" data-mggun="'+esc(g.id)+'"'+(on.has(g.id)?' checked':'')+'> '+esc(g.name||"Unnamed gun")+'</label>').join("")+'</div>':'<p class="note" style="margin:0">'+(guns.length?'None of your guns is chambered for '+esc(x.cart)+'.':'No guns yet.')+'</p>')+
+      (hid>0||magAllGuns?'<button class="linkbtn" type="button" id="mgAllGuns">'+(magAllGuns?'Show only guns for '+esc(x.cart||"this cartridge"):'Show all guns ('+hid+' more)')+'</button>':'');
+    box.querySelectorAll("[data-mggun]").forEach(cb=>cb.addEventListener("change",()=>{const id=cb.dataset.mggun,s=new Set(x.gunIds||[]);if(cb.checked)s.add(id);else s.delete(id);x.gunIds=[...s];queueRifles();}));
+    const ab=$("mgAllGuns");if(ab)ab.addEventListener("click",()=>{magAllGuns=!magAllGuns;drawFits();});};
+  drawFits();$("mg_cart").addEventListener("change",drawFits);
+  $("mg_retired").addEventListener("change",e=>{x.retired=e.target.checked;queueRifles();});
+  root.querySelectorAll("[data-mgid]").forEach(el=>el.addEventListener("input",()=>{const i=magIssues(x).find(y=>y.id===el.dataset.mgid);if(i){i[el.dataset.mgk]=el.value;queueRifles();}}));
+  root.querySelectorAll("[data-mgdel]").forEach(b=>b.addEventListener("click",()=>{const L=magIssues(x),k=L.findIndex(y=>y.id===b.dataset.mgdel);if(k<0)return;const gone=L.splice(k,1)[0];queueRifles();renderRifles();
+    RB_UNDO("Removed a problem",()=>{magIssues(x).splice(Math.min(k,magIssues(x).length),0,gone);queueRifles();renderRifles();});}));
+  $("mgIssue").addEventListener("click",()=>{if(!Array.isArray(x.issues))x.issues=[];const i={id:gearId("q"),date:todayStr(),note:""};x.issues.push(i);queueRifles();renderRifles();const e=root.querySelector('[data-mgid="'+CSS.escape(i.id)+'"][data-mgk="note"]');if(e)e.focus();});
+  $("mgLike").addEventListener("click",()=>{const n={id:gearId("m"),num:magNext(x),mfr:x.mfr||"",model:x.model||"",cart:x.cart||"",cap:x.cap!=null?x.cap:null,gunIds:(x.gunIds||[]).slice(),where:x.where||"",notes:"",issues:[]};mags.push(n);queueRifles();magOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("mg_num");if(e){e.focus();e.select();}});
+  bindGearPhotos(root,x.id);
+  $("magDel").addEventListener("click",()=>{const i=mags.indexOf(x);mags=mags.filter(y=>y!==x);magOpen=null;queueRifles();renderRifles();window.scrollTo(0,0);
+    RB_UNDO("Deleted "+magName(x),()=>{mags.splice(Math.min(i,mags.length),0,x);queueRifles();renderRifles();});});
+}
 function renderScopes(root){
   if(scopeOpen&&!scopes.some(x=>x.id===scopeOpen))scopeOpen=null;
   const sc=scopeOpen&&scopes.find(x=>x.id===scopeOpen),onGun=x=>rifles.filter(g=>g.scopeId===x.id);
@@ -8796,7 +8881,7 @@ async function refresh(first){
       if(window.RB_CARTS&&!window.GUEST){let ch=false;ammo.forEach(a=>{if(!a.cartridge)return;const c=RB_CARTS.canon(a.cartridge);if(c!==a.cartridge){a.cartridge=c;ch=true;}});if(ch)queueAmmo();}if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
     if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];
-      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];mags=R.data&&Array.isArray(R.data.mags)?R.data.mags:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
     if(!$("panel-home").hidden)renderHome();
@@ -9754,12 +9839,13 @@ function startTabTour(tab){
   if(tab==="rifles"){
     const area=a=>()=>{showTab("rifles",false);click("#rifHeadBack");click('#rifSeg [data-garea="'+a+'"]');};
     STEPS=[
-      {t:"The Gear & Ranges tab",b:"Your guns, scopes, suppressors, the ammo you shoot, the rest of your gear, the ranges you shoot at and notes about it all.",go:area("guns")},
-      {el:()=>q("#rifSeg"),t:"Seven lists",b:"<b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.",go:area("guns")},
+      {t:"The Gear & Ranges tab",b:"Your guns, scopes, suppressors, magazines, the ammo you shoot, the rest of your gear, the ranges you shoot at and notes about it all.",go:area("guns")},
+      {el:()=>q("#rifSeg"),t:"Eight lists",b:"<b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.",go:area("guns")},
       {el:()=>q("#rifleAdd"),t:"Guns",b:"Add each gun with its serial number, barrel, twist, sight height, scope and photos. Tap the star to make it a favorite. Its page counts the rounds fired, tracks barrel life and cleaning, and keeps a cold-bore log. <b>Export Excel</b> and <b>Export PDF</b> make a list for insurance.",go:area("guns")},
       {el:()=>q("#secLU"),t:"Lowers, uppers and barrels",b:"For ARs and other guns built from a lower and an upper: add the parts, build a gun from them, and add more uppers to the same lower as variations you pick when you shoot. Spare barrels for a complete gun go under <b>Barrels</b>.",go:area("guns")},
       {el:()=>q("#scopeAdd"),t:"Scopes",b:"Add your scopes from a list of popular ones, with a picture, and put each on a gun. A gun's scope sets MOA or MIL on its profiles, and the dope card's reticle can look like yours or be a picture of it.",go:area("scopes")},
       {el:()=>q("#canAdd"),t:"Suppressors",b:"Serial number, tax stamp date, a picture and its own round count from the range trips shot with it. Put one on a gun, or pick it on each trip. Keep the tax stamp in the document vault, locked with a passphrase only you know.",go:area("cans")},
+      {el:()=>q("#magAdd"),t:"Magazines",b:"Each magazine with its <b>Mag #</b> (the number you paint on it), grouped by maker and model. Log a jam or failure to feed on the mag that caused it, and retire the bad ones.",go:area("mags")},
       {el:()=>q("#ammoAddCard"),t:"Ammo",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low.",go:area("ammo")},
       {el:()=>q("#calBrowse"),t:"Factory ammo catalog",b:"About 155 popular factory loads with their bullet, BC and box velocity. Pick a caliber or search, and tap one to add it.",go:area("ammo")},
       {el:()=>q("#invAddC"),t:"Inventory",b:"Everything else: supplies with a count and a low warning (batteries, targets, earplugs), and equipment with serial numbers and reminders to check or replace it.",go:area("inv")},
