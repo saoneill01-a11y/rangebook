@@ -5152,7 +5152,20 @@ let compKind="bullets",compOpen=null,compReturn=null,compReturnAmmo=null;
 /* popular reloading powders: maker, name, kind (Ball = spherical; Extruded = stick). Pick one under Components → Powders, or let the recipe suggest it. */
 const POWDER_LIST=[["Hodgdon","H4350","Extruded"],["Hodgdon","H4831SC","Extruded"],["Hodgdon","H4831","Extruded"],["Hodgdon","H1000","Extruded"],["Hodgdon","Retumbo","Extruded"],["Hodgdon","H50BMG","Extruded"],["Hodgdon","Varget","Extruded"],["Hodgdon","H4895","Extruded"],["Hodgdon","H4198","Extruded"],["Hodgdon","H322","Extruded"],["Hodgdon","Benchmark","Extruded"],["Hodgdon","H4227","Extruded"],["Hodgdon","H335","Ball"],["Hodgdon","BL-C(2)","Ball"],["Hodgdon","H380","Ball"],["Hodgdon","H414","Ball"],["Hodgdon","US 869","Ball"],["Hodgdon","CFE 223","Ball"],["Hodgdon","CFE BLK","Ball"],["Hodgdon","CFE Pistol","Ball"],["Hodgdon","Superformance","Ball"],["Hodgdon","LEVERevolution","Ball"],["Hodgdon","H110","Ball"],["Hodgdon","Lil'Gun","Ball"],["Hodgdon","HS-6","Ball"],["Hodgdon","HP-38","Ball"],["Hodgdon","Titegroup","Flake"],["Hodgdon","Clays","Flake"],["Hodgdon","Universal","Flake"],["Hodgdon","Longshot","Flake"],["Hodgdon","Trail Boss","Flake"],["IMR","IMR 3031","Extruded"],["IMR","IMR 4064","Extruded"],["IMR","IMR 4166","Extruded"],["IMR","IMR 4198","Extruded"],["IMR","IMR 4227","Extruded"],["IMR","IMR 4320","Extruded"],["IMR","IMR 4350","Extruded"],["IMR","IMR 4451","Extruded"],["IMR","IMR 4831","Extruded"],["IMR","IMR 4895","Extruded"],["IMR","IMR 7828","Extruded"],["IMR","IMR 7977","Extruded"],["IMR","IMR 8133","Extruded"],["IMR","IMR 8208 XBR","Extruded"],["IMR","IMR Red","Flake"],["IMR","IMR Green","Flake"],["IMR","IMR Blue","Flake"],["IMR","IMR Target","Flake"],["IMR","IMR Unequal","Flake"],["Winchester","748","Ball"],["Winchester","760","Ball"],["Winchester","StaBALL 6.5","Ball"],["Winchester","StaBALL Match","Ball"],["Winchester","StaBALL HD","Ball"],["Winchester","296","Ball"],["Winchester","231","Ball"],["Winchester","244","Ball"],["Winchester","WST","Ball"],["Winchester","Super Handicap","Ball"],["Winchester","AutoComp","Ball"],["Alliant","Reloder 7","Extruded"],["Alliant","Reloder 10X","Extruded"],["Alliant","Reloder 15","Extruded"],["Alliant","Reloder TS 15.5","Extruded"],["Alliant","Reloder 16","Extruded"],["Alliant","Reloder 17","Extruded"],["Alliant","Reloder 19","Extruded"],["Alliant","Reloder 22","Extruded"],["Alliant","Reloder 23","Extruded"],["Alliant","Reloder 25","Extruded"],["Alliant","Reloder 26","Extruded"],["Alliant","Reloder 33","Extruded"],["Alliant","Reloder 50","Extruded"],["Alliant","AR-Comp","Extruded"],["Alliant","Power Pro 1200-R","Ball"],["Alliant","Power Pro 2000-MR","Ball"],["Alliant","Power Pro 4000-MR","Ball"],["Alliant","Power Pro 300-MP","Ball"],["Alliant","Power Pro Varmint","Ball"],["Alliant","2400","Extruded"],["Alliant","Bullseye","Flake"],["Alliant","Red Dot","Flake"],["Alliant","Green Dot","Flake"],["Alliant","Unique","Flake"],["Alliant","Herco","Flake"],["Alliant","Blue Dot","Flake"],["Alliant","Power Pistol","Flake"],["Alliant","Sport Pistol","Flake"],["Alliant","BE-86","Flake"],["Alliant","e3","Flake"],["Alliant","American Select","Flake"],["Alliant","20/28","Flake"],["Alliant","Steel","Flake"],["Alliant","360","Flake"],["Alliant","410","Flake"],["Accurate","2015","Extruded"],["Accurate","2495","Extruded"],["Accurate","4064","Extruded"],["Accurate","4350","Extruded"],["Accurate","5744","Extruded"],["Accurate","LT-30","Extruded"],["Accurate","LT-32","Extruded"],["Accurate","2200","Ball"],["Accurate","2230","Ball"],["Accurate","2460","Ball"],["Accurate","2520","Ball"],["Accurate","2700","Ball"],["Accurate","MagPro","Ball"],["Accurate","1680","Ball"],["Accurate","No. 2","Ball"],["Accurate","No. 5","Ball"],["Accurate","No. 7","Ball"],["Accurate","No. 9","Ball"],["Ramshot","TAC","Ball"],["Ramshot","Big Game","Ball"],["Ramshot","Hunter","Ball"],["Ramshot","Magnum","Ball"],["Ramshot","LRT","Ball"],["Ramshot","X-Terminator","Ball"],["Ramshot","Enforcer","Ball"],["Ramshot","Silhouette","Ball"],["Ramshot","True Blue","Ball"],["Ramshot","Zip","Ball"],["Ramshot","Competition","Ball"],["Vihtavuori","N110","Extruded"],["Vihtavuori","N120","Extruded"],["Vihtavuori","N130","Extruded"],["Vihtavuori","N133","Extruded"],["Vihtavuori","N135","Extruded"],["Vihtavuori","N140","Extruded"],["Vihtavuori","N150","Extruded"],["Vihtavuori","N160","Extruded"],["Vihtavuori","N165","Extruded"],["Vihtavuori","N170","Extruded"],["Vihtavuori","N540","Extruded"],["Vihtavuori","N550","Extruded"],["Vihtavuori","N555","Extruded"],["Vihtavuori","N560","Extruded"],["Vihtavuori","N565","Extruded"],["Vihtavuori","N570","Extruded"],["Vihtavuori","24N41","Extruded"],["Vihtavuori","20N29","Extruded"],["Vihtavuori","N310","Extruded"],["Vihtavuori","N320","Extruded"],["Vihtavuori","N330","Extruded"],["Vihtavuori","N340","Extruded"],["Vihtavuori","N350","Extruded"],["Vihtavuori","3N37","Extruded"],["Vihtavuori","3N38","Extruded"],["Norma","201","Extruded"],["Norma","203-B","Extruded"],["Norma","204","Extruded"],["Norma","URP","Extruded"],["Norma","MRP","Extruded"],["Norma","MRP-2","Extruded"]];
 const PRIMER_SIZES=["Small Rifle","Small Rifle Magnum","Large Rifle","Large Rifle Magnum","Small Pistol","Small Pistol Magnum","Large Pistol","Large Pistol Magnum","Other"];
-window.RB_LISTS={POWDER_LIST,PRIMER_SIZES};
+// common primers: maker, name or number, size (from the makers' own listings)
+const PRIMER_LIST=[
+  ["CCI","200","Large Rifle"],["CCI","BR2 Benchrest","Large Rifle"],["CCI","34 (5.56/7.62 NATO spec)","Large Rifle"],["CCI","250 Magnum","Large Rifle Magnum"],
+  ["CCI","400","Small Rifle"],["CCI","BR4 Benchrest","Small Rifle"],["CCI","41 (5.56 NATO spec)","Small Rifle"],["CCI","450 Magnum","Small Rifle Magnum"],
+  ["CCI","500","Small Pistol"],["CCI","550 Magnum","Small Pistol Magnum"],["CCI","300","Large Pistol"],["CCI","350 Magnum","Large Pistol Magnum"],["CCI","35 (.50 BMG)","Other"],
+  ["Federal","210","Large Rifle"],["Federal","GM210M Gold Medal Match","Large Rifle"],["Federal","215","Large Rifle Magnum"],["Federal","GM215M Gold Medal Match","Large Rifle Magnum"],
+  ["Federal","205","Small Rifle"],["Federal","GM205M Gold Medal Match","Small Rifle"],["Federal","GM205MAR Gold Medal Match AR","Small Rifle"],
+  ["Federal","100","Small Pistol"],["Federal","GM100M Gold Medal Match","Small Pistol"],["Federal","200","Small Pistol Magnum"],["Federal","150","Large Pistol"],["Federal","GM150M Gold Medal Match","Large Pistol"],["Federal","155","Large Pistol Magnum"],
+  ["Winchester","WLR","Large Rifle"],["Winchester","WLRM","Large Rifle Magnum"],["Winchester","WSR","Small Rifle"],["Winchester","WSP","Small Pistol"],["Winchester","WSPM","Small Pistol Magnum"],["Winchester","WLP","Large Pistol"],
+  ["Remington","9-1/2","Large Rifle"],["Remington","9-1/2M Magnum","Large Rifle Magnum"],["Remington","7-1/2 Benchrest","Small Rifle"],["Remington","6-1/2","Small Rifle"],
+  ["Remington","1-1/2","Small Pistol"],["Remington","5-1/2 Magnum","Small Pistol Magnum"],["Remington","2-1/2","Large Pistol"],
+  ["Fiocchi","Large Rifle","Large Rifle"],["Fiocchi","Small Rifle","Small Rifle"],["Fiocchi","Small Pistol","Small Pistol"],["Fiocchi","Large Pistol","Large Pistol"],
+  ["Murom","KVB-7","Large Rifle"],["Murom","KVB-223","Small Rifle"],["Murom","KVB-9","Small Pistol"]];
+window.RB_LISTS={POWDER_LIST,PRIMER_SIZES,PRIMER_LIST};
 const CK={
   bullets:{one:"bullet",title:"Bullets",idKey:"bulletId",
     fields:[["mfr","Manufacturer","text"],["name","Name","text"],["calname","Caliber (as sold)","calname"],["caliber","Actual diameter","dia"],["weight","Weight (gr)","number"],["bc","Ballistic coefficient","number"],["bcm","BC type","bcm"],["length","Length (in)","number"],["_inv","Inventory","group"],["onHand","On hand (bullets)","number"],["lowAt","Warn when fewer than","number"],["_cost","Cost","group"],["price","Price paid ($)","number"],["priceQty","For how many bullets","number"],["notes","Notes","area"]],unit:"bullets",
@@ -5236,25 +5249,30 @@ function pushComp(kind,c){
   if(na)queueAmmo();
   return {nl,na};
 }
-// the "pick a powder from the list" dropdown: grouped by maker, leaving out ones you've already saved
+// "pick one from the list" for powders, primers and bullets: searchable, grouped, leaving out ones you've already saved
 const powderKey=(m,n)=>lc(m)+"|"+lc(n);
-function powderPickHtml(){
-  const have=new Set((comps.powders||[]).map(c=>powderKey(c.mfr,c.name)));
-  const n=POWDER_LIST.filter(([m,nm])=>!have.has(powderKey(m,nm))).length;
-  return '<div class="field wide"><label for="powBtn">Add a powder from the list</label><button type="button" id="powBtn" class="ammobtn" aria-expanded="false" aria-controls="powPanel"><span class="none">Pick one ('+n+' popular powders)…</span></button>'+
-    '<div class="ammopick" id="powPanel" hidden><input id="powQ" type="search" placeholder="Search: varget, h4350, alliant, ball…" autocomplete="off" aria-label="Search powders"><div id="powList" class="ammopicklist" role="listbox" aria-label="Powders"></div></div></div>';
-}
-function bindPowderPick(onPick){
-  const btn=$("powBtn");if(!btn)return;const panel=$("powPanel"),q=$("powQ"),box=$("powList");
-  const draw=()=>{const have=new Set((comps.powders||[]).map(c=>powderKey(c.mfr,c.name)));
-    const words=lc(q.value).replace(/[^a-z0-9]+/g," ").split(" ").filter(Boolean);
-    const hits=POWDER_LIST.map((p,i)=>({p,i})).filter(({p})=>!have.has(powderKey(p[0],p[1]))&&words.every(w=>lc(p[0]+" "+p[1]+" "+p[2]).replace(/[^a-z0-9]+/g," ").includes(w)));
-    const by=new Map();hits.forEach(o=>{if(!by.has(o.p[0]))by.set(o.p[0],[]);by.get(o.p[0]).push(o);});
-    box.innerHTML=hits.length?[...by.keys()].sort().map(m=>'<div class="pickhead">'+esc(m)+'</div>'+by.get(m).map(({p,i})=>'<button type="button" class="apick" role="option" data-pw="'+i+'">'+esc(p[1])+'<small>'+esc(p[2])+'</small></button>').join("")).join(""):'<p class="pickmore">No powders match that. Use <b>+ Add a powder that isn\'t listed</b> below.</p>';
-    box.querySelectorAll("[data-pw]").forEach(b=>b.addEventListener("click",()=>onPick(POWDER_LIST[+b.dataset.pw])));};
+const bulletKey=(m,n,w,d)=>lc(m)+"|"+lc(n)+"|"+(num(w)||"")+"|"+(num(d)?Math.round(num(d)*1000):"");
+const CAT_PICK={
+  powders:{noun:"powder",ph:"Search: varget, h4350, alliant, ball…",items:()=>POWDER_LIST.map((p,i)=>({i,mfr:p[0],t:p[1],sub:p[2],g:p[0],key:powderKey(p[0],p[1])})),have:c=>powderKey(c.mfr,c.name)},
+  primers:{noun:"primer",ph:"Search: cci 200, 205m, large rifle magnum…",items:()=>PRIMER_LIST.map((p,i)=>({i,mfr:p[0],t:p[0]+" "+p[1],sub:p[2],g:p[2],key:powderKey(p[0],p[1])})),have:c=>powderKey(c.mfr,c.name)},
+  bullets:{noun:"bullet",ph:"Search: 6.5 147 eld, 30 cal 175 smk, berger hybrid…",items:()=>(window.RB_BULLETS||[]).map((b,i)=>({i,mfr:b.mfr,t:b.mfr+" "+b.line+" "+b.w+" gr",sub:[b.g7?"G7 "+b.g7:"",b.g1?"G1 "+b.g1:""].filter(Boolean).join(" · "),
+      g:b.cal+" ("+String(b.d).replace(/^0\./,".")+'")',d:b.d,key:bulletKey(b.mfr,b.line,b.w,b.d),words:[b.cal,String(b.d),String(b.d).replace(/^0\./,""),b.item||""].join(" ")})),have:c=>bulletKey(c.mfr,c.name,c.weight,c.caliber)}};
+function catPickHtml(kind){const P=CAT_PICK[kind];if(!P)return "";
+  const have=new Set((comps[kind]||[]).map(P.have)),n=P.items().filter(x=>!have.has(x.key)).length;if(!n&&!P.items().length)return "";
+  return '<div class="field wide"><label for="catBtn">Add a '+P.noun+' from the list</label><button type="button" id="catBtn" class="ammobtn" aria-expanded="false" aria-controls="catPanel"><span class="none">Pick one ('+n.toLocaleString()+' '+P.noun+'s)…</span></button>'+
+    '<div class="ammopick" id="catPanel" hidden><input id="catQ" type="search" placeholder="'+P.ph+'" autocomplete="off" aria-label="Search '+P.noun+'s"><div id="catList" class="ammopicklist" role="listbox" aria-label="'+P.noun+'s"></div></div></div>';}
+function bindCatPick(kind,onPick){
+  const btn=$("catBtn");if(!btn)return;const P=CAT_PICK[kind],panel=$("catPanel"),q=$("catQ"),box=$("catList");
+  const draw=()=>{const have=new Set((comps[kind]||[]).map(P.have));
+    const words=lc(q.value).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean);
+    const all=P.items().filter(x=>!have.has(x.key)&&words.every(w=>{const t=lc(x.t+" "+x.sub+" "+x.g+" "+(x.words||""));return t.includes(w)||t.replace(/[^a-z0-9]+/g," ").includes(w.replace(/[^a-z0-9]+/g,""));}));
+    const LIM=300,hits=all.slice(0,LIM),by=new Map();hits.forEach(o=>{if(!by.has(o.g))by.set(o.g,[]);by.get(o.g).push(o);});
+    const keys=[...by.keys()];if(kind==="bullets")keys.sort((a,b)=>by.get(a)[0].d-by.get(b)[0].d||a.localeCompare(b));else keys.sort();
+    box.innerHTML=hits.length?keys.map(g=>'<div class="pickhead">'+esc(g)+'</div>'+by.get(g).map(o=>'<button type="button" class="apick" role="option" data-cp="'+o.i+'">'+esc(o.t)+(o.sub?'<small>'+esc(o.sub)+'</small>':'')+'</button>').join("")).join("")+(all.length>LIM?'<p class="pickmore">'+(all.length-LIM).toLocaleString()+' more. Type to narrow it down.</p>':''):'<p class="pickmore">No '+P.noun+'s match. Add it yourself with the button below.</p>';
+    box.querySelectorAll("[data-cp]").forEach(b=>b.addEventListener("click",()=>onPick(+b.dataset.cp)));};
   btn.addEventListener("click",()=>{const open=panel.hidden;panel.hidden=!open;btn.setAttribute("aria-expanded",open?"true":"false");if(open){q.value="";draw();q.focus();}});
   q.addEventListener("input",draw);
-  q.addEventListener("keydown",e=>{if(e.key==="Escape"){panel.hidden=true;btn.setAttribute("aria-expanded","false");btn.focus();}if(e.key==="Enter"){e.preventDefault();const f=box.querySelector("[data-pw]");if(f)f.click();}});
+  q.addEventListener("keydown",e=>{if(e.key==="Escape"){panel.hidden=true;btn.setAttribute("aria-expanded","false");btn.focus();}if(e.key==="Enter"){e.preventDefault();const f=box.querySelector("[data-cp]");if(f)f.click();}});
 }
 const powderFind=(m,n)=>POWDER_LIST.find(p=>lc(p[1])===lc(n)&&(!m||lc(p[0])===lc(m)));
 function compFromRecipe(kind,L){
@@ -5340,7 +5358,12 @@ function compRetHtml(){
   if(ld)return '<div class="row"><button class="btn" type="button" id="compRet">‹ Back to '+esc(ld.title||"the load")+'</button></div>';
   return '';
 }
+// the bullet list (public/bullets.json) loads the first time Bullets is opened
+let bulletsLoading=null;
+function loadBulletCat(){if(window.RB_BULLETS)return Promise.resolve(window.RB_BULLETS);
+  return bulletsLoading=bulletsLoading||fetch("/bullets.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>(window.RB_BULLETS=j.bullets||[])).catch(()=>{bulletsLoading=null;return [];});}
 function renderComps(){
+  if(compKind==="bullets"&&!window.RB_BULLETS)loadBulletCat().then(b=>{if(b.length&&compKind==="bullets"&&!compOpen)renderComps();});
   const root=$("compRoot"),broot=$("brassRoot");if(!root)return;
   document.querySelectorAll("#compTabs [data-ck]").forEach(b=>b.setAttribute("aria-selected",b.dataset.ck===compKind?"true":"false"));
   const notes=$("brassNotes");if(notes)notes.hidden=true;
@@ -5353,7 +5376,8 @@ function renderComps(){
   let h;
   if(!compOpen){
     back.hidden=true;title.textContent="Reloading";sub.hidden=false;
-    h=compRetHtml()+'<section class="card" aria-label="'+K.title+'">'+(compKind==="powders"?powderPickHtml():'')+'<div class="row"><button class="btn'+(compKind==="powders"?'':' primary')+'" id="compAdd" type="button">+ Add '+(compKind==="powders"?'a powder that isn\'t listed':K.one)+'</button>'+(!window.GUEST?'<button class="btn" type="button" data-sximp="brass">Import from a spreadsheet</button>':'')+'<span class="savestate" id="compState"></span></div>';
+    const hasCat=!!CAT_PICK[compKind]&&(compKind!=="bullets"||(window.RB_BULLETS||[]).length>0);
+    h=compRetHtml()+'<section class="card" aria-label="'+K.title+'">'+(hasCat?catPickHtml(compKind):'')+'<div class="row"><button class="btn'+(hasCat?'':' primary')+'" id="compAdd" type="button">+ Add '+(hasCat?'a '+K.one+' that isn\'t listed':K.one)+'</button>'+(!window.GUEST?'<button class="btn" type="button" data-sximp="brass">Import from a spreadsheet</button>':'')+'<span class="savestate" id="compState"></span></div>';
     if(!list.length){
       const fromLoads=[...loads.entries()].some(([id,L])=>isMine(id)&&L[RECIPE_KEY[compKind]]&&(L[RECIPE_KEY[compKind]].mfr||L[RECIPE_KEY[compKind]].type));
       h+=(compKind==="brass"?'<p class="note">No brass lots yet. A lot is a batch of cases you keep together, like "Lapua 6.5 CM, bought 2025". Add one to track how many cases you have and how many times they\'ve been loaded.</p>':'<p class="note">No saved '+K.title.toLowerCase()+' yet. Add one here, or tap <b>Save to Components</b> in a load\'s recipe.</p>')+(fromLoads?'<div class="row"><button class="btn" id="compFill" type="button">Add the '+K.title.toLowerCase()+' from my loads</button></div>':'');
@@ -5396,7 +5420,14 @@ function renderComps(){
   const cr=$("compRet");if(cr)cr.addEventListener("click",()=>{
     if(compReturnAmmo){const id=compReturnAmmo;compReturnAmmo=null;compOpen=null;gunArea="ammo";ammoOpen=ammo.some(x=>x.id===id)?id:null;showTab("rifles");renderRifles();window.scrollTo(0,0);return;}
     const id=compReturn;compReturn=null;showTab("rel");openLoad(id);});
-  bindPowderPick(p=>{if(!p)return;const c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:p[0],name:p[1],kind:p[2],notes:""};comps.powders.push(c);queueComps();compOpen=c.id;renderComps();window.scrollTo(0,0);});
+  bindCatPick(compKind,i=>{const id="c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);let c=null;
+    if(compKind==="powders"){const p=POWDER_LIST[i];c={id,mfr:p[0],name:p[1],kind:p[2],notes:""};}
+    else if(compKind==="primers"){const p=PRIMER_LIST[i];c={id,mfr:p[0],name:p[1],size:p[2],notes:""};}
+    else if(compKind==="bullets"){const b=(window.RB_BULLETS||[])[i];if(!b)return;
+      // the G7 BC when the maker publishes one (it fits long-range bullets better), otherwise G1
+      c={id,mfr:b.mfr,name:b.line,calname:b.cal,caliber:b.d,caliberUnit:"in",weight:b.w,bc:b.g7||b.g1||null,bcm:b.g7?"G7":"G1",length:b.len||null,catItem:b.item||null,
+        notes:["From "+b.mfr+"'s published data"+(b.item?" (item "+b.item+")":"")+".",b.g7&&b.g1?"G1 BC: "+b.g1+".":"","Check it against your box."].filter(Boolean).join(" ")};}
+    if(!c)return;comps[compKind].push(c);queueComps();compOpen=c.id;renderComps();window.scrollTo(0,0);});
   const fill=$("compFill");
   if(fill)fill.addEventListener("click",()=>{
     loads.forEach((L,id)=>{if(!isMine(id))return;const r=L[RECIPE_KEY[compKind]];if(!r||!(r.mfr||r.type))return;
