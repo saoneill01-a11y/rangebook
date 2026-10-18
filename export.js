@@ -263,6 +263,7 @@ function exportXlsx(d) {
     { name: "Loads", rows: loadRows, cols: [{ h: "Load", w: 26 }, { h: "Cartridge", w: 22 }, { h: "Bullet", w: 20 }, { h: "Bullet maker", w: 16 }, { h: "Bullet (gr)", w: 10 }, { h: "BC", w: 8 }, { h: "BC type", w: 8 }, { h: "Primer", w: 16 }, { h: "Primer maker", w: 16 }, { h: "Powder", w: 12 }, { h: "Powder maker", w: 14 }, { h: "Brass", w: 12 }, { h: "Brass maker", w: 14 }, { h: "Case length (" + ul("dim") + ")", w: 14 }, { h: "COAL (" + ul("dim") + ")", w: 10 }, { h: "Max charge (gr)", w: 14 }, { h: "Gun", w: 22 }, { h: "Ladders", w: 8 }, { h: "Groups", w: 8 }, { h: "Shared with", w: 18 }, { h: "Notes", w: 70, s: 5 }] },
     { name: "Guns", rows: rifleRows, cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 24 }, { h: "Type", w: 10 }, { h: "Built from (lower + upper)", w: 30 }, { h: "Cartridge", w: 20 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 18 }, { h: "Twist (" + ul("dim") + ")", w: 10 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Loads", w: 7 }, { h: "Notes", w: 60, s: 5 }] },
     ...(partList(d).length ? [partSheet(d)] : []),
+    ...gearSheets(d),
     { name: "Components", rows: compRows(d), cols: [{ h: "Kind", w: 9 }, { h: "Manufacturer", w: 18 }, { h: "Name", w: 24 }, { h: "Actual diameter (" + (METRIC ? "mm" : "cal") + ")", w: 18 }, { h: "Weight (gr)", w: 11 }, { h: "BC", w: 8 }, { h: "BC type", w: 8 }, { h: "Length (" + ul("dim") + ")", w: 11 }, { h: "Size / kind", w: 16 }, { h: "Used by", w: 8 }, { h: "Notes", w: 50, s: 5 }, { h: "On hand", w: 10 }, { h: "Warn below", w: 11 }] },
     ...(noteRows.length ? [{ name: "Reloading notes", rows: noteRows, cols: [{ h: "Title", w: 30 }, { h: "Last changed", w: 13 }, { h: "Pinned", w: 8 }, { h: "Note", w: 90, s: 5 }] }] : []),
     { name: "Brass", rows: brass, cols: [{ h: "Manufacturer", w: 32 }, { h: "Headstamp", w: 16 }, { h: "Rating", w: 14 }] },
@@ -774,6 +775,25 @@ function partRoundsX(p, d) {
   const base = numv(p.roundsBase) || 0, total = base + trip + dev, life = p.kind === "lower" ? null : numv(p.barrelLife);
   return { total, life, pct: life > 0 ? Math.round((total / life) * 100) : null, since: cl ? since : null };
 }
+// suppressors and inventory (2.20), from the rifles doc
+const canList = (d) => (d.rifles && Array.isArray(d.rifles.cans) ? d.rifles.cans : []);
+const invList = (d) => (d.rifles && Array.isArray(d.rifles.inventory) ? d.rifles.inventory : []);
+function canSheet(d) {
+  const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], trips = d.trips && Array.isArray(d.trips.trips) ? d.trips.trips : [];
+  const nm = (c) => [c.mfr, c.model].filter(Boolean).join(" ") || "Unnamed suppressor";
+  return { name: "Suppressors", rows: canList(d).slice().sort((a, b) => nm(a).localeCompare(nm(b), undefined, { numeric: true })).map((c) => {
+    const tr = trips.filter((t) => t.canId === c.id).reduce((a, t) => a + (numv(t.rounds) || 0), 0);
+    return [c.mfr || "", c.model || "", c.caliber || "", c.serial || "", c.approved || "", rows.filter((r) => r.canId === c.id).map((r) => r.name || "").join(", "), (numv(c.roundsBase) || 0) + tr, c.cleaned || "", c.notes || ""]; }),
+    cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 22 }, { h: "Rated for", w: 18 }, { h: "Serial number", w: 18 }, { h: "Tax stamp approved", w: 14 }, { h: "On gun", w: 24 }, { h: "Rounds", w: 9 }, { h: "Last cleaned", w: 12 }, { h: "Notes", w: 40, s: 5 }] };
+}
+function invSheet(d) {
+  const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [];
+  return { name: "Inventory", rows: invList(d).slice().sort((a, b) => String(a.kind).localeCompare(String(b.kind)) || String(a.cat || "").localeCompare(String(b.cat || "")) || String(a.name || "").localeCompare(String(b.name || ""), undefined, { numeric: true })).map((x) => {
+    const g = x.gunId && rows.find((r) => r.id === x.gunId);
+    return [x.kind === "equipment" ? "Equipment" : "Supplies", x.name || "", x.cat || "", x.kind === "equipment" ? "" : numv(x.qty) ?? "", x.kind === "equipment" ? "" : numv(x.warnAt) ?? "", x.where || "", g ? g.name || "" : "", x.serial || "", x.price || "", x.bought || "", x.due || "", x.notes || ""]; }),
+    cols: [{ h: "Kind", w: 11 }, { h: "Name", w: 26 }, { h: "Category", w: 16 }, { h: "On hand", w: 9 }, { h: "Warn at", w: 9 }, { h: "Where", w: 16 }, { h: "Goes with", w: 22 }, { h: "Serial number", w: 16 }, { h: "Price", w: 12 }, { h: "Bought", w: 12 }, { h: "Check or replace by", w: 14 }, { h: "Notes", w: 40, s: 5 }] };
+}
+const gearSheets = (d) => [...(canList(d).length ? [canSheet(d)] : []), ...(invList(d).length ? [invSheet(d)] : [])];
 function partSheet(d) {
   const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], ord = { lower: 0, upper: 1, barrel: 2 };
   return { name: "Lowers uppers barrels", rows: partList(d).slice().sort((a, b) => (ord[a.kind] ?? 2) - (ord[b.kind] ?? 2) || partNm(a).localeCompare(partNm(b), undefined, { numeric: true })).map((p) => { const rc = partRoundsX(p, d);
@@ -793,7 +813,7 @@ function gunsXlsx(d) {
     const rc = gunRounds(r, d), uses = d.loads.filter((l) => l.data.rifleId === r.id).length + calc.filter((c) => c.rifleId === r.id).length;
     return [gunMfr(r), gunModel(r), gunType(r), r.builtFrom || "", r.cartridge || "", r.serial || "", numv(r.barrel) != null ? cv("dim", r.barrel, METRIC ? 0 : null) : r.barrel || "", twistTxt(numv(r.twist) != null && METRIC ? cv("dim", r.twist, 0) : r.twist), cv("in", r.sightHeight, METRIC ? 2 : null), scopeTxt(r, d), rc.total || null, rc.life, rc.pct, r.barrelSince ? { date: r.barrelSince } : null, r.cleaned ? { date: r.cleaned } : null, numv(r.cleanEvery), rc.since, uses || null, (d.gunPhotos || []).filter((p) => p.rifle_id === r.id).length || null, r.notes || ""];
   });
-  const extra = partList(d).length ? [partSheet(d)] : [];
+  const extra = [...(partList(d).length ? [partSheet(d)] : []), ...gearSheets(d)];
   return buildXlsx([{ name: "Guns", selected: true, rows, cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 24 }, { h: "Type", w: 10 }, { h: "Built from (lower + upper)", w: 30 }, { h: "Cartridge", w: 20 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 11 }, { h: "Twist" + (METRIC ? " (mm)" : ""), w: 9 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Scope", w: 34 }, { h: "Round count", w: 12 }, { h: "Barrel life", w: 11 }, { h: "Barrel life used (%)", w: 17 }, { h: "Barrel fitted", w: 13 }, { h: "Last cleaned", w: 13 }, { h: "Clean every", w: 11 }, { h: "Rounds since cleaning", w: 18 }, { h: "Loads using it", w: 13 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] }, ...extra]);
 }
 function gunsPdf(d, readPhoto) {

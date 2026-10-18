@@ -128,6 +128,20 @@ CREATE TABLE IF NOT EXISTS gun_photos(
   w INTEGER, h INTEGER,
   created_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS vault_keys(
+  owner_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  data TEXT NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS vault_docs(
+  id TEXT PRIMARY KEY,
+  owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  item_id TEXT NOT NULL,
+  meta TEXT NOT NULL,
+  file TEXT NOT NULL,
+  size INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
 CREATE TABLE IF NOT EXISTS user_docs(
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   key TEXT NOT NULL,
@@ -759,6 +773,56 @@ async function api(req, res, url) {
     return send(res, 200, { ok: true });
   }
 
+  /* ---- document vault (2.20): documents are encrypted in the browser with a key only the owner's vault passphrase can
+     unlock. The server stores the wrapped key and the encrypted files as they arrive and can't read either; it only
+     checks sizes and ownership. Files sit in the photo folder as <uuid>.rbv so the nightly backup keeps them, but they
+     are never served by /api/photos (they aren't in any photo table). ---- */
+  if (p === "/api/vault" && method === "GET") {
+    const k = q("SELECT data FROM vault_keys WHERE owner_id=?").get(user.id);
+    const docs = q("SELECT id, item_id, meta, size, created_at FROM vault_docs WHERE owner_id=? ORDER BY created_at").all(user.id);
+    res.setHeader("Cache-Control", "no-store");
+    return send(res, 200, { key: k ? JSON.parse(k.data) : null, docs: docs.map((r) => ({ id: r.id, item: r.item_id, meta: JSON.parse(r.meta), size: r.size, at: r.created_at })) });
+  }
+  if (p === "/api/vault/key" && method === "PUT") {
+    const body = await readJson(req, 16 * 1024), k = body && body.key;
+    const b64 = (v, max) => typeof v === "string" && v.length <= max && /^[A-Za-z0-9+/=]+$/.test(v);
+    if (!k || k.v !== 1 || !b64(k.salt, 64) || !b64(k.iv, 32) || !b64(k.ct, 256) || !(Number.isInteger(k.iter) && k.iter >= 100000 && k.iter <= 10000000))
+      throw new HttpError(400, "That vault key isn't valid.");
+    const had = q("SELECT 1 AS x FROM vault_keys WHERE owner_id=?").get(user.id);
+    // replacing a key is only for a new passphrase on the same vault; the browser sends the key it unlocked with
+    if (had && !body.replace) throw new HttpError(409, "There's already a vault on this account.");
+    q("INSERT INTO vault_keys(owner_id,data,updated_at) VALUES(?,?,?) ON CONFLICT(owner_id) DO UPDATE SET data=excluded.data, updated_at=excluded.updated_at")
+      .run(user.id, JSON.stringify({ v: 1, salt: k.salt, iter: k.iter, iv: k.iv, ct: k.ct }), now());
+    return send(res, 200, { ok: true });
+  }
+  if (p === "/api/vault/docs" && method === "POST") {
+    if (!q("SELECT 1 AS x FROM vault_keys WHERE owner_id=?").get(user.id)) throw new HttpError(400, "Set up the vault first.");
+    const item = String(url.searchParams.get("item") || "");
+    if (!/^[A-Za-z0-9_-]{1,80}$/.test(item)) throw new HttpError(400, "Which item is this document for?");
+    let meta = null;
+    try { meta = JSON.parse(Buffer.from(String(req.headers["x-vault-meta"] || ""), "base64").toString("utf8")); } catch { meta = null; }
+    if (!meta || typeof meta.iv !== "string" || typeof meta.ct !== "string" || meta.iv.length > 32 || meta.ct.length > 2048) throw new HttpError(400, "That document's details aren't valid.");
+    const buf = await readBody(req, 20 * 1024 * 1024);
+    if (buf.length < 29) throw new HttpError(400, "That document is empty.");
+    const id = crypto.randomUUID(), file = id + ".rbv";
+    fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
+    q("INSERT INTO vault_docs(id,owner_id,item_id,meta,file,size,created_at) VALUES(?,?,?,?,?,?,?)").run(id, user.id, item, JSON.stringify({ iv: meta.iv, ct: meta.ct }), file, buf.length, now());
+    return send(res, 200, { doc: { id, item, meta: { iv: meta.iv, ct: meta.ct }, size: buf.length, at: now() } });
+  }
+  m = /^\/api\/vault\/docs\/([A-Za-z0-9-]{1,80})$/.exec(p);
+  if (m && method === "GET") {
+    const r = q("SELECT file FROM vault_docs WHERE id=? AND owner_id=?").get(m[1], user.id);
+    if (!r) throw new HttpError(404, "Not found.");
+    let buf; try { buf = fs.readFileSync(path.join(PHOTO_DIR, path.basename(r.file))); } catch { throw new HttpError(404, "That document's file is missing."); }
+    res.writeHead(200, { "Content-Type": "application/octet-stream", "Content-Length": buf.length, "Cache-Control": "no-store", ...SECURITY_HEADERS });
+    return res.end(buf);
+  }
+  if (m && method === "DELETE") {
+    const rows = q("SELECT file FROM vault_docs WHERE id=? AND owner_id=?").all(m[1], user.id);
+    deletePhotoFiles(rows); q("DELETE FROM vault_docs WHERE id=? AND owner_id=?").run(m[1], user.id);
+    return send(res, 200, { ok: true });
+  }
+
   /* ---- range trip photos (private to their owner; trips themselves live in the "trips" doc) ---- */
   m = /^\/api\/trips\/([A-Za-z0-9_-]{1,80})\/report\.pdf$/.exec(p);
   if (m && method === "GET") {
@@ -992,6 +1056,7 @@ async function api(req, res, url) {
         deletePhotoFiles(q("SELECT file FROM photos WHERE owner_id=?").all(id));
         deletePhotoFiles(q("SELECT file FROM trip_photos WHERE owner_id=?").all(id));
         deletePhotoFiles(q("SELECT file FROM gun_photos WHERE owner_id=?").all(id));
+        deletePhotoFiles(q("SELECT file FROM vault_docs WHERE owner_id=?").all(id));
         // private box photos go with the account; photos of catalog loads and of loads they shared stay for everyone
         const privBox = "owner_id=? AND cat_item IS NULL AND (ammo_id IS NULL OR ammo_id NOT IN (SELECT id FROM shared_ammo))";
         deletePhotoFiles(q("SELECT file FROM box_photos WHERE " + privBox).all(id));

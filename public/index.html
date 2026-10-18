@@ -852,6 +852,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .ltext{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ltext.grow{flex:1 1 auto}
 /* favorite star on gun tiles (2.18.5) */
+@media(max-width:420px){#rifSeg{gap:16px}}
+.vdoc{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}.vdoc .t{font-weight:600;flex:1 1 180px;min-width:0;overflow-wrap:anywhere}.vdoc .row{margin:0;gap:10px}
 .gtile{position:relative;display:flex}.gtile[hidden]{display:none}.gtile>.loaditem{flex:1 1 auto;padding-right:46px}
 .favstar{position:absolute;top:6px;right:6px;width:38px;height:38px;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 .favstar svg,.favbtn svg{width:22px;height:22px}.favbtn svg{width:18px;height:18px;vertical-align:-3px}
@@ -1526,6 +1528,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b>. It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up in their caliber's box under <b>Browse by caliber</b> and in searches, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
       <h3>Box photos</h3>
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
+      <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b> and <b>Ranges</b>. On a phone the row scrolls sideways.</p>
+      <h3>Suppressors</h3>
+      <p>Add each suppressor under <b>Gear &amp; Ranges → Suppressors</b> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
+      <h3>Inventory</h3>
+      <p><b>Gear &amp; Ranges → Inventory</b> keeps track of the rest of your gear. <b>+ Add supplies</b> is for things that get used up (batteries, target pasters, earplugs, patches and solvent, hand warmers): give it a count and <b>Warn when at or below</b>, and use <b>− 1 used</b> and <b>+ 1</b> to keep the count right. <b>+ Add equipment</b> is for things you keep (a chronograph, rangefinder, bipod, magazines, cases) with a serial number, price, date bought and photos, handy for insurance. Either can have a category, where it's kept, a gun it goes with and a <b>Check or replace by</b> date that can repeat (a battery every year, a hunting license, a first-aid kit). Low supplies and dates within two weeks are listed first under <b>Needs attention</b>, and on Home. When you've done it, tap <b>Done</b> and a repeating date moves to the next one.</p>
+      <h3>Document vault</h3>
+      <p>Suppressors, guns and inventory items have a <b>Documents</b> card for papers like a tax stamp, a receipt or a manual (PDFs or pictures, up to 15 MB). The first time, tap <b>Set up the vault</b> and choose a vault passphrase. It isn't your sign-in password: use something long you don't use anywhere else, like four or five random words. Every document is locked (encrypted) on your phone or computer with that passphrase before it's uploaded, so the server only ever holds scrambled data. Nobody can open your documents without the passphrase: not the person who runs this server, not an admin (even one who resets your password), not someone with your backup file, and not Range Book's maker. <b>That also means a forgotten passphrase can't be recovered</b>, and neither can the documents, so keep the originals somewhere too.</p>
+      <p>To see or add documents, tap <b>Unlock</b> and type the passphrase. On a computer <b>Open</b> shows the document in a new tab; on a phone it unlocks it, then a second tap opens the share sheet to view, print or save it. The vault locks itself after 15 minutes, when you tap <b>Lock</b>, or when you close Range Book. <b>Account → Document vault</b> shows how many documents you have and lets you change the passphrase (your documents stay as they are). Your backup file includes the vault, still locked: restoring it brings the documents back, and they open with the same passphrase. One caution: whoever controls the server could, in theory, change Range Book's code to capture a passphrase as it's typed, so only use the vault on a Range Book run by someone you trust.</p>
     </section>
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
       <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. Nothing in Tools is saved: change a number and the answer updates.</p>
@@ -1564,7 +1574,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-rifles" role="tabpanel" aria-labelledby="tab-rifles" hidden>
     <header class="phead"><button class="backbtn" id="rifHeadBack" type="button" hidden aria-label="Back to the list">‹ Guns</button><h1 id="rifTitle">Gear & Ranges</h1><p class="sub" id="rifSub">Your guns (barrel, twist, sight height, round count) and the ammunition you shoot, factory and reloaded.</p></header>
-    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Gear & Ranges"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammo</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button><button type="button" role="tab" data-garea="ranges" aria-selected="false">Ranges</button></div>
+    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Gear & Ranges"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button><button type="button" role="tab" data-garea="cans" aria-selected="false">Suppressors</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammo</button><button type="button" role="tab" data-garea="inv" aria-selected="false">Inventory</button><button type="button" role="tab" data-garea="ranges" aria-selected="false">Ranges</button></div>
     <div id="riflesRoot" style="display:flex;flex-direction:column;gap:14px"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-brass" role="tabpanel" aria-labelledby="tab-rel" hidden>
@@ -1679,7 +1689,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="panel" id="panel-account" role="tabpanel" hidden>
     <header><h1>Account</h1><p class="sub" id="acctWho"></p></header>
     <section class="card" aria-label="Back up and export"><h2>Back up and export</h2>
-      <p class="note"><b>Download backup</b> saves everything in your account in one .zip file, photos included: loads, ladders, Shooting profiles, guns, ammo, components, range trips and notes. Import it here (or on another Range Book) to get it all back.</p>
+      <p class="note"><b>Download backup</b> saves everything in your account in one .zip file, photos included: loads, ladders, Shooting profiles, guns, suppressors, inventory, ammo, components, range trips and notes, plus your document vault, still locked. Import it here (or on another Range Book) to get it all back.</p>
       <div class="row"><a class="btn primary" href="/api/backup.zip" download>Download backup</a></div>
       <p class="note">To read or print your data: the Excel file has your loads, every shot's velocity, group results and more (it can be imported too, without photos); the PDF also includes your target photos.</p>
       <div class="row"><a class="btn" href="/api/export.xlsx" download>Download Excel</a><a class="btn" href="/api/export.pdf" download>Download PDF</a></div>
@@ -1701,6 +1711,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="segtabs" id="unitMode" role="group" aria-label="Imperial or metric"><button type="button" data-units="imperial">Imperial</button><button type="button" data-units="metric">Metric</button></div>
       <p class="note" id="unitNote">Imperial: yards, fps, inches, ft-lb, °F, mph, feet and pounds. Metric: metres, m/s, centimetres (millimetres for cartridge sizes), joules, °C, km/h and kilograms. Bullet weights and powder charges stay in grains either way. Your data doesn't change; only how it's shown. The choice follows your account to your other devices, and the exports use it too.</p>
     </section>
+    <section class="card" aria-label="Document vault"><h2>Document vault</h2><div id="vaultAcct"></div></section>
     <section class="card" aria-label="Feedback" id="fbCard"><h2>Feedback and ideas</h2>
       <p class="note">Found something wrong, or have an idea? This goes to the person who makes Range Book, not to whoever runs this server. Nothing is sent from Range Book itself: it opens your own email app (or GitHub) with the Range Book version filled in, and you write the rest.</p>
       <div class="row"><a class="btn primary" id="fbMail" hidden>Email feedback</a><a class="btn" id="fbGh" target="_blank" rel="noopener">Post it on GitHub</a></div>
@@ -3437,7 +3448,7 @@ function queueRifles(){
   riflesDirty=true;riflesVer++;const my=riflesVer;
   clearTimeout(riflesTimer);
   riflesTimer=setTimeout(()=>{
-    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts))}}))
+    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts)),cans:JSON.parse(JSON.stringify(cans)),inventory:JSON.parse(JSON.stringify(inv))}}))
       .then(()=>{if(riflesVer===my){riflesDirty=false;const el=$("rifleState");if(el)el.textContent="Saved";}},e=>{riflesDirty=false;onWriteError(e);});
   },600);
   const el=$("rifleState");if(el)el.textContent="Saving…";
@@ -3450,11 +3461,13 @@ function riflesEditing(){const a=document.activeElement;return a&&$("riflesRoot"
 let rifleOpen=null;
 document.getElementById("rifHeadBack").addEventListener("click",()=>{if(partOpen){const g=partFromGun&&rifles.some(r=>r.id===partFromGun)?partFromGun:null;partOpen=null;partFromGun=null;rifleOpen=g;renderRifles();window.scrollTo(0,0);return;}
   if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
+  if(canOpen&&canFromGun&&rifles.some(r=>r.id===canFromGun)){gunArea="guns";rifleOpen=canFromGun;canOpen=null;canFromGun=null;renderRifles();window.scrollTo(0,0);return;}
+  canOpen=null;canFromGun=null;invOpen=null;
   rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
 let ammoReturnTraj=null;
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;canOpen=null;canFromGun=null;invOpen=null;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 // gun type: rifle, pistol or shotgun. Guessed from the cartridge when not picked (handgun cartridges → pistol, gauges → shotgun)
 const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shotgun","Shotgun","Shotguns"]];
 function gunTypeGuess(cart){const t=String(cart||"").trim();if(!t)return null;if(/\b(\d+|four|eight|ten|twelve|sixteen|twenty)\s*-?\s*(ga|gauge|bore)\b|\b410\b|\.410/i.test(t))return "shotgun";
@@ -3993,8 +4006,13 @@ function renderAmmo(root){
 function renderRifles(){
   const root=$("riflesRoot");if(!root)return;
   syncBuilds();
-  document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.setAttribute("aria-selected",b.dataset.garea===gunArea?"true":"false"));
+  setTimeout(()=>root.querySelectorAll("[data-vault]").forEach(el=>vDraw(el)),0);
+  document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>{const on=b.dataset.garea===gunArea;b.setAttribute("aria-selected",on?"true":"false");
+    // six tabs don't fit on a phone: the row scrolls sideways, so keep the open one in view
+    if(on){const sg=$("rifSeg");if(sg&&sg.scrollWidth>sg.clientWidth){const l=b.offsetLeft-sg.offsetLeft;if(l<sg.scrollLeft||l+b.offsetWidth>sg.scrollLeft+sg.clientWidth)sg.scrollLeft=Math.max(0,l-24);}}});
   if(gunArea==="scopes"){renderScopes(root);return;}
+  if(gunArea==="cans"){renderCans(root);return;}
+  if(gunArea==="inv"){renderInv(root);return;}
   if(gunArea==="ranges"){renderGearRanges(root);return;}
   if(gunArea==="ammo"){
     const a0=ammoOpen&&ammo.find(x=>x.id===ammoOpen);
@@ -4069,6 +4087,7 @@ function renderRifles(){
       field("rf_twist","Twist (1 turn in __ in)",r.twist,"number")+
       field("rf_sightHeight","Sight height over bore (in)",r.sightHeight,"number")+
       '<div class="field"><label for="rf_scope">Scope</label><select id="rf_scope" class="fieldselect"><option value="">None</option>'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b))).map(x=>'<option value="'+esc(x.id)+'"'+(r.scopeId===x.id?' selected':'')+'>'+esc(scopeLabel(x))+'</option>').join("")+'<option value="__new">+ Add a scope…</option></select>'+(r.scopeId&&scopes.some(x=>x.id===r.scopeId)?'<button class="linkbtn" type="button" id="rfScopeOpen">Open this scope ›</button>':'')+'</div>'+
+      '<div class="field"><label for="rf_can">Suppressor</label><select id="rf_can" class="fieldselect"><option value="">None (pick one on each range trip)</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(r.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+'<option value="__new">+ Add a suppressor…</option></select>'+(r.canId&&cans.some(c=>c.id===r.canId)?'<button class="linkbtn" type="button" id="rfCanOpen">Open this suppressor ›</button>':'')+'</div>'+
       '<div class="field wide"><label for="rf_notes">Notes</label><textarea id="rf_notes" style="min-height:90px">'+esc(r.notes||"")+'</textarea></div></div>'+
       '<p class="note">Measure sight height the way the How to Use tab describes. Changing it here also updates the loads that use this gun.</p></section>'+
       (()=>{if(r.build)return '';const ps=partsOf(r.id);return '<section class="card" aria-label="Barrels for this gun" id="secGunParts"><h2>Barrels</h2>'+
@@ -4078,6 +4097,7 @@ function renderRifles(){
       (()=>{const ps=gunPhotosOf(r.id);
         return '<section class="card" aria-label="Gun photos" id="secGunPh"><h2>Photos</h2>'+(ps.length?'<div class="boxgrid gungrid">'+ps.map(p=>'<figure class="boxph"><a href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Photo of '+esc(r.name||"this gun")+'" loading="lazy"></a><figcaption>'+(p.at?esc((d=>fmtDate(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')))(new Date(p.at))):'')+' <button class="linkbtn danger" type="button" data-gdel="'+esc(p.id)+'">Delete</button></figcaption></figure>').join("")+'</div>':'<p class="note">No photos yet.</p>')+
           (window.GUEST?'<p class="note">Gun photos need an account.</p>':'<div class="row"><label class="btn" for="gunIn" style="cursor:pointer">+ Add photos</label><input id="gunIn" type="file" accept="image/*" multiple hidden><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these. Handy for insurance records along with the serial number.</p>')+'</section>';})()+
+      vaultCardHtml(r.id)+
       '<section class="card" aria-label="Round count" id="secRounds"><h2>Round count</h2><div id="rcBox"></div><div class="grid">'+
       field("rf_barrelLife","Barrel life (rounds)",r.barrelLife,"number")+field("rf_roundsBase","Rounds before Range Book",r.roundsBase,"number")+
       field("rf_barrelSince","Barrel fitted on",r.barrelSince,"date")+field("rf_cleanEvery","Clean every (rounds)",r.cleanEvery,"number")+
@@ -4160,6 +4180,10 @@ function renderRifles(){
   root.querySelectorAll("[data-gtraj]").forEach(b=>b.addEventListener("click",()=>RB_TRAJ.open(b.dataset.gtraj)));
   root.querySelectorAll("[data-gtrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.gtrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("gunRangeDay").addEventListener("click",()=>{homePick={gun:r.id};showTab("home");window.scrollTo(0,0);});
+  $("rf_can").addEventListener("change",e=>{const v=e.target.value;
+    if(v==="__new"){const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);mountCan(n.id,r.id);canFromGun=r.id;gunArea="cans";canOpen=n.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("cn_mfr");if(el)el.focus();return;}
+    if(v)mountCan(v,r.id);else{r.canId=null;queueRifles();}renderRifles();});
+  {const co=$("rfCanOpen");if(co)co.addEventListener("click",()=>{canFromGun=r.id;gunArea="cans";canOpen=r.canId;rifleOpen=null;renderRifles();window.scrollTo(0,0);});}
   $("rf_scope").addEventListener("change",e=>{const v=e.target.value;
     if(v==="__new"){scopeFromGun=r.id;gunArea="scopes";scopeAdding=true;scopeForGun=r.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);return;}
     mountScope(v||null,r.id);renderRifles();});
@@ -4238,6 +4262,278 @@ async function uploadRetPic(sc,file){
 function calScope(sc){const ph=RB_RETPIC(sc.id);if(!ph)return;
   const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{const now=scopes.find(y=>y.id===sc.id);if(now){now.pic=cal;now.retMode="pic";}else{sc.pic=cal;sc.retMode="pic";scopes.push(sc);}scopesChanged();renderRifles();}});
   if(ph.w&&ph.h)go(ph.w,ph.h);else{const im=new Image();im.onload=()=>go(im.naturalWidth,im.naturalHeight);im.src=ph.url;}}
+/* ---------- Document vault (2.20) ----------
+   Tax stamps, receipts and other papers, locked in the browser before they're uploaded. A random 256-bit vault key encrypts
+   each document (AES-GCM); the vault key itself is stored on the server only wrapped (encrypted) with a key made from the
+   owner's vault passphrase (PBKDF2-SHA-256, 600,000 rounds). So the server, an admin, a backup or an export only ever hold
+   scrambled data, and a forgotten passphrase can't be recovered. A new passphrase just re-wraps the same vault key.
+   Unlocked, the key lives only in this page's memory and locks again after 15 idle minutes or on Lock. */
+const VLT={cfg:undefined,docs:[],key:null,names:new Map(),timer:null,loading:null,ready:new Map()};
+const VLT_ITER=600000,VLT_MAX=15*1024*1024,VLT_IDLE=15*60*1000;
+const vb64e=buf=>{let s="";const b=buf instanceof Uint8Array?buf:new Uint8Array(buf);for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s);};
+const vb64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function vDerive(pass,salt,iter){const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(String(pass).normalize("NFC")),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);}
+async function vWrap(raw,pass){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),wk=await vDerive(pass,salt,VLT_ITER);
+  return {v:1,salt:vb64e(salt),iter:VLT_ITER,iv:vb64e(iv),ct:vb64e(await crypto.subtle.encrypt({name:"AES-GCM",iv},wk,raw))};}
+async function vUnwrap(cfg,pass){const wk=await vDerive(pass,vb64d(cfg.salt),cfg.iter);try{return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:vb64d(cfg.iv)},wk,vb64d(cfg.ct)));}catch(e){return null;}}
+const vImport=raw=>crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
+async function vEnc(bytes){const iv=crypto.getRandomValues(new Uint8Array(12));return {iv,ct:new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},VLT.key,bytes))};}
+async function vDec(iv,ct){return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv},VLT.key,ct));}
+const vFetch=(url,o)=>fetch(url,Object.assign({credentials:"same-origin",cache:"no-store"},o||{},{headers:Object.assign({"X-Requested-With":"rangebook"},(o&&o.headers)||{})})).then(async r=>{if(!r.ok){let j=null;try{j=await r.json();}catch(e){}const e=new Error((j&&j.error)||"The server answered with error "+r.status+".");e.status=r.status;throw e;}return r;});
+function vLoad(force){
+  if(window.GUEST)return Promise.resolve();
+  if(VLT.loading&&!force)return VLT.loading;
+  return VLT.loading=vFetch("/api/vault").then(r=>r.json()).then(async j=>{VLT.cfg=j.key||null;VLT.docs=j.docs||[];await vNames();}).catch(e=>{VLT.loading=null;throw e;});
+}
+async function vNames(){if(!VLT.key)return;for(const d of VLT.docs){if(VLT.names.has(d.id))continue;try{VLT.names.set(d.id,JSON.parse(new TextDecoder().decode(await vDec(vb64d(d.meta.iv),vb64d(d.meta.ct)))));}catch(e){VLT.names.set(d.id,{name:"(couldn't read this document's name)",type:"application/octet-stream"});}}}
+function vTouch(){clearTimeout(VLT.timer);if(VLT.key)VLT.timer=setTimeout(()=>vLock(),VLT_IDLE);}
+function vLock(){VLT.key=null;VLT.names.clear();VLT.ready.clear();clearTimeout(VLT.timer);vRedraw();}
+const vRedraw=()=>{document.querySelectorAll("[data-vault]").forEach(el=>vDraw(el));vAccountDraw();};
+// a short message on the Documents cards (and Account), since this tab has no banner of its own
+function vSay(t,bad){document.querySelectorAll("[data-vault] .vmsg,#vaultAcct .vmsg").forEach(m=>{m.textContent=t;m.className="vmsg "+(bad?"err":"note");m.hidden=!t;});}
+// the passphrase sheet: "setup", "unlock" or "change"; resolves with the passphrase(s), or null if closed
+function vAsk(mode){return new Promise(res=>{
+  const sh=document.createElement("div");sh.className="infowrap";sh.id="vaultSheet";
+  const pw=(id,l,ac)=>'<div class="field wide"><label for="'+id+'">'+l+'</label><input id="'+id+'" type="password" autocomplete="'+ac+'" class="name"></div>';
+  const T={setup:"Set up the document vault",unlock:"Unlock the vault",change:"Change the vault passphrase"}[mode];
+  sh.innerHTML='<div class="infoback" data-vx></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="vT"><div class="infohead"><h2 id="vT">'+T+'</h2><button class="infox" type="button" data-vx aria-label="Close">✕</button></div><form id="vForm" novalidate><div class="grid">'+
+    (mode==="setup"?'<p class="note wide" style="margin:0">Documents in the vault are locked on this device with a passphrase before they\'re uploaded. Nobody can open them without it: not the person who runs this server, not an admin, and not Range Book. Use something long that you don\'t use anywhere else, like four or five random words.</p>'+pw("vP1","Vault passphrase","new-password")+pw("vP2","Type it again","new-password")+
+      '<label class="toggle wide"><input type="checkbox" id="vOk"> I understand: if I forget this passphrase, my vault documents can\'t be recovered by anyone. I\'ll keep the originals somewhere else too.</label>'
+    :mode==="unlock"?pw("vP1","Vault passphrase","current-password")
+    :pw("vP0","Current passphrase","current-password")+pw("vP1","New passphrase","new-password")+pw("vP2","Type the new one again","new-password"))+
+    '</div><p class="err" id="vErr" hidden></p><div class="row" style="margin-top:10px"><button class="btn primary" type="submit" id="vGo">'+(mode==="unlock"?"Unlock":mode==="setup"?"Set up the vault":"Change it")+'</button><button class="btn" type="button" data-vx>Cancel</button></div></form></div>';
+  document.body.appendChild(sh);requestAnimationFrame(()=>{sh.classList.add("on");const f=sh.querySelector("input");if(f)f.focus();});
+  const done=v=>{sh.classList.remove("on");setTimeout(()=>sh.remove(),180);res(v);};
+  sh.addEventListener("click",e=>{if(e.target.closest("[data-vx]"))done(null);});
+  sh.addEventListener("keydown",e=>{if(e.key==="Escape")done(null);});
+  const err=t=>{const e=$("vErr");e.textContent=t;e.hidden=!t;};
+  $("vForm").addEventListener("submit",async e=>{e.preventDefault();const p1=$("vP1").value,p2=$("vP2")?$("vP2").value:p1,p0=$("vP0")?$("vP0").value:null;
+    if(mode!=="unlock"){if(p1.length<10)return err("Use at least 10 characters. A few random words is easiest to remember.");if(p1!==p2)return err("The two passphrases don't match.");}
+    if(mode==="setup"&&!$("vOk").checked)return err("Tick the box to show you understand the passphrase can't be recovered.");
+    if(!p1)return err("Type the passphrase.");
+    const b=$("vGo");b.disabled=true;b.textContent="Working…";err("");
+    const r=await sh._check({p0,p1}).catch(x=>x&&x.message||"Something went wrong.");
+    if(r===true)done(true);else{b.disabled=false;b.textContent=mode==="unlock"?"Unlock":mode==="setup"?"Set up the vault":"Change it";err(r);}});
+  sh._check=async()=>true;VLT.sheet=sh;
+});}
+async function vSetup(){await vLoad(true);if(VLT.cfg)return vUnlock();
+  const p=vAsk("setup");VLT.sheet._check=async({p1})=>{const raw=crypto.getRandomValues(new Uint8Array(32)),cfg=await vWrap(raw,p1);
+    await vFetch("/api/vault/key",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:cfg})});
+    VLT.cfg=cfg;VLT.key=await vImport(raw);raw.fill(0);vTouch();return true;};
+  if(await p)vRedraw();}
+async function vUnlock(){await vLoad();if(!VLT.cfg)return vSetup();
+  const p=vAsk("unlock");VLT.sheet._check=async({p1})=>{const raw=await vUnwrap(VLT.cfg,p1);if(!raw)return "That passphrase doesn't open this vault.";VLT.key=await vImport(raw);raw.fill(0);await vNames();vTouch();return true;};
+  if(await p)vRedraw();}
+async function vChange(){await vLoad(true);if(!VLT.cfg)return vSetup();
+  const p=vAsk("change");VLT.sheet._check=async({p0,p1})=>{const raw=await vUnwrap(VLT.cfg,p0);if(!raw)return "The current passphrase isn't right.";
+    const cfg=await vWrap(raw,p1);await vFetch("/api/vault/key",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:cfg,replace:true})});
+    VLT.cfg=cfg;VLT.key=await vImport(raw);raw.fill(0);await vNames();vTouch();return true;};
+  if(await p){vRedraw();vSay("Vault passphrase changed. Use the new one from now on.");}}
+async function vAdd(item,files,el){
+  for(const f of files){
+    if(f.size>VLT_MAX){vSay(f.name+" is over 15 MB. Make it smaller (a scan at a lower resolution) and try again.",true);continue;}
+    try{vTouch();const st=el.querySelector(".vstate");if(st)st.textContent="Locking and uploading "+f.name+"…";
+      const data=await vEnc(new Uint8Array(await f.arrayBuffer())),meta=await vEnc(new TextEncoder().encode(JSON.stringify({name:f.name,type:f.type||"application/octet-stream",size:f.size})));
+      const body=new Uint8Array(12+data.ct.length);body.set(data.iv,0);body.set(data.ct,12);
+      const r=await vFetch("/api/vault/docs?item="+encodeURIComponent(item),{method:"POST",headers:{"Content-Type":"application/octet-stream","X-Vault-Meta":btoa(JSON.stringify({iv:vb64e(meta.iv),ct:vb64e(meta.ct)}))},body}).then(x=>x.json());
+      VLT.docs.push(r.doc);VLT.names.set(r.doc.id,{name:f.name,type:f.type||"application/octet-stream",size:f.size});}
+    catch(e){vRedraw();vSay(f.name+" couldn't be added"+(e&&e.message?": "+e.message:".")+" Check your connection and try again.",true);return;}
+  }
+  vRedraw();}
+async function vOpen(id,btn){
+  vTouch();const nm=VLT.names.get(id)||{name:"document",type:"application/octet-stream"};
+  if(VLT.ready.has(id)){RB_SAVE(VLT.ready.get(id),nm.name);return;}
+  const touch=window.matchMedia("(pointer:coarse)").matches,w=touch?null:window.open("","_blank");
+  const was=btn.textContent;btn.disabled=true;btn.textContent="Unlocking…";
+  try{const buf=new Uint8Array(await (await vFetch("/api/vault/docs/"+id)).arrayBuffer());
+    const blob=new Blob([await vDec(buf.subarray(0,12),buf.subarray(12))],{type:nm.type||"application/octet-stream"});
+    if(w){w.location.href=URL.createObjectURL(blob);btn.textContent=was;}
+    else{VLT.ready.set(id,blob);btn.textContent="Tap again to view or save";btn.classList.add("primary");}}
+  catch(e){if(w)w.close();vSay("That document couldn't be opened"+(e&&e.message?": "+e.message:"."),true);btn.textContent=was;}
+  finally{btn.disabled=false;}}
+// deleted from the list right away; the server copy goes once the Undo note is gone
+function vDelete(id){const nm=(VLT.names.get(id)||{}).name||"document",i=VLT.docs.findIndex(d=>d.id===id),d=VLT.docs[i];if(!d)return;
+  VLT.docs.splice(i,1);VLT.ready.delete(id);vRedraw();
+  RB_UNDO("Deleted "+nm,()=>{VLT.docs.splice(Math.min(i,VLT.docs.length),0,d);vRedraw();},()=>vFetch("/api/vault/docs/"+id,{method:"DELETE"}).catch(()=>{VLT.docs.push(d);vRedraw();vSay(nm+" couldn't be deleted. Check your connection and try again.",true);}));}
+const vSize=n=>n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB";
+// the Documents card on a suppressor, gun or inventory item
+const vaultCardHtml=item=>'<section class="card" aria-label="Documents"><h2>Documents <span class="note">locked in your vault</span></h2><div data-vault="'+esc(item)+'"><p class="note">Loading…</p></div></section>';
+function vDraw(el){
+  const item=el.dataset.vault;
+  if(window.GUEST){el.innerHTML='<p class="note">The document vault needs an account.</p>';return;}
+  if(VLT.cfg===undefined){el.innerHTML='<p class="note">Loading…</p>';vLoad().then(()=>vDraw(el),()=>{el.innerHTML='<p class="err">The vault couldn\'t be reached. Check your connection.</p>';});return;}
+  const mine=VLT.docs.filter(d=>d.item===item);let h;
+  if(!VLT.cfg)h='<p class="note">Keep a copy of the tax stamp, a receipt or a manual here. Documents are locked on your device with a vault passphrase before they\'re uploaded, so nobody else can open them: not the person who runs this server, an admin, or a backup.</p><div class="row"><button class="btn" type="button" data-vsetup>Set up the vault</button></div>';
+  else if(!VLT.key)h='<p class="note">'+(mine.length?mine.length+' locked document'+(mine.length===1?'':'s')+'.':'No documents here yet.')+' Unlock the vault to see or add them.</p><div class="row"><button class="btn" type="button" data-vunlock>Unlock</button></div>';
+  else h=(mine.length?'<div class="cartgroup">'+mine.map(d=>{const n=VLT.names.get(d.id)||{};return '<div class="vdoc"><span class="t">'+esc(n.name||"Document")+'</span><span class="note">'+esc([vSize(n.size||d.size),d.at?fmtDate((t=>t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"))(new Date(d.at))):""].filter(Boolean).join(" · "))+'</span><span class="row"><button class="btn small" type="button" data-vopen="'+esc(d.id)+'">Open</button><button class="linkbtn danger" type="button" data-vdel="'+esc(d.id)+'">Delete</button></span></div>';}).join("")+'</div>':'<p class="note">No documents here yet.</p>')+
+    '<div class="row"><label class="btn" style="cursor:pointer">+ Add document<input type="file" accept="application/pdf,image/*" multiple hidden data-vadd></label><button class="btn" type="button" data-vlock>Lock</button><span class="savestate vstate"></span></div><p class="vmsg" hidden></p><p class="note">PDFs or pictures, up to 15 MB each. The vault locks itself after 15 minutes.</p>';
+  el.innerHTML=h;
+  const on=(q,f)=>el.querySelectorAll(q).forEach(b=>b.addEventListener(b.tagName==="INPUT"?"change":"click",f));
+  on("[data-vsetup]",()=>vSetup());on("[data-vunlock]",()=>vUnlock());on("[data-vlock]",()=>vLock());
+  on("[data-vadd]",e=>{const f=[...e.target.files];e.target.value="";vAdd(item,f,el);});
+  el.querySelectorAll("[data-vopen]").forEach(b=>b.addEventListener("click",()=>vOpen(b.dataset.vopen,b)));
+  el.querySelectorAll("[data-vdel]").forEach(b=>b.addEventListener("click",()=>vDelete(b.dataset.vdel)));
+}
+// Account → Document vault
+window.RB_VAULT_ACCT=()=>vAccountDraw();
+function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
+  if(window.GUEST){el.innerHTML='<p class="note">The document vault needs an account.</p>';return;}
+  if(VLT.cfg===undefined){el.innerHTML='<p class="note">Loading…</p>';vLoad().then(vAccountDraw,()=>{el.innerHTML='<p class="err">The vault couldn\'t be reached.</p>';});return;}
+  const msg='<p class="vmsg" hidden></p>';
+  el.innerHTML=msg+(VLT.cfg?'<p class="note">'+VLT.docs.length+' document'+(VLT.docs.length===1?'':'s')+' in your vault. It\'s '+(VLT.key?'<b>unlocked</b> on this device.':'locked.')+' Add documents on a suppressor, gun or inventory item.</p><div class="row">'+(VLT.key?'<button class="btn" type="button" id="vaLock">Lock now</button>':'<button class="btn" type="button" id="vaUnlock">Unlock</button>')+'<button class="btn" type="button" id="vaChange">Change passphrase</button></div>'
+    :'<p class="note">Not set up yet. It keeps tax stamps, receipts and other papers locked with a passphrase only you know. Set it up from the <b>Documents</b> card on a suppressor, gun or inventory item, or here.</p><div class="row"><button class="btn" type="button" id="vaSetup">Set up the vault</button></div>');
+  const b=(id,f)=>{const x=$(id);if(x)x.addEventListener("click",f);};
+  b("vaLock",()=>vLock());b("vaUnlock",()=>vUnlock());b("vaChange",()=>vChange());b("vaSetup",()=>vSetup());}
+
+/* ---------- Suppressors and Inventory (Gear & Ranges, 2.20) ----------
+   Both live in the rifles doc next to scopes and parts:
+     cans:[{id,mfr,model,caliber,serial,approved,roundsBase,cleanEvery,cleaned,notes}]
+     inventory:[{id,kind:"consumable"|"equipment",name,cat,qty,warnAt,where,gunId,due,repeat,serial,price,bought,notes}]
+   A gun can carry a suppressor (gun.canId), like a scope. Each range trip records the suppressor it was shot with (trip.canId:
+   copied from the gun when the trip is made, changeable on the trip), and a suppressor's round count comes from those trips.
+   Photos go in the gun-photo store under the item's id. */
+let cans=[],canOpen=null,canFromGun=null,inv=[],invOpen=null;
+const gearId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const canName=c=>[c.mfr,c.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ")||"Unnamed suppressor";
+const canGuns=c=>rifles.filter(r=>r.canId===c.id);
+function canRounds(c){const cl=c.cleaned||"";let trip=0,nTrips=0,since=0;
+  trips.forEach(t=>{if(t.canId!==c.id)return;const n=num(t.rounds)||0;if(!n)return;trip+=n;nTrips++;if(cl&&(t.date||"")>cl)since+=n;});
+  const base=num(c.roundsBase)||0,every=num(c.cleanEvery);return {base,trip,nTrips,total:base+trip,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};}
+// put a suppressor on a gun (it comes off any other gun), or take it off
+function mountCan(cid,gid){rifles.forEach(g=>{if(g.id===gid)g.canId=cid||null;else if(cid&&g.canId===cid)g.canId=null;});queueRifles();}
+const INV_REPEAT=[["","Doesn't repeat"],["1","Every month"],["3","Every 3 months"],["6","Every 6 months"],["12","Every year"],["24","Every 2 years"]];
+const invName=x=>String(x.name||"").trim()||"Unnamed item";
+const invLow=x=>x.kind!=="equipment"&&num(x.warnAt)!=null&&num(x.qty)!=null&&num(x.qty)<=num(x.warnAt);
+const invDays=x=>x.due?Math.round((Date.parse(x.due+"T12:00:00")-Date.parse(todayStr()+"T12:00:00"))/864e5):null;
+const shortDate=d=>{const f=fmtDate(d);return d&&d.slice(0,4)===todayStr().slice(0,4)?f.replace(/, \d{4}$/,""):f;};
+const invDue=x=>{const d=invDays(x);return d!=null&&d<=14;};
+const invDueTxt=x=>{const d=invDays(x);return d==null?"":d<0?"Overdue since "+fmtDate(x.due):d===0?"Due today":"Due "+fmtDate(x.due);};
+function addMonths(ymd,m){const p=String(ymd||todayStr()).split("-").map(Number),dt=new Date(p[0],p[1]-1+m,1),last=new Date(dt.getFullYear(),dt.getMonth()+1,0).getDate();dt.setDate(Math.min(p[2]||1,last));
+  return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");}
+const qtyTxt=v=>{const n=num(v);return n==null?"":(Math.round(n*100)/100).toLocaleString();};
+// the photos card shared by suppressors and inventory (the gun one, under another id)
+function gearPhotosHtml(id,what){const ps=gunPhotosOf(id);
+  return '<section class="card" aria-label="Photos"><h2>Photos</h2>'+(ps.length?'<div class="boxgrid gungrid">'+ps.map(p=>'<figure class="boxph"><a href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Photo of '+esc(what)+'" loading="lazy"></a><figcaption>'+(p.at?esc((d=>fmtDate(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')))(new Date(p.at))):'')+' <button class="linkbtn danger" type="button" data-gdel="'+esc(p.id)+'">Delete</button></figcaption></figure>').join("")+'</div>':'<p class="note">No photos yet.</p>')+
+    (window.GUEST?'<p class="note">Photos need an account.</p>':'<div class="row"><label class="btn" for="gearIn" style="cursor:pointer">+ Add photos</label><input id="gearIn" type="file" accept="image/*" multiple hidden><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these.</p>')+'</section>';}
+function bindGearPhotos(root,id){
+  {const gi=$("gearIn");if(gi)gi.addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadGun({id},f);});}
+  root.querySelectorAll("[data-gdel]").forEach(b=>b.addEventListener("click",()=>{const pid=b.dataset.gdel,i=gunPhotos.findIndex(p=>p.id===pid),ph=gunPhotos[i];gunPhotos=gunPhotos.filter(p=>p.id!==pid);renderRifles();
+    RB_UNDO("Deleted photo",()=>{if(ph){gunPhotos.splice(i,0,ph);renderRifles();}},()=>API.del("/api/gunphotos/"+pid).catch(onWriteError));}));}
+const gearThumb=id=>{const p=gunPhotosOf(id)[0];return p?'<img alt="" loading="lazy" src="'+esc(p.url)+'">':null;};
+const selHtml=(id,opts,v)=>'<select id="'+id+'" class="fieldselect">'+opts.map(([a,b])=>'<option value="'+esc(a)+'"'+(String(a)===String(v==null?"":v)?' selected':'')+'>'+esc(b)+'</option>').join("")+'</select>';
+function gearHead(title,back){$("rifSeg").hidden=!!title;$("rifHeadBack").hidden=!title;if(back)$("rifHeadBack").textContent=back;$("rifSub").hidden=!!title;$("rifTitle").textContent=title||"Gear & Ranges";}
+
+/* ----- Suppressors ----- */
+const CAN_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="15" height="6" rx="1.5"/><path d="M18 11h3v2h-3M7 9v6M11 9v6M15 9v6"/></svg>';
+function renderCans(root){
+  if(canOpen&&!cans.some(c=>c.id===canOpen))canOpen=null;
+  const c=canOpen&&cans.find(x=>x.id===canOpen);
+  let h;
+  if(!c){
+    h='<section class="card" aria-label="Suppressors list"><div class="row"><button class="btn primary" id="canAdd" type="button">+ Add suppressor</button></div>';
+    if(!cans.length)h+='<p class="note">No suppressors yet. Add each one with its serial number and approval date. Put one on a gun if it lives there; leave it off if it moves between guns, and pick it on each range trip. Its round count comes from the range trips shot with it.</p>';
+    else h+='<div class="cartgroup">'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(x=>{const gs=canGuns(x),rc=canRounds(x),th=gearThumb(x.id);
+      return '<button class="loaditem withthumb" type="button" data-canopen="'+esc(x.id)+'"><span class="lthumb">'+(th||CAN_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(canName(x))+'</span>'+
+        '<span class="d">'+esc([x.caliber||"",x.serial?"Serial "+x.serial:"",x.approved?"Approved "+fmtDate(x.approved):""].filter(Boolean).join(" · "))+'</span>'+
+        '<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>'+
+        '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun: picked on each range trip')+'</span></span></button>';}).join("")+'</div>';
+    h+='</section>';
+    root.innerHTML=h;gearHead(null);
+    $("canAdd").addEventListener("click",()=>{const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("cn_mfr");if(e)e.focus();});
+    root.querySelectorAll("[data-canopen]").forEach(b=>b.addEventListener("click",()=>{canOpen=b.dataset.canopen;canFromGun=null;renderRifles();window.scrollTo(0,0);}));
+    return;
+  }
+  const g0=canGuns(c)[0],rc=canRounds(c),tr=trips.filter(t=>t.canId===c.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+  const tname=new Map(((window.RB_TRAJ&&RB_TRAJ.all())||[]).map(x=>[x.id,x.name]));
+  h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Suppressor"><h2>Details</h2><div class="grid">'+
+    field("cn_mfr","Maker",c.mfr,"text")+field("cn_model","Model",c.model,"text")+
+    field("cn_caliber","Rated for (caliber)",c.caliber,"text")+field("cn_serial","Serial number",c.serial,"text")+
+    field("cn_approved","Tax stamp approved",c.approved,"date")+
+    '<div class="field"><label for="cn_gun">On gun</label>'+selHtml("cn_gun",[["","None: I pick it on each range trip"]].concat([...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(g=>[g.id,g.name||"Unnamed gun"])),g0?g0.id:"")+'</div>'+
+    '<div class="field wide"><label for="cn_notes">Notes</label><textarea id="cn_notes" style="min-height:70px">'+esc(c.notes||"")+'</textarea></div></div>'+
+    '<p class="note">On a gun, it\'s filled in on that gun\'s new range trips. Either way you can change it on each trip, and the trip\'s rounds count toward it.</p></section>'+
+    '<section class="card" aria-label="Round count"><h2>Round count</h2><div id="cnRc"></div><div class="grid">'+
+    field("cn_roundsBase","Rounds before Range Book",c.roundsBase,"number")+field("cn_cleanEvery","Clean every (rounds)",c.cleanEvery,"number")+
+    field("cn_cleaned","Last cleaned",c.cleaned,"date")+'<div class="field"><span class="flabel">&nbsp;</span><button class="btn" type="button" id="cnCleaned">Cleaned today</button></div></div></section>'+
+    vaultCardHtml(c.id)+gearPhotosHtml(c.id,canName(c))+
+    '<section class="card" aria-label="Range trips with this suppressor"><h2>Range trips</h2>'+(tr.length?'<div class="cartgroup">'+tr.slice(0,12).map(t=>'<button class="loaditem" type="button" data-cantrip="'+esc(t.id)+'"><span class="t">'+esc(t.date?fmtDate(t.date):"No date")+(t.place?' · '+esc(t.place):'')+'</span><span class="d">'+esc([tname.get(t.trajId)||"",num(t.rounds)?num(t.rounds)+" rounds":""].filter(Boolean).join(" · "))+'</span></button>').join("")+'</div>':'<p class="note">No range trips with it yet. Pick it under <b>Suppressor</b> on a range trip.</p>')+'</section>'+
+    '<div class="row endrow"><button class="btn danger" type="button" id="canDel">Delete suppressor</button></div>';
+  root.innerHTML=h;
+  gearHead(canName(c),canFromGun&&rifles.some(r=>r.id===canFromGun)?"‹ "+(rifles.find(r=>r.id===canFromGun).name||"Gun"):"‹ Suppressors");
+  const drawRc=()=>{const r2=canRounds(c),parts2=[r2.base?r2.base.toLocaleString()+" before Range Book":"",r2.trip?r2.trip.toLocaleString()+" from "+r2.nTrips+" range trip"+(r2.nTrips===1?"":"s"):""].filter(Boolean);
+    $("cnRc").innerHTML='<div class="rcount"><b>'+r2.total.toLocaleString()+'</b><span>rounds through it</span></div>'+(parts2.length?'<p class="note">'+parts2.join(" · ")+'</p>':'')+
+      (r2.since!=null?'<p class="'+(r2.due?'err':'note')+'">'+r2.since.toLocaleString()+' round'+(r2.since===1?'':'s')+' since cleaning on '+esc(fmtDate(c.cleaned))+(r2.due?' — due for cleaning.':'.')+'</p>':'');};
+  drawRc();
+  [["mfr",0],["model",0],["caliber",0],["serial",0],["approved",0],["notes",0],["roundsBase",1],["cleanEvery",1],["cleaned",0]].forEach(([k,isNum])=>{const el=$("cn_"+k);if(!el)return;
+    el.addEventListener("input",()=>{c[k]=isNum?num(el.value):el.value;queueRifles();if(k==="mfr"||k==="model")$("rifTitle").textContent=canName(c);if(isNum||k==="cleaned")drawRc();});});
+  $("cnCleaned").addEventListener("click",()=>{c.cleaned=todayStr();$("cn_cleaned").value=c.cleaned;queueRifles();drawRc();});
+  $("cn_gun").addEventListener("change",e=>{const v=e.target.value;if(v)mountCan(c.id,v);else{rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;});queueRifles();}});
+  bindGearPhotos(root,c.id);
+  root.querySelectorAll("[data-cantrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.cantrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
+  $("canDel").addEventListener("click",()=>{const i=cans.indexOf(c),on=canGuns(c).map(g=>g.id),tr2=trips.filter(t=>t.canId===c.id).map(t=>t.id);
+    cans=cans.filter(x=>x!==c);rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;});canOpen=null;queueRifles();renderRifles();window.scrollTo(0,0);
+    RB_UNDO("Deleted "+canName(c),()=>{cans.splice(Math.min(i,cans.length),0,c);rifles.forEach(g=>{if(on.includes(g.id))g.canId=c.id;});queueRifles();renderRifles();});});
+}
+
+/* ----- Inventory ----- */
+const INV_ICON={consumable:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M4 5h16v3H4zM10 12h4"/></svg>',equipment:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M9 7V5h6v2"/></svg>'};
+function renderInv(root){
+  if(invOpen&&!inv.some(x=>x.id===invOpen))invOpen=null;
+  const x=invOpen&&inv.find(y=>y.id===invOpen);
+  if(!x){
+    const tile=it=>{const th=gearThumb(it.id),g=it.gunId&&rifles.find(r=>r.id===it.gunId),cons=it.kind!=="equipment";
+      const chips=(invLow(it)?' <span class="chip warnchip">Low</span>':'')+(invDue(it)?' <span class="chip warnchip">'+esc(invDays(it)<0?"Overdue":"Due "+shortDate(it.due))+'</span>':'');
+      const d=[it.cat||"",it.where||"",g?"With "+(g.name||"a gun"):""].filter(Boolean).join(" · ");
+      const m=cons?[num(it.qty)!=null?qtyTxt(it.qty)+" on hand":"",num(it.warnAt)!=null?"warn at "+qtyTxt(it.warnAt):"",it.due&&!invDue(it)?"Next "+fmtDate(it.due):""].filter(Boolean).join(" · ")
+        :[it.serial?"Serial "+it.serial:"",it.bought?"Bought "+fmtDate(it.bought):"",it.price||"",it.due&&!invDue(it)?"Next "+fmtDate(it.due):""].filter(Boolean).join(" · ");
+      return '<button class="loaditem withthumb" type="button" data-invo="'+esc(it.id)+'"><span class="lthumb">'+(th||INV_ICON[cons?"consumable":"equipment"])+'</span><span class="ltext grow"><span class="t">'+esc(invName(it))+chips+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+esc(m)+'</span>':'')+'</span></button>';};
+    const by=(a,b)=>String(a.cat||"").localeCompare(String(b.cat||""),undefined,{numeric:true})||invName(a).localeCompare(invName(b),undefined,{numeric:true});
+    const att=inv.filter(it=>invLow(it)||invDue(it)).sort((a,b)=>(invDays(a)==null?1e9:invDays(a))-(invDays(b)==null?1e9:invDays(b))||by(a,b));
+    const rest=inv.filter(it=>!att.includes(it)),cons=rest.filter(it=>it.kind!=="equipment").sort(by),eq=rest.filter(it=>it.kind==="equipment").sort(by);
+    let h='<section class="card" aria-label="Inventory list"><div class="row"><button class="btn primary" id="invAddC" type="button">+ Add supplies</button><button class="btn" id="invAddE" type="button">+ Add equipment</button></div>';
+    if(!inv.length)h+='<p class="note">Keep track of the rest of your gear. <b>Supplies</b> get used up and have a count with a warning when you\'re low: batteries, target pasters, earplugs, patches and solvent, hand warmers. <b>Equipment</b> keeps a serial number, price and photos for insurance: a chronograph, rangefinder, bipod, magazines, cases. Either can have a <b>Check or replace by</b> date (a battery, a hunting tag or license, a first-aid kit) that shows up on Home when it\'s near.</p>';
+    const grp=(t,list)=>list.length?'<div class="cartgroup"><div class="cartname">'+t+' <span class="note">'+list.length+'</span></div>'+list.map(tile).join("")+'</div>':'';
+    h+=grp("Needs attention",att)+grp("Supplies",cons)+grp("Equipment",eq)+'</section>';
+    root.innerHTML=h;gearHead(null);
+    if(window.RB_FILTER)RB_FILTER(root.querySelector(".card"),"inv");
+    const add=kind=>{const n={id:gearId("i"),kind,name:"",cat:"",notes:""};inv.push(n);queueRifles();invOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("iv_name");if(e)e.focus();};
+    $("invAddC").addEventListener("click",()=>add("consumable"));$("invAddE").addEventListener("click",()=>add("equipment"));
+    root.querySelectorAll("[data-invo]").forEach(b=>b.addEventListener("click",()=>{invOpen=b.dataset.invo;renderRifles();window.scrollTo(0,0);}));
+    return;
+  }
+  const cons=x.kind!=="equipment",cats=[...new Set(inv.map(y=>String(y.cat||"").trim()).filter(Boolean))].sort();
+  const h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Item"><h2>'+(cons?'Supplies':'Equipment')+'</h2><div class="grid">'+
+    field("iv_name","Name",x.name,"text"," wide")+
+    '<div class="field"><label for="iv_kind">Kind</label>'+selHtml("iv_kind",[["consumable","Supplies (gets used up)"],["equipment","Equipment"]],cons?"consumable":"equipment")+'</div>'+
+    field("iv_cat","Category",x.cat,"text").replace('autocomplete="off"','autocomplete="off" list="dl_invcat" placeholder="e.g. Batteries"')+'<datalist id="dl_invcat">'+cats.map(c=>'<option value="'+esc(c)+'">').join("")+'</datalist>'+
+    (cons?field("iv_qty","On hand",x.qty,"number")+field("iv_warnAt","Warn when at or below",x.warnAt,"number"):'')+
+    field("iv_where","Where it is",x.where,"text").replace('autocomplete="off"','autocomplete="off" placeholder="e.g. Range bag"')+
+    '<div class="field"><label for="iv_gun">Goes with</label>'+selHtml("iv_gun",[["","No particular gun"]].concat([...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(g=>[g.id,g.name||"Unnamed gun"])),x.gunId||"")+'</div>'+
+    field("iv_due","Check or replace by",x.due,"date")+
+    '<div class="field"><label for="iv_repeat">Repeat</label>'+selHtml("iv_repeat",INV_REPEAT,x.repeat||"")+'</div>'+
+    field("iv_serial","Serial number",x.serial,"text")+field("iv_price","Price",x.price,"text").replace('autocomplete="off"','autocomplete="off" placeholder="e.g. $8.99 for 6"')+
+    field("iv_bought","Bought on",x.bought,"date")+
+    '<div class="field wide"><label for="iv_notes">Notes</label><textarea id="iv_notes" style="min-height:70px">'+esc(x.notes||"")+'</textarea></div></div>'+
+    '<div class="row">'+(cons?'<button class="btn" type="button" id="ivMinus">− 1 used</button><button class="btn" type="button" id="ivPlus">+ 1</button>':'')+
+      '<button class="btn" type="button" id="ivDone"'+(x.due?'':' hidden')+'>Done'+(x.repeat?': set the next date':'')+'</button><span class="note" id="ivMsg"></span></div>'+
+    '<p class="note">A <b>Check or replace by</b> date shows on Home two weeks ahead (and once it\'s past). '+(cons?'Supplies at or below their warning count show there too.':'')+'</p></section>'+
+    gearPhotosHtml(x.id,invName(x))+vaultCardHtml(x.id)+
+    '<div class="row endrow"><button class="btn danger" type="button" id="invDel">Delete item</button></div>';
+  root.innerHTML=h;gearHead(invName(x),"‹ Inventory");
+  [["name",0],["cat",0],["qty",1],["warnAt",1],["where",0],["due",0],["serial",0],["price",0],["bought",0],["notes",0]].forEach(([k,isNum])=>{const el=$("iv_"+k);if(!el)return;
+    el.addEventListener("input",()=>{x[k]=isNum?num(el.value):el.value;queueRifles();if(k==="name")$("rifTitle").textContent=invName(x);if(k==="due"){$("ivDone").hidden=!x.due;}});});
+  ["kind","gun","repeat"].forEach(k=>$("iv_"+k).addEventListener("change",e=>{const v=e.target.value;if(k==="kind")x.kind=v;else if(k==="gun")x.gunId=v||null;else x.repeat=v;queueRifles();if(k!=="gun")renderRifles();}));
+  const bump=d=>{x.qty=Math.max(0,(num(x.qty)||0)+d);$("iv_qty").value=qtyTxt(x.qty).replace(/,/g,"");queueRifles();$("ivMsg").textContent=invLow(x)?"Running low.":"";};
+  {const m=$("ivMinus"),p=$("ivPlus");if(m)m.addEventListener("click",()=>bump(-1));if(p)p.addEventListener("click",()=>bump(1));}
+  $("ivDone").addEventListener("click",()=>{const before=x.due;const m=num(x.repeat);x.due=m>0?addMonths(todayStr(),m):"";queueRifles();renderRifles();
+    const msg=$("ivMsg");if(msg)msg.textContent=x.due?"Next: "+fmtDate(x.due)+".":"Done.";
+    RB_UNDO(m>0?"Next date set":"Date cleared",()=>{x.due=before;queueRifles();renderRifles();});});
+  bindGearPhotos(root,x.id);
+  $("invDel").addEventListener("click",()=>{const i=inv.indexOf(x);inv=inv.filter(y=>y!==x);invOpen=null;queueRifles();renderRifles();window.scrollTo(0,0);
+    RB_UNDO("Deleted "+invName(x),()=>{inv.splice(Math.min(i,inv.length),0,x);queueRifles();renderRifles();});});
+}
+
 function renderScopes(root){
   if(scopeOpen&&!scopes.some(x=>x.id===scopeOpen))scopeOpen=null;
   const sc=scopeOpen&&scopes.find(x=>x.id===scopeOpen),onGun=x=>rifles.filter(g=>g.scopeId===x.id);
@@ -7151,7 +7447,8 @@ function newTrip(){
   const T=tripTraj;if(!T)return;
   const prev=trips.filter(t=>t.trajId===T.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")))[0];
   const TL=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===T.id)||T,tp=TL.partId;
-  const t={id:newId(),trajId:T.id,partId:tp&&parts.some(p=>p.id===tp)?tp:"",...gunBuild(TL.rifleId),date:todayISO(),place:prev?prev.place||"":"",distance:prev?prev.distance:null,rounds:null,temp:null,wind:"",avgVel:null,sd:null,notes:"",created:Date.now()};
+  const g0=rifles.find(r=>r.id===TL.rifleId),cn=g0&&g0.canId&&cans.some(c=>c.id===g0.canId)?g0.canId:"";
+  const t={id:newId(),trajId:T.id,partId:tp&&parts.some(p=>p.id===tp)?tp:"",canId:cn,...gunBuild(TL.rifleId),date:todayISO(),place:prev?prev.place||"":"",distance:prev?prev.distance:null,rounds:null,temp:null,wind:"",avgVel:null,sd:null,notes:"",created:Date.now()};
   trips.push(t);queueTrips();openTrip(t.id);
   setTimeout(()=>{const f=$("tp_place");if(f&&!f.value)f.focus();},50);
 }
@@ -7296,6 +7593,8 @@ function renderTrips(){
   {const tl=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId),ps=tl?partsOf(tl.rifleId):[];
     if(ps.length||t.partId)h+='<div class="field wide"><label for="tp_part">Barrel</label><select id="tp_part" class="fieldselect"><option value="">The gun as it is</option>'+ps.map(p=>'<option value="'+esc(p.id)+'"'+(t.partId===p.id?' selected':'')+'>'+esc(partName(p))+'</option>').join("")+
       (t.partId&&!ps.some(p=>p.id===t.partId)?'<option value="'+esc(t.partId)+'" selected>'+esc((parts.find(p=>p.id===t.partId)&&partName(parts.find(p=>p.id===t.partId)))||"A barrel no longer here")+'</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>';}
+  if(cans.length||t.canId)h+='<div class="field wide"><label for="tp_can">Suppressor</label><select id="tp_can" class="fieldselect"><option value="">None</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(t.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+
+      (t.canId&&!cans.some(c=>c.id===t.canId)?'<option value="'+esc(t.canId)+'" selected>A suppressor no longer here</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>';
   h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">Use the weather where I am</button><span class="note" id="tripWxNote"></span></div>'+
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>'+
     coldHtml(t)+
@@ -7371,6 +7670,7 @@ function renderTrips(){
     if(k==="avgVel")mvRow();}));
   bindCold(t);
   {const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>{t.partId=tpp.value;t.updated=Date.now();queueTrips();});}
+  {const tc=$("tp_can");if(tc)tc.addEventListener("change",()=>{t.canId=tc.value;t.updated=Date.now();queueTrips();});}
   $("tripBack").addEventListener("click",()=>{tripOpen=null;tripPhotos=[];renderTrips();const s=$("secTrips");if(s)s.scrollIntoView({block:"start"});});
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
   $("tripLiveAdd").addEventListener("click",()=>livePick(t.id));
@@ -7537,6 +7837,9 @@ function renderHome(){
   // things that need attention
   const alerts=[];
   lowStock().forEach(x=>alerts.push({t:'Running low: <b>'+esc(x.label)+'</b>, '+esc(x.left)+' left',go:"comp:"+x.kind+":"+x.c.id}));
+  inv.forEach(x=>{if(invLow(x))alerts.push({t:'Running low: <b>'+esc(invName(x))+'</b>, '+esc(qtyTxt(x.qty)||"0")+' left',go:"inv:"+x.id});
+    if(invDue(x))alerts.push({t:'<b>'+esc(invName(x))+'</b>: '+esc(invDueTxt(x).replace(/^D/,"d").replace(/^O/,"o")),go:"inv:"+x.id});});
+  cans.forEach(c=>{const rc=canRounds(c);if(rc.due)alerts.push({t:'<b>'+esc(canName(c))+'</b> (suppressor) is due for cleaning: '+rc.since.toLocaleString()+' rounds since '+esc(fmtDate(c.cleaned)),go:"can:"+c.id});});
   rifles.forEach(r=>{const rc=rifleRounds(r);const nm=esc(r.name||"Unnamed gun");
     if(rc.pct>=80)alerts.push({t:'<b>'+nm+'</b> barrel: '+Math.round(rc.pct)+'% of its life used ('+rc.total.toLocaleString()+' rounds)',go:"rifle:"+r.id});
     if(rc.due)alerts.push({t:'<b>'+nm+'</b> is due for cleaning: '+rc.since.toLocaleString()+' rounds since '+esc(fmtDate(r.cleaned)),go:"rifle:"+r.id});});
@@ -7612,6 +7915,8 @@ function renderHome(){
   root.querySelectorAll("[data-hload]").forEach(b=>b.addEventListener("click",()=>{showTab("rel");openLoad(b.dataset.hload);}));
   root.querySelectorAll("[data-hgo]").forEach(b=>b.addEventListener("click",()=>{const [k,a,c]=b.dataset.hgo.split(":");
     if(k==="rifle"){showTab("rifles");gunArea="guns";ammoOpen=null;rifleOpen=a;renderRifles();window.scrollTo(0,0);}
+    if(k==="inv"){showTab("rifles");gunArea="inv";rifleOpen=null;ammoOpen=null;invOpen=a;renderRifles();window.scrollTo(0,0);}
+    if(k==="can"){showTab("rifles");gunArea="cans";rifleOpen=null;ammoOpen=null;canOpen=a;canFromGun=null;renderRifles();window.scrollTo(0,0);}
     if(k==="guns"){showTab("rifles");gunArea="guns";ammoOpen=null;rifleOpen=null;partOpen=null;renderRifles();window.scrollTo(0,0);}
     if(k==="part"){showTab("rifles");gunArea="guns";ammoOpen=null;rifleOpen=null;partOpen=a;partFromGun=null;renderRifles();window.scrollTo(0,0);}
     if(k==="comp"&&a==="ammo"){showTab("rifles");gunArea="ammo";rifleOpen=null;ammoOpen=c;renderRifles();window.scrollTo(0,0);return;}
@@ -7647,7 +7952,7 @@ async function refresh(first){
       if(window.RB_CARTS&&!window.GUEST){let ch=false;ammo.forEach(a=>{if(!a.cartridge)return;const c=RB_CARTS.canon(a.cartridge);if(c!==a.cartridge){a.cartridge=c;ch=true;}});if(ch)queueAmmo();}if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
     if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];
-      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
     if(!$("panel-home").hidden)renderHome();
@@ -7713,7 +8018,7 @@ const OFF=(()=>{
     clear:()=>Promise.all([tx("cache","readwrite",s=>s.clear()),tx("queue","readwrite",s=>s.clear())]).catch(()=>{})
   };
 })();
-const NOQUEUE=/^\/api\/(login|logout|me|admin|public|export)/;
+const NOQUEUE=/^\/api\/(login|logout|me|admin|public|export|vault)/;
 /* ---------- merging saves from several devices (the server side is merge.js) ----------
    Every save of a document or recipe also sends the version this device started from: "sent" (what it last
    saved) and "seen" (what it last loaded). The server keeps other devices' edits to anything this device didn't
@@ -8004,6 +8309,7 @@ function showTab(t,remember){
   if(t==="rel"&&REL)REL.onShow();
   if(t==="home"&&REL)REL.onHome();
   if(t==="targets"&&window.RB_TARGETS)RB_TARGETS();
+  if(t==="account"&&window.RB_VAULT_ACCT)RB_VAULT_ACCT();
   if((t==="tools"||t==="targets")&&window.RB_TOOLS)RB_TOOLS.shown(t,REL);
   if(t==="log"&&REL)REL.onLog();
   if(t==="rifles"&&REL)REL.onRifles();
@@ -8326,7 +8632,8 @@ function setupImport(){
     const R=j.result,lines=[];
     const ln=(name,t)=>{if(!t||!(t.added||t.skipped))return;lines.push('<li><b>'+esc(name)+'</b>: '+t.added+' added'+(t.skipped?', '+t.skipped+' already here':'')+'</li>');};
     ln("Reloading loads",R.loads);Object.keys(NAMES).forEach(k=>ln(NAMES[k],R.lists&&R.lists[k]));if(R.kind==="backup")ln("Photos",R.photos);
-    const any=R.loads.added||R.photos.added||Object.values(R.lists||{}).some(t=>t.added);
+    if(R.vault){if(R.vault.different)lines.push('<li><b>Vault documents</b>: '+R.vault.skipped+' not imported. They\'re locked with another vault passphrase than the vault on this account.</li>');else ln("Vault documents (still locked)",R.vault);}
+    const any=R.loads.added||R.photos.added||(R.vault&&R.vault.added)||Object.values(R.lists||{}).some(t=>t.added);
     st.textContent="";
     out.innerHTML='<div class="banner" role="status"><p style="margin:0 0 6px"><b>'+(any?'Imported':'Nothing new to import')+'</b> from '+esc(f.name)+(R.from&&R.from.name?' ('+esc(R.from.name)+(R.made?', '+esc(fmtRelDate(String(R.made).slice(0,10))):'')+')':'')+'.</p>'+
       (lines.length?'<ul style="margin:0;padding-left:20px">'+lines.join("")+'</ul>':'')+(R.kind==="excel"?'<p class="note" style="margin:6px 0 0">Excel files don\'t carry photos. Use a backup file to bring photos along.</p>':'')+

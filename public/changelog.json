@@ -2,7 +2,19 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.19.1",
+      "version": "2.20.0",
+      "date": "2026-10-17",
+      "title": "Suppressors, Inventory and a locked document vault",
+      "items": [
+        "Gear & Ranges now has Guns, Scopes, Suppressors, Ammo, Inventory and Ranges.",
+        "Suppressors: maker, model, caliber, serial number and tax stamp approval date. Put one on a gun (it's filled in on that gun's range trips) or leave it off and pick it on each range trip. Each keeps its own round count from the trips shot with it, with a cleaning reminder.",
+        "Inventory: supplies with a count and a low warning (batteries, pasters, earplugs, cleaning supplies) and equipment with serial numbers, prices and photos. Any item can have a Check or replace by date that repeats. Low supplies and coming dates show under Needs attention and on Home.",
+        "Document vault: keep tax stamps, receipts and manuals on a suppressor, gun or inventory item. They're encrypted on your device with a vault passphrase before they're uploaded, so nobody else can open them, not even an admin. A forgotten passphrase can't be recovered.",
+        "Backups include the vault, still locked. The Excel exports have Suppressors and Inventory sheets."
+      ]
+    },
+    {
+      "version": "2.19",
       "date": "2026-10-17",
       "title": "Favorite guns, Most used guns on Home, and target photo downloads",
       "items": [

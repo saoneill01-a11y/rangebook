@@ -152,6 +152,9 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
       out.tripPhotos = q("SELECT id, trip_id, caption, file, w, h, measure, created_at FROM trip_photos WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, measure: parse(r.measure) }));
       out.gunPhotos = q("SELECT id, rifle_id, file, w, h, created_at FROM gun_photos WHERE owner_id=? ORDER BY created_at").all(uid);
       out.boxPhotos = q("SELECT id, cat_item, ammo_id, file, w, h, created_at FROM box_photos WHERE owner_id=? ORDER BY created_at").all(uid);
+      // the document vault, still encrypted: without the owner's passphrase it can't be read here or after a restore
+      const vk = q("SELECT data FROM vault_keys WHERE owner_id=?").get(uid);
+      if (vk) out.vault = { key: parse(vk.data), docs: q("SELECT id, item_id, meta, file, size, created_at FROM vault_docs WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, meta: parse(r.meta) })) };
     }
     return out;
   }
@@ -165,6 +168,10 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
     for (const p of [...d.photos, ...d.tripPhotos, ...d.gunPhotos, ...d.boxPhotos]) {
       const f = path.basename(p.file || ""); if (!f || seen.has(f)) continue; seen.add(f);
       try { files.push({ name: "photos/" + f, data: fs.readFileSync(path.join(PHOTO_DIR, f)) }); } catch { /* a missing file is skipped */ }
+    }
+    for (const v of (d.vault && d.vault.docs) || []) {
+      const f = path.basename(v.file || ""); if (!f) continue;
+      try { files.push({ name: "vault/" + f, data: fs.readFileSync(path.join(PHOTO_DIR, f)) }); } catch { /* a missing file is skipped */ }
     }
     files.push({ name: "README.txt", data: "Range Book backup made " + d.exportedAt + " (Range Book " + APP_VERSION + ").\r\nTo restore it, open Range Book, go to Account and use Import, then pick this file.\r\nrangebook-backup.json holds your data; the photos folder holds your photos.\r\n" });
     return zip(files);
@@ -219,7 +226,7 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
 
   function importInto(uid, buf) {
     const { d, files, kind } = readFile(buf);
-    const res = { kind, loads: { added: 0, skipped: 0 }, lists: {}, photos: { added: 0, skipped: 0 }, from: d.account || null, made: d.exportedAt || null };
+    const res = { kind, loads: { added: 0, skipped: 0 }, lists: {}, photos: { added: 0, skipped: 0 }, vault: null, from: d.account || null, made: d.exportedAt || null };
     const written = [], t = now();
     const newFile = (orig) => {
       const ext = (/\.(jpg|jpeg|png|webp)$/i.exec(orig || "") || [, "jpg"])[1].toLowerCase().replace("jpeg", "jpg");
@@ -281,6 +288,21 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
           const f = newFile(p.file); if (!f) continue;
           q("INSERT INTO gun_photos(id,rifle_id,owner_id,file,w,h,created_at) VALUES(?,?,?,?,?,?,?)").run(id, String(p.rifle_id || ""), uid, f, p.w || null, p.h || null, p.created_at || t);
           P.added++;
+        }
+        // vault documents only fit the vault they were locked with: restore them if this account has no vault yet (it takes
+        // the backup's) or has that same one; a different vault here means a different passphrase, so they're skipped
+        if (d.vault && d.vault.key && Array.isArray(d.vault.docs)) {
+          const V = (res.vault = { added: 0, skipped: 0, different: false });
+          const cur = q("SELECT data FROM vault_keys WHERE owner_id=?").get(uid), inc = JSON.stringify(d.vault.key);
+          if (!cur) q("INSERT INTO vault_keys(owner_id,data,updated_at) VALUES(?,?,?)").run(uid, inc, t);
+          if (cur && cur.data !== inc) { V.different = true; V.skipped = d.vault.docs.length; }
+          else for (const v of d.vault.docs) {
+            const { id, skip } = freeId("vault_docs", v.id); if (skip) { V.skipped++; continue; }
+            const data = files && files.has("vault/" + path.basename(v.file || "")) ? files.get("vault/" + path.basename(v.file))() : null; if (!data) continue;
+            const f = crypto.randomUUID() + ".rbv"; fs.writeFileSync(path.join(PHOTO_DIR, f), data); written.push(f);
+            q("INSERT INTO vault_docs(id,owner_id,item_id,meta,file,size,created_at) VALUES(?,?,?,?,?,?,?)").run(id, uid, String(v.item_id || ""), JSON.stringify(v.meta || {}), f, data.length, v.created_at || t);
+            V.added++;
+          }
         }
         for (const p of d.boxPhotos || []) {
           const { id, skip } = freeId("box_photos", p.id); if (skip) { P.skipped++; continue; }
