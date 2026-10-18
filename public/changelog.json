@@ -2,7 +2,20 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.25.0",
+      "version": "2.26.0",
+      "date": "2026-10-17",
+      "title": "Reloading › Reference",
+      "items": [
+        "Reloading has a new Reference area next to Loads, Components and Notes.",
+        "Cartridges: the cartridge list (also still in Tools) now shows each cartridge's usual trim-to length and primer size, with notes where brass differs (small-primer Creedmoor brass, small-primer 45 ACP, 454 Casull's small rifle primers and so on).",
+        "Bullet diameters: cartridges grouped by the bullet they actually use, with the common mix-ups (.308 vs .311, .355 vs .357, .452 vs .458).",
+        "Powder burn rates: about 250 powders from fastest to slowest, searchable and filterable by maker, with the powders in your Components marked. It's for orientation only, never for substituting powders.",
+        "Pressure signs: what each sign on the ladder checklist looks like, what it means and what to do.",
+        "Glossary: reloading terms, searchable."
+      ]
+    },
+    {
+      "version": "2.25",
       "date": "2026-10-17",
       "title": "Links to the rest of Range Book",
       "items": [
