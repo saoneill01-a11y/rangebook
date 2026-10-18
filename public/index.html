@@ -948,6 +948,17 @@ textarea.notebody{min-height:260px;line-height:1.5;font-size:16px;resize:vertica
 .segtabs button{flex:1 1 0;padding:8px 4px;border:0;border-radius:7px;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
 .segtabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
 .selbtn{display:flex;gap:8px;align-items:center}.selbtn select{flex:1 1 auto;min-width:0}.selbtn .btn{flex:none}
+.cmpbul{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 10px;background:var(--sunk)}
+.cmpbul .cmphead{display:flex;gap:8px;align-items:center;margin-bottom:8px}.cmpbul .cmphead input{flex:1 1 auto;min-width:0;font-weight:600}
+.cmpsw{width:28px;height:4px;border-radius:2px;flex:none}.cmpsw svg{display:block}
+.cmpbul .grid{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.cmpseg{margin:4px 0 8px}.cmpseg button{padding:8px 2px}.cmpopts{display:flex;flex-wrap:wrap;gap:8px 12px;margin:0 0 8px}.cmpopts .segtabs{flex:1 1 240px}#cmpUnit{flex:0 1 160px}
+.cmplegend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13.5px;margin:4px 0}.cmplegend span{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.cmpchart{width:100%;min-width:0}.cmpchart svg{display:block;width:100%;height:auto}
+.cmptbl th .cmpsw{display:inline-block;vertical-align:middle;margin-right:4px}
+.chstr{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:var(--sunk)}.chstr h4{margin:0 0 4px;font-size:15px;overflow-wrap:anywhere}
+.chstats{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:14px;margin:4px 0}.chstats b{font-variant-numeric:tabular-nums}
+.chshots{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px}.chshots span{font:13px/1 var(--mono,monospace);padding:5px 6px;border-radius:6px;background:var(--surface);border:1px solid var(--line)}.chshots span i{font-style:normal;color:var(--muted);margin-right:3px}
 .rngrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 8px}.rngrow .segtabs{flex:0 1 300px;min-width:0}.rngrow .note{flex:1 1 180px;margin:0}
 .gtypes{max-width:360px}
 #rf_typeNote{display:block;margin-top:4px;font-size:12px}
@@ -1551,7 +1562,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
       <p><b>Tools</b> (a tab on a computer, or <b>More → Tools</b> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. Nothing in Tools is saved: change a number and the answer updates.</p>
       <ul>
-        <li><b>Trajectory calculator</b> (also the <b>Trajectory calculator</b> button on Home): the whole Shooting calculator without making a profile. Pick a gun and ammo (your own, or anything from the factory catalog, which here only fills in its numbers) or type the bullet weight, velocity, BC and sight height, and every card works the same as on a profile: conditions and wind, bullet path and zeros, point-blank range, range table, true-up, dope card and saved ranges. Nothing is saved to your profiles; this device remembers the last numbers so it opens where you left off. <b>Reset</b> clears it for new numbers (<b>Undo</b> brings them back), and <b>Save as a Shooting profile</b> keeps it as a profile, so it gets range trips too, and opens it on Shooting.</li>
+        <li><b>Compare trajectories</b>: up to six bullets on one chart, all with the same zero, sight height, temperature and altitude. Type each one's weight, velocity and BC, or fill it in from a Shooting profile, your ammo or the factory catalog. Switch the chart between <b>Path</b> (above or below your line of sight), <b>Dial</b> (MOA or MIL to dial up), <b>Wind</b> (drift in a 10 mph crosswind), <b>Speed</b> and <b>Energy</b>, and between <b>Short</b>, <b>Medium</b> and <b>Long</b> (200, 400 or 1,000 yd). The table under the chart has each bullet's numbers. Each line has its own color and dash pattern, so they're easy to tell apart in Red Night too. It remembers your bullets on that phone or computer; <b>Reset</b> starts over.</li><li><b>Chronograph file check</b>: pick your chronograph's export to see how Range Book reads it before you import it: each string's shots, average, SD, spread and time, in the order they were shot, and which ladder charge it would go to when its name has a charge. Nothing is imported or saved. If a file doesn't read right, this is the screen to show when you report it.</li><li><b>Trajectory calculator</b> (also the <b>Trajectory calculator</b> button on Home): the whole Shooting calculator without making a profile. Pick a gun and ammo (your own, or anything from the factory catalog, which here only fills in its numbers) or type the bullet weight, velocity, BC and sight height, and every card works the same as on a profile: conditions and wind, bullet path and zeros, point-blank range, range table, true-up, dope card and saved ranges. Nothing is saved to your profiles; this device remembers the last numbers so it opens where you left off. <b>Reset</b> clears it for new numbers (<b>Undo</b> brings them back), and <b>Save as a Shooting profile</b> keeps it as a profile, so it gets range trips too, and opens it on Shooting.</li>
         <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a <b>Bullet</b> from your Components and a <b>Gun</b> (for its twist) side by side, or type the numbers in. On a Shooting profile, <b>Check barrel twist</b> (under Inputs) opens it filled in from that profile. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
         <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
         <li><b>Powder</b>: how many rounds a container of powder makes at your charge, what the powder costs per round, and how much you need for a number of rounds. <b>Fill in from</b> uses a Reloading load's charge and, if its powder has a price in Components, the price.</li>
@@ -1606,7 +1617,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved unless you ask.</p></header>
-    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cart"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l1.5-5h3L15 9v12z"/><path d="M9 13h6"/></svg></span><span class="t">Cartridges</span><span class="d">The cartridge list Range Book uses: bullet diameters and SAAMI case and overall lengths. Fix anything wrong, or add your own.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cart"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l1.5-5h3L15 9v12z"/><path d="M9 13h6"/></svg></span><span class="t">Cartridges</span><span class="d">The cartridge list Range Book uses: bullet diameters and SAAMI case and overall lengths. Fix anything wrong, or add your own.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph file check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <div class="tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
       <section class="card qcbar"><p class="note toolnote">The full Shooting calculator, without making a profile: pick a gun and ammo or type the numbers, and every card below works (chart, point-blank range, range table, true-up, dope card, saved ranges). Nothing is saved to your profiles; this device remembers the last numbers until you tap <b>Reset</b>.</p>
         <div class="row"><button class="btn primary" type="button" id="qcSave">Save as a Shooting profile</button><button class="btn" type="button" id="qcReset">Reset</button></div></section>
@@ -1660,6 +1671,29 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p class="note" id="lt_msg" hidden></p>
       <div id="lt_saved"></div>
       <p class="note">It needs Range Book's https address: phones only allow the camera on a secure address. <b>Listen for shots</b> (on the Live target screen) uses the microphone instead of the Shot button; use it only when nobody is shooting near you.</p>
+    </section>
+    <section class="card tool" data-toolsec="cmp" aria-label="Compare trajectories" hidden>
+      <p class="note toolnote">Plot up to six bullets on one chart, all with the same zero, sight height and air. Fill one in from a Shooting profile, your ammo or the factory catalog, or type the numbers. Nothing is saved to your profiles.</p>
+      <div id="cmpRows"></div>
+      <div class="row"><button class="btn" id="cmpAdd" type="button">+ Add a bullet</button><button class="btn" id="cmpReset" type="button">Reset</button></div>
+      <h3 class="toolsub">Zero and air</h3>
+      <div class="grid toolgrid t4"><div class="field"><label for="cmp_z">Zero (<span data-unit="yd">yd</span>)</label><input id="cmp_z" type="number" inputmode="numeric" step="any"></div>
+        <div class="field"><label for="cmp_sh">Sight height (<span data-unit="in">in</span>)</label><input id="cmp_sh" type="number" inputmode="decimal" step="any"></div>
+        <div class="field"><label for="cmp_t">Temperature (<span data-unit="F">°F</span>)</label><input id="cmp_t" type="number" inputmode="decimal" step="any"></div>
+        <div class="field"><label for="cmp_a">Altitude (<span data-unit="ft">ft</span>)</label><input id="cmp_a" type="number" inputmode="decimal" step="any"></div></div>
+      <h3 class="toolsub">Chart</h3>
+      <div class="segtabs cmpseg" id="cmpView" role="radiogroup" aria-label="What to plot"><button type="button" role="radio" data-cv="path">Path</button><button type="button" role="radio" data-cv="dial">Dial</button><button type="button" role="radio" data-cv="wind">Wind</button><button type="button" role="radio" data-cv="vel">Speed</button><button type="button" role="radio" data-cv="en">Energy</button></div>
+      <div class="cmpopts"><div class="segtabs" id="cmpRng" role="radiogroup" aria-label="How far"><button type="button" role="radio" data-cr="200">Short</button><button type="button" role="radio" data-cr="400">Medium</button><button type="button" role="radio" data-cr="1000">Long</button></div>
+        <div class="segtabs" id="cmpUnit" role="radiogroup" aria-label="Dial units"><button type="button" role="radio" data-cu="moa">MOA</button><button type="button" role="radio" data-cu="mil">MIL</button></div></div>
+      <p class="note" id="cmpWhat"></p>
+      <div class="cmplegend" id="cmpLegend"></div>
+      <div id="cmpChart" class="cmpchart"></div>
+      <div id="cmpTable"></div>
+    </section>
+    <section class="card tool" data-toolsec="chrono" aria-label="Chronograph file check" hidden>
+      <p class="note toolnote">Pick your chronograph's export to see how Range Book reads it: each string with its shots, average, SD and spread, in the order they were shot. Nothing is imported or saved. It reads RangeCraft (.xlsx), Garmin Xero (ShotView .csv or .xlsx), MagnetoSpeed (.csv) and LabRadar (SR Report.csv; pick several at once).</p>
+      <div class="row"><label class="btn primary" for="chIn" style="cursor:pointer">Pick a chronograph file</label><input id="chIn" type="file" multiple accept=".xlsx,.xls,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" hidden><button class="btn" id="chClear" type="button" hidden>Clear</button></div>
+      <div id="chOut" aria-live="polite"></div>
     </section>
     <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden>
       <p class="note toolnote">Type in either box.</p>
@@ -2271,6 +2305,8 @@ window.RB_TRAJ={
     return {w:num(L.w),mv:effMV(L),bc:num(L.bc),bcm:L.bcm==="G7"?"G7":"G1",sh:num(L.sh),zero:(ai>=0&&ai<3?num(L.z[ai]):null)||(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null,
       temp:num(L.temp),alt:num(L.alt),wind:num(L.wind),wclock:windClock(L),cal:num(L.cal),twist:num(L.twist),blen:num(L.blen),cart:L.cart||"",rifleId:L.rifleId||null};},
   ranges(){return (Array.isArray(state.ranges)?state.ranges:[]).map(r=>r.name).filter(Boolean);},
+  // your ammo with what a trajectory needs (Tools → Compare trajectories)
+  ammoList(){return (AMMO||[]).map(a=>({id:a.id,label:ammoName(a),w:num(a.weight),mv:num(a.measVel)||num(a.boxVel),bc:num(a.bc),bcm:a.bcm==="G7"?"G7":"G1"})).filter(a=>a.w>0&&a.bc>0);},
   // saved ranges, for Gear & Ranges → Ranges
   rg:{list:()=>rgList(),
     add(){const r={id:rgId(),name:"",targets:[{id:rgId(),name:"",dist:U.metric?100/0.9144:100,angle:null,size:null}],temp:null,alt:null,notes:""};rgList().push(r);state.rangeCur=r.id;save();return r;},
@@ -7352,7 +7388,7 @@ async function readChronoFile(file){
         const right=row[c+1],below=(rows[r+1]||[])[c];
         date=toISO(right)||toISO(below)||toISO(v.replace(/^\s*(date|session date|date\/time)\s*:?\s*/i,""));
         // a date with a time ("June 15, 2026 at 1:55 PM") also says when the string was shot
-        if(date&&at==null){const txt=String(typeof right==="string"?right:typeof below==="string"?below:"").replace(/[\u202f\u00a0]/g," ").replace(/\s+at\s+/i," ");const t=Date.parse(txt);if(!isNaN(t)&&/\d:\d\d/.test(txt))at=t;}
+        if(date&&at==null){const txt=String(typeof right==="string"?right:typeof below==="string"?below:"").replace(/[\u202f\u00a0]/g," ").replace(/\s+at\s+/i," ");const t=Date.parse(txt);if(!isNaN(t)&&/\d:\d\d/.test(txt))at=t-new Date(t).getTimezoneOffset()*60000;}// kept as the clock time, like the others
         if(date)break;
       }}}
     const isHead=v=>typeof v==="string"&&/speed|velocity|fps|m\/s/i.test(v)&&!/(avg|average|mean|max|min|sd|std|dev|spread|es\b|energy|power|\bke\b|Δ)/i.test(v);
@@ -7383,6 +7419,7 @@ async function readChronoFile(file){
   if(out.length>1&&out.every(x=>x.at!=null)){out.forEach((x,i)=>x._i=i);out.sort((a,b)=>a.at-b.at||a._i-b._i);out.forEach(x=>delete x._i);}
   return out;
 }
+window.RB_CHRONO={read:list=>readChronoFiles(list),charge:n=>chargeFromName(n)};
 // the numbers in a string's name that could be its charge weight ("25.9grn N140 69gr" → 25.9, 69; "N140" isn't one)
 function chargeNums(n){n=String(n||"");if(/^\s*(series|string at|sr\d)/i.test(n))return [];return [...n.replace(/\d{1,2}:\d{2}/g,"").matchAll(/(^|[^A-Za-z\d.])(\d{1,3}(?:\.\d+)?)(?![\d])/g)].map(m=>parseFloat(m[2])).filter(v=>v>0&&v<200);}
 // its likely charge on its own: the first number with a decimal point ("23.2 N140 69 gr" → 23.2), or else the first marked gr
@@ -9195,8 +9232,8 @@ API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)l
 window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
-  const TOOLS=["traj","twist","moa","powder","conv","live","hit","cart"];
-  const TITLES={traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",cart:"Cartridges"};
+  const TOOLS=["traj","twist","moa","powder","conv","live","hit","cart","cmp","chrono"];
+  const TITLES={cmp:"Compare trajectories",chrono:"Chronograph file check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",cart:"Cartridges"};
   let tool=null, pending=null, rel=null, ready=false;      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   // a box in the person's units <-> the imperial value behind it
@@ -9212,6 +9249,7 @@ window.RB_TOOLS=(function(){
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
     if(tool==="cart"&&window.RB_CARTPAGE)RB_CARTPAGE.draw();
     if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
+    if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();
     if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
   }
   /* ----- hit chance: the shot lands in a spread made of your group, velocity spread, wind call and range error ----- */
@@ -9399,6 +9437,155 @@ window.RB_TOOLS=(function(){
     // open a tool from elsewhere, e.g. Shooting's twist warning
     open(t,o){pending=t;if(o&&o.hit)hitPick=o.hit;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
   };
+})();
+</script>
+<script>
+/* ---------- Tools → Compare trajectories: several bullets on one chart, the same zero and air. Kept on this device only. ---------- */
+window.RB_CMP=(function(){
+  const $=id=>document.getElementById(id),U=window.U,KEY="rangebook.cmptool";
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
+  const COL=["var(--z1)","var(--z2)","var(--z3)","var(--z4)","var(--c5)","var(--c6)"],DASH=["","7 4","2 3","10 3 2 3","5 2","1 4"];
+  const VIEWS={path:"Path",dial:"Dial",wind:"Wind",vel:"Speed",en:"Energy"};
+  let S=null,wired=false,uid=0;
+  const rid=()=>"b"+Date.now().toString(36)+(uid++);
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+  // starting bullets: your first two complete Shooting profiles, or two from the factory catalog
+  function fresh(){
+    const rows=[],T=(window.RB_TRAJ&&RB_TRAJ.all())||[];
+    for(const t of T){const sp=RB_TRAJ.spec(t.id);if(sp&&sp.w>0&&sp.mv>0&&sp.bc>0&&!rows.some(q=>q.w===sp.w&&q.bc===sp.bc&&Math.abs(q.mv-sp.mv)<5)){rows.push({id:rid(),label:t.name||"Profile",w:sp.w,mv:Math.round(sp.mv),bc:sp.bc,bcm:sp.bcm});if(rows.length===2)break;}}
+    if(rows.length<2){const C=(window.RB_AMMO_CATALOG||[]).filter(c=>c.g7&&c.v>0);
+      ["6.5 Creedmoor","308 Winchester"].forEach(k=>{if(rows.length>=2)return;const c=C.find(x=>x.cart===k);if(c)rows.push(fromCat(c));});}
+    while(rows.length<2)rows.push({id:rid(),label:"Bullet "+(rows.length+1),w:null,mv:null,bc:null,bcm:"G7"});
+    const sp0=T[0]&&RB_TRAJ.spec(T[0].id);
+    return {rows,z:100,sh:sp0&&sp0.sh>0?sp0.sh:1.5,temp:59,alt:0,rng:400,view:"path",unit:"moa"};
+  }
+  const fromCat=c=>({id:rid(),label:[c.mfr,c.cart,c.bullet].filter(Boolean).join(" "),w:c.w,mv:c.v,bc:c.g7||c.bc,bcm:c.g7?"G7":"G1"});
+  function load(){if(S)return;try{S=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){S=null;}if(!S||!Array.isArray(S.rows)||!S.rows.length)S=fresh();}
+  // "Fill in from": Shooting profiles, your ammo, the factory catalog (those with a BC)
+  function srcOpts(){
+    const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],A=(window.RB_TRAJ&&RB_TRAJ.ammoList&&RB_TRAJ.ammoList())||[],C=(window.RB_AMMO_CATALOG||[]).filter(c=>(c.bc||c.g7)&&c.v>0);
+    let h='<option value="">Fill in from…</option>';
+    if(T.length)h+='<optgroup label="Shooting profiles">'+T.map(t=>'<option value="p:'+esc(t.id)+'">'+esc(t.name||"Untitled profile")+'</option>').join("")+'</optgroup>';
+    if(A.length)h+='<optgroup label="Your ammo">'+A.map(a=>'<option value="a:'+esc(a.id)+'">'+esc(a.label)+'</option>').join("")+'</optgroup>';
+    const by={};C.forEach(c=>{(by[c.cart]=by[c.cart]||[]).push(c);});
+    Object.keys(by).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})).forEach(k=>{h+='<optgroup label="Factory: '+esc(k)+'">'+by[k].map(c=>'<option value="c:'+esc(c.item)+'">'+esc(c.mfr+" "+c.line+" "+c.bullet)+'</option>').join("")+'</optgroup>';});
+    return h;
+  }
+  function fill(r,v){
+    if(v.startsWith("p:")){const sp=RB_TRAJ.spec(v.slice(2)),t=RB_TRAJ.all().find(x=>x.id===v.slice(2));if(!sp)return;Object.assign(r,{label:t?t.name:r.label,w:sp.w,mv:sp.mv>0?Math.round(sp.mv):null,bc:sp.bc,bcm:sp.bcm});}
+    else if(v.startsWith("a:")){const a=RB_TRAJ.ammoList().find(x=>x.id===v.slice(2));if(a)Object.assign(r,{label:a.label,w:a.w,mv:a.mv,bc:a.bc,bcm:a.bcm});}
+    else if(v.startsWith("c:")){const c=RB_AMMO_CATALOG.find(x=>x.item===v.slice(2));if(c){const n=fromCat(c);delete n.id;Object.assign(r,n);}}
+  }
+  const swatch=i=>'<span class="cmpsw" aria-hidden="true"><svg width="28" height="6" viewBox="0 0 28 6"><line x1="1" y1="3" x2="27" y2="3" stroke="'+COL[i%6]+'" stroke-width="3" stroke-linecap="round"'+(DASH[i%6]?' stroke-dasharray="'+DASH[i%6]+'"':'')+'/></svg></span>';
+  function drawRows(){
+    const box=$("cmpRows"),opts=srcOpts();
+    box.innerHTML=S.rows.map((r,i)=>'<div class="cmpbul" data-ci="'+i+'"><div class="cmphead">'+swatch(i)+'<input data-k="label" aria-label="Name for this bullet" value="'+esc(r.label||"")+'" placeholder="Bullet '+(i+1)+'">'+
+      (S.rows.length>1?'<button class="btn danger small" type="button" data-cdel="'+i+'" aria-label="Remove this bullet">✕</button>':'')+'</div>'+
+      '<div class="grid"><div class="field wide"><select class="fieldselect" data-k="src" aria-label="Fill in from">'+opts+'</select></div>'+
+      '<div class="field"><label>Weight (gr)<input data-k="w" type="number" inputmode="decimal" step="any"></label></div>'+
+      '<div class="field"><label>Velocity ('+U.u("fps")+')<input data-k="mv" type="number" inputmode="decimal" step="any"></label></div>'+
+      '<div class="field"><label>BC<input data-k="bc" type="number" inputmode="decimal" step="any"></label></div>'+
+      '<div class="field"><label>BC type<select class="fieldselect" data-k="bcm"><option value="G1">G1</option><option value="G7">G7</option></select></label></div></div></div>').join("");
+    box.querySelectorAll(".cmpbul").forEach(el=>{const r=S.rows[+el.dataset.ci],q=k=>el.querySelector('[data-k="'+k+'"]');
+      q("w").value=r.w!=null?r.w:"";q("mv").value=r.mv!=null?U.n("fps",r.mv,U.metric?1:0):"";q("bc").value=r.bc!=null?r.bc:"";q("bcm").value=r.bcm==="G7"?"G7":"G1";
+      q("label").addEventListener("input",e=>{r.label=e.target.value;save();drawOut();});
+      q("w").addEventListener("input",e=>{r.w=num(e.target.value);save();drawOut();});
+      q("mv").addEventListener("input",e=>{const n=num(e.target.value);r.mv=n==null?null:U.from("fps",n);save();drawOut();});
+      q("bc").addEventListener("input",e=>{r.bc=num(e.target.value);save();drawOut();});
+      q("bcm").addEventListener("change",e=>{r.bcm=e.target.value;save();drawOut();});
+      q("src").addEventListener("change",e=>{if(e.target.value)fill(r,e.target.value);save();drawRows();drawOut();});});
+    box.querySelectorAll("[data-cdel]").forEach(b=>b.addEventListener("click",()=>{S.rows.splice(+b.dataset.cdel,1);save();drawRows();drawOut();}));
+    $("cmpAdd").disabled=S.rows.length>=6;
+  }
+  // each bullet's trajectory with the shared setup
+  function solveAll(){return S.rows.map((r,i)=>{
+    if(!(r.w>0&&r.mv>0&&r.bc>0))return {i,r,err:"Fill in the weight, velocity and BC."};
+    const B=RB_TRAJ.solveObj({name:r.label,w:r.w,mv:r.mv,bc:r.bc,bcm:r.bcm==="G7"?"G7":"G1",sh:S.sh,z:[S.z,null,null,null],zpb:1,adj:1,temp:S.temp,alt:S.alt,wind:0,lr:S.rng>1000,cal:null,twist:null,blen:null});
+    return B.err?{i,r,err:B.err}:{i,r,B};});}
+  function val(x,B,w){const a=B.at(x),UF=S.unit==="mil"?3.6:1.0472;
+    switch(S.view){case "path":return U.to("in",a.path);case "dial":return x>0?-a.path/(x*UF/100):0;case "wind":return U.to("in",a.drift1*10);case "vel":return U.to("fps",a.v);default:return U.to("ftlb",w*a.v*a.v/450240);}}
+  const yLabel=()=>({path:"Path ("+U.u("in")+")",dial:"Dial up ("+(S.unit==="mil"?"MIL":"MOA")+")",wind:"Drift in a "+U.s("mph",10,0)+" crosswind ("+U.u("in")+")",vel:"Speed ("+U.u("fps")+")",en:"Energy ("+U.u("ftlb")+")"})[S.view];
+  function nice(span,n){const raw=span/n,p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p;}
+  function drawOut(){
+    const sol=solveAll(),ok=sol.filter(s=>s.B),R=S.rng,step=R<=200?25:R<=400?50:100;
+    document.querySelectorAll("#cmpView [data-cv]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.cv===S.view)));
+    document.querySelectorAll("#cmpRng [data-cr]").forEach(b=>b.setAttribute("aria-selected",String(+b.dataset.cr===R)));
+    document.querySelectorAll("#cmpUnit [data-cu]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.cu===S.unit)));
+    $("cmpUnit").hidden=S.view!=="dial";
+    $("cmpWhat").textContent={path:"Where each bullet is above or below your line of sight, with every one zeroed at "+U.s("yd",S.z,0)+".",dial:"How far to dial up at each distance from the "+U.s("yd",S.z,0)+" zero.",wind:"How far a "+U.s("mph",10,0)+" full-value crosswind pushes each bullet.",vel:"How fast each bullet is still going.",en:"Each bullet's energy downrange."}[S.view];
+    $("cmpLegend").innerHTML=sol.map(s=>'<span>'+swatch(s.i)+esc(s.r.label||"Bullet "+(s.i+1))+(s.err?' <i class="err">('+esc(s.err)+')</i>':'')+'</span>').join("");
+    if(!ok.length){$("cmpChart").innerHTML='<p class="note">Fill in at least one bullet to see the chart.</p>';$("cmpTable").innerHTML="";return;}
+    // the chart
+    const W=Math.max(300,Math.round($("cmpChart").clientWidth||600)),H=W<500?260:320,m={l:46,r:12,t:10,b:34},pw=W-m.l-m.r,ph=H-m.t-m.b;
+    const series=ok.map(s=>{const last=Math.min(R,s.B.last),pts=[];const k=Math.max(1,Math.round(R/150));for(let x=0;x<=last;x+=k)pts.push([x,val(x,s.B,s.r.w)]);if(pts[pts.length-1][0]!==last)pts.push([last,val(last,s.B,s.r.w)]);return {s,pts};});
+    let lo=Infinity,hi=-Infinity;series.forEach(o=>o.pts.forEach(([x,y])=>{if(S.view==="dial"&&x<S.z*0.5)return;lo=Math.min(lo,y);hi=Math.max(hi,y);}));
+    if(S.view==="path"||S.view==="dial"||S.view==="wind"){lo=Math.min(lo,0);hi=Math.max(hi,0);}
+    if(S.view==="vel"||S.view==="en")lo=Math.max(0,lo-(hi-lo)*0.1);
+    if(!(hi>lo)){hi=lo+1;}const pad=(hi-lo)*0.06;hi+=pad;if(S.view!=="vel"&&S.view!=="en")lo-=pad;
+    const ys=nice(hi-lo,ph/36),y0=Math.floor(lo/ys)*ys,y1=Math.ceil(hi/ys)*ys;
+    const X=x=>m.l+x/R*pw,Y=y=>m.t+(y1-y)/(y1-y0)*ph,dx=U.metric?U.from("yd",R<=200?25:R<=400?50:100):step;
+    let g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(VIEWS[S.view])+' for each bullet">';
+    for(let y=y0;y<=y1+1e-9;y+=ys){const yy=Y(y);g+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+yy+'" y2="'+yy+'" stroke="var(--line)" stroke-width="1"/><text x="'+(m.l-6)+'" y="'+(yy+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+(+y.toFixed(2)).toLocaleString()+'</text>';}
+    for(let x=0;x<=R+1e-6;x+=dx){const xx=X(x);g+='<line x1="'+xx+'" x2="'+xx+'" y1="'+m.t+'" y2="'+(H-m.b)+'" stroke="var(--line)" stroke-width="1"/><text x="'+xx+'" y="'+(H-m.b+15)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+Math.round(U.n("yd",x,0)).toLocaleString()+'</text>';}
+    g+='<text x="'+(m.l+pw/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="11.5" fill="var(--muted)">Distance ('+U.u("yd")+')</text>';
+    if(y0<0&&y1>0)g+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="var(--fg)" stroke-width="1.2" opacity=".7"/>';
+    series.forEach(({s,pts})=>{const d=pts.filter(([x])=>!(S.view==="dial"&&x<S.z*0.5)).map(([x,y],j)=>(j?"L":"M")+X(x).toFixed(1)+" "+Y(y).toFixed(1)).join("");
+      g+='<path d="'+d+'" fill="none" stroke="'+COL[s.i%6]+'" stroke-width="2.4" stroke-linejoin="round"'+(DASH[s.i%6]?' stroke-dasharray="'+DASH[s.i%6]+'"':'')+'/>';});
+    g+='<text x="'+(m.l+4)+'" y="'+(m.t+12)+'" font-size="11.5" fill="var(--muted)">'+esc(yLabel())+'</text></svg>';
+    $("cmpChart").innerHTML=g;
+    // the table: every step, one column per bullet
+    const dec=S.view==="dial"?1:S.view==="path"||S.view==="wind"?1:0,fmt=v=>v==null?"":(dec?v.toFixed(dec):Math.round(v).toLocaleString());
+    let t='<div class="tablewrap"><table class="dope cmptbl"><thead><tr><th>'+U.u("yd")+'</th>'+ok.map(s=>'<th>'+swatch(s.i)+'<br>'+esc((s.r.label||"Bullet "+(s.i+1)).slice(0,28))+'</th>').join("")+'</tr></thead><tbody>';
+    for(let x=dx;x<=R+1e-6;x+=dx){t+='<tr><td>'+Math.round(U.n("yd",x,0)).toLocaleString()+'</td>'+ok.map(s=>'<td>'+(x<=s.B.last?fmt(val(x,s.B,s.r.w)):'—')+'</td>').join("")+'</tr>';}
+    t+='</tbody></table></div><p class="note">'+esc(yLabel())+'. Zero '+U.s("yd",S.z,0)+', sight height '+U.s("in",S.sh,U.metric?1:2)+', '+U.s("F",S.temp,0)+', '+U.s("ft",S.alt,0,true)+'. — means the bullet has slowed too much to work out that far.</p>';
+    $("cmpTable").innerHTML=t;
+  }
+  function setupInputs(){
+    const f=(id,kind,v,dec)=>{const e=$(id);e.value=v==null?"":U.n(kind,v,dec);};
+    f("cmp_z","yd",S.z,0);f("cmp_sh","in",S.sh,U.metric?1:2);f("cmp_t","F",S.temp,0);f("cmp_a","ft",S.alt,0);
+  }
+  function wire(){if(wired)return;wired=true;
+    [["cmp_z","yd","z"],["cmp_sh","in","sh"],["cmp_t","F","temp"],["cmp_a","ft","alt"]].forEach(([id,kind,k])=>$(id).addEventListener("input",e=>{const n=num(e.target.value);
+      if(n!=null&&!(k==="z"&&n<=0))S[k]=U.from(kind,n);save();drawOut();}));
+    document.querySelectorAll("#cmpView [data-cv]").forEach(b=>b.addEventListener("click",()=>{S.view=b.dataset.cv;save();drawOut();}));
+    document.querySelectorAll("#cmpRng [data-cr]").forEach(b=>b.addEventListener("click",()=>{S.rng=+b.dataset.cr;save();drawOut();}));
+    document.querySelectorAll("#cmpUnit [data-cu]").forEach(b=>b.addEventListener("click",()=>{S.unit=b.dataset.cu;save();drawOut();}));
+    $("cmpAdd").addEventListener("click",()=>{if(S.rows.length>=6)return;const l=S.rows[S.rows.length-1];S.rows.push(Object.assign({},l||{bcm:"G7"},{id:rid(),label:"Bullet "+(S.rows.length+1)}));save();drawRows();drawOut();
+      const ins=document.querySelectorAll("#cmpRows .cmpbul");const last=ins[ins.length-1];if(last){last.scrollIntoView({block:"center"});const q=last.querySelector('[data-k="label"]');q.focus();q.select();}});
+    $("cmpReset").addEventListener("click",()=>{const old=S;S=fresh();save();setupInputs();drawRows();drawOut();if(window.RB_UNDO)RB_UNDO("Reset the comparison",()=>{S=old;save();setupInputs();drawRows();drawOut();});});
+    let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{if(!$("cmpChart").closest("[hidden]"))drawOut();},150);});
+  }
+  return {show(){load();wire();setupInputs();drawRows();drawOut();}};
+})();
+/* ---------- Tools → Chronograph file check: read a chronograph export the same way the importers do, without saving anything ---------- */
+window.RB_CHTOOL=(function(){
+  const $=id=>document.getElementById(id),U=window.U;
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  let wired=false;
+  const stats=a=>{const n=a.length,av=a.reduce((x,y)=>x+y,0)/n,sd=n>1?Math.sqrt(a.reduce((x,y)=>x+(y-av)*(y-av),0)/(n-1)):null;return {n,av,sd,es:Math.max(...a)-Math.min(...a),lo:Math.min(...a),hi:Math.max(...a)};};
+  async function read(files){
+    const out=$("chOut"),name=files.length>1?files.length+" files":files[0].name;out.innerHTML='<p class="note">Reading '+esc(name)+'…</p>';$("chClear").hidden=false;
+    let S;try{S=await RB_CHRONO.read(files);}
+    catch(e){out.innerHTML='<p class="err">'+(e&&e.message==="load"?"The spreadsheet reader couldn't load. Check your internet connection and try again.":"That file couldn't be read. Range Book reads the exports from RangeCraft (.xlsx), Garmin ShotView (.csv or .xlsx), MagnetoSpeed (.csv) and LabRadar (Report.csv).")+'</p>';return;}
+    if(!S.length){out.innerHTML='<p class="err">Range Book couldn\'t find any velocities in '+esc(name)+'. If it\'s a chronograph export it should read, please report it on the project\'s GitHub page (How to Use → License has the link) with the file attached.</p>';return;}
+    const all=S.flatMap(x=>x.shots),f1=v=>U.n("fps",v,U.metric?1:0),uu=U.u("fps");
+    const ordered=S.length>1&&S.every(x=>x.at!=null),dates=[...new Set(S.map(x=>x.date).filter(Boolean))];
+    let h='<div class="banner" role="status"><b>'+S.length+' string'+(S.length===1?'':'s')+', '+all.length+' shot'+(all.length===1?'':'s')+'</b> from '+esc(name)+(dates.length?' · shot '+dates.map(d=>esc(fmtD(d))).join(", "):' · no date in the file')+'.'+
+      (ordered?' Listed in the order they were shot (the file had its own order; Range Book uses the times).':S.length>1?' Listed in the order they are in the file.':'')+'</div>';
+    S.forEach((x,i)=>{const st=stats(x.shots),c=S.length>1&&RB_CHRONO.charge(x.name);
+      h+='<div class="chstr"><h4>'+(i+1)+'. '+esc(x.name||("String "+(i+1)))+'</h4>'+
+        '<div class="chstats"><span>Shots <b>'+st.n+'</b></span><span>Average <b>'+f1(st.av).toLocaleString()+' '+uu+'</b></span>'+(st.sd!=null?'<span>SD <b>'+U.n("fps",st.sd,1)+'</b></span>':'')+'<span>ES <b>'+f1(st.es)+'</b></span><span>Low–high <b>'+f1(st.lo).toLocaleString()+'–'+f1(st.hi).toLocaleString()+'</b></span>'+(x.at!=null?'<span>At <b>'+esc(new Date(x.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit",timeZone:"UTC"}))+'</b></span>':'')+'</div>'+
+        '<div class="chshots">'+x.shots.map((v,k)=>'<span><i>'+(k+1)+'</i>'+f1(v)+'</span>').join("")+'</div>'+
+        (c?'<p class="note">Its name has a charge of <b>'+c+' gr</b>: imported into a ladder, it goes to the '+c+' gr group if the ladder has one.</p>':S.length>1?'<p class="note">No charge in its name: imported into a ladder, it fills the next empty group in order.</p>':'')+'</div>';});
+    h+='<p class="note">This is exactly what a ladder or range trip import would get. If a shot is wrong (a miss or an echo), you can delete it after importing. Nothing here was saved.</p>';
+    out.innerHTML=h;
+  }
+  const fmtD=d=>{const p=String(d).split("-").map(Number);if(p.length!==3)return d;return new Date(p[0],p[1]-1,p[2]).toLocaleDateString([],{year:"numeric",month:"short",day:"numeric"});};
+  function wire(){if(wired)return;wired=true;
+    $("chIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";if(f.length)read(f);});
+    $("chClear").addEventListener("click",()=>{$("chOut").innerHTML="";$("chClear").hidden=true;});}
+  return {show(){wire();}};
 })();
 </script>
 <script>
