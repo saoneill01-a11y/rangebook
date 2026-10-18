@@ -905,6 +905,10 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 
 .wxrow{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .wxrow .note{flex:1 1 200px}
+.rgloc .row{margin:0 0 4px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
+.wxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0 6px}.wxgrid div{background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.wxgrid dt{font-size:12.5px;color:var(--muted)}.wxgrid dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
+@media (max-width:420px){.wxgrid{grid-template-columns:1fr 1fr}}
 
 @media (min-width:700px){.grid.bt4{grid-template-columns:repeat(4,minmax(0,1fr))}}
 details.bhist{margin-top:8px;border:0;padding:0;background:none;box-shadow:none}
@@ -1362,18 +1366,20 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>True up the velocity</h3>
       <p>Once you've shot at long range, enter the distance and the dial that actually hit under <b>True up velocity</b>. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> and the table and dope card will line up with what you saw. Use a distance well past your zero and a good group.</p>
       <h3>Weather where you are</h3>
-      <p>On the <b>Conditions</b> card, <b>Use the weather where I am</b> fills in the temperature and the altitude from today's air pressure where you're standing. It needs a signal and the https:// (Cloudflare) address, since phones only share location with secure sites. Set the crosswind yourself, since it depends on which way you're shooting.</p>
+      <p>On the <b>Conditions</b> card, <b>Use the weather where I am</b> fills in the temperature and the altitude from today's air pressure and humidity where you're standing (the altitude that gives the same air density, so humid air counts too), and tells you the density altitude, the ground's elevation and the wind. If you're within about 2 miles of one of your saved ranges that has its address, it says you're there and picks that range on the <b>Saved ranges</b> card. It needs a signal and the https:// (Cloudflare) address, since phones only share location with secure sites. Set the crosswind yourself, since it depends on which way you're shooting.</p>
       <h3>Print a dope card</h3>
       <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the <b>MOA / MIL</b> button: tap it to switch). It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold, in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
       <h3>Reticle holds</h3>
       <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> button shows the unit in use; tap it to switch. It sets both the card and the reticle. When the profile's gun has a scope (Gear &amp; Ranges → Scopes), the scope sets it (the button is greyed out) and the reticle can look like yours, or be a picture of it. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the profile, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
       <h3>Saved ranges</h3>
-      <p>Save the places you shoot under <b>Gear &amp; Ranges → Ranges</b>: tap <b>+ New range</b>, give it a name, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Changes save as you type. Under <b>Dope</b>, pick a Shooting profile to see the dial and wind for every target with it; the size column shows each target in MOA or MIL, so you can see how much room you have, and <b>Use these conditions</b> sets that profile's temperature and altitude to the range's usual ones. Each Shooting profile also has a <b>Saved ranges</b> card: pick a range there to see the same thing for that profile, and <b>Edit ranges ›</b> takes you to the range. Range names show up under <b>Where</b> on range trips.</p>
+      <p>Save the places you shoot under <b>Gear &amp; Ranges → Ranges</b>: tap <b>+ New range</b>, give it a name, its address, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Changes save as you type. Under <b>Dope</b>, pick a Shooting profile to see the dial and wind for every target with it; the size column shows each target in MOA or MIL, so you can see how much room you have, and <b>Use these conditions</b> sets that profile's temperature and altitude to the range's usual ones. Each Shooting profile also has a <b>Saved ranges</b> card: pick a range there to see the same thing for that profile, and <b>Edit ranges ›</b> takes you to the range. Range names show up under <b>Where</b> on range trips.</p>
+      <h3>A range's address and weather</h3>
+      <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>, or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then the range's <b>Weather</b> card shows today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there; tap <b>Refresh</b> for the latest. Under <b>Dope</b>, and on a profile's <b>Saved ranges</b> card, <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
       <h3>The inputs fold up on a phone</h3>
       <p>On a phone, when you open a profile the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a profile (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
-      <p>Every profile in the calculator has a <b>Range trips</b> log at the bottom (tap <b>Range trips</b> in the row of links at the top to jump there). Tap <b>+ New range trip</b> and fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target for this trip</b> opens a printable target with the trip's profile, date, distance and gun already filled in at the top. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, tap <b>+ Shot</b> to add one, or tap <b>− Shot</b>, tap the shots you want gone (a bad reading, an unused box) and tap <b>Delete</b>. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
+      <p>Every profile in the calculator has a <b>Range trips</b> log at the bottom (tap <b>Range trips</b> in the row of links at the top to jump there). Tap <b>+ New range trip</b> and fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target for this trip</b> opens a printable target with the trip's profile, date, distance and gun already filled in at the top. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, tap <b>+ Shot</b> to add one, or tap <b>− Shot</b>, tap the shots you want gone (a bad reading, an unused box) and tap <b>Delete</b>. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
       <h3>Cold-bore shot</h3>
       <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point (right or left, high or low, in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
       <h3>Zoom the chart</h3>
@@ -1818,6 +1824,54 @@ window.DIA={
     u.addEventListener("change",()=>{el.value=DIA.show(getInches(),u.value);onChange(getInches(),u.value);});},
   label(inches,unit){return inches?(unit==="mm"?DIA.show(inches,"mm")+" mm":String(DIA.show(inches,"in")).replace(/^0\./,".")+" cal"):"";}
 };
+/* weather and places: today's weather from Open-Meteo (where you are, or at a saved range), and finding a range's address on OpenStreetMap */
+window.RB_WX=(()=>{
+  const dirs=["N","NE","E","SE","S","SW","W","NW"],f4=n=>(+n).toFixed(4);
+  const W={
+    dir:d=>isFinite(d)?dirs[Math.round(d/45)%8]:"",
+    ok:(r)=>!!r&&isFinite(r.lat)&&isFinite(r.lon),
+    // where the phone is (only on https:// sites)
+    here(){return new Promise((ok,no)=>{
+      if(!window.isSecureContext||!navigator.geolocation)return no(new Error("Your phone only shares its location with https:// sites. Open Range Book through its https:// address to use this."));
+      navigator.geolocation.getCurrentPosition(p=>ok({lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy}),
+        e=>no(new Error(e.code===1?"Location is turned off for this site. Allow it in your browser's settings (on an iPhone: Settings → Privacy & Security → Location Services → Safari Websites) and try again.":"Couldn't find your location. Try again outside, or enter it yourself.")),
+        {enableHighAccuracy:true,timeout:15000,maximumAge:300000});});},
+    // today's weather at a spot: °F, mph, ft, hPa
+    async get(lat,lon){
+      const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+f4(lat)+"&longitude="+f4(lon)+"&current=temperature_2m,relative_humidity_2m,dew_point_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=fahrenheit&wind_speed_unit=mph");
+      if(!r.ok)throw new Error("weather");
+      const j=await r.json(),c=j.current||{},T=c.temperature_2m,P=c.surface_pressure,RH=c.relative_humidity_2m;
+      if(!(isFinite(T)&&P>300))throw new Error("weather");
+      const tc=(T-32)*5/9,tk=tc+273.15,pv=isFinite(RH)?RH/100*6.1078*Math.pow(10,7.5*tc/(tc+237.3)):0;
+      const rho=(P-pv)*100/(287.05*tk)+pv*100/(461.495*tk),pa=p=>(1-Math.pow(p/1013.25,0.190284))*145366.45;
+      return {temp:T,rh:isFinite(RH)?RH:null,dew:isFinite(c.dew_point_2m)?c.dew_point_2m:null,hpa:P,inHg:P*0.0295300,
+        pAlt:pa(P),
+        // the altitude the calculator uses: the pressure altitude with the same air density at this temperature, so humidity counts too
+        alt:pa(rho*287.05*tk/100),
+        dAlt:(1-Math.pow(rho/1.225,0.234969))*145442.16,
+        wind:isFinite(c.wind_speed_10m)?c.wind_speed_10m:null,dir:isFinite(c.wind_direction_10m)?c.wind_direction_10m:null,gust:isFinite(c.wind_gusts_10m)?c.wind_gusts_10m:null,
+        elev:isFinite(j.elevation)?j.elevation*3.28084:null,at:Date.now()};
+    },
+    // the ground's height at a spot (ft)
+    async elev(lat,lon){try{const r=await fetch("https://api.open-meteo.com/v1/elevation?latitude="+f4(lat)+"&longitude="+f4(lon));if(!r.ok)return null;const j=await r.json(),e=j.elevation&&j.elevation[0];return isFinite(e)?e*3.28084:null;}catch(e){return null;}},
+    // an address or place name to a spot on the map: OpenStreetMap first, then Open-Meteo's town lookup
+    async find(q){
+      q=String(q||"").trim();if(!q)return null;let net=false;
+      try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q="+encodeURIComponent(q));
+        if(r.ok){const a=await r.json();if(a&&a[0]&&isFinite(+a[0].lat))return {lat:+a[0].lat,lon:+a[0].lon,label:a[0].display_name||q};}}catch(e){net=true;}
+      try{const r=await fetch("https://geocoding-api.open-meteo.com/v1/search?count=1&name="+encodeURIComponent(q.split(",")[0].trim()));
+        if(r.ok){const j=await r.json(),g=j.results&&j.results[0];if(g)return {lat:g.latitude,lon:g.longitude,label:[g.name,g.admin1,g.country].filter(Boolean).join(", "),rough:true};}}catch(e){net=true;}
+      if(net)throw new Error("network");return null;
+    },
+    // miles between two spots
+    mi(a,b){const R=3958.8,rad=Math.PI/180,dLa=(b.lat-a.lat)*rad,dLo=(b.lon-a.lon)*rad,h=Math.sin(dLa/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));},
+    // the closest saved range within about 2 miles of a spot
+    near(p,list){let best=null,bd=2;(list||[]).forEach(r=>{if(!W.ok(r))return;const d=W.mi(p,r);if(d<=bd){bd=d;best=r;}});return best;},
+    // a link that opens the spot in the phone's maps app
+    mapUrl(r){const ll=f4(r.lat)+","+f4(r.lon);return /iPhone|iPad|Macintosh/.test(navigator.userAgent)?"https://maps.apple.com/?ll="+ll+"&q="+encodeURIComponent(r.name||"Range"):"https://www.google.com/maps/search/?api=1&query="+ll;}
+  };
+  return W;
+})();
 </script>
 <script>
 /* ---------- cartridges: names, true bullet diameter, SAAMI/C.I.P. max case length and overall length, and what else each chamber can safely fire ---------- */
@@ -2201,7 +2255,8 @@ window.RB_TRAJ={
     editHtml:r=>rangeEditHtml(r),bindEdit:(box,r,changed,redraw)=>bindRangeEdit(box,r,()=>{if(TVIEW==="detail")renderRanges();if(changed)changed();},redraw),
     dopeHtml:(r,id)=>{const L=state.loads.find(l=>l.id===id);return L?rangeDopeHtml(r,L):'';},
     bindDope:(box,r,id,after)=>{const L=state.loads.find(l=>l.id===id);if(L)bindRangeDope(box,r,L,after);},
-    pick(id){state.rangeCur=id;save();}},
+    pick(id){state.rangeCur=id;save();},
+    wxHtml:r=>rangeWxHtml(r),bindWx:(box,r,redraw)=>bindRangeWx(box,r,redraw)},
   // the trajectory of a Shooting profile for other screens (hit chance, saved ranges). o can change the wind, angle,
   // conditions, or add dmv (fps) to the velocity while keeping the same sight setting.
   solve(id,o){
@@ -2452,6 +2507,7 @@ function rangeDopeHtml(r,L){
   const B=window.RB_TRAJ?RB_TRAJ.solve(L.id):null;let h='';
   if(r.notes)h+='<p class="note">'+escL(r.notes)+'</p>';
   if(num(r.temp)!=null||num(r.alt)!=null)h+='<div class="row"><span class="note">Usual conditions: '+[num(r.temp)!=null?U.s("F",num(r.temp),0):"",num(r.alt)!=null?U.s("ft",num(r.alt),0,true):""].filter(Boolean).join(" · ")+'</span><button class="btn small" data-rguse type="button">Use these conditions on '+(L===cur()&&TVIEW==="detail"?'this profile':'the profile')+'</button></div>';
+  if(RB_WX.ok(r)){const w=RWX[r.id];h+='<div class="row"><button class="btn small" data-rgwx type="button">Use today\'s weather here</button><span class="note" data-rgwxnote>'+(w?'Weather at '+wxTime(w)+': '+U.s("F",w.temp,0)+(w.rh!=null?', '+Math.round(w.rh)+'% humidity':'')+', density altitude '+U.s("ft",Math.round(w.dAlt/10)*10,0,true)+'.':'')+'</span></div>';}
   if(!B||B.err)return h+'<p class="err">'+escL(B?B.err:"")+'</p>';
   if(!(r.targets||[]).length)return h+'<p class="note">No targets yet. Add them under <b>Gear &amp; Ranges → Ranges</b>.</p>';
   const MIL=B.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",f1=n=>{const s2=n.toFixed(1);return s2==="-0.0"?"0.0":s2;};
@@ -2464,10 +2520,39 @@ function rangeDopeHtml(r,L){
     '<p class="note">Up is how far to dial from the '+U.s("yd",B.z,0)+' zero (angles included). Wind is for '+(B.wind?U.s("mph",L.wind||0,0)+' from '+B.clock+' o\'clock, hold '+B.side:'no wind (set it under the profile\'s Conditions)')+'. Size is the target in '+UN+', so you can see how much room you have.</p>';
   return h;
 }
-function bindRangeDope(box,r,L,after){const u=box.querySelector("[data-rguse]");if(u)u.addEventListener("click",()=>{if(num(r.temp)!=null)L.temp=num(r.temp);if(num(r.alt)!=null)L.alt=num(r.alt);if(L===cur())fillInputs();save();render();if(after)after();});}
+function bindRangeDope(box,r,L,after){const u=box.querySelector("[data-rguse]");if(u)u.addEventListener("click",()=>{if(num(r.temp)!=null)L.temp=num(r.temp);if(num(r.alt)!=null)L.alt=num(r.alt);if(L===cur())fillInputs();save();render();if(after)after();});
+  const wb=box.querySelector("[data-rgwx]");if(wb)wb.addEventListener("click",async()=>{const n=box.querySelector("[data-rgwxnote]");wb.disabled=true;n.textContent="Getting the weather…";
+    try{const w=await rangeWxGet(r);wxToProfile(L,w);if(L===cur())fillInputs();save();render();if(after)after();}catch(e){n.textContent="Couldn't get the weather. You need a signal for this.";wb.disabled=false;}});}
+// today's weather onto a profile: the temperature, and the altitude from the air pressure and humidity
+function wxToProfile(L,w){L.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",w.temp)))*100)/100:Math.round(w.temp);L.alt=Math.round(w.alt/10)*10;}
 /* editing a range: its name, usual conditions, notes and targets */
+/* where a range is: its address, found on the map or set by standing there, so Range Book can get the weather at it */
+const RWX={};// today's weather per range, kept while the app is open
+function rangeLocTxt(r){
+  if(!RB_WX.ok(r))return 'Tap <b>Find on the map</b> after typing the address, or <b>I\'m here now</b> when you\'re at the range. Then Range Book can get the weather there.';
+  return 'On the map at '+(+r.lat).toFixed(4)+', '+(+r.lon).toFixed(4)+(num(r.elev)!=null?' · ground about '+U.s("ft",num(r.elev),0,true):'')+' · <a href="'+escL(RB_WX.mapUrl(r))+'" target="_blank" rel="noopener">Open in Maps</a> · <button class="linkbtn" type="button" id="rg_forget">Forget the spot</button>';
+}
+function rangeWxRows(w){
+  const P=U.metric?Math.round(w.hpa)+" hPa":w.inHg.toFixed(2)+" inHg";
+  return [["Temperature",U.s("F",w.temp,0)],["Humidity",w.rh!=null?Math.round(w.rh)+"%":"—"],["Dew point",w.dew!=null?U.s("F",w.dew,0):"—"],["Air pressure (ground)",P],
+    ["Pressure altitude",U.s("ft",Math.round(w.pAlt/10)*10,0,true)],["Density altitude",U.s("ft",Math.round(w.dAlt/10)*10,0,true)],["Elevation",w.elev!=null?U.s("ft",w.elev,0,true):"—"],
+    ["Wind",w.wind!=null?U.s("mph",w.wind,0)+(w.dir!=null?" from the "+RB_WX.dir(w.dir):"")+(w.gust!=null&&w.gust>w.wind+3?", gusts "+U.n("mph",w.gust,0):""):"—"]];
+}
+const wxTime=w=>new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+// the Weather card on Gear & Ranges → a range
+function rangeWxHtml(r){
+  if(!RB_WX.ok(r))return '<p class="note">Add the range\'s address under <b>Details</b> (or tap <b>I\'m here now</b> there) to see the weather at it.</p>';
+  const w=RWX[r.id];
+  return '<div class="row"><button class="btn" type="button" id="rgWxGo">'+(w?'Refresh':'Get today\'s weather')+'</button><span class="note" id="rgWxNote">'+(w?'As of '+wxTime(w)+'.':'')+'</span></div>'+
+    (w?'<dl class="wxgrid">'+rangeWxRows(w).map(([k,v])=>'<div><dt>'+k+'</dt><dd>'+escL(v)+'</dd></div>').join("")+'</dl><p class="note">Density altitude is how high the air feels to a bullet, with the temperature and humidity counted in. Use it on a profile with <b>Use today\'s weather here</b> under <b>Dope</b> (or on the profile\'s Ranges card).</p>':'');
+}
+async function rangeWxGet(r,force){const w0=RWX[r.id];if(!force&&w0&&Date.now()-w0.at<10*60000)return w0;const w=await RB_WX.get(r.lat,r.lon);RWX[r.id]=w;return w;}
+function bindRangeWx(box,r,redraw){const b=box.querySelector("#rgWxGo");if(!b)return;b.addEventListener("click",async()=>{b.disabled=true;$("rgWxNote").textContent="Getting the weather…";
+  try{await rangeWxGet(r,true);redraw();}catch(e){$("rgWxNote").textContent="Couldn't get the weather. You need a signal for this.";b.disabled=false;}});}
 function rangeEditHtml(r){
   return '<div class="grid"><div class="field wide"><label for="rg_name">Name</label><input id="rg_name" value="'+escL(r.name||"")+'" placeholder="e.g. Rio Salado, south steel line"></div>'+
+    '<div class="field wide"><label for="rg_addr">Address</label><input id="rg_addr" value="'+escL(r.address||"")+'" autocomplete="off" placeholder="Street address, or the range\'s name and town"></div>'+
+    '<div class="field wide rgloc"><div class="row"><button class="btn" id="rg_find" type="button">Find on the map</button><button class="btn" id="rg_here" type="button">I\'m here now</button></div><span class="note" id="rg_locNote">'+rangeLocTxt(r)+'</span></div>'+
     '<div class="field"><label for="rg_temp">Usual temperature ('+U.u("F")+')</label><input id="rg_temp" type="number" inputmode="decimal" step="any"></div>'+
     '<div class="field"><label for="rg_alt">Altitude ('+U.u("ft")+')</label><input id="rg_alt" type="number" inputmode="numeric" step="any"></div>'+
     '<div class="field wide"><label for="rg_notes">Notes</label><input id="rg_notes" value="'+escL(r.notes||"")+'" placeholder="Wind flags, best time of day, rules"></div></div>'+
@@ -2484,6 +2569,19 @@ function bindRangeEdit(box,r,changed,redraw){
   const ch=()=>{save();if(changed)changed();};
   $("rg_name").addEventListener("input",e=>{r.name=e.target.value;ch();});
   $("rg_notes").addEventListener("input",e=>{r.notes=e.target.value;ch();});
+  $("rg_addr").addEventListener("input",e=>{r.address=e.target.value;ch();});
+  {const note=$("rg_locNote"),fb=$("rg_find"),hb=$("rg_here");
+    const bindForget=()=>{const f=$("rg_forget");if(f)f.addEventListener("click",()=>{r.lat=r.lon=r.elev=null;delete RWX[r.id];ch();redraw();});};bindForget();
+    // a new spot: also its ground height, which fills in the altitude if it's empty
+    const setSpot=async(p,how)=>{r.lat=Math.round(p.lat*1e5)/1e5;r.lon=Math.round(p.lon*1e5)/1e5;delete RWX[r.id];const e=await RB_WX.elev(r.lat,r.lon);r.elev=e!=null?Math.round(e):null;
+      if(num(r.alt)==null&&r.elev!=null)r.alt=r.elev;ch();redraw();const n=$("rg_locNote");if(n)n.insertAdjacentHTML("afterbegin",escL(how)+' ');};
+    fb.addEventListener("click",async()=>{const q=$("rg_addr").value.trim()||r.name||"";if(!q){note.textContent="Type the address first.";$("rg_addr").focus();return;}
+      fb.disabled=hb.disabled=true;note.textContent="Looking it up…";
+      try{const p=await RB_WX.find(q);if(!p){note.textContent="Couldn't find that address. Try the street and town, or tap I'm here now when you're at the range.";fb.disabled=hb.disabled=false;return;}
+        await setSpot(p,"Found "+(p.label||q)+(p.rough?" (the town only: tap I'm here now at the range for its exact spot)":"")+".");}
+      catch(e){note.textContent="Couldn't look it up. You need a signal for this.";fb.disabled=hb.disabled=false;}});
+    hb.addEventListener("click",async()=>{fb.disabled=hb.disabled=true;note.textContent="Finding you…";
+      try{const p=await RB_WX.here();await setSpot(p,"Saved where you are now.");}catch(e){note.textContent=e.message;fb.disabled=hb.disabled=false;}});}
   if(num(r.temp)!=null)U.fill($("rg_temp"),"F",num(r.temp),1,0);if(num(r.alt)!=null)U.fill($("rg_alt"),"ft",num(r.alt),0,0);
   $("rg_temp").addEventListener("input",e=>{const v=U.read(e.target,"F",r.temp);r.temp=num(v);ch();});
   $("rg_alt").addEventListener("input",e=>{const v=U.read(e.target,"ft",r.alt);r.alt=num(v);ch();});
@@ -2636,26 +2734,18 @@ $("hitTool").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("hit
 $("f_bcm").addEventListener("change",()=>{readInputs();render();});
 $("f_wclock").addEventListener("change",()=>{readInputs();render();});
 $("f_cal_u").addEventListener("change",()=>{const L=cur();$("f_cal").value=DIA.show(L.cal,$("f_cal_u").value);L.calUnit=$("f_cal_u").value;save();});
-$("wxBtn").addEventListener("click",()=>{
+$("wxBtn").addEventListener("click",async()=>{
   const note=$("wxNote"),btn=$("wxBtn");
-  if(!window.isSecureContext||!navigator.geolocation){note.textContent="Your phone only shares its location with https:// sites. Open Range Book through your Cloudflare address to use this.";return;}
   btn.disabled=true;note.textContent="Finding you…";
-  navigator.geolocation.getCurrentPosition(async pos=>{
-    try{
-      const {latitude:la,longitude:lo}=pos.coords;
-      note.textContent="Getting the weather…";
-      const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+la.toFixed(4)+"&longitude="+lo.toFixed(4)+"&current=temperature_2m,surface_pressure,wind_speed_10m,wind_direction_10m&temperature_unit=fahrenheit&wind_speed_unit=mph");// kept in °F and mph; shown in the account's units
-      if(!r.ok)throw new Error("weather");
-      const j=await r.json(),c=j.current||{};
-      const T=c.temperature_2m,P=c.surface_pressure;
-      if(!(isFinite(T)&&P>300))throw new Error("weather");
-      const pAlt=Math.round((1-Math.pow(P/1013.25,0.190284))*145366.45/10)*10,elev=isFinite(j.elevation)?Math.round(j.elevation*3.28084):null;
-      const L=cur();L.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",T)))*100)/100:Math.round(T);L.alt=pAlt;U.fill($("f_temp"),"F",L.temp,1,1);U.fill($("f_alt"),"ft",L.alt,0,0);save();render();
-      const dirs=["N","NE","E","SE","S","SW","W","NW"],wd=isFinite(c.wind_direction_10m)?dirs[Math.round(c.wind_direction_10m/45)%8]:"";
-      note.textContent="Set from the weather here at "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})+": "+U.s("F",L.temp,0)+", air pressure "+Math.round(P)+" hPa, so altitude is set to "+U.s("ft",pAlt,0,true)+" (pressure altitude"+(elev!=null?"; the ground here is about "+U.s("ft",elev,0,true):"")+")."+(isFinite(c.wind_speed_10m)?" Wind "+U.s("mph",c.wind_speed_10m,0)+" from the "+wd+". Set the wind speed and its o'clock direction yourself, since they depend on which way you're shooting.":"");
-    }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter the temperature and altitude yourself.";}
-    btn.disabled=false;
-  },err=>{btn.disabled=false;note.textContent=err.code===1?"Location is turned off for this site. Allow it in Settings → Safari → Location (or the site's settings) and try again.":"Couldn't find your location. Try again outside or enter the conditions yourself.";},{enableHighAccuracy:false,timeout:15000,maximumAge:600000});
+  let p;try{p=await RB_WX.here();}catch(e){note.textContent=e.message;btn.disabled=false;return;}
+  try{
+    note.textContent="Getting the weather…";
+    const w=await RB_WX.get(p.lat,p.lon),at=RB_WX.near(p,rgList());if(at)RWX[at.id]=w;
+    const L=cur();wxToProfile(L,w);U.fill($("f_temp"),"F",L.temp,1,1);U.fill($("f_alt"),"ft",L.alt,0,0);
+    if(at&&state.rangeCur!==at.id)state.rangeCur=at.id;save();render();
+    note.textContent=(at?"You're at "+(at.name||"a saved range")+". ":"")+"Set from the weather here at "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})+": "+U.s("F",L.temp,0)+(w.rh!=null?", "+Math.round(w.rh)+"% humidity":"")+", air pressure "+(U.metric?Math.round(w.hpa)+" hPa":w.inHg.toFixed(2)+" inHg")+", so altitude is set to "+U.s("ft",L.alt,0,true)+" (density altitude "+U.s("ft",Math.round(w.dAlt/10)*10,0,true)+(w.elev!=null?"; the ground here is about "+U.s("ft",w.elev,0,true):"")+")."+(w.wind!=null?" Wind "+U.s("mph",w.wind,0)+" from the "+RB_WX.dir(w.dir)+(w.gust!=null&&w.gust>w.wind+3?", gusts "+U.n("mph",w.gust,0):"")+": set the crosswind for the way you're facing.":"");
+  }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter the temperature and altitude yourself.";}
+  btn.disabled=false;
 });
 $("tuGo").addEventListener("click",()=>{
   const L=cur(),out=$("tuRes"),xs=num($("tu_dist").value)||0,x=U.from("yd",xs),want=num($("tu_val").value),UF=$("tu_unit").value==="mil"?3.6:1.0472;
@@ -4211,6 +4301,7 @@ function renderGearRanges(root){
   }else{
     h='<div class="row"><span class="savestate" id="rifleState"></span></div>'+
       '<section class="card" aria-label="Range"><h2>Details</h2><div id="rgEditBox">'+G.editHtml(r)+'</div></section>'+
+      '<section class="card" aria-label="Range weather"><h2>Weather</h2><div id="rgWxBox"></div></section>'+
       '<section class="card" aria-label="Range dope"><h2>Dope</h2>'+(loadsT.length?'<div class="row"><label for="rgLoad" class="note" style="margin:0">Dope for</label><select id="rgLoad" class="fieldselect" style="flex:1 1 220px;min-width:0">'+loadsT.map(l=>'<option value="'+esc(l.id)+'"'+(l.id===rangeLoad?' selected':'')+'>'+esc(l.name)+'</option>').join("")+'</select></div><div id="rgDopeBox"></div>':'<p class="note">Add a Shooting profile to see the dial and wind for these targets.</p>')+'</section>'+
       '<div class="row endrow"><button class="btn danger" type="button" id="rgDel">Delete range</button></div>';
   }
@@ -4222,9 +4313,10 @@ function renderGearRanges(root){
     return;
   }
   if(window.foldAll)foldAll(root,"range");
-  const dope=()=>{const box=$("rgDopeBox");if(!box||!rangeLoad)return;box.innerHTML=G.dopeHtml(r,rangeLoad);G.bindDope(box,r,rangeLoad,dope);};
-  const edit=()=>{const box=$("rgEditBox");box.innerHTML=G.editHtml(r);G.bindEdit(box,r,()=>{$("rifTitle").textContent=r.name||"Unnamed range";const st=$("rifleState");if(st)st.textContent="Saved";clearTimeout(edit.t);edit.t=setTimeout(dope,350);},()=>{edit();dope();});};
-  edit();dope();
+  const dope=()=>{const box=$("rgDopeBox");if(!box||!rangeLoad)return;box.innerHTML=G.dopeHtml(r,rangeLoad);G.bindDope(box,r,rangeLoad,()=>{dope();wx();});};
+  const wx=()=>{const box=$("rgWxBox");if(!box)return;box.innerHTML=G.wxHtml(r);G.bindWx(box,r,()=>{wx();dope();});};
+  const edit=()=>{const box=$("rgEditBox");box.innerHTML=G.editHtml(r);G.bindEdit(box,r,()=>{$("rifTitle").textContent=r.name||"Unnamed range";const st=$("rifleState");if(st)st.textContent="Saved";clearTimeout(edit.t);edit.t=setTimeout(dope,350);},()=>{edit();wx();dope();});};
+  edit();wx();dope();
   {const sel=$("rgLoad");if(sel)sel.addEventListener("change",()=>{rangeLoad=sel.value;try{localStorage.setItem("rb.rangeLoad",rangeLoad);}catch(e){}dope();});}
   $("rgDel").addEventListener("click",()=>{const out=G.del(r.id);rangeOpen=null;renderRifles();window.scrollTo(0,0);
     if(out)RB_UNDO("Deleted "+(r.name||"the range"),()=>{G.put(out.r,out.i);rangeOpen=out.r.id;if(gunArea==="ranges")renderRifles();});});
@@ -7493,6 +7585,12 @@ function coldLogHtml(rt){
     rows.slice(0,12).map(r=>'<tr><td>'+esc(r.t.date?fmtDate(r.t.date):"–")+'</td><td>'+U.n("yd",r.d,0)+'</td><td>'+(Math.abs(r.mx)<.05?"0":Math.abs(r.mx).toFixed(1)+(r.mx>0?" R":" L"))+'</td><td>'+(Math.abs(r.my)<.05?"0":Math.abs(r.my).toFixed(1)+(r.my>0?" high":" low"))+'</td><td>'+esc(r.t.cold.bore||"–")+'</td></tr>').join("")+'</tbody></table></div></section>';
   return h;
 }
+// saved ranges (from the Shooting profiles) and the one a trip's Where names, if it has a spot on the map
+const tripRanges=()=>(window.RB_TRAJ&&RB_TRAJ.rg&&RB_TRAJ.rg.list())||[];
+const tripRange=t=>{const n=String(t.place||"").trim().toLowerCase();return n?tripRanges().find(r=>RB_WX.ok(r)&&String(r.name||"").trim().toLowerCase()===n)||null:null;};
+const tripWxLabel=t=>{const r=tripRange(t);return r?"Use the weather at "+(r.name||"this range"):"Use the weather where I am";};
+const tripWxTxt=t=>{const w=t.wx;if(!w||!w.at)return "";const P=U.metric?Math.round(w.hpa)+" hPa":(w.hpa*0.02953).toFixed(2)+" inHg";
+  return "Weather"+(w.range?" at "+w.range:"")+" at "+new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+": "+[w.rh!=null?w.rh+"% humidity":"",P,"density altitude "+U.s("ft",w.dAlt,0,true),w.elev!=null?"elevation "+U.s("ft",w.elev,0,true):""].filter(Boolean).join(" · ")+".";};
 const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["wind","Wind","text","e.g. 5 mph from 3 o'clock"],["avgVel","Average velocity (fps)","number","optional"],["sd","SD (fps)","number","optional"]];
 /* velocity vs temperature: each trip's average velocity against its temperature, with a best-fit line.
    Its slope is the powder's temperature sensitivity for this load, which the calculator can use. */
@@ -7595,7 +7693,7 @@ function renderTrips(){
       (t.partId&&!ps.some(p=>p.id===t.partId)?'<option value="'+esc(t.partId)+'" selected>'+esc((parts.find(p=>p.id===t.partId)&&partName(parts.find(p=>p.id===t.partId)))||"A barrel no longer here")+'</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>';}
   if(cans.length||t.canId)h+='<div class="field wide"><label for="tp_can">Suppressor</label><select id="tp_can" class="fieldselect"><option value="">None</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(t.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+
       (t.canId&&!cans.some(c=>c.id===t.canId)?'<option value="'+esc(t.canId)+'" selected>A suppressor no longer here</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>';
-  h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">Use the weather where I am</button><span class="note" id="tripWxNote"></span></div>'+
+  h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">'+esc(tripWxLabel(t))+'</button><span class="note" id="tripWxNote">'+esc(tripWxTxt(t))+'</span></div>'+
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>'+
     coldHtml(t)+
     '<h3>Chronograph</h3><div id="tripChrono"></div>'+
@@ -7697,25 +7795,23 @@ function renderTrips(){
   del.addEventListener("click",()=>{
     const i=trips.indexOf(t);trips=trips.filter(x=>x.id!==t.id);tripOpen=null;tripPhotos=[];queueTrips();renderTrips();
     RB_UNDO("Deleted range trip"+(t.date?" from "+fmtDate(t.date):""),()=>{trips.splice(Math.min(i,trips.length),0,t);queueTrips();renderTrips();},()=>API.del("/api/trips/"+t.id+"/photos").catch(onWriteError));});
-  $("tripWx").addEventListener("click",()=>{
-    const note=$("tripWxNote"),btn=$("tripWx");
-    if(!window.isSecureContext||!navigator.geolocation){note.textContent="Your phone only shares its location with https:// sites. Open Range Book through your Cloudflare address to use this.";return;}
-    btn.disabled=true;note.textContent="Finding you…";
-    navigator.geolocation.getCurrentPosition(async pos=>{
-      try{
-        const {latitude:la,longitude:lo}=pos.coords;note.textContent="Getting the weather…";
-        const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+la.toFixed(4)+"&longitude="+lo.toFixed(4)+"&current=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=fahrenheit&wind_speed_unit=mph");
-        if(!r.ok)throw new Error("weather");
-        const c=(await r.json()).current||{};if(!isFinite(c.temperature_2m))throw new Error("weather");
-        const dirs=["N","NE","E","SE","S","SW","W","NW"];
-        t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",c.temperature_2m)))*100)/100:Math.round(c.temperature_2m);
-        if(isFinite(c.wind_speed_10m))t.wind=U.s("mph",c.wind_speed_10m,0)+" from the "+(isFinite(c.wind_direction_10m)?dirs[Math.round(c.wind_direction_10m/45)%8]:"?")+(isFinite(c.wind_gusts_10m)&&c.wind_gusts_10m>c.wind_speed_10m+3?", gusts "+U.n("mph",c.wind_gusts_10m,0):"");
-        U.fill($("tp_temp"),"F",t.temp,0,1);$("tp_wind").value=t.wind||"";queueTrips();
-        note.textContent="Filled in from the weather here at "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+".";
-      }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter it yourself.";}
-      btn.disabled=false;
-    },err=>{btn.disabled=false;note.textContent=err.code===1?"Location is turned off for this site. Allow it in your browser's settings and try again.":"Couldn't find your location. Enter the conditions yourself.";},{enableHighAccuracy:false,timeout:15000,maximumAge:600000});
+  $("tripWx").addEventListener("click",async()=>{
+    const note=$("tripWxNote"),btn=$("tripWx");btn.disabled=true;
+    // at a saved range with a spot on the map: its weather, no location needed
+    let p=tripRange(t),at=p;
+    if(!p){note.textContent="Finding you…";try{p=await RB_WX.here();}catch(e){note.textContent=e.message;btn.disabled=false;return;}
+      at=RB_WX.near(p,tripRanges());if(at&&!String(t.place||"").trim()){t.place=at.name||"";$("tp_place").value=t.place;}}
+    try{note.textContent="Getting the weather…";
+      const w=await RB_WX.get(p.lat,p.lon);
+      t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",w.temp)))*100)/100:Math.round(w.temp);
+      if(w.wind!=null)t.wind=U.s("mph",w.wind,0)+" from the "+(w.dir!=null?RB_WX.dir(w.dir):"?")+(w.gust!=null&&w.gust>w.wind+3?", gusts "+U.n("mph",w.gust,0):"");
+      t.wx={rh:w.rh!=null?Math.round(w.rh):null,hpa:Math.round(w.hpa*10)/10,dAlt:Math.round(w.dAlt/10)*10,elev:w.elev!=null?Math.round(w.elev):null,at:w.at,range:at?at.name||"":""};
+      U.fill($("tp_temp"),"F",t.temp,0,1);$("tp_wind").value=t.wind||"";queueTrips();
+      note.textContent=tripWxTxt(t);btn.textContent=tripWxLabel(t);
+    }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter it yourself.";}
+    btn.disabled=false;
   });
+  $("tp_place").addEventListener("input",()=>{$("tripWx").textContent=tripWxLabel(t);});
   renderTripPhotos();
 }
 window.RB_TARGETS=()=>renderTargets($("targetsRoot"));

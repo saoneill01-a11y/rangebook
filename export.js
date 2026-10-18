@@ -706,8 +706,8 @@ function tripReportPdf(d, t, photos, readPhoto) {
   pdf.y += 16; pdf.text(pdf.M, pdf.y, [T.name || "", T.cart || "", rifle].filter(Boolean).join(" · "), { size: 10, color: MUTED });
   pdf.y += 12; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y, ACC, 1.5); pdf.y += 4;
   const v = (x, u) => (x == null || x === "" ? "" : String(x) + (u || ""));
-  const facts = [["Load", T.name || ""], ["Gun", rifle], ["Bullet", [T.w ? T.w + " gr" : "", T.bc ? "BC " + T.bc + (T.bcm === "G7" ? " G7" : " G1") : ""].filter(Boolean).join(", ")], ["Distance", numv(t.distance) != null ? cs("yd", t.distance, 0) : ""],
-    ["Rounds fired", v(t.rounds)], ["Temperature", numv(t.temp) != null ? cs("F", t.temp, 0) : ""], ["Wind", t.wind || ""], ["Average velocity", t.avgVel ? cs("fps", t.avgVel, 0) + (t.sd != null && t.sd !== "" ? ", SD " + cv("fps", t.sd, 1) : "") : ""],
+  const facts = [["Profile", T.name || ""], ["Gun", rifle], ["Bullet", [T.w ? T.w + " gr" : "", T.bc ? "BC " + T.bc + (T.bcm === "G7" ? " G7" : " G1") : ""].filter(Boolean).join(", ")], ["Distance", numv(t.distance) != null ? cs("yd", t.distance, 0) : ""],
+    ["Rounds fired", v(t.rounds)], ["Temperature", numv(t.temp) != null ? cs("F", t.temp, 0) : ""], ["Wind", t.wind || ""], ["Air", t.wx && t.wx.dAlt != null ? [t.wx.rh != null ? t.wx.rh + "% humidity" : "", "density altitude " + cs("ft", t.wx.dAlt, 0)].filter(Boolean).join(", ") : ""], ["Average velocity", t.avgVel ? cs("fps", t.avgVel, 0) + (t.sd != null && t.sd !== "" ? ", SD " + cv("fps", t.sd, 1) : "") : ""],
     ["Calculator velocity", T.mv ? cs("fps", T.mv, 0) : ""],
     ["Cold-bore shot", t.cold && (t.cold.x || t.cold.y) ? [t.cold.x ? cs("in", Math.abs(t.cold.x), 2) + (t.cold.x > 0 ? " right" : " left") : "", t.cold.y ? cs("in", Math.abs(t.cold.y), 2) + (t.cold.y > 0 ? " high" : " low") : ""].filter(Boolean).join(", ") + (t.cold.bore ? " (" + t.cold.bore + " barrel)" : "") : ""]].filter((r) => r[1]);
   const colW = content / 2;

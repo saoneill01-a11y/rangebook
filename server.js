@@ -349,7 +349,7 @@ const SECURITY_HEADERS = {
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob:",
     // the offline helper (sw.js) runs under this policy too, and it fetches the spreadsheet reader and fonts to keep copies
-    "connect-src 'self' https://api.open-meteo.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com",
+    "connect-src 'self' https://api.open-meteo.com https://geocoding-api.open-meteo.com https://nominatim.openstreetmap.org https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
