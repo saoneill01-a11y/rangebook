@@ -327,6 +327,7 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sorting{position:relative;z-index:30;opacity:.92;box-shadow:0 10px 28px rgba(0,0,0,.28)!important;cursor:grabbing;transition:none!important}
 .sortingbox [data-tooltile]:not(.sorting){transition:transform .15s}
 .toolsarr{margin:10px 2px 0}
+svg.inlock{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;vertical-align:-2px}.gnopts{gap:8px 18px;margin-top:8px}.gnbusy{font-weight:600;color:var(--accent)}
 .panel section.card{scroll-margin-top:calc(var(--stick,110px) + 8px)}
 .refnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 2px}.refnav .btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .refwatch{margin:6px 0 10px;padding-left:18px;font-size:14px}.refwatch li{margin:3px 0}
@@ -1615,11 +1616,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b>. It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up in their caliber's box under <b>Browse by caliber</b> and in searches, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
       <h3>Box photos</h3>
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
-      <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b> and <b>Ranges</b>. On a phone the row scrolls sideways.</p>
+      <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
       <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
       <h3>Inventory</h3>
       <p><a class=goto href=#go data-go=rifles:inv>Gear &amp; Ranges › Inventory</a> keeps track of the rest of your gear. <b>+ Add supplies</b> is for things that get used up (batteries, target pasters, earplugs, patches and solvent, hand warmers): give it a count and <b>Warn when at or below</b>, and use <b>− 1 used</b> and <b>+ 1</b> to keep the count right. <b>+ Add equipment</b> is for things you keep (a chronograph, rangefinder, bipod, magazines, cases) with a serial number, price, date bought and photos, handy for insurance. Either can have a category, where it's kept, a gun it goes with and a <b>Check or replace by</b> date that can repeat (a battery every year, a hunting license, a first-aid kit). Low supplies and dates within two weeks are listed first under <b>Needs attention</b>, and on Home. When you've done it, tap <b>Done</b> and a repeating date moves to the next one.</p>
+      <h3>Gear notes</h3>
+      <p><a class=goto href=#go data-go=rifles:notes>Gear &amp; Ranges › Notes</a> is for notes about your gear that don't belong to one gun: where things are stored, a gunsmith's work, part numbers, warranty details. Tap <b>+ New note</b>, give it a title and type. Add <b>Pictures</b> and <b>Files</b> (PDFs, manuals, receipts, spreadsheets, up to 20 MB each) to a note. Notes save as you type, <b>Pin to the top</b> keeps one first, and the search box looks through titles and text.</p>
+      <p>Tick <b>Lock in the vault</b> to encrypt a note: its title, text, pictures and files are locked on your device with your vault passphrase before they're saved, and its pictures and files move into the vault. Nobody can read it without the passphrase, not even the server's admin. Until you unlock the vault, the list just shows <b>Locked note</b> and searching skips it. Untick it to take the note back out of the vault (Range Book asks first). Pictures and files on a note that isn't locked are private to you but not encrypted.</p>
       <h3>Document vault</h3>
       <p>Suppressors, guns and inventory items have a <b>Documents</b> card for papers like a tax stamp, a receipt or a manual (PDFs or pictures, up to 15 MB). The first time, tap <b>Set up the vault</b> and choose a vault passphrase. It isn't your sign-in password: use something long you don't use anywhere else, like four or five random words. Every document is locked (encrypted) on your phone or computer with that passphrase before it's uploaded, so the server only ever holds scrambled data. Nobody can open your documents without the passphrase: not the person who runs this server, not an admin (even one who resets your password), not someone with your backup file, and not Range Book's maker. <b>That also means a forgotten passphrase can't be recovered</b>, and neither can the documents, so keep the originals somewhere too.</p>
       <p>To see or add documents, tap <b>Unlock</b> and type the passphrase. On a computer <b>Open</b> shows the document in a new tab; on a phone it unlocks it, then a second tap opens the share sheet to view, print or save it. The vault locks itself after 15 minutes, when you tap <b>Lock</b>, or when you close Range Book. <a class=goto href=#go data-go=account:vault>Account › Document vault</a> shows how many documents you have and lets you change the passphrase (your documents stay as they are). Your backup file includes the vault, still locked: restoring it brings the documents back, and they open with the same passphrase. One caution: whoever controls the server could, in theory, change Range Book's code to capture a passphrase as it's typed, so only use the vault on a Range Book run by someone you trust.</p>
@@ -1661,7 +1665,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-rifles" role="tabpanel" aria-labelledby="tab-rifles" hidden>
     <header class="phead"><button class="backbtn" id="rifHeadBack" type="button" hidden aria-label="Back to the list">‹ Guns</button><h1 id="rifTitle">Gear & Ranges</h1><p class="sub" id="rifSub">Your guns (barrel, twist, sight height, round count) and the ammunition you shoot, factory and reloaded.</p></header>
-    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Gear & Ranges"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button><button type="button" role="tab" data-garea="cans" aria-selected="false">Suppressors</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammo</button><button type="button" role="tab" data-garea="inv" aria-selected="false">Inventory</button><button type="button" role="tab" data-garea="ranges" aria-selected="false">Ranges</button></div>
+    <div class="areatabs" id="rifSeg" role="tablist" aria-label="Gear & Ranges"><button type="button" role="tab" data-garea="guns" aria-selected="true">Guns</button><button type="button" role="tab" data-garea="scopes" aria-selected="false">Scopes</button><button type="button" role="tab" data-garea="cans" aria-selected="false">Suppressors</button><button type="button" role="tab" data-garea="ammo" aria-selected="false">Ammo</button><button type="button" role="tab" data-garea="inv" aria-selected="false">Inventory</button><button type="button" role="tab" data-garea="ranges" aria-selected="false">Ranges</button><button type="button" role="tab" data-garea="notes" aria-selected="false">Notes</button></div>
     <div id="riflesRoot" style="display:flex;flex-direction:column;gap:14px"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-brass" role="tabpanel" aria-labelledby="tab-rel" hidden>
@@ -3812,7 +3816,7 @@ function queueRifles(){
   riflesDirty=true;riflesVer++;const my=riflesVer;
   clearTimeout(riflesTimer);
   riflesTimer=setTimeout(()=>{
-    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts)),cans:JSON.parse(JSON.stringify(cans)),inventory:JSON.parse(JSON.stringify(inv))}}))
+    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts)),cans:JSON.parse(JSON.stringify(cans)),inventory:JSON.parse(JSON.stringify(inv)),gnotes:JSON.parse(JSON.stringify(gnotes))}}))
       .then(()=>{if(riflesVer===my){riflesDirty=false;const el=$("rifleState");if(el)el.textContent="Saved";}},e=>{riflesDirty=false;onWriteError(e);});
   },600);
   const el=$("rifleState");if(el)el.textContent="Saving…";
@@ -3826,14 +3830,14 @@ let rifleOpen=null;
 document.getElementById("rifHeadBack").addEventListener("click",()=>{if(partOpen){const g=partFromGun&&rifles.some(r=>r.id===partFromGun)?partFromGun:null;partOpen=null;partFromGun=null;rifleOpen=g;renderRifles();window.scrollTo(0,0);return;}
   if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
   if(canOpen&&canFromGun&&rifles.some(r=>r.id===canFromGun)){gunArea="guns";rifleOpen=canFromGun;canOpen=null;canFromGun=null;renderRifles();window.scrollTo(0,0);return;}
-  canOpen=null;canFromGun=null;invOpen=null;
+  canOpen=null;canFromGun=null;invOpen=null;gnoteOpen=null;gnConfirm=false;
   rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;gunReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
 let ammoReturnTraj=null,gunReturnTraj=null;
 // a profile's Edit button on its gun: open the gun, with a way back to the profile
 window.RB_OPEN_GUN=(id,ret)=>{if(!rifles.some(r=>r.id===id))return;gunArea="guns";rifleOpen=id;canOpen=null;scopeOpen=null;partOpen=null;gunReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;gnoteOpen=null;gnConfirm=false;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 // gun type: rifle, pistol or shotgun. Guessed from the cartridge when not picked (handgun cartridges → pistol, gauges → shotgun)
 const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shotgun","Shotgun","Shotguns"]];
 function gunTypeGuess(cart){const t=String(cart||"").trim();if(!t)return null;if(/\b(\d+|four|eight|ten|twelve|sixteen|twenty)\s*-?\s*(ga|gauge|bore)\b|\b410\b|\.410/i.test(t))return "shotgun";
@@ -4380,6 +4384,7 @@ function renderRifles(){
   if(gunArea==="cans"){renderCans(root);return;}
   if(gunArea==="inv"){renderInv(root);return;}
   if(gunArea==="ranges"){renderGearRanges(root);return;}
+  if(gunArea==="notes"){renderGearNotes(root);return;}
   if(gunArea==="ammo"){
     const a0=ammoOpen&&ammo.find(x=>x.id===ammoOpen);
     renderAmmo(root);
@@ -4658,7 +4663,7 @@ function vLoad(force){
 }
 async function vNames(){if(!VLT.key)return;for(const d of VLT.docs){if(VLT.names.has(d.id))continue;try{VLT.names.set(d.id,JSON.parse(new TextDecoder().decode(await vDec(vb64d(d.meta.iv),vb64d(d.meta.ct)))));}catch(e){VLT.names.set(d.id,{name:"(couldn't read this document's name)",type:"application/octet-stream"});}}}
 function vTouch(){clearTimeout(VLT.timer);if(VLT.key)VLT.timer=setTimeout(()=>vLock(),VLT_IDLE);}
-function vLock(){VLT.key=null;VLT.names.clear();VLT.ready.clear();clearTimeout(VLT.timer);vRedraw();}
+function vLock(){VLT.key=null;VLT.names.clear();VLT.ready.clear();clearTimeout(VLT.timer);if(typeof GN_DEC!=="undefined")GN_DEC.clear();vRedraw();if(gunArea==="notes"&&!$("panel-rifles").hidden&&!gnBusy)renderRifles();}
 const vRedraw=()=>{document.querySelectorAll("[data-vault]").forEach(el=>vDraw(el));vAccountDraw();};
 // a short message on the Documents cards (and Account), since this tab has no banner of its own
 function vSay(t,bad){document.querySelectorAll("[data-vault] .vmsg,#vaultAcct .vmsg").forEach(m=>{m.textContent=t;m.className="vmsg "+(bad?"err":"note");m.hidden=!t;});}
@@ -4737,7 +4742,7 @@ function vDraw(el){
   if(!VLT.cfg)h='<p class="note">Keep a copy of the tax stamp, a receipt or a manual here. Documents are locked on your device with a vault passphrase before they\'re uploaded, so nobody else can open them: not the person who runs this server, an admin, or a backup.</p><div class="row"><button class="btn" type="button" data-vsetup>Set up the vault</button></div>';
   else if(!VLT.key)h='<p class="note">'+(mine.length?mine.length+' locked document'+(mine.length===1?'':'s')+'.':'No documents here yet.')+' Unlock the vault to see or add them.</p><div class="row"><button class="btn" type="button" data-vunlock>Unlock</button></div>';
   else h=(mine.length?'<div class="cartgroup">'+mine.map(d=>{const n=VLT.names.get(d.id)||{};return '<div class="vdoc"><span class="t">'+esc(n.name||"Document")+'</span><span class="note">'+esc([vSize(n.size||d.size),d.at?fmtDate((t=>t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"))(new Date(d.at))):""].filter(Boolean).join(" · "))+'</span><span class="row"><button class="btn small" type="button" data-vopen="'+esc(d.id)+'">Open</button><button class="linkbtn danger" type="button" data-vdel="'+esc(d.id)+'">Delete</button></span></div>';}).join("")+'</div>':'<p class="note">No documents here yet.</p>')+
-    '<div class="row"><label class="btn" style="cursor:pointer">+ Add document<input type="file" accept="application/pdf,image/*" multiple hidden data-vadd></label><button class="btn" type="button" data-vlock>Lock</button><span class="savestate vstate"></span></div><p class="vmsg" hidden></p><p class="note">PDFs or pictures, up to 15 MB each. The vault locks itself after 15 minutes.</p>';
+    '<div class="row"><label class="btn" style="cursor:pointer">+ '+(el.dataset.vany?'Add picture or file':'Add document')+'<input type="file"'+(el.dataset.vany?'':' accept="application/pdf,image/*"')+' multiple hidden data-vadd></label><button class="btn" type="button" data-vlock>Lock</button><span class="savestate vstate"></span></div><p class="vmsg" hidden></p><p class="note">'+(el.dataset.vany?'Pictures and files':'PDFs or pictures')+', up to 15 MB each. The vault locks itself after 15 minutes.</p>';
   el.innerHTML=h;
   const on=(q,f)=>el.querySelectorAll(q).forEach(b=>b.addEventListener(b.tagName==="INPUT"?"change":"click",f));
   on("[data-vsetup]",()=>vSetup());on("[data-vunlock]",()=>vUnlock());on("[data-vlock]",()=>vLock());
@@ -4751,7 +4756,7 @@ function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
   if(window.GUEST){el.innerHTML='<p class="note">The document vault needs an account.</p>';return;}
   if(VLT.cfg===undefined){el.innerHTML='<p class="note">Loading…</p>';vLoad().then(vAccountDraw,()=>{el.innerHTML='<p class="err">The vault couldn\'t be reached.</p>';});return;}
   const msg='<p class="vmsg" hidden></p>';
-  el.innerHTML=msg+(VLT.cfg?'<p class="note">'+VLT.docs.length+' document'+(VLT.docs.length===1?'':'s')+' in your vault. It\'s '+(VLT.key?'<b>unlocked</b> on this device.':'locked.')+' Add documents on a suppressor, gun or inventory item.</p><div class="row">'+(VLT.key?'<button class="btn" type="button" id="vaLock">Lock now</button>':'<button class="btn" type="button" id="vaUnlock">Unlock</button>')+'<button class="btn" type="button" id="vaChange">Change passphrase</button></div>'
+  el.innerHTML=msg+(VLT.cfg?'<p class="note">'+VLT.docs.length+' document'+(VLT.docs.length===1?'':'s')+' in your vault. It\'s '+(VLT.key?'<b>unlocked</b> on this device.':'locked.')+' Add documents on a suppressor, gun or inventory item, or lock a note under Gear &amp; Ranges › Notes.</p><div class="row">'+(VLT.key?'<button class="btn" type="button" id="vaLock">Lock now</button>':'<button class="btn" type="button" id="vaUnlock">Unlock</button>')+'<button class="btn" type="button" id="vaChange">Change passphrase</button></div>'
     :'<p class="note">Not set up yet. It keeps tax stamps, receipts and other papers locked with a passphrase only you know. Set it up from the <b>Documents</b> card on a suppressor, gun or inventory item, or here.</p><div class="row"><button class="btn" type="button" id="vaSetup">Set up the vault</button></div>');
   const b=(id,f)=>{const x=$(id);if(x)x.addEventListener("click",f);};
   b("vaLock",()=>vLock());b("vaUnlock",()=>vUnlock());b("vaChange",()=>vChange());b("vaSetup",()=>vSetup());}
@@ -4870,6 +4875,132 @@ function renderCans(root){
 
 /* ----- Inventory ----- */
 const INV_ICON={consumable:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M4 5h16v3H4zM10 12h4"/></svg>',equipment:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M9 7V5h6v2"/></svg>'};
+/* ---------- Gear notes (Gear & Ranges → Notes, 2.27) ----------
+   gnotes:[{id,title,body,pinned,created,updated,locked,enc}] in the rifles doc. Pictures go in the gun-photo store under the
+   note's id, other files in /api/files (not encrypted). A locked note keeps its title and text only as enc (AES-GCM with the
+   vault key) and its pictures and files in the vault under the note's id, so the server can't read any of it. */
+let gnotes=[],gnoteOpen=null,gnoteQ="",GFILES=null,gfUp=0,gnBusy="",gnConfirm=false;
+const GN_DEC=new Map(); // locked notes read on this device while the vault is open: id → {title,body}
+const GN_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 11h7M9 15h7M9 19h4"/></svg>';
+const GN_LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const gnText=n=>n.locked?(GN_DEC.get(n.id)||null):{title:n.title||"",body:n.body||""};
+const gnTitle=n=>{const t=gnText(n);if(!t)return "Locked note";return (t.title||"").trim()||((t.body||"").trim().split("\n")[0]||"").slice(0,80)||"Untitled note";};
+const gnFiles=id=>(GFILES||[]).filter(f=>f.item===id);
+function gnLoadFiles(){if(window.GUEST){GFILES=[];return Promise.resolve();}return API.get("/api/files").then(r=>{GFILES=(r&&r.files)||[];},()=>{GFILES=GFILES||[];});}
+async function gnDecrypt(n){if(!n.locked||GN_DEC.has(n.id)||!VLT.key||!n.enc)return;
+  try{GN_DEC.set(n.id,JSON.parse(new TextDecoder().decode(await vDec(vb64d(n.enc.iv),vb64d(n.enc.ct)))));}catch(e){GN_DEC.set(n.id,{title:"",body:"(This note couldn't be read with this vault.)",bad:true});}}
+async function gnEncrypt(n,t){const e=await vEnc(new TextEncoder().encode(JSON.stringify({title:t.title||"",body:t.body||""})));n.enc={iv:vb64e(e.iv),ct:vb64e(e.ct)};}
+async function gnUpload(id,files){
+  for(const f of files){
+    if(f.size>20*1024*1024){banner(f.name+" is over 20 MB. Make it smaller and try again.",true);continue;}
+    gfUp++;renderRifles();
+    try{const r=await vFetch("/api/files?item="+encodeURIComponent(id),{method:"POST",headers:{"Content-Type":f.type||"application/octet-stream","X-File-Name":vb64e(new TextEncoder().encode(f.name||"file"))},body:f}).then(x=>x.json());
+      GFILES=GFILES||[];GFILES.push(r.file);}
+    catch(e){banner(f.name+" couldn't be uploaded"+(e&&e.message?": "+e.message:".")+" Check your connection and try again.",true);}
+    finally{gfUp--;renderRifles();}
+  }
+}
+const gnDelFile=fid=>vFetch("/api/files/"+fid,{method:"DELETE"});
+// everything attached to a note goes when the note does (after the Undo note is gone)
+function gnPurge(id){
+  if(gunPhotosOf(id).length)API.del("/api/rifles/"+id+"/photos").catch(()=>{});gunPhotos=gunPhotos.filter(p=>p.rifle!==id);
+  gnFiles(id).forEach(f=>gnDelFile(f.id).catch(()=>{}));GFILES=(GFILES||[]).filter(f=>f.item!==id);
+  VLT.docs.filter(d=>d.item===id).forEach(d=>vFetch("/api/vault/docs/"+d.id,{method:"DELETE"}).catch(()=>{}));VLT.docs=VLT.docs.filter(d=>d.item!==id);}
+// make sure the vault is open; false if the person closed the passphrase sheet
+async function gnVault(){await vLoad();if(!VLT.cfg)await vSetup();else if(!VLT.key)await vUnlock();return !!VLT.key;}
+// lock: the text into enc, pictures and files into the vault
+async function gnLock(n){
+  if(!(await gnVault())){renderRifles();return;}
+  gnBusy="Locking the note…";renderRifles();
+  try{const t={title:n.title||"",body:n.body||""};await gnEncrypt(n,t);GN_DEC.set(n.id,t);n.title="";n.body="";n.locked=true;n.updated=Date.now();queueRifles();
+    const tmp=document.createElement("div");
+    for(const p of gunPhotosOf(n.id)){const b=await (await fetch(p.url,{credentials:"same-origin"})).blob();await vAdd(n.id,[new File([b],"Picture "+fmtDate(new Date(p.at||Date.now()).toISOString().slice(0,10))+".jpg",{type:b.type||"image/jpeg"})],tmp);
+      if(VLT.docs.some(d=>d.item===n.id)){API.del("/api/gunphotos/"+p.id).catch(()=>{});gunPhotos=gunPhotos.filter(z=>z!==p);}}
+    for(const f of gnFiles(n.id)){const b=await (await vFetch("/api/files/"+f.id+"?dl=1")).blob();await vAdd(n.id,[new File([b],f.name,{type:f.type})],tmp);
+      gnDelFile(f.id).catch(()=>{});GFILES=GFILES.filter(z=>z!==f);}
+    gnBusy="";}
+  catch(e){gnBusy="";banner("The note couldn't be locked completely"+(e&&e.message?": "+e.message:".")+" Try again.",true);}
+  renderRifles();}
+// unlock for good: the text back in the clear, vault pictures back to photos and the rest back to files
+async function gnUnlockFor(n){
+  if(!(await gnVault())){renderRifles();return;}
+  gnBusy="Taking the note out of the vault…";renderRifles();
+  try{await gnDecrypt(n);const t=GN_DEC.get(n.id)||{title:"",body:""};
+    for(const d of VLT.docs.filter(x=>x.item===n.id)){const nm=VLT.names.get(d.id)||{name:"file",type:"application/octet-stream"};
+      const buf=new Uint8Array(await (await vFetch("/api/vault/docs/"+d.id)).arrayBuffer());const blob=new Blob([await vDec(buf.subarray(0,12),buf.subarray(12))],{type:nm.type});
+      const file=new File([blob],nm.name,{type:nm.type});
+      if(/^image\/(jpeg|png|webp|gif|heic|heif)$/.test(nm.type))await uploadGun({id:n.id},[file]);else await gnUpload(n.id,[file]);
+      await vFetch("/api/vault/docs/"+d.id,{method:"DELETE"});VLT.docs=VLT.docs.filter(x=>x!==d);}
+    n.title=t.title||"";n.body=t.body||"";n.locked=false;delete n.enc;GN_DEC.delete(n.id);n.updated=Date.now();queueRifles();gnBusy="";}
+  catch(e){gnBusy="";banner("The note couldn't be taken out of the vault"+(e&&e.message?": "+e.message:".")+" Try again.",true);}
+  renderRifles();}
+function gnFilesHtml(n){const fs=gnFiles(n.id);
+  return '<section class="card" aria-label="Files"><h2>Files</h2>'+(fs.length?'<div class="cartgroup">'+fs.map(f=>'<div class="vdoc"><span class="t">'+esc(f.name)+'</span><span class="note">'+esc([vSize(f.size),f.at?fmtDate(new Date(f.at).toISOString().slice(0,10)):""].filter(Boolean).join(" · "))+'</span>'+
+      '<span class="row"><a class="btn small" href="/api/files/'+esc(f.id)+'" target="_blank" rel="noopener">Open</a><a class="btn small" href="/api/files/'+esc(f.id)+'?dl=1" download>Download</a><button class="btn small danger" type="button" data-gfdel="'+esc(f.id)+'">Delete</button></span></div>').join("")+'</div>':'<p class="note">No files yet.</p>')+
+    (window.GUEST?'<p class="note">Files need an account.</p>':'<div class="row"><label class="btn" style="cursor:pointer">+ Add file<input type="file" multiple hidden id="gfIn"></label>'+(gfUp?'<span class="savestate">Uploading…</span>':'')+'</div><p class="note">PDFs, manuals, receipts, spreadsheets: up to 20 MB each. Only you can see them, but they aren\'t encrypted; lock the note to keep them in the vault.</p>')+'</section>';}
+function renderGearNotes(root){
+  if(GFILES===null){GFILES=[];gnLoadFiles().then(()=>{if(gunArea==="notes")renderRifles();});}
+  if(gnoteOpen&&!gnotes.some(x=>x.id===gnoteOpen))gnoteOpen=null;
+  const n=gnoteOpen&&gnotes.find(x=>x.id===gnoteOpen);
+  if(!n){
+    const words=gnoteQ.toLowerCase().split(/\s+/).filter(Boolean);
+    const list=[...gnotes].filter(x=>{const t=gnText(x);if(!words.length)return true;if(!t)return false;return words.every(w=>((t.title||"")+" "+(t.body||"")).toLowerCase().includes(w));})
+      .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||(b.updated||0)-(a.updated||0));
+    let h='<section class="card" aria-label="Gear notes"><div class="row"><button class="btn primary" id="gnAdd" type="button">+ New note</button></div>';
+    if(gnotes.length)h+='<div class="row"><input id="gnQ" type="search" placeholder="Search notes" value="'+esc(gnoteQ)+'" aria-label="Search notes" autocomplete="off" style="flex:1 1 220px"></div>';
+    if(gnotes.some(x=>x.locked)&&!VLT.key)h+='<p class="note">'+GN_LOCK.replace('<svg','<svg class="inlock"')+' Locked notes stay hidden until you unlock the vault. <button class="linkbtn" type="button" id="gnUnlockAll">Unlock</button></p>';
+    if(!gnotes.length)h+='<p class="note">Notes about your gear that don\'t belong to one gun: where things are stored, a gunsmith\'s work, part numbers, warranty details. Add pictures and files to a note, and tick <b>Lock in the vault</b> to encrypt the note and everything on it with your vault passphrase.</p>';
+    else if(!list.length)h+='<p class="note">No notes match that.</p>';
+    else h+='<div class="cartgroup">'+list.map(x=>{const t=gnText(x),ph=x.locked?null:gunPhotosOf(x.id)[0],na=x.locked?VLT.docs.filter(d=>d.item===x.id).length:gunPhotosOf(x.id).length+gnFiles(x.id).length;
+        const body=t?((t.title||"").trim()?(t.body||""):(t.body||"").split("\n").slice(1).join(" ")).replace(/\s+/g," ").trim():"";
+        return '<button class="loaditem withthumb" type="button" data-gno="'+esc(x.id)+'"><span class="lthumb">'+(ph?'<img alt="" loading="lazy" src="'+esc(ph.url)+'">':(x.locked?GN_LOCK:GN_ICON))+'</span><span class="ltext grow"><span class="t">'+(x.pinned?'<span class="pintag">Pinned</span> ':'')+esc(gnTitle(x))+(x.locked?' <span class="chip">Locked</span>':'')+'</span>'+
+          (body?'<span class="d">'+esc(body.slice(0,140))+'</span>':'')+'<span class="m">'+esc([x.updated?"Changed "+fmtDate(new Date(x.updated).toISOString().slice(0,10)):"",na?na+" attachment"+(na===1?"":"s"):"",x.locked&&!t?"Unlock the vault to read it":""].filter(Boolean).join(" · "))+'</span></span></button>';}).join("")+'</div>';
+    root.innerHTML=h+'</section>';gearHead(null);
+    $("gnAdd").addEventListener("click",()=>{const t=Date.now(),x={id:gearId("g"),title:"",body:"",created:t,updated:t};gnotes.push(x);queueRifles();gnoteOpen=x.id;renderRifles();window.scrollTo(0,0);const el=$("gn_title");if(el)el.focus();});
+    const q=$("gnQ");if(q)q.addEventListener("input",()=>{gnoteQ=q.value;const pos=q.selectionStart;renderRifles();const q2=$("gnQ");if(q2){q2.focus();try{q2.setSelectionRange(pos,pos);}catch(e){}}});
+    {const u=$("gnUnlockAll");if(u)u.addEventListener("click",async()=>{if(await gnVault()){await Promise.all(gnotes.filter(x=>x.locked).map(gnDecrypt));renderRifles();}});}
+    root.querySelectorAll("[data-gno]").forEach(b=>b.addEventListener("click",()=>{gnoteOpen=b.dataset.gno;gnConfirm=false;renderRifles();window.scrollTo(0,0);}));
+    if(VLT.key&&gnotes.some(x=>x.locked&&!GN_DEC.has(x.id)))Promise.all(gnotes.filter(x=>x.locked).map(gnDecrypt)).then(()=>{if(gunArea==="notes"&&!gnoteOpen)renderRifles();});
+    return;
+  }
+  const busy=gnBusy?'<p class="note gnbusy">'+esc(gnBusy)+'</p>':'';
+  if(n.locked&&!GN_DEC.has(n.id)){
+    if(VLT.key){gnDecrypt(n).then(()=>renderRifles());root.innerHTML='<section class="card"><p class="note">Unlocking…</p></section>';return;}
+    root.innerHTML='<section class="card" aria-label="Locked note"><h2>'+GN_LOCK.replace('<svg','<svg class="inlock"')+' Locked note</h2><p class="note">This note, and its pictures and files, are locked in your vault. Unlock the vault to read or change it.</p><div class="row"><button class="btn primary" type="button" id="gnUnlock">Unlock</button></div>'+busy+'</section>'+
+      '<div class="row endrow"><button class="btn danger" type="button" id="gnDel">Delete note</button></div>';
+    gearHead("Locked note","‹ Notes");
+    $("gnUnlock").addEventListener("click",async()=>{if(await gnVault()){await gnDecrypt(n);renderRifles();}});
+  }else{
+    const t=gnText(n);
+    root.innerHTML='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Note"><div class="grid">'+
+      '<div class="field wide"><label for="gn_title">Title</label><input id="gn_title" class="text" type="text" value="'+esc(t.title||"")+'" placeholder="e.g. Safe inventory, gunsmith work" autocomplete="off"></div>'+
+      '<div class="field wide"><label for="gn_body">Note</label><textarea id="gn_body" class="notebody" rows="12">'+esc(t.body||"")+'</textarea></div></div>'+
+      '<div class="row gnopts"><label class="toggle"><input type="checkbox" id="gn_pin"'+(n.pinned?' checked':'')+'> Pin to the top</label>'+
+      (window.GUEST?'':'<label class="toggle"><input type="checkbox" id="gn_lock"'+(n.locked?' checked':'')+(gnBusy?' disabled':'')+'> Lock in the vault</label>')+'</div>'+
+      (gnConfirm?'<div class="banner twistbanner" role="alert"><b>Take this note out of the vault?</b> Its text, pictures and files will be stored without encryption, like your other notes. <div class="row" style="margin-top:8px"><button class="btn primary" type="button" id="gnUnOk">Yes, take it out</button><button class="btn" type="button" id="gnUnNo">Keep it locked</button></div></div>':'')+
+      '<p class="note">'+(n.locked?GN_LOCK.replace('<svg','<svg class="inlock"')+' Locked: the title, text, pictures and files are encrypted on this device with your vault passphrase before they\'re saved. The note list shows "Locked note" until the vault is unlocked.':'Tick <b>Lock in the vault</b> to encrypt this note, its pictures and its files with your vault passphrase.')+'</p>'+busy+
+      '<p class="note">'+(n.created?'Started '+esc(fmtDate(new Date(n.created).toISOString().slice(0,10))):'')+(n.updated&&n.updated!==n.created?' · last changed '+esc(fmtDate(new Date(n.updated).toISOString().slice(0,10))):'')+'</p></section>'+
+      (n.locked?vaultCardHtml(n.id).replace('<h2>Documents <span class="note">locked in your vault</span></h2>','<h2>Pictures and files <span class="note">locked in your vault</span></h2>').replace('<div data-vault=','<div data-vany="1" data-vault='):gearPhotosHtml(n.id,gnTitle(n)).replace('<h2>Photos</h2>','<h2>Pictures</h2>').replace('+ Add photos','+ Add pictures')+gnFilesHtml(n))+
+      '<div class="row endrow"><button class="btn danger" type="button" id="gnDel">Delete note</button></div>';
+    gearHead(gnTitle(n),"‹ Notes");
+    const grow=el=>{el.style.height="auto";el.style.height=Math.max(220,el.scrollHeight+4)+"px";};
+    const body=$("gn_body");grow(body);
+    let et=null;
+    const touch=()=>{n.updated=Date.now();$("rifTitle").textContent=gnTitle(n);const st=$("rifleState");if(st)st.textContent="Saving…";
+      if(n.locked){vTouch();clearTimeout(et);et=setTimeout(async()=>{try{await gnEncrypt(n,GN_DEC.get(n.id));queueRifles();}catch(e){banner("The vault locked before this could be saved. Unlock it and type again.",true);}},400);}else queueRifles();};
+    $("gn_title").addEventListener("input",e=>{if(n.locked)GN_DEC.get(n.id).title=e.target.value;else n.title=e.target.value;touch();});
+    body.addEventListener("input",()=>{if(n.locked)GN_DEC.get(n.id).body=body.value;else n.body=body.value;grow(body);touch();});
+    $("gn_pin").addEventListener("change",e=>{n.pinned=e.target.checked;queueRifles();});
+    {const lk=$("gn_lock");if(lk)lk.addEventListener("change",()=>{if(lk.checked){gnLock(n);}else{lk.checked=true;gnConfirm=true;renderRifles();}});}
+    {const a=$("gnUnOk"),b=$("gnUnNo");if(a)a.addEventListener("click",()=>{gnConfirm=false;gnUnlockFor(n);});if(b)b.addEventListener("click",()=>{gnConfirm=false;renderRifles();});}
+    if(!n.locked){bindGearPhotos(root,n.id);
+      {const fi=$("gfIn");if(fi)fi.addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";gnUpload(n.id,f);});}
+      root.querySelectorAll("[data-gfdel]").forEach(b=>b.addEventListener("click",()=>{const f=(GFILES||[]).find(x=>x.id===b.dataset.gfdel);if(!f)return;const i=GFILES.indexOf(f);GFILES.splice(i,1);renderRifles();
+        RB_UNDO("Deleted "+f.name,()=>{GFILES.splice(Math.min(i,GFILES.length),0,f);renderRifles();},()=>gnDelFile(f.id).catch(onWriteError));}));}
+  }
+  $("gnDel").addEventListener("click",()=>{const i=gnotes.indexOf(n);gnotes=gnotes.filter(x=>x!==n);gnoteOpen=null;queueRifles();renderRifles();window.scrollTo(0,0);
+    RB_UNDO("Deleted "+gnTitle(n),()=>{gnotes.splice(Math.min(i,gnotes.length),0,n);queueRifles();renderRifles();},()=>gnPurge(n.id));});
+}
 function renderInv(root){
   if(invOpen&&!inv.some(x=>x.id===invOpen))invOpen=null;
   const x=invOpen&&inv.find(y=>y.id===invOpen);
@@ -8394,7 +8525,7 @@ async function refresh(first){
       if(window.RB_CARTS&&!window.GUEST){let ch=false;ammo.forEach(a=>{if(!a.cartridge)return;const c=RB_CARTS.canon(a.cartridge);if(c!==a.cartridge){a.cartridge=c;ch=true;}});if(ch)queueAmmo();}if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
     if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];
-      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
     if(!$("panel-home").hidden)renderHome();
@@ -8828,6 +8959,7 @@ function helpTopic(tab){
   if(tab==="ref")return "Reference";
   if(tab==="rifles"){const g=document.querySelector('#rifSeg [aria-selected="true"]');if(g&&g.dataset.garea==="ammo"){if(document.querySelector('#panel-rifles [aria-label="Box photo"]'))return "Factory ammo";if(document.querySelector('#panel-rifles [aria-label="Ammo details"]'))return "Reloaded ammo";return "Ammunition";}
     if(g&&g.dataset.garea==="ranges")return "Saved ranges";
+    if(g&&g.dataset.garea==="notes")return "Gear notes";
     if(g&&g.dataset.garea==="scopes")return document.querySelector('#panel-rifles [aria-label="Reticle"]')?"Your own reticle picture":"Scopes";
     return document.querySelector('#panel-rifles [aria-label="Round count"]')?"Round count and barrel life":"Guns";}
   if(tab==="tools"){const t=document.querySelector("[data-toolsec]:not([hidden])");return t&&HELP_TOOL[t.dataset.toolsec]||"#hTools";}
@@ -9348,8 +9480,8 @@ function startTabTour(tab){
   if(tab==="rifles"){
     const area=a=>()=>{showTab("rifles",false);click("#rifHeadBack");click('#rifSeg [data-garea="'+a+'"]');};
     STEPS=[
-      {t:"The Gear & Ranges tab",b:"Your guns, scopes, suppressors, the ammo you shoot, the rest of your gear and the ranges you shoot at.",go:area("guns")},
-      {el:()=>q("#rifSeg"),t:"Six lists",b:"<b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b> and <b>Ranges</b>. On a phone the row scrolls sideways.",go:area("guns")},
+      {t:"The Gear & Ranges tab",b:"Your guns, scopes, suppressors, the ammo you shoot, the rest of your gear, the ranges you shoot at and notes about it all.",go:area("guns")},
+      {el:()=>q("#rifSeg"),t:"Seven lists",b:"<b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.",go:area("guns")},
       {el:()=>q("#rifleAdd"),t:"Guns",b:"Add each gun with its serial number, barrel, twist, sight height, scope and photos. Tap the star to make it a favorite. Its page counts the rounds fired, tracks barrel life and cleaning, and keeps a cold-bore log. <b>Export Excel</b> and <b>Export PDF</b> make a list for insurance.",go:area("guns")},
       {el:()=>q("#secLU"),t:"Lowers, uppers and barrels",b:"For ARs and other guns built from a lower and an upper: add the parts, build a gun from them, and add more uppers to the same lower as variations you pick when you shoot. Spare barrels for a complete gun go under <b>Barrels</b>.",go:area("guns")},
       {el:()=>q("#scopeAdd"),t:"Scopes",b:"Add your scopes from a list of popular ones, with a picture, and put each on a gun. A gun's scope sets MOA or MIL on its profiles, and the dope card's reticle can look like yours or be a picture of it.",go:area("scopes")},
@@ -9358,6 +9490,7 @@ function startTabTour(tab){
       {el:()=>q("#calBrowse"),t:"Factory ammo catalog",b:"About 155 popular factory loads with their bullet, BC and box velocity. Pick a caliber or search, and tap one to add it.",go:area("ammo")},
       {el:()=>q("#invAddC"),t:"Inventory",b:"Everything else: supplies with a count and a low warning (batteries, targets, earplugs), and equipment with serial numbers and reminders to check or replace it.",go:area("inv")},
       {el:()=>q("#rgAdd"),t:"Ranges",b:"Save the places you shoot, with the address and each target's distance, angle and size (in the order you walk them, if you like). A range's page shows today's weather there and the dial and wind for every target with any of your Shooting profiles.",go:area("ranges")},
+      {el:()=>q("#gnAdd"),t:"Notes",b:"Notes about your gear, with pictures and files. Tick <b>Lock in the vault</b> on a note to encrypt it and everything on it with your vault passphrase.",go:area("notes")},
       END];
   }
   if(tab==="tools"||tab==="targets"){

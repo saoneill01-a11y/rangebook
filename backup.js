@@ -155,6 +155,8 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
       // the document vault, still encrypted: without the owner's passphrase it can't be read here or after a restore
       const vk = q("SELECT data FROM vault_keys WHERE owner_id=?").get(uid);
       if (vk) out.vault = { key: parse(vk.data), docs: q("SELECT id, item_id, meta, file, size, created_at FROM vault_docs WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, meta: parse(r.meta) })) };
+      // files on gear notes (not encrypted)
+      out.files = q("SELECT id, item_id, name, type, file, size, created_at FROM gear_files WHERE owner_id=? ORDER BY created_at").all(uid);
     }
     return out;
   }
@@ -172,6 +174,10 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
     for (const v of (d.vault && d.vault.docs) || []) {
       const f = path.basename(v.file || ""); if (!f) continue;
       try { files.push({ name: "vault/" + f, data: fs.readFileSync(path.join(PHOTO_DIR, f)) }); } catch { /* a missing file is skipped */ }
+    }
+    for (const v of d.files || []) {
+      const f = path.basename(v.file || ""); if (!f) continue;
+      try { files.push({ name: "files/" + f, data: fs.readFileSync(path.join(PHOTO_DIR, f)) }); } catch { /* a missing file is skipped */ }
     }
     files.push({ name: "README.txt", data: "Range Book backup made " + d.exportedAt + " (Range Book " + APP_VERSION + ").\r\nTo restore it, open Range Book, go to Account and use Import, then pick this file.\r\nrangebook-backup.json holds your data; the photos folder holds your photos.\r\n" });
     return zip(files);
@@ -303,6 +309,13 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
             q("INSERT INTO vault_docs(id,owner_id,item_id,meta,file,size,created_at) VALUES(?,?,?,?,?,?,?)").run(id, uid, String(v.item_id || ""), JSON.stringify(v.meta || {}), f, data.length, v.created_at || t);
             V.added++;
           }
+        }
+        for (const v of d.files || []) {
+          const { id, skip } = freeId("gear_files", v.id); if (skip) { P.skipped++; continue; }
+          const data = files && files.has("files/" + path.basename(v.file || "")) ? files.get("files/" + path.basename(v.file))() : null; if (!data) continue;
+          const f = crypto.randomUUID() + ".rbf"; fs.writeFileSync(path.join(PHOTO_DIR, f), data); written.push(f);
+          q("INSERT INTO gear_files(id,owner_id,item_id,name,type,file,size,created_at) VALUES(?,?,?,?,?,?,?,?)").run(id, uid, String(v.item_id || ""), String(v.name || "file").slice(0, 160), String(v.type || "application/octet-stream").slice(0, 100), f, data.length, v.created_at || t);
+          P.added++;
         }
         for (const p of d.boxPhotos || []) {
           const { id, skip } = freeId("box_photos", p.id); if (skip) { P.skipped++; continue; }

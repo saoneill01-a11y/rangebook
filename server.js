@@ -142,6 +142,16 @@ CREATE TABLE IF NOT EXISTS vault_docs(
   size INTEGER NOT NULL,
   created_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS gear_files(
+  id TEXT PRIMARY KEY,
+  owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  item_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  file TEXT NOT NULL,
+  size INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
 CREATE TABLE IF NOT EXISTS user_docs(
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   key TEXT NOT NULL,
@@ -823,6 +833,44 @@ async function api(req, res, url) {
     return send(res, 200, { ok: true });
   }
 
+  /* ---- files on a gear note (2.27): PDFs and other documents, private to their owner and NOT encrypted (a locked note's
+     files go in the vault instead). Stored in the photo folder as <uuid>.rbf. Only PDFs and pictures are shown in the
+     browser; anything else is always downloaded, so an uploaded web page can't run here. ---- */
+  if (p === "/api/files" && method === "GET") {
+    const rows = q("SELECT id, item_id, name, type, size, created_at FROM gear_files WHERE owner_id=? ORDER BY created_at").all(user.id);
+    res.setHeader("Cache-Control", "no-store");
+    return send(res, 200, { files: rows.map((r) => ({ id: r.id, item: r.item_id, name: r.name, type: r.type, size: r.size, at: r.created_at })) });
+  }
+  if (p === "/api/files" && method === "POST") {
+    const item = String(url.searchParams.get("item") || "");
+    if (!/^[A-Za-z0-9_-]{1,80}$/.test(item)) throw new HttpError(400, "Which note is this file for?");
+    let name = "file";
+    try { name = Buffer.from(String(req.headers["x-file-name"] || ""), "base64").toString("utf8").replace(/[\u0000-\u001f\\/]/g, "_").slice(0, 160) || "file"; } catch { name = "file"; }
+    const type = String(req.headers["content-type"] || "application/octet-stream").split(";")[0].trim().toLowerCase().slice(0, 100);
+    const buf = await readBody(req, 20 * 1024 * 1024);
+    if (!buf.length) throw new HttpError(400, "That file is empty.");
+    const id = crypto.randomUUID(), file = id + ".rbf";
+    fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
+    q("INSERT INTO gear_files(id,owner_id,item_id,name,type,file,size,created_at) VALUES(?,?,?,?,?,?,?,?)").run(id, user.id, item, name, type, file, buf.length, now());
+    return send(res, 200, { file: { id, item, name, type, size: buf.length, at: now() } });
+  }
+  m = /^\/api\/files\/([A-Za-z0-9-]{1,80})$/.exec(p);
+  if (m && method === "GET") {
+    const r = q("SELECT name, type, file FROM gear_files WHERE id=? AND owner_id=?").get(m[1], user.id);
+    if (!r) throw new HttpError(404, "Not found.");
+    let buf; try { buf = fs.readFileSync(path.join(PHOTO_DIR, path.basename(r.file))); } catch { throw new HttpError(404, "That file is missing."); }
+    const safe = /^(application\/pdf|image\/(jpeg|png|gif|webp|heic|heif)|text\/plain)$/.test(r.type);
+    const dl = url.searchParams.get("dl") === "1" || !safe;
+    res.writeHead(200, { "Content-Type": safe ? r.type : "application/octet-stream", "Content-Length": buf.length, "Cache-Control": "private, max-age=3600",
+      "Content-Disposition": (dl ? "attachment" : "inline") + "; filename*=UTF-8''" + encodeURIComponent(r.name), ...SECURITY_HEADERS, "X-Content-Type-Options": "nosniff" });
+    return res.end(buf);
+  }
+  if (m && method === "DELETE") {
+    const rows = q("SELECT file FROM gear_files WHERE id=? AND owner_id=?").all(m[1], user.id);
+    deletePhotoFiles(rows); q("DELETE FROM gear_files WHERE id=? AND owner_id=?").run(m[1], user.id);
+    return send(res, 200, { ok: true });
+  }
+
   /* ---- range trip photos (private to their owner; trips themselves live in the "trips" doc) ---- */
   m = /^\/api\/trips\/([A-Za-z0-9_-]{1,80})\/report\.pdf$/.exec(p);
   if (m && method === "GET") {
@@ -1057,6 +1105,7 @@ async function api(req, res, url) {
         deletePhotoFiles(q("SELECT file FROM trip_photos WHERE owner_id=?").all(id));
         deletePhotoFiles(q("SELECT file FROM gun_photos WHERE owner_id=?").all(id));
         deletePhotoFiles(q("SELECT file FROM vault_docs WHERE owner_id=?").all(id));
+        deletePhotoFiles(q("SELECT file FROM gear_files WHERE owner_id=?").all(id));
         // private box photos go with the account; photos of catalog loads and of loads they shared stay for everyone
         const privBox = "owner_id=? AND cat_item IS NULL AND (ammo_id IS NULL OR ammo_id NOT IN (SELECT id FROM shared_ammo))";
         deletePhotoFiles(q("SELECT file FROM box_photos WHERE " + privBox).all(id));
