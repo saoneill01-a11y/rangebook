@@ -506,11 +506,17 @@ select.fieldselect{flex:0 0 auto;width:100%;padding:9px 10px;border-radius:7px;b
 .rgsub{font-size:15px;margin:14px 0 6px}
 .rgedit{display:flex;flex-direction:column;gap:8px}
 @media(max-width:560px){.rgedit{gap:14px}.rgrow{padding-bottom:12px;border-bottom:1px solid var(--line);border-radius:0}}
-.rgrow{display:grid;grid-template-columns:auto minmax(0,1.6fr) repeat(3,minmax(0,1fr)) auto;gap:6px;align-items:end;background:var(--surface);border-radius:8px}
+.rgrow{display:grid;grid-template-columns:auto minmax(0,1.6fr) repeat(3,minmax(0,1fr)) minmax(0,1.3fr) auto;gap:6px;align-items:end;background:var(--surface);border-radius:8px}
 .rggrip{align-self:center;width:26px}.rgrow.sorting{box-shadow:0 8px 22px rgba(0,0,0,.25)}
 .rgrow label{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted)}
 .rgrow input{width:100%;min-width:0;padding:7px 8px;border-radius:7px;border:1px solid var(--line);background:var(--input,var(--sunk));color:var(--input-fg,var(--fg));font:inherit;font-size:16px}
-@media(max-width:560px){.rgrow{grid-template-columns:auto repeat(3,minmax(0,1fr)) auto}.rgrow>.rggrip{grid-row:span 2}.rgrow>input[data-k="name"]{grid-column:2/-1}}
+@media(max-width:560px){.rgrow{grid-template-columns:auto repeat(3,minmax(0,1fr)) auto}.rgrow>.rggrip{grid-row:span 2}.rgrow>input[data-k="name"]{grid-column:2/4;grid-row:1}.rgrow>.rgdir{grid-column:4/6;grid-row:1}}
+.rgaz{display:flex;gap:4px}.rgaz input{flex:1 1 auto}.rgaz .btn{padding:0 6px;min-width:0;flex:none}
+.corbox .corgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.corbox .corgrid .row,.corbox .corgrid .note{grid-column:1/-1;margin:0}
+.corbtns{flex-wrap:wrap;gap:6px}.corbtns select{flex:1 1 160px;min-width:0}
+.cmpbody{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.cmpdeg{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--accent)}
 table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
 .flabel{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
 .unitbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;min-width:5.6em;padding:0 12px;background:var(--accent);color:var(--accent-fg,#fff);border:1px solid var(--accent);border-radius:9px;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
@@ -1269,6 +1275,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="field"><label for="f_wclock">Wind from (o'clock)</label><select id="f_wclock" class="fieldselect"><option value="12">12 · straight at you</option><option value="1">1</option><option value="2">2</option><option value="3">3 · from the right</option><option value="4">4</option><option value="5">5</option><option value="6">6 · from behind</option><option value="7">7</option><option value="8">8</option><option value="9">9 · from the left</option><option value="10">10</option><option value="11">11</option></select></div>
       <div class="field"><label for="f_angle">Shot angle, up or down (°)</label><input id="f_angle" type="number" inputmode="decimal" step="any" placeholder="0 = level"></div>
       <div class="field wide"><label class="switch" for="f_wbr"><input id="f_wbr" type="checkbox" role="switch"><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Wind brackets</b><span class="note" id="wbrNote">Add 5, 10 and 15 mph full-value wind holds to the range table and dope card</span></span></label></div>
+      <div class="field wide corbox" id="corBox" hidden></div>
       <div class="field wide" id="wxCalcBox"><p class="note" id="wxCalc" style="margin:0"></p></div>
     </div>
   </section>
@@ -1451,6 +1458,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The <b>Point-blank range</b> card (the <b>Point-blank</b> link at the top) works out the best zero for holding dead on. Enter the size of what you're shooting at, or tap <b>4" varmint</b>, <b>6" deer</b> or <b>8" elk</b>. It finds the zero that keeps the bullet within half that size above or below your line of sight for as long as possible, and shows the near and far zero for that path (zero at either one; the far one is more forgiving), where the bullet stays on target (from how close to how far), the maximum point-blank range, and the highest point. This zero is always the first (purple) zero box under the chart, and the chart draws its path in purple, the target band as a shaded box and a line at the maximum point-blank range Tap the circle in its box to use it for the range table and dope card. It uses the profile, gun and conditions you've entered, and doesn't include wind.</p>
       <h3>G1 or G7</h3>
       <p>Pick the <b>BC type</b> that matches the number you have. Many long-range bullets list a G7 number (around 0.2–0.35); it's usually more accurate past 600 yd. The Reloading recipe has the same choice and sends it over with <b>Use in calculator</b>.</p>
+      <h3>Coriolis</h3>
+      <p>With the <b>Long</b> chart picked, the Conditions card has a <b>Coriolis</b> switch. Coriolis is the earth turning under the bullet while it flies. It pushes the bullet a little right in the northern hemisphere (left in the southern), whatever direction you shoot, and a little high shooting east or low shooting west. It's tiny up close and a few inches at 1,000 yd, so it's off until you turn it on. Enter your <b>latitude</b> (or tap <b>Use my location</b>, or pick a saved range) and the <b>direction of fire</b> in degrees from north (0 north, 90 east, 180 south, 270 west). On a phone, <b>Use phone compass</b> reads it for you: hold the phone flat with its top edge pointing at the target, away from the rifle, the truck and steel benches. On an iPhone you'll be asked to allow motion and orientation access the first time. The compass gives a magnetic heading, which is close enough here. Once it's on, the Up numbers, the reticle holds, the range table (with a Coriolis column), the dope card (a Cor R column) and Field mode all include it. On a saved range, give each target its own direction (<b>Dir °</b>, with a compass button) and the range's latitude is used for that range's dope.</p>
       <h3>Stability and spin drift</h3>
       <p>Enter the barrel <b>twist</b> (1 turn in so many inches; it fills in from your gun) and the <b>bullet length</b> (measure one with calipers, tip to base). You then see the stability number (SG: 1.4 or more is good, under 1.0 the bullet won't fly straight) and a spin drift column. With a normal right-hand twist the bullet drifts right; add that to your wind hold.</p>
       <h3>True up the velocity</h3>
@@ -2552,7 +2561,8 @@ window.RB_TRAJ={
     const sight=x=>x*(L.sh-S.at(S.G,z))/z-L.sh;
     const dr=(spd,x)=>spd*1.46667*(S.at(S.t,x)-x*3/L.mv)*12,sg=stability(L,S);
     return {name:L0.name||"Untitled profile",z,last:Math.min(S.MR,S.last,Sd.last),mv:L.mv,unit:dopeOpts(L0).unit,wind:(L.wind||0)*crossFactor(L),side:windSide(L),clock:windClock(L),sg,temp:L.temp,alt:L.alt,
-      at(x){return {path:Sd.at(Sd.G,x)*AC+sight(x),drift1:dr(1,x),drift:dr((L.wind||0)*crossFactor(L),x),spin:sg!=null?(spinIn(sg,S.at(S.t,x))||0):0,v:Sd.at(Sd.v,x),t:Sd.at(Sd.t,x)};}};
+      cor:!!corOn(L),
+      at(x){const c=corRel(L,S,x,z);return {path:Sd.at(Sd.G,x)*AC+sight(x)+c.v,cor:c.h,drift1:dr(1,x),drift:dr((L.wind||0)*crossFactor(L),x),spin:sg!=null?(spinIn(sg,S.at(S.t,x))||0):0,v:Sd.at(Sd.v,x),t:Sd.at(Sd.t,x)};}};
   }
 };
 /* your own order for a profile's cards (one order for every profile and the Tools calculator). On a phone or tablet the cards
@@ -2587,7 +2597,7 @@ function fillInputs(){
   $("f_bcm").value=L.bcm==="G7"?"G7":"G1";
   $("f_cal_u").value=L.calUnit==="mm"?"mm":"in";$("f_cal").value=DIA.show(L.cal,$("f_cal_u").value);
   for(let i=0;i<3;i++)fillZero(i,L.z[i]);
-  fillRng(L);
+  fillRng(L);fillCor(L);
   $("f_wclock").value=String(windClock(L));$("f_wbr").checked=!!L.wbr;
   {const pb=L.pbr||{};U.fill($("pb_size"),"in",pb.size,1,2);}
   fillDope();
@@ -2616,6 +2626,64 @@ function readInputs(){
   save();
 }
 
+// --- Coriolis controls (Conditions card, Long chart only) ---
+function fillCor(L){const box=$("corBox");if(!box)return;const lr=rngOf(L)==="l";box.hidden=!lr;if(!lr){box.innerHTML="";return;}
+  const c=L.cor||{},RS=rgList().filter(r=>num(r.lat)!=null);
+  box.innerHTML='<label class="switch" for="cor_on"><input id="cor_on" type="checkbox" role="switch"'+(c.on?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Coriolis</b><span class="note">The earth turning under the bullet. It only matters at long range: a few inches at 1,000 yd.</span></span></label>'+
+    (c.on?'<div class="corgrid"><div class="field"><label for="cor_lat">Latitude (° north; south is negative)</label><input id="cor_lat" type="number" inputmode="decimal" step="any" placeholder="34.2" value="'+(num(c.lat)!=null?num(c.lat):'')+'"></div>'+
+      '<div class="field"><label for="cor_az">Direction of fire (° from north)</label><input id="cor_az" type="number" inputmode="decimal" step="any" placeholder="270 = west" value="'+(num(c.az)!=null?num(c.az):'')+'"></div>'+
+      '<div class="row corbtns"><button class="btn small" type="button" id="cor_here">Use my location</button>'+(RS.length?'<select id="cor_rg" class="fieldselect" aria-label="Latitude from a saved range"><option value="">Or a saved range…</option>'+RS.map(r=>'<option value="'+escL(r.id)+'">'+escL(r.name||"Unnamed range")+'</option>').join("")+'</select>':'')+
+      '<button class="btn small" type="button" id="cor_cmp">Use phone compass</button></div>'+
+      '<p class="note" id="corSum" aria-live="polite"></p><p class="note err" id="corErr" hidden></p></div>':'');
+  const ch=()=>{save();render();};
+  $("cor_on").addEventListener("change",e=>{L.cor=Object.assign({},L.cor||{},{on:e.target.checked});save();fillCor(L);render();});
+  if(!c.on)return;
+  const la=$("cor_lat"),az=$("cor_az"),er=$("cor_err")||$("corErr");
+  la.addEventListener("input",()=>{const v=num(la.value);L.cor.lat=v!=null&&Math.abs(v)<=90?v:null;ch();});
+  az.addEventListener("input",()=>{const v=num(az.value);L.cor.az=v!=null?((v%360)+360)%360:null;ch();});
+  $("cor_here").addEventListener("click",async()=>{er.hidden=true;try{const p=await RB_WX.here();L.cor.lat=Math.round(p.lat*100)/100;la.value=L.cor.lat;ch();}catch(e){er.hidden=false;er.textContent=e.message;}});
+  {const rs=$("cor_rg");if(rs)rs.addEventListener("change",()=>{const r=RS.find(x=>x.id===rs.value);if(r){L.cor.lat=Math.round(num(r.lat)*100)/100;la.value=L.cor.lat;ch();}rs.value="";});}
+  $("cor_cmp").addEventListener("click",()=>RB_COMPASS.open(h=>{L.cor.az=h;az.value=h;ch();}));
+}
+/* the phone's compass: iPhones give a heading after you allow motion access; Android gives an absolute orientation.
+   It's a magnetic heading (a few degrees off true north), which is close enough for Coriolis. */
+window.RB_COMPASS=(function(){
+  let sh=null,on=null,last=null,got=false,tm=null,sx=0,sy=0;
+  const close=()=>{if(on){window.removeEventListener("deviceorientationabsolute",on,true);window.removeEventListener("deviceorientation",on,true);on=null;}clearTimeout(tm);if(sh){sh.classList.remove("on");setTimeout(()=>{if(sh)sh.hidden=true;},180);}};
+  function draw(h){const n=sh.querySelector("#cmpNeedle"),b=sh.querySelector("#cmpDeg"),d=sh.querySelector("#cmpDir"),u=sh.querySelector("#cmpUse");
+    n.setAttribute("transform","rotate("+h.toFixed(1)+" 80 80)");b.textContent=Math.round(h)+"°";d.textContent=["North","Northeast","East","Southeast","South","Southwest","West","Northwest"][Math.round(h/45)%8];u.disabled=false;u.textContent="Use "+Math.round(h)+"°";}
+  function open(pick){
+    if(!sh){sh=document.createElement("div");sh.className="infowrap";sh.hidden=true;
+      sh.innerHTML='<div class="infoback" data-cclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-label="Compass"><div class="infohead"><h2>Point your phone at the target</h2><button class="infox" type="button" data-cclose aria-label="Close">✕</button></div>'+
+        '<div class="cmpbody"><svg viewBox="0 0 160 160" width="170" height="170" aria-hidden="true"><circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" stroke-opacity=".35"/>'+["N",0,"E",90,"S",180,"W",270].reduce((a,v,i,A)=>i%2?a:a+'<text x="'+(80+58*Math.sin(A[i+1]*Math.PI/180)).toFixed(1)+'" y="'+(84-58*Math.cos(A[i+1]*Math.PI/180)).toFixed(1)+'" text-anchor="middle" font-size="13" fill="currentColor" opacity=".7">'+v+'</text>',"")+
+        '<g id="cmpNeedle"><line x1="80" y1="80" x2="80" y2="38" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/><path d="M80 30l-6 10h12z" fill="var(--accent)"/></g><circle cx="80" cy="80" r="5" fill="var(--accent)"/></svg>'+
+        '<div class="cmpdeg" id="cmpDeg">–</div><div class="note" id="cmpDir">Waiting for the compass…</div>'+
+        '<p class="note">Hold the phone flat with its top edge pointing at the target, away from the rifle, the truck and steel benches; they throw a compass off. This is a magnetic heading, which is close enough for Coriolis.</p>'+
+        '<p class="err" id="cmpErr" hidden></p><div class="row"><button class="btn primary" type="button" id="cmpUse" disabled>Use</button><button class="btn" type="button" data-cclose>Cancel</button></div></div></div>';
+      document.body.appendChild(sh);
+      sh.addEventListener("click",e=>{if(e.target.closest("[data-cclose]"))close();});
+      sh.addEventListener("keydown",e=>{if(e.key==="Escape")close();});}
+    const err=sh.querySelector("#cmpErr"),use=sh.querySelector("#cmpUse");err.hidden=true;use.disabled=true;use.textContent="Use";sh.querySelector("#cmpDeg").textContent="–";sh.querySelector("#cmpDir").textContent="Waiting for the compass…";
+    got=false;last=null;sx=sy=0;
+    use.onclick=()=>{if(last==null)return;const h=Math.round(last);close();pick(h);};
+    sh.hidden=false;requestAnimationFrame(()=>{sh.classList.add("on");const x=sh.querySelector(".infox");if(x)x.focus();});
+    const fail=t=>{err.hidden=false;err.textContent=t;};
+    const start=()=>{
+      on=e=>{let h=null;if(e.webkitCompassHeading!=null&&!isNaN(e.webkitCompassHeading))h=e.webkitCompassHeading;
+        else if((e.absolute||e.type==="deviceorientationabsolute")&&e.alpha!=null){const so=(screen.orientation&&screen.orientation.angle)||window.orientation||0;h=(360-e.alpha+so)%360;}
+        if(h==null)return;got=true;
+        // smooth it: average the direction as a vector so 359° and 1° don't average to 180°
+        const r=h*Math.PI/180;sx=sx*0.8+Math.sin(r)*0.2;sy=sy*0.8+Math.cos(r)*0.2;last=(Math.atan2(sx,sy)*180/Math.PI+360)%360;draw(last);};
+      if("ondeviceorientationabsolute" in window)window.addEventListener("deviceorientationabsolute",on,true);
+      window.addEventListener("deviceorientation",on,true);
+      tm=setTimeout(()=>{if(!got)fail("No compass reading. This device may not have a compass (computers don't), or it isn't allowed. Type the direction instead.");},3000);};
+    if(!window.isSecureContext){fail("The compass needs a secure (https) connection. Type the direction instead.");return;}
+    if(typeof DeviceOrientationEvent!=="undefined"&&typeof DeviceOrientationEvent.requestPermission==="function"){
+      DeviceOrientationEvent.requestPermission().then(p=>{if(p==="granted")start();else fail("Motion and orientation access wasn't allowed. Allow it in Settings › Safari, or type the direction.");}).catch(()=>fail("Couldn't turn on the compass. Type the direction instead."));}
+    else start();
+  }
+  return {open};
+})();
 // --- conditions helpers ---
 // wind clock: where the wind comes from (12 = straight at you, 3 = from the right). Old loads had a full-value crosswind = 3 o'clock.
 function windClock(L){const c=Math.round(+L.wclock||3);return c>=1&&c<=12?c:3;}
@@ -2631,17 +2699,28 @@ function simulate(L){
   const T=L.temp==null?59:L.temp, alt=L.alt==null?0:L.alt;
   const rho=Math.pow(1-6.8756e-6*alt,5.2559)*518.67/(T+459.67);
   const sos=49.0223*Math.sqrt(T+459.67);
-  const v=new Float64Array(MR+1),t=new Float64Array(MR+1),G=new Float64Array(MR+1),H=new Float64Array(MR+1);
+  const v=new Float64Array(MR+1),t=new Float64Array(MR+1),G=new Float64Array(MR+1),H=new Float64Array(MR+1),I=new Float64Array(MR+1);
   v[0]=L.mv;let last=MR;
   for(let y=1;y<=MR;y++){
     const p=y-1;if(!(v[p]>30)){last=p;break;}
     const k=rho*2.08551e-4*(L.bcm==="G7"?cdTab(G7,v[p]/sos):cdG1(v[p]/sos))*v[p]/L.bc, dt=3/v[p];
     v[y]=v[p]-k*v[p]*dt;t[y]=t[p]+dt;H[y]=H[p]+(32.174-k*H[p])*dt;G[y]=G[p]-(H[p]+H[y])/2*dt*12;
+    I[y]=I[p]+(p+0.5)*3*dt; // ∫ distance (ft) dt, for Coriolis
   }
   // values between whole yards (metric distances fall between them)
   const at=(A,x)=>{if(x<=0)return A[0];const i=Math.floor(x);if(i>=last)return A[last];const f=x-i;return f?A[i]+(A[i+1]-A[i])*f:A[i];};
-  return {MR,last,v,t,G,sos,rho,at};
+  return {MR,last,v,t,G,sos,rho,at,I};
 }
+/* Coriolis (2.30): only with the Long chart and when it's turned on. The earth turning under the bullet adds an acceleration
+   2Ω × velocity; integrating twice along the flight gives 2Ω·∫x dt. Sideways: 2Ω·sin(latitude)·∫x dt (right in the northern
+   hemisphere, whatever the direction). Up/down (Eötvös): 2Ω·cos(latitude)·sin(direction of fire)·∫x dt (up firing east, down west).
+   Both are taken relative to the zero, since zeroing at that place and direction already takes out what happens at the zero. */
+const EARTH_W=7.292115e-5;
+function corOn(L){const c=L&&L.cor;if(!c||!c.on||rngOf(L)!=="l")return null;const lat=num(c.lat);return lat!=null&&Math.abs(lat)<=90?c:null;}
+function corIn(L,S,x){const c=corOn(L);if(!c||!(x>0))return {h:0,v:0};const k=2*EARTH_W*S.at(S.I,x)*12,la=num(c.lat)*Math.PI/180,az=num(c.az);
+  return {h:k*Math.sin(la),v:az!=null?k*Math.cos(la)*Math.sin(az*Math.PI/180):0};}
+// inches right (h) and up (v) at x, compared with the zero z
+function corRel(L,S,x,z){if(!corOn(L)||!(z>0))return {h:0,v:0};const a=corIn(L,S,x),b=corIn(L,S,z);return {h:a.h-b.h*x/z,v:a.v-b.v*x/z};}
 
 // Miller twist rule (corrected for velocity and air) and Litz spin drift
 function stability(L,S){
@@ -2698,7 +2777,8 @@ function render(){
   if(bad.length){err.hidden=false;err.textContent="Enter a positive number for "+bad.join(", ")+".";for(let i=0;i<4;i++)$("cxv"+i).innerHTML="";$("chart").innerHTML="";$("tbl").innerHTML="";$("legend").innerHTML="";$("derived").innerHTML="";return;}
   const S=simulate(L), MR=S.MR, sh=L.sh;
   const AC=angleCos(L);
-  const path=(x,z)=>S.at(S.G,x)*AC+x*(sh-S.at(S.G,z))/z-sh; // zeroed level; at an angle only cos(angle) of the drop counts
+  const path0=(x,z)=>S.at(S.G,x)*AC+x*(sh-S.at(S.G,z))/z-sh; // zeroed level; at an angle only cos(angle) of the drop counts
+  const COR=corOn(L),path=COR?(x,z)=>path0(x,z)+corRel(L,S,x,z).v:path0; // Coriolis up/down, when it's on
   // the point-blank zero is zero 4 (the first box)
   {const P=pbrCalc(L,S,path);PBR=P&&!P.none?P:null;const v=PBR?PBR.z:null;if(!Array.isArray(L0.z))L0.z=[null,null,null,null];if(L0.z[3]!==v){L0.z[3]=v;save();}L.z=L0.z.slice();}
   const pbSize=PBR?PBR.size:((num((L.pbr||{}).size)>0)?num(L.pbr.size):6);
@@ -2755,12 +2835,15 @@ function render(){
   // table
   // rows every N yards, or every N metres in metric (each has its own setting, so neither gets odd numbers)
   const step=Math.max(1,Math.round((U.metric?L.stepM:L.step)||50));
+  const lim0=()=>Math.min(MR,S.last);
   const ai=Math.round(L.adj||0)-1, za=(ai>=0&&ai<4)?zs[ai]:null;
   const wind=(L.wind||0)*crossFactor(L), side=windSide(L), BR=L.wbr?brackets():[];
   const drift=(spd,x)=>spd*1.46667*(S.at(S.t,x)-x*3/L.mv)*12; // inches the wind pushes the bullet
   {const n=$("wxCalc");if(n){const bits=[];
     if(L.wind){const c=windClock(L);bits.push(c===12||c===6?"A wind from "+c+" o'clock doesn't push the bullet sideways.":"Wind from "+c+" o'clock: "+U.n("mph",wind,1)+" of "+U.s("mph",L.wind,1)+" pushes the bullet "+(side==="right"?"left":"right")+", so hold "+side+".");}
     if(angleCos(L)<1)bits.push("At "+Math.abs(num(L.angle))+"° only "+Math.round(angleCos(L)*100)+"% of the drop counts, so you hold or dial less than on level ground.");
+    {const cs=$("corSum");if(cs){const z0=za!=null?za:zs.find(z=>z!=null);if(COR&&z0){const xd=Math.min(lim0(),U.from("yd",U.metric?1000:1000)),c=corRel(L,S,xd,z0);
+      cs.textContent="At "+U.s("yd",xd,0)+": "+U.s("in",Math.abs(c.h),1)+" "+(c.h>=0?"right":"left")+(num(COR.az)!=null?", "+U.s("in",Math.abs(c.v),1)+" "+(c.v>=0?"high":"low"):" (add the direction for the up/down part)")+". It's in the Up, the reticle holds and the Coriolis column.";}else cs.textContent=COR?"Pick a zero to see how much it moves the bullet.":"";}}
     n.textContent=bits.join(" ");$("wxCalcBox").hidden=!bits.length;}}
   // which optional columns to show: the boxes under the table (TBLCOLS), remembered on this device
   let h="<thead><tr><th>Range ("+U.u("yd")+")</th><th>Velocity ("+U.u("fps")+")</th><th>Energy ("+U.u("ftlb")+")</th><th>Time (s)</th>";
@@ -2772,7 +2855,9 @@ function render(){
   // wind in MIL when only the MIL column is shown (a MIL scope), otherwise MOA
   const WU=CL&&!CM?"MIL":"MOA",WF=WU==="MIL"?3.6:1.0472;
   h+=(CM?"<th>Adjust (MOA)"+(za?"<br>from "+U.s("yd",za,0):"")+"</th>":"")+(CL?"<th>Adjust (MIL)"+(za&&!CM?"<br>from "+U.s("yd",za,0):"")+"</th>":"")+
-    (CW?"<th>Wind ("+U.u("in")+")"+(wind&&side?"<br>hold "+side:"")+"</th><th>Wind ("+WU+")</th>"+BR.map(b=>"<th>"+brLabel(b)+" wind<br>("+WU+", full value)</th>").join("")+(SGd!=null?"<th>Spin drift ("+U.u("in")+", right)</th>":""):"")+"</tr></thead><tbody>";
+    (CW?"<th>Wind ("+U.u("in")+")"+(wind&&side?"<br>hold "+side:"")+"</th><th>Wind ("+WU+")</th>"+BR.map(b=>"<th>"+brLabel(b)+" wind<br>("+WU+", full value)</th>").join("")+(SGd!=null?"<th>Spin drift ("+U.u("in")+", right)</th>":""):"")+(COR?"<th>Coriolis ("+U.u("in")+")<br>already in Path</th>":"")+"</tr></thead><tbody>";
+  const czr=za!=null?za:pz,corTxt=x=>{if(!COR||!(x>0)||!(czr>0))return "";const c=corRel(L,S,x,czr),hh=U.to("in",c.h),vv=U.to("in",c.v);
+    return (Math.abs(hh)<0.05?"0.0":(hh>0?"R ":"L ")+Math.abs(hh).toFixed(1))+(Math.abs(vv)>=0.05?" · "+(vv>0?"U ":"D ")+Math.abs(vv).toFixed(1):"");};
   const f1=n=>{const s=n.toFixed(1);return s==="-0.0"?"0.0":s;};
   const lim=Math.min(MR,S.last);
   for(let dd=0;U.from("yd",dd)<=lim+1e-9;dd+=step){
@@ -2781,6 +2866,7 @@ function render(){
     if(pz!=null){const t=f1(U.to("in",path(x,pz)));h+='<td'+(t[0]==="-"?' class="neg"':'')+'>'+t+"</td>";}
     {const p=za&&x>0?path(x,za):null;if(CM)h+="<td>"+(p!=null?f1(-p/(x*1.0472/100)):"")+"</td>";if(CL)h+="<td>"+(p!=null?f1(-p/(x*3.6/100)):"")+"</td>";}
     if(CW){const wd=drift(wind,x);h+="<td>"+f1(U.to("in",wd))+"</td><td>"+(x>0?f1(wd/(x*WF/100)):"")+"</td>"+BR.map(b=>"<td>"+(x>0?f1(drift(b,x)/(x*WF/100)):"")+"</td>").join("")+(SGd!=null?"<td>"+f1(U.to("in",spinIn(SGd,tt)||0))+"</td>":"");}
+    if(COR)h+="<td>"+corTxt(x)+"</td>";
     h+="</tr>";
   }
   $("tbl").innerHTML=h+"</tbody>";
@@ -2798,12 +2884,15 @@ function rangeDopeHtml(r,L){
   if(!B||B.err)return h+'<p class="err">'+escL(B?B.err:"")+'</p>';
   if(!(r.targets||[]).length)return h+'<p class="note">No targets yet. Add them under <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a>.</p>';
   const MIL=B.unit==="mil",UF=MIL?3.6:1.0472,UN=MIL?"MIL":"MOA",f1=n=>{const s2=n.toFixed(1);return s2==="-0.0"?"0.0":s2;};
-  h+='<div class="tablewrap"><table class="dope rgtbl"><thead><tr><th style="text-align:left">Target</th><th>'+U.u("yd")+'</th><th>Up<br>('+UN+')</th><th>Wind<br>('+UN+')</th><th>Size<br>('+UN+')</th></tr></thead><tbody>'+
+  const CORR=!!corOn(L);
+  h+='<div class="tablewrap"><table class="dope rgtbl"><thead><tr><th style="text-align:left">Target</th><th>'+U.u("yd")+'</th><th>Up<br>('+UN+')</th><th>Wind<br>('+UN+')</th>'+(CORR?'<th>Cor R<br>('+UN+')</th>':'')+'<th>Size<br>('+UN+')</th></tr></thead><tbody>'+
     (r.manual?r.targets.slice():r.targets.slice().sort((a,b)=>(num(a.dist)||0)-(num(b.dist)||0))).map(t=>{const d=num(t.dist),ang=num(t.angle)||0;
-      if(!(d>0))return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td colspan="4" class="note">Add its distance</td></tr>';
-      const Bt=ang?RB_TRAJ.solve(L.id,{angle:ang}):B;if(d>Bt.last)return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td>'+U.n("yd",d,0)+'</td><td colspan="3" class="note">Too far for this profile</td></tr>';
+      if(!(d>0))return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td colspan="'+(CORR?5:4)+'" class="note">Add its distance</td></tr>';
+      const co=CORR?{cor:Object.assign({},L.cor,{lat:num(r.lat)!=null?num(r.lat):L.cor.lat,az:num(t.az)!=null?num(t.az):L.cor.az})}:null;
+      const Bt=ang||co?RB_TRAJ.solve(L.id,Object.assign({},ang?{angle:ang}:{},co||{})):B;if(d>Bt.last)return '<tr><td style="text-align:left">'+escL(t.name||"Target")+'</td><td>'+U.n("yd",d,0)+'</td><td colspan="'+(CORR?4:3)+'" class="note">Too far for this profile</td></tr>';
       const a2=Bt.at(d),per=d*UF/100,sz=num(t.size);
-      return '<tr><td style="text-align:left">'+escL(t.name||"Target")+(ang?' <span class="note">'+(ang>0?"↑":"↓")+Math.abs(ang)+'°</span>':'')+'</td><td>'+U.n("yd",d,0)+'</td><td><b>'+f1(-a2.path/per)+'</b></td><td>'+f1(a2.drift/per)+'</td><td>'+(sz>0?f1(sz/per):'')+'</td></tr>';}).join("")+'</tbody></table></div>'+
+      return '<tr><td style="text-align:left">'+escL(t.name||"Target")+(ang?' <span class="note">'+(ang>0?"↑":"↓")+Math.abs(ang)+'°</span>':'')+'</td><td>'+U.n("yd",d,0)+'</td><td><b>'+f1(-a2.path/per)+'</b></td><td>'+f1(a2.drift/per)+'</td>'+(CORR?'<td>'+f1(a2.cor/per)+'</td>':'')+'<td>'+(sz>0?f1(sz/per):'')+'</td></tr>';}).join("")+'</tbody></table></div>'+
+    (CORR?'<p class="note">Coriolis uses '+(num(r.lat)!=null?'this range\'s latitude':'the profile\'s latitude')+' and each target\'s direction (or the profile\'s, for targets without one). Up includes its up/down part; Cor R is the sideways part.</p>':'')+
     '<p class="note">Up is how far to dial from the '+U.s("yd",B.z,0)+' zero (angles included). Wind is for '+(B.wind?U.s("mph",L.wind||0,0)+' from '+B.clock+' o\'clock, hold '+B.side:'no wind (set it under the profile\'s Conditions)')+'. Size is the target in '+UN+', so you can see how much room you have.</p>';
   return h;
 }
@@ -2848,6 +2937,7 @@ function rangeEditHtml(r){
       '<label>'+U.u("yd")+'<input data-k="dist" type="number" inputmode="numeric" step="any" aria-label="Distance"></label>'+
       '<label>Angle °<input data-k="angle" type="number" inputmode="decimal" step="any" aria-label="Angle up or down, degrees" placeholder="0"></label>'+
       '<label>Size '+U.u("in")+'<input data-k="size" type="number" inputmode="decimal" step="any" aria-label="Target size" placeholder="opt."></label>'+
+      '<label class="rgdir">Dir °<span class="rgaz"><input data-k="az" type="number" inputmode="decimal" step="any" aria-label="Direction of fire, degrees from north" placeholder="°"><button class="btn small" type="button" data-rgcmp aria-label="Use phone compass" title="Use phone compass"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></button></span></label>'+
       '<button class="btn danger small" type="button" data-rgdel="'+i+'" aria-label="Delete this target">✕</button></div>').join("")+'</div>'+
     '<div class="row"><button class="btn" id="rg_add" type="button">+ Target</button>'+(r.manual&&(r.targets||[]).length>1?'<button class="btn" id="rg_sort" type="button">Sort by distance</button>':'')+'</div>'+
     '<p class="note">Angle is how far up (+) or down (−) you shoot at that target, in degrees; your rangefinder may show it. '+((r.targets||[]).length>1?(r.manual?'The targets are in your own order, and the dope follows it. Drag <b>⠿</b> to move one.':'The dope lists them nearest first; drag <b>⠿</b> to put them in your own order, like the order you walk or shoot them.'):'')+'</p>';
@@ -2884,7 +2974,10 @@ function bindRangeEdit(box,r,changed,redraw){
     row.querySelector('[data-k="name"]').addEventListener("input",e=>{t.name=e.target.value;ch();});
     di.addEventListener("input",()=>{t.dist=num(U.read(di,"yd",t.dist));ch();});
     an.addEventListener("input",()=>{const v=num(an.value);t.angle=v!=null&&Math.abs(v)<=60?v:null;ch();});
-    sz.addEventListener("input",()=>{t.size=num(U.read(sz,"in",t.size));ch();});});
+    sz.addEventListener("input",()=>{t.size=num(U.read(sz,"in",t.size));ch();});
+    const az=row.querySelector('[data-k="az"]');if(num(t.az)!=null)az.value=num(t.az);
+    az.addEventListener("input",()=>{const v=num(az.value);t.az=v!=null?((v%360)+360)%360:null;ch();});
+    row.querySelector("[data-rgcmp]").addEventListener("click",()=>RB_COMPASS.open(h=>{t.az=h;az.value=h;ch();}));});
   box.querySelectorAll("[data-rgdel]").forEach(b=>b.addEventListener("click",()=>{r.targets.splice(+b.dataset.rgdel,1);ch();redraw();}));
   // your own order for the targets (the dope follows it); Sort by distance goes back to nearest first
   {const ed=box.querySelector(".rgedit");if(ed)RB_SORT(ed,".rgrow","data-tid",ids=>{const by=new Map(r.targets.map((t,i)=>[t.id||("i"+i),t]));r.targets=ids.map(id=>by.get(id)).filter(Boolean);r.manual=true;ch();redraw();},{handle:".rggrip"});}
@@ -2921,7 +3014,8 @@ function renderReticle(L,S,zs,path){
   const up=-path(x,za)/per,upD=-path(x,za)/dper,wind=(L.wind||0)*crossFactor(L),side=windSide(L);
   const wd=wind*1.46667*(S.at(S.t,x)-x*3/L.mv)*12/per,sp=S.sg!=null?(spinIn(S.sg,S.at(S.t,x))||0)/per:0;
   // where the bullet goes from the center, in reticle units (right and down are positive)
-  const dx0=(side==="right"?-wd:side==="left"?wd:0)+sp,dial=R0.mode==="dial",dy0=dial?0:up;
+  const cr=corOn(L)?corRel(L,S,x,za).h/per:0;
+  const dx0=(side==="right"?-wd:side==="left"?wd:0)+sp+cr,dial=R0.mode==="dial",dy0=dial?0:up;
   // second focal plane: the marks are only true at one power; at another power the same hold covers more or fewer marks
   const sfp=sc&&sc.fp==="SFP",mag=sc?[num(sc.magMin),num(sc.magMax)]:[null,null],tp=sfp?(num(sc.sfpTrue)||mag[1]||null):null;
   let pw=sfp&&tp?(num(R0.power)>0?num(R0.power):tp):null;if(pw&&mag[0]&&mag[1])pw=Math.min(mag[1],Math.max(mag[0],pw));
@@ -2933,7 +3027,7 @@ function renderReticle(L,S,zs,path){
   if(dial)lines.push('Dial <b>'+(upD>=0?f1(upD)+' '+DU+' up':f1(upD)+' '+DU+' down')+'</b>.');
   const hv=dy===0?'':(dy>0?f1(dy)+' '+MK+' below':f1(dy)+' '+MK+' above'),hh=Math.abs(dx)<.05?'':f1(dx)+' '+MK+' '+(dx>0?'right':'left');
   lines.push(hv||hh?'Put the target on the mark <b>'+(hv&&hh?hv+' and '+hh+' of':hh?hh+' of':hv)+'</b> the center.':'Hold dead on.');
-  const why=[];if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+f1(wd)+' '+UN+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+f1(sp)+' '+UN+' right');
+  const why=[];if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+f1(wd)+' '+UN+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+f1(sp)+' '+UN+' right');if(Math.abs(cr)>=.05)why.push('Coriolis '+f1(cr)+' '+UN+' '+(cr>0?'right':'left'));else if(corOn(L))why.push('Coriolis is under 0.1 '+UN+' here');
   let pwr='';
   if(sfp){
     if(tp){const lo=Math.ceil(mag[0]||1),hi=Math.floor(mag[1]||tp),opts=[];for(let m=lo;m<=hi;m++)opts.push(m);if(!opts.includes(tp))opts.push(tp);opts.sort((a,b)=>a-b);
@@ -2978,13 +3072,13 @@ function renderDope(L,S,zs,path){
   const f1=n=>{const s=n.toFixed(1);return s==="-0.0"?"0.0":s;};
   const wind=(L.wind||0)*crossFactor(L), side=windSide(L), BR=L.wbr?brackets():[];
   const drift=(spd,x)=>spd*1.46667*(S.at(S.t,x)-x*3/L.mv)*12;
-  let rows="",n=0;DOPE={unit:UN,wind:L.wind||0,clock:windClock(L),side,BR,rows:[]};
+  let rows="",n=0;DOPE={unit:UN,wind:L.wind||0,clock:windClock(L),side,BR,rows:[],cor:!!corOn(L)};
   for(let dd=a>0?a:st;dd<=b&&n<80;dd+=st,n++){
     const x=U.from("yd",dd);
     const p=path(x,za), up=-p/(x*UF/100), wh=drift(wind,x)/(x*UF/100), brs=BR.map(v=>drift(v,x)/(x*UF/100));
-    const sp=S.sg!=null?spinIn(S.sg,S.at(S.t,x)):null;
-    DOPE.rows.push({x:dd,up:f1(up),wind:f1(wh),brs:brs.map(f1)});
-    rows+="<tr data-dx=\""+dd+"\" tabindex=\"0\"><td>"+dd+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
+    const sp=S.sg!=null?spinIn(S.sg,S.at(S.t,x)):null,ch=corOn(L)?corRel(L,S,x,za).h/(x*UF/100):null;
+    DOPE.rows.push({x:dd,up:f1(up),wind:f1(wh),brs:brs.map(f1),cor:ch!=null?f1(ch):null});
+    rows+="<tr data-dx=\""+dd+"\" tabindex=\"0\"><td>"+dd+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+(ch!=null?"<td>"+f1(ch)+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
   }
   // the distance shown on the reticle: the one you tapped, or the closest row to it
   {const R0=L.ret||{},want=num(R0.dist)>0?num(R0.dist):Math.min(lim,Math.max(za*2,U.metric?500/0.9144:500));let bi=-1,bd=1e9;
@@ -2997,8 +3091,8 @@ function renderDope(L,S,zs,path){
   const today=new Date();const ds=today.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
   box.innerHTML='<div class="dopehead"><div class="dopename">'+esc(L.name||"Load")+'</div><div class="dopemeta">'+
     (L.rifleName?esc(L.rifleName)+" · ":"")+(o.scope?esc(scopeName(o.scope))+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
-    '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+" · "+esc(ds)+"</div></div>"+
-    (rows?'<table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table>"
+    '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+(corOn(L)?" · Coriolis "+Math.abs(num(L.cor.lat)).toFixed(1)+"°"+(num(L.cor.lat)<0?"S":"N")+(num(L.cor.az)!=null?" firing "+Math.round(num(L.cor.az))+"°":"")+" (in Up)":"")+" · "+esc(ds)+"</div></div>"+
+    (rows?'<table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+(corOn(L)?'<th>Cor R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table>"
          :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this profile slows too much past "+U.s("yd",S.last,0)+")":"")+".</p>");
 }
 // the units switch sets the dope card and the reticle together
@@ -3029,7 +3123,7 @@ $("hitTool").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("hit
 ["d_from","d_to","d_step","d_unit"].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener(id==="d_unit"?"change":"input",()=>{
   const L=cur(),M=U.metric?"M":"";L.dope=Object.assign({},L.dope||{},{["from"+M]:num($("d_from").value),["to"+M]:num($("d_to").value),["step"+M]:num($("d_step").value),unit:$("d_unit").value});save();render();});});
 $("f_bcm").addEventListener("change",()=>{readInputs();render();});
-document.querySelectorAll("#f_rng [data-rng]").forEach(b=>b.addEventListener("click",()=>{const L=cur(),r=b.dataset.rng;L.rng=r;L.lr=r==="l";fillRng(L);fillDope();save();render();}));
+document.querySelectorAll("#f_rng [data-rng]").forEach(b=>b.addEventListener("click",()=>{const L=cur(),r=b.dataset.rng;L.rng=r;L.lr=r==="l";fillRng(L);fillCor(L);fillDope();save();render();}));
 $("f_wclock").addEventListener("change",()=>{readInputs();render();});
 $("f_cal_u").addEventListener("change",()=>{const L=cur();$("f_cal").value=DIA.show(L.cal,$("f_cal_u").value);L.calUnit=$("f_cal_u").value;save();});
 $("wxBtn").addEventListener("click",async()=>{
@@ -3073,8 +3167,8 @@ function openField(){
   const v=document.createElement("div");v.id="fieldMode";v.className="fieldmode"+(FIELD.bright?" bright":"");v.setAttribute("role","dialog");v.setAttribute("aria-label","Field mode");
   v.innerHTML='<div class="fmbar"><button class="btn" id="fieldClose" type="button">← Back</button><span class="fmsp"></span><button class="btn" id="fmSmall" type="button" aria-label="Smaller text">A−</button><button class="btn" id="fmBig" type="button" aria-label="Bigger text">A+</button><button class="btn" id="fmBright" type="button">'+(FIELD.bright?'Dark':'Bright')+'</button></div>'+
     '<div class="fmhead">'+box.querySelector(".dopehead").innerHTML+'</div>'+
-    '<table class="fmtbl" style="font-size:'+(26*FIELD.size).toFixed(0)+'px"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Dial up<br><small>'+unit+'</small></th>'+wHead+'</tr></thead><tbody>'+
-    D.rows.map(r=>'<tr><td>'+r.x+'</td><td class="up">'+r.up+'</td>'+(BR.length?r.brs.map(v=>'<td>'+v+'</td>').join(""):'<td>'+(wind?r.wind:'–')+'</td>')+'</tr>').join("")+'</tbody></table>'+
+    '<table class="fmtbl" style="font-size:'+(26*FIELD.size).toFixed(0)+'px"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Dial up<br><small>'+unit+'</small></th>'+wHead+(D.cor?'<th>Cor R<br><small>'+unit+'</small></th>':'')+'</tr></thead><tbody>'+
+    D.rows.map(r=>'<tr><td>'+r.x+'</td><td class="up">'+r.up+'</td>'+(BR.length?r.brs.map(v=>'<td>'+v+'</td>').join(""):'<td>'+(wind?r.wind:'–')+'</td>')+(D.cor?'<td>'+r.cor+'</td>':'')+'</tr>').join("")+'</tbody></table>'+
     '<p class="fmnote">Screen stays on while this is open'+(navigator.wakeLock?'':' (if your phone allows it)')+'. '+(BR.length?'Wind columns are full-value holds for '+BR.map(b=>U.n("mph",b,0)).join(", ").replace(/, (\d+)$/," and $1")+' '+U.u("mph")+'.':'Wind is for '+U.s("mph",wind,0)+' from '+D.clock+' o\'clock; change it on the Conditions card.')+'</p>';
   document.body.appendChild(v);document.body.classList.add("noscroll");keepAwake(true);
   const t=v.querySelector(".fmtbl");
