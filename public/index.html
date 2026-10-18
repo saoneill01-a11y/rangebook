@@ -219,7 +219,7 @@ img{max-width:100%}
 .panel{display:flex;flex-direction:column;gap:14px}
 #trajDetail{display:flex;flex-direction:column;gap:14px}
 #trajDetail[hidden],#trajList[hidden]{display:none}
-#trajDetail.scratch #trajSample,#trajDetail.scratch #hitTool,#trajDetail.scratch .field:has(#f_name){display:none}
+#trajDetail.scratch #trajSample,#trajDetail.scratch #hitTool,#trajDetail.scratch .field:has(#trajFav),#trajDetail.scratch .field:has(#f_name){display:none}
 /* the calculator with nothing filled in yet: only Inputs and Conditions, so no old numbers are left showing */
 #trajDetail.scratch.qcempty section.card:not(#secTInputs):not(#secTWx){display:none}
 textarea{font:inherit;color:var(--fg);width:100%;min-height:110px;padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);resize:vertical;line-height:1.45}
@@ -852,7 +852,7 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .ltext{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ltext.grow{flex:1 1 auto}
 /* favorite star on gun tiles (2.18.5) */
-.gtile{position:relative;display:flex}.gtile>.loaditem{flex:1 1 auto;padding-right:46px}
+.gtile{position:relative;display:flex}.gtile[hidden]{display:none}.gtile>.loaditem{flex:1 1 auto;padding-right:46px}
 .favstar{position:absolute;top:6px;right:6px;width:38px;height:38px;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 .favstar svg,.favbtn svg{width:22px;height:22px}.favbtn svg{width:18px;height:18px;vertical-align:-3px}
 .favstar:hover{background:var(--sunk)}
@@ -1143,7 +1143,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <button class="sechead" type="button" id="inToggle" aria-expanded="true" aria-controls="inBody"><h2>Inputs</h2><span class="secsum" id="inSum"></span><span class="chev" aria-hidden="true"></span></button>
     <div class="secbody" id="inBody">
     <div class="grid">
-      <div class="field wide"><label for="f_name">Profile name</label><input id="f_name" class="name" type="text" autocomplete="off"></div>
+      <div class="field wide"><button class="btn favbtn" type="button" id="trajFav" aria-pressed="false" style="justify-self:start"></button></div><div class="field wide"><label for="f_name">Profile name</label><input id="f_name" class="name" type="text" autocomplete="off"></div>
       <div class="field wide"><label for="f_cart">Cartridge</label><input id="f_cart" class="name" type="text" autocomplete="off" list="dl_cart" placeholder="e.g. 308 Winchester"></div>
     </div>
     <fieldset class="ingrp"><legend>Gun &amp; ammo</legend><div class="grid">
@@ -1324,7 +1324,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h2>Shooting</h2>
       <p>The <b>Shooting</b> tab is the trajectory calculator plus your range trips and printable targets.</p>
       <h3>Pick or make a profile</h3>
-      <p>A <b>profile</b> is one gun and the ammo you shoot in it, with its zero, scope and conditions: everything the calculator needs. (On Reloading, a load is still a load.) The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your profiles, grouped by cartridge and sorted by name (long-range profiles are tagged, and so are profiles whose ammo is marked <b>Subsonic</b>). Set a profile's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Profiles</b> to go back. To add your own, tap <b>+ New profile</b>. It starts as a copy of the profile you were looking at; turn on <b>Long range</b> on its chart to chart it to 1,000 yd and table it to 2,000 yd (off, it charts to 400 yd). Your profiles are saved to your account. To remove a profile, open it and tap <b>Delete profile</b> at the very bottom (<b>Undo</b> brings it back). That works for the sample profile too, which also has <b>Reset to defaults</b> if you've changed it and want the original back.</p>
+      <p>A <b>profile</b> is one gun and the ammo you shoot in it, with its zero, scope and conditions: everything the calculator needs. (On Reloading, a load is still a load.) The <b>Shooting</b> tab (the trajectory calculator and your range trips) opens to a list of your profiles, grouped by cartridge and sorted by name (long-range profiles are tagged, and so are profiles whose ammo is marked <b>Subsonic</b>). Set a profile's <b>Cartridge</b> at the top of its inputs to move it to that group. Tap one to open it, and tap <b>‹ Profiles</b> to go back. Tap the <b>star</b> on a profile (or <b>Add to favorites</b> at the top of its inputs) to make it a favorite: favorites are listed first, under <b>★ Favorites</b>, and come first when <b>Start a range day</b> asks what you're shooting. To add your own, tap <b>+ New profile</b>. It starts as a copy of the profile you were looking at; turn on <b>Long range</b> on its chart to chart it to 1,000 yd and table it to 2,000 yd (off, it charts to 400 yd). Your profiles are saved to your account. To remove a profile, open it and tap <b>Delete profile</b> at the very bottom (<b>Undo</b> brings it back). That works for the sample profile too, which also has <b>Reset to defaults</b> if you've changed it and want the original back.</p>
       <p>A new account's Shooting list starts with a single <b>SAMPLE · 6.5 Creedmoor</b> profile, and on a new Range Book the first account also gets a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
       <h3>Fill in the fields</h3>
       <ul>
@@ -1910,7 +1910,7 @@ window.DIA={
     if(anchor)anchor.after(inp);else scope.prepend(inp);
     const first=items[0]&&items[0].closest(".cartgroup")||items[0];if(first)first.before(none);
     const run=()=>{const q=inp.value.trim().toLowerCase().split(/\s+/).filter(Boolean);FQ[key]=inp.value;let shown=0;
-      items.forEach(it=>{const g=it.closest(".cartgroup"),gn=g&&g.querySelector(".cartname");const txt=(it.textContent+" "+(gn?gn.textContent:"")).toLowerCase();const ok=q.every(w=>txt.includes(w));it.hidden=!ok;if(ok)shown++;});
+      items.forEach(it=>{const g=it.closest(".cartgroup"),gn=g&&g.querySelector(".cartname");const txt=(it.textContent+" "+(gn?gn.textContent:"")).toLowerCase();const ok=q.every(w=>txt.includes(w));it.hidden=!ok;if(it.parentElement.classList.contains("gtile"))it.parentElement.hidden=!ok;if(ok)shown++;});
       scope.querySelectorAll(".cartgroup").forEach(g=>{const its=[...g.querySelectorAll("button.loaditem")];if(its.length)g.hidden=its.every(i=>i.hidden);});
       none.hidden=!!shown;};
     inp.addEventListener("input",run);if(inp.value)run();
@@ -2070,6 +2070,7 @@ function migZ(l){if(l.zpb)return;l.zpb=1;const z=(Array.isArray(l.z)?l.z.slice(0
   if(v!=null){let k=z.slice(0,3).indexOf(v);if(k<0){k=z.slice(0,3).indexOf(null);if(k<0&&picked)k=2;if(k>=0)z[k]=v;}if(picked)l.adj=k>=0?k+1:0;}
   l.z=z;}
 
+const TSTAR=on=>'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"'+(on?' fill="currentColor"':' fill="none"')+' stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 function escL(t){return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 let TVIEW="list";
 const BUILTIN_CART={"308-168":"308 Winchester","300blk-220":"300 Blackout","300blk-147":"300 Blackout","22lr-40":"22 LR","38spl-158":"38 Special","556-55":"5.56 NATO","6arc-105":"6mm ARC","270-130":"270 Winchester","338wm-225":"338 Win Mag"};
@@ -2090,11 +2091,15 @@ function fillSelect(){
     const nt=window.RB_TRIPS?RB_TRIPS.count(l.id):0;
     const pbz=num((l.z||[])[3]),uz=(l.z||[]).slice(0,3).map(num).filter(z=>z>0);
     const m=[[pbz>0?"Point-blank "+U.s("yd",pbz,0):"",uz.length?"zeros "+uz.map(z=>U.n("yd",z,0)).join(", ")+" "+U.u("yd"):""].filter(Boolean).join(", ").replace(/^z/,"Z")||"No zeros",l.rifleName?l.rifleName:"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ");
-    return '<button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled profile")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+(fitCheck(l)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>';
+    return '<div class="gtile"><button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled profile")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+(fitCheck(l)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>'+
+      '<button type="button" class="favstar" data-tfav="'+escL(l.id)+'" aria-pressed="'+!!l.fav+'" aria-label="'+(l.fav?'Remove '+escL(l.name||"this profile")+' from favorites':'Add '+escL(l.name||"this profile")+' to favorites')+'" title="'+(l.fav?'Favorite':'Mark as a favorite')+'">'+TSTAR(l.fav)+'</button></div>';
   };
   const coll=new Intl.Collator(undefined,{numeric:false,sensitivity:"base"});
   const groups=new Map();
-  state.loads.forEach(l=>{const k=String(l.cart||"").trim()||"Other";if(!groups.has(k))groups.set(k,[]);groups.get(k).push(l);});
+  // favorites (the star) come first, in their own group (2.19.1)
+  const favs=state.loads.filter(l=>l.fav).sort((a,b)=>coll.compare(a.name||"",b.name||""));
+  if(favs.length)h+='<div class="cartgroup"><div class="cartname">★ Favorites</div>'+favs.map(item).join("")+'</div>';
+  state.loads.forEach(l=>{if(l.fav)return;const k=String(l.cart||"").trim()||"Other";if(!groups.has(k))groups.set(k,[]);groups.get(k).push(l);});
   [...groups.keys()].sort((a,b)=>(a==="Other")-(b==="Other")||coll.compare(a,b)).forEach(k=>{
     const arr=groups.get(k).sort((a,b)=>coll.compare(a.name||"",b.name||""));
     h+='<div class="cartgroup"><div class="cartname">'+escL(k)+'</div>'+arr.map(item).join("")+'</div>';
@@ -2103,6 +2108,7 @@ function fillSelect(){
   root.innerHTML=h;
   if(window.RB_FILTER)RB_FILTER(root.querySelector(".card"),"traj");
   $("newBtn").addEventListener("click",()=>newLoad(false));
+  root.querySelectorAll("[data-tfav]").forEach(b=>b.addEventListener("click",()=>{const L=state.loads.find(x=>x.id===b.dataset.tfav);if(!L)return;if(L.fav)delete L.fav;else L.fav=true;save();fillSelect();if(window.RB_TRIPS&&RB_TRIPS.changed)RB_TRIPS.changed();}));
   root.querySelectorAll("[data-topen]").forEach(bt=>bt.addEventListener("click",()=>openTraj(bt.dataset.topen)));
 }
 function trajHead(){const d=TVIEW==="detail",nm=d?(cur().name||"Untitled profile"):"";{const sb=$("trajSample");if(sb)sb.hidden=!(d&&cur().sample);}$("trajBack").hidden=!d;$("trajSub").hidden=d;
@@ -2167,7 +2173,7 @@ window.RB_TRAJ={
   setTempSens(perTen,mvtemp){const L=cur();L.tsens=Math.round(perTen*10)/10;if(mvtemp!=null&&num(L.mvtemp)==null)L.mvtemp=Math.round(mvtemp);fillInputs();render();save();},
   listChanged(){if(TVIEW==="list")fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
-  all(){return state.loads.map(l=>({id:l.id,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
+  all(){return state.loads.map(l=>({id:l.id,fav:!!l.fav,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
   setPart(id,partId){const L=state.loads.find(l=>l.id===id);if(!L)return;L.partId=partId||"";const r=rifleOf(L);if(r){L.rifleName=r.name||"";const rs=num(r.sightHeight),tw=num(r.twist);if(rs>0){L.sh=rs;L._rifleSh=rs;}if(tw>0){L.twist=tw;L._rifleTw=tw;}}save();if(L===cur()&&TVIEW==="detail"){fillInputs();fillRifle();render();}},
   forTools(){return state.loads.concat(SCR&&SCRATCH?[SCRATCH]:[]).map(l=>({id:l.id,label:l.name||"Untitled profile",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
   where(){return TVIEW==="detail"&&!SCR?state.cur:null;},
@@ -2206,6 +2212,7 @@ window.RB_TRAJ={
       at(x){return {path:Sd.at(Sd.G,x)*AC+sight(x),drift1:dr(1,x),drift:dr((L.wind||0)*crossFactor(L),x),spin:sg!=null?(spinIn(sg,S.at(S.t,x))||0):0,v:Sd.at(Sd.v,x),t:Sd.at(Sd.t,x)};}};
   }
 };
+$("trajFav").addEventListener("click",()=>{const L=cur();if(SCR)return;if(L.fav)delete L.fav;else L.fav=true;save();fillInputs();});
 $("trajBack").addEventListener("click",()=>{showTrajView("list");window.scrollTo(0,0);});
 // common target sizes: 4, 6 and 8 in, or 10, 15 and 20 cm in metric
 if(U.metric)document.querySelectorAll("#pbChips [data-pbs]").forEach((b,i)=>{const cm=[10,15,20][i];b.dataset.pbs=cm;b.textContent=cm+" cm "+b.textContent.replace(/^[\d.]+"\s*/,"");});
@@ -2219,6 +2226,7 @@ function fillZero(i,z){const el=$("f_z"+i),t=z==null?"":String(Math.round(U.to("
 function readZero(i,old){const el=$("f_z"+i);if(el.dataset.shown!=null&&el.value===el.dataset.shown)return old==null?null:old;const n=num(el.value);if(n==null)return null;return U.metric?Math.round(U.from("yd",n)*1000)/1000:Math.round(n);}
 function fillInputs(){
   const L=cur();
+  {const fb=$("trajFav");if(fb){fb.setAttribute("aria-pressed",!!L.fav);fb.innerHTML=TSTAR(!!L.fav)+(L.fav?" Favorite":" Add to favorites");}}
   $("f_name").value=L.name;
   $("f_cart").value=L.cart||"";
   F.forEach(k=>{const el=$("f_"+k);if(k==="step"){el.value=(U.metric?L.stepM:L.step)==null?(U.metric?50:""):(U.metric?L.stepM:L.step);return;}
@@ -7512,14 +7520,15 @@ function renderHome(){
         ps.map(p=>card('data-hpart="'+esc(p.id)+'"',partName(p),[p.cartridge||"",partRounds(p).total.toLocaleString()+" rounds"].filter(Boolean).join(" · "))).join("")+card('data-hpart=""',"The gun as it is","")+'</div>';
     }else{
       const gid=homePick===true?"":(homePick.gun||""),g=rifles.find(r=>r.id===gid);
-      const mine=T.filter(t=>!gid||t.rifleId===gid).sort(byUse),rest=gid?T.filter(t=>t.rifleId!==gid).sort(byUse):[];
+      const favFirst=(a,b)=>(b.fav?1:0)-(a.fav?1:0)||byUse(a,b);
+      const mine=T.filter(t=>!gid||t.rifleId===gid).sort(favFirst),rest=gid?T.filter(t=>t.rifleId!==gid).sort(favFirst):[];
       const fa=ammo.filter(a=>!mine.some(t=>t.ammoId===a.id));
       h+='<div class="rdhead"><b>Range day</b>'+(g?' with '+esc(g.name||"Unnamed gun"):'')+' · What are you shooting?'+(rifles.length?' <button class="linkbtn" type="button" id="hGunBack">Change gun</button>':'')+'</div>';
-      if(mine.length)h+='<div class="cartgroup">'+mine.map(t=>card('data-hpick="'+esc(t.id)+'"',t.name,t.cart)).join("")+'</div>';
+      if(mine.length)h+='<div class="cartgroup">'+mine.map(t=>card('data-hpick="'+esc(t.id)+'"',(t.fav?"★ ":"")+t.name,t.cart)).join("")+'</div>';
       if(fa.length)h+='<p class="note rdsub">Ammunition'+(g?' (makes a Shooting profile for this gun)':'')+'</p><div class="cartgroup">'+fa.map(a=>card('data-hammo="'+esc(a.id)+'"',ammoLabel(a),a.cartridge||"")).join("")+'</div>';
       // factory ammo you don't have yet, from the catalog: the gun's cartridge first, or search all of it (2.17)
       h+='<p class="note rdsub">Factory ammo from the catalog</p><div class="field" style="max-width:420px;margin-bottom:6px"><input id="hCatQ" class="name" type="search" autocomplete="off" placeholder="Search maker, bullet or cartridge" aria-label="Search the factory ammo catalog"></div><div class="cartgroup" id="hCatList"></div>';
-      if(rest.length)h+='<p class="note rdsub">Other Shooting profiles</p><div class="cartgroup">'+rest.map(t=>card('data-hpick="'+esc(t.id)+'"',t.name,t.cart)).join("")+'</div>';
+      if(rest.length)h+='<p class="note rdsub">Other Shooting profiles</p><div class="cartgroup">'+rest.map(t=>card('data-hpick="'+esc(t.id)+'"',(t.fav?"★ ":"")+t.name,t.cart)).join("")+'</div>';
 
       h+='<p class="err" id="hPickErr" hidden></p>';
     }
