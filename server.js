@@ -182,7 +182,7 @@ const now = () => Date.now();
 // Live target remote sessions (in memory): id -> { uid, device, frame, state, cmds, waiters, ... }
 const REMOTE = new Map();
 function remoteEnd(id) { const r = REMOTE.get(id); if (!r) return; REMOTE.delete(id); for (const w of r.waiters) w(); r.waiters.clear(); }
-setInterval(() => { const t = Date.now(); for (const r of REMOTE.values()) if (t - r.last > 120000) remoteEnd(r.id); }, 30000).unref();
+setInterval(() => { const t = Date.now(); for (const r of REMOTE.values()) if (t - r.last > 900000) remoteEnd(r.id); }, 30000).unref();
 
 /* ---------------- passwords ---------------- */
 const SCRYPT = { N: 16384, r: 8, p: 1, keylen: 64 };

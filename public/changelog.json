@@ -2,7 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.33.2",
+      "version": "2.34.0",
+      "date": "2026-10-19",
+      "title": "Live target that keeps going",
+      "items": [
+        "Live target restarts the camera by itself if a call, another app or the phone interrupts it, finds the target again and keeps your marks.",
+        "Remote: if the connection drops, the phone starts it again and the watching iPad or phone follows it, so you don't have to walk to the target.",
+        "iPhone: Turn on Range Focus runs a shortcut you make once to silence calls and notifications on the phone at the target; the ⓘ next to it shows how to set it up. Android: Silence calls shows how to turn on Do Not Disturb."
+      ]
+    },
+    {
+      "version": "2.33",
       "date": "2026-10-18",
       "title": "Your reticle over Live target",
       "items": [
