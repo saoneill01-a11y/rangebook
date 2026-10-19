@@ -414,6 +414,8 @@ a.goto:hover{text-decoration-thickness:2px}a.goto:focus-visible{outline:2px soli
 .crdel{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);color:var(--warn);font-size:16px;cursor:pointer}
 .cred{padding:10px 12px 12px;border-top:1px solid var(--line)}
 .cred .field.chg input,.cred .field.chg select{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600;box-shadow:0 0 0 1px var(--accent)}
+.cred .field.chg textarea{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent)}
+.addmore{align-items:center;margin-top:10px}.addmore .note{margin:0}.libcount{margin:6px 0 0}
 .cred .field.chg>label{color:var(--accent)}.crtag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.crrev{font-size:14px;margin-top:4px;align-self:flex-start;text-align:left}
 .cartsug{position:absolute;left:0;right:0;top:100%;z-index:40;margin-top:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22);max-height:330px;overflow:auto;padding:4px}
 .cartsug button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;background:none;border:0;padding:8px 10px;border-radius:7px;color:var(--fg);font:inherit;font-size:15px;cursor:pointer;min-height:44px}
@@ -1538,9 +1540,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>Enter each group's size in <b>Group size</b> (center to center of the two widest holes), or measure it from a target photo (below). The <b>Distance</b> is entered once at the top of the ladder. The MOA is worked out for you, so groups shot at different distances can be compared.</li>
       </ol>
       <h3>Reference</h3>
-      <p><a class=goto href=#go data-go=ref>Reloading › Reference</a> has reference lists for reloading. Pick one with the buttons at the top:</p>
+      <p><a class=goto href=#go data-go=ref>Reloading › Reference</a> has reference lists for reloading. Pick one with the buttons at the top (<b>Library</b> opens <a class=goto href=#go data-go=tools:lib>Tools › Library</a>, with every built-in list):</p>
       <ul>
-        <li><b>Cartridges</b>: every cartridge Range Book knows, with its bullet diameter, maximum case length, the usual trim-to length (0.010" under the maximum), maximum overall length and primer size. Tap one for notes (like brass that takes a different primer) or to fix it for your own use. It's the same list as <a class=goto href=#go data-go=tools:cart>Tools › Cartridges</a>.</li>
+        <li><b>Cartridges</b>: every cartridge Range Book knows, with its bullet diameter, maximum case length, the usual trim-to length (0.010" under the maximum), maximum overall length and primer size. Tap one for notes (like brass that takes a different primer) or to fix it for your own use. It's the same list as Cartridges in <a class=goto href=#go data-go=tools:lib:cart>Tools › Library</a>.</li>
         <li><b>Bullet diameters</b>: the cartridges grouped by the bullet diameter they actually use, so you can see which share bullets, with the common mix-ups (.308 vs .311, .355 vs .357, .452 vs .458). Tap a cartridge to open it.</li>
         <li><b>Powder burn rates</b>: about 250 powders from fastest to slowest, with a search box and a maker filter. Powders you have under Components are marked. It shows roughly where a powder sits; never use it to pick a substitute powder or a charge.</li>
         <li><b>Pressure signs</b>: what each sign on the ladder checklist looks like, what it means and what to do.</li>
@@ -1563,7 +1565,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Brass lots</h3>
       <p>Under <a class=goto href=#go data-go=brass:brass>Reloading › Components › Brass</a>, add a lot for each batch of cases you keep together. Enter how many cases, how many times they'd been loaded before Range Book, and when you last annealed and trimmed them (<b>Annealed today</b> and <b>Trimmed today</b> fill in the date). Each batch you log with that lot adds one to its load count. The old 5.56 → 300 Blackout headstamp notes are folded up at the bottom of the Brass list; tap them to open.</p>
       <h3>Components: bullets, powders and primers</h3>
-      <p><a class=goto href=#go data-go=brass>Reloading › Components</a> keeps the components you use: bullets (maker, name, the caliber as sold like 38 Special or 30 cal, the actual diameter like .357 used for the math, weight, BC, BC type, length), powders, primers and brass lots. Tap <b>+ Add</b> to enter one, or <b>Add the … from my loads</b> to fill the list from recipes you've already entered. For powders, <b>Add a powder from the list</b> has about 150 popular ones from Hodgdon, IMR, Winchester, Alliant, Accurate, Ramshot, Vihtavuori and Norma, grouped by maker, with a search box at the top (type a name, maker or kind, like "h4350" or "alliant ball"); picking one fills in the maker, name and kind (ball, extruded or flake) for you. Primers have the same kind of list (46 from CCI, Federal, Winchester, Remington, Fiocchi and Murom, with their size). Bullets have <b>Add a bullet from the list</b> too: about 1,000 from Berger, Hornady, Sierra, Nosler, Barnes, Speer, Lapua, Berry's, X-Treme and CamPro, grouped by caliber. The plated and cast ones show the cartridge they're sold for, so "380 100" or "9mm plated" finds them. Search with the caliber, weight and type, like "6.5 147 eld", "30 175 smk" or "berger hybrid" (nicknames such as SMK, TMK, ELDM, ABLR and LRHT work). Picking one fills in the maker, line, caliber, diameter, weight, BC (G7 when the maker publishes one, otherwise G1) and length, and its notes say where the numbers came from. Makers change their BCs from time to time, so check them against your box. Berry's, X-Treme and most CamPro handgun bullets have no published BC; type one in if you need it for the calculator. The same names are suggested as you type a powder into a recipe, and a listed name fills in its maker. If you change a saved bullet, powder or primer later (a corrected BC, a new name), its <b>Loads</b> card marks the loads that still have the old details; tap <b>Update</b> to copy the new details into them, along with any reloaded ammo made from them. A recipe that's out of date also shows <b>Update this recipe</b> under that component. Inside a load, the <b>Components ›</b> button at the right end of the shortcut bar takes you straight to Components, with a <b>‹ Back to</b> button to return to that load. The recipe's <b>Brass</b> can be picked from your saved brass lots the same way; it fills in the brass and its case length (add a <b>Case length</b> to the lot under Components), and makes that lot the default when you log a batch. COAL stays with each load, since it depends on the bullet and seating depth.</p>
+      <p><a class=goto href=#go data-go=brass>Reloading › Components</a> keeps the components you use: bullets (maker, name, the caliber as sold like 38 Special or 30 cal, the actual diameter like .357 used for the math, weight, BC, BC type, length), powders, primers and brass lots. Tap <b>+ Add bullet</b> (or powder, or primer) to open the list Range Book knows, the same way <b>+ Add scope</b> works: a search box at the top, the list in tiles grouped by maker (bullets by caliber, primers by size), and <b>+ Enter a … yourself</b> for one that isn't listed. Ones you've already saved aren't shown again. <b>Add the … from my loads</b> fills the list from recipes you've already entered. Powders: about 150 popular ones from Hodgdon, IMR, Winchester, Alliant, Accurate, Ramshot, Vihtavuori and Norma (type a name, maker or kind, like "h4350" or "alliant ball"); picking one fills in the maker, name and kind (ball, extruded or flake) for you. Primers: 46 from CCI, Federal, Winchester, Remington, Fiocchi and Murom, with their size. Bullets: about 1,000 from Berger, Hornady, Sierra, Nosler, Barnes, Speer, Lapua, Berry's, X-Treme and CamPro, grouped by caliber. The plated and cast ones show the cartridge they're sold for, so "380 100" or "9mm plated" finds them. Search with the caliber, weight and type, like "6.5 147 eld", "30 175 smk" or "berger hybrid" (nicknames such as SMK, TMK, ELDM, ABLR and LRHT work). Picking one fills in the maker, line, caliber, diameter, weight, BC (G7 when the maker publishes one, otherwise G1) and length, and its notes say where the numbers came from. Makers change their BCs from time to time, so check them against your box. Berry's, X-Treme and most CamPro handgun bullets have no published BC; type one in if you need it for the calculator. The same names are suggested as you type a powder into a recipe, and a listed name fills in its maker. If you change a saved bullet, powder or primer later (a corrected BC, a new name), its <b>Loads</b> card marks the loads that still have the old details; tap <b>Update</b> to copy the new details into them, along with any reloaded ammo made from them. A recipe that's out of date also shows <b>Update this recipe</b> under that component. Inside a load, the <b>Components ›</b> button at the right end of the shortcut bar takes you straight to Components, with a <b>‹ Back to</b> button to return to that load. The recipe's <b>Brass</b> can be picked from your saved brass lots the same way; it fills in the brass and its case length (add a <b>Case length</b> to the lot under Components), and makes that lot the default when you log a batch. COAL stays with each load, since it depends on the bullet and seating depth.</p>
       <p>In a recipe, pick a saved component from the shaded box above the Bullet, Primer or Powder fields; it fills in the details for you (for a bullet: weight, BC, length and diameter too). You can still type everything by hand. If you type one that isn't saved yet, a <b>Save to Components</b> button appears so you can keep it for next time. Cartridges you type are remembered too, and the cartridge and maker boxes suggest what you've used before as you type.</p>
       <h3>Ladder tests</h3>
       <p>A load's groups live in <b>Ladder tests</b>. Each ladder (Ladder 1, Ladder 2 and so on) is one batch you loaded and shot, kept separate from the others. At the top of each ladder are its <b>Loaded date</b>, <b>Tested date</b>, <b>Temperature (°F)</b> and <b>Distance</b>, entered once for the whole ladder. Each ladder can have its own distance, and every group in it uses that distance for its MOA. Under them are its groups, one per charge, then its target photos. Inside a ladder, <b>+ Add group</b> adds another charge, and <b>Import chronograph file as new group</b> brings in velocities as new groups in that ladder. <b>Delete ladder</b> removes the ladder and its groups (with an <b>Undo</b>). Tap a ladder's title to fold it down to its title and summary line, and tap again to open it; each phone or computer remembers which ones you folded.</p>
@@ -1647,7 +1649,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Swap barrels on a complete gun? Add each one under <a class=goto href=#go data-go=rifles:guns#secParts>Gear &amp; Ranges › Guns › Barrels</a> (or <b>+ Add barrel</b> on the gun's page) and pick the gun it goes on. Each barrel can have its own cartridge, length, twist, sight height and scope; leave a box blank to use the gun's. You can move a barrel to another gun, and its round count goes with it. When you pick a gun that has barrels on <a class=goto href=#go data-go=traj>Shooting</a>, <a class=goto href=#go data-go=rel>Reloading</a> or <a class=goto href=#go data-go=home>Start a range day</a>, Range Book asks which barrel you're using, or <b>The gun as it is</b>, and uses its specs. Trips and ladders remember the barrel, and each barrel keeps its own round count, barrel life and cleaning reminder.</p>
       <p>The guns export has a <b>Lowers uppers barrels</b> tab, and each gun shows what it's built from.</p>
       <h3>Cartridges</h3>
-      <p><a class=goto href=#go data-go=tools:cart>Tools › Cartridges</a> shows the whole list: search it, or tap <b>Rifle</b>, <b>Handgun</b> or <b>Rimfire</b>. It's for reference only, so don't trust it over your gun's barrel stamp, a current load manual and the SAAMI drawing. Tap a cartridge to change any of its numbers or names if you find a mistake: a changed box turns your accent color and says <b>changed</b>, with <b>Revert to …</b> to put the original back (or <b>Revert all changes</b>). Tap <b>+ Add a cartridge</b> for one that isn't listed (a wildcat, say); yours are listed under <b>Yours</b> with a ✕ to delete them. Your changes and additions are used everywhere in Range Book and sync to your other devices.</p>
+      <p>Cartridges in <a class=goto href=#go data-go=tools:lib:cart>Tools › Library</a> shows the whole list: search it, or tap <b>Rifle</b>, <b>Handgun</b> or <b>Rimfire</b>. It's for reference only, so don't trust it over your gun's barrel stamp, a current load manual and the SAAMI drawing. Tap a cartridge to change any of its numbers or names if you find a mistake: a changed box turns your accent color and says <b>changed</b>, with <b>Revert to …</b> to put the original back (or <b>Revert all changes</b>). Tap <b>+ Add a cartridge</b> for one that isn't listed (a wildcat, say); yours are listed under <b>Yours</b> with a ✕ to delete them. Your changes and additions are used everywhere in Range Book and sync to your other devices.</p>
       <p>Range Book knows about 115 rifle, handgun and rimfire cartridges. Wherever you enter a cartridge (a gun, a reloading recipe, factory or reloaded ammo, a Shooting profile), start typing any name for it, like <b>3006</b>, <b>308 Win</b>, <b>7.62 NATO</b> or <b>6.5 CM</b>, and pick it from the list. It's saved under its standard name (30-06 Springfield, 308 Winchester and so on), so loads group together, and the bullet diameter fills in if it's empty. Under the box you'll see the bullet it takes and the SAAMI (or C.I.P.) maximum case length and overall length. A cartridge that isn't in the list (a wildcat, say) can still be typed in; just enter the bullet diameter yourself. Cartridges you'd already typed with another name for a listed one were switched to its standard name.</p>
       <p><b>Warnings:</b> Range Book checks that things fit, and warns you (it doesn't stop you) when they don't:</p>
       <ul>
@@ -1660,7 +1662,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Round count and barrel life</h3>
       <p>Each gun's page has a <b>Round count</b>. It adds the rounds from range trips on Shooting profiles that use that gun, the shots in your load-development groups on Reloading loads that use it, and the <b>Rounds before Range Book</b> you enter. Fill in <b>Barrel life</b> to see a bar of how much is used (it turns red at 80%, and Home warns you). Set <b>Clean every</b> and tap <b>Cleaned today</b> after cleaning to see the rounds since then; Home tells you when it's due. When you fit a new barrel, set <b>Barrel fitted on</b> to that date and <b>Rounds before Range Book</b> to 0.</p>
       <h3>Scopes</h3>
-      <p><a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Scopes</a> keeps your scopes. Each scope and suppressor has a <b>Picture</b> at the top of its Details: tap <b>+ Add picture</b> (or <b>Replace picture</b>, or <b>Remove</b>), and it shows on the list. A scope's picture is separate from the picture of its reticle. Tap <b>+ Add scope</b> and search the list of about 90 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting profile that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
+      <p><a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Scopes</a> keeps your scopes. Each scope and suppressor has a <b>Picture</b> at the top of its Details: tap <b>+ Add picture</b> (or <b>Replace picture</b>, or <b>Remove</b>), and it shows on the list. A scope's picture is separate from the picture of its reticle. Tap <b>+ Add scope</b> and search the list of about 120 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting profile that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
       <p><b>Second focal plane</b> scopes have marks that are only their true size at one power, often the highest (the scope's manual says). Enter it in <b>Marks true at power</b>. On the dope card's reticle a <b>Scope power</b> picker then works out the hold in marks for the power you're on; at the true power it's the same as the MIL or MOA.</p>
       <h3>Make the reticle look like yours</h3>
       <p>Range Book's reticle is a plain one, not any brand's design. Tap <b>Change how it looks</b> (on the scope's page, or under the reticle on the dope card) to open a window with a preview where you pick where the main marks are, the small marks between them, the holdover dots (a full grid, a tree that widens as it goes down, or none), the numbers, the center (lines that meet, an open center, or an open center with a dot) and the line thickness. <b>Back to the standard look</b> undoes it.</p>
@@ -1676,14 +1678,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To compare loads, tap <b>Compare loads</b> at the top of the Reloading list and pick up to three. A table shows the components, the working charge (or the last one used) with its velocity, SD, ES and group, the best group and lowest SD at any charge, cost per round and rounds loaded. The lowest SD, ES, group size and cost are highlighted. Tap a load's name to open it.</p>
       <p>To keep count of rounds you've loaded, open a recipe on <a class=goto href=#go data-go=rel>Reloading</a>, switch to <b>Load</b> and log a batch in <b>Loaded rounds</b>. The first batch at a charge adds the load to your ammo inventory, copying the bullet, BC, powder, primer and brass from the recipe and the velocity from your groups at that charge. Each later batch at the same charge adds to the count, removing a batch takes it back off, and range trips with it count it down. The card shows how many you have on hand, and the batch history folds away underneath. You can also start one from <b>Ammunition → + Reloaded ammo</b>: pick a recipe, or choose <b>None: I'll pick the parts myself</b>, then pick the bullet, powder, primer and brass from your Components and fill in the charge. Each part shows its details underneath (weight, BC, diameter, kind, case length, on hand, cost); tap <b>Edit</b> to change them on the Components page, then <b>‹ Back to</b> to return. <b>+ Create new</b> at the top of each list makes a new component and opens it so you can fill it in. An entry can also be linked to a recipe later with <b>Fill in from this recipe</b>. Once you've loaded it, turn on <b>Locked</b> at the top so the recipe (name, cartridge, bullet, powder, charge, primer, brass and COAL) can't be changed by accident, not even by an Update from Components; the rounds, velocity and notes stay editable. <b>Duplicate</b> at the bottom makes an unlocked copy (with no rounds yet) to start a new one from. The cost per round comes from the prices on your components, or type it in. <b>Use in calculator</b> makes a Shooting profile from it, just like factory ammo.</p>
       <h3>Factory ammo</h3>
-      <p>On <a class=goto href=#go data-go=rifles:ammo>Gear &amp; Ranges › Ammo</a>, tap a caliber under <b>Browse by caliber</b> (they're grouped into Rifle, Handgun and Rimfire) to see what's available, or type in the search box. There are about 155 popular loads in 56 cartridges, from 17 HMR to 50 BMG (Hornady, Federal, Sig Sauer, Remington, CCI, Speer, Nosler and Barnes; rifle, rimfire and handgun) with the bullet, BC and box velocity already filled in from the maker's published data (Nosler and Barnes velocities come from gun-shop listings instead, with the BC from the makers' bullet data); tap one to add it to your list. Not listed? Tap <b>+ Enter factory ammo yourself</b> and fill in the maker, cartridge, bullet, weight, BC, the velocity on the box (and your measured velocity if you've chronographed it), plus rounds bought, price and lot number. <b>Use in calculator</b> (pick the gun first if you like) makes a profile on <a class=goto href=#go data-go=traj>Shooting</a> with those numbers. You can also pick the ammo in a Shooting profile's <b>Ammunition</b> box. Tap it to open a short list: your reloaded ammo, your factory ammo, and the catalog loads for that load's cartridge. Type in its search box (a maker, powder, bullet weight or cartridge) to search everything, including the whole catalog. Picking a catalog load fills in the numbers and adds it to your Ammunition for you. The range trips you log on that profile count down your rounds on hand (bought minus fired), and <b>+ Bought more</b> adds a new box. Set <b>Warn when fewer than</b> and Home tells you when you're running low. If your range trips have average velocities, it offers to use their average as your measured velocity.</p>
+      <p>On <a class=goto href=#go data-go=rifles:ammo>Gear &amp; Ranges › Ammo</a>, tap <b>+ Add ammo</b>. It works like adding a scope: a search box, the factory loads in tiles grouped by cartridge (smallest bullet first), <b>+ Enter factory ammo yourself</b>, and <b>+ Reloaded ammo</b> to make an entry from one of your Reloading recipes. Type a cartridge, maker or weight to narrow it down. There are about 155 popular loads in 56 cartridges, from 17 HMR to 50 BMG (Hornady, Federal, Sig Sauer, Remington, CCI, Speer, Nosler and Barnes; rifle, rimfire and handgun) with the bullet, BC and box velocity already filled in from the maker's published data (Nosler and Barnes velocities come from gun-shop listings instead, with the BC from the makers' bullet data); tap one to add it to your list. Not listed? Tap <b>+ Enter factory ammo yourself</b> on the same screen and fill in the maker, cartridge, bullet, weight, BC, the velocity on the box (and your measured velocity if you've chronographed it), plus rounds bought, price and lot number. <b>Use in calculator</b> (pick the gun first if you like) makes a profile on <a class=goto href=#go data-go=traj>Shooting</a> with those numbers. You can also pick the ammo in a Shooting profile's <b>Ammunition</b> box. Tap it to open a short list: your reloaded ammo, your factory ammo, and the catalog loads for that load's cartridge. Type in its search box (a maker, powder, bullet weight or cartridge) to search everything, including the whole catalog. Picking a catalog load fills in the numbers and adds it to your Ammunition for you. The range trips you log on that profile count down your rounds on hand (bought minus fired), and <b>+ Bought more</b> adds a new box. Set <b>Warn when fewer than</b> and Home tells you when you're running low. If your range trips have average velocities, it offers to use their average as your measured velocity.</p>
       <h3>Sharing factory loads</h3>
-      <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b>. It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up in their caliber's box under <b>Browse by caliber</b> and in searches, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
+      <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b>. It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up under their cartridge on the <b>+ Add ammo</b> screen, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
       <h3>Box photos</h3>
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
       <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
-      <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. <b>Add a suppressor from the list</b> has about 420 suppressors from 25 makers (type a maker, model, caliber, or "full auto"): picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
+      <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. Tap <b>+ Add suppressor</b> for the list of about 430 suppressors, grouped by maker the same way as scopes (type a maker, model, caliber, "rimfire" or "full auto"), or <b>+ Enter a suppressor yourself</b>. <b>+ Add a suppressor…</b> on a gun's page opens the same screen and puts the new one on that gun. Picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
       <p><b>Rated for</b> suggests cartridges and size families as you type: pick a family like <b>30 caliber</b>, <b>22 rimfire</b> or <b>6.5mm</b> if the maker rates it for any bullet up to that size, or a cartridge like <b>5.56 NATO</b> if it's rated for just that one. Range Book then checks it against the gun's cartridge on the suppressor, on the gun and on each range trip. A bullet wider than the rating gets a red <b>Don't shoot</b> warning, since it can hit the baffles. A rimfire suppressor on a centerfire cartridge, or a pistol suppressor on a rifle cartridge, gets a <b>Check first</b> note to look at the maker's manual. A suppressor on a gun it isn't rated for is also flagged on the Suppressors list. The check only goes by bullet size and type, so the manual's other limits (barrel length, full auto, mount) still apply.</p>
       <p><b>Suggestions you've typed before</b> (gun makers, magazine makers and models, inventory categories, trip places, your own cartridge names) drop down as you type. Tap the <b>×</b> next to one to take it off the list, for a typo or something you don't have any more. Your saved gear doesn't change, and it comes back if you type it in again.</p>
       <h3>Magazines</h3>
@@ -1702,6 +1704,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
       <p><b>Tools</b> (a tab on a computer, or <a class=goto href=#go data-go=tools>More › Tools</a> on a phone, or the <b>Tools</b> button on Home) holds quick calculators, one tile each with a line about what it does. Tap a tile to open that tool, and <b>‹ Tools</b> (or swiping back) to return to the tiles. To put the tiles in your own order, press and hold one and drag it where you want it (on a computer, just drag it; with a keyboard, Alt + the arrow keys move the selected tile). The order is saved to your account, so it's the same on every phone and computer; <b>Put them back in the usual order</b> under the tiles undoes it. Nothing in Tools is saved: change a number and the answer updates.</p>
       <ul>
+        <li><b>Library</b>: every list built into Range Book: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors, with how many of each (the Built in Library card on Home and <b>Library</b> in Reloading › Reference open it too). Tap a list to look through it, grouped by maker or caliber, with a search box. Tap anything in it to see all of its numbers. If one is wrong (a maker's new BC, a typo), fix it right there: the box you changed turns your accent color and says <b>changed</b>, the entry is marked <b>Edited</b>, and <b>Revert to …</b> (or <b>Revert all changes</b>) puts the maker's number back. Your fixes are only for you, sync to your other devices, and are used the next time you add that entry, from the Library or from any <b>+ Add</b> screen. Things you've already added are your own copies and keep their own numbers; change those on their own pages. Search <b>edited</b> to find the ones you've changed. <b>+ Add to my …</b> on an entry adds it to your Components or Gear and opens it. <b>Cartridges</b> is the cartridge list described under <a class=goto href=#go data-go=help:Cartridges>Cartridges</a>, and the bottom of the Library links to the other reloading reference lists.</li>
         <li><b>Compare trajectories</b>: up to six bullets on one chart, all with the same zero, sight height, temperature and altitude. Type each one's weight, velocity and BC, or fill it in from a Shooting profile, your ammo or the factory catalog. Switch the chart between <b>Path</b> (above or below your line of sight), <b>Dial</b> (MOA or MIL to dial up), <b>Wind</b> (drift in a 10 mph crosswind), <b>Speed</b> and <b>Energy</b>, and between <b>Short</b>, <b>Medium</b> and <b>Long</b> (200, 400 or 1,000 yd). The table under the chart has each bullet's numbers. Each line has its own color and dash pattern, so they're easy to tell apart in Red Night too. It remembers your bullets on that phone or computer; <b>Reset</b> starts over.</li><li><b>Chronograph file check</b>: pick your chronograph's export to see how Range Book reads it before you import it: each string's shots, average, SD, spread and time, in the order they were shot, and which ladder charge it would go to when its name has a charge. Nothing is imported or saved. If a file doesn't read right, this is the screen to show when you report it.</li><li><b>Trajectory calculator</b> (also the <b>Trajectory calculator</b> button on Home): the whole Shooting calculator without making a profile. Pick a gun and ammo (your own, or anything from the factory catalog, which here only fills in its numbers) or type the bullet weight, velocity, BC and sight height, and every card works the same as on a profile: conditions and wind, bullet path and zeros, point-blank range, range table, true-up, dope card and saved ranges. Nothing is saved to your profiles; this device remembers the last numbers so it opens where you left off. <b>Reset</b> clears it for new numbers (<b>Undo</b> brings them back), and <b>Save as a Shooting profile</b> keeps it as a profile, so it gets range trips too, and opens it on Shooting.</li>
         <li><b>Stability</b>: will a bullet be stable in your barrel's twist? Pick a <b>Bullet</b> from your Components and a <b>Gun</b> (for its twist) side by side, or type the numbers in. On a Shooting profile, <b>Check barrel twist</b> (under Inputs) opens it filled in from that profile. It shows the Miller stability number (1.5 or more is fully stable, 1.0 to 1.5 marginal, under 1.0 the bullet will likely tumble) and the slowest twist that fully stabilizes that bullet. Colder air and lower altitude make the number smaller, so check it for the coldest day you'll shoot.</li>
         <li><b>MOA/MIL</b>: turn a group size or hold into MOA and MIL at a distance, or an angle back into a size.</li>
@@ -1764,7 +1767,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved unless you ask.</p></header>
-    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cart"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l1.5-5h3L15 9v12z"/><path d="M9 13h6"/></svg></span><span class="t">Cartridges</span><span class="d">The cartridge list Range Book uses: bullet diameters and SAAMI case and overall lengths. Fix anything wrong, or add your own.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph file check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="lib"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16 5l3.6-.9 3 15.5-3.6.9z"/></svg></span><span class="t">Library</span><span class="d">Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Look anything up, fix it for your own use, or add it to yours.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph file check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <p class="note toolsarr" id="toolsArr">Press and hold a tool to move it (on a computer, drag it).<span id="toolsReorder" hidden> <button class="linkbtn" type="button" id="toolsReorderGo">Put them back in the usual order</button></span></p>
     <div class="tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
       <section class="card qcbar"><p class="note toolnote">The full Shooting calculator, without making a profile: pick a gun and ammo or type the numbers, and every card below works (chart, point-blank range, range table, true-up, dope card, saved ranges). Nothing is saved to your profiles; this device remembers the last numbers until you tap <b>Reset</b>.</p>
@@ -1790,6 +1793,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="toolres" id="pw_res" aria-live="polite"></div>
     </section>
     <section class="card tool" data-toolsec="cart" aria-label="Cartridges" hidden><div id="cartRoot"></div></section>
+    <div class="tool col" data-toolsec="lib" aria-label="Library" hidden><div id="libRoot" class="col"></div></div>
     <section class="card tool" data-toolsec="hit" aria-label="Hit chance" hidden>
       <p class="note toolnote">How likely is a first-round hit? It uses a Shooting profile's trajectory and the conditions on it, and assumes you aim at the center with the right dial and a wind call that's right on average, give or take what you enter.</p>
       <div class="grid">
@@ -4197,15 +4201,16 @@ let rifleOpen=null;
 document.getElementById("rifHeadBack").addEventListener("click",()=>{if(partOpen){const g=partFromGun&&rifles.some(r=>r.id===partFromGun)?partFromGun:null;partOpen=null;partFromGun=null;rifleOpen=g;renderRifles();window.scrollTo(0,0);return;}
   if(scopeOpen&&scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)){gunArea="guns";rifleOpen=scopeFromGun;scopeOpen=null;scopeFromGun=null;renderRifles();window.scrollTo(0,0);return;}
   if(magOpen&&magFromGun&&rifles.some(r=>r.id===magFromGun)){gunArea="guns";rifleOpen=magFromGun;magOpen=null;magFromGun=null;renderRifles();window.scrollTo(0,0);return;}
+  if(canAdding&&canForGun&&rifles.some(r=>r.id===canForGun)){gunArea="guns";rifleOpen=canForGun;canAdding=false;canForGun=null;canFromGun=null;renderRifles();window.scrollTo(0,0);return;}
   if(canOpen&&canFromGun&&rifles.some(r=>r.id===canFromGun)){gunArea="guns";rifleOpen=canFromGun;canOpen=null;canFromGun=null;renderRifles();window.scrollTo(0,0);return;}
-  canOpen=null;canFromGun=null;invOpen=null;magOpen=null;magFromGun=null;gnoteOpen=null;gnConfirm=false;
+  canOpen=null;canFromGun=null;canAdding=false;canForGun=null;ammoAdding=false;invOpen=null;magOpen=null;magFromGun=null;gnoteOpen=null;gnConfirm=false;
   rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;gunReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);});
 let ammoReturnTraj=null,gunReturnTraj=null;
 // a profile's Edit button on its gun: open the gun, with a way back to the profile
 window.RB_OPEN_GUN=(id,ret)=>{if(!rifles.some(r=>r.id===id))return;gunArea="guns";rifleOpen=id;canOpen=null;scopeOpen=null;partOpen=null;gunReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
-document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;magOpen=null;magFromGun=null;magBulk=null;gnoteOpen=null;gnConfirm=false;partOpen=null;partFromGun=null;ammoOpen=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
+document.querySelectorAll("#rifSeg [data-garea]").forEach(b=>b.addEventListener("click",()=>{gunArea=b.dataset.garea;rifleOpen=null;gunReturnTraj=null;canOpen=null;canFromGun=null;invOpen=null;magOpen=null;magFromGun=null;magBulk=null;gnoteOpen=null;gnConfirm=false;partOpen=null;partFromGun=null;ammoOpen=null;ammoAdding=false;canAdding=false;canForGun=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();window.scrollTo(0,0);if(gunArea==="ammo")loadBoxes().then(()=>{if(gunArea==="ammo"&&!ammoEditing())renderRifles();});}));
 // gun type: rifle, pistol or shotgun. Guessed from the cartridge when not picked (handgun cartridges → pistol, gauges → shotgun)
 const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shotgun","Shotgun","Shotguns"]];
 function gunTypeGuess(cart){const t=String(cart||"").trim();if(!t)return null;if(/\b(\d+|four|eight|ten|twelve|sixteen|twenty)\s*-?\s*(ga|gauge|bore)\b|\b410\b|\.410/i.test(t))return "shotgun";
@@ -4404,7 +4409,7 @@ function addFromCatalog(c){
   ammo.push(a);queueAmmo();ammoCat=false;ammoOpen=a.id;renderRifles();window.scrollTo(0,0);
 }
 /* ---- ammo box photos: catalog loads share theirs with everyone; your own entries keep theirs private ---- */
-let gunPhotos=[],gunUp=0,boxes=[],boxUp=0,sharedAmmo=[],ammoCatTab="maker",shareTimers={},ammoCal=null;
+let gunPhotos=[],gunUp=0,boxes=[],boxUp=0,sharedAmmo=[],ammoCatTab="maker",shareTimers={},ammoCal=null,ammoAdding=false;
 const boxesFor=a=>a.catItem?boxes.filter(b=>b.item===a.catItem):boxes.filter(b=>b.ammo===a.id||(a.sharedFrom&&b.ammo===a.sharedFrom));
 const SHARE_KEYS=["mfr","name","cartridge","bullet","weight","bc","bcm","dia","boxVel","testBarrel"];
 function pushShared(a,now){clearTimeout(shareTimers[a.id]);const go=()=>{const d={};SHARE_KEYS.forEach(k=>{if(a[k]!=null&&a[k]!=="")d[k]=a[k];});
@@ -4601,21 +4606,27 @@ function renderAmmo(root){
       return hits.length===1?hits[0][1]:raw;};
     const picks=[...AMMO_CATALOG.map(c=>({kind:"cat",cal:c.cart,c,key:c.item,label:c.mfr+" "+c.line+" "+c.bullet,search:catLabel(c)+" "+c.item})),
       ...(window.GUEST?[]:sharedAmmo).map(x=>{const d=x.data||{};return {kind:"shared",cal:calOf(d.cartridge),x,key:x.id,label:[d.mfr,d.name||d.bullet].filter(Boolean).join(" ")+(d.weight?" "+d.weight+" gr":""),search:ammoLabel(d)+" "+(d.bullet||"")+" "+x.by};})];
-    const RIM=new Set(["22 LR","22 WMR","17 HMR"]),HG=new Set(["9mm Luger","380 Auto","40 S&W","45 ACP","38 Special","357 Magnum","10mm Auto","44 Rem Magnum"]);
-    const typeOf=cal=>RIM.has(cal)?"Rimfire":HG.has(cal)?"Handgun":"Rifle";
-    const byCal=new Map();picks.forEach(p=>{if(!byCal.has(p.cal))byCal.set(p.cal,[]);byCal.get(p.cal).push(p);});
-    const sortCal=(x,y)=>x.localeCompare(y,undefined,{numeric:true});
-    const pickHtml=p=>{
-      if(p.kind==="cat"){const c=p.c,cb=catBox(c.item);
-        return '<button class="loaditem'+(cb?' withthumb':'')+'" type="button" data-cat="'+esc(c.item)+'">'+(cb?'<span class="lthumb"><img alt="" loading="lazy" src="'+esc(cb.url)+'"></span><span class="ltext">':'')+'<span class="t">'+esc(p.label)+'</span><span class="d">'+esc(U.s("fps",c.v,0,true)+(c.tb?" ("+U.s("dim",c.tb,0)+" barrel)":"")+" · "+(c.bc!=null?"BC "+c.bc+" G1"+(c.g7?" / "+c.g7+" G7":""):"no published BC"))+'</span><span class="m">'+(c.dealer?"Velocity from a dealer, BC from "+esc(c.mfr):"Maker data")+'</span>'+(cb?'</span>':'')+'</button>';}
-      const x=p.x,d=x.data||{},bx=boxes.find(b=>b.ammo===x.id),det=[d.boxVel?U.s("fps",Number(d.boxVel),0,true):"",d.bc?"BC "+d.bc+" "+(d.bcm==="G7"?"G7":"G1"):"no BC"].filter(Boolean).join(" · ");
-      return '<div class="sharedrow"><button class="loaditem sharedload'+(bx?' withthumb':'')+'" type="button" data-shcopy="'+esc(x.id)+'">'+(bx?'<span class="lthumb"><img alt="" loading="lazy" src="'+esc(bx.url)+'"></span><span class="ltext">':'')+'<span class="t">'+esc(p.label||"Unnamed ammo")+'</span><span class="d">'+esc(det)+'</span><span class="m sharetag"><span class="sharebadge">Shared</span> by '+esc(x.mine?"you":x.by)+'</span>'+(bx?'</span>':'')+'</button>'+((x.mine||(ME&&ME.isAdmin))?'<button class="btn small danger" type="button" data-shdel="'+esc(x.id)+'">Remove</button>':'')+'</div>';};
-    const panel=cal=>{const list=(byCal.get(cal)||[]).slice().sort((p,q)=>(p.kind==="cat"?0:1)-(q.kind==="cat"?0:1)||p.label.localeCompare(q.label,undefined,{numeric:true}));
-      return '<div class="calpanel" id="calPanel"><div class="calhead"><b>'+esc(cal)+'</b><span class="note">'+list.length+' load'+(list.length===1?'':'s')+'. Tap one to add it to your ammo.'+(list.some(p=>p.kind==="shared")?' Shaded ones were shared by people here, not taken from the maker.':'')+'</span><button class="btn small" type="button" id="calClose">Close</button></div><div class="cartgroup">'+list.map(pickHtml).join("")+'</div>'+
-        '<button class="btn" type="button" id="calOwn">+ Enter a '+esc(cal)+' load yourself</button></div>';};
-    h='<section class="card" aria-label="Ammunition" id="ammoAddCard"><h2>Add ammunition</h2><div class="row"><input id="ammoCatQ" type="search" placeholder="Search the factory catalog: 6.5 creedmoor, hornady, 168…" value="'+esc(ammoCatQ)+'" aria-label="Search the factory catalog" autocomplete="off"></div>'+
-      '<div class="row"><button class="btn" id="ammoAddRel" type="button">+ Reloaded ammo</button><button class="btn" id="ammoAdd" type="button">+ Enter factory ammo yourself</button><span class="savestate" id="rifleState"></span></div>'+
-      '<div id="relAddBox" hidden></div><div id="ammoSearch"></div></section>';
+    const shdel=el=>el.querySelectorAll("[data-shdel]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();arm(b,"shd"+b.dataset.shdel,"Tap again",()=>{const own=ammo.find(a=>a.id===b.dataset.shdel);if(own){own.shared=false;queueAmmo();}unshare(b.dataset.shdel).then(()=>renderRifles());});}));
+    if(ammoAdding){
+      root.innerHTML=addScreenHtml({title:"Add ammo",q:ammoCatQ,ph:"Search: 6.5 creedmoor, hornady, 168…",own:"+ Enter factory ammo yourself",
+        more:'<button class="btn" id="ammoAddRel" type="button">+ Reloaded ammo</button><span class="savestate" id="rifleState"></span>',after:'<div id="relAddBox" hidden></div>',
+        note:'Pick factory ammo to fill in the maker\'s published BC and velocity (Nosler and Barnes velocities are from dealer listings), or enter yours from the box. Shaded ones were shared by people on this Range Book, not taken from the maker. <b>+ Reloaded ammo</b> makes an entry from one of your Reloading recipes. To fix something in this list, open it in <a class=goto href=#go data-go=tools:lib:ammo>Tools › Library</a>.'});
+      gearHead("Add ammo","‹ Ammo");
+      $("ammoAddRel").addEventListener("click",()=>{const b=$("relAddBox");b.hidden=!b.hidden;if(!b.hidden)drawRelAdd(b,null,a=>{ammoAdding=false;ammoOpen=a.id;renderRifles();window.scrollTo(0,0);});});
+      bindAddScreen({onQ:v=>{ammoCatQ=v;},bind:shdel,
+        items:()=>{const cat=libItems("ammo").map(it=>{const c=it.x,cb=catBox(c.item);return Object.assign(it,{thumb:cb?'<img alt="" loading="lazy" src="'+esc(cb.url)+'">':"",
+            d:U.s("fps",c.v,0,true)+(c.tb?" ("+U.s("dim",c.tb,0)+" barrel)":"")+" · "+(c.bc!=null?"BC "+c.bc+" G1"+(c.g7?" / "+c.g7+" G7":""):"no published BC"),
+            m:it.m||(c.dealer?"Velocity from a dealer, BC from "+c.mfr:"Maker data"),words:it.words+" "+catLabel(c)});});
+          const sh=picks.filter(p=>p.kind==="shared").map(p=>{const x=p.x,d=x.data||{},bx=boxes.find(b=>b.ammo===x.id);
+            return {shared:x,t:p.label||"Unnamed ammo",g:p.cal,gk:num(d.dia)||(window.RB_CARTS&&RB_CARTS.dia(p.cal))||0,cls:"sharedload",thumb:bx?'<img alt="" loading="lazy" src="'+esc(bx.url)+'">':"",words:p.search,
+              d:[d.boxVel?U.s("fps",Number(d.boxVel),0,true):"",d.bc?"BC "+d.bc+" "+(d.bcm==="G7"?"G7":"G1"):"no BC"].filter(Boolean).join(" · "),m:"Shared by "+(x.mine?"you":x.by),
+              after:(x.mine||(ME&&ME.isAdmin))?'<button class="btn small danger" type="button" data-shdel="'+esc(x.id)+'">Remove</button>':""};});
+          return cat.concat(sh);},
+        onPick:it=>{ammoAdding=false;if(it.shared)addFromShared(it.shared);else libAdd("ammo",it.i);},
+        onOwn:()=>{ammoAdding=false;const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",bcm:"G1"};ammo.push(a);freshAdd(a,{list:()=>ammo,open:()=>ammoOpen===a.id,save:queueAmmo});queueAmmo();ammoOpen=a.id;renderRifles();window.scrollTo(0,0);const el=$("af_mfr");if(el)el.focus();}});
+      return;
+    }
+    h='<div class="row"><button class="btn primary" id="ammoAddGo" type="button">+ Add ammo</button><span class="savestate" id="rifleState"></span></div>';
     // my ammo: reloaded first, then factory
     const ammoRow=a=>{const u=ammoUse(a),rl=isReload(a);
         const d=(rl?[[a.weight?a.weight+" gr":"",a.bullet].filter(Boolean).join(" "),num(a.charge)?num(a.charge)+" gr "+(a.powder||"powder"):"",a.primer,a.brass]:[a.bc?"BC "+a.bc+(a.bcm==="G7"?" G7":" G1"):"",num(a.measVel)?U.s("fps",num(a.measVel),0,true)+" measured":num(a.boxVel)?U.s("fps",num(a.boxVel),0,true)+" on the box":""]).filter(Boolean).join(" · ");
@@ -4627,36 +4638,10 @@ function renderAmmo(root){
     const relA=ammo.filter(isReload).sort(bySort),facA=ammo.filter(a=>!isReload(a)).sort(bySort);
     if(relA.length)h+='<section class="card" aria-label="Reloaded ammo"><h2>Reloaded ammo</h2><div class="cartgroup">'+relA.map(ammoRow).join("")+'</div></section>';
     if(facA.length)h+='<section class="card" aria-label="Factory ammo"><h2>Factory ammo</h2><div class="cartgroup">'+facA.map(ammoRow).join("")+'</div></section>';
-    // caliber boxes
-    h+='<section class="card" aria-label="Browse by caliber" id="calBrowse"><h2>Browse by caliber</h2><p class="note">Popular factory loads with the maker\'s published BC and velocity (Nosler and Barnes velocities are from dealer listings), plus loads people here have shared. Tap a caliber to see what\'s available.</p>';
-    ["Rifle","Handgun","Rimfire"].forEach(tp=>{const cals=[...byCal.keys()].filter(c=>typeOf(c)===tp).sort(sortCal);if(!cals.length)return;
-      h+='<div class="cartname">'+tp+'</div><div class="calgrid">';
-      cals.forEach(c=>{const L=byCal.get(c),ns=L.filter(p=>p.kind==="shared").length,on=ammoCal===c;
-        h+='<button class="caltile'+(on?' on':'')+'" type="button" data-cal="'+esc(c)+'" aria-expanded="'+on+'"><b>'+esc(c)+'</b><span>'+L.length+' load'+(L.length===1?'':'s')+(ns?' · '+ns+' shared':'')+'</span></button>';
-        if(on)h+=panel(c);});
-      h+='</div>';});
-    h+='</section>';
-    if(!ammo.length)h='<section class="card"><p class="note">Keep track of the ammo you shoot. <b>+ Reloaded ammo</b> makes an entry from one of your Reloading recipes (or by hand) and counts how many loaded rounds you have. For factory ammo, pick it from a caliber below (the BC and velocity are already filled in) or enter yours from the box. Either way, <b>Use in calculator</b> then makes a Shooting profile from it, and the range trips you log on that profile count down how many rounds you have left.</p></section>'+h;
-    root.innerHTML=h;
+    if(!ammo.length)h+='<section class="card"><p class="note">Keep track of the ammo you shoot. Tap <b>+ Add ammo</b> and pick factory ammo from the list (the BC and velocity are already filled in), enter yours from the box, or make <b>reloaded ammo</b> from one of your Reloading recipes. Either way, <b>Use in calculator</b> then makes a Shooting profile from it, and the range trips you log on that profile count down how many rounds you have left.</p></section>';
+    root.innerHTML=h;gearHead(null);
     if(window.foldAll)foldAll(root,"ammolist");
-    const bindPicks=el=>{
-      el.querySelectorAll("[data-cat]").forEach(b=>b.addEventListener("click",()=>{const c=AMMO_CATALOG.find(x=>x.item===b.dataset.cat);if(c)addFromCatalog(c);}));
-      el.querySelectorAll("[data-shcopy]").forEach(b=>b.addEventListener("click",()=>{const x=sharedAmmo.find(y=>y.id===b.dataset.shcopy);if(x)addFromShared(x);}));
-      el.querySelectorAll("[data-shdel]").forEach(b=>b.addEventListener("click",()=>arm(b,"shd"+b.dataset.shdel,"Tap again",()=>{const own=ammo.find(a=>a.id===b.dataset.shdel);if(own){own.shared=false;queueAmmo();}unshare(b.dataset.shdel).then(()=>renderRifles());})));};
-    bindPicks(root);
-    root.querySelectorAll("[data-cal]").forEach(b=>b.addEventListener("click",()=>{ammoCal=ammoCal===b.dataset.cal?null:b.dataset.cal;renderRifles();const t=root.querySelector('[data-cal="'+CSS.escape(b.dataset.cal)+'"]');if(t&&ammoCal)t.scrollIntoView({block:"start",behavior:"smooth"});}));
-    const cc=$("calClose");if(cc)cc.addEventListener("click",()=>{ammoCal=null;renderRifles();});
-    const co=$("calOwn");if(co)co.addEventListener("click",()=>{const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",bcm:"G1",cartridge:ammoCal};ammo.push(a);freshAdd(a,{list:()=>ammo,open:()=>ammoOpen===a.id,save:queueAmmo});queueAmmo();ammoOpen=a.id;ammoCal=null;renderRifles();window.scrollTo(0,0);const el=$("af_mfr");if(el)el.focus();});
-    // search across everything, flat results by caliber
-    const drawSearch=()=>{const box=$("ammoSearch"),words=norm(ammoCatQ).split(" ").filter(Boolean);$("calBrowse").hidden=!!words.length;
-      if(!words.length){box.innerHTML="";return;}
-      const hits=picks.filter(p=>{const t=norm(p.search+" "+p.cal);return words.every(w=>t.includes(w));});
-      const g=new Map();hits.forEach(p=>{if(!g.has(p.cal))g.set(p.cal,[]);g.get(p.cal).push(p);});
-      box.innerHTML=hits.length?[...g.keys()].sort(sortCal).map(c=>'<div class="cartgroup"><div class="cartname">'+esc(c)+'</div>'+g.get(c).map(pickHtml).join("")+'</div>').join(""):'<p class="note">Nothing matches that. Try fewer words, or use <b>Enter it yourself</b>.</p>';
-      bindPicks(box);};
-    drawSearch();$("ammoCatQ").addEventListener("input",e=>{ammoCatQ=e.target.value;drawSearch();});
-    $("ammoAddRel").addEventListener("click",()=>{const b=$("relAddBox");b.hidden=!b.hidden;if(!b.hidden)drawRelAdd(b,null,a=>{ammoOpen=a.id;renderRifles();window.scrollTo(0,0);});});
-    $("ammoAdd").addEventListener("click",()=>{const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",bcm:"G1"};ammo.push(a);freshAdd(a,{list:()=>ammo,open:()=>ammoOpen===a.id,save:queueAmmo});queueAmmo();ammoOpen=a.id;renderRifles();window.scrollTo(0,0);const el=$("af_mfr");if(el)el.focus();});
+    $("ammoAddGo").addEventListener("click",()=>{ammoAdding=true;ammoCatQ="";renderRifles();window.scrollTo(0,0);const q=$("addQ");if(q&&matchMedia("(pointer:fine)").matches)q.focus();});
     root.querySelectorAll("[data-aopen]").forEach(b=>b.addEventListener("click",()=>{ammoOpen=b.dataset.aopen;renderRifles();window.scrollTo(0,0);}));
     return;
   }
@@ -4679,7 +4664,7 @@ function renderAmmo(root){
   });
   h+='</div>'+(a.src?'<p class="note">Filled in from the catalog. <a href="'+esc(a.src)+'" target="_blank" rel="noopener">'+((AMMO_CATALOG.find(x=>x.item===a.catItem)||{}).dealer?"See the dealer\'s listing</a> (the velocity isn\'t from "+esc(a.mfr)+" directly)":"See it on the maker\'s site</a>")+'.</p>':'')+
     (RL?reloadSrcHtml(a):'')+
-    (!RL&&!a.catItem&&!a.sharedFrom&&!window.GUEST?'<label class="toggle" style="margin-top:10px"><input type="checkbox" id="ammoShare"'+(a.shared?' checked':'')+'> Share this load with everyone on this Range Book</label><p class="note" id="ammoShareMsg">Shares the maker, product, cartridge, bullet, weight, BC, diameter and box velocity (and its box photo), so others can find it in its caliber under <b>Browse by caliber</b>. Your rounds, price, lot, measured velocity and notes stay private.</p>':'')+
+    (!RL&&!a.catItem&&!a.sharedFrom&&!window.GUEST?'<label class="toggle" style="margin-top:10px"><input type="checkbox" id="ammoShare"'+(a.shared?' checked':'')+'> Share this load with everyone on this Range Book</label><p class="note" id="ammoShareMsg">Shares the maker, product, cartridge, bullet, weight, BC, diameter and box velocity (and its box photo), so others can find it under its cartridge when they tap <b>+ Add ammo</b>. Your rounds, price, lot, measured velocity and notes stay private.</p>':'')+
     (a.sharedFrom?'<p class="note">Copied from a load someone shared here.</p>':'')+'</section>';
   if(!RL){const bx=boxesFor(a);
     h+='<section class="card" aria-label="Box photo" id="ammoBoxPh"><h2>Box</h2>'+(bx.length?'<div class="boxgrid">'+bx.map(b=>'<figure class="boxph"><a href="'+esc(b.url)+'" target="_blank" rel="noopener"><img src="'+esc(b.url)+'" alt="Ammo box" loading="lazy"></a><figcaption>'+(a.catItem?'by '+esc(b.mine?'you':b.by):'')+((b.mine||(ME&&ME.isAdmin))?' <button class="btn small danger" type="button" data-bxdel="'+esc(b.id)+'">Delete</button>':'')+'</figcaption></figure>').join("")+'</div>':'<p class="note">No photo of this box yet.</p>')+
@@ -4775,7 +4760,7 @@ function renderRifles(){
     const a0=ammoOpen&&ammo.find(x=>x.id===ammoOpen);
     renderAmmo(root);
     const a1=ammoOpen&&ammo.find(x=>x.id===ammoOpen);
-    $("rifSeg").hidden=!!a1;$("rifHeadBack").hidden=!a1;$("rifHeadBack").textContent="‹ Ammo";$("rifSub").hidden=!!a1;$("rifTitle").textContent=a1?ammoLabel(a1):"Gear & Ranges";
+    if(a1)gearHead(ammoLabel(a1),"‹ Ammo");else if(!ammoAdding)gearHead(null);
     return;
   }
   const usedBy=id=>[...loads.entries()].filter(([lid,L])=>isMine(lid)&&L.rifleId===id);
@@ -4956,7 +4941,7 @@ function renderRifles(){
   root.querySelectorAll("[data-gtrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.gtrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("gunRangeDay").addEventListener("click",()=>{homePick={gun:r.id};showTab("home");window.scrollTo(0,0);});
   $("rf_can").addEventListener("change",e=>{const v=e.target.value;
-    if(v==="__new"){const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);freshAdd(n,{list:()=>cans,open:()=>canOpen===n.id,save:queueRifles});mountCan(n.id,r.id);canFromGun=r.id;gunArea="cans";canOpen=n.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("cn_mfr");if(el)el.focus();return;}
+    if(v==="__new"){canFromGun=r.id;canForGun=r.id;canAdding=true;canAddQ="";gunArea="cans";canOpen=null;rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("cn_mfr");if(el)el.focus();return;}
     if(v)mountCan(v,r.id);else{r.canId=null;queueRifles();}renderRifles();});
   {const co=$("rfCanOpen");if(co)co.addEventListener("click",()=>{canFromGun=r.id;gunArea="cans";canOpen=r.canId;rifleOpen=null;renderRifles();window.scrollTo(0,0);});}
   $("rf_scope").addEventListener("change",e=>{const v=e.target.value;
@@ -5018,7 +5003,7 @@ function mountScope(sid,rid){rifles.forEach(g=>{if(g.id===rid)g.scopeId=sid||nul
 window.RB_SCOPE_SAVE=(id,patch)=>{const x=scopes.find(y=>y.id===id);if(!x)return;Object.assign(x,patch);scopesChanged();if(gunArea==="scopes"&&scopeOpen===id&&!$("panel-rifles").hidden)renderRifles();};
 // the newest picture uploaded for a scope (kept with the gun photos, private to you)
 window.RB_RETPIC=id=>{const ps=gunPhotos.filter(q=>q.rifle===id);return ps.length?ps[ps.length-1]:null;};
-function loadScopeCat(){return SCOPE_CAT?Promise.resolve(SCOPE_CAT):fetch("/scopes.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>(SCOPE_CAT=j.scopes||[]));}
+function loadScopeCat(){return SCOPE_CAT?Promise.resolve(SCOPE_CAT):fetch("/scopes.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>{SCOPE_CAT=j.scopes||[];LIBED.apply("scopes");return SCOPE_CAT;});}
 function newScope(f){const x=Object.assign({id:"s"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",model:"",magMin:null,magMax:null,obj:null,fp:"FFP",sfpTrue:null,unit:"mil",click:0.1,reticle:"",notes:"",retMode:"plain",look:null,pic:null},f||{});
   scopes.push(x);if(scopeForGun&&rifles.some(g=>g.id===scopeForGun))mountScope(x.id,scopeForGun);scopeForGun=null;scopesChanged();scopeAdding=false;scopeOpen=x.id;return x;}
 async function retJpeg(file){
@@ -5223,7 +5208,7 @@ function vAccountState(t){const st=$("vaOffState");if(st&&t)st.textContent=t;}
    A gun can carry a suppressor (gun.canId), like a scope. Each range trip records the suppressor it was shot with (trip.canId:
    copied from the gun when the trip is made, changeable on the trip), and a suppressor's round count comes from those trips.
    Photos go in the gun-photo store under the item's id. */
-let cans=[],canOpen=null,canFromGun=null,inv=[],invOpen=null,mags=[],magOpen=null,magFromGun=null,magBulk=null;
+let cans=[],canOpen=null,canFromGun=null,canAdding=false,canForGun=null,canAddQ="",inv=[],invOpen=null,mags=[],magOpen=null,magFromGun=null,magBulk=null;
 const gearId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const canName=c=>[c.mfr,c.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ")||"Unnamed suppressor";
 const canGuns=c=>rifles.filter(r=>r.canId===c.id);
@@ -5319,9 +5304,18 @@ function renderCans(root){
   if(canOpen&&!cans.some(c=>c.id===canOpen))canOpen=null;
   const c=canOpen&&cans.find(x=>x.id===canOpen);
   let h;
+  if(c)canAdding=false;
+  if(canAdding){
+    root.innerHTML=addScreenHtml({title:"Add a suppressor",q:canAddQ,ph:CAT_PICK.cans.ph,own:"+ Enter a suppressor yourself",
+      note:'Pick yours to fill in its caliber rating and the maker\'s published size, mount, full auto rating and barrel-length minimum, or enter it yourself. To fix something in this list, open it in <a class=goto href=#go data-go=tools:lib:cans>Tools › Library</a>.'});
+    gearHead("Add a suppressor",canForGun&&rifles.some(g=>g.id===canForGun)?"‹ "+(rifles.find(g=>g.id===canForGun).name||"Gun"):"‹ Suppressors");
+    bindAddScreen({load:loadCanCat,onQ:v=>{canAddQ=v;},items:()=>libItems("cans"),onPick:it=>libAdd("cans",it.i),
+      onOwn:()=>{const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);freshAdd(n,{list:()=>cans,open:()=>canOpen===n.id,save:queueRifles});
+        if(canForGun&&rifles.some(g=>g.id===canForGun))mountCan(n.id,canForGun);canForGun=null;canAdding=false;queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("cn_mfr");if(e)e.focus();}});
+    return;
+  }
   if(!c){
-    if(!window.RB_CANS)loadCanCat().then(l=>{if(l.length&&gunArea==="cans"&&!canOpen)renderRifles();});
-    h='<section class="card" aria-label="Suppressors list">'+(window.RB_CANS&&RB_CANS.length?'<div class="grid">'+catPickHtml("cans")+'</div>':'')+'<div class="row"><button class="btn primary" id="canAdd" type="button">+ Add suppressor</button></div>';
+    h='<section class="card" aria-label="Suppressors list"><div class="row"><button class="btn primary" id="canAdd" type="button">+ Add suppressor</button></div>';
     if(!cans.length)h+='<p class="note">No suppressors yet. Add each one with its serial number and approval date. Put one on a gun if it lives there; leave it off if it moves between guns, and pick it on each range trip. Its round count comes from the range trips shot with it.</p>';
     else h+='<div class="cartgroup">'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(x=>{const gs=canGuns(x),rc=canRounds(x),th=gearThumb(x.id);
       return '<button class="loaditem withthumb" type="button" data-canopen="'+esc(x.id)+'"><span class="lthumb">'+(th||CAN_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(canName(x))+'</span>'+
@@ -5330,9 +5324,8 @@ function renderCans(root){
         '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", "))+(gs.some(g=>canFitHtml(x,gunCart(g)).includes('class="err"'))?' <span class="lowtag">· not rated for that cartridge</span>':''):'Not on a gun: picked on each range trip')+'</span></span></button>';}).join("")+'</div>';
     h+='</section>';
     root.innerHTML=h;gearHead(null);
-    $("canAdd").addEventListener("click",()=>{const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);freshAdd(n,{list:()=>cans,open:()=>canOpen===n.id,save:queueRifles});queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("cn_mfr");if(e)e.focus();});
+    $("canAdd").addEventListener("click",()=>{canAdding=true;canAddQ="";canForGun=null;renderRifles();window.scrollTo(0,0);});
     root.querySelectorAll("[data-canopen]").forEach(b=>b.addEventListener("click",()=>{canOpen=b.dataset.canopen;canFromGun=null;renderRifles();window.scrollTo(0,0);}));
-    bindCatPick("cans",i=>{const x=(window.RB_CANS||[])[i];if(!x)return;const n=canFromCat(x);cans.push(n);queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);});
     return;
   }
   const g0=canGuns(c)[0],rc=canRounds(c),tr=trips.filter(t=>t.canId===c.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
@@ -5687,8 +5680,8 @@ function renderScopes(root){
   const sc=scopeOpen&&scopes.find(x=>x.id===scopeOpen),onGun=x=>rifles.filter(g=>g.scopeId===x.id);
   let h;
   if(scopeAdding){
-    h='<section class="card" aria-label="Add a scope"><h2>Add a scope</h2><p class="note">Pick yours to fill in its power, focal plane, units and click value from the maker\'s published specs, or enter it yourself.</p>'+
-      '<div class="row"><input id="scopeQ" type="search" placeholder="Search: maker, model, MIL or MOA" value="'+esc(scopeQ)+'" aria-label="Search scopes" style="flex:1 1 220px"><button class="btn" type="button" id="scopeOwn">+ Enter a scope yourself</button></div><div id="scopeCat"><p class="note">Loading the list…</p></div></section>';
+    h=addScreenHtml({title:"Add a scope",q:scopeQ,ph:"Search: maker, model, MIL or MOA",own:"+ Enter a scope yourself",
+      note:'Pick yours to fill in its power, focal plane, units and click value from the maker\'s published specs, or enter it yourself. To fix something in this list, open it in <a class=goto href=#go data-go=tools:lib:scopes>Tools › Library</a>.'});
   }else if(!sc){
     h='<section class="card" aria-label="Scopes list"><div class="row"><button class="btn primary" id="scopeAdd" type="button">+ Add scope</button></div>';
     if(!scopes.length)h+='<p class="note">No scopes yet. Add the scope on each gun: its units and click value then set the dope card for every profile that uses that gun, and the reticle on the card can look like yours.</p>';
@@ -5730,16 +5723,8 @@ function renderScopes(root){
   $("rifSeg").hidden=!!(sc||scopeAdding);$("rifHeadBack").hidden=!(sc||scopeAdding);$("rifHeadBack").textContent=scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)&&sc?"‹ "+(rifles.find(r=>r.id===scopeFromGun).name||"Gun"):"‹ Scopes";$("rifSub").hidden=!!(sc||scopeAdding);
   $("rifTitle").textContent=sc?scopeLabel(sc):scopeAdding?"Add a scope":"Gear & Ranges";
   if(scopeAdding){
-    const draw=()=>{const box=$("scopeCat");if(!box||!SCOPE_CAT)return;const q=scopeQ.trim().toLowerCase().split(/\s+/).filter(Boolean);
-      const hit=SCOPE_CAT.map((x,i)=>[x,i]).filter(([x])=>{const t=(x.mfr+" "+x.model+" "+x.unit+" "+(x.unit==="mil"?"mrad":"")+" "+x.fp+" "+x.reticle).toLowerCase();return q.every(w=>t.includes(w));});
-      if(!hit.length){box.innerHTML='<p class="note">No match. Try fewer words, or tap <b>+ Enter a scope yourself</b>.</p>';return;}
-      const by={};hit.forEach(([x,i])=>{(by[x.mfr]=by[x.mfr]||[]).push([x,i]);});
-      box.innerHTML=Object.keys(by).sort().map(m=>'<h3 class="catmk">'+esc(m)+'</h3><div class="cartgroup">'+by[m].map(([x,i])=>'<button class="loaditem" type="button" data-scat="'+i+'"><span class="t">'+esc(x.model)+'</span><span class="d">'+esc([unitTxt(x),x.fp,x.reticle].filter(Boolean).join(" · "))+'</span></button>').join("")+'</div>').join("");
-      box.querySelectorAll("[data-scat]").forEach(b=>b.addEventListener("click",()=>{const x=SCOPE_CAT[+b.dataset.scat];
-        newScope({mfr:x.mfr,model:x.model,magMin:x.mag[0],magMax:x.mag[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src});renderRifles();window.scrollTo(0,0);}));};
-    loadScopeCat().then(draw).catch(()=>{const b=$("scopeCat");if(b)b.innerHTML='<p class="err">Couldn\'t load the list. Check your connection, or enter the scope yourself.</p>';});
-    $("scopeQ").addEventListener("input",e=>{scopeQ=e.target.value;draw();});
-    $("scopeOwn").addEventListener("click",()=>{const x=newScope({});if(x)freshAdd(x,{list:()=>scopes,open:()=>scopeOpen===x.id,save:scopesChanged});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();});
+    bindAddScreen({load:loadScopeCat,onQ:v=>{scopeQ=v;},items:()=>libItems("scopes"),onPick:it=>libAdd("scopes",it.i),
+      onOwn:()=>{const x=newScope({});if(x)freshAdd(x,{list:()=>scopes,open:()=>scopeOpen===x.id,save:scopesChanged});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();}});
     return;
   }
   if(!sc){
@@ -5832,7 +5817,9 @@ function queueComps(){
 }
 function setComps(d){comps={bullets:[],powders:[],primers:[],brass:[],cartridges:[],...(d||{})};["bullets","powders","primers","brass","cartridges"].forEach(k=>{if(!Array.isArray(comps[k]))comps[k]=[];});
   // your cartridge fixes and additions (Tools → Cartridges)
-  if(window.RB_CARTS){RB_CARTS.setUser(comps.cartEdits);if(window.RB_CARTPAGE&&!$("panel-tools").hidden&&!RB_CARTPAGE.editing())RB_CARTPAGE.draw();}}
+  if(window.RB_CARTS){RB_CARTS.setUser(comps.cartEdits);if(window.RB_CARTPAGE&&!$("panel-tools").hidden&&!RB_CARTPAGE.editing())RB_CARTPAGE.draw();}
+  // your fixes to the other built-in lists (Tools › Library)
+  if(comps.libEdits&&typeof comps.libEdits!=="object")comps.libEdits={};LIBED.applyAll();}
 window.RB_CART_EDITS={save(u){comps.cartEdits=JSON.parse(JSON.stringify(u));queueComps();}};
 window.RB_MY_POWDERS=()=>(comps.powders||[]).map(c=>[c.mfr,c.name].filter(Boolean).join(" "));
 function compsEditing(){const a=document.activeElement;return a&&($("compRoot").contains(a)||(window.RB_CARTPAGE&&RB_CARTPAGE.editing()))&&/INPUT|TEXTAREA|SELECT/.test(a.tagName);}
@@ -5874,6 +5861,216 @@ function pushComp(kind,c){
   if(na)queueAmmo();
   return {nl,na};
 }
+/* ---------- The built-in lists (2.41): what each one holds, and your fixes to them ----------
+   Tools › Library shows each list; tap an entry to see it all or fix something. Your fixes are kept with your Components as
+   comps.libEdits = {kind:{key:{field:value}}} and applied to the lists in memory (LIBED keeps copies of the originals), so the
+   Add screens and every lookup use your version. Things you've already added are your own copies and don't change. */
+const LIB_YN=[["","Not published"],["yes","Yes"],["no","No"]];
+const LIB_DEF={
+  bullets:{title:"Bullets",one:"bullet",mine:"Components › Bullets",list:()=>window.RB_BULLETS,load:()=>loadBulletCat(),
+    key:b=>[b.mfr,b.line,b.w,b.d].join("|"),label:b=>b.mfr+" "+b.line+" "+b.w+" gr",
+    sub:b=>[b.f?"for "+b.f:"",b.g7?"G7 "+b.g7:"",b.g1?"G1 "+b.g1:"",b.len?b.len+'" long':""].filter(Boolean).join(" · "),
+    group:b=>b.cal+" ("+String(b.d).replace(/^0\./,".")+'")',gk:b=>b.d,words:b=>[b.cal,String(b.d),String(b.d).replace(/^0\./,""),b.item||"",b.k||"",b.f?b.f.replace(/[./]/g," "):""].join(" "),num:true,
+    fields:[["mfr","Maker","text"],["line","Bullet","text"],["cal","Caliber (as sold)","text"],["d","Actual diameter (in)","num"],["w","Weight (gr)","num"],["g1","G1 BC","num"],["g7","G7 BC","num"],["len","Length (in)","num"],["f","Sold for","text"],["item","Item number","text"]]},
+  powders:{title:"Powders",one:"powder",mine:"Components › Powders",list:()=>POWDER_LIST,arr:["mfr","name","type"],
+    key:p=>p[0]+"|"+p[1],label:p=>p[1],sub:p=>p[2],group:p=>p[0],
+    fields:[["mfr","Maker","text"],["name","Name","text"],["type","Type","text"]]},
+  primers:{title:"Primers",one:"primer",mine:"Components › Primers",list:()=>PRIMER_LIST,arr:["mfr","name","size"],
+    key:p=>p[0]+"|"+p[1],label:p=>p[0]+" "+p[1],sub:()=>"",group:p=>p[2],
+    fields:[["mfr","Maker","text"],["name","Name","text"],["size","Size","sel",()=>PRIMER_SIZES.map(z=>[z,z])]]},
+  ammo:{title:"Factory ammo",one:"factory load",mine:"Gear & Ranges › Ammo",list:()=>AMMO_CATALOG,
+    key:a=>a.item,label:a=>a.mfr+" "+a.line+" "+a.bullet,
+    sub:a=>[a.v?U.s("fps",a.v,0,true)+(a.tb?" ("+U.s("dim",a.tb,0)+" barrel)":""):"",a.bc?"BC "+a.bc+" G1":"no BC published",a.g7?"G7 "+a.g7:""].filter(Boolean).join(" · "),
+    group:a=>a.cart,gk:a=>a.dia||0,words:a=>a.item+" "+a.w,
+    fields:[["mfr","Maker","text"],["line","Line","text"],["cart","Cartridge","text"],["bullet","Bullet","text"],["w","Bullet weight (gr)","num"],["dia","Bullet diameter (in)","num"],["v","Box velocity (fps)","num"],["tb","Test barrel (in)","num"],["bc","G1 BC","num"],["g7","G7 BC","num"]]},
+  scopes:{title:"Scopes",one:"scope",mine:"Gear & Ranges › Scopes",list:()=>SCOPE_CAT,load:()=>loadScopeCat(),
+    key:s=>s.mfr+"|"+s.model,label:s=>s.model,sub:s=>[unitTxt(s),s.fp,s.reticle].filter(Boolean).join(" · "),group:s=>s.mfr,
+    words:s=>(s.unit==="mil"?"mil mrad":"moa"),
+    fields:[["mfr","Maker","text"],["model","Model","text"],["mag0","Power from (x)","num"],["mag1","Power to (x)","num"],["obj","Objective (mm)","num"],
+      ["fp","Focal plane","sel",[["FFP","First (FFP)"],["SFP","Second (SFP)"]]],["sfpTrue","Marks true at power (x)","num"],["unit","Reticle","sel",[["mil","MIL (MRAD)"],["moa","MOA"]]],
+      ["turret","Turrets","sel",[["","Same as the reticle"],["mil","MIL (MRAD)"],["moa","MOA"]]],["click","One click is","num"],["reticle","Reticle name","text"]]},
+  cans:{title:"Suppressors",one:"suppressor",mine:"Gear & Ranges › Suppressors",list:()=>window.RB_CANS,load:()=>loadCanCat(),
+    key:x=>x.mfr+"|"+x.model,label:x=>x.model,group:x=>x.mfr,
+    sub:x=>[x.cal,x.fa===true?"Full auto rated":"",x.minbarrel?x.minbarrel+" in barrel minimum":"",x.disc?"Discontinued":""].filter(Boolean).join(" · "),
+    words:x=>[CAN_TYPE[x.type]||"",x.fa===true?"full auto fa":"",x.disc?"discontinued":""].join(" "),
+    fields:[["mfr","Maker","text"],["model","Model","text"],["type","Type","sel",()=>Object.entries(CAN_TYPE)],["cal","Rated for (caliber)","text"],["maxcal","Largest bullet (in)","num"],
+      ["len","Length (in)","num"],["wt","Weight (oz)","num"],["dia","Diameter (in)","num"],["minbarrel","Barrel minimum (in)","num"],["fa","Full auto rated","sel",LIB_YN],
+      ["disc","Discontinued","sel",[["","No"],["yes","Yes"]]],["mount","Mount","text"],["notes","Notes","area"]]}};
+const LIB_ORDER=["bullets","cart","powders","primers","ammo","scopes","cans"];
+// a field's value on an entry, and putting one back (powders and primers are [maker, name, type] lists; a scope's power is mag:[from,to])
+function libGet(kind,x,k){const D=LIB_DEF[kind];if(D.arr)return x[D.arr.indexOf(k)];
+  if(kind==="scopes"&&(k==="mag0"||k==="mag1"))return (x.mag||[])[k==="mag0"?0:1];
+  if(kind==="cans"&&k==="fa")return x.fa===true?"yes":x.fa===false?"no":"";
+  if(kind==="cans"&&k==="disc")return x.disc?"yes":"";
+  return x[k];}
+function libPut(kind,x,k,v){const D=LIB_DEF[kind];if(D.arr){x[D.arr.indexOf(k)]=v;return;}
+  if(kind==="scopes"&&(k==="mag0"||k==="mag1")){x.mag=(x.mag||[null,null]).slice();x.mag[k==="mag0"?0:1]=v;return;}
+  if(kind==="cans"&&k==="fa"){x.fa=v==="yes"?true:v==="no"?false:null;return;}
+  if(kind==="cans"&&k==="disc"){if(v==="yes")x.disc=true;else delete x.disc;return;}
+  if(v==null||v==="")delete x[k];else x[k]=v;}
+const libSame=(a,b)=>{const e=v=>v==null||v==="";if(e(a)&&e(b))return true;if(e(a)!==e(b))return false;
+  return typeof a==="number"||typeof b==="number"?Math.abs((num(a)||0)-(num(b)||0))<1e-9:String(a)===String(b);};
+const LIBED={base:{},
+  edits(){return (typeof comps!=="undefined"&&comps&&comps.libEdits)||{};},
+  ready(kind){const L=LIB_DEF[kind].list();return !!(L&&L.length);},
+  // put the list back to the originals, then lay your fixes on top (in place, so anything holding the list sees it)
+  apply(kind){const D=LIB_DEF[kind],L=D.list();if(!L||!L.length)return;
+    if(!this.base[kind]||this.base[kind].length!==L.length)this.base[kind]=L.map(x=>JSON.parse(JSON.stringify(x)));
+    const B=this.base[kind],E=this.edits()[kind]||{};
+    B.forEach((b,i)=>{const cur=L[i],e=E[D.key(b)];
+      if(Array.isArray(cur)){cur.length=0;b.forEach(v=>cur.push(v));}else{Object.keys(cur).forEach(k=>delete cur[k]);Object.assign(cur,JSON.parse(JSON.stringify(b)));}
+      if(e)Object.keys(e).forEach(k=>libPut(kind,cur,k,e[k]));});},
+  applyAll(){Object.keys(LIB_DEF).forEach(k=>this.apply(k));},
+  orig(kind,i){return this.base[kind]&&this.base[kind][i];},
+  changed(kind,i){const b=this.orig(kind,i);if(!b)return [];const e=(this.edits()[kind]||{})[LIB_DEF[kind].key(b)];return e?Object.keys(e):[];},
+  editedCount(kind){return Object.keys(this.edits()[kind]||{}).length;},
+  set(kind,i,k,v){const b=this.orig(kind,i);if(!b)return;const key=LIB_DEF[kind].key(b);
+    comps.libEdits=comps.libEdits||{};const E=comps.libEdits[kind]=comps.libEdits[kind]||{},e=E[key]||{};
+    if(libSame(libGet(kind,b,k),v))delete e[k];else e[k]=v;
+    if(Object.keys(e).length)E[key]=e;else delete E[key];
+    if(!Object.keys(E).length)delete comps.libEdits[kind];
+    queueComps();this.apply(kind);},
+  revert(kind,i,k){const b=this.orig(kind,i);if(!b||!comps.libEdits||!comps.libEdits[kind])return null;const key=LIB_DEF[kind].key(b),E=comps.libEdits[kind],was=E[key]?JSON.parse(JSON.stringify(E[key])):null;
+    if(k){if(E[key])delete E[key][k];if(E[key]&&!Object.keys(E[key]).length)delete E[key];}else delete E[key];
+    if(!Object.keys(E).length)delete comps.libEdits[kind];queueComps();this.apply(kind);return was;},
+  restore(kind,i,was){const b=this.orig(kind,i);if(!b||!was)return;comps.libEdits=comps.libEdits||{};(comps.libEdits[kind]=comps.libEdits[kind]||{})[LIB_DEF[kind].key(b)]=was;queueComps();this.apply(kind);}};
+window.RB_LIBED=LIBED;
+// "Add it" from the Library or an Add screen: make your own copy and open it
+function libAdd(kind,i){const x=(LIB_DEF[kind].list()||[])[i];if(!x)return;
+  if(kind==="bullets"||kind==="powders"||kind==="primers"){const c=compFromCat(kind,i);if(!c)return;comps[kind].push(c);queueComps();compKind=kind;compAdding=false;compOpen=c.id;showTab("brass");renderComps();window.scrollTo(0,0);return;}
+  gunArea=kind;rifleOpen=null;
+  if(kind==="ammo"){ammoAdding=false;showTab("rifles");addFromCatalog(x);return;}
+  if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src});}
+  if(kind==="cans"){const n=canFromCat(x);cans.push(n);if(canForGun&&rifles.some(g=>g.id===canForGun))mountCan(n.id,canForGun);canForGun=null;canAdding=false;canOpen=n.id;queueRifles();}
+  showTab("rifles");renderRifles();window.scrollTo(0,0);}
+
+/* ---------- the Add screen every built-in list uses (2.41), the same as Add a scope: a search box, the list as tiles grouped by
+   maker or caliber, and a button to enter one yourself ---------- */
+function addScreenHtml(o){
+  return '<section class="card addscreen" aria-label="'+esc(o.title)+'"><h2>'+esc(o.title)+'</h2><p class="note">'+o.note+'</p>'+
+    '<div class="row"><input id="addQ" type="search" placeholder="'+esc(o.ph)+'" value="'+esc(o.q||"")+'" aria-label="Search" autocomplete="off" style="flex:1 1 220px">'+
+    '<button class="btn" type="button" id="addOwn">'+esc(o.own)+'</button>'+(o.more||"")+'</div>'+(o.after||"")+'<div id="addCat"><p class="note">Loading the list…</p></div></section>';}
+// a typed word against an entry; with nums (bullets), a number has to be a whole weight, caliber or diameter, so "6.5" doesn't find a BC of .657
+function addMatch(x,w,nums){const t=lc(x.t+" "+(x.d||"")+" "+x.g+" "+(x.words||""));
+  if(nums&&/^[\d.]+$/.test(w)){const v=w.replace(/^0(?=\.)/,"");return lc(x.t+" "+x.g+" "+(x.words||"")).split(/[^a-z0-9.]+/).some(k=>{k=k.replace(/\.$/,"");return k===w||k.replace(/^0(?=\.)/,"")===v||k.replace(/^0?\./,"")===v.replace(/^\./,"")||(k.startsWith(w)&&/^[a-z]/.test(k.slice(w.length)));});}
+  return t.includes(w)||t.replace(/[^a-z0-9]+/g,"").includes(w.replace(/[^a-z0-9]+/g,""));}
+const addTile=(x,n)=>(x.after?'<div class="sharedrow">':'')+'<button class="loaditem'+(x.thumb?' withthumb':'')+(x.cls?' '+x.cls:'')+'" type="button" data-addi="'+n+'">'+(x.thumb?'<span class="lthumb">'+x.thumb+'</span><span class="ltext">':'')+
+  '<span class="t">'+esc(x.t)+'</span>'+(x.d?'<span class="d">'+esc(x.d)+'</span>':'')+(x.m?'<span class="m">'+esc(x.m)+'</span>':'')+(x.thumb?'</span>':'')+'</button>'+(x.after?x.after+'</div>':'');
+/* o: items() → [{t,d,m,g,gk,words,thumb,cls,...}] or null while loading · load() a promise for the list · nums · onPick(item) · onOwn() · onQ(text) · empty (when nothing's listed) */
+function bindAddScreen(o){
+  const box=$("addCat"),qi=$("addQ");if(!box||!qi)return;let lim=200;
+  const draw=()=>{const its=o.items();if(!its){return;}
+    if(!its.length){box.innerHTML='<p class="note">'+(o.empty||'Nothing listed. Tap <b>'+esc($("addOwn").textContent)+'</b>.')+'</p>';return;}
+    const words=lc(qi.value).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean),hit=its.filter(x=>words.every(w=>addMatch(x,w,o.nums)));
+    if(!hit.length){box.innerHTML='<p class="note">No match. Try fewer words, or tap <b>'+esc($("addOwn").textContent)+'</b>.</p>';return;}
+    const shown=hit.slice(0,lim),by=new Map();shown.forEach((x,n)=>{x._n=n;if(!by.has(x.g))by.set(x.g,[]);by.get(x.g).push(x);});
+    const keys=[...by.keys()].sort((a,b)=>(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(a).localeCompare(String(b),undefined,{numeric:true}));
+    box.innerHTML=keys.map(g=>'<h3 class="catmk">'+esc(g)+'</h3><div class="cartgroup">'+by.get(g).map(x=>addTile(x,x._n)).join("")+'</div>').join("")+
+      (hit.length>lim?'<div class="row addmore"><span class="note">'+(hit.length-lim).toLocaleString()+' more. Type to narrow it down, or </span><button class="btn small" type="button" id="addAll">show all '+hit.length.toLocaleString()+'</button></div>':'');
+    box.querySelectorAll("[data-addi]").forEach(b=>b.addEventListener("click",()=>o.onPick(shown[+b.dataset.addi])));
+    if(o.bind)o.bind(box);
+    const al=$("addAll");if(al)al.addEventListener("click",()=>{lim=hit.length;draw();});};
+  qi.addEventListener("input",()=>{lim=200;if(o.onQ)o.onQ(qi.value);draw();});
+  qi.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const f=box.querySelector("[data-addi]");if(f)f.click();}});
+  $("addOwn").addEventListener("click",o.onOwn);
+  if(o.items())draw();else (o.load?o.load():Promise.resolve()).then(()=>{if(document.body.contains(box))draw();}).catch(()=>{if(document.body.contains(box))box.innerHTML='<p class="err">Couldn\'t load the list. Check your connection, or tap <b>'+esc($("addOwn").textContent)+'</b>.</p>';});}
+// an Add screen's tiles for a built-in list (with your fixes)
+function libItems(kind,skip){const D=LIB_DEF[kind],L=D.list();if(!L||!L.length)return null;LIBED.apply(kind);
+  return L.map((x,i)=>({i,x,t:D.label(x),d:D.sub(x),g:D.group(x),gk:D.gk?D.gk(x):0,words:(D.words?D.words(x):"")+(LIBED.changed(kind,i).length?" edited":""),
+    m:LIBED.changed(kind,i).length?"Your edited version":""})).filter(it=>!skip||!skip(it));}
+
+/* ---------- Tools › Library (2.41): every built-in list, each one searchable; tap an entry to see all of it, fix it for your own
+   use (Revert puts the original back), or add it to your gear or components. Cartridges is the same list as before. ---------- */
+window.RB_LIBPAGE=(function(){
+  let list=null,q="",open=null,lim=150;
+  const TITLE=k=>k==="cart"?"Cartridges":LIB_DEF[k].title;
+  function head(){const b=$("toolsBack"),t=$("toolsTitle");if(b)b.textContent=list?"‹ Library":"‹ Tools";if(t)t.textContent=list?TITLE(list):"Library";}
+  function landing(){const n=RB_LIB.counts(),f=v=>v==null?"…":v.toLocaleString();
+    if(n.bullets==null||n.scopes==null||n.cans==null)RB_LIB.load().then(()=>{if(!list&&visible())draw();});
+    const row=(go,name,d,v,ed)=>'<button class="loaditem librow" type="button" data-libgo="'+go+'"><span class="ltext"><span class="t">'+name+(ed?' <span class="chip crchg">'+ed+' edited</span>':'')+'</span><span class="d">'+d+'</span></span>'+(v!==undefined?'<b class="libn">'+f(v)+'</b>':'')+'</button>';
+    const ed=k=>LIBED.editedCount(k)||0,ce=window.RB_CARTS?Object.keys(RB_CARTS.user().ed||{}).length+(RB_CARTS.user().add||[]).length:0;
+    const bm=n.byMaker||[],top=bm.length?bm[0][1]:1;
+    return '<section class="card" aria-label="Library" id="libList"><h2>Built in Library</h2><p class="note">Everything Range Book knows before you add anything, taken from the makers\' own published data. Tap a list to look through it. Tap anything in it to see all of it, fix something for your own use, or add it to yours.</p><div class="cartgroup">'+
+      row("bullets","Bullets",(n.bulletMakers!=null?n.bulletMakers+" makers, "+f(n.bulletBC)+" with a published BC.":"With their BCs and lengths."),n.bullets,ed("bullets"))+
+      row("cart","Cartridges","Bullet diameter, case and overall length, trim-to and primer size.",n.cartridges,ce)+
+      row("powders","Powders",n.powderMakers+" makers.",n.powders,ed("powders"))+
+      row("primers","Primers","With their sizes.",n.primers,ed("primers"))+
+      row("ammo","Factory ammo","In "+n.loadCarts+" cartridges, with BC and box velocity.",n.loads,ed("ammo"))+
+      row("scopes","Scopes","Power, focal plane, click value and reticle.",n.scopes,ed("scopes"))+
+      row("cans","Suppressors",(n.canMakers!=null?n.canMakers+" makers. ":"")+"Caliber rating, size, full auto and barrel-length limits.",n.cans,ed("cans"))+'</div>'+
+      '<h3>Reloading reference</h3><div class="cartgroup">'+row("ref:dia","Bullet diameters","Which cartridges share a bullet.",n.dia)+row("ref:burn","Powder burn order","Fastest to slowest.",n.burn)+
+      row("ref:press","Pressure signs","What each looks like and what to do.",n.press)+row("ref:gloss","Glossary","Reloading terms explained.",n.gloss)+'</div>'+
+      (bm.length?'<h3>Bullets by maker</h3><div class="libbars">'+bm.map(([m,c])=>'<div class="libbar"><span>'+esc(m)+'</span><span class="lbtrack"><span style="width:'+(c/top*100).toFixed(1)+'%"></span></span><b>'+c+'</b></div>').join("")+'</div>':'')+'</section>';}
+  function rowHead(kind,x,i){const D=LIB_DEF[kind],ch=LIBED.changed(kind,i).length;
+    return '<span class="t">'+esc(D.label(x))+(ch?' <span class="chip crchg">Edited</span>':'')+'</span>'+(D.sub(x)?'<span class="d">'+esc(D.sub(x))+'</span>':'');}
+  function inputFor(kind,f,v){const [k,,t,opts]=f,id="lb_"+k;
+    if(t==="sel"){const o=typeof opts==="function"?opts():opts,has=o.some(p=>String(p[0])===String(v??""));return '<select id="'+id+'" class="fieldselect">'+(has?'':'<option value="'+esc(v??"")+'" selected>'+esc(v??"")+'</option>')+o.map(p=>'<option value="'+esc(p[0])+'"'+(String(p[0])===String(v??"")?' selected':'')+'>'+esc(p[1])+'</option>').join("")+'</select>';}
+    if(t==="area")return '<textarea id="'+id+'" style="min-height:90px">'+esc(v??"")+'</textarea>';
+    if(t==="num")return '<input id="'+id+'" type="number" inputmode="decimal" step="any" value="'+esc(v??"")+'">';
+    return '<input id="'+id+'" type="text" autocomplete="off" value="'+esc(v??"")+'">';}
+  const showV=(f,v)=>{if(v==null||v==="")return "blank";if(f[2]==="sel"){const o=typeof f[3]==="function"?f[3]():f[3],p=o.find(p=>String(p[0])===String(v));return p?p[1]:String(v);}return String(v);};
+  function editor(kind,i){const D=LIB_DEF[kind],L=D.list(),x=L[i],b=LIBED.orig(kind,i),chg=LIBED.changed(kind,i);
+    let h='<div class="cred"><div class="grid">';
+    D.fields.forEach(f=>{const k=f[0],c=chg.includes(k);
+      h+='<div class="field'+(f[2]==="area"||k==="reticle"||k==="mount"||k==="cal"&&kind==="cans"?' wide':'')+(c?' chg':'')+'" data-fk="'+k+'"><label for="lb_'+k+'">'+esc(f[1])+(c?' <span class="crtag">changed</span>':'')+'</label>'+inputFor(kind,f,libGet(kind,x,k))+
+        (c?'<button type="button" class="linkbtn crrev" data-lrev="'+k+'">Revert to '+esc(showV(f,libGet(kind,b,k)))+'</button>':'')+'</div>';});
+    h+='</div>';
+    if(kind==="ammo"&&x.src)h+='<p class="note">From <a href="'+esc(x.src)+'" target="_blank" rel="noopener">'+esc(x.dealer?"a dealer listing":x.mfr+"'s page")+'</a>'+(x.note?'. '+esc(x.note):'')+'.</p>';
+    if(kind==="scopes"&&x.src)h+='<p class="note">From <a href="'+esc(x.src)+'" target="_blank" rel="noopener">'+esc(x.mfr)+'\'s published specs</a>.</p>';
+    h+='<div class="row"><button type="button" class="btn primary" data-ladd>+ Add to my '+esc(D.mine.split(" › ").pop().toLowerCase())+'</button>'+(chg.length?'<button type="button" class="btn" data-lrevall>Revert all changes</button>':'')+'</div>'+
+      '<p class="note">'+(chg.length?'Changed boxes are colored. ':'')+'Your changes are used when you add this from here or from <b>'+esc(D.mine)+'</b>; <b>Revert</b> puts the maker\'s number back. Ones you\'ve already added keep their own numbers.</p></div>';
+    return h;}
+  function listView(kind){const D=LIB_DEF[kind];
+    if(!LIBED.ready(kind)){(D.load?D.load():Promise.resolve()).then(()=>{LIBED.apply(kind);if(list===kind&&visible())draw();});return '<section class="card"><p class="note">Loading the list…</p></section>';}
+    LIBED.apply(kind);
+    const L=D.list(),words=lc(q).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean);
+    const all=L.map((x,i)=>({i,x,t:D.label(x),d:D.sub(x),g:D.group(x),gk:D.gk?D.gk(x):0,words:(D.words?D.words(x):"")+(LIBED.changed(kind,i).length?" edited":"")}));
+    const hit=all.filter(it=>it.i===open||words.every(w=>addMatch(it,w,D.num)));
+    const shown=hit.slice(0,lim);if(open!=null&&!shown.some(it=>it.i===open)){const o=hit.find(it=>it.i===open);if(o)shown.push(o);}
+    const by=new Map();shown.forEach(it=>{if(!by.has(it.g))by.set(it.g,[]);by.get(it.g).push(it);});
+    const keys=[...by.keys()].sort((a,b)=>(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(a).localeCompare(String(b),undefined,{numeric:true}));
+    const ne=LIBED.editedCount(kind);
+    let h='<section class="card" aria-label="'+esc(D.title)+'" id="libKind"><p class="note">From the makers\' published data. Tap one to see all of it, fix something for your own use, or add it to your '+esc(D.mine.split(" › ").pop().toLowerCase())+'.'+(ne?' You\'ve edited '+ne+'; search <b>edited</b> to see them.':'')+'</p>'+
+      '<div class="row crtools"><input id="libQ" type="search" placeholder="Search '+esc(D.title.toLowerCase())+'" aria-label="Search '+esc(D.title.toLowerCase())+'" value="'+esc(q)+'"></div>'+
+      '<p class="note libcount">'+(words.length?hit.length.toLocaleString()+' of '+L.length.toLocaleString():L.length.toLocaleString()+' '+esc(D.title.toLowerCase()))+'</p>';
+    h+=hit.length?keys.map(g=>'<h3 class="crgh">'+esc(g)+'</h3><div class="crlist">'+by.get(g).map(it=>{const isO=open===it.i;
+      return '<div class="crow'+(isO?' open':'')+'" data-lrow="'+it.i+'"><button type="button" class="crhead" data-lr="'+it.i+'" aria-expanded="'+isO+'">'+rowHead(kind,it.x,it.i)+'</button>'+(isO?editor(kind,it.i):'')+'</div>';}).join("")+'</div>').join(""):'<p class="note">Nothing matches.</p>';
+    if(hit.length>lim)h+='<div class="row addmore"><span class="note">'+(hit.length-lim).toLocaleString()+' more. Type to narrow it down, or </span><button class="btn small" type="button" id="libAll">show all '+hit.length.toLocaleString()+'</button></div>';
+    return h+'</section>';}
+  function visible(){const s=document.querySelector('[data-toolsec="lib"]');return !!(s&&!s.hidden&&!$("panel-tools").hidden);}
+  function draw(){const root=$("libRoot");if(!root)return;head();
+    const cr=$("cartRoot");
+    if(list==="cart"){root.innerHTML='<section class="card" aria-label="Cartridges" id="libCart"></section>';if(cr){$("libCart").appendChild(cr);if(window.RB_CARTPAGE)RB_CARTPAGE.draw();}return;}
+    if(cr&&root.contains(cr)){const keep=document.querySelector('[data-toolsec="cart"]');if(keep)keep.appendChild(cr);}
+    const had=document.activeElement&&document.activeElement.id,pos=had&&document.activeElement.selectionStart;
+    root.innerHTML=list?listView(list):landing();
+    bind(root);
+    if(had&&/^lib/.test(had)){const el=$(had);if(el){el.focus();try{if(pos!=null)el.setSelectionRange(pos,pos);}catch(e){}}}}
+  function setVal(kind,i,f,el){const t=f[2];const v=t==="num"?num(el.value):el.value;
+    LIBED.set(kind,i,f[0],v);
+    const rw=document.querySelector('[data-lrow="'+i+'"]');if(!rw)return;const x=LIB_DEF[kind].list()[i];rw.querySelector(".crhead").innerHTML=rowHead(kind,x,i);
+    const fd=rw.querySelector('[data-fk="'+f[0]+'"]'),c=LIBED.changed(kind,i).includes(f[0]);
+    if(fd&&fd.classList.contains("chg")!==c){const pos=el.selectionStart;draw();const e2=$(el.id);if(e2){e2.focus();try{if(pos!=null)e2.setSelectionRange(pos,pos);}catch(e){}}}}
+  function bind(root){
+    root.querySelectorAll("[data-libgo]").forEach(b=>b.addEventListener("click",()=>{const g=b.dataset.libgo;if(g.startsWith("ref:")){RB_GO(g);return;}show(g);window.scrollTo(0,0);}));
+    if(!list)return;const kind=list,D=LIB_DEF[kind];
+    const qi=$("libQ");if(qi)qi.addEventListener("input",()=>{q=qi.value;lim=150;draw();});
+    const al=$("libAll");if(al)al.addEventListener("click",()=>{lim=1e9;draw();});
+    root.querySelectorAll("[data-lr]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.lr;open=open===i?null:i;draw();if(open!=null){const r=document.querySelector('[data-lrow="'+i+'"]');if(r&&r.getBoundingClientRect().top<60)r.scrollIntoView({block:"start"});}}));
+    if(open==null)return;const i=open;
+    D.fields.forEach(f=>{const el=$("lb_"+f[0]);if(!el)return;el.addEventListener(f[2]==="sel"?"change":"input",()=>setVal(kind,i,f,el));});
+    root.querySelectorAll("[data-lrev]").forEach(b=>b.addEventListener("click",()=>{LIBED.revert(kind,i,b.dataset.lrev);draw();}));
+    const ra=root.querySelector("[data-lrevall]");if(ra)ra.addEventListener("click",()=>{const was=LIBED.revert(kind,i,null);draw();if(window.RB_UNDO&&was)RB_UNDO("Put back the original "+D.one,()=>{LIBED.restore(kind,i,was);draw();});});
+    const ad=root.querySelector("[data-ladd]");if(ad)ad.addEventListener("click",()=>libAdd(kind,i));}
+  // show the Library (k = null) or one list
+  function show(k){list=k&&(k==="cart"||LIB_DEF[k])?k:null;q="";open=null;lim=150;draw();}
+  return {show,draw,
+    // Tools' back button: from a list back to the Library
+    back(){if(!list)return false;list=null;draw();window.scrollTo(0,0);return true;},
+    sub:()=>list,
+    // open one entry (from the Add screens' "fix it in the Library")
+    openOne(k,i){list=k;q="";open=i;lim=150;draw();}};
+})();
 // "pick one from the list" for powders, primers and bullets: searchable, grouped, leaving out ones you've already saved
 const powderKey=(m,n)=>lc(m)+"|"+lc(n);
 const bulletKey=(m,n,w,d)=>lc(m)+"|"+lc(n)+"|"+(num(w)||"")+"|"+(num(d)?Math.round(num(d)*1000):"");
@@ -5889,7 +6086,7 @@ const CAT_PICK={
 const CAN_TYPE={rifle:"Rifle",pistol:"Pistol",rimfire:"Rimfire",multi:"Multi-caliber",shotgun:"Shotgun"};
 let cansLoading=null;
 function loadCanCat(){if(window.RB_CANS)return Promise.resolve(window.RB_CANS);
-  return cansLoading=cansLoading||fetch("/suppressors.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>(window.RB_CANS=j.suppressors||[])).catch(()=>{cansLoading=null;return [];});}
+  return cansLoading=cansLoading||fetch("/suppressors.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>{window.RB_CANS=j.suppressors||[];LIBED.apply("cans");return window.RB_CANS;}).catch(()=>{cansLoading=null;return [];});}
 // a suppressor picked from the list: the maker's specs and limits go in its notes
 function canFromCat(x){const U2=v=>v==null?"":v;
   const spec=[x.len?x.len+" in long":"",x.wt?x.wt+" oz":"",x.dia?x.dia+" in diameter":""].filter(Boolean).join(", ");
@@ -5897,26 +6094,17 @@ function canFromCat(x){const U2=v=>v==null?"":v;
     x.fa===true?"Full auto rated.":x.fa===false?"Not full auto rated.":"",x.minbarrel?"Barrel minimum: "+x.minbarrel+" in.":"",x.notes?U2(x.notes).replace(/\.?$/,"."):"",x.disc?"Discontinued model.":"","Check the manual for your exact model."].filter(Boolean);
   return {id:gearId("c"),mfr:x.mfr,model:x.model,caliber:x.cal||"",serial:"",approved:"",notes:lines.join(" "),
     cat:{type:x.type||null,len:x.len||null,wt:x.wt||null,dia:x.dia||null,fa:x.fa==null?null:x.fa,minbarrel:x.minbarrel||null,maxcal:x.maxcal||null}};}
-function catPickHtml(kind){const P=CAT_PICK[kind];if(!P)return "";
-  const have=new Set((comps[kind]||[]).map(P.have)),n=P.items().filter(x=>!have.has(x.key)).length;if(!n&&!P.items().length)return "";
-  return '<div class="field wide"><label for="catBtn">Add a '+P.noun+' from the list</label><button type="button" id="catBtn" class="ammobtn" aria-expanded="false" aria-controls="catPanel"><span class="none">Pick one ('+n.toLocaleString()+' '+P.noun+'s)…</span></button>'+
-    '<div class="ammopick" id="catPanel" hidden><input id="catQ" type="search" placeholder="'+P.ph+'" autocomplete="off" aria-label="Search '+P.noun+'s"><div id="catList" class="ammopicklist" role="listbox" aria-label="'+P.noun+'s"></div></div></div>';}
-function bindCatPick(kind,onPick){
-  const btn=$("catBtn");if(!btn)return;const P=CAT_PICK[kind],panel=$("catPanel"),q=$("catQ"),box=$("catList");
-  const draw=()=>{const have=new Set((comps[kind]||[]).map(P.have));
-    const words=lc(q.value).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean);
-    // Bullets: a number has to be a whole weight, caliber or diameter, so "6.5" doesn't find a BC of .657.
-    const numHit=(x,w)=>lc(x.t+" "+x.g+" "+(x.words||"")).split(/[^a-z0-9.]+/).some(k=>{k=k.replace(/\.$/,"");const v=w.replace(/^0(?=\.)/,"");
-      return k===w||k.replace(/^0(?=\.)/,"")===v||k.replace(/^0?\./,"")===v.replace(/^\./,"")||(k.startsWith(w)&&/^[a-z]/.test(k.slice(w.length)));});
-    const all=P.items().filter(x=>!have.has(x.key)&&words.every(w=>{if(kind==="bullets"&&/^[\d.]+$/.test(w))return numHit(x,w);const t=lc(x.t+" "+x.sub+" "+x.g+" "+(x.words||""));return t.includes(w)||t.replace(/[^a-z0-9]+/g," ").includes(w.replace(/[^a-z0-9]+/g,""));}));
-    const LIM=300,hits=all.slice(0,LIM),by=new Map();hits.forEach(o=>{if(!by.has(o.g))by.set(o.g,[]);by.get(o.g).push(o);});
-    const keys=[...by.keys()];if(kind==="bullets")keys.sort((a,b)=>by.get(a)[0].d-by.get(b)[0].d||a.localeCompare(b));else keys.sort();
-    box.innerHTML=hits.length?keys.map(g=>'<div class="pickhead">'+esc(g)+'</div>'+by.get(g).map(o=>'<button type="button" class="apick" role="option" data-cp="'+o.i+'">'+esc(o.t)+(o.sub?'<small>'+esc(o.sub)+'</small>':'')+'</button>').join("")).join("")+(all.length>LIM?'<p class="pickmore">'+(all.length-LIM).toLocaleString()+' more. Type to narrow it down.</p>':''):'<p class="pickmore">No '+P.noun+'s match. Add it yourself with the button below.</p>';
-    box.querySelectorAll("[data-cp]").forEach(b=>b.addEventListener("click",()=>onPick(+b.dataset.cp)));};
-  btn.addEventListener("click",()=>{const open=panel.hidden;panel.hidden=!open;btn.setAttribute("aria-expanded",open?"true":"false");if(open){q.value="";draw();q.focus();}});
-  q.addEventListener("input",draw);
-  q.addEventListener("keydown",e=>{if(e.key==="Escape"){panel.hidden=true;btn.setAttribute("aria-expanded","false");btn.focus();}if(e.key==="Enter"){e.preventDefault();const f=box.querySelector("[data-cp]");if(f)f.click();}});
-}
+// a component made from a built-in list entry (with your Library fixes)
+function compFromCat(kind,i){const id="c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);let c=null;
+
+    if(kind==="powders"){const p=POWDER_LIST[i];c={id,mfr:p[0],name:p[1],kind:p[2],notes:""};}
+    else if(kind==="primers"){const p=PRIMER_LIST[i];c={id,mfr:p[0],name:p[1],size:p[2],notes:""};}
+    else if(kind==="bullets"){const b=(window.RB_BULLETS||[])[i];if(!b)return null;
+      // the G7 BC when the maker publishes one (it fits long-range bullets better), otherwise G1
+      c={id,mfr:b.mfr,name:b.line,calname:b.cal,caliber:b.d,caliberUnit:"in",weight:b.w,bc:b.g7||b.g1||null,bcm:b.g7?"G7":"G1",length:b.len||null,catItem:b.item||null,
+        notes:["From "+b.mfr+"'s published data"+(b.item?" (item "+b.item+")":"")+".",b.f?"Sold for "+b.f+".":"",b.g7&&b.g1?"G1 BC: "+b.g1+".":"",!b.g1&&!b.g7?b.mfr+" doesn't publish a BC for this bullet; enter one to use it in the calculator.":"","Check it against your box."].filter(Boolean).join(" ")};}
+  if(c&&LIBED.changed(kind,i).length)c.notes=(c.notes?c.notes+" ":"")+"Includes your changes from Tools › Library.";
+  return c;}
 const powderFind=(m,n)=>POWDER_LIST.find(p=>lc(p[1])===lc(n)&&(!m||lc(p[0])===lc(m)));
 function compFromRecipe(kind,L){
   const r=L[RECIPE_KEY[kind]]||{},c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:r.mfr||"",name:r.type||"",notes:""};
@@ -6004,7 +6192,7 @@ function compRetHtml(){
 // the bullet list (public/bullets.json) loads the first time Bullets is opened
 let bulletsLoading=null;
 function loadBulletCat(){if(window.RB_BULLETS)return Promise.resolve(window.RB_BULLETS);
-  return bulletsLoading=bulletsLoading||fetch("/bullets.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>(window.RB_BULLETS=j.bullets||[])).catch(()=>{bulletsLoading=null;return [];});}
+  return bulletsLoading=bulletsLoading||fetch("/bullets.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>{window.RB_BULLETS=j.bullets||[];LIBED.apply("bullets");return window.RB_BULLETS;}).catch(()=>{bulletsLoading=null;return [];});}
 /* counts of the built-in lists, for Home's Built in Library card and Reloading › Reference › Library.
    Bullets and scopes come from their own files, so load() fetches them first (once). */
 window.RB_LIB={
@@ -6016,6 +6204,7 @@ window.RB_LIB={
       primers:PRIMER_LIST.length,loads:AMMO_CATALOG.length,loadCarts:new Set(AMMO_CATALOG.map(a=>a.cart)).size,
       scopes:SCOPE_CAT?SCOPE_CAT.length:null,cans:window.RB_CANS?RB_CANS.length:null,canMakers:window.RB_CANS?new Set(RB_CANS.map(x=>x.mfr)).size:null,burn:R.burn,dia:R.dia,press:R.press,gloss:R.gloss};}
 };
+let compAdding=false,compAddQ="";
 function renderComps(){
   sweepFresh();
   if(compKind==="bullets"&&!window.RB_BULLETS)loadBulletCat().then(b=>{if(b.length&&compKind==="bullets"&&!compOpen)renderComps();});
@@ -6024,15 +6213,28 @@ function renderComps(){
   const notes=$("brassNotes");if(notes)notes.hidden=true;
   const back=$("compHeadBack"),title=$("compTitle"),sub=$("compSub");
   if(compKind==="targets")compKind="bullets";
-  $("compSeg").hidden=!!compOpen;
+  if(compOpen||!CAT_PICK[compKind])compAdding=false;
+  $("compSeg").hidden=!!(compOpen||compAdding);$("compTabs").hidden=compAdding;
   const K=CK[compKind],list=comps[compKind];
   if(compOpen&&!list.some(c=>c.id===compOpen))compOpen=null;
   const usedBy=id=>compKind==="brass"?[...new Map([...lotBatches(id).map(x=>[x.lid,[x.lid,x.L]]),...[...loads.entries()].filter(([lid,L])=>isMine(lid)&&L.brassLotId===id).map(e=>[e[0],e])]).values()]:[...loads.entries()].filter(([lid,L])=>isMine(lid)&&L[K.idKey]===id);
   let h;
+  if(compAdding){
+    back.hidden=false;back.textContent="‹ "+K.title;title.textContent="Add a "+K.one;sub.hidden=true;
+    const P=CAT_PICK[compKind],kind=compKind;
+    root.innerHTML=compRetHtml()+addScreenHtml({title:"Add a "+K.one,q:compAddQ,ph:P.ph,own:"+ Enter a "+K.one+" yourself",
+      note:'Pick yours to fill it in from the maker\'s published data, or enter it yourself. Ones you\'ve already saved aren\'t shown. To fix something in this list, open it in <a class=goto href=#go data-go=tools:lib:'+kind+'>Tools › Library</a>.'});
+    const cr0=$("compRet");if(cr0)cr0.addEventListener("click",()=>{compAdding=false;renderComps();});
+    bindAddScreen({nums:kind==="bullets",load:kind==="bullets"?loadBulletCat:null,onQ:v=>{compAddQ=v;},
+      items:()=>{if(!LIBED.ready(kind))return null;const have=new Set((comps[kind]||[]).map(P.have)),ks=P.items().map(x=>x.key);return libItems(kind,it=>have.has(ks[it.i]));},
+      onPick:it=>{const c=compFromCat(kind,it.i);if(!c)return;comps[kind].push(c);queueComps();compAdding=false;compOpen=c.id;renderComps();window.scrollTo(0,0);},
+      onOwn:()=>{compAdding=false;newComp();}});
+    return;
+  }
   if(!compOpen){
     back.hidden=true;title.textContent="Reloading";sub.hidden=false;
-    const hasCat=!!CAT_PICK[compKind]&&(compKind!=="bullets"||(window.RB_BULLETS||[]).length>0);
-    h=compRetHtml()+'<section class="card" aria-label="'+K.title+'">'+(hasCat?catPickHtml(compKind):'')+'<div class="row"><button class="btn'+(hasCat?'':' primary')+'" id="compAdd" type="button">+ Add '+(hasCat?'a '+K.one+' that isn\'t listed':K.one)+'</button>'+(!window.GUEST?'<button class="btn" type="button" data-sximp="brass">Import from a spreadsheet</button>':'')+'<span class="savestate" id="compState"></span></div>';
+    const hasCat=!!CAT_PICK[compKind];
+    h=compRetHtml()+'<section class="card" aria-label="'+K.title+'"><div class="row"><button class="btn primary" id="compAdd" type="button">+ Add '+K.one+'</button>'+(!window.GUEST?'<button class="btn" type="button" data-sximp="brass">Import from a spreadsheet</button>':'')+'<span class="savestate" id="compState"></span></div>';
     if(!list.length){
       const fromLoads=[...loads.entries()].some(([id,L])=>isMine(id)&&L[RECIPE_KEY[compKind]]&&(L[RECIPE_KEY[compKind]].mfr||L[RECIPE_KEY[compKind]].type));
       h+=(compKind==="brass"?'<p class="note">No brass lots yet. A lot is a batch of cases you keep together, like "Lapua 6.5 CM, bought 2025". Add one to track how many cases you have and how many times they\'ve been loaded.</p>':'<p class="note">No saved '+K.title.toLowerCase()+' yet. Add one here, or tap <b>Save to Components</b> in a load\'s recipe.</p>')+(fromLoads?'<div class="row"><button class="btn" id="compFill" type="button">Add the '+K.title.toLowerCase()+' from my loads</button></div>':'');
@@ -6071,18 +6273,11 @@ function renderComps(){
   root.innerHTML=h;
   if(!compOpen&&window.RB_FILTER)RB_FILTER(root.querySelector("section.card"),"comp_"+compKind);
   const add=$("compAdd");
-  if(add)add.addEventListener("click",()=>{const c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",notes:""};if(compKind==="bullets")c.bcm="G1";comps[compKind].push(c);{const k=compKind;freshAdd(c,{list:()=>comps[k],open:()=>compOpen===c.id,save:queueComps});}queueComps();compOpen=c.id;renderComps();window.scrollTo(0,0);const el=$("cf_"+K.fields[0][0]);if(el)el.focus();});
+  if(add)add.addEventListener("click",()=>{if(CAT_PICK[compKind]){compAdding=true;compAddQ="";renderComps();window.scrollTo(0,0);const q=$("addQ");if(q&&matchMedia("(pointer:fine)").matches)q.focus();}else newComp();});
+  function newComp(){const c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",name:"",notes:""};if(compKind==="bullets")c.bcm="G1";comps[compKind].push(c);{const k=compKind;freshAdd(c,{list:()=>comps[k],open:()=>compOpen===c.id,save:queueComps});}queueComps();compOpen=c.id;renderComps();window.scrollTo(0,0);const el=$("cf_"+K.fields[0][0]);if(el)el.focus();}
   const cr=$("compRet");if(cr)cr.addEventListener("click",()=>{
     if(compReturnAmmo){const id=compReturnAmmo;compReturnAmmo=null;compOpen=null;gunArea="ammo";ammoOpen=ammo.some(x=>x.id===id)?id:null;showTab("rifles");renderRifles();window.scrollTo(0,0);return;}
     const id=compReturn;compReturn=null;showTab("rel");openLoad(id);});
-  bindCatPick(compKind,i=>{const id="c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);let c=null;
-    if(compKind==="powders"){const p=POWDER_LIST[i];c={id,mfr:p[0],name:p[1],kind:p[2],notes:""};}
-    else if(compKind==="primers"){const p=PRIMER_LIST[i];c={id,mfr:p[0],name:p[1],size:p[2],notes:""};}
-    else if(compKind==="bullets"){const b=(window.RB_BULLETS||[])[i];if(!b)return;
-      // the G7 BC when the maker publishes one (it fits long-range bullets better), otherwise G1
-      c={id,mfr:b.mfr,name:b.line,calname:b.cal,caliber:b.d,caliberUnit:"in",weight:b.w,bc:b.g7||b.g1||null,bcm:b.g7?"G7":"G1",length:b.len||null,catItem:b.item||null,
-        notes:["From "+b.mfr+"'s published data"+(b.item?" (item "+b.item+")":"")+".",b.f?"Sold for "+b.f+".":"",b.g7&&b.g1?"G1 BC: "+b.g1+".":"",!b.g1&&!b.g7?b.mfr+" doesn't publish a BC for this bullet; enter one to use it in the calculator.":"","Check it against your box."].filter(Boolean).join(" ")};}
-    if(!c)return;comps[compKind].push(c);queueComps();compOpen=c.id;renderComps();window.scrollTo(0,0);});
   const fill=$("compFill");
   if(fill)fill.addEventListener("click",()=>{
     loads.forEach((L,id)=>{if(!isMine(id))return;const r=L[RECIPE_KEY[compKind]];if(!r||!(r.mfr||r.type))return;
@@ -6116,8 +6311,8 @@ function renderComps(){
     RB_UNDO("Deleted "+(K.label(c)||"component"),()=>{comps[kind].splice(Math.min(i,comps[kind].length),0,c);queueComps();renderComps();});});
   root.querySelectorAll("[data-cload]").forEach(b=>b.addEventListener("click",()=>{showTab("rel");openLoad(b.dataset.cload);}));
 }
-document.querySelectorAll("#compTabs [data-ck]").forEach(b=>b.addEventListener("click",()=>{compKind=b.dataset.ck;compOpen=null;renderComps();}));
-document.getElementById("compHeadBack").addEventListener("click",()=>{compOpen=null;renderComps();window.scrollTo(0,0);});
+document.querySelectorAll("#compTabs [data-ck]").forEach(b=>b.addEventListener("click",()=>{compKind=b.dataset.ck;compOpen=null;compAdding=false;renderComps();}));
+document.getElementById("compHeadBack").addEventListener("click",()=>{compOpen=null;compAdding=false;renderComps();window.scrollTo(0,0);});
 
 /* ---------- reloading notes (Reloading → Notes): free-form notes that aren't about one load ---------- */
 let notes=[],notesDirty=false,notesTimer=null,notesSaving=Promise.resolve(),notesVer=0,noteOpen=null,notesQ="";
@@ -9411,8 +9606,8 @@ function renderHome(){
         (life>0?'<span class="lifebar mini'+(rc.pct>=80?' warn':'')+'"><span style="width:'+Math.min(100,rc.pct).toFixed(1)+'%"></span></span>':'')+'</span></button>';}).join("")+'</div>'+
       '<div class="row" id="homeGunsMore" hidden><button class="linkbtn" type="button" data-hgo="guns">All '+G.length+' guns ›</button></div></section>';}
   {const n=RB_LIB.counts(),f=v=>v==null?"…":v.toLocaleString();
-    h+='<section class="card" aria-label="Built in Library" data-hsec="lib"><div class="h2row"><h2>Built in Library</h2><button class="linkbtn" type="button" data-lgo="ref:lib">Open Library ›</button></div><div class="tiles libtiles">'+
-      [["bullets","bullets","brass:bullets"],["cartridges","cartridges","ref:cart"],["powders","powders","brass:powders"],["loads","factory ammo","rifles:ammo"],["scopes","scopes","rifles:scopes"],["primers","primers","brass:primers"]]
+    h+='<section class="card" aria-label="Built in Library" data-hsec="lib"><div class="h2row"><h2>Built in Library</h2><button class="linkbtn" type="button" data-lgo="tools:lib">Open Library ›</button></div><div class="tiles libtiles">'+
+      [["bullets","bullets","tools:lib:bullets"],["cartridges","cartridges","tools:lib:cart"],["powders","powders","tools:lib:powders"],["loads","factory ammo","tools:lib:ammo"],["scopes","scopes","tools:lib:scopes"],["primers","primers","tools:lib:primers"]]
         .map(([k,l,go])=>'<button class="tile libtile" type="button" data-lgo="'+go+'"><b data-libn="'+k+'">'+f(n[k])+'</b><span>'+l+'</span></button>').join("")+'</div></section>';}
   h+='<div class="row endrow homearr"><button class="linkbtn" type="button" id="hArrange">Arrange Home</button></div>';
   root.innerHTML=h;
@@ -9924,7 +10119,7 @@ const INFO={
   "@Live target":{head:1,t:"Live target",b:"Put your phone on a spotting scope and it marks each shot on a printed target as it lands. Set the bullet diameter, distance and shots per aim point and tap <b>Start Live target</b>. Saved targets are listed under <b>Saved</b>, where <b>Move to</b> puts one into a range trip or a ladder. <b>Watch</b> shows a phone's Live target on this screen.",h:"Live target (phone on a spotting scope)"},
   "@Printable targets":{t:"Printable targets",b:"Tap <b>Open PDF to print</b> and print at <b>Actual size</b>. Photograph the target with all four corner squares showing and Range Book measures the groups by itself, or point Live target at it. The two-page targets tape together into one big target.",h:"Printable targets"}
 };
-const HELP_TOOL={twist:"tool:Stability",moa:"tool:MOA/MIL",powder:"tool:Powder",conv:"tool:Convert",hit:"tool:Hit chance",live:"Live target (phone on a spotting scope)",cart:"Cartridges"};
+const HELP_TOOL={twist:"tool:Stability",moa:"tool:MOA/MIL",powder:"tool:Powder",conv:"tool:Convert",hit:"tool:Hit chance",live:"Live target (phone on a spotting scope)",cart:"Cartridges",lib:"Library"};
 const shownEl=id=>{const e=$(id);return !!(e&&!e.hidden&&e.offsetParent);};
 // the How to Use topic closest to what's on screen
 function helpTopic(tab){
@@ -10424,7 +10619,7 @@ function startTabTour(tab){
     {el:()=>q('#panel-home [aria-label="Recent range trips"]'),t:"Recent range trips",b:"Your latest trips with their best groups. Tap one to open it, or <b>See the whole range log</b>."},
     {el:()=>q('#panel-home [aria-label="Recent reloading"]'),t:"Recent reloading",b:"The reloading loads you've worked on lately. Tap one to pick up where you left off."},
     {el:()=>q('#panel-home [aria-label="Most used guns"]'),t:"Most used guns",b:"Your favorite guns first (star them on Gear & Ranges), then the ones you shoot most, with their photos and round counts. Tap one to open it."},
-    {el:()=>q('#panel-home [aria-label="Built in Library"]'),t:"Built in Library",b:"How many bullets, cartridges, powders, factory ammo, scopes and primers Range Book already knows. Tap a number to open that list, or <b>Open Library</b> for everything."},
+    {el:()=>q('#panel-home [aria-label="Built in Library"]'),t:"Built in Library",b:"How many bullets, cartridges, powders, factory ammo, scopes and primers Range Book already knows. Tap a number to open that list in Tools › Library, or <b>Open Library</b> for everything."},
     {el:()=>q("#hArrange"),t:"Arrange Home",b:"Put Home's cards in the order you want and turn off the ones you don't need. On a computer, Most used guns sits in its own column on the right and Built in Library across the bottom. It's saved to your account."},
     END];
   if(tab==="traj"||tab==="log"){
@@ -10453,7 +10648,7 @@ function startTabTour(tab){
       ...(has?[{el:()=>q(".viewbar"),t:"Develop and Load",b:"Each load has two views. <b>Develop</b> is for working it up; <b>Load</b> is the finished load sheet, with the batches you've loaded.",go:open("develop")},
         card("#secRecipe","secRecipe",null,open("develop")),card("#secGroups","secGroups",null,open("develop")),card("#secSummary","secSummary",null,open("develop")),
         card("#secCharts","secCharts",null,open("develop")),card("#secTargets","secTargets",null,open("develop")),card("#secBatches","secBatches",null,open("load"))]:[]),
-      {el:()=>q("#panel-ref .refnav"),t:"Reference",b:"Pick a list here: <b>Library</b> (everything that's built in, with counts), <b>Cartridges</b>, <b>Bullet diameters</b>, <b>Powder burn rates</b>, <b>Pressure signs</b> or <b>Glossary</b>. The burn-rate order is only for orientation, never for swapping powders.",go:()=>{showTab("ref",false);}},
+      {el:()=>q("#panel-ref .refnav"),t:"Reference",b:"Pick a list here: <b>Library</b> (opens Tools › Library, with everything that's built in), <b>Cartridges</b>, <b>Bullet diameters</b>, <b>Powder burn rates</b>, <b>Pressure signs</b> or <b>Glossary</b>. The burn-rate order is only for orientation, never for swapping powders.",go:()=>{showTab("ref",false);}},
       END];
   }
   if(tab==="rifles"){
@@ -10463,11 +10658,10 @@ function startTabTour(tab){
       {el:()=>q("#rifSeg"),t:"Eight lists",b:"<b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.",go:area("guns")},
       {el:()=>q("#rifleAdd"),t:"Guns",b:"Add each gun with its serial number, barrel, twist, sight height, scope and photos. Tap the star to make it a favorite. Its page counts the rounds fired, tracks barrel life and cleaning, and keeps a cold-bore log. <b>Export Excel</b> and <b>Export PDF</b> make a list for insurance.",go:area("guns")},
       {el:()=>q("#secLU"),t:"Lowers, uppers and barrels",b:"For ARs and other guns built from a lower and an upper: add the parts, build a gun from them, and add more uppers to the same lower as variations you pick when you shoot. Spare barrels for a complete gun go under <b>Barrels</b>.",go:area("guns")},
-      {el:()=>q("#scopeAdd"),t:"Scopes",b:"Add your scopes from a list of popular ones, with a picture, and put each on a gun. A gun's scope sets MOA or MIL on its profiles, and the dope card's reticle can look like yours or be a picture of it.",go:area("scopes")},
+      {el:()=>q("#scopeAdd"),t:"Scopes",b:"Add your scopes from a list of popular ones (every <b>+ Add</b> button in Range Book works this way: search the list, tap yours, or enter it yourself), with a picture, and put each on a gun. A gun's scope sets MOA or MIL on its profiles, and the dope card's reticle can look like yours or be a picture of it.",go:area("scopes")},
       {el:()=>q("#canAdd"),t:"Suppressors",b:"Serial number, tax stamp date, a picture and its own round count from the range trips shot with it. Put one on a gun, or pick it on each trip. Keep the tax stamp in the document vault, locked with a passphrase only you know.",go:area("cans")},
       {el:()=>q("#magAdd"),t:"Magazines",b:"Each magazine with its <b>Mag #</b> (the number you paint on it), grouped by maker and model. Log a jam or failure to feed on the mag that caused it, and retire the bad ones.",go:area("mags")},
-      {el:()=>q("#ammoAddCard"),t:"Ammo",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low.",go:area("ammo")},
-      {el:()=>q("#calBrowse"),t:"Factory ammo catalog",b:"About 155 popular factory loads with their bullet, BC and box velocity. Pick a caliber or search, and tap one to add it.",go:area("ammo")},
+      {el:()=>q("#ammoAddGo"),t:"Ammo",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low. <b>+ Add ammo</b> lists about 155 popular factory loads with their bullet, BC and box velocity: search, and tap one to add it.",go:area("ammo")},
       {el:()=>q("#invAddC"),t:"Inventory",b:"Everything else: supplies with a count and a low warning (batteries, targets, earplugs), and equipment with serial numbers and reminders to check or replace it.",go:area("inv")},
       {el:()=>q("#rgAdd"),t:"Ranges",b:"Save the places you shoot, with the address and each target's distance, angle and size (in the order you walk them, if you like). A range's page shows today's weather there and the dial and wind for every target with any of your Shooting profiles.",go:area("ranges")},
       {el:()=>q("#gnAdd"),t:"Notes",b:"Notes about your gear, with pictures and files. Tick <b>Lock in the vault</b> on a note to encrypt it and everything on it with your vault passphrase.",go:area("notes")},
@@ -10481,6 +10675,7 @@ function startTabTour(tab){
       {el:()=>q('[data-tooltile="traj"]'),t:"Trajectory calculator",b:"The whole Shooting calculator without making a profile: pick a gun and ammo or type the numbers. <b>Save as a Shooting profile</b> keeps it; <b>Reset</b> starts over.",go:tiles},
       {el:()=>q('[data-tooltile="cmp"]'),t:"Compare trajectories",b:"Up to six bullets on one chart with the same zero and air: path, dial, wind drift, speed or energy.",go:tiles},
       {el:()=>q('[data-tooltile="chrono"]'),t:"Chronograph file check",b:"See how Range Book reads your chronograph's export, string by string, before you import it. Suspicious shots are marked.",go:tiles},
+      {el:()=>q('[data-tooltile="lib"]'),t:"Library",b:"Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Tap anything to see all of it, fix a number for your own use (<b>Revert</b> puts it back), or add it to yours.",go:tiles},
       {el:()=>q('[data-tooltile="hit"]'),t:"Hit chance",b:info("@Hit chance"),go:tiles},
       {el:()=>q('[data-tooltile="live"]'),t:"Live target",b:info("@Live target"),go:tiles},
       {el:()=>q('[data-tooltile="targets"]'),t:"Printable targets",b:info("@Printable targets"),go:tiles},
@@ -10670,8 +10865,8 @@ API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)l
 window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
-  const TOOLS=["traj","twist","moa","powder","conv","live","hit","cart","cmp","chrono"];
-  const TITLES={cmp:"Compare trajectories",chrono:"Chronograph file check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",cart:"Cartridges"};
+  const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono"];
+  const TITLES={cmp:"Compare trajectories",chrono:"Chronograph file check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
   let tool=null, pending=null, rel=null, ready=false;
   const TILE_DEFAULT=[...document.querySelectorAll("#toolTiles [data-tooltile]")].map(b=>b.dataset.tooltile);      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -10682,11 +10877,14 @@ window.RB_TOOLS=(function(){
 
   // show the tiles (t = null) or one tool
   function view(t){
+    // the Library has its own lists (lib:bullets…); Cartridges is one of them
+    let libSub=null;if(t==="cart")t="lib:cart";if(typeof t==="string"&&t.startsWith("lib:")){libSub=t.slice(4)||null;t="lib";}
     tool=TOOLS.includes(t)?t:null;
     $("toolTiles").hidden=!!tool;$("toolsArr").hidden=!!tool;
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
-    if(tool==="cart"){const cr=$("cartRoot"),ts=document.querySelector('[data-toolsec="cart"]');if(cr&&ts&&cr.parentNode!==ts)ts.appendChild(cr);if(window.RB_CARTPAGE)RB_CARTPAGE.draw();}
+    $("toolsBack").textContent="‹ Tools";
+    if(tool==="lib"&&window.RB_LIBPAGE)RB_LIBPAGE.show(libSub);
     if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
     if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();
     if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
@@ -10857,7 +11055,7 @@ window.RB_TOOLS=(function(){
     $("pw_j").addEventListener("change",powderCalc);$("pw_from").addEventListener("change",e=>powderFill(e.target.value));
     document.querySelectorAll("[data-tooltile]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tooltile;
       if(t==="targets"){if(window.APP_showTab)APP_showTab("targets");return;}view(t);window.scrollTo(0,0);}));
-    $("toolsBack").addEventListener("click",()=>{view(null);window.scrollTo(0,0);});
+    $("toolsBack").addEventListener("click",()=>{if(tool==="lib"&&window.RB_LIBPAGE&&RB_LIBPAGE.back())return;view(null);window.scrollTo(0,0);});
     // your own order for the tiles: press and hold (or drag with a mouse) to move one
     const tileOrder=()=>{RB_ORDER.apply("tools",$("toolTiles"),"[data-tooltile]","data-tooltile");$("toolsReorder").hidden=!RB_ORDER.get("tools");};
     tileOrder();RB_ORDER.on(tileOrder);
@@ -11133,7 +11331,7 @@ window.RB_REF=(function(){
   const $=id=>document.getElementById(id),U=window.U,C=window.RB_CARTS;
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const SECS=[["lib","Library"],["cart","Cartridges"],["dia","Bullet diameters"],["burn","Powder burn rates"],["press","Pressure signs"],["gloss","Glossary"]];
-  let sec="lib",q={dia:"",burn:"",gloss:""},mk="";try{const v=localStorage.getItem("rb.refSec");if(SECS.some(s=>s[0]===v))sec=v;}catch(e){}
+  let sec="cart",q={dia:"",burn:"",gloss:""},mk="";try{const v=localStorage.getItem("rb.refSec");if(v!=="lib"&&SECS.some(s=>s[0]===v))sec=v;}catch(e){}
   // fastest to slowest, from the 2025 comparative burn-rate chart published by Wolfe Publishing (loaddata.com)
   const BURN=[["Norma","R1"],["Winchester","WAALite"],["Vihtavuori","N310"],["Alliant","Extra-Lite"],["Shooters World","Sparta 100"],["Accurate","Nitro 100 NF"],["Alliant","e3"],["Hodgdon","Perfect Pattern"],["Hodgdon","Titewad"],["Scot","Royal D"],["Ramshot","Competition"],["Reload Swiss","RS12"],["Alliant","Red Dot"],["Winchester","AA Plus"],["Alliant","Promo"],["Hodgdon","Clays"],["IMR","Red"],["Alliant","Clay Dot"],["Hodgdon","Hi-Skor 700-X"],["Alliant","Bullseye"],["IMR","Target"],["Alliant","Sport Pistol"],["Hodgdon","HighGun"],["Hodgdon","Titegroup"],["Alliant","American Select"],["Accurate","Solo 1000"],["Scot","Red Diamond"],["Alliant","Green Dot"],["IMR","Green"],["Winchester","WST"],["Hodgdon","Trail Boss"],["Winchester","Super Handicap"],["Shooters World","Clean Shot"],["Hodgdon","International"],["Accurate","Solo 1250"],["IMR","PB"],["Vihtavuori","N320"],["Accurate","No. 2"],["Ramshot","Zip"],["Reload Swiss","RS14"],["IMR","SR 7625"],["Vihtavuori","N32C Tin Star"],["Winchester","452AA"],["Scot","453"],["Hodgdon","HP-38"],["Winchester","231"],["Alliant","20/28"],["Winchester","244"],["Hodgdon","HS-5"],["Winchester","WSL"],["Alliant","Unique"],["Hodgdon","Universal"],["Alliant","Power Pistol"],["Shooters World","Ultimate Pistol"],["Vihtavuori","N330"],["Alliant","Herco"],["Reload Swiss","RS20"],["Winchester","WSF"],["Shooters World","Auto Pistol"],["Winchester","WAP"],["Vihtavuori","N340"],["Alliant","BE-86"],["Accurate","No. 5"],["Hodgdon","HS-6"],["Winchester","540"],["Winchester","AutoComp"],["Hodgdon","CFE Pistol"],["Ramshot","True Blue"],["Ramshot","Silhouette"],["Scot","Solo 1500"],["Hodgdon","Hi-Skor 800-X"],["IMR","SR 4756"],["Vihtavuori","3N37"],["Vihtavuori","N350"],["Vihtavuori","3N38"],["Winchester","571"],["Hodgdon","HS-7"],["IMR","Blue"],["Winchester","572"],["Shooters World","Major Pistol"],["Alliant","Blue Dot"],["Accurate","No. 7"],["Alliant","Pro Reach"],["Reload Swiss","RS24"],["Hodgdon","Longshot"],["Alliant","410"],["Accurate","TCM"],["Alliant","2400"],["Ramshot","Enforcer"],["Vihtavuori","N105"],["Accurate","No. 9"],["Accurate","4100"],["Scot","4100"],["Alliant","Steel"],["Norma","R123"],["Shooters World","Heavy Pistol"],["Vihtavuori","N110"],["Hodgdon","Lil'Gun"],["Hodgdon","H110"],["Winchester","296"],["Reload Swiss","RS30"],["Accurate","No. 11FS"],["IMR","4227"],["Hodgdon","H4227"],["IMR","SR 4759"],["Alliant","Power Pro 300-MP"],["Accurate","5744"],["Shooters World","Buffalo Rifle"],["Accurate","1680"],["Shooters World","Blackout"],["Accurate","LT-30"],["Hodgdon","CFE BLK"],["Winchester","680"],["Norma","200"],["Scot","Brig 3032"],["Accurate","2200"],["Alliant","Reloder 7"],["Accurate","LT-32"],["IMR","4198"],["Reload Swiss","RS36"],["Hodgdon","H4198"],["Shooters World","SOCOM"],["Vihtavuori","N120"],["Norma","201"],["Alliant","Power Pro 1200-R"],["Vihtavuori","N130"],["Hodgdon","H322"],["Rottweil","R901"],["Accurate","2015"],["Alliant","Reloder 10X"],["IMR","3031"],["Vihtavuori","N133"],["Scot","Brig 322"],["Hodgdon","Benchmark"],["Hodgdon","H335"],["Ramshot","X-Terminator"],["Shooters World","AR Plus"],["Rottweil","R902"],["Accurate","2230"],["Accurate","2460"],["IMR","8208 XBR"],["Alliant","AR-Comp"],["Reload Swiss","RS40"],["Ramshot","TAC"],["Alliant","Power Pro Varmint"],["Hodgdon","H4895"],["Vihtavuori","N530"],["IMR","4895"],["Scot","Brig 4065"],["Vihtavuori","N135"],["Alliant","Reloder 12"],["Accurate","2495"],["IMR","4166"],["IMR","4064"],["Norma","202"],["Accurate","4064"],["Rottweil","R903"],["Shooters World","Tactical Rifle"],["Accurate","2520"],["Alliant","Reloder 15"],["Norma","203B"],["Shooters World","Match Rifle"],["Reload Swiss","RS50"],["Vihtavuori","N140"],["Shooters World","Precision"],["Hodgdon","Varget"],["IMR","4320"],["Winchester","748"],["Winchester","StaBALL Match"],["Hodgdon","BL-C(2)"],["Vihtavuori","N540"],["Hodgdon","CFE 223"],["Alliant","Reloder 15.5"],["Alliant","Power Pro 2000-MR"],["Hodgdon","LEVERevolution"],["Reload Swiss","RS52"],["Hodgdon","H380"],["IMR","4007 SSC"],["Ramshot","Big Game"],["Vihtavuori","N150"],["Scot","Brig 4351"],["Shooters World","Long Rifle"],["Alliant","Power Pro 4000-MR"],["Hodgdon","H414"],["Winchester","760"],["Accurate","2700"],["Norma","URP"],["Reload Swiss","RS60"],["Vihtavuori","N550"],["Rottweil","R904"],["IMR","4350"],["Reload Swiss","RS62"],["IMR","4451"],["Alliant","Reloder 16"],["Hodgdon","H4350"],["Alliant","Reloder 17"],["Accurate","4350"],["Shooters World","4350"],["Norma","204"],["Hodgdon","Hybrid 100V"],["Winchester","StaBALL 6.5"],["Hodgdon","Superformance"],["Alliant","Reloder 19"],["IMR","4831"],["Ramshot","Hunter"],["Scot","Brig 4831"],["Vihtavuori","N160"],["Shooters World","S071"],["Vihtavuori","N555"],["Winchester","WMR"],["Norma","205"],["Accurate","3100"],["Hodgdon","H4831 / H4831SC"],["Vihtavuori","N560"],["Rottweil","R905"],["IMR","4955"],["Norma","MRP"],["Alliant","Reloder 22"],["Reload Swiss","RS70"],["Winchester","WXR"],["Norma","MRP2"],["Alliant","Reloder 23"],["Vihtavuori","N165"],["IMR","7828 SSC"],["Alliant","Reloder 25"],["Vihtavuori","N565"],["Vihtavuori","N170"],["Winchester","785"],["Reload Swiss","RS76"],["Hodgdon","H450"],["Accurate","MagPro"],["IMR","7977"],["Alliant","Reloder 26"],["Hodgdon","H1000"],["Ramshot","Grand"],["Ramshot","Magnum"],["Norma","217"],["Hodgdon","Retumbo"],["Winchester","StaBALL HD"],["IMR","8133"],["Vihtavuori","N568"],["Ramshot","LRT"],["Vihtavuori","N570"],["Accurate","8700"],["Reload Swiss","RS80"],["Alliant","Reloder 33"],["Hodgdon","H870"],["Vihtavuori","24N41"],["Hodgdon","H50BMG"],["Hodgdon","US869"],["Shooters World","BMG"],["Alliant","Reloder 50"],["Vihtavuori","20N29"]];
   const PRESS=[
@@ -11198,26 +11396,8 @@ window.RB_REF=(function(){
     // the cartridge list lives in one place: bring it here (Tools › Cartridges takes it back)
     const cr=$("cartRoot");if(cr&&cr.parentNode)cr.parentNode.removeChild(cr);
     let h=nav();
-    if(sec==="lib"){
-      const n=window.RB_LIB?RB_LIB.counts():{},f=v=>v==null?"…":v.toLocaleString();
-      if(window.RB_LIB&&(n.bullets==null||n.scopes==null||n.cans==null))RB_LIB.load().then(()=>{if(sec==="lib")draw();});
-      const row=(go,name,d,v)=>'<button class="loaditem librow" type="button" data-rgo="'+go+'"><span class="ltext"><span class="t">'+name+'</span><span class="d">'+d+'</span></span><b class="libn">'+f(v)+'</b></button>';
-      const bm=n.byMaker||[],top=bm.length?bm[0][1]:1;
-      h+='<section class="card" aria-label="Library" id="refLib"><h2>Built in Library</h2><p class="note">Everything Range Book knows before you add anything, taken from the makers\' own published data. Tap a list to open it.</p><div class="cartgroup">'+
-        row("brass:bullets","Bullets",n.bulletMakers!=null?n.bulletMakers+" makers, "+f(n.bulletBC)+" with a published BC. Pick one under Components › Bullets.":"Pick one under Components › Bullets.",n.bullets)+
-        row("ref:cart","Cartridges","Bullet diameter, case and overall length, trim-to and primer size.",n.cartridges)+
-        row("ref:dia","Bullet diameters","Which cartridges share a bullet.",n.dia)+
-        row("brass:powders","Powders",n.powderMakers+" makers. Pick one under Components › Powders.",n.powders)+
-        row("ref:burn","Powder burn order","Fastest to slowest.",n.burn)+
-        row("brass:primers","Primers","With their sizes. Pick one under Components › Primers.",n.primers)+
-        row("rifles:ammo","Factory ammo","In "+n.loadCarts+" cartridges, with BC and box velocity.",n.loads)+
-        row("rifles:scopes","Scopes","Power, focal plane, click value and reticle.",n.scopes)+
-        row("rifles:cans","Suppressors",(n.canMakers!=null?n.canMakers+" makers. ":"")+"Caliber rating, size, full auto and barrel-length limits.",n.cans)+
-        row("ref:press","Pressure signs","What each looks like and what to do.",n.press)+
-        row("ref:gloss","Glossary","Reloading terms explained.",n.gloss)+'</div>'+
-        (bm.length?'<h3>Bullets by maker</h3><div class="libbars">'+bm.map(([m,c])=>'<div class="libbar"><span>'+esc(m)+'</span><span class="lbtrack"><span style="width:'+(c/top*100).toFixed(1)+'%"></span></span><b>'+c+'</b></div>').join("")+'</div>':'')+
-        '</section>';}
-    else if(sec==="cart"){h+='<section class="card" aria-label="Cartridges" id="refCart"><h2>Cartridges</h2><p class="note">Bullet diameter, maximum case length, trim-to length, maximum overall length and primer size for each cartridge. Tap one for more, or to fix it for your own use. It\'s the same list as <a class=goto href=#go data-go=tools:cart>Tools › Cartridges</a>.</p></section>';}
+    if(sec==="lib")sec="cart";
+    if(sec==="cart"){h+='<section class="card" aria-label="Cartridges" id="refCart"><h2>Cartridges</h2><p class="note">Bullet diameter, maximum case length, trim-to length, maximum overall length and primer size for each cartridge. Tap one for more, or to fix it for your own use. It\'s the same list as Cartridges in <a class=goto href=#go data-go=tools:lib:cart>Tools › Library</a>.</p></section>';}
     else if(sec==="dia"){
       const L=(C?C.list:[]).filter(c=>c.d>0),k=pk(q.dia),by=new Map();
       L.forEach(c=>{const d=Math.round(c.d*1000)/1000;if(!by.has(d))by.set(d,[]);by.get(d).push(c);});
@@ -11227,7 +11407,7 @@ window.RB_REF=(function(){
         '<ul class="refwatch"><li><b>.308 vs .311–.312:</b> 7.62×39, 7.62×54R and 303 British take .311–.312" bullets, not .308".</li><li><b>9mm .355 vs .357:</b> 9mm, 380 and 357 SIG use .355"; 38 Special and 357 Magnum use .357" (cast bullets often .358").</li><li><b>6.8mm/270 .277 vs 7mm .284</b> and <b>6.5mm .264 vs 6mm .243</b> are easy to mix up on a shelf.</li><li><b>.452 vs .458:</b> 45 ACP and 45 Colt use about .451–.452"; 45-70 and 458 SOCOM use .458".</li><li><b>Cast lead bullets</b> are usually sized about 0.001" over the jacketed diameter. Slug your barrel if you\'re not sure.</li></ul>'+
         '<div class="row"><input id="refDiaQ" type="search" placeholder="Search: .308, 9mm, 7mm…" aria-label="Search bullet diameters" value="'+esc(q.dia)+'" style="flex:1 1 220px"></div>'+
         (ds.length?'<div class="dialist">'+ds.map(d=>'<div class="diarow"><div class="diah"><b>'+C.dtxt(d)+'"</b><span class="note">'+(d*25.4).toFixed(2)+' mm'+(C.fam(d)?' · '+esc(C.fam(d)):'')+'</span></div><div class="dian">'+by.get(d).sort((a,b)=>String(a.n).localeCompare(String(b.n),undefined,{numeric:true})).map(c=>'<button type="button" class="refc" data-refcart="'+esc(c.own?c.id:c.n)+'">'+esc(c.n)+'</button>').join('<span class="sep">·</span>')+'</div></div>').join("")+'</div>':'<p class="note">Nothing matches.</p>')+
-        '<p class="note">From the same cartridge list as <a class=goto href=#go data-go=tools:cart>Tools › Cartridges</a>, including any you\'ve fixed or added. Always check against the bullet maker and your load manual.</p></section>';}
+        '<p class="note">From the same cartridge list as Cartridges in <a class=goto href=#go data-go=tools:lib:cart>Tools › Library</a>, including any you\'ve fixed or added. Always check against the bullet maker and your load manual.</p></section>';}
     else if(sec==="burn"){
       const mine=myPowders().map(pn),k=pk(q.burn),makers=[...new Set(BURN.map(b=>b[0]))].sort();
       const rows=BURN.map((b,i)=>({i:i+1,m:b[0],n:b[1],mine:b[1].split("/").some(v=>{const a1=pn(b[0]+v),a2=pn(v);return mine.some(x=>x&&(x===a1||x===a2));})})).filter(r=>(!mk||r.m===mk)&&(!k||pk(r.m+" "+r.n).includes(k)||pk(r.n).includes(k)));
@@ -11249,7 +11429,7 @@ window.RB_REF=(function(){
     const had=document.activeElement&&document.activeElement.id;
     root.innerHTML=h;
     if(cr){if(sec==="cart"){$("refCart").appendChild(cr);if(window.RB_CARTPAGE)RB_CARTPAGE.draw();}else{const ts=document.querySelector('[data-toolsec="cart"]');if(ts)ts.appendChild(cr);}}
-    root.querySelectorAll("[data-rsec]").forEach(b=>b.addEventListener("click",()=>{sec=b.dataset.rsec;try{localStorage.setItem("rb.refSec",sec);}catch(e){}draw();window.scrollTo(0,0);}));
+    root.querySelectorAll("[data-rsec]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.rsec==="lib"){RB_GO("tools:lib");return;}sec=b.dataset.rsec;try{localStorage.setItem("rb.refSec",sec);}catch(e){}draw();window.scrollTo(0,0);}));
     const sq=(id,key)=>{const el=$(id);if(el)el.addEventListener("input",()=>{q[key]=el.value;draw();});};
     sq("refDiaQ","dia");sq("refBurnQ","burn");sq("refGlossQ","gloss");
     {const m=$("refBurnM");if(m)m.addEventListener("change",()=>{mk=m.value;draw();});}
@@ -11258,7 +11438,7 @@ window.RB_REF=(function(){
     if(had&&/^ref.*Q$/.test(had)){const el=$(had);if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length);}}
   }
   function counts(){const C2=(C?C.list:[]).filter(c=>c.d>0);return {burn:BURN.length,press:PRESS.length,gloss:GLOSS.length,dia:new Set(C2.map(c=>Math.round(c.d*1000))).size};}
-  return {counts,show(s){if(s&&SECS.some(x=>x[0]===s)){sec=s;try{localStorage.setItem("rb.refSec",sec);}catch(e){}}draw();}};
+  return {counts,show(s){if(s==="lib"){RB_GO("tools:lib");return;}if(s&&SECS.some(x=>x[0]===s)){sec=s;try{localStorage.setItem("rb.refSec",sec);}catch(e){}}draw();}};
 })();
 </script>
 
