@@ -65,7 +65,7 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .rtvital{fill:none;stroke:#ffd24a;stroke-dasharray:2 1.4}.rthold{stroke:var(--accent)}
 .rtlines{stroke:#151515}.rtlines circle{fill:#151515}.rtlines text{fill:#2c2c2c}
 :root[data-palette="night"] .rtsky{fill:#2a1210}:root[data-palette="night"] .rtground{fill:#3a1a14}:root[data-palette="night"] .rtbody{fill:#7a2a20}:root[data-palette="night"] .rtblack{fill:#4a1812}:root[data-palette="night"] .rtwhite{fill:#a8483a}:root[data-palette="night"] .rtgray .rtbody,:root[data-palette="night"] .rtgray .rtwhite,:root[data-palette="night"] .rtgray .rtblack{fill:#5c1f18}:root[data-palette="night"] .rtplate{fill:#c45a48;stroke:#7a2a20}:root[data-palette="night"] .rtpost{fill:#5c1f18}:root[data-palette="night"] .rtvital{stroke:#ff6a4a}:root[data-palette="night"] .rtlines{stroke:#ff8a70}:root[data-palette="night"] .rtlines circle{fill:#ff8a70}:root[data-palette="night"] .rtlines text{fill:#ff8a70}
-.rttgt{margin:8px 0 4px;max-width:360px}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
+.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
 .mcchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.mcchip{display:inline-flex;align-items:center;gap:2px;padding:3px 4px 3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--fg);font-size:14px;font-weight:600}.mcchip button{border:0;background:none;color:inherit;font-size:17px;line-height:1;padding:2px 6px;cursor:pointer;border-radius:99px}.mcchip button:hover{background:var(--sunk)}
 .mcsug{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.mcsug .note{margin:0}.mcadd{position:relative}
 .magbulk{padding:10px 12px;margin:4px 0 8px;border-radius:8px;background:var(--sunk);border:1px solid var(--line)}
@@ -1604,6 +1604,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>Tap <b>Save</b> when you're done. It saves one photo of the target with every group measured, the same as <b>Measure groups</b>, and each charge gets its group size, mean radius and distance. You can open the photo and edit the marks later. (From Tools, it's kept under <a class=goto href=#go data-go=tools:live>Tools › Live target › Saved</a> until you move it to a range trip or a ladder.)</li>
       </ol>
       <p><b>Not a Range Book target?</b> Live target works on any paper or board. Tap <b>Not a Range Book target?</b> on the camera picture, tap the target's four corners (top-left first, then clockwise), pick or type its size, then tap each aim point in the order you'll shoot them and tap <b>Done</b>. Without the corner squares it can't follow the target if the phone moves, so keep it still; if it does move, tap <b>Tap corners again</b>. Your marks stay put.</p>
+      <p><b>Your reticle over the target:</b> turn on <b>Show my reticle</b> on the Live target screen, then pick the <b>Shooting profile</b> for the gun you're shooting. Range Book draws that scope's reticle (your own reticle picture if you've added one) over the camera picture, to scale for the <b>Distance</b> you entered, with the mark you'd hold for that distance on the current aim point, so you can see where the crosshair sits and how your shots land against the reticle. The hold uses the profile's zero; type a different one in <b>Zero</b> if your scope is zeroed somewhere else (leave it blank to use the profile's). It also includes the profile's wind, spin drift and scope power, the same as the reticle on the dope card, and if the profile is set to <b>Dial it</b> it tells you how much to dial. Your choices are remembered on that phone.</p>
       <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
@@ -2487,7 +2488,39 @@ window.RB_WX=(()=>{
       const d=Math.hypot(mx-cx,my-cy);W.close();o.onSave({cx:+cx.toFixed(1),cy:+cy.toFixed(1),mx:+mx.toFixed(1),my:+my.toFixed(1),val:v,ppu:+(d/v).toFixed(4),w:o.w,h:o.h});});
     draw();
   }
-  window.RB_RET={svg,look,editLook,calibrate,DEF,TG,TG_ORDER,knockout};
+  /* the reticle drawn straight onto a canvas, over a camera picture (Live target, 2.33). o: {unit, look, pic:{url,cx,cy,ppu,w,h},
+     cx, cy (where the crosshair's center goes, in canvas px), ppm (canvas px per mark), W, H (the canvas size), hx, hy (the hold
+     mark), col (the hold mark's color)}. Your own reticle picture is drawn with its background made see-through. Returns false
+     while that picture is still being prepared. */
+  const KOI={};
+  function drawCanvas(ctx,o){
+    const {cx,cy,ppm,W,H}=o;if(!(ppm>0))return true;let ok=true;
+    if(o.pic&&o.pic.url&&o.pic.ppu>0){
+      const ku=knockout(o.pic.url);
+      if(ku){let im=KOI[ku];if(!im){im=new Image();im.src=ku;KOI[ku]=im;}
+        if(im.complete&&im.naturalWidth){const sc=im.naturalWidth/o.pic.w,s=ppm/(o.pic.ppu*sc);ctx.drawImage(im,cx-o.pic.cx*sc*s,cy-o.pic.cy*sc*s,im.naturalWidth*s,im.naturalHeight*s);}else ok=false;}
+      else ok=false;
+    }else{
+      const MIL=o.unit==="mil",lk=look(o.unit,o.look),span=MIL?10:40,M=lk.main,sub=lk.sub|0,st=M/(sub+1),wt=lk.weight==="thin"?.7:lk.weight==="thick"?1.7:1;
+      const R=span*ppm,gap=lk.center==="cross"?0:Math.min(M*.6,span*.2)*ppm*.5,lw=Math.max(1,1.3*wt);
+      ctx.save();ctx.lineCap="butt";
+      const pass=(col,extra)=>{ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=lw+extra;
+        ctx.beginPath();ctx.moveTo(Math.max(0,cx-R),cy);ctx.lineTo(cx-gap,cy);ctx.moveTo(cx+gap,cy);ctx.lineTo(Math.min(W,cx+R),cy);
+        ctx.moveTo(cx,Math.max(0,cy-R));ctx.lineTo(cx,cy-gap);ctx.moveTo(cx,cy+gap);ctx.lineTo(cx,Math.min(H,cy+R));
+        const tick=Math.max(4,Math.min(12,ppm*.35));
+        for(let i=1;i*st<=span+1e-9;i++){const t=i*st*ppm,big=i%(sub+1)===0,len=big?tick:tick*.55;if(t<gap-1)continue;
+          [t,-t].forEach(u=>{ctx.moveTo(cx+u,cy-len);ctx.lineTo(cx+u,cy+len);ctx.moveTo(cx-len,cy+u);ctx.lineTo(cx+len,cy+u);});}
+        ctx.stroke();
+        if(lk.tree!=="none")for(let i=1;i*M<=span+1e-9;i++){const t=i*M,n=Math.floor(span/M);
+          for(let j=-n;j<=n;j++){if(!j)continue;const u=j*M;if(lk.tree==="tree"&&Math.abs(u)>t*.7+M)continue;
+            ctx.beginPath();ctx.arc(cx+u*ppm,cy+t*ppm,Math.max(1.2,(1.3*wt+.2)*.9)+extra/2,0,7);ctx.fill();}}
+        if(lk.center==="dot"){ctx.beginPath();ctx.arc(cx,cy,Math.max(2,1.8*wt+.6)+extra/2,0,7);ctx.fill();}};
+      pass("rgba(255,255,255,.55)",2);pass("#0b0b0b",0);ctx.restore();
+    }
+    if(o.hx!=null){ctx.save();ctx.lineWidth=3;ctx.strokeStyle="rgba(0,0,0,.6)";ctx.beginPath();ctx.arc(o.hx,o.hy,9,0,7);ctx.stroke();ctx.lineWidth=2;ctx.strokeStyle=o.col||"#ff3b30";ctx.stroke();ctx.restore();}
+    return ok;
+  }
+  window.RB_RET={svg,look,editLook,calibrate,DEF,TG,TG_ORDER,knockout,drawCanvas};
 })();
 </script>
 <script>
@@ -2680,6 +2713,21 @@ window.RB_TRAJ={
   solve(id,o){
     if(SCR&&SCRATCH&&id===SCRATCH.id)return RB_TRAJ.solveObj(SCRATCH,o);
     const L0=state.loads.find(l=>l.id===id);if(!L0)return {err:"That Shooting profile is gone."};return RB_TRAJ.solveObj(L0,o);},
+  // the reticle hold for Live target (2.33): a profile, a distance (yards) and an optional zero (yards) in place of the profile's.
+  // Returns {err} or the reticle (unit, look, picture), the hold in marks (dx right, dy down), and what a mark covers (in per mark).
+  liveRet(id,x,zOver){
+    const L0=state.loads.find(l=>l.id===id);if(!L0)return {err:"Pick a Shooting profile."};
+    if(!(x>0))return {err:"Enter the distance."};
+    const B=RB_TRAJ.solveObj(L0,zOver>0?{z:[zOver,null,null,null],adj:1}:null);if(B.err)return B;
+    if(x>B.last)return {err:"That's farther than this profile can follow."};
+    const o=dopeOpts(L0),sc=o.scope,R0=L0.ret||{},RU=sc?(sc.unit==="mil"?"mil":"moa"):o.unit,UF=RU==="mil"?3.6:1.0472,per=x*UF/100;
+    const a=B.at(x),up=-a.path/per,wd=a.drift/per,sp=a.spin/per,cr=a.cor/per,dial=R0.mode==="dial";
+    const dx0=(B.side==="right"?-wd:B.side==="left"?wd:0)+sp+cr,dy0=dial?0:up;
+    const sfp=sc&&sc.fp==="SFP",mag=sc?[num(sc.magMin),num(sc.magMax)]:[null,null],tp=sfp?(num(sc.sfpTrue)||mag[1]||null):null;
+    let pw=sfp&&tp?(num(R0.power)>0?num(R0.power):tp):null;if(pw&&mag[0]&&mag[1])pw=Math.min(mag[1],Math.max(mag[0],pw));
+    const kf=sfp&&tp&&pw?pw/tp:1,pic=sc&&sc.retMode==="pic"&&sc.pic&&sc.pic.ppu>0&&window.RB_RETPIC?RB_RETPIC(sc.id):null;
+    return {name:B.name,z:B.z,unit:RU,UN:RU==="mil"?"MIL":"MOA",look:sc?sc.look:R0.look,pic:pic?Object.assign({url:pic.url},sc.pic):null,
+      per:per/kf,dx:dx0*kf,dy:dy0*kf,kf,pw,tp,dial,upD:-a.path/(x*(o.unit==="mil"?3.6:1.0472)/100),DU:o.unit==="mil"?"MIL":"MOA",wind:B.wind?U.s("mph",L0.wind||0,0)+" from "+B.clock+" o'clock":""};},
   // the same, for a load that isn't saved (Tools → Trajectory calculator)
   solveObj(L0,o){
     if(!L0.zpb)migZ(L0);
@@ -6880,6 +6928,9 @@ function openLive(o){
         '<label>Shots<input id="lvWant" type="number" inputmode="numeric" min="1" step="1"></label>'+
         '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label>'+
         '<label id="lvLensL" class="lvlens" hidden>Camera lens<select id="lvLens"></select></label></div>'+
+      '<label class="lvmic lvretl"><input type="checkbox" id="lvRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale for the distance, with the hold for your zero on the aim point.</small></span></label>'+
+      '<div class="lvgrid lvretopts" id="lvRetOpts" hidden><label>Shooting profile<select id="lvRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="lvRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
+      '<p class="note lvretnote" id="lvRetNote" hidden></p>'+
       '<div class="lvstats" id="lvStats"></div>'+
       '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
@@ -7131,6 +7182,9 @@ function openLive(o){
     const S=(x,y)=>{const p=applyH(lock.Hinv,x,y);return [(p[0]-sx)*k/dpr,(p[1]-sy)*k/dpr];};
     if(lock){
       const ppi=Math.hypot(...[0,1].map(i=>S(1,0)[i]-S(0,0)[i])),hr=Math.max(4,dia/2*ppi);
+      // your reticle, to scale, with its hold mark on the current aim point (2.33)
+      if(RT.on&&RTR&&!RTR.err){const a=aims()[aim];if(a){const A=S(a.x,a.y),ppm=ppi*RTR.per;
+        if(!RB_RET.drawCanvas(ctx,{unit:RTR.unit,look:RTR.look,pic:RTR.pic,cx:A[0]-RTR.dx*ppm,cy:A[1]-RTR.dy*ppm,ppm,W:cw,H:ch,hx:A[0],hy:A[1],col:HL})&&!RTwait){RTwait=true;}}}
       if(view==="full"||!ref){
         ctx.strokeStyle=ac;ctx.lineWidth=2;ctx.setLineDash([8,6]);ctx.beginPath();lock.fid.forEach((f,i)=>{const p=S(f[0],f[1]);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});ctx.closePath();ctx.stroke();ctx.setLineDash([]);
         if(lock.manual)lock.fid.forEach(f=>{const p=S(f[0],f[1]);ctx.fillStyle=ac;ctx.beginPath();ctx.arc(p[0],p[1],6,0,7);ctx.fill();});
@@ -7322,7 +7376,32 @@ function openLive(o){
   $("lvWant").addEventListener("input",e=>{want=num(e.target.value)>0?Math.round(num(e.target.value)):null;renderStats();});
   U.fill($("lvDist"),"yd",dist,0,1);
   $("lvLens").addEventListener("change",e=>switchLens(e.target.value));
-  $("lvDist").addEventListener("input",e=>{const d=U.read(e.target,"yd",dist);if(d>0)dist=d;renderStats();});
+  $("lvDist").addEventListener("input",e=>{const d=U.read(e.target,"yd",dist);if(d>0)dist=d;renderStats();retCalc();});
+  /* ----- your reticle over the target (2.33): a Shooting profile's reticle and hold, at the distance above, for the profile's
+     zero or one you type in. Remembered on this device. ----- */
+  let RT={on:false,prof:null,zero:null},RTR=null,RTwait=false;
+  try{Object.assign(RT,JSON.parse(localStorage.getItem("rb.liveRet")||"{}"));}catch(e){}
+  const rtSave=()=>{try{localStorage.setItem("rb.liveRet",JSON.stringify(RT));}catch(e){}};
+  const PROFS=(window.RB_TRAJ&&RB_TRAJ.all()||[]).slice().sort((a,b)=>(b.fav?1:0)-(a.fav?1:0));
+  if(!PROFS.some(p=>p.id===RT.prof))RT.prof=PROFS.length?PROFS[0].id:null;
+  $("lvRetProf").innerHTML=PROFS.length?PROFS.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===RT.prof?' selected':'')+'>'+(p.fav?'★ ':'')+esc(p.name)+'</option>').join(""):'<option value="">No Shooting profiles yet</option>';
+  function retCalc(){
+    $("lvRet").checked=!!RT.on;$("lvRetOpts").hidden=!RT.on;const n=$("lvRetNote");n.hidden=!RT.on;if(!RT.on){RTR=null;return;}
+    RTR=RT.prof?RB_TRAJ.liveRet(RT.prof,dist,num(RT.zero)>0?num(RT.zero):null):{err:"Make a Shooting profile first (under Shooting), with this gun's scope."};
+    const zi=$("lvRetZero");if(RTR&&!RTR.err&&!(num(RT.zero)>0)){zi.value="";zi.placeholder=String(U.n("yd",RTR.z,0));}
+    if(!RTR||RTR.err){n.textContent=RTR?RTR.err:"";n.classList.add("err");return;}
+    n.classList.remove("err");const f=v=>Math.abs(v).toFixed(1),MK=RTR.kf!==1?"marks":RTR.UN;
+    const hv=Math.abs(RTR.dy)<.05?"":f(RTR.dy)+" "+MK+(RTR.dy>0?" below":" above"),hh=Math.abs(RTR.dx)<.05?"":f(RTR.dx)+" "+MK+" "+(RTR.dx>0?"right":"left");
+    n.innerHTML=esc(RTR.name)+' · '+U.s("yd",RTR.z,0)+' zero'+(num(RT.zero)>0?' (typed in)':'')+'. '+(RTR.dial?'Dial <b>'+f(RTR.upD)+' '+RTR.DU+' '+(RTR.upD>=0?'up':'down')+'</b>, then ':'')+
+      (hv||hh?(RTR.dial?'the mark <b>':'The mark <b>')+(hv&&hh?hv+' and '+hh+' of':hh?hh+' of':hv)+'</b> the center is on the aim point (circled).':'hold dead on: the crosshair is on the aim point.')+
+      (RTR.wind?' Includes the profile\'s wind ('+esc(RTR.wind)+').':'')+(RTR.kf!==1?' Scope at '+RTR.pw+'x (marks true at '+RTR.tp+'x).':'');
+  }
+  $("lvRet").addEventListener("change",e=>{RT.on=e.target.checked;rtSave();retCalc();});
+  $("lvRetProf").addEventListener("change",e=>{RT.prof=e.target.value||null;rtSave();retCalc();});
+  $("lvRetZero").addEventListener("input",e=>{const z=U.read(e.target,"yd",null);RT.zero=z>0?z:null;rtSave();retCalc();});
+  if(num(RT.zero)>0)U.fill($("lvRetZero"),"yd",RT.zero,0,0);
+  window.addEventListener("rb-retko",()=>{RTwait=false;});
+  retCalc();
   {const gs=$("lvGroup");if(gs)gs.addEventListener("change",()=>{const a=aims()[aim];if(!a)return;const id=gs.value||null;aims().forEach(x=>{if(x!==a&&x.groupId===id&&id)x.groupId=null;});a.groupId=id;fillAim();});}
   /* ----- microphone ----- */
   let actx=null,mic=null,micT=null,bg=0.01,lastBang=0,hold=0;
