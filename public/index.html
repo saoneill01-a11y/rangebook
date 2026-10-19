@@ -678,7 +678,8 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvstat,.lvview,.lvthumb{z-index:2}
 .watch .lvcam img{display:block;width:100%;height:100%;object-fit:contain;cursor:crosshair}
 .lvthumb{position:absolute;top:8px;right:8px;border:2px solid rgba(255,255,255,.85);border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,.6);cursor:zoom-out}
-.lvstat{position:absolute;left:8px;right:8px;bottom:10px;display:flex;justify-content:center;pointer-events:none}
+.lvstat{position:absolute;left:8px;right:8px;bottom:10px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.lvpill[hidden]{display:none}.lvpill.warn i{background:#e3b341}.lvpill.warn,.lvpill.bad{text-align:left}
 .lvpill{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:6px 11px;border-radius:14px;background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:13px;line-height:1.3}
 .lvpill i{flex:none;width:9px;height:9px;border-radius:50%;background:var(--accent)}
 .lvpill.busy i{background:#e3b341;animation:lvp 1s infinite}.lvpill.bad i{background:#ff6b5b}
@@ -1601,7 +1602,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Group size is center to center of the two farthest shots, the same as calipers across the outside edges minus one bullet width.</p>
       <h3>Live target (phone on a spotting scope)</h3>
       <p>Range Book can watch a printed Range Book target through your phone's camera and mark each shot as it lands. Put the phone on the spotting scope with an adapter so it holds still, and aim the scope so the whole page and all four corner squares are in the picture. It needs Range Book's https address (the camera doesn't work on a plain http address).</p>
-      <p>The camera doesn't have to be straight on. Live target uses the corner squares to work out how the paper is tilted and measures every shot on the flattened target, so the group size and MOA are right from off to the side too. Up to about 30° makes no real difference, and 30° to 45° works well (zoom in a little). From 45° to 60° the holes look like thin ovals, so touching holes are harder to tell apart. Past about 60° it often can't find the corner squares at all. Keep the paper flat: staple or tape all four corners. The ⓘ next to <b>Camera off to the side?</b> in Tools › Live target says the same.</p>
+      <p>The camera doesn't have to be straight on. Live target uses the corner squares to work out how the paper is tilted and measures every shot on the flattened target, so the group size and MOA are right from off to the side too. Up to about 30° makes no real difference, and 30° to 45° works well (zoom in a little). From 45° to 60° the holes look like thin ovals, so touching holes are harder to tell apart. Past about 60° it often can't find the corner squares at all. You don't have to guess: once it finds the target, Live target works out the angle and shows a note on the camera picture from about 45° and a red warning from about 60° (an iPad watching it shows them too). It counts tilting up or down the same as side to side. Keep the paper flat: staple or tape all four corners. The ⓘ next to <b>Camera off to the side?</b> in Tools › Live target says the same.</p>
       <ol>
         <li>In a ladder, tap <b>Live target</b> (next to <b>+ Photo</b>). From a range trip, use <b>Live target</b> next to <b>+ Add target photo</b>. To use it without a load, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a>.</li>
         <li>Allow the camera. On a phone with more than one back lens, it uses the main lens so it doesn't keep jumping between lenses up close to the eyepiece; pick another under <b>Camera lens</b> if you like (it's remembered on that phone). Through a spotting scope the page often looks gray and washed out; Range Book allows for that, but zoom the scope so the page fills more of the view if it can't find the corner squares. When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
@@ -6779,6 +6780,17 @@ function homography(src,dst){
   const h=b.map((v,i)=>v/A[i][i]);return [...h,1];
 }
 const applyH=(h,x,y)=>{const w=h[6]*x+h[7]*y+h[8];return [(h[0]*x+h[1]*y+h[2])/w,(h[3]*x+h[4]*y+h[5])/w];};
+/* how far the camera is off to the side of the target, in degrees (2.41.2). At the page's center, a target seen at an angle is
+   squeezed in the direction it's tilted and not across it; the squeezed size over the full size is the cosine of the angle.
+   corners: where the page points are on screen; fid: the same points on the page. */
+function tiltDeg(corners,fid){if(!corners||!fid||corners.length<4)return null;const H=homography(fid,corners);if(!H||H.some(v=>!isFinite(v)))return null;
+  const xs=fid.map(p=>p[0]),ys=fid.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2,e=.25;
+  const c=applyH(H,cx,cy),a=applyH(H,cx+e,cy),b=applyH(H,cx,cy+e),p=a[0]-c[0],q=b[0]-c[0],r=a[1]-c[1],t=b[1]-c[1];
+  const S=p*p+q*q+r*r+t*t,D=Math.abs(p*t-q*r),k=Math.sqrt(Math.max(0,S*S-4*D*D)),s1=Math.sqrt((S+k)/2),s2=Math.sqrt(Math.max(0,(S-k)/2));
+  return s1>0?Math.acos(Math.min(1,s2/s1))*180/Math.PI:null;}
+window.RB_TILT=tiltDeg;
+// for tests: find a Range Book page in a picture
+window.RB_DETECT=img=>loadTargets().then(T=>detectRBTarget(img,T));
 // Through a spotting scope the page is washed out (the corner squares come out mid-gray, not black), so if the normal
 // pass finds nothing, look again with looser "dark" thresholds; the checks after it (shape, one hollow square, the aim
 // rings) still have to pass. (2.18.4)
@@ -6817,7 +6829,8 @@ function detectRBTarget1(img,T,P){
     const bw=x1-x0+1,bh=y1-y0+1;comps.push({a,cx:sx/a,cy:sy/a,bw,bh,fill:a/(bw*bh),asp:Math.max(bw,bh)/Math.min(bw,bh)});}
   // (through a scope the page is often small in the picture, so smaller squares count then)
   const amin=P[0]==="w"?N*0.0001:N*0.0003;
-  const cand=comps.filter(q=>q.a>amin&&q.a<N*0.03&&q.asp<1.7&&q.fill>0.55).sort((p,q)=>q.a-p.a).slice(0,P[0]==="w"?14:10);
+  // (a square seen from the side looks narrower: 1.7 to 1 is about 55° off, 2.9 to 1 about 70°; 2.41.2)
+  const cand=comps.filter(q=>q.a>amin&&q.a<N*0.03&&q.asp<2.9&&q.fill>0.55).sort((p,q)=>q.a-p.a).slice(0,P[0]==="w"?14:10);
   if(cand.length<4)return null;
   let best=null,bestScore=0;
   const quadArea=P=>{const c0=[P.reduce((s,p)=>s+p.cx,0)/4,P.reduce((s,p)=>s+p.cy,0)/4];const o=[...P].sort((p,q)=>Math.atan2(p.cy-c0[1],p.cx-c0[0])-Math.atan2(q.cy-c0[1],q.cx-c0[0]));
@@ -6826,8 +6839,9 @@ function detectRBTarget1(img,T,P){
     const P=[cand[a],cand[b],cand[c2],cand[d]],as=P.map(p=>p.a);if(Math.max(...as)/Math.min(...as)>3)continue;
     const {A,o}=quadArea(P),sq=Math.max(...as);if(A<sq*20||A>sq*400)continue;
     const e=[0,1,2,3].map(i=>Math.hypot(o[i].cx-o[(i+1)%4].cx,o[i].cy-o[(i+1)%4].cy));
-    if(Math.min(e[0],e[2])/Math.max(e[0],e[2])<.55||Math.min(e[1],e[3])/Math.max(e[1],e[3])<.55)continue;
-    const r=(e[0]+e[2])/(e[1]+e[3]),ar=Math.max(r,1/r);if(ar<1.05||ar>2.1)continue;
+    if(Math.min(e[0],e[2])/Math.max(e[0],e[2])<.4||Math.min(e[1],e[3])/Math.max(e[1],e[3])<.4)continue;
+    // a page seen at a steep angle can look square, or wider than tall (2.41.2); the hollow square and the aim rings still have to check out
+    const r=(e[0]+e[2])/(e[1]+e[3]),ar=Math.max(r,1/r);if(ar>4.5)continue;
     if(A>bestScore){bestScore=A;best=o;}}
   if(!best||bestScore<N*0.01)return null;
   // ordered clockwise from top-left in the picture; the hollow square marks the real top-left
@@ -7250,7 +7264,7 @@ function openLive(o){
   const v=document.createElement("div");v.className="viewer live";v.id="live";v.setAttribute("role","dialog");v.setAttribute("aria-label","Live target");
   v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
-      '<div class="lvstat"><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
+      '<div class="lvstat"><span class="lvpill warn" id="lvAng" hidden><i></i><span></span></span><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
       '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
     '<div class="chgrip lvgrip" id="lvGrip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Camera picture height. Drag up or down, or use the arrow keys." title="Drag to make the camera picture bigger or smaller. Double-tap to reset."><span></span></div>'+
     '<div class="lvside">'+
@@ -7284,6 +7298,13 @@ function openLive(o){
   const aims=()=>lock?lock.layout.aims:[];
   const grpFor=i=>{const a=aims()[i];return a&&a.groupId!==undefined?groups.find(g=>g.id===a.groupId)||null:groups[i]||null;};
   const aimLabel=i=>{const g=grpFor(i);return g?gName(g,groups.indexOf(g)):"Aim "+(i+1);};
+  // the camera angle (2.41.2): a note from 45°, a warning from 60°, with a little slack so it doesn't flicker at the line
+  let ang={deg:null,lvl:0,t:"",k:""};
+  function angleCheck(){const d=lock?tiltDeg(lock.corners,lock.fid):null;if(d==null){ang={deg:null,lvl:0,t:"",k:""};}
+    else{const L=ang.lvl,up=[45,60],dn=[42,57];let lvl=d>=up[1]?2:d>=up[0]?1:0;if(L===2&&d>=dn[1])lvl=2;else if(L>=1&&lvl<1&&d>=dn[0])lvl=1;
+      const r=Math.round(d/5)*5;
+      ang={deg:d,lvl,k:lvl===2?"bad":"warn",t:lvl===2?"Camera about "+r+"° off straight-on: too steep. Holes may be missed or misplaced. Move it more in front of the target.":lvl===1?"Camera about "+r+"° off straight-on. Still measured right; zoom in if the holes look thin.":""};}
+    const e=$("lvAng");if(!e)return;e.hidden=!ang.t;e.className="lvpill "+ang.k;e.lastChild.textContent=ang.t;}
   const setStat=(t,k)=>{status={t,k:k||""};const ds=$("lvDimStat");if(ds)ds.textContent=t;const s=$("lvStat");if(!s)return;s.className="lvpill"+(k?" "+k:"");s.lastChild.textContent=t;s.parentNode.hidden=!t;};
   const snap=()=>{undo.push(JSON.stringify({holes,aim}));if(undo.length>60)undo.shift();$("lvUndo").disabled=false;dirty=true;};
   let dirty=false,stored=null;
@@ -7409,7 +7430,7 @@ function openLive(o){
     if(r){
       // keep the old mapping unless the page really moved, so tiny wobbles don't shift the flattened picture
       if(lock){const d=Math.max(...r.corners.map((c,i)=>Math.hypot(c[0]-lock.corners[i][0],c[1]-lock.corners[i][1])));if(d<1.5){lockMiss=0;return true;}}
-      const first=!lock;if(!first)r.layout=lock.layout;lock=r;lockMiss=0;
+      const first=!lock;if(!first)r.layout=lock.layout;lock=r;lockMiss=0;angleCheck();
       if(first){
         const fm=T.formats&&T.formats[r.fmt];if(fm&&fm.page){pageW=fm.page[0];pageH=fm.page[1];}else if(T.page){pageW=T.page[0];pageH=T.page[1];}
         r.layout=JSON.parse(JSON.stringify(r.layout));
@@ -7670,7 +7691,7 @@ function openLive(o){
     const keepAims=lock&&lock.manual&&lock.layout.aims.length===aimsL.length?lock.layout.aims:null;
     if(keepAims)aimsL.forEach((a,i)=>a.groupId=keepAims[i].groupId);
     lock={manual:true,H:man.H,Hinv:man.Hinv,corners:man.pts,fid:[[0,0],[w,0],[w,h],[0,h]],fmt:null,layout:{id:"custom",name:"your target",aims:aimsL}};
-    pageW=w;pageH=h;man=null;$("lvMDone").hidden=true;$("lvManual").hidden=false;$("lvManual").textContent="Tap corners again";
+    pageW=w;pageH=h;man=null;angleCheck();$("lvMDone").hidden=true;$("lvManual").hidden=false;$("lvManual").textContent="Tap corners again";
     if(!keepAims){aim=0;fillAim();}
     busy=true;setStat("Taking a picture of the target to compare against…","busy");
     const f=await steady(1500);busy=false;if(closed)return;ref=f;view="aim";lastRefresh=Date.now();
@@ -7696,7 +7717,7 @@ function openLive(o){
     if(sh&&!sh.hidden)sheet={title:(sh.querySelector("h3")||{}).textContent||"",note:(sh.querySelector("p.note")||{}).textContent||"",
       rows:[...sh.querySelectorAll(".lvsum > div")].map(d=>[(d.querySelector("b")||{}).textContent||"",(d.querySelector("span")||{}).textContent||"",d.classList.contains("wide")?1:0]),
       buttons:[...sh.querySelectorAll("button")].filter(b=>b.id!=="lvsShare").map(b=>[b.id,b.textContent,b.classList.contains("primary")?1:0])};
-    return {status:status.t,kind:status.k,locked:!!lock,ready:!!ref,chip:$("lvAimChip").textContent,
+    return {status:status.t,kind:status.k,ang:ang.t?{t:ang.t,k:ang.k,deg:Math.round(ang.deg)}:null,locked:!!lock,ready:!!ref,chip:$("lvAimChip").textContent,
       stats:{n:r.n,want:want||null,size:r.size!=null?U.n("in",r.size,2):"–",moa:m!=null?m.toFixed(2):"–",mr:r.mr!=null?U.n("in",r.mr,2):"–",off:offTxt(r)},
       en:{shot:!$("lvShot").disabled,undo:!$("lvUndo").disabled,prev:!$("lvPrev").disabled,next:!$("lvNext").disabled,done:!$("lvDone").disabled},
       viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,doneLabel:$("lvDone").textContent,
@@ -7918,7 +7939,7 @@ function openLive(o){
   const onVis=()=>{if(document.visibilityState==="visible"&&!closed){keep(true);lastVTat=Date.now();setTimeout(()=>camCheck(false),1500);}};
   document.addEventListener("keydown",onKey);document.addEventListener("visibilitychange",onVis);
   $("lvClose").addEventListener("click",()=>close());
-  window.RB_LIVE={state:()=>({locked:!!lock,layout:lock&&lock.layout.id,aim,holes:JSON.parse(JSON.stringify(holes)),view,crop,status:status.t,busy,ref:!!ref}),shot:()=>shot("button"),mic:()=>!!micT,
+  window.RB_LIVE={state:()=>({angle:ang.deg,angleLvl:ang.lvl,locked:!!lock,layout:lock&&lock.layout.id,aim,holes:JSON.parse(JSON.stringify(holes)),view,crop,status:status.t,busy,ref:!!ref}),shot:()=>shot("button"),mic:()=>!!micT,
     at(px,py){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1),p=applyH(lock.Hinv,px,py);return [rc.left+(p[0]-crop[0])*k,rc.top+(p[1]-crop[1])*k];},
     camAt(cx,cy){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);return [rc.left+(cx-crop[0])*k,rc.top+(cy-crop[1])*k];}};
   /* ----- the camera for another device (2.37): it started this session and saves the result; this phone sends the
@@ -8017,7 +8038,7 @@ function openWatch(id,dev,host){
   const HO=host&&host.o?host.o:null; // started here, with the phone as the camera (2.37)
   const v=document.createElement("div");v.className="viewer live watch";v.id="liveWatch";v.setAttribute("role","dialog");v.setAttribute("aria-label","Watching Live target");
   v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span></div>'+
-    '<div class="lvmain"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
+    '<div class="lvmain"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill warn" id="wAng" hidden><i></i><span></span></span><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
       '<button class="btn lvview" id="wView" type="button" hidden>Whole target</button></div>'+
     '<div class="lvside"><div class="lvinfo"><span class="lvchip" id="wTitle"></span></div>'+
       '<div class="lvrow"><button class="lvshot" id="wShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="wUndo" type="button" disabled>↶ Undo</button></div>'+
@@ -8049,7 +8070,7 @@ function openWatch(id,dev,host){
     const u=(e.clientX-ox)/dw,w=(e.clientY-oy)/dh;if(u<0||w<0||u>1||w>1)return;cmd({cmd:"tap",u,w});});
   function render(S){
     st=S;if(!S)return;
-    setStat(S.status||"",S.kind||"");$("wChip").textContent=S.chip||"";$("wTitle").textContent=S.title||"";$("wYd").textContent=S.unitYd||"yd";
+    setStat(S.status||"",S.kind||"");{const a=$("wAng");if(a){a.hidden=!(S.ang&&S.ang.t);if(S.ang&&S.ang.t){a.className="lvpill "+(S.ang.k||"warn");a.lastChild.textContent=S.ang.t;}}}$("wChip").textContent=S.chip||"";$("wTitle").textContent=S.title||"";$("wYd").textContent=S.unitYd||"yd";
     const T=S.stats||{};
     $("wStats").innerHTML='<div><b>'+esc(T.n)+(T.want?'<small>/'+esc(T.want)+'</small>':'')+'</b><span>Shots</span></div><div><b>'+esc(T.size)+'</b><span>Group '+esc(S.unitIn||"in")+'</span></div><div><b>'+esc(T.moa)+'</b><span>MOA</span></div><div><b>'+esc(T.mr)+'</b><span>Mean rad.</span></div><div class="wide">Center from aim: <b>'+esc(T.off)+'</b></div>';
     const E=S.en||{};$("wShot").disabled=!E.shot;$("wUndo").disabled=!E.undo;$("wPrev").disabled=!E.prev;$("wNext").disabled=!E.next;$("wDone").disabled=!E.done;$("wDone").textContent=S.doneLabel||"Save";
@@ -10077,7 +10098,7 @@ window.APP_showTab=showTab;
 /* ---------- Help buttons and ⓘ tips ---------- */
 // short how-tos for the tiles; h is the How to Use topic ("#id" a section, "tool:Name" a Tools item, otherwise an h3's text)
 const INFO={
-  liveAngle:{t:"Camera at an angle",noMore:true,b:"Live target finds the four corner squares and uses them to work out how the paper is tilted toward the camera. Every shot is turned back into real inches on the flat target before anything is measured, so group size, MOA, mean radius and group center come out the same whether the camera is straight on or off to the side.<br><b>How far off to the side:</b><br><b>Up to about 30°:</b> no real difference.<br><b>30° to 45°:</b> works well. The target looks narrower, so zoom in a little to keep the holes sharp.<br><b>45° to 60°:</b> still corrected, but the target looks only half to three-quarters as wide, so each hole is a thin oval. Holes that touch are harder to tell apart, and you'll fix more misses with <b>Undo</b>.<br><b>Past about 60°:</b> the corner squares get too thin to find reliably, and Live target says it can't see the target instead of giving wrong numbers.<br>A quick check: at 45° the target looks about 70% as wide as it should, and at 60° about half.<br><b>Keep the paper flat.</b> The correction assumes a flat sheet, so a curled, rippling or sagging target throws positions off, and more so the steeper the angle. Staple or tape all four corners. The same goes for tilting up or down, not just side to side."},
+  liveAngle:{t:"Camera at an angle",noMore:true,b:"Live target finds the four corner squares and uses them to work out how the paper is tilted toward the camera. Every shot is turned back into real inches on the flat target before anything is measured, so group size, MOA, mean radius and group center come out the same whether the camera is straight on or off to the side.<br><b>How far off to the side:</b><br><b>Up to about 30°:</b> no real difference.<br><b>30° to 45°:</b> works well. The target looks narrower, so zoom in a little to keep the holes sharp.<br><b>45° to 60°:</b> still corrected, but the target looks only half to three-quarters as wide, so each hole is a thin oval. Holes that touch are harder to tell apart, and you'll fix more misses with <b>Undo</b>.<br><b>Past about 60°:</b> the corner squares get too thin to find reliably, and Live target says it can't see the target instead of giving wrong numbers.<br><b>You don't have to guess the angle.</b> Live target works it out from the corner squares and shows a note on the camera picture from about 45° (\"Camera about 50° off straight-on\") and a red warning from about 60°, on the phone and on an iPad watching it.<br><b>Keep the paper flat.</b> The correction assumes a flat sheet, so a curled, rippling or sagging target throws positions off, and more so the steeper the angle. Staple or tape all four corners. The same goes for tilting up or down, not just side to side."},
   liveFocusIos:{t:"Range Focus",noMore:true,b:"Keeps calls and notifications from interrupting the phone on the target. Set it up once:<br><b>1. Make the Focus.</b> Settings › Focus › <b>+</b> › Custom, name it <b>Range</b>. Under People, pick <b>Allow notifications from</b> and add nobody; tap Calls and choose <b>Nobody</b>, and turn off <b>Allow Repeated Calls</b>. Under Apps, allow none.<br><b>2. Make the shortcut.</b> Open the Shortcuts app, tap <b>+</b>, add the action <b>Set Focus</b>, set it to turn <b>Range</b> on <b>until turned off</b>, and name the shortcut exactly <b>Range Book Focus</b>.<br><b>3. Use it.</b> Tap <b>Turn on Range Focus</b> here. The Shortcuts app opens for a moment; tap <b>◀ Range Book</b> at the top left to come back (Live target picks up where it was). Turn the Focus off afterwards from Control Center.<br>Also set <b>Auto-Lock</b> to <b>Never</b> on that phone (Settings › Display &amp; Brightness) and turn off <b>Low Power Mode</b>. Test it once with a call and a text before you walk down range."},
   liveFocusAnd:{t:"Silence calls (Android)",noMore:true,b:"Web apps can't turn on Do Not Disturb by themselves on Android, but it's two taps. Set it up once:<br><b>1.</b> Settings › Notifications (or Sound) › <b>Do Not Disturb</b> (called <b>Modes</b> on some phones). Under <b>People</b>, set Calls and Messages to <b>None</b> and turn off <b>Repeat callers</b>. Under <b>Apps</b>, allow none.<br><b>2.</b> At the range, swipe down twice from the top of the screen and tap <b>Do Not Disturb</b>, then come back here.<br>Also set <b>Screen timeout</b> to the longest time (Settings › Display), turn off <b>Battery Saver</b>, and test it once with a call and a text before you walk down range."},
   secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},

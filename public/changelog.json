@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.41.1",
+      "version": "2.41.2",
       "date": "2026-10-19",
       "title": "Library in Tools, and one way to add things",
       "items": [
@@ -12,7 +12,9 @@
         "Home's Built in Library card and Reloading › Reference › Library open Tools › Library. The Cartridges tile in Tools is now inside the Library.",
         "Every + Add button for something Range Book has a list of (suppressors, factory ammo, bullets, powders, primers) now opens the same screen as Add a scope: a search box, tiles grouped by maker or caliber, and Enter it yourself.",
         "+ Add a suppressor… on a gun's page opens that screen too and puts the new suppressor on the gun.",
-        "Live target: an ⓘ in Tools › Live target explains that the group is measured correctly with the camera off to the side, and how far off to the side works (about 45° easily, up to about 60°)."
+        "Live target: an ⓘ in Tools › Live target explains that the group is measured correctly with the camera off to the side, and how far off to the side works (about 45° easily, up to about 60°).",
+        "Live target works out how far off straight-on the camera is and says so on the camera picture: a note from about 45°, a red warning from about 60° (on an iPad watching too).",
+        "Live target and target photos now find a Range Book target at steeper angles: about 60° off to the side, above or below, up from about 45° (and about 38° from above or below)."
       ]
     },
     {
