@@ -909,17 +909,18 @@ async function api(req, res, url) {
      same account watches and sends taps back. Kept in memory only; nothing is saved. ---- */
   if (p === "/api/remote" && method === "GET") {
     const t = now();
-    return send(res, 200, { sessions: [...REMOTE.values()].filter((r) => r.uid === user.id && t - r.last < 20000).map((r) => ({ id: r.id, device: r.device, started: r.created, watching: t - r.watchSeen < 15000 })) });
+    return send(res, 200, { sessions: [...REMOTE.values()].filter((r) => r.uid === user.id && t - r.last < 20000).map((r) => ({ id: r.id, device: r.device, role: r.role, started: r.created, watching: t - r.watchSeen < 15000, alive: t - r.last < 6000, standby: !!(r.state && r.state.standby) })) });
   }
   if (p === "/api/remote" && method === "POST") {
     const b = await readJson(req);
     const mine = [...REMOTE.values()].filter((r) => r.uid === user.id).sort((a, c) => a.last - c.last);
     while (mine.length >= 3) remoteEnd(mine.shift().id);
     const id = crypto.randomUUID(), t = now();
-    REMOTE.set(id, { id, uid: user.id, device: String(b.device || "Phone").slice(0, 40), created: t, last: t, seq: 0, frame: null, state: null, cmds: [], waiters: new Set(), watchSeen: 0 });
+    // role "camera" (2.37): a phone waiting to be the camera for a Live target started on another device (an iPad)
+    REMOTE.set(id, { id, uid: user.id, device: String(b.device || "Phone").slice(0, 40), role: b.role === "camera" ? "camera" : "", created: t, last: t, seq: 0, frame: null, state: null, cmds: [], waiters: new Set(), watchSeen: 0, result: null });
     return send(res, 200, { id });
   }
-  m = /^\/api\/remote\/([0-9a-f-]{36})(\/push|\/wait|\/frame|\/cmd)?$/.exec(p);
+  m = /^\/api\/remote\/([0-9a-f-]{36})(\/push|\/wait|\/frame|\/cmd|\/result)?$/.exec(p);
   if (m) {
     const r = REMOTE.get(m[1]);
     if (!r || r.uid !== user.id) {
@@ -948,6 +949,9 @@ async function api(req, res, url) {
       r.waiters.add(fin); req.on("close", () => { if (!done) { done = true; clearTimeout(timer); r.waiters.delete(fin); } });
       return;
     }
+    // the camera phone hands the finished target (picture and marks) to the device that started it, which saves it
+    if (m[2] === "/result" && method === "POST") { const b = await readJson(req, 16 * 1024 * 1024); r.result = { data: String(b.data || ""), w: Number(b.w) || 0, h: Number(b.h) || 0, M: b.M || null, tok: String(b.tok || "") }; return send(res, 200, { ok: true }); }
+    if (m[2] === "/result" && method === "GET") { r.watchSeen = t; if (!r.result) throw new HttpError(404, "Nothing to save yet."); return send(res, 200, r.result); }
     if (m[2] === "/frame" && method === "GET") {
       r.watchSeen = t;
       if (!r.frame) throw new HttpError(404, "No picture yet.");
@@ -958,7 +962,9 @@ async function api(req, res, url) {
       const b = await readJson(req);
       if (typeof b.cmd !== "string" || b.cmd.length > 40) throw new HttpError(400, "Bad command.");
       r.watchSeen = t;
-      if (r.cmds.length < 30) r.cmds.push({ cmd: b.cmd, id: typeof b.id === "string" ? b.id.slice(0, 40) : undefined, k: typeof b.k === "string" ? b.k.slice(0, 20) : undefined, v: typeof b.v === "string" || typeof b.v === "number" ? String(b.v).slice(0, 80) : undefined, u: Number(b.u), w: Number(b.w) });
+      if (r.cmds.length < 30) r.cmds.push({ cmd: b.cmd, id: typeof b.id === "string" ? b.id.slice(0, 40) : undefined, k: typeof b.k === "string" ? b.k.slice(0, 20) : undefined, v: typeof b.v === "boolean" ? b.v : typeof b.v === "string" || typeof b.v === "number" ? String(b.v).slice(0, 80) : undefined, u: Number(b.u), w: Number(b.w),
+        // starting a session from another device (2.37): who started it, its setup, and the answer to a save
+        ...(b.cmd === "start" ? { host: String(b.host || "").slice(0, 40), cfg: b.cfg && typeof b.cfg === "object" ? b.cfg : {} } : {}), ...(b.cmd === "saved" ? { ok: !!b.ok, tok: String(b.tok || "").slice(0, 40) } : {}) });
       return send(res, 200, { ok: true });
     }
     if (!m[2] && method === "DELETE") { remoteEnd(r.id); return send(res, 200, { ok: true }); }

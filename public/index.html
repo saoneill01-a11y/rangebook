@@ -65,7 +65,7 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .rtvital{fill:none;stroke:#ffd24a;stroke-dasharray:2 1.4}.rthold{stroke:var(--accent)}
 .rtlines{stroke:#151515}.rtlines circle{fill:#151515}.rtlines text{fill:#2c2c2c}
 :root[data-palette="night"] .rtsky{fill:#2a1210}:root[data-palette="night"] .rtground{fill:#3a1a14}:root[data-palette="night"] .rtbody{fill:#7a2a20}:root[data-palette="night"] .rtblack{fill:#4a1812}:root[data-palette="night"] .rtwhite{fill:#a8483a}:root[data-palette="night"] .rtgray .rtbody,:root[data-palette="night"] .rtgray .rtwhite,:root[data-palette="night"] .rtgray .rtblack{fill:#5c1f18}:root[data-palette="night"] .rtplate{fill:#c45a48;stroke:#7a2a20}:root[data-palette="night"] .rtpost{fill:#5c1f18}:root[data-palette="night"] .rtvital{stroke:#ff6a4a}:root[data-palette="night"] .rtlines{stroke:#ff8a70}:root[data-palette="night"] .rtlines circle{fill:#ff8a70}:root[data-palette="night"] .rtlines text{fill:#ff8a70}
-.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.bkh{font-size:15px;margin:16px 0 4px}#rs_out .row{margin-top:8px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
+.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.lwbtns{display:flex;flex-direction:column;gap:8px;margin-top:10px}.camwait video{width:100%;height:100%;object-fit:contain;background:#000;display:block}.cwnote{color:#bbb}.lvdim{position:fixed;inset:0;z-index:60;background:#000;border:0;color:#9a9a9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;font:inherit}.lvdim[hidden]{display:none}.lvdim b{color:#cfcfcf;font-size:18px}.lvdim span{font-size:14px;max-width:320px}.lvdim small{font-size:12px;color:#666}.bkh{font-size:15px;margin:16px 0 4px}#rs_out .row{margin-top:8px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
 .mcchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.mcchip{display:inline-flex;align-items:center;gap:2px;padding:3px 4px 3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--fg);font-size:14px;font-weight:600}.mcchip button{border:0;background:none;color:inherit;font-size:17px;line-height:1;padding:2px 6px;cursor:pointer;border-radius:99px}.mcchip button:hover{background:var(--sunk)}
 .mcsug{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.mcsug .note{margin:0}.mcadd{position:relative}
 .magbulk{padding:10px 12px;margin:4px 0 8px;border-radius:8px;background:var(--sunk);border:1px solid var(--line)}
@@ -1611,6 +1611,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Your reticle over the target:</b> turn on <b>Show my reticle</b> on the Live target screen, then pick the <b>Shooting profile</b> for the gun you're shooting. From a range trip it uses the trip's profile on its own (its gun, scope and selected zero). Range Book draws that scope's reticle (your own reticle picture if you've added one) over the camera picture, to scale for the <b>Distance</b> you entered, with the mark you'd hold for that distance on the current aim point, so you can see where the crosshair sits and how your shots land against the reticle. The hold uses the profile's zero; type a different one in <b>Zero</b> if your scope is zeroed somewhere else (leave it blank to use the profile's). It also includes the profile's wind, spin drift and scope power, the same as the reticle on the dope card, and if the profile is set to <b>Dial it</b> it tells you how much to dial. Your choices are remembered on that phone.</p>
       <p><b>Leaving a phone at the target</b> (for long range, with Remote on another phone at the bench): the screen stays on while Live target is open. On an iPhone, <b>Turn on Range Focus</b> runs a shortcut you make once that turns on a Focus, so calls and notifications don't interrupt it (tap the <b>ⓘ</b> next to it for the steps). Android web apps can't do that by themselves, so <b>Silence calls</b> shows how to turn on Do Not Disturb in two taps. If something still interrupts the camera, Live target starts it again by itself and finds the target again, and your marks are kept; if the Remote connection drops, the phone starts it again and the watching device follows it. Set the phone's screen lock to Never (Auto-Lock on iPhone, Screen timeout on Android), keep it on a battery pack, and test it with a call and a text before you walk down range.</p>
       <p><b>Bigger picture on a phone:</b> drag the bar under the camera picture down to make it bigger; the buttons and numbers below it then scroll. Drag it up to make it smaller, or double-tap the bar to fit everything on the screen again. It's remembered on that phone.</p>
+      <p><b>Or start it on your iPad, with the phone as its camera:</b> on the phone, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Be the camera for your iPad</b>, aim it at the target and leave it (the screen goes dark after 30 seconds to save battery; tap it to see the camera). On the iPad, start Live target the usual way (from a ladder, a range trip or Tools › Live target) and pick <b>Use the iPhone on the scope</b>. The phone starts by itself with that setup: the ladder's charges, the distance and shots, and the trip's Shooting profile for the reticle. The iPad has the <b>Shot</b>, <b>Undo</b>, <b>Aim</b> and <b>Save</b> buttons, <b>Listen for shots</b> with the iPad's own microphone, and <b>Show my reticle</b> with its profile and zero. <b>Save</b> puts the target where you started it on the iPad. To change guns, loads or profiles, tap <b>← Back</b> on the iPad (it offers to save the shots first), then start Live target again from the new place: the phone goes back to waiting in between and keeps its camera open, so you never have to touch it.</p>
       <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
@@ -1811,7 +1812,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="grid"><div class="field"><label for="lt_dia">Bullet diameter (<span data-unit="dim">in</span>)</label><input id="lt_dia" type="number" inputmode="decimal" step="any" list="lt_dias"><datalist id="lt_dias"><option value=".224"><option value=".243"><option value=".264"><option value=".277"><option value=".284"><option value=".308"><option value=".338"><option value=".355"><option value=".357"><option value=".452"></datalist></div>
         <div class="field"><label for="lt_dist">Distance (<span data-unit="yd">yd</span>)</label><input id="lt_dist" type="number" inputmode="numeric" step="any"></div>
         <div class="field"><label for="lt_want">Shots per aim point</label><input id="lt_want" type="number" inputmode="numeric" min="1" step="1"></div></div>
-      <div class="row"><button class="btn primary" id="lt_go" type="button">Start Live target</button><button class="btn" id="lt_print" type="button">Printable targets</button></div>
+      <div class="row"><button class="btn primary" id="lt_go" type="button">Start Live target</button><button class="btn" id="lt_cam" type="button">Be the camera for your iPad</button><button class="btn" id="lt_print" type="button">Printable targets</button></div>
       <div id="lt_watch"></div>
       <p class="note" id="lt_msg" hidden></p>
       <div id="lt_saved"></div>
@@ -6962,7 +6963,8 @@ function openLive(o){
       '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i><b></b></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
       '<div class="lvsens" id="lvSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-sens="normal">Normal</button><button type="button" data-sens="supp">Suppressed</button><button type="button" data-sens="quiet">Quiet .22</button></div>'+
       '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it.</p>'+
-    '</div></div><div class="lvsheet" id="lvSheet" hidden></div>';
+    '</div></div><div class="lvsheet" id="lvSheet" hidden></div>'+
+    (o.hosted?'<button class="lvdim" id="lvDim" type="button" hidden><b>Camera for your '+esc(o.hosted.host||"iPad")+'</b><span id="lvDimStat"></span><small>Tap to see the camera</small></button>':'');
   document.body.appendChild(v);
   const can=$("lvCan"),ctx=can.getContext("2d"),thumb=$("lvThumb"),tctx=thumb.getContext("2d"),camBox=$("lvCam");
   const video=document.createElement("video");video.setAttribute("playsinline","");video.muted=true;video.autoplay=true;
@@ -6975,7 +6977,7 @@ function openLive(o){
   const aims=()=>lock?lock.layout.aims:[];
   const grpFor=i=>{const a=aims()[i];return a&&a.groupId!==undefined?groups.find(g=>g.id===a.groupId)||null:groups[i]||null;};
   const aimLabel=i=>{const g=grpFor(i);return g?gName(g,groups.indexOf(g)):"Aim "+(i+1);};
-  const setStat=(t,k)=>{status={t,k:k||""};const s=$("lvStat");if(!s)return;s.className="lvpill"+(k?" "+k:"");s.lastChild.textContent=t;s.parentNode.hidden=!t;};
+  const setStat=(t,k)=>{status={t,k:k||""};const ds=$("lvDimStat");if(ds)ds.textContent=t;const s=$("lvStat");if(!s)return;s.className="lvpill"+(k?" "+k:"");s.lastChild.textContent=t;s.parentNode.hidden=!t;};
   const snap=()=>{undo.push(JSON.stringify({holes,aim}));if(undo.length>60)undo.shift();$("lvUndo").disabled=false;dirty=true;};
   let dirty=false,stored=null;
   async function keep(on){try{if(on&&navigator.wakeLock&&document.visibilityState==="visible")wake=await navigator.wakeLock.request("screen");else if(!on&&wake){await wake.release();wake=null;}}catch(e){}}
@@ -7020,13 +7022,16 @@ function openLive(o){
     camFix=true;camTries++;setStat("The camera was interrupted. Starting it again…","busy");
     try{let st=null;if(lensId){try{st=await openStream(lensId);}catch(e){st=null;}}if(!st)st=await openStream(null);
       if(closed){st.getTracks().forEach(t=>t.stop());return;}
-      await useStream(st);lastVT=-1;lastVTat=Date.now();camTries=0;keep(true);
+      await useStream(st);lastVT=-1;lastVTat=Date.now();camTries=0;keep(true);if(o.hosted&&o.hosted.onStream)o.hosted.onStream(st);
       setStat(lock?"Camera back. Finding the corner squares again…":"Camera back. Point it at the target with all four corner squares in view.","busy");}
     catch(e){setStat("The camera was interrupted and won't start yet. Trying again"+(camTries>3?" (if a call or another app is using it, close that)":"")+"…","bad");}
     finally{camFix=false;}
   }
   camT=setInterval(()=>camCheck(false),2000);
   async function startCam(){
+    // the camera for an iPad (2.37): the waiting screen already has the camera open, so use it (no new permission prompt)
+    if(o.hosted&&o.hosted.stream&&o.hosted.stream.getVideoTracks().some(t=>t.readyState==="live")){
+      try{await useStream(o.hosted.stream);setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");keep(true);return;}catch(e){}}
     if(!liveSupported()){setStat(location.protocol==="https:"||location.hostname==="localhost"?"This browser can't use the camera.":"The camera needs Range Book's https address. Open it that way and try again.","bad");return;}
     try{
       let saved=null;try{saved=localStorage.getItem(LENS_KEY);}catch(e){}
@@ -7389,7 +7394,8 @@ function openLive(o){
       en:{shot:!$("lvShot").disabled,undo:!$("lvUndo").disabled,prev:!$("lvPrev").disabled,next:!$("lvNext").disabled,done:!$("lvDone").disabled},
       viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,doneLabel:$("lvDone").textContent,
       groups:gs?[...gs.options].map(o=>[o.value,o.textContent]):null,group:gs?gs.value:null,want:$("lvWant").value,dist:$("lvDist").value,unitIn:U.u("in"),unitYd:U.u("yd"),
-      mic:!!micT,sens,sheet,title:o.title||""};
+      mic:!!micT,sens,sheet,title:o.title||"",hosted:!!o.hosted,total:holes.reduce((s2,h)=>s2+(h?h.length:0),0),result:resTok,
+      ret:{on:!!RT.on,prof:RT.prof||null,zero:num(RT.zero)>0?num(RT.zero):null,note:(($("lvRetNote")||{}).textContent)||""}};
   }
   const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvMDone","lvmOk","lvmRedo"];
   function rmRun(c){
@@ -7397,6 +7403,10 @@ function openLive(o){
     else if(c.cmd==="tap"&&isFinite(c.u)&&isFinite(c.w))tapAt(Math.min(1,Math.max(0,c.u)),Math.min(1,Math.max(0,c.w)));
     else if(c.cmd==="set"){const el=c.k==="group"?$("lvGroup"):c.k==="want"?$("lvWant"):c.k==="dist"?$("lvDist"):null;if(el){el.value=c.v==null?"":c.v;el.dispatchEvent(new Event(el.tagName==="SELECT"?"change":"input"));}}
     else if(c.cmd==="sens"&&SENS[c.v])setSens(c.v);
+    // from the device that started it (2.37): end without saving, the save went through, the reticle settings
+    else if(c.cmd==="end"&&o.hosted)close(true);
+    else if(c.cmd==="saved"&&o.hosted&&resWait)resWait(c);
+    else if(c.cmd==="ret"){if(c.k==="on"){RT.on=!!c.v;}else if(c.k==="prof"&&(!c.v||PROFS.some(x=>x.id===c.v))){RT.prof=c.v||null;$("lvRetProf").value=RT.prof||"";}else if(c.k==="zero"){RT.zero=num(c.v)>0?U.from("yd",num(c.v)):null;if(RT.zero)U.fill($("lvRetZero"),"yd",RT.zero,0,0);else $("lvRetZero").value="";}retCalc();}
   }
   const rmCan=document.createElement("canvas");
   async function remotePush(){
@@ -7408,7 +7418,8 @@ function openLive(o){
       const r=await rfetch("POST","/api/remote/"+rmId+"/push",{frame,state:rmState()});
       rmFail=0;if(!!r.watching!==rmWatch){rmWatch=!!r.watching;rmLabel();if(rmWatch&&!busy)setStat("Another device is watching."+(ref?" Fire at "+aimLabel(aim)+", then tap Shot.":""),"");}
       (r.cmds||[]).forEach(rmRun);
-    }catch(e){if(e&&e.status===404){rmId=null;rmLabel();if(!closed){setStat("The remote was reset. Starting it again…","busy");setTimeout(()=>{if(!closed&&!rmId)remoteStart();},500);}}else if(++rmFail===5)setStat("The remote can't reach your Range Book. It keeps trying.","bad");}
+    }catch(e){if(e&&e.status===404){rmId=null;rmLabel();if(!closed&&o.hosted){rfetch("POST","/api/remote",{device:devName(),role:"camera"}).then(r=>{if(closed)return;rmId=r.id;o.hosted.sid=r.id;remotePush();},()=>setTimeout(()=>{if(!closed&&!rmId){rmId=o.hosted.sid;remotePush();}},3000));}
+        else if(!closed){setStat("The remote was reset. Starting it again…","busy");setTimeout(()=>{if(!closed&&!rmId)remoteStart();},500);}}else if(++rmFail===5)setStat("The remote can't reach your Range Book. It keeps trying.","bad");}
     finally{rmBusy=false;}
     if(rmId&&!closed)rmTimer=setTimeout(remotePush,Math.max(150,650-(Date.now()-t0)));
   }
@@ -7592,8 +7603,9 @@ function openLive(o){
   function close(force){
     const total=holes.reduce((s,h)=>s+(h?h.length:0),0);
     if(!force&&total&&dirty){arm($("lvClose"),"live","Discard "+total+" shot"+(total===1?"":"s")+"?",()=>close(true));return;}
-    closed=true;clearInterval(camT);remoteStop();micOff();if(stream)stream.getTracks().forEach(t=>t.stop());keep(false);
+    closed=true;clearInterval(camT);clearTimeout(dimT);if(o.hosted){clearTimeout(rmTimer);rmId=null;}else remoteStop();micOff();if(stream&&!o.hosted)stream.getTracks().forEach(t=>t.stop());keep(false);
     document.removeEventListener("keydown",onKey);document.removeEventListener("visibilitychange",onVis);v.remove();
+    if(o.hosted&&o.hosted.onEnd)o.hosted.onEnd(stream);
   }
   const onKey=e=>{if(e.key==="Escape")close();};
   const onVis=()=>{if(document.visibilityState==="visible"&&!closed){keep(true);lastVTat=Date.now();setTimeout(()=>camCheck(false),1500);}};
@@ -7602,6 +7614,20 @@ function openLive(o){
   window.RB_LIVE={state:()=>({locked:!!lock,layout:lock&&lock.layout.id,aim,holes:JSON.parse(JSON.stringify(holes)),view,crop,status:status.t,busy,ref:!!ref}),shot:()=>shot("button"),mic:()=>!!micT,
     at(px,py){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1),p=applyH(lock.Hinv,px,py);return [rc.left+(p[0]-crop[0])*k,rc.top+(p[1]-crop[1])*k];},
     camAt(cx,cy){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);return [rc.left+(cx-crop[0])*k,rc.top+(cy-crop[1])*k];}};
+  /* ----- the camera for another device (2.37): it started this session and saves the result; this phone sends the
+     finished picture and marks to it, and dims its screen to save battery ----- */
+  let resTok="",resWait=null,dimT=null;
+  if(o.hosted){
+    rmId=o.hosted.sid;rmWatch=true;$("lvRemote").hidden=true;
+    o.save=async(data,w,h,M)=>{
+      const tok=String(Date.now());await rfetch("POST","/api/remote/"+rmId+"/result",{data,w,h,M,tok});resTok=tok;
+      setStat("Sent to your "+(o.hosted.host||"iPad")+". Waiting for it to save…","busy");
+      const r=await new Promise((res,rej)=>{const t=setTimeout(()=>{resWait=null;rej(new Error("timeout"));},180000);resWait=c=>{clearTimeout(t);resWait=null;if(c.tok&&c.tok!==tok)return;c.ok?res(c):rej(new Error("save"));};});
+      resTok="";return r;};
+    const dim=$("lvDim"),wake=()=>{dim.hidden=true;clearTimeout(dimT);dimT=setTimeout(()=>{if(!closed&&lock)dim.hidden=false;else wake();},30000);};
+    dim.addEventListener("click",wake);v.addEventListener("pointerdown",()=>{if(dim.hidden)wake();},true);wake();
+    remotePush();
+  }
   renderStats();setStat(status.t,status.k);
   startCam().then(()=>{if(stream){frame();lockLoop();}});
 }
@@ -7664,7 +7690,7 @@ function livePick(tid){
     v.querySelectorAll("[data-photo]").forEach(b=>b.addEventListener("click",()=>{b.disabled=true;$("lpMsg").textContent="Adding…";liveMove(b.dataset.photo,"t:"+tid).then(()=>close(),e=>{b.disabled=false;$("lpMsg").textContent="Couldn't add it. Check your connection.";});}));
   },()=>banner("Couldn't load your saved Live targets. Check your connection.",true));
 }
-window.RB_LIVE_OPEN=o=>openLive(Object.assign({store:liveStore},o));
+window.RB_LIVE_OPEN=o=>startLive(Object.assign({store:liveStore},o));
 window.RB_LIVE_LIST=()=>{renderLiveSaved();watchList();};
 /* ----- watching a phone's Live target from another device (an iPad, say) signed in to the same account ----- */
 const rfetch=(method,url,body)=>fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:body===undefined?undefined:JSON.stringify(body)}).then(r=>r.ok?r.json():r.json().catch(()=>({})).then(j=>{const e=new Error(j.error||"error "+r.status);e.status=r.status;throw e;}));
@@ -7673,25 +7699,32 @@ function watchList(){
   const box=document.getElementById("lt_watch");clearTimeout(watchTimer);if(!box)return;
   if(!box.offsetParent){return;} // the Tools page isn't showing
   rfetch("GET","/api/remote").then(r=>{
-    const ss=(r.sessions||[]);
-    box.innerHTML=ss.length?'<h2>Watch a phone</h2>'+ss.map(x=>'<div class="row"><button class="btn primary" type="button" data-watch="'+esc(x.id)+'" data-dev="'+esc(x.device)+'">Watch the '+esc(x.device)+'</button><span class="note">Live target, started '+esc(new Date(x.started).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))+(x.watching?' · already being watched':'')+'</span></div>').join(""):
-      '<p class="note"><b>Control it from another device:</b> on the phone\'s Live target screen, tap <b>Remote</b>. Then a <b>Watch</b> button shows up here on your iPad (or any device signed in to your account).</p>';
+    const all=(r.sessions||[]),cams=all.filter(x=>x.role==="camera"&&x.standby),ss=all.filter(x=>x.role!=="camera");
+    box.innerHTML=(cams.length?'<p class="note"><b>'+cams.map(x=>'Your '+esc(x.device)).join(", ")+' '+(cams.length===1?'is':'are')+' waiting as a camera.</b> Tap <b>Start Live target</b> (here, on a ladder or on a range trip) and pick it.</p>':'')+(ss.length?'<h2>Watch a phone</h2>'+ss.map(x=>'<div class="row"><button class="btn primary" type="button" data-watch="'+esc(x.id)+'" data-dev="'+esc(x.device)+'">Watch the '+esc(x.device)+'</button><span class="note">Live target, started '+esc(new Date(x.started).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))+(x.watching?' · already being watched':'')+'</span></div>').join(""):
+      '<p class="note"><b>Control it from another device:</b> on the phone\'s Live target screen, tap <b>Remote</b>. Then a <b>Watch</b> button shows up here on your iPad (or any device signed in to your account). <b>Or the other way round:</b> on the phone, tap <b>Be the camera for your iPad</b>, then start Live target on the iPad.</p>');
     box.querySelectorAll("[data-watch]").forEach(b=>b.addEventListener("click",()=>openWatch(b.dataset.watch,b.dataset.dev)));
   },()=>{box.innerHTML='<p class="note">Watching a phone needs a signal to reach your Range Book.</p>';}).finally(()=>{watchTimer=setTimeout(watchList,4000);});
 }
-function openWatch(id,dev){
+function openWatch(id,dev,host){
   clearTimeout(watchTimer);
+  const HO=host&&host.o?host.o:null; // started here, with the phone as the camera (2.37)
   const v=document.createElement("div");v.className="viewer live watch";v.id="liveWatch";v.setAttribute("role","dialog");v.setAttribute("aria-label","Watching Live target");
-  v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><b class="mtitle">Watching the '+esc(dev||"phone")+'</b><span class="lvchip" id="wChip"></span></div>'+
+  v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
       '<button class="btn lvview" id="wView" type="button" hidden>Whole target</button></div>'+
     '<div class="lvside"><div class="lvinfo"><span class="lvchip" id="wTitle"></span></div>'+
-      '<div class="lvgrid"><label id="wGroupL" hidden>Charge for this aim<select id="wGroup"></select></label><label>Shots<input id="wWant" type="number" inputmode="numeric" min="1" step="1"></label><label><span>Distance (<span id="wYd">yd</span>)</span><input id="wDist" type="number" inputmode="numeric" step="any"></label></div>'+
-      '<div class="lvstats" id="wStats"></div>'+
       '<div class="lvrow"><button class="lvshot" id="wShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="wUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
+      '<div class="lvstats" id="wStats"></div>'+
+      '<div class="lvgrid"><label id="wGroupL" hidden>Charge for this aim<select id="wGroup"></select></label><label>Shots<input id="wWant" type="number" inputmode="numeric" min="1" step="1"></label><label><span>Distance (<span id="wYd">yd</span>)</span><input id="wDist" type="number" inputmode="numeric" step="any"></label></div>'+
+      (HO?'<label class="lvmic"><input type="checkbox" id="whMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="whMeter" hidden><i></i><b></b></span><small>Uses this '+esc(LIVE_DEV())+'\'s microphone. Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
+        '<div class="lvsens" id="whSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-whsens="normal">Normal</button><button type="button" data-whsens="supp">Suppressed</button><button type="button" data-whsens="quiet">Quiet .22</button></div>'+
+        '<label class="lvmic lvretl"><input type="checkbox" id="whRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale, with the hold for your zero on the aim point.</small></span></label>'+
+        '<div class="lvgrid lvretopts" id="whRetOpts" hidden><label>Shooting profile<select id="whRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="whRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
+        '<p class="note lvretnote" id="whRetNote" hidden></p>'+
+        '<p class="note lvnote" style="display:block!important">The '+esc(dev||"phone")+' finds the shots; this '+esc(LIVE_DEV())+' runs the session and saves the target. To switch to another gun, load or profile, tap <b>← Back</b> (it saves first), then start Live target again from there.</p>':
       '<div class="lvsens" id="wSens" hidden role="group" aria-label="Microphone sensitivity"><span>Microphone</span><button type="button" data-wsens="normal">Normal</button><button type="button" data-wsens="supp">Suppressed</button><button type="button" data-wsens="quiet">Quiet .22</button></div>'+
-      '<p class="note lvnote" style="display:block!important">Everything here runs on the phone: tap <b>Shot</b> after each shot, or tap a hole on the picture to add it or a mark to remove it. Turn the microphone on from the phone.</p>'+
+      '<p class="note lvnote" style="display:block!important">Everything here runs on the phone: tap <b>Shot</b> after each shot, or tap a hole on the picture to add it or a mark to remove it. Turn the microphone on from the phone.</p>')+
     '</div></div><div class="lvsheet" id="wSheet" hidden></div>';
   document.body.appendChild(v);
   let closed=false,seq=0,st=null,lastGroups="";
@@ -7717,7 +7750,8 @@ function openWatch(id,dev){
     const gl=$("wGroupL"),gsel=$("wGroup");gl.hidden=!S.groups;gl.parentNode.style.gridTemplateColumns=S.groups?"":"1fr 1fr";
     if(S.groups){const key=JSON.stringify(S.groups);if(key!==lastGroups){lastGroups=key;gsel.innerHTML=S.groups.map(([a,b])=>'<option value="'+esc(a)+'">'+esc(b)+'</option>').join("");}if(document.activeElement!==gsel)gsel.value=S.group||"";}
     if(document.activeElement!==$("wWant"))$("wWant").value=S.want||"";if(document.activeElement!==$("wDist"))$("wDist").value=S.dist||"";
-    $("wSens").hidden=!S.mic;v.querySelectorAll("[data-wsens]").forEach(x=>x.classList.toggle("on",x.dataset.wsens===S.sens));
+    if(!HO){$("wSens").hidden=!S.mic;v.querySelectorAll("[data-wsens]").forEach(x=>x.classList.toggle("on",x.dataset.wsens===S.sens));}
+    else hostRender(S);
     const sh=$("wSheet");
     if(S.sheet){const X=S.sheet;sh.innerHTML='<h3>'+esc(X.title)+'</h3>'+(X.note?'<p class="note" style="margin:0">'+esc(X.note)+'</p>':'')+
         (X.rows&&X.rows.length?'<div class="lvsum">'+X.rows.map(([b,s2,w])=>'<div'+(w?' class="wide"':'')+'><b>'+esc(b)+'</b><span>'+esc(s2)+'</span></div>').join("")+'</div>':'')+
@@ -7741,16 +7775,165 @@ function openWatch(id,dev){
       }catch(e){if(closed)return;setStat("Can't reach your Range Book. Trying again…","bad");await new Promise(res=>setTimeout(res,2000));}
     }
   }
-  const close=()=>{closed=true;document.removeEventListener("keydown",onKey);v.remove();watchList();};
-  const onKey=e=>{if(e.key==="Escape")close();};document.addEventListener("keydown",onKey);
-  $("wClose").addEventListener("click",close);
+  const close=()=>{closed=true;if(HO)hostStop();document.removeEventListener("keydown",onKey);v.remove();watchList();};
+  const onKey=e=>{if(e.key==="Escape")(HO?hostBack():close());};document.addEventListener("keydown",onKey);
+  $("wClose").addEventListener("click",()=>HO?hostBack():close());
+  /* ----- running the session from here (2.37) ----- */
+  let started=0,live=false,doneTok="",ending=false,micT=null,mic=null,actx=null,sens="normal",retSent=false,startT=null;
+  function hostStart(){if(closed||live)return;started=Date.now();
+    cmd({cmd:"start",host:LIVE_DEV(),cfg:{title:HO.title||"Live target",groups:HO.groups||[],dist:HO.dist,dia:HO.dia,want:HO.want||null,profile:HO.profile||null}});
+    setStat("Starting the "+(dev||"phone")+"'s camera…","busy");clearTimeout(startT);startT=setTimeout(()=>{if(!closed&&!live)hostStart();},5000);}
+  // the reticle: the same settings as Live target on this device, sent to the phone
+  let RT={on:false,prof:null,zero:null};try{Object.assign(RT,JSON.parse(localStorage.getItem("rb.liveRet")||"{}"));}catch(e){}
+  const PROFS=(window.RB_TRAJ&&RB_TRAJ.all()||[]).slice().sort((a,b)=>(b.fav?1:0)-(a.fav?1:0));
+  if(HO&&HO.profile&&PROFS.some(p=>p.id===HO.profile)){RT.prof=HO.profile;RT.zero=null;}
+  if(!PROFS.some(p=>p.id===RT.prof))RT.prof=PROFS.length?PROFS[0].id:null;
+  function retUI(){const on=$("whRet");if(!on)return;on.checked=!!RT.on;$("whRetOpts").hidden=!RT.on;}
+  function retSend(){if(RT.prof)cmd({cmd:"ret",k:"prof",v:RT.prof});cmd({cmd:"ret",k:"zero",v:num(RT.zero)>0?U.n("yd",RT.zero,0):null});cmd({cmd:"ret",k:"on",v:!!RT.on});}
+  function hostRender(S){
+    if(S.hosted&&!live){live=true;clearTimeout(startT);if(!retSent){retSent=true;retSend();}}
+    if(S.standby&&live){live=false;if(ending||doneTok){hostStop();closed=true;document.removeEventListener("keydown",onKey);v.remove();watchList();return;}
+      setStat("The "+(dev||"phone")+" left the session. Starting it again…","busy");hostStart();}
+    else if(S.standby&&!live&&Date.now()-started>5000)hostStart();
+    const n=$("whRetNote");if(n&&S.ret){n.hidden=!RT.on;n.textContent=S.ret.note||"";}
+    if(S.result&&S.result!==doneTok){doneTok=S.result;hostSave(S.result);}
+  }
+  async function hostSave(tok){
+    setStat("Saving…","busy");
+    try{const R=await rfetch("GET","/api/remote/"+id+"/result");
+      if(HO.save)await HO.save(R.data,R.w,R.h,R.M);
+      else if(HO.store)await HO.store(R.data,R.w,R.h,R.M,measureText(R.M,null),null);
+      cmd({cmd:"saved",ok:true,tok});setStat("Saved.","");ending=true;}
+    catch(e){doneTok="";cmd({cmd:"saved",ok:false,tok});setStat("Couldn't save. Check your connection and tap Save again.","bad");}
+  }
+  // ← Back: save first if there are shots (or throw them away), then let the phone wait for the next one
+  function hostBack(){
+    const S=st||{};
+    if(!S.hosted||!S.total){ending=true;cmd({cmd:"end"});close();return;}
+    const sh=$("wSheet");sh.innerHTML='<h3>'+S.total+' shot'+(S.total===1?'':'s')+' on this target</h3><p class="note" style="margin:0">Save it before you switch, or throw it away.</p><div class="lvrow" style="flex-wrap:wrap"><button class="btn primary lvbtn" type="button" id="whSaveGo">Save and close</button><button class="btn lvbtn" type="button" id="whDiscard">Discard</button><button class="btn lvbtn" type="button" id="whKeep">Keep going</button></div>';
+    sh.hidden=false;
+    $("whSaveGo").onclick=()=>{sh.hidden=true;ending=true;click("lvDone");setStat("Saving…","busy");};
+    $("whDiscard").onclick=()=>{sh.hidden=true;ending=true;cmd({cmd:"end"});close();};
+    $("whKeep").onclick=()=>{sh.hidden=true;};
+  }
+  function hostStop(){clearTimeout(startT);micOff();}
+  // this device's microphone, the same as on the phone
+  function micOff(){clearInterval(micT);micT=null;if(mic)mic.getTracks().forEach(t=>t.stop());mic=null;if(actx)actx.close().catch(()=>{});actx=null;const m=$("whMeter");if(m)m.hidden=true;const se=$("whSens");if(se)se.hidden=true;}
+  async function micOn(){
+    try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+      actx=new (window.AudioContext||window.webkitAudioContext)();await actx.resume();
+      const src=actx.createMediaStreamSource(mic),an=actx.createAnalyser();an.fftSize=1024;src.connect(an);
+      const buf=new Float32Array(an.fftSize),meter=$("whMeter");meter.hidden=false;$("whSens").hidden=false;let bg=.01,hold=0,lastBang=0;
+      micT=setInterval(()=>{an.getFloatTimeDomainData(buf);let pk=0,ss=0;for(let i=0;i<buf.length;i++){const a=Math.abs(buf[i]);if(a>pk)pk=a;ss+=a*a;}
+        const rms=Math.sqrt(ss/buf.length),now=Date.now(),X=v2=>Math.min(100,Math.round(Math.sqrt(v2)*100));hold=Math.max(pk,hold*.96);meter.firstChild.style.width=X(hold)+"%";meter.lastChild.style.left="calc("+X(LIVE_SENS[sens].pk)+"% - 1px)";
+        const S2=LIVE_SENS[sens],E=(st&&st.en)||{};
+        if(pk>S2.pk&&rms>bg*S2.x&&now-lastBang>1500&&E.shot){lastBang=now;click("lvShot");$("wShot").disabled=true;setStat("Heard a shot. Looking for it…","busy");}
+        else bg=bg*.97+Math.min(rms,bg*3)*.03;if(bg<.002)bg=.002;},20);}
+    catch(e){$("whMic").checked=false;setStat(e&&e.name==="NotAllowedError"?"Microphone access was blocked. Allow it in your settings, or tap Shot after each shot.":"Couldn't start the microphone.","bad");}
+  }
+  if(HO){
+    try{const sv=localStorage.getItem("rangebook.livesens");if(LIVE_SENS[sv])sens=sv;}catch(e){}
+    const sb=()=>v.querySelectorAll("[data-whsens]").forEach(b=>{b.classList.toggle("on",b.dataset.whsens===sens);b.setAttribute("aria-pressed",b.dataset.whsens===sens);});sb();
+    v.querySelectorAll("[data-whsens]").forEach(b=>b.addEventListener("click",()=>{sens=b.dataset.whsens;try{localStorage.setItem("rangebook.livesens",sens);}catch(e){}sb();}));
+    $("whMic").addEventListener("change",e=>{if(e.target.checked)micOn();else micOff();});
+    $("whRetProf").innerHTML=PROFS.length?PROFS.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===RT.prof?' selected':'')+'>'+(p.fav?'★ ':'')+esc(p.name)+'</option>').join(""):'<option value="">No Shooting profiles yet</option>';
+    if(num(RT.zero)>0)$("whRetZero").value=U.n("yd",RT.zero,0);retUI();
+    const saveRT=()=>{try{const k=Object.assign({},RT);if(HO.profile){const o0=JSON.parse(localStorage.getItem("rb.liveRet")||"{}");k.prof=o0.prof;k.zero=o0.zero;}localStorage.setItem("rb.liveRet",JSON.stringify(k));}catch(e){}};
+    $("whRet").addEventListener("change",e=>{RT.on=e.target.checked;retUI();saveRT();cmd({cmd:"ret",k:"on",v:RT.on});});
+    $("whRetProf").addEventListener("change",e=>{RT.prof=e.target.value||null;saveRT();cmd({cmd:"ret",k:"prof",v:RT.prof});});
+    let zt=null;$("whRetZero").addEventListener("input",e=>{const z=num(e.target.value);RT.zero=z>0?U.from("yd",z):null;saveRT();clearTimeout(zt);zt=setTimeout(()=>cmd({cmd:"ret",k:"zero",v:z>0?z:null}),500);});
+    hostStart();
+  }
   loop();
 }
+/* ---------- the other way round (2.37): start Live target on an iPad and use a phone on the scope as its camera ----------
+   The phone opens Tools › Live target › Be the camera and waits (a "camera" remote session). Starting Live target anywhere
+   on another device then asks which camera to use. With the phone: the phone does the camera and the shot finding as
+   always; the iPad sends it the setup (title, charges, distance, shots, profile), has its own microphone for shots and
+   the reticle settings, and saves the finished target where it was started. Switching setups saves first, then starts
+   fresh; the phone goes back to waiting in between, with the camera kept open so it never asks for permission again. */
+const LIVE_DEV=()=>/iPhone/.test(navigator.userAgent)?"iPhone":/iPad|Macintosh.*Mobile/.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform))?"iPad":/Android/.test(navigator.userAgent)?"Android phone":"computer";
+const LIVE_SENS={normal:{pk:.35,x:8},supp:{pk:.15,x:6},quiet:{pk:.06,x:5}};
+// which camera: a phone waiting as a camera, or this device's own
+async function startLive(o){
+  let cams=[];
+  try{const r=await rfetch("GET","/api/remote");cams=(r.sessions||[]).filter(x=>x.role==="camera"&&x.alive&&x.standby);}catch(e){}
+  if(!cams.length)return openLive(o);
+  const w=document.createElement("div");w.className="infowrap";w.id="liveWhich";
+  w.innerHTML='<div class="infoback" data-lwx></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="lwT"><div class="infohead"><h2 id="lwT">Which camera?</h2><button class="infox" type="button" data-lwx aria-label="Close">✕</button></div>'+
+    '<p class="note">'+(cams.length===1?'Your '+esc(cams[0].device)+' is waiting as a camera.':'These are waiting as cameras.')+' Use it, and this '+esc(LIVE_DEV())+' runs the session: the buttons, the microphone and the save.</p>'+
+    '<div class="lwbtns">'+cams.map(c=>'<button class="btn primary" type="button" data-lwcam="'+esc(c.id)+'" data-lwdev="'+esc(c.device)+'">Use the '+esc(c.device)+' on the scope</button>').join("")+
+    '<button class="btn" type="button" data-lwself>Use this '+esc(LIVE_DEV())+'\'s camera</button></div></div>';
+  document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("on"));
+  const shut=()=>{w.classList.remove("on");setTimeout(()=>w.remove(),180);};
+  w.addEventListener("click",e=>{
+    if(e.target.closest("[data-lwx]"))return shut();
+    if(e.target.closest("[data-lwself]")){shut();return openLive(o);}
+    const b=e.target.closest("[data-lwcam]");if(b){shut();openWatch(b.dataset.lwcam,b.dataset.lwdev,{o});}});
+}
+// the phone: wait to be the camera
+function cameraStandby(){
+  if($("camWait"))return;
+  const v=document.createElement("div");v.className="viewer live camwait";v.id="camWait";v.setAttribute("role","dialog");v.setAttribute("aria-label","Camera for your iPad");
+  v.innerHTML='<div class="lvtop"><button class="btn" id="cwClose" type="button">← Stop</button><b class="mtitle">Camera for your iPad</b></div>'+
+    '<div class="lvmain"><div class="lvcam" id="cwCam"><video id="cwVid" playsinline muted autoplay></video><div class="lvstat"><span class="lvpill busy" id="cwStat"><i></i><span>Starting the camera…</span></span></div></div>'+
+    '<p class="note cwnote">Aim this phone at the target with all four corner squares in view. Then on your iPad (signed in to this account), start Live target from a ladder, a range trip or Tools › Live target, and pick this phone. The screen goes dark after 30 seconds to save battery; tap it to see the camera.</p></div>'+
+    '<button class="lvdim" id="cwDim" type="button" hidden><b>Camera for your iPad</b><span id="cwDimStat"></span><small>Tap to see the camera</small></button>';
+  document.body.appendChild(v);document.body.classList.add("noscroll");
+  const vid=$("cwVid"),dim=$("cwDim");let stream=null,closed=false,hosted=false,H={sid:null},T=null,wake=null,dimT=null,fails=0;
+  const setStat=(t,k)=>{const s=$("cwStat");if(s){s.className="lvpill"+(k?" "+k:"");s.lastChild.textContent=t;}const d=$("cwDimStat");if(d)d.textContent=t;};
+  const keep=async()=>{try{if(navigator.wakeLock&&document.visibilityState==="visible")wake=await navigator.wakeLock.request("screen");}catch(e){}};
+  const awake=()=>{dim.hidden=true;clearTimeout(dimT);dimT=setTimeout(()=>{if(!closed&&!hosted)dim.hidden=false;},30000);};
+  dim.addEventListener("click",awake);v.addEventListener("pointerdown",()=>{if(dim.hidden)awake();},true);
+  async function camera(){
+    const v0={width:{ideal:1920},height:{ideal:1920}};let saved=null;try{saved=localStorage.getItem("rb.liveLens");}catch(e){}
+    let st=null;if(saved){try{st=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({deviceId:{exact:saved}},v0)});}catch(e){st=null;}}
+    if(!st)st=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({facingMode:{ideal:"environment"}},v0)});
+    // the main lens, not iOS's self-switching camera (the same as Live target)
+    if(!saved){try{const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput"),main=all.find(d=>/^back camera$/i.test((d.label||"").trim())),cur=st.getVideoTracks()[0].getSettings().deviceId;
+      if(main&&main.deviceId!==cur){const s2=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({deviceId:{exact:main.deviceId}},v0)});st.getTracks().forEach(t=>t.stop());st=s2;}}catch(e){}}
+    return st;
+  }
+  const small=document.createElement("canvas");
+  const snap=()=>{if(!vid.videoWidth)return null;const k=Math.min(1,480/vid.videoWidth);small.width=Math.round(vid.videoWidth*k);small.height=Math.round(vid.videoHeight*k);small.getContext("2d").drawImage(vid,0,0,small.width,small.height);return small.toDataURL("image/jpeg",.5);};
+  let lastFrame=0;
+  async function loop(){
+    clearTimeout(T);if(closed||hosted)return;
+    try{
+      if(!H.sid){const r=await rfetch("POST","/api/remote",{device:LIVE_DEV(),role:"camera"});H.sid=r.id;}
+      const now=Date.now(),fr=now-lastFrame>2500?snap():null;if(fr)lastFrame=now;
+      const r=await rfetch("POST","/api/remote/"+H.sid+"/push",{frame:fr,state:{standby:true,status:"Waiting for your iPad",kind:"busy",title:"Camera ready",locked:false,ready:false,en:{}}});
+      fails=0;if(!hosted)setStat("Ready. Start Live target on your iPad and pick this phone.","");
+      const s=(r.cmds||[]).filter(c=>c.cmd==="start").pop();if(s&&!closed)return host(s);
+    }catch(e){if(e&&e.status===404)H.sid=null;if(++fails>=3)setStat("Can't reach your Range Book. Check the signal. Trying again…","bad");}
+    T=setTimeout(loop,1000);
+  }
+  function host(c){
+    hosted=true;clearTimeout(dimT);dim.hidden=true;v.hidden=true;
+    H.host=c.host||"iPad";H.stream=stream;H.onStream=s=>{stream=s;vid.srcObject=s;};
+    H.onEnd=st=>{if(st)stream=st;hosted=false;if(closed)return;v.hidden=false;if(vid.srcObject!==stream)vid.srcObject=stream;vid.play().catch(()=>{});keep();awake();setStat("Waiting for your iPad…","busy");loop();};
+    const cfg=c.cfg||{};
+    openLive({title:cfg.title||"Live target",groups:Array.isArray(cfg.groups)?cfg.groups:[],dist:num(cfg.dist)||100,dia:num(cfg.dia)||.308,want:num(cfg.want)||null,profile:cfg.profile||null,store:liveStore,hosted:H});
+  }
+  const stop=()=>{closed=true;clearTimeout(T);clearTimeout(dimT);if(stream)stream.getTracks().forEach(t=>t.stop());if(H.sid)rfetch("DELETE","/api/remote/"+H.sid).catch(()=>{});
+    try{if(wake)wake.release();}catch(e){}document.removeEventListener("visibilitychange",onVis);document.body.classList.remove("noscroll");v.remove();};
+  const onVis=()=>{if(document.visibilityState==="visible"&&!closed){keep();if(stream&&!stream.getVideoTracks().some(t=>t.readyState==="live")&&!hosted)restart();}};
+  async function restart(){try{const st=await camera();if(stream)stream.getTracks().forEach(t=>t.stop());stream=st;vid.srcObject=st;await vid.play().catch(()=>{});}catch(e){setStat("The camera stopped. Trying again…","bad");setTimeout(()=>{if(!closed&&!hosted)restart();},3000);}}
+  document.addEventListener("visibilitychange",onVis);
+  $("cwClose").addEventListener("click",stop);
+  (async()=>{
+    if(!liveSupported()){setStat("The camera needs Range Book's https address.","bad");return;}
+    try{stream=await camera();vid.srcObject=stream;await vid.play().catch(()=>{});}
+    catch(e){setStat(e&&e.name==="NotAllowedError"?"Camera access was blocked. Allow the camera for this site in your settings, then try again.":"Couldn't start the camera.","bad");return;}
+    keep();awake();setStat("Connecting…","busy");loop();
+  })();
+}
+window.RB_CAMERA=cameraStandby;
 function liveForLadder(lid){
   const id=openId,L=loads.get(id);if(!L||!isMine(id))return;
   const lad=(L.ladders||[]).find(l=>l.id===lid)||null,gs=(L.groups||[]).filter(g=>lad?g.ladderId===lid:true);
   const d0=lad&&num(lad.dist)>0?num(lad.dist):(gs.find(g=>num(g.distance)>0)||{}).distance;
-  openLive({title:(L.title||"Load")+(lad?" · "+ladderName(L,lad):""),groups:gs,dist:num(d0)||100,dia:guessDia(L),
+  startLive({title:(L.title||"Load")+(lad?" · "+ladderName(L,lad):""),groups:gs,dist:num(d0)||100,dia:guessDia(L),
     async save(data,w,h,M){
       const r=await API.post("/api/loads/"+id+"/photos",{data,w,h,caption:"",ladderId:lid||null});const ph=r&&r.photo;if(!ph)throw new Error("save");
       const txt=measureText(M,L);await API.patch("/api/photos/"+ph.id,{measure:M,caption:txt});
@@ -8890,7 +9073,7 @@ function renderTrips(){
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
   $("tripLiveAdd").addEventListener("click",()=>livePick(t.id));
   $("tripLive").addEventListener("click",()=>{const id=t.id,C=tripCtx(t);
-    openLive({title:(t.place||"Range trip")+(t.date?" · "+fmtDate(t.date):""),groups:[],dist:num(t.distance)||100,dia:C.dia,profile:t.trajId,
+    startLive({title:(t.place||"Range trip")+(t.date?" · "+fmtDate(t.date):""),groups:[],dist:num(t.distance)||100,dia:C.dia,profile:t.trajId,
       async save(data,w,h,M){const r=await API.post("/api/trips/"+id+"/photos",{data,w,h,caption:""});const ph=r&&r.photo;if(!ph)throw new Error("save");
         const txt=measureText(M,null);await API.patch("/api/photos/"+ph.id,{measure:M,caption:txt});Object.assign(ph,{measure:M,caption:txt,w,h});
         if(tripOpen===id){freshKeep(id);tripPhotos.push(ph);renderTripPhotos();openViewer(ph.id,tripCtx(t));}}});});
@@ -10570,7 +10753,7 @@ window.RB_TOOLS=(function(){
     $("toolsReorderGo").addEventListener("click",()=>{const before=RB_ORDER.get("tools");RB_ORDER.set("tools",null);
       const box=$("toolTiles");TILE_DEFAULT.forEach(id=>{const el=box.querySelector('[data-tooltile="'+id+'"]');if(el)box.appendChild(el);});$("toolsReorder").hidden=true;
       if(window.RB_UNDO)RB_UNDO("Tools are back in the usual order",()=>{RB_ORDER.set("tools",before);tileOrder();});});
-    $("lt_go").addEventListener("click",liveGo);
+    $("lt_go").addEventListener("click",liveGo);$("lt_cam").addEventListener("click",()=>{if(window.RB_CAMERA)RB_CAMERA();});
     ["hc_dist","hc_w","hc_h","hc_grp","hc_sd","hc_wind","hc_rng"].forEach(id=>$(id).addEventListener("input",hitCalc));["hc_load","hc_shape"].forEach(id=>$(id).addEventListener("change",hitCalc));$("lt_print").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("targets");});
     $("targetsBack").addEventListener("click",()=>{if(window.APP_showTab)APP_showTab("tools");});
     convBuild();
