@@ -1047,6 +1047,30 @@ async function api(req, res, url) {
       if (method === "POST") { const r = makeBackup(); if (!r.ok) throw new HttpError(500, "Backup failed: " + r.error); }
       return send(res, 200, { backups: listBackups(), keep: BACKUP_KEEP, hour: BACKUP_HOUR, lastError: lastBackupError });
     }
+    /* ---- the whole site in one file (2.35): download it, or bring it back on a fresh install ---- */
+    if (p === "/api/admin/site-backup" && method === "GET") return send(res, 200, siteInfo());
+    if (p === "/api/admin/site-backup.tar.gz" && method === "GET") return sendSiteBackup(res);
+    if (p === "/api/admin/site-restore/start" && method === "POST") {
+      const inf = siteInfo(); if (!inf.fresh) throw new HttpError(409, inf.why);
+      const id = crypto.randomBytes(8).toString("hex"), dir = path.join(DATA_DIR, ".restore-" + id);
+      for (const n of fs.readdirSync(DATA_DIR)) if (/^\.restore-/.test(n)) fs.rmSync(path.join(DATA_DIR, n), { recursive: true, force: true });
+      fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, "upload"), "");
+      return send(res, 200, { id, chunk: RESTORE_CHUNK });
+    }
+    {const mr = /^\/api\/admin\/site-restore\/([0-9a-f]{16})\/(chunk|finish|cancel)$/.exec(p);
+    if (mr && method === "POST") {
+      const dir = path.join(DATA_DIR, ".restore-" + mr[1]), up = path.join(dir, "upload");
+      if (!fs.existsSync(up)) throw new HttpError(404, "That upload isn't here any more. Start again.");
+      if (mr[2] === "cancel") { fs.rmSync(dir, { recursive: true, force: true }); return send(res, 200, { ok: true }); }
+      if (mr[2] === "chunk") {
+        const off = Number(url.searchParams.get("off")), have = fs.statSync(up).size;
+        if (off !== have) return send(res, 409, { error: "Out of order.", have });
+        const buf = await readBody(req, RESTORE_CHUNK + 1024);
+        fs.appendFileSync(up, buf); return send(res, 200, { have: have + buf.length });
+      }
+      try { const r = siteRestore(dir, user); return send(res, 200, r); }
+      finally { fs.rmSync(dir, { recursive: true, force: true }); }
+    }}
     if (p === "/api/admin/settings") {
       if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); }
       return send(res, 200, { guestEnabled: !!getSetting("guestEnabled", false) });
@@ -1202,6 +1226,133 @@ const server = http.createServer(async (req, res) => {
     if (!res.headersSent) send(res, 500, { error: "Something went wrong on the server." });
   }
 });
+/* ---------------- the whole site in one file (2.35) ----------------
+   Download: a .tar.gz with site-backup.json, a consistent copy of the database (VACUUM INTO) and every file in the photos
+   folder (photos, videos, vault and gear files), streamed so any size works. Restore (only on a fresh install: one account
+   and no pictures or files): the file is uploaded in pieces (so it gets through Cloudflare's upload limit), unpacked into a
+   folder, checked, and then every table is copied into the open database (columns both have), so the server keeps running.
+   It also takes a .zip or a plain .tar of a nightly backup folder (rangebook.db + photos/). What was there before is kept in
+   pre-restore-<time>/ in the data folder. */
+const RESTORE_CHUNK = Math.max(65536, parseInt(process.env.RESTORE_CHUNK || "", 10) || 32 * 1024 * 1024); // RESTORE_CHUNK: only for testing
+const TABLES = () => q("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").all().map((r) => r.name);
+function siteInfo() {
+  const users = q("SELECT COUNT(*) AS n FROM users").get().n;
+  let files = 0, bytes = 0;
+  try { for (const f of fs.readdirSync(PHOTO_DIR)) { files++; try { bytes += fs.statSync(path.join(PHOTO_DIR, f)).size; } catch {} } } catch {}
+  try { bytes += fs.statSync(path.join(DATA_DIR, "rangebook.db")).size; } catch {}
+  const why = users > 1 ? "This Range Book already has " + users + " accounts. Restoring only works on a fresh install (just the account you set it up with, and no pictures or files)." :
+    files > 0 ? "This Range Book already has pictures or files. Restoring only works on a fresh install (just the account you set it up with, and no pictures or files)." : "";
+  return { fresh: !why, why, users, files, bytes, version: APP_VERSION };
+}
+function tarHeader(name, size, mtime) {
+  const h = Buffer.alloc(512);
+  h.write(name.slice(0, 99), 0, "utf8");
+  h.write("0000644\0", 100); h.write("0000000\0", 108); h.write("0000000\0", 116);
+  h.write(size.toString(8).padStart(11, "0") + "\0", 124); h.write(Math.floor(mtime / 1000).toString(8).padStart(11, "0") + "\0", 136);
+  h.write("        ", 148); h.write("0", 156); h.write("ustar\0", 257); h.write("00", 263);
+  let sum = 0; for (let i = 0; i < 512; i++) sum += h[i];
+  h.write(sum.toString(8).padStart(6, "0") + "\0 ", 148);
+  return h;
+}
+function sendSiteBackup(res) {
+  const tmp = path.join(DATA_DIR, ".site-" + process.pid + "-" + Date.now() + ".db");
+  db.exec(`VACUUM INTO '${tmp.replace(/'/g, "''")}'`);
+  const day = localDate(), names = fs.readdirSync(PHOTO_DIR).filter((n) => !n.startsWith("."));
+  const info = Buffer.from(JSON.stringify({ app: "Range Book", kind: "site-backup", format: 1, version: APP_VERSION, created: new Date().toISOString(),
+    users: q("SELECT COUNT(*) AS n FROM users").get().n, files: names.length }, null, 2));
+  res.writeHead(200, { "Content-Type": "application/gzip", "Content-Disposition": `attachment; filename="RangeBook-site-backup-${day}.tar.gz"`, "Cache-Control": "no-store", ...SECURITY_HEADERS });
+  const gz = zlib.createGzip({ level: 1 });
+  gz.pipe(res);
+  const pad = (n) => (n % 512 ? Buffer.alloc(512 - (n % 512)) : null);
+  const entries = [["site-backup.json", null], ["rangebook.db", tmp], ...names.map((n) => ["photos/" + n, path.join(PHOTO_DIR, n)])];
+  let i = 0, done = false;
+  const finish = () => { if (done) return; done = true; try { fs.rmSync(tmp, { force: true }); } catch {} };
+  res.on("close", finish);
+  const pump = () => {
+    while (i < entries.length) {
+      const [name, file] = entries[i++];
+      let data;
+      if (file === null) data = info;
+      else { try { data = fs.readFileSync(file); } catch { continue; } }
+      gz.write(tarHeader(name, data.length, Date.now())); const ok = gz.write(data); const pd = pad(data.length); if (pd) gz.write(pd);
+      if (!ok) { gz.once("drain", pump); return; }
+    }
+    gz.end(Buffer.alloc(1024)); finish();
+  };
+  pump();
+}
+// the files in a .tar(.gz) or .zip, as [name, Buffer] one at a time
+function* tarEntries(buf) {
+  let o = 0, longName = null;
+  while (o + 512 <= buf.length) {
+    const h = buf.subarray(o, o + 512); if (h.every((b) => b === 0)) break;
+    let name = h.toString("utf8", 0, 100).replace(/\0.*$/s, ""); const prefix = h.toString("utf8", 345, 500).replace(/\0.*$/s, "");
+    if (prefix && h.toString("utf8", 257, 262) === "ustar") name = prefix + "/" + name;
+    const size = parseInt(h.toString("utf8", 124, 136).replace(/\0.*$/s, "").trim() || "0", 8), type = String.fromCharCode(h[156] || 48);
+    const data = buf.subarray(o + 512, o + 512 + size); o += 512 + Math.ceil(size / 512) * 512;
+    if (type === "L") { longName = data.toString("utf8").replace(/\0.*$/s, ""); continue; }
+    if (longName) { name = longName; longName = null; }
+    if (type === "0" || type === "\0") yield [name, data];
+  }
+}
+function siteRestore(dir, user) {
+  const inf = siteInfo(); if (!inf.fresh) throw new HttpError(409, inf.why);
+  let buf = fs.readFileSync(path.join(dir, "upload"));
+  if (buf.length < 100) throw new HttpError(400, "That file is empty.");
+  let list;
+  if (buf[0] === 0x1f && buf[1] === 0x8b) { try { buf = zlib.gunzipSync(buf, { maxOutputLength: 2 ** 31 }); } catch { throw new HttpError(400, "That file couldn't be unpacked."); } }
+  if (buf.length >= 512 && buf.toString("utf8", 257, 262) === "ustar") list = [...tarEntries(buf)];
+  else if (buf.readUInt32LE(0) === 0x04034b50) { try { const z = backupKit.unzip(buf); list = [...z.keys()].map((n) => [n, z.get(n)]); } catch { throw new HttpError(400, "That .zip couldn't be read."); } }
+  else throw new HttpError(400, "That isn't a Range Book site backup. Use the .tar.gz from Download site backup, or a .zip of a nightly backup folder.");
+  // the folder the database is in counts as the top (a zipped nightly folder has its date in front)
+  const dbe = list.find(([n]) => /(^|\/)rangebook\.db$/.test(n));
+  if (!dbe) throw new HttpError(400, "There's no rangebook.db in that file, so it isn't a whole-site backup. (A backup from Account › Download backup is one person's data: import that from Account › Import instead.)");
+  const root = dbe[0].slice(0, -"rangebook.db".length);
+  const x = path.join(dir, "x"), xp = path.join(x, "photos"); fs.mkdirSync(xp, { recursive: true });
+  let nfiles = 0;
+  for (const [n, d] of list) {
+    if (!n.startsWith(root)) continue; const rel = n.slice(root.length);
+    const data = typeof d === "function" ? d() : d;
+    if (rel === "rangebook.db") fs.writeFileSync(path.join(x, "rangebook.db"), data);
+    else if (/^photos\/[^/]+$/.test(rel)) { const b = path.basename(rel); if (b && !b.startsWith(".") && b !== ".." ) { fs.writeFileSync(path.join(xp, b), data); nfiles++; } }
+  }
+  buf = null; list = null;
+  // check it before touching anything
+  let admins = [], nusers = 0;
+  try { const bk = new DatabaseSync(path.join(x, "rangebook.db"), { readOnly: true });
+    try { nusers = bk.prepare("SELECT COUNT(*) AS n FROM users").get().n; admins = bk.prepare("SELECT username FROM users WHERE is_admin=1 ORDER BY username").all().map((r) => r.username); } finally { bk.close(); } }
+  catch { throw new HttpError(400, "The database in that file couldn't be opened, so nothing was changed."); }
+  if (!nusers) throw new HttpError(400, "That backup has no accounts in it, so nothing was changed.");
+  // keep what's here now
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19), keep = path.join(DATA_DIR, "pre-restore-" + stamp);
+  fs.mkdirSync(path.join(keep, "photos"), { recursive: true });
+  db.exec(`VACUUM INTO '${path.join(keep, "rangebook.db").replace(/'/g, "''")}'`);
+  // copy every table across, in one transaction
+  const bkPath = path.join(x, "rangebook.db").replace(/'/g, "''");
+  db.exec("PRAGMA foreign_keys = OFF");
+  db.exec(`ATTACH DATABASE '${bkPath}' AS bk`);
+  try {
+    const theirs = new Set(db.prepare("SELECT name FROM bk.sqlite_master WHERE type='table'").all().map((r) => r.name));
+    db.exec("BEGIN");
+    try {
+      for (const t of TABLES()) {
+        db.exec(`DELETE FROM main."${t}"`);
+        if (!theirs.has(t)) continue;
+        const mine = db.prepare(`PRAGMA main.table_info("${t}")`).all().map((c) => c.name), have = new Set(db.prepare(`PRAGMA bk.table_info("${t}")`).all().map((c) => c.name));
+        const cols = mine.filter((c) => have.has(c)).map((c) => `"${c}"`).join(",");
+        if (cols) db.exec(`INSERT INTO main."${t}"(${cols}) SELECT ${cols} FROM bk."${t}"`);
+      }
+      if (theirs.has("sqlite_sequence")) { db.exec("DELETE FROM main.sqlite_sequence"); db.exec("INSERT INTO main.sqlite_sequence SELECT * FROM bk.sqlite_sequence"); }
+      db.exec("COMMIT");
+    } catch (e) { try { db.exec("ROLLBACK"); } catch {} throw new HttpError(500, "Restoring failed, and nothing was changed: " + (e.message || e)); }
+  } finally { try { db.exec("DETACH DATABASE bk"); } catch {} db.exec("PRAGMA foreign_keys = ON"); }
+  // the files: what was here goes with the old copy, the backup's go in
+  for (const f of fs.readdirSync(PHOTO_DIR)) { try { fs.renameSync(path.join(PHOTO_DIR, f), path.join(keep, "photos", f)); } catch {} }
+  for (const f of fs.readdirSync(xp)) { try { fs.renameSync(path.join(xp, f), path.join(PHOTO_DIR, f)); } catch { try { fs.copyFileSync(path.join(xp, f), path.join(PHOTO_DIR, f)); } catch {} } }
+  for (const r of [...REMOTE.keys()]) remoteEnd(r);
+  console.log(`Site restored by ${user.username}: ${nusers} accounts, ${nfiles} files. The data that was here is in ${path.basename(keep)}/.`);
+  return { ok: true, users: nusers, admins, files: nfiles, kept: path.basename(keep) };
+}
 /* ---------------- nightly backups ----------------
    One folder per day in DATA_DIR/backups: a consistent copy of the database
    (VACUUM INTO) plus the photos (hard links when possible, so they take no extra space). */
@@ -1254,6 +1405,7 @@ function scheduleBackups() {
 }
 scheduleBackups();
 
+server.requestTimeout = 60 * 60 * 1000; // big uploads and the site backup download can take a while
 server.listen(PORT, () => {
   console.log(`Range Book ${APP_VERSION} listening on port ${PORT} (data in ${DATA_DIR})`);
   // pack the app page now, so the first visitor already gets the small copy

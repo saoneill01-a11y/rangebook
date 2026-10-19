@@ -65,7 +65,7 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .rtvital{fill:none;stroke:#ffd24a;stroke-dasharray:2 1.4}.rthold{stroke:var(--accent)}
 .rtlines{stroke:#151515}.rtlines circle{fill:#151515}.rtlines text{fill:#2c2c2c}
 :root[data-palette="night"] .rtsky{fill:#2a1210}:root[data-palette="night"] .rtground{fill:#3a1a14}:root[data-palette="night"] .rtbody{fill:#7a2a20}:root[data-palette="night"] .rtblack{fill:#4a1812}:root[data-palette="night"] .rtwhite{fill:#a8483a}:root[data-palette="night"] .rtgray .rtbody,:root[data-palette="night"] .rtgray .rtwhite,:root[data-palette="night"] .rtgray .rtblack{fill:#5c1f18}:root[data-palette="night"] .rtplate{fill:#c45a48;stroke:#7a2a20}:root[data-palette="night"] .rtpost{fill:#5c1f18}:root[data-palette="night"] .rtvital{stroke:#ff6a4a}:root[data-palette="night"] .rtlines{stroke:#ff8a70}:root[data-palette="night"] .rtlines circle{fill:#ff8a70}:root[data-palette="night"] .rtlines text{fill:#ff8a70}
-.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
+.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.bkh{font-size:15px;margin:16px 0 4px}#rs_out .row{margin-top:8px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
 .mcchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.mcchip{display:inline-flex;align-items:center;gap:2px;padding:3px 4px 3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--fg);font-size:14px;font-weight:600}.mcchip button{border:0;background:none;color:inherit;font-size:17px;line-height:1;padding:2px 6px;cursor:pointer;border-radius:99px}.mcchip button:hover{background:var(--sunk)}
 .mcsug{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.mcsug .note{margin:0}.mcadd{position:relative}
 .magbulk{padding:10px 12px;margin:4px 0 8px;border-radius:8px;background:var(--sunk);border:1px solid var(--line)}
@@ -1629,6 +1629,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Back up, export and import</h3>
       <p>Tap <a class=goto href=#go data-go=account>More › Account</a> (or <b>Account</b> at the top on a computer). <b>Download backup</b> saves everything in your account in one .zip file, photos included. <b>Download Excel</b> and <b>Download PDF</b> are for reading and printing (the PDF includes your target photos).</p>
       <p>To bring data back in, or move it to another Range Book, use <b>Import</b> on the same page and pick a backup or an Excel export (Excel files don't carry photos). Importing <b>adds</b> to your account: anything already there is left alone and nothing is deleted, so importing the same file twice doesn't double anything.</p>
+      <p><b>The whole site (admins):</b> on the <b>Admin</b> page, <b>Download site backup</b> saves every account and everything in it (data, photos, videos and files; document vaults stay locked) in one .tar.gz file on the device you're using. Keep it somewhere other than the server. To bring a whole site back, set up a fresh Range Book (an empty data folder), sign in with the account it asks you to make, and on the Admin page tap <b>Choose backup file</b>, pick the file and tap <b>Restore</b> twice. Every account comes back with its own password, so then sign in with your old account. It also takes a .zip of one of the nightly backup folders. It only works on a fresh install, so it can never wipe out a Range Book that's in use.</p>
       <h3>Import from a spreadsheet</h3>
       <p>To add a lot of gear at once, tap <a class=goto href=#go data-go=account:import>Account › Import from a spreadsheet</a> (or <b>Import from a spreadsheet</b> on the Gear &amp; Ranges and Components lists). <b>Download the template</b> gets an Excel file with a tab each for guns, scopes, lowers, uppers, barrels, factory ammo, bullets, powders, primers and brass, with drop-down lists for cartridges and other choices, and a tip on columns like Twist when you click a cell. To bring in a gun built from a lower and an upper, list them on the <b>Lowers</b> and <b>Uppers</b> tabs, then on the <b>Guns</b> tab fill in its <b>Lower</b> and <b>Upper</b> columns (Manufacturer and Model can stay blank; it's named after the lower, and its specs come from the upper). Several rows with the same lower become one gun with several uppers. On the <b>Barrels</b> tab, <b>On gun</b> is the complete gun the barrel goes on. They can name gear that's already in Range Book or a row in the same file. Fill it in with Excel, Numbers or Google Sheets, save it as .xlsx (or a single tab as .csv), and pick it with <b>Choose a file to import</b>. Your own spreadsheet works too: Range Book matches the columns by their headings (Make and Model are joined into a gun's name, S/N is the serial number, and so on).</p>
       <p>Nothing is saved until you tap <b>Import</b>, and before then it asks about anything it isn't sure of: a column it doesn't recognize (pick what it is, add it to Notes, or leave it out), a cartridge, BC type, primer size or scope it doesn't know (pick the right one, or keep it as typed), a number or date it can't read (fix it, or leave it blank), and anything already in Range Book (the same gun by serial number or name, the same scope, ammo or component). For those it shows what's different and you pick <b>Skip</b>, <b>Update it</b> (only the boxes filled in on the spreadsheet change) or <b>Add as new</b>; rows that match exactly are left alone. <b>Download it with my gear filled in</b> gets a copy of everything you have, so you can fix things in the spreadsheet and import it back as updates.</p>
@@ -1870,6 +1871,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div id="bk_info" class="note">Loading…</div>
       <div class="row"><button class="btn" id="bk_now" type="button">Back up now</button><span class="savestate" id="bk_state"></span></div>
       <p class="note">A copy of everyone's data and photos is saved every night on the server, in the <b>backups</b> folder inside Range Book's appdata folder. The last 14 days are kept. To restore one, see the README.</p>
+      <h3 class="bkh">Download the whole site</h3>
+      <p class="note">One file with every account and everything in it: data, photos, videos and files (document vaults stay locked). Keep it somewhere other than the server, like your computer or cloud storage. <span id="bk_size"></span></p>
+      <div class="row"><a class="btn primary" id="bk_dl" href="/api/admin/site-backup.tar.gz" download>Download site backup</a></div>
+      <h3 class="bkh">Restore the whole site</h3>
+      <p class="note" id="rs_why">Brings back everything from a site backup: every account (with its password), all the data and all the files. It only works on a fresh install, so it can't wipe out a Range Book that's in use.</p>
+      <div class="row rsrow"><label class="btn" for="rs_file">Choose backup file</label><input type="file" id="rs_file" accept=".gz,.tgz,.tar,.zip,application/gzip,application/x-gzip,application/x-tar,application/zip" hidden><span class="note" id="rs_name"></span></div>
+      <div class="row"><button class="btn" id="rs_go" type="button" disabled>Restore</button><span class="savestate" id="rs_state"></span></div>
+      <div class="banner" id="rs_out" hidden></div>
     </section>
     <section class="card" aria-label="Community box photos"><h2>Community box photos</h2><p class="note">Photos people added to catalog ammo. Everyone can see these, so delete any that don't match the load or shouldn't be there.</p><div id="au_boxes" class="sharelist"><p class="note">Loading…</p></div></section>
     <section class="card" aria-label="Users"><h2>Users</h2><div id="au_list" class="sharelist"><p class="note">Loading…</p></div></section>
@@ -10261,7 +10270,47 @@ function showBackups(r){
   if(r.lastError)h+='<br><span class="err">The last backup failed: '+esc(r.lastError.message)+'</span>';
   box.innerHTML=h;
 }
-async function loadBackups(){try{showBackups(await API.get("/api/admin/backups"));}catch(e){$("bk_info").textContent=e.message;}}
+async function loadBackups(){try{showBackups(await API.get("/api/admin/backups"));}catch(e){$("bk_info").textContent=e.message;}loadSiteInfo();}
+/* the whole site (2.35): download it, or restore it on a fresh install (uploaded in pieces, so big files get through) */
+let SITE=null,rsFile=null;
+const mb=n=>n>=1e9?(n/1e9).toFixed(1)+" GB":Math.max(1,Math.round(n/1e6))+" MB";
+async function loadSiteInfo(){
+  try{SITE=await API.get("/api/admin/site-backup");$("bk_size").textContent="About "+mb(SITE.bytes)+" ("+SITE.users+" account"+(SITE.users===1?"":"s")+", "+SITE.files.toLocaleString()+" photo"+(SITE.files===1?"":"s")+" and files). Big sites take a while; keep this screen open until it's done.";}
+  catch(e){$("bk_size").textContent="";}
+  rsReady();
+}
+function rsReady(){
+  const why=$("rs_why"),go=$("rs_go");if(!why)return;
+  if(SITE&&!SITE.fresh){why.innerHTML='Brings back everything from a site backup, on a fresh install only. <b>This Range Book is already in use</b>: '+esc(SITE.why.replace(/^This Range Book already has /,"it has ").replace(/ Restoring only works.*$/,"").replace(/\.$/,""))+'. To restore here, set Range Book up again with an empty data folder first (see the README).';}
+  go.disabled=!(SITE&&SITE.fresh&&rsFile);
+}
+$("rs_file").addEventListener("change",e=>{rsFile=e.target.files[0]||null;$("rs_name").textContent=rsFile?rsFile.name+" ("+mb(rsFile.size)+")":"";$("rs_out").hidden=true;rsReady();});
+$("rs_go").addEventListener("click",async()=>{
+  const go=$("rs_go"),st=$("rs_state"),out=$("rs_out");if(!rsFile)return;
+  if(go.dataset.armed!=="1"){go.dataset.armed="1";go.textContent="Tap again to restore";setTimeout(()=>{go.dataset.armed="";go.textContent="Restore";},5000);return;}
+  go.dataset.armed="";go.textContent="Restore";go.disabled=true;out.hidden=true;
+  const H={"X-Requested-With":"rangebook"};
+  const call=async(u,body,ct)=>{const r=await fetch(u,{method:"POST",credentials:"same-origin",headers:Object.assign({},H,ct?{"Content-Type":ct}:{}),body});const j=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(j.error||("Error "+r.status));e.status=r.status;e.have=j.have;throw e;}return j;};
+  let id=null;
+  try{
+    const s0=await call("/api/admin/site-restore/start","{}","application/json");id=s0.id;const C=s0.chunk||32*1024*1024;
+    let off=0,fails=0;
+    while(off<rsFile.size){
+      st.textContent="Uploading… "+Math.floor(off/rsFile.size*100)+"%";
+      try{const r=await call("/api/admin/site-restore/"+id+"/chunk?off="+off,rsFile.slice(off,off+C),"application/octet-stream");off=r.have;fails=0;}
+      catch(e){if(e.status===409&&e.have!=null){off=e.have;continue;}if(++fails>4)throw e;await new Promise(r=>setTimeout(r,1500*fails));}
+    }
+    st.textContent="Restoring… (this can take a minute)";
+    const r=await call("/api/admin/site-restore/"+id+"/finish","{}","application/json");id=null;
+    st.textContent="";out.hidden=false;out.classList.remove("bad");
+    out.innerHTML='<b>Restored.</b> '+r.users+' account'+(r.users===1?'':'s')+' and '+r.files.toLocaleString()+' file'+(r.files===1?'':'s')+' (photos, videos and documents) are back. The account you set this install up with is gone; sign in with your account from the backup'+(r.admins&&r.admins.length?' (admin: <b>'+r.admins.map(esc).join('</b>, <b>')+'</b>)':'')+', with its old password. What was here before is saved in <b>'+esc(r.kept)+'</b> in the data folder.<div class="row"><button class="btn primary" type="button" id="rs_signin">Sign in</button></div>';
+    $("rs_signin").addEventListener("click",()=>location.reload());
+  }catch(e){
+    st.textContent="";out.hidden=false;out.classList.add("bad");out.textContent=e.message||"The restore didn't work.";
+    if(id)fetch("/api/admin/site-restore/"+id+"/cancel",{method:"POST",credentials:"same-origin",headers:H}).catch(()=>{});
+    go.disabled=false;
+  }
+});
 async function loadAdminBoxes(){
   const box=$("au_boxes");if(!box)return;
   try{const r=await API.get("/api/boxphotos");const list=(r.photos||[]).filter(b=>b.item);

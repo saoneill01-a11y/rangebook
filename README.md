@@ -164,7 +164,9 @@ Weather and range addresses are looked up straight from the browser: the weather
 
 These backups sit on the same disk as your data, so they protect against mistakes, not a failed drive. Copy the data folder somewhere else too (on Unraid, the Appdata Backup plugin does this).
 
-**To restore** a backup:
+**From the Admin page:** **Download site backup** saves the whole site (every account, all the data, photos, videos and files) in one `.tar.gz` file on whatever device you're using, so you can keep a copy off the server without logging in to it. To bring it back, start a fresh Range Book (an empty data folder), sign in with the account it asks you to set up, and on the Admin page use **Restore the whole site** with that file (or a `.zip` of a nightly backup folder). The upload goes in pieces, so it works through a Cloudflare Tunnel too. Every account comes back with its own password. It only runs on a fresh install (one account, no pictures or files), and what was there is kept in `pre-restore-<time>/` in the data folder.
+
+**To restore** a nightly backup by hand:
 
 ```sh
 docker stop rangebook
