@@ -1608,7 +1608,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>Tap <b>Save</b> when you're done. It saves one photo of the target with every group measured, the same as <b>Measure groups</b>, and each charge gets its group size, mean radius and distance. You can open the photo and edit the marks later. (From Tools, it's kept under <a class=goto href=#go data-go=tools:live>Tools › Live target › Saved</a> until you move it to a range trip or a ladder.)</li>
       </ol>
       <p><b>Not a Range Book target?</b> Live target works on any paper or board. Tap <b>Not a Range Book target?</b> on the camera picture, tap the target's four corners (top-left first, then clockwise), pick or type its size, then tap each aim point in the order you'll shoot them and tap <b>Done</b>. Without the corner squares it can't follow the target if the phone moves, so keep it still; if it does move, tap <b>Tap corners again</b>. Your marks stay put.</p>
-      <p><b>Your reticle over the target:</b> turn on <b>Show my reticle</b> on the Live target screen, then pick the <b>Shooting profile</b> for the gun you're shooting. Range Book draws that scope's reticle (your own reticle picture if you've added one) over the camera picture, to scale for the <b>Distance</b> you entered, with the mark you'd hold for that distance on the current aim point, so you can see where the crosshair sits and how your shots land against the reticle. The hold uses the profile's zero; type a different one in <b>Zero</b> if your scope is zeroed somewhere else (leave it blank to use the profile's). It also includes the profile's wind, spin drift and scope power, the same as the reticle on the dope card, and if the profile is set to <b>Dial it</b> it tells you how much to dial. Your choices are remembered on that phone.</p>
+      <p><b>Your reticle over the target:</b> turn on <b>Show my reticle</b> on the Live target screen, then pick the <b>Shooting profile</b> for the gun you're shooting. From a range trip it uses the trip's profile on its own (its gun, scope and selected zero). Range Book draws that scope's reticle (your own reticle picture if you've added one) over the camera picture, to scale for the <b>Distance</b> you entered, with the mark you'd hold for that distance on the current aim point, so you can see where the crosshair sits and how your shots land against the reticle. The hold uses the profile's zero; type a different one in <b>Zero</b> if your scope is zeroed somewhere else (leave it blank to use the profile's). It also includes the profile's wind, spin drift and scope power, the same as the reticle on the dope card, and if the profile is set to <b>Dial it</b> it tells you how much to dial. Your choices are remembered on that phone.</p>
       <p><b>Bigger picture on a phone:</b> drag the bar under the camera picture down to make it bigger; the buttons and numbers below it then scroll. Drag it up to make it smaller, or double-tap the bar to fit everything on the screen again. It's remembered on that phone.</p>
       <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
@@ -6918,7 +6918,7 @@ function overlaySvg(p){
 const LIVE_PPI=48;            // flattened page resolution, pixels per inch
 function liveSupported(){return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);}
 function openLive(o){
-  // o: {title, groups (this ladder's groups, in order), dist, dia, save(dataUrl,w,h,measure) → Promise}
+  // o: {title, groups (this ladder's groups, in order), dist, dia, profile (a range trip's Shooting profile, for the reticle), save(dataUrl,w,h,measure) → Promise}
   const groups=o.groups||[];
   const shotCount=g=>(g&&g.shots||[]).filter(x=>Number(x)>0).length||null;
   const v=document.createElement("div");v.className="viewer live";v.id="live";v.setAttribute("role","dialog");v.setAttribute("aria-label","Live target");
@@ -7399,8 +7399,12 @@ function openLive(o){
      zero or one you type in. Remembered on this device. ----- */
   let RT={on:false,prof:null,zero:null},RTR=null,RTwait=false;
   try{Object.assign(RT,JSON.parse(localStorage.getItem("rb.liveRet")||"{}"));}catch(e){}
-  const rtSave=()=>{try{localStorage.setItem("rb.liveRet",JSON.stringify(RT));}catch(e){}};
+  const RT0prof=RT.prof,RT0zero=RT.zero;
+  // on a range trip only the switch is remembered: the profile and zero you use in Tools stay as they were
+  const rtSave=()=>{try{const keep=Object.assign({},RT);if(tripProf){keep.prof=RT0prof;keep.zero=RT0zero;}localStorage.setItem("rb.liveRet",JSON.stringify(keep));}catch(e){}};
   const PROFS=(window.RB_TRAJ&&RB_TRAJ.all()||[]).slice().sort((a,b)=>(b.fav?1:0)-(a.fav?1:0));
+  // from a range trip: its profile's gun, scope and zero (just for this time; Tools keeps the one you picked there)
+  const tripProf=o.profile&&PROFS.some(p=>p.id===o.profile)?o.profile:null;if(tripProf)RT.prof=tripProf;
   if(!PROFS.some(p=>p.id===RT.prof))RT.prof=PROFS.length?PROFS[0].id:null;
   $("lvRetProf").innerHTML=PROFS.length?PROFS.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===RT.prof?' selected':'')+'>'+(p.fav?'★ ':'')+esc(p.name)+'</option>').join(""):'<option value="">No Shooting profiles yet</option>';
   function retCalc(){
@@ -7417,6 +7421,7 @@ function openLive(o){
   $("lvRet").addEventListener("change",e=>{RT.on=e.target.checked;rtSave();retCalc();});
   $("lvRetProf").addEventListener("change",e=>{RT.prof=e.target.value||null;rtSave();retCalc();});
   $("lvRetZero").addEventListener("input",e=>{const z=U.read(e.target,"yd",null);RT.zero=z>0?z:null;rtSave();retCalc();});
+  if(tripProf)RT.zero=null;
   if(num(RT.zero)>0)U.fill($("lvRetZero"),"yd",RT.zero,0,0);
   window.addEventListener("rb-retko",()=>{RTwait=false;});
   retCalc();
@@ -8841,7 +8846,7 @@ function renderTrips(){
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
   $("tripLiveAdd").addEventListener("click",()=>livePick(t.id));
   $("tripLive").addEventListener("click",()=>{const id=t.id,C=tripCtx(t);
-    openLive({title:(t.place||"Range trip")+(t.date?" · "+fmtDate(t.date):""),groups:[],dist:num(t.distance)||100,dia:C.dia,
+    openLive({title:(t.place||"Range trip")+(t.date?" · "+fmtDate(t.date):""),groups:[],dist:num(t.distance)||100,dia:C.dia,profile:t.trajId,
       async save(data,w,h,M){const r=await API.post("/api/trips/"+id+"/photos",{data,w,h,caption:""});const ph=r&&r.photo;if(!ph)throw new Error("save");
         const txt=measureText(M,null);await API.patch("/api/photos/"+ph.id,{measure:M,caption:txt});Object.assign(ph,{measure:M,caption:txt,w,h});
         if(tripOpen===id){freshKeep(id);tripPhotos.push(ph);renderTripPhotos();openViewer(ph.id,tripCtx(t));}}});});
