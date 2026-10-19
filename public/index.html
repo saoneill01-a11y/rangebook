@@ -61,6 +61,11 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .derived .tipnote{flex-basis:100%}
 .magfits{display:flex;flex-wrap:wrap;gap:6px 18px}
 .magghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.magghead .linkbtn{text-transform:none;letter-spacing:0;white-space:nowrap}
+.rtsky{fill:#bccbd9}.rtground{fill:#ab9a70}.rtbody{fill:#5e4431}.rtdark{fill:#4a3424}.rtwhite{fill:#efe8da}.rtpronghorn .rtbody{fill:#a8743c}.rtpronghorn .rtdark{fill:#8a5a2c}.rtplate{fill:#f3f1ea;stroke:#6b6b6b}.rtpost{fill:#5b5146}.rtzone{fill:none;stroke:#9a9a9a}
+.rtantler{fill:none;stroke:#9c8460;stroke-width:1.4;stroke-linecap:round}.rthorn{stroke:#2a2420}.rtvital{fill:none;stroke:#ffd24a;stroke-dasharray:2 1.4}.rthold{stroke:var(--accent)}
+.rtlines{stroke:#151515}.rtlines circle{fill:#151515}.rtlines text{fill:#2c2c2c}
+:root[data-palette="night"] .rtsky{fill:#2a1210}:root[data-palette="night"] .rtground{fill:#3a1a14}:root[data-palette="night"] .rtbody{fill:#7a2a20}:root[data-palette="night"] .rtpronghorn .rtbody{fill:#8a3226}:root[data-palette="night"] .rtpronghorn .rtdark{fill:#5c1f18}:root[data-palette="night"] .rtdark{fill:#5c1f18}:root[data-palette="night"] .rtwhite{fill:#a8483a}:root[data-palette="night"] .rtplate{fill:#c45a48;stroke:#7a2a20}:root[data-palette="night"] .rtpost{fill:#5c1f18}:root[data-palette="night"] .rtantler{stroke:#a8483a}:root[data-palette="night"] .rtvital{stroke:#ff6a4a}:root[data-palette="night"] .rtlines{stroke:#ff8a70}:root[data-palette="night"] .rtlines circle{fill:#ff8a70}:root[data-palette="night"] .rtlines text{fill:#ff8a70}
+.rttgt{margin:8px 0 4px;max-width:260px}
 .mcchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.mcchip{display:inline-flex;align-items:center;gap:2px;padding:3px 4px 3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--fg);font-size:14px;font-weight:600}.mcchip button{border:0;background:none;color:inherit;font-size:17px;line-height:1;padding:2px 6px;cursor:pointer;border-radius:99px}.mcchip button:hover{background:var(--sunk)}
 .mcsug{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.mcsug .note{margin:0}.mcadd{position:relative}
 .magbulk{padding:10px 12px;margin:4px 0 8px;border-radius:8px;background:var(--sunk);border:1px solid var(--line)}
@@ -1643,8 +1648,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Second focal plane</b> scopes have marks that are only their true size at one power, often the highest (the scope's manual says). Enter it in <b>Marks true at power</b>. On the dope card's reticle a <b>Scope power</b> picker then works out the hold in marks for the power you're on; at the true power it's the same as the MIL or MOA.</p>
       <h3>Make the reticle look like yours</h3>
       <p>Range Book's reticle is a plain one, not any brand's design. Tap <b>Change how it looks</b> (on the scope's page, or under the reticle on the dope card) to open a window with a preview where you pick where the main marks are, the small marks between them, the holdover dots (a full grid, a tree that widens as it goes down, or none), the numbers, the center (lines that meet, an open center, or an open center with a dot) and the line thickness. <b>Back to the standard look</b> undoes it.</p>
+      <h3>A target behind the reticle</h3>
+      <p>Under the reticle on the dope card, <b>Target behind it</b> puts a target in the scope view: a 4, 6, 8, 10 or 12 inch circle, a 2/3 IPSC silhouette, or a pronghorn, coyote, deer, elk or prairie dog. It's drawn life size for the distance you picked on the card (and for the power you picked, on a second focal plane scope), so you see how big it really looks. The animals face left and have their vital zone marked with a dashed ring. In <b>Hold it</b> mode the target sits on the mark you hold; with <b>Dial it, hold wind</b> it sits on the crosshair, moved over for the wind. Your own reticle picture works too: Range Book makes its light background see-through so the target shows behind the lines.</p>
       <h3>Your own reticle picture</h3>
-      <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
+      <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The best picture is the maker's drawing of the reticle on a white background; a photo through the scope works too if you point it at something bright and even (a white wall or an overcast sky) at full power with the reticle sharp. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
       <h3>Ammunition</h3>
       <p><a class=goto href=#go data-go=rifles:ammo>Gear &amp; Ranges › Ammo</a> keeps the ammo you shoot, in two lists: <b>Reloaded ammo</b> and <b>Factory ammo</b>. Each one counts the rounds you have on hand (loaded or bought, minus what your range trips fire) and can warn you when you're running low.</p>
       <p><b>Subsonic ammo:</b> the button next to <b>Cartridge</b> says <b>Supersonic</b>; tap it and it changes to <b>Subsonic</b> (tap again to switch back). Do the same on a reloading recipe, next to its <b>Cartridge</b>. Subsonic recipes and ammo get a <b>Subsonic</b> tag in the Reloading and Ammo lists, and so does any Shooting profile that uses that ammo. Reloaded ammo made from a recipe follows the recipe's setting.</p>
@@ -2339,19 +2346,66 @@ window.RB_WX=(()=>{
   const DEF=unit=>unit==="mil"?{main:1,sub:1,tree:"grid",num:2,center:"cross",weight:"normal"}:{main:2,sub:1,tree:"grid",num:5,center:"cross",weight:"normal"};
   const look=(unit,L)=>Object.assign(DEF(unit),L||{});
   const MAINS={mil:[[1,"Every 1 MIL"],[0.5,"Every ½ MIL"]],moa:[[1,"Every 1 MOA"],[2,"Every 2 MOA"],[5,"Every 5 MOA"],[10,"Every 10 MOA"]]};
-  // o: {unit, look, pic:{url,cx,cy,ppu,w,h}, dx, dy, view, size, label}
+  /* ---------- targets behind the reticle (2.32): drawn to scale in inches, facing left, with the aim point (the vital zone's
+     center, or the plate's) at 0,0. Shapes are written facing right and mirrored when drawn. ---------- */
+  const TG={
+    c4:{n:'4" circle',d:4},c6:{n:'6" circle',d:6},c8:{n:'8" circle',d:8},c10:{n:'10" circle',d:10},c12:{n:'12" circle',d:12},
+    ipsc:{n:'2/3 IPSC',h:20},deer:{n:"Deer",h:48},elk:{n:"Elk",h:72},coyote:{n:"Coyote",h:24},antelope:{n:"Pronghorn",h:40},pdog:{n:"Prairie dog",h:16}};
+  const TG_ORDER=["c4","c6","c8","c10","c12","ipsc","antelope","coyote","deer","elk","pdog"];
+  // each: shapes facing right in inches, its aim point [vx,vy], the vital zone radius vr, and where its feet are (ground)
+  function tgShape(k){const E=(cx,cy,rx,ry,c)=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" class="'+(c||"rtbody")+'"/>',
+      PG=(pts,c)=>'<polygon points="'+pts.map(p=>p.join(",")).join(" ")+'" class="'+(c||"rtbody")+'"/>',
+      LEG=(x,y0,y1,w,c)=>PG([[x-w,y0],[x+w,y0],[x+w*.7,y1],[x-w*.7,y1]],c);
+    if(TG[k]&&TG[k].d){const r=TG[k].d/2;return {v:[0,0],vr:0,feet:r*3.2,body:'<rect x="'+(-r*.12)+'" y="'+r+'" width="'+(r*.24)+'" height="'+(r*2.2)+'" class="rtpost"/><circle cx="0" cy="0" r="'+r+'" class="rtplate"/>'};}
+    if(k==="ipsc")return {v:[0,6],vr:0,feet:20,body:PG([[-4,4],[4,4],[6,7],[6,16],[4,20],[-4,20],[-6,16],[-6,7]],"rtplate")+PG([[-1.3,0],[1.3,0],[2,.8],[2,3.2],[1.3,4],[-1.3,4],[-2,3.2],[-2,.8]],"rtplate")+'<rect x="-2" y="5.3" width="4" height="7.3" class="rtzone"/>'};
+    if(k==="deer")return {v:[13,0],vr:4,feet:31,body:E(-1.5,.5,20.5,9.5)+LEG(-18,6,31,2,"rtdark")+LEG(-12,6,31,2)+LEG(10,6,31,2,"rtdark")+LEG(15,6,31,2)+
+      PG([[-22,-6],[-26,-10],[-23,-3]])+PG([[11,-7],[18,-21],[24,-19],[19,-2]])+PG([[17,-25],[27,-24],[33,-19],[30,-16],[19,-18]])+PG([[18,-24],[15,-30],[20,-25]])+
+      '<path d="M19 -25 L16 -33 L13 -36 M16 -33 L19 -37 M22 -25 L20 -34 L17 -38 M20 -34 L23 -38" class="rtantler"/>'};
+    if(k==="elk")return {v:[19,1],vr:5,feet:46,body:E(-2,0,30,14)+LEG(-26,8,46,3,"rtdark")+LEG(-18,8,46,3)+LEG(15,8,46,3,"rtdark")+LEG(22,8,46,3)+
+      PG([[17,-6],[25,-22],[34,-20],[28,-2]],"rtdark")+PG([[23,-28],[37,-27],[46,-21],[42,-17],[26,-20]])+PG([[25,-27],[21,-34],[28,-28]])+
+      '<path d="M28 -28 L20 -44 L10 -58 M20 -44 L26 -54 M16 -50 L20 -62 M13 -54 L4 -58 M31 -28 L28 -46 L20 -62 M28 -46 L34 -56" class="rtantler"/>'};
+    if(k==="coyote")return {v:[9,1],vr:2,feet:17,body:E(0,0,15,6.5)+LEG(-11,3,17,1.4,"rtdark")+LEG(-7,3,17,1.4)+LEG(8,3,17,1.4,"rtdark")+LEG(12,3,17,1.4)+
+      PG([[-14,-3],[-22,2],[-27,10],[-24,11],[-17,5],[-13,2]])+PG([[10,-5],[15,-9],[19,-7],[15,1]])+PG([[14,-11],[20,-11],[28,-7],[27,-5],[19,-4],[14,-6]])+PG([[15,-10],[15.5,-15],[17.5,-10.5]])+PG([[17.5,-10.5],[18.5,-15],[19.8,-10.5]])};
+    if(k==="antelope")return {v:[12,1],vr:3.5,feet:27,body:'<g class="rtpronghorn">'+E(0,0,18,8.5)+LEG(-14,4,27,1.5,"rtdark")+LEG(-9,4,27,1.5)+LEG(10,4,27,1.5,"rtdark")+LEG(14,4,27,1.5)+
+      PG([[12,-5],[17,-20],[22,-19],[19,-2]])+E(4,2,0,0)+PG([[16,-23],[24,-22],[29,-18],[27,-16],[17,-18]])+E(-15,-1,3,4,"rtwhite")+'<path d="M19 -23 L18 -32 L16 -34 M18 -29 L20 -29 M21 -23 L21 -31 L19 -33" class="rtantler rthorn"/></g>'};
+    if(k==="pdog")return {v:[.3,-1],vr:1,feet:7,body:E(0,0,3.2,6.5)+'<circle cx=".6" cy="-8.2" r="2.6" class="rtbody"/>'+PG([[2.2,-9],[4.4,-8],[2.3,-7]])+PG([[1.5,-3.5],[3.6,-2.2],[3.4,-1.6],[1.4,-2.4]])+E(-1,6.3,2.6,.9,"rtdark")};
+    return null;}
+  // the target and the ground and sky behind it, in reticle-units-per-inch upi (k = svg px per unit), centered on hx,hy
+  function tgScene(kind,hx,hy,ppi,W,c){const s=tgShape(kind);if(!s)return "";
+    const feetY=hy+(s.feet-s.v[1])*ppi,hz=Math.min(W,Math.max(0,feetY-(TG[kind].d?TG[kind].d*1.6:TG[kind].h*.45)*ppi));
+    let g='<rect x="0" y="0" width="'+W+'" height="'+W+'" class="rtsky"/><rect x="0" y="'+hz.toFixed(1)+'" width="'+W+'" height="'+W+'" class="rtground"/>';
+    g+='<g transform="translate('+hx.toFixed(2)+' '+hy.toFixed(2)+') scale('+(-ppi).toFixed(4)+' '+ppi.toFixed(4)+') translate('+(-s.v[0])+' '+(-s.v[1])+')" stroke-width="'+(0.6/ppi).toFixed(3)+'">'+s.body+
+      (s.vr?'<circle cx="'+s.v[0]+'" cy="'+s.v[1]+'" r="'+s.vr+'" class="rtvital" stroke-width="'+(1.6/ppi).toFixed(3)+'"/>':'')+'</g>';
+    return g;}
+  // a reticle picture with its light background made see-through (kept per picture; null until it's ready)
+  const KO={};
+  function knockout(url){if(!url)return null;if(KO[url]&&KO[url]!=="…")return KO[url];if(KO[url]==="…")return null;KO[url]="…";
+    const im=new Image();im.onload=()=>{try{const sc=Math.min(1,1600/Math.max(im.naturalWidth,im.naturalHeight)),w=Math.round(im.naturalWidth*sc),h=Math.round(im.naturalHeight*sc);
+      const cv=document.createElement("canvas");cv.width=w;cv.height=h;const cx=cv.getContext("2d");cx.drawImage(im,0,0,w,h);const D=cx.getImageData(0,0,w,h),d=D.data;
+      // the background's brightness: the bright end of the picture (a white page, or the sky through the scope)
+      const hist=new Array(256).fill(0);for(let i=0;i<d.length;i+=16)hist[Math.round(.299*d[i]+.587*d[i+1]+.114*d[i+2])]++;
+      let tot=hist.reduce((a,b)=>a+b,0),acc=0,bg=255;for(let v=255;v>=0;v--){acc+=hist[v];if(acc>=tot*.25){bg=v;break;}}
+      const top=bg*.9,span=Math.max(40,bg*.55);
+      for(let i=0;i<d.length;i+=4){const r=d[i],g2=d[i+1],b=d[i+2],mx=Math.max(r,g2,b),mn=Math.min(r,g2,b),lum=.299*r+.587*g2+.114*b;
+        if(mx-mn>90&&mx>110){d[i+3]=255;continue;}                        // a lit (red or green) part of the reticle
+        const a=Math.max(0,Math.min(1,(top-lum)/span));d[i]=d[i+1]=d[i+2]=Math.round(lum*.25);d[i+3]=Math.round(a*255);}
+      cx.putImageData(D,0,0);KO[url]=cv.toDataURL("image/png");window.dispatchEvent(new Event("rb-retko"));}catch(e){KO[url]=null;}};
+    im.onerror=()=>{KO[url]=null;};im.src=url;return null;}
+  // o: {unit, look, pic:{url,cx,cy,ppu,w,h}, dx, dy, view, size, label, tgt:{kind, upi (reticle units per inch at that distance)}}
   function svg(o){
     const MIL=o.unit==="mil",lk=look(o.unit,o.look),id="rc"+(++uid),W=o.size||300,c=W/2;
     const span=MIL?10:40,minV=MIL?3:10;
     const has=o.dx!=null&&o.dy!=null;
-    const view=o.view||Math.min(span,Math.max(minV,has?Math.abs(o.dx)*1.35:0,has?Math.abs(o.dy)*1.35:0)),k=(W/2-14)/view;
+    const TGT=o.tgt&&TG[o.tgt.kind]&&o.tgt.upi>0?o.tgt:null,th=TGT?(TG[TGT.kind].d||TG[TGT.kind].h)*TGT.upi:0;
+    const view=o.view||Math.min(span,Math.max(minV,has?Math.abs(o.dx)*1.35+th*.4:0,has?Math.abs(o.dy)*1.35+th*.4:0)),k=(W/2-14)/view;
     const P=(u,v)=>[c+u*k,c+v*k],f=n=>n.toFixed(1),wt=lk.weight==="thin"?.7:lk.weight==="thick"?1.7:1;
-    let g='<svg class="retsvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="'+escR(o.label||"Reticle")+'"><defs><clipPath id="'+id+'"><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'"/></clipPath></defs>';
+    let g='<svg class="retsvg'+(TGT?' rtscene':'')+'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="'+escR(o.label||"Reticle")+'"><defs><clipPath id="'+id+'"><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'"/></clipPath></defs>';
     if(o.pic&&o.pic.url&&o.pic.ppu>0){
       const s=k/o.pic.ppu;
-      g+='<circle class="retpicbg" cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="#fff"/><g clip-path="url(#'+id+')"><image class="retpic" href="'+escR(o.pic.url)+'" xlink:href="'+escR(o.pic.url)+'" x="'+f(c-o.pic.cx*s)+'" y="'+f(c-o.pic.cy*s)+'" width="'+f(o.pic.w*s)+'" height="'+f(o.pic.h*s)+'" preserveAspectRatio="none"/></g><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="none" stroke="var(--line)" stroke-width="2"/>';
+      const ku=TGT?knockout(o.pic.url):null,pu=ku||o.pic.url;
+      g+='<circle class="retpicbg" cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="#fff"/><g clip-path="url(#'+id+')">'+(TGT&&ku&&has?tgScene(TGT.kind,c+o.dx*k,c+o.dy*k,TGT.upi*k,W,c):'')+'<image class="retpic" href="'+escR(pu)+'" xlink:href="'+escR(pu)+'" x="'+f(c-o.pic.cx*s)+'" y="'+f(c-o.pic.cy*s)+'" width="'+f(o.pic.w*s)+'" height="'+f(o.pic.h*s)+'" preserveAspectRatio="none"/></g><circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="none" stroke="var(--line)" stroke-width="2"/>';
     }else{
-      g+='<circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="var(--sunk)" stroke="var(--line)" stroke-width="2"/><g clip-path="url(#'+id+')" stroke="var(--fg)">';
+      g+='<circle cx="'+c+'" cy="'+c+'" r="'+(W/2-2)+'" fill="var(--sunk)" stroke="var(--line)" stroke-width="2"/>'+(TGT&&has?'<g clip-path="url(#'+id+')">'+tgScene(TGT.kind,c+o.dx*k,c+o.dy*k,TGT.upi*k,W,c)+'</g>':'')+'<g clip-path="url(#'+id+')" stroke="var(--fg)" class="'+(TGT?'rtlines':'')+'">';
       const M=lk.main,sub=lk.sub|0,st=M/(sub+1),gap=lk.center==="cross"?0:Math.min(M*.6,view*.2)*k;
       // the crosshair, with a gap in the middle for an open center
       g+='<path d="M0 '+c+'H'+(c-gap)+'M'+(c+gap)+' '+c+'H'+W+'M'+c+' 0V'+(c-gap)+'M'+c+' '+(c+gap)+'V'+W+'" stroke-width="'+f(1.2*wt)+'" fill="none"/>';
@@ -2367,7 +2421,7 @@ window.RB_WX=(()=>{
       g+='</g>';
     }
     if(has){const [hx,hy]=P(o.dx,o.dy);
-      g+='<line x1="'+c+'" y1="'+c+'" x2="'+f(hx)+'" y2="'+f(hy)+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="'+f(hx)+'" cy="'+f(hy)+'" r="7" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>';}
+      g+=TGT?'<circle cx="'+f(hx)+'" cy="'+f(hy)+'" r="'+f(Math.max(5,(TG[TGT.kind].d?TG[TGT.kind].d/2:0)*TGT.upi*k+4))+'" fill="none" class="rthold" stroke-width="2"/>':'<line x1="'+c+'" y1="'+c+'" x2="'+f(hx)+'" y2="'+f(hy)+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="'+f(hx)+'" cy="'+f(hy)+'" r="7" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>';}
     return g+'</svg>';
   }
   /* a pop-up window (a sheet on a phone) */
@@ -2437,7 +2491,7 @@ window.RB_WX=(()=>{
       const d=Math.hypot(mx-cx,my-cy);W.close();o.onSave({cx:+cx.toFixed(1),cy:+cy.toFixed(1),mx:+mx.toFixed(1),my:+my.toFixed(1),val:v,ppu:+(d/v).toFixed(4),w:o.w,h:o.h});});
     draw();
   }
-  window.RB_RET={svg,look,editLook,calibrate,DEF};
+  window.RB_RET={svg,look,editLook,calibrate,DEF,TG,TG_ORDER,knockout};
 })();
 </script>
 <script>
@@ -3106,6 +3160,7 @@ $("rg_pick").addEventListener("change",e=>{state.rangeCur=e.target.value||null;s
 $("rg_go").addEventListener("click",()=>{if(window.RB_GEAR_RANGES)RB_GEAR_RANGES(rgList().length?state.rangeCur:"__new");});
 // the holds for one distance drawn on a plain reticle: the dot is where the target goes
 const scopeName=sc=>[sc.mfr,sc.model].filter(Boolean).join(" ")||"Unnamed scope";
+window.addEventListener("rb-retko",()=>{try{render();}catch(e){}});
 function renderReticle(L,S,zs,path){
   const box=$("retBox");if(!box)return;
   const o=dopeOpts(L),ai=Math.round(L.adj||0)-1,za=(ai>=0&&ai<4)?zs[ai]:null,sc=o.scope;
@@ -3126,7 +3181,9 @@ function renderReticle(L,S,zs,path){
   let pw=sfp&&tp?(num(R0.power)>0?num(R0.power):tp):null;if(pw&&mag[0]&&mag[1])pw=Math.min(mag[1],Math.max(mag[0],pw));
   const kf=sfp&&tp&&pw?pw/tp:1,dx=dx0*kf,dy=dy0*kf,MK=kf!==1?"marks":UN;
   const pic=sc&&sc.retMode==="pic"&&sc.pic&&sc.pic.ppu>0&&window.RB_RETPIC?RB_RETPIC(sc.id):null;
-  const g=RB_RET.svg({unit:RU,look:sc?sc.look:R0.look,pic:pic?Object.assign({url:pic.url},sc.pic):null,dx,dy,label:"Reticle with the hold for "+U.s("yd",x,0)});
+  // a target behind the reticle, to scale at this distance (and this power, on a second focal plane scope)
+  const TK=R0.tgt&&RB_RET.TG[R0.tgt]?R0.tgt:"",tgt=TK?{kind:TK,upi:kf/per}:null;
+  const g=RB_RET.svg({unit:RU,look:sc?sc.look:R0.look,pic:pic?Object.assign({url:pic.url},sc.pic):null,dx,dy,tgt,label:"Reticle with the hold for "+U.s("yd",x,0)+(TK?", over a "+RB_RET.TG[TK].n:"")});
   const f1=n=>{const s2=Math.abs(n).toFixed(1);return s2;};
   const lines=[];
   if(dial)lines.push('Dial <b>'+(upD>=0?f1(upD)+' '+DU+' up':f1(upD)+' '+DU+' down')+'</b>.');
@@ -3143,11 +3200,15 @@ function renderReticle(L,S,zs,path){
   const lookBtn=pic?'':'<button class="btn small" type="button" id="rtLook">Change how it looks</button>';
   if(sc&&sc.retMode==="pic"&&!pic){const why=!(sc.pic&&sc.pic.ppu>0)?'its scale isn\'t set yet. On the scope\'s page (<a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Scopes</a>), tap <b>Set the scale</b>.':!(window.RB_RETPIC&&RB_RETPIC(sc.id))?'the picture hasn\'t loaded on this device yet. Pull down to refresh, or check your connection.':'';
     if(why)pwr='<p class="err retwhy">Your scope is set to use your reticle picture, but '+why+' Until then this is the plain reticle.</p>'+pwr;}
-  box.innerHTML=pwr+'<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+
-    '<div class="row retbtns">'+lookBtn+(sc?'<span class="note">'+(pic?'Your reticle picture · ':'')+escL(scopeName(sc))+'</span>':'')+'</div></div></div>';
+  const TGsel='<div class="field rttgt"><label for="rt_tgt">Target behind it</label><select id="rt_tgt" class="fieldselect"><option value="">None</option>'+RB_RET.TG_ORDER.map(k=>'<option value="'+k+'"'+(k===TK?' selected':'')+'>'+RB_RET.TG[k].n+'</option>').join("")+'</select></div>';
+  const TGinfo=TK?(()=>{const T=RB_RET.TG[TK],sz=T.d||T.h,lab=T.d?'wide':'tall';const nm=TK==="ipsc"?'A 2/3 IPSC target':T.d?'The '+T.n:(/^[aeiou]/i.test(T.n)?'An ':'A ')+T.n.toLowerCase();
+    return '<p class="note">'+nm+' is about '+f1(sz*kf/per)+' '+MK+' '+lab+' at '+U.s("yd",x,0)+(T.d?'':' ('+(TK==="ipsc"?'':'life size, ')+U.s("in",sz,0)+')'+(TK==="ipsc"?'; the box is its A-zone':'; the dashed ring is its vital zone'))+'.</p>';})():'';
+  box.innerHTML=pwr+'<div class="retwrap">'+g+'<div><div class="tbig">'+U.s("yd",x,0)+'</div><p class="tline">'+lines.join(' ')+'</p>'+TGinfo+(why.length?'<p class="note">'+escL(why.join('; '))+'.</p>':'')+(dial?'':'<p class="note">Up '+(up>=0?'':'−')+f1(up)+' '+UN+' from your '+U.s("yd",za,0)+' zero.</p>')+
+    TGsel+'<div class="row retbtns">'+lookBtn+(sc?'<span class="note">'+(pic?'Your reticle picture · ':'')+escL(scopeName(sc))+'</span>':'')+'</div></div></div>';
   const lb=$("rtLook");if(lb)lb.addEventListener("click",()=>RB_RET.editLook({unit:RU,look:sc?sc.look:R0.look,onSave:lk=>{
     if(sc&&window.RB_SCOPE_SAVE)RB_SCOPE_SAVE(sc.id,{look:lk});else{const C=cur();C.ret=Object.assign({},C.ret||{},{look:lk});save();}render();}}));
   const ps=$("rt_pwr");if(ps)ps.addEventListener("change",()=>{const C=cur();C.ret=Object.assign({},C.ret||{},{power:+ps.value});save();render();});
+  const ts=$("rt_tgt");if(ts)ts.addEventListener("change",()=>{const C=cur();C.ret=Object.assign({},C.ret||{},{tgt:ts.value||null});save();render();});
   retNav();
 }
 // the dope card's distances are kept separately for yards and metres, so each stays in round numbers
@@ -5471,7 +5532,7 @@ function renderScopes(root){
       (!usePic?'<p class="note">A plain '+(MIL?'MIL':'MOA')+' reticle. Make it look like yours (where the marks are, holdover dots, numbers, the center) so it\'s easy to count.</p><div class="row"><button class="btn" type="button" id="scLook">Change how it looks</button></div>'
         :(window.GUEST?'<p class="note">Reticle pictures need an account.</p>':
           (ph?(sc.pic&&sc.pic.ppu>0?'<p class="note">Your picture, with the scale set: '+esc(String(sc.pic.val))+' '+(MIL?'MIL':'MOA')+' from the center. The dope card puts the dot on it.</p>':'<p class="err">Set the scale so Range Book knows how big the marks are. Until then the dope card uses the plain reticle.</p>'):
-            '<p class="note">Upload a picture of just your reticle, straight on, like the drawing in the scope\'s manual or on the maker\'s website (a screenshot is fine). It stays private to you.</p>')+
+            '<p class="note">Upload a picture of just your reticle, straight on. Best is the maker\'s drawing of it, from their website or the manual, on a white background (a screenshot is fine). A photo through the scope works too: point it at something bright and even, like a white wall or an overcast sky, turn it to full power with the reticle sharp, and hold the phone straight behind the eyepiece. It stays private to you.</p>')+
           '<div class="row"><label class="btn'+(ph?'':' primary')+'" for="scPicIn" style="cursor:pointer">'+(ph?'Replace picture':'+ Upload a picture')+'</label><input id="scPicIn" type="file" accept="image/*" hidden>'+(ph?'<button class="btn'+(sc.pic&&sc.pic.ppu>0?'':' primary')+'" type="button" id="scCal">Set the scale</button><button class="btn danger" type="button" id="scPicDel">Remove picture</button>':'')+'<span class="savestate">'+(retUp?'Uploading…':'')+'</span></div>'))+
       '</div></div></section>'+
       '<section class="card" aria-label="Guns with this scope"><h2>On</h2>'+(gs.length?'<div class="cartgroup">'+gs.map(g=>'<button class="loaditem" type="button" data-sgun="'+esc(g.id)+'"><span class="t">'+esc(g.name||"Unnamed gun")+'</span></button>').join("")+'</div><p class="note">Every Shooting profile that uses this gun takes its MOA or MIL and reticle from this scope.</p>':'<p class="note">Not on a gun yet. Pick the gun under <b>On gun</b> above.</p>')+'</section>'+
