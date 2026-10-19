@@ -65,7 +65,7 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .rtvital{fill:none;stroke:#ffd24a;stroke-dasharray:2 1.4}.rthold{stroke:var(--accent)}
 .rtlines{stroke:#151515}.rtlines circle{fill:#151515}.rtlines text{fill:#2c2c2c}
 :root[data-palette="night"] .rtsky{fill:#2a1210}:root[data-palette="night"] .rtground{fill:#3a1a14}:root[data-palette="night"] .rtbody{fill:#7a2a20}:root[data-palette="night"] .rtblack{fill:#4a1812}:root[data-palette="night"] .rtwhite{fill:#a8483a}:root[data-palette="night"] .rtgray .rtbody,:root[data-palette="night"] .rtgray .rtwhite,:root[data-palette="night"] .rtgray .rtblack{fill:#5c1f18}:root[data-palette="night"] .rtplate{fill:#c45a48;stroke:#7a2a20}:root[data-palette="night"] .rtpost{fill:#5c1f18}:root[data-palette="night"] .rtvital{stroke:#ff6a4a}:root[data-palette="night"] .rtlines{stroke:#ff8a70}:root[data-palette="night"] .rtlines circle{fill:#ff8a70}:root[data-palette="night"] .rtlines text{fill:#ff8a70}
-.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.favhint{font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}#gFavs .gtile,#tFavs .gtile{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.lwbtns{display:flex;flex-direction:column;gap:8px;margin-top:10px}.camwait video{width:100%;height:100%;object-fit:contain;background:#000;display:block}.cwnote{color:#bbb}.lvdim{position:fixed;inset:0;z-index:60;background:#000;border:0;color:#9a9a9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;font:inherit}.lvdim[hidden]{display:none}.lvdim b{color:#cfcfcf;font-size:18px}.lvdim span{font-size:14px;max-width:320px}.lvdim small{font-size:12px;color:#666}.bkh{font-size:15px;margin:16px 0 4px}#rs_out .row{margin-top:8px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
+.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.voff{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.voffnote{margin:0 0 8px}.favhint{font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}#gFavs .gtile,#tFavs .gtile{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.lwbtns{display:flex;flex-direction:column;gap:8px;margin-top:10px}.camwait video{width:100%;height:100%;object-fit:contain;background:#000;display:block}.cwnote{color:#bbb}.lvdim{position:fixed;inset:0;z-index:60;background:#000;border:0;color:#9a9a9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;font:inherit}.lvdim[hidden]{display:none}.lvdim b{color:#cfcfcf;font-size:18px}.lvdim span{font-size:14px;max-width:320px}.lvdim small{font-size:12px;color:#666}.bkh{font-size:15px;margin:16px 0 4px}#rs_out .row{margin-top:8px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
 .mcchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.mcchip{display:inline-flex;align-items:center;gap:2px;padding:3px 4px 3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--fg);font-size:14px;font-weight:600}.mcchip button{border:0;background:none;color:inherit;font-size:17px;line-height:1;padding:2px 6px;cursor:pointer;border-radius:99px}.mcchip button:hover{background:var(--sunk)}
 .mcsug{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.mcsug .note{margin:0}.mcadd{position:relative}
 .magbulk{padding:10px 12px;margin:4px 0 8px;border-radius:8px;background:var(--sunk);border:1px solid var(--line)}
@@ -5053,10 +5053,44 @@ const vImport=raw=>crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["en
 async function vEnc(bytes){const iv=crypto.getRandomValues(new Uint8Array(12));return {iv,ct:new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},VLT.key,bytes))};}
 async function vDec(iv,ct){return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv},VLT.key,ct));}
 const vFetch=(url,o)=>fetch(url,Object.assign({credentials:"same-origin",cache:"no-store"},o||{},{headers:Object.assign({"X-Requested-With":"rangebook"},(o&&o.headers)||{})})).then(async r=>{if(!r.ok){let j=null;try{j=await r.json();}catch(e){}const e=new Error((j&&j.error)||"The server answered with error "+r.status+".");e.status=r.status;throw e;}return r;});
+/* ----- an offline copy on this device (2.39), if you turn it on in Account › Document vault: the vault's wrapped key, its
+   list and every document, all exactly as the server has them (still encrypted), in IndexedDB. With no signal the vault
+   opens from it with your passphrase as usual. One switch per device and account; signing out removes the copy. ----- */
+const VOFF={
+  on(){try{return !!window.RB_UID&&localStorage.getItem("rb.vaultOffline")===String(window.RB_UID);}catch(e){return false;}},
+  set(v){try{if(v)localStorage.setItem("rb.vaultOffline",String(window.RB_UID));else localStorage.removeItem("rb.vaultOffline");}catch(e){}},
+  dbp:null,syncing:null,
+  db(){return this.dbp||(this.dbp=new Promise((res,rej)=>{if(!window.indexedDB)return rej(new Error("no idb"));const r=indexedDB.open("rangebook-vault",1);
+    r.onupgradeneeded=()=>{r.result.createObjectStore("kv");r.result.createObjectStore("docs");};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}));},
+  async tx(st,mode,fn){const d=await this.db();return new Promise((res,rej)=>{const t=d.transaction(st,mode),o=t.objectStore(st);let out;const r=fn(o);if(r)r.onsuccess=()=>{out=r.result;};t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error);});},
+  k(x){return String(window.RB_UID||"")+":"+x;},
+  get(st,x){return this.tx(st,"readonly",o=>o.get(this.k(x))).catch(()=>undefined);},
+  put(st,x,v){return this.tx(st,"readwrite",o=>o.put(v,this.k(x))).catch(()=>{});},
+  del(st,x){return this.tx(st,"readwrite",o=>o.delete(this.k(x))).catch(()=>{});},
+  keys(st){const pre=this.k("");return this.tx(st,"readonly",o=>o.getAllKeys()).then(a=>(a||[]).filter(x=>String(x).startsWith(pre)).map(x=>String(x).slice(pre.length))).catch(()=>[]);},
+  async clear(){for(const id of await this.keys("docs"))await this.del("docs",id);await this.del("kv","list");},
+  // bring the copy up to date: new documents in, deleted ones out
+  sync(){if(!this.on()||!VLT.cfg)return Promise.resolve();if(this.syncing)return this.syncing;
+    return this.syncing=(async()=>{
+      await this.put("kv","list",{cfg:VLT.cfg,docs:VLT.docs,at:Date.now()});
+      const have=new Set(await this.keys("docs")),want=new Set(VLT.docs.map(d=>d.id));
+      for(const id of have)if(!want.has(id))await this.del("docs",id);
+      let n=0;for(const d of VLT.docs){if(have.has(d.id))continue;n++;vAccountState("Saving documents on this device… "+n+" of "+VLT.docs.filter(x=>!have.has(x.id)).length);
+        const buf=new Uint8Array(await (await vFetch("/api/vault/docs/"+d.id)).arrayBuffer());await this.put("docs",d.id,buf);}
+      vAccountState("");})().finally(()=>{this.syncing=null;vAccountDraw();});}
+};
+// a document's locked bytes: from this device's copy when there is one, otherwise from the server (and kept, if it's on)
+async function vDocBytes(id){
+  if(VOFF.on()){const b=await VOFF.get("docs",id);if(b)return b instanceof Uint8Array?b:new Uint8Array(b);}
+  const buf=new Uint8Array(await (await vFetch("/api/vault/docs/"+id)).arrayBuffer());if(VOFF.on())VOFF.put("docs",id,buf);return buf;}
 function vLoad(force){
   if(window.GUEST)return Promise.resolve();
   if(VLT.loading&&!force)return VLT.loading;
-  return VLT.loading=vFetch("/api/vault").then(r=>r.json()).then(async j=>{VLT.cfg=j.key||null;VLT.docs=j.docs||[];await vNames();}).catch(e=>{VLT.loading=null;throw e;});
+  return VLT.loading=vFetch("/api/vault").then(r=>r.json()).then(async j=>{VLT.cfg=j.key||null;VLT.docs=j.docs||[];VLT.offline=false;await vNames();if(VOFF.on())VOFF.sync().catch(()=>{});})
+    .catch(async e=>{
+      // no signal: open from this device's copy
+      if(!e.status&&VOFF.on()){const L=await VOFF.get("kv","list");if(L&&L.cfg){VLT.cfg=L.cfg;VLT.docs=L.docs||[];VLT.offline=true;await vNames();return;}}
+      VLT.loading=null;throw e;});
 }
 async function vNames(){if(!VLT.key)return;for(const d of VLT.docs){if(VLT.names.has(d.id))continue;try{VLT.names.set(d.id,JSON.parse(new TextDecoder().decode(await vDec(vb64d(d.meta.iv),vb64d(d.meta.ct)))));}catch(e){VLT.names.set(d.id,{name:"(couldn't read this document's name)",type:"application/octet-stream"});}}}
 function vTouch(){clearTimeout(VLT.timer);if(VLT.key)VLT.timer=setTimeout(()=>vLock(),VLT_IDLE);}
@@ -5109,7 +5143,8 @@ async function vAdd(item,files,el){
       const data=await vEnc(new Uint8Array(await f.arrayBuffer())),meta=await vEnc(new TextEncoder().encode(JSON.stringify({name:f.name,type:f.type||"application/octet-stream",size:f.size})));
       const body=new Uint8Array(12+data.ct.length);body.set(data.iv,0);body.set(data.ct,12);
       const r=await vFetch("/api/vault/docs?item="+encodeURIComponent(item),{method:"POST",headers:{"Content-Type":"application/octet-stream","X-Vault-Meta":btoa(JSON.stringify({iv:vb64e(meta.iv),ct:vb64e(meta.ct)}))},body}).then(x=>x.json());
-      VLT.docs.push(r.doc);VLT.names.set(r.doc.id,{name:f.name,type:f.type||"application/octet-stream",size:f.size});}
+      VLT.docs.push(r.doc);VLT.names.set(r.doc.id,{name:f.name,type:f.type||"application/octet-stream",size:f.size});
+      if(VOFF.on()){VOFF.put("docs",r.doc.id,body);VOFF.put("kv","list",{cfg:VLT.cfg,docs:VLT.docs,at:Date.now()});}}
     catch(e){vRedraw();vSay(f.name+" couldn't be added"+(e&&e.message?": "+e.message:".")+" Check your connection and try again.",true);return;}
   }
   vRedraw();}
@@ -5118,7 +5153,7 @@ async function vOpen(id,btn){
   if(VLT.ready.has(id)){RB_SAVE(VLT.ready.get(id),nm.name);return;}
   const touch=window.matchMedia("(pointer:coarse)").matches,w=touch?null:window.open("","_blank");
   const was=btn.textContent;btn.disabled=true;btn.textContent="Unlocking…";
-  try{const buf=new Uint8Array(await (await vFetch("/api/vault/docs/"+id)).arrayBuffer());
+  try{const buf=await vDocBytes(id);
     const blob=new Blob([await vDec(buf.subarray(0,12),buf.subarray(12))],{type:nm.type||"application/octet-stream"});
     if(w){w.location.href=URL.createObjectURL(blob);btn.textContent=was;}
     else{VLT.ready.set(id,blob);btn.textContent="Tap again to view or save";btn.classList.add("primary");}}
@@ -5127,7 +5162,7 @@ async function vOpen(id,btn){
 // deleted from the list right away; the server copy goes once the Undo note is gone
 function vDelete(id){const nm=(VLT.names.get(id)||{}).name||"document",i=VLT.docs.findIndex(d=>d.id===id),d=VLT.docs[i];if(!d)return;
   VLT.docs.splice(i,1);VLT.ready.delete(id);vRedraw();
-  RB_UNDO("Deleted "+nm,()=>{VLT.docs.splice(Math.min(i,VLT.docs.length),0,d);vRedraw();},()=>vFetch("/api/vault/docs/"+id,{method:"DELETE"}).catch(()=>{VLT.docs.push(d);vRedraw();vSay(nm+" couldn't be deleted. Check your connection and try again.",true);}));}
+  RB_UNDO("Deleted "+nm,()=>{VLT.docs.splice(Math.min(i,VLT.docs.length),0,d);vRedraw();},()=>vFetch("/api/vault/docs/"+id,{method:"DELETE"}).then(()=>{if(VOFF.on()){VOFF.del("docs",id);VOFF.put("kv","list",{cfg:VLT.cfg,docs:VLT.docs,at:Date.now()});}}).catch(()=>{VLT.docs.push(d);vRedraw();vSay(nm+" couldn't be deleted. Check your connection and try again.",true);}));}
 const vSize=n=>n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB";
 // the Documents card on a suppressor, gun or inventory item
 const vaultCardHtml=item=>'<section class="card" aria-label="Documents"><h2>Documents <span class="note">locked in your vault</span></h2><div data-vault="'+esc(item)+'"><p class="note">Loading…</p></div></section>';
@@ -5140,11 +5175,12 @@ function vDraw(el){
   if(vNoCrypto()){el.innerHTML=VNOSEC;return;}
   if(VLT.cfg===undefined){el.innerHTML='<p class="note">Loading…</p>';vLoad().then(()=>vDraw(el),()=>{el.innerHTML='<p class="err">The vault couldn\'t be reached. Check your connection.</p>';});return;}
   const mine=VLT.docs.filter(d=>d.item===item);let h;
+  const offNote=VLT.offline?'<p class="note voffnote"><b>No signal:</b> this is the copy saved on this device. You can open documents; adding or deleting them needs a signal.</p>':'';
   if(!VLT.cfg)h='<p class="note">Keep a copy of the tax stamp, a receipt or a manual here. Documents are locked on your device with a vault passphrase before they\'re uploaded, so nobody else can open them: not the person who runs this server, an admin, or a backup.</p><div class="row"><button class="btn" type="button" data-vsetup>Set up the vault</button></div>';
   else if(!VLT.key)h='<p class="note">'+(mine.length?mine.length+' locked document'+(mine.length===1?'':'s')+'.':'No documents here yet.')+' Unlock the vault to see or add them.</p><div class="row"><button class="btn" type="button" data-vunlock>Unlock</button></div>';
   else h=(mine.length?'<div class="cartgroup">'+mine.map(d=>{const n=VLT.names.get(d.id)||{};return '<div class="vdoc"><span class="t">'+esc(n.name||"Document")+'</span><span class="note">'+esc([vSize(n.size||d.size),d.at?fmtDate((t=>t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"))(new Date(d.at))):""].filter(Boolean).join(" · "))+'</span><span class="row"><button class="btn small" type="button" data-vopen="'+esc(d.id)+'">Open</button><button class="linkbtn danger" type="button" data-vdel="'+esc(d.id)+'">Delete</button></span></div>';}).join("")+'</div>':'<p class="note">No documents here yet.</p>')+
     '<div class="row"><label class="btn" style="cursor:pointer">+ '+(el.dataset.vany?'Add picture or file':'Add document')+'<input type="file"'+(el.dataset.vany?'':' accept="application/pdf,image/*"')+' multiple hidden data-vadd></label><button class="btn" type="button" data-vlock>Lock</button><span class="savestate vstate"></span></div><p class="vmsg" hidden></p><p class="note">'+(el.dataset.vany?'Pictures and files':'PDFs or pictures')+', up to 15 MB each. The vault locks itself after 15 minutes.</p>';
-  el.innerHTML=h;
+  el.innerHTML=offNote+h;
   const on=(q,f)=>el.querySelectorAll(q).forEach(b=>b.addEventListener(b.tagName==="INPUT"?"change":"click",f));
   on("[data-vsetup]",()=>vSetup());on("[data-vunlock]",()=>vUnlock());on("[data-vlock]",()=>vLock());
   on("[data-vadd]",e=>{const f=[...e.target.files];e.target.value="";vAdd(item,f,el);});
@@ -5161,7 +5197,19 @@ function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
   el.innerHTML=msg+(VLT.cfg?'<p class="note">'+VLT.docs.length+' document'+(VLT.docs.length===1?'':'s')+' in your vault. It\'s '+(VLT.key?'<b>unlocked</b> on this device.':'locked.')+' Add documents on a suppressor, gun or inventory item, or lock a note under Gear &amp; Ranges › Notes.</p><div class="row">'+(VLT.key?'<button class="btn" type="button" id="vaLock">Lock now</button>':'<button class="btn" type="button" id="vaUnlock">Unlock</button>')+'<button class="btn" type="button" id="vaChange">Change passphrase</button></div>'
     :'<p class="note">Not set up yet. It keeps tax stamps, receipts and other papers locked with a passphrase only you know. Set it up from the <b>Documents</b> card on a suppressor, gun or inventory item, or here.</p><div class="row"><button class="btn" type="button" id="vaSetup">Set up the vault</button></div>');
   const b=(id,f)=>{const x=$(id);if(x)x.addEventListener("click",f);};
-  b("vaLock",()=>vLock());b("vaUnlock",()=>vUnlock());b("vaChange",()=>vChange());b("vaSetup",()=>vSetup());}
+  b("vaLock",()=>vLock());b("vaUnlock",()=>vUnlock());b("vaChange",()=>vChange());b("vaSetup",()=>vSetup());
+  if(VLT.cfg){const box=document.createElement("div");box.className="voff";
+    box.innerHTML='<label class="toggle"><input type="checkbox" id="vaOff"'+(VOFF.on()?' checked':'')+'> Keep on this device for offline use</label>'+
+      '<p class="note">Saves a copy of your vault on this '+(/iPad|Tablet/i.test(navigator.userAgent)?'tablet':/Mobi|iPhone|Android/i.test(navigator.userAgent)?'phone':'device')+', still locked with your passphrase, so you can open your documents with no signal. It updates whenever you open the vault with a signal. Someone with this device still can\'t read them without the passphrase. Turn it off to remove the copy; signing out removes it too.</p><p class="note" id="vaOffState"></p>';
+    el.appendChild(box);
+    const showState=async()=>{const st=$("vaOffState");if(!st||!VOFF.on())return st&&(st.textContent="");if(VOFF.syncing)return;
+      const ids=await VOFF.keys("docs");let bytes=0;for(const id of ids){const x=await VOFF.get("docs",id);bytes+=x?x.byteLength||x.length||0:0;}
+      if($("vaOffState"))$("vaOffState").textContent=ids.length+' of '+VLT.docs.length+' document'+(VLT.docs.length===1?'':'s')+' on this device ('+vSize(bytes)+').'+(VLT.offline?' No signal right now: it updates next time.':'');};
+    showState();
+    $("vaOff").addEventListener("change",async e=>{
+      if(e.target.checked){VOFF.set(true);vAccountState("Saving documents on this device…");try{await vLoad(true);await VOFF.sync();}catch(x){vAccountState("Couldn't save the copy: you need a signal to make it.");}}
+      else{VOFF.set(false);await VOFF.clear();vAccountDraw();}});}}
+function vAccountState(t){const st=$("vaOffState");if(st&&t)st.textContent=t;}
 
 /* ---------- Suppressors and Inventory (Gear & Ranges, 2.20) ----------
    Both live in the rifles doc next to scopes and parts:
@@ -5333,7 +5381,7 @@ async function gnUnlockFor(n){
   gnBusy="Taking the note out of the vault…";renderRifles();
   try{await gnDecrypt(n);const t=GN_DEC.get(n.id)||{title:"",body:""};
     for(const d of VLT.docs.filter(x=>x.item===n.id)){const nm=VLT.names.get(d.id)||{name:"file",type:"application/octet-stream"};
-      const buf=new Uint8Array(await (await vFetch("/api/vault/docs/"+d.id)).arrayBuffer());const blob=new Blob([await vDec(buf.subarray(0,12),buf.subarray(12))],{type:nm.type});
+      const buf=await vDocBytes(d.id);const blob=new Blob([await vDec(buf.subarray(0,12),buf.subarray(12))],{type:nm.type});
       const file=new File([blob],nm.name,{type:nm.type});
       if(/^image\/(jpeg|png|webp|gif|heic|heif)$/.test(nm.type))await uploadGun({id:n.id},[file]);else await gnUpload(n.id,[file]);
       await vFetch("/api/vault/docs/"+d.id,{method:"DELETE"});VLT.docs=VLT.docs.filter(x=>x!==d);}
@@ -7308,7 +7356,8 @@ function openLive(o){
   }
   function showSheet(){
     const r=stats(aim),m=moaOf(r.size),n=aims().length,sh=$("lvSheet");sheetFor=aim+":"+r.n;
-    sh.innerHTML='<h3>'+esc(aimLabel(aim))+' done: '+r.n+' shot'+(r.n===1?'':'s')+'</h3>'+
+    sh.innerHTML='<p><b>With no signal:</b> in <a class=goto href=#go data-go=account:vault>More › Account › Document vault</a>, turn on <b>Keep on this device for offline use</b> on each phone or tablet you want it on. That device then keeps a copy of your vault, still locked with your passphrase, and updates it whenever you open the vault with a signal. With no signal, the Documents cards say they're using that copy: unlock with your passphrase as usual and open your documents. Adding or deleting documents still needs a signal. Turn the switch off to remove the copy; signing out removes it too.</p>
+      <h3>'+esc(aimLabel(aim))+' done: '+r.n+' shot'+(r.n===1?'':'s')+'</h3>'+
       '<div class="lvsum"><div><b>'+(r.size!=null?U.s("in",r.size,2):"–")+'</b><span>Group'+(m!=null?' ('+m.toFixed(2)+' MOA)':'')+'</span></div><div><b>'+(r.mr!=null?U.s("in",r.mr,2):"–")+'</b><span>Mean radius</span></div>'+
       '<div class="wide"><b>'+esc(offTxt(r))+'</b><span>Group center from the aim point</span></div></div>'+
       '<div class="lvrow">'+(aim<n-1?'<button class="btn primary lvbtn" id="lvsNext" type="button">Next: '+esc(aimLabel(aim+1))+' ›</button>':'')+'<button class="btn lvbtn'+(aim<n-1?'':' primary')+'" id="lvsSave" type="button">'+(o.save?'Save &amp; finish':'Save')+'</button></div>'+
@@ -9734,6 +9783,7 @@ async function signOut(){
   const left=(await OFF.queue()).length;
   if(left&&!confirmSignOut){confirmSignOut=true;const b=document.getElementById("moreSignOutLbl");if(b)b.textContent="Tap again: "+left+" unsynced change"+(left===1?"":"s")+" will be lost";const s2=document.getElementById("signOut");if(s2)s2.textContent="Tap again to lose "+left+" unsynced";return;}
   try{await API.post("/api/logout");}catch(e){}await OFF.clear();VERS={};
+  try{localStorage.removeItem("rb.vaultOffline");indexedDB.deleteDatabase("rangebook-vault");}catch(e){}
   try{if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));}}catch(e){}
   location.reload();}
 let confirmSignOut=false;
@@ -10132,7 +10182,7 @@ async function loadChangelog(){
 }
 async function startApp(user,api){
   const A=api||API;
-  ME=user;$("authView").hidden=true;$("appView").hidden=false;
+  ME=user;window.RB_UID=user&&user.id;$("authView").hidden=true;$("appView").hidden=false;
   $("whoName").textContent=user.name;
   $("tab-admin").hidden=!user.isAdmin;
   if(started)return;started=true;
