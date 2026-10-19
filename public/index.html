@@ -56,7 +56,7 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .field label{font-size:12px;color:var(--muted);font-weight:500}
 .field input{width:100%;padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--input);color:var(--input-fg);font-family:var(--mono);font-weight:500;font-size:16px}
 .field input.name{font-family:var(--body);font-weight:600;color:var(--fg);background:var(--sunk)}
-.field.wide{grid-column:1/-1}
+.field.wide{grid-column:1/-1}.grid>.note.wide{grid-column:1/-1;margin:-4px 0 2px}
 .derived{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .derived .tipnote{flex-basis:100%}
 .magfits{display:flex;flex-wrap:wrap;gap:6px 18px}
@@ -1638,6 +1638,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h2>Gear &amp; Ranges</h2>
       <h3>Guns</h3>
       <p>The <b>Gear &amp; Ranges</b> tab lists your guns under <b>Guns</b>. The list is grouped by type: rifles, then pistols, then shotguns. Tap the <b>star</b> on a gun to make it a favorite: favorites are listed first, under <b>★ Favorites</b>, and come first in Home's <b>Most used guns</b> (a gun's page has the same star at the top). Tap <b>+ Add gun</b> or tap a gun to open it, fill in its <b>Manufacturer</b> and <b>Model</b> (the gun is listed and picked everywhere by the two together, like Tikka T3x Lite), pick its <b>Type</b> (Rifle, Pistol or Shotgun; when you fill in the cartridge first, Range Book guesses it, and you can tap another), then fill in the <b>Cartridge</b> it's chambered for, its serial number, barrel, twist rate, sight height and notes. Under <b>Photos</b>, tap <b>+ Add photos</b> to keep pictures of the gun; the first one shows in your list of guns. Gun photos and serial numbers are private to you, and the serial numbers are included when you export your data, which is handy for insurance. To export just your guns, tap <b>Export Excel</b> or <b>Export PDF</b> at the top of the Guns list: the spreadsheet has one row per gun (serial number, barrel, twist, round count, barrel life, cleaning), and the PDF has a summary table, then a page for each gun with its details, notes and photos. Each gun's page also lists the Reloading loads, Shooting profiles and range trips that use it; tap one to jump to it. When a load has a gun picked, <b>Use in calculator</b> also brings that gun's sight height across.</p>
+      <p><b>Nickname:</b> give a gun a name of your own (like Elk rifle) in the <b>Nickname</b> box at the top of its page. It's used everywhere the gun shows up: the lists, Shooting profiles, range trips, the dope card, Home and the exports. The manufacturer and model still show under it in the Guns list. Leave it blank to use the manufacturer and model. A gun with several uppers shares one nickname, with each upper's cartridge after it.</p>
       <h3>Lowers, uppers and built guns</h3>
       <p>For ARs and other guns made of a lower and an upper, add each part under <a class=goto href=#go data-go=rifles:guns#secLU>Gear &amp; Ranges › Guns › Lowers &amp; uppers</a>. A <b>lower</b> has its manufacturer, model and serial number, with no caliber. An <b>upper</b> has its cartridge, barrel length, twist, sight height and scope. Then put a lower and an upper together to make a gun: tap <b>+ Add gun</b> and choose <b>A lower + an upper</b> under <b>Made as</b> (or tap <b>Make a gun with this lower</b> or <b>upper</b> on either one), and pick them. The gun takes the upper's specs and the lower's serial number, and you can rename it. Put more than one upper on the same lower and they become <b>variations</b> of one gun: the Guns list shows it once, with a chip for each upper's cartridge (tap a chip to open that one), and its page has an <b>Uppers</b> row to switch between them, plus <b>+ Add upper</b> to add another. The gun's name is shared by all of them, and each variation is shown as the name plus its cartridge (Aero Precision M4E1 · 300 Blackout; when two uppers have the same cartridge, the barrel length or the upper's name tells them apart). Each variation keeps its own type, notes, photos and loads. On Shooting and Reloading the gun picker groups the variations under the gun's name, and <b>Start a range day</b> asks which upper you're shooting. The Upper list starts each upper with its cartridge and is sorted by it, so you can tell them apart. In the Guns list, a lower that's already in a gun and a barrel that's on a gun are shaded, so the ones still free stand out.</p>
       <p>Each lower and upper keeps its own round count (and uppers their barrel life), from the range trips and load-development groups shot with any gun built with it. Trips and ladders remember the lower and upper they were shot with, so if you change a gun's upper later, old rounds stay where they were. The gun's own count includes everything shot as that gun.</p>
@@ -4204,7 +4205,9 @@ const GUN_MAKERS=["Accuracy International","Aero Precision","Anschutz","Armalite
 function splitGunName(n){const t=String(n||"").trim();if(!t)return {mfr:"",model:""};
   const low=t.toLowerCase(),m=GUN_MAKERS.slice().sort((a,b)=>b.length-a.length).find(x=>low===x.toLowerCase()||low.startsWith(x.toLowerCase()+" "));
   return m?{mfr:t.slice(0,m.length),model:t.slice(m.length).trim()}:{mfr:"",model:t};}
-const gunName=r=>[r.mfr,r.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ");
+// a gun's name: its nickname if it has one (2.36), otherwise its manufacturer and model
+const gunMakeModel=r=>[r.mfr,r.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ");
+const gunName=r=>String(r.nick||"").trim()||gunMakeModel(r);
 window.RB_SPLIT_GUN=splitGunName;window.RB_GUN_MAKERS=GUN_MAKERS;
 function rifleSummary(r){return [r.cartridge||"",num(r.barrel)?U.s("dim",num(r.barrel),0)+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
 /* round count: starting count + rounds from range trips (loads in the calculator using this rifle) + shots in load-development groups */
@@ -4242,7 +4245,8 @@ function syncBuilds(){
     let labs=sibs.map(x=>{const u=up(x);return u?(u.cartridge||partName(u)):"No upper yet";});
     labs=labs.map((l,i)=>{if(labs.filter(m=>m===l).length<2)return l;const u=up(sibs[i]),b=u&&num(u.barrel);return u&&u.cartridge&&b?l+" "+U.s("dim",b,b%1?1:0):l;});
     labs=labs.map((l,i)=>{if(labs.filter(m=>m===l).length<2)return l;const u=up(sibs[i]);return u&&u.cartridge?u.cartridge+" · "+partName(u):l;});
-    sibs.forEach((x,i)=>{const want={mfr,model,varLabel:labs[i]};want.name=buildName(want)+" · "+labs[i];
+    const nick=String(head.nick||"").trim();
+    sibs.forEach((x,i)=>{const want={mfr,model,varLabel:labs[i]};if(nick||x.nick)want.nick=nick;want.name=buildName(want)+" · "+labs[i];
       if(auto&&!x.nameAuto){x.nameAuto=true;changed.add(x);}if(!auto&&x.nameAuto){delete x.nameAuto;changed.add(x);}
       Object.keys(want).forEach(f=>{if(x[f]!==want[f]){x[f]=want[f];changed.add(x);}});});});
   if(changed.size){queueRifles();changed.forEach(r=>syncRifleIntoLoads(r));if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));}
@@ -4784,12 +4788,12 @@ function renderRifles(){
         if(r.build&&r.build.lowerId){const lo=partById(r.build.lowerId),lr=lo?partRounds(lo):null,nl=sibs.reduce((a,x)=>a+usedBy(x.id).length,0),gp=sibs.map(x=>gunPhotosOf(x.id)[0]).find(Boolean);
           const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
           h+='<div class="gtile"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
-            '<span class="d">'+esc([sibs.length+(sibs.length===1?' upper':' uppers'),lo&&lo.serial?'Serial '+lo.serial:''].filter(Boolean).join(' · '))+'</span>'+
+            '<span class="d">'+esc([r.nick&&gunMakeModel(r)?gunMakeModel(r):"",sibs.length+(sibs.length===1?' upper':' uppers'),lo&&lo.serial?'Serial '+lo.serial:''].filter(Boolean).join(' · '))+'</span>'+
             '<span class="varchips">'+sibs.map(x=>'<span class="varchip" data-rvar="'+esc(x.id)+'">'+esc(x.varLabel||"No upper yet")+'</span>').join("")+'</span>'+
             (lr&&lr.total?'<span class="best"><b>'+lr.total.toLocaleString()+'</b> rounds on the lower'+(lr.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'')+
             '<span class="m">'+(nl?'Used by '+nl+' load'+(nl===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,gname)+'</div>';
           return;}
-        const rs=gunSpec(r),lo0=r.build&&partById(r.build.lowerId),up0=r.build&&partById(r.build.upperId),n=usedBy(r.id).length,sc0=rs.scopeId&&scopes.find(x=>x.id===rs.scopeId),d=[r.build?"Built: "+[lo0?partName(lo0):"no lower",up0?partName(up0):"no upper"].join(" + "):"",rifleSummary(rs),sc0?scopeLabel(sc0):""].filter(Boolean).join(" · "),rc=rifleRounds(r);
+        const rs=gunSpec(r),lo0=r.build&&partById(r.build.lowerId),up0=r.build&&partById(r.build.upperId),n=usedBy(r.id).length,sc0=rs.scopeId&&scopes.find(x=>x.id===rs.scopeId),d=[r.nick&&gunMakeModel(r)?gunMakeModel(r):"",r.build?"Built: "+[lo0?partName(lo0):"no lower",up0?partName(up0):"no upper"].join(" + "):"",rifleSummary(rs),sc0?scopeLabel(sc0):""].filter(Boolean).join(" · "),rc=rifleRounds(r);
         const rt=rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
         const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
@@ -4811,6 +4815,8 @@ function renderRifles(){
         sibs.map(x=>'<button type="button" data-rvartab="'+esc(x.id)+'" aria-pressed="'+(x===r)+'">'+esc(x.varLabel||"No upper yet")+'</button>').join("")+
         '<button type="button" id="rfVarAdd">+ Add upper</button></div><p class="note">Each upper you put on this lower is a variation of the gun. Pick the one you\'re shooting on <a class=goto href=#go data-go=traj>Shooting</a>, <a class=goto href=#go data-go=rel>Reloading</a> or a range day. The name is shared; everything below is for the '+esc(r.varLabel||"selected")+' variation.</p></section>':'')+
       '<section class="card" aria-label="Gun"><h2>Details</h2><div class="grid">'+
+      field("rf_nick","Nickname (optional)",r.nick||"","text").replace('autocomplete="off"','autocomplete="off" placeholder="e.g. Elk rifle, Grandpa\'s 30-06"').replace('<div class="field','<div class="field wide')+
+      '<p class="note wide rfnicknote">A nickname shows everywhere this gun does'+(isVar?' (all its uppers)':'')+'. Leave it blank to use the manufacturer and model.</p>'+
       field("rf_mfr","Manufacturer",r.mfr,"text").replace('autocomplete="off"','autocomplete="off" list="dl_gunmakers" placeholder="e.g. Tikka"')+field("rf_model","Model",r.model,"text").replace('autocomplete="off"','autocomplete="off" placeholder="e.g. T3x Lite"')+
       '<datalist id="dl_gunmakers">'+[...new Set(GUN_MAKERS.concat(rifles.map(x=>x.mfr).filter(Boolean)))].sort().map(m=>'<option value="'+esc(m)+'">').join("")+'</datalist>'+
       '<div class="field wide"><span class="flabel" id="rf_typeL">Type</span><div class="segtabs gtypes" role="radiogroup" aria-labelledby="rf_typeL">'+GUN_TYPES.map(([k,l])=>'<button type="button" role="radio" data-gtype="'+k+'" aria-selected="'+(r.type===k)+'" aria-checked="'+(r.type===k)+'">'+l+'</button>').join("")+'</div><span class="note" id="rf_typeNote"'+(r.typeGuessed&&r.type?'':' hidden')+'>Guessed from the cartridge. Tap another if that\'s wrong.</span></div>'+
@@ -4912,9 +4918,9 @@ function renderRifles(){
     ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
     ce.addEventListener("change",()=>{if(ce.value.trim())rememberCartridge(RB_CARTS.canon(ce.value));});
     RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[]});}
-  [["mfr",false],["model",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
+  [["nick",false],["mfr",false],["model",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
     const el=$("rf_"+k);if(!el)return;
-    el.addEventListener("input",()=>{r[k]=isNum?readU(el,k,GUN_U,r[k]):el.value;const nm=k==="mfr"||k==="model";if(nm){delete r.nameAuto;if(r.build&&r.build.lowerId){buildSibs(r).forEach(x=>{x.mfr=r.mfr;x.model=r.model;delete x.nameAuto;});syncBuilds();$("rifTitle").textContent=buildName(r);}else{r.name=gunName(r);$("rifTitle").textContent=r.name||"Unnamed gun";}}queueRifles();if(nm||k==="sightHeight")syncRifleIntoLoads(r);});
+    el.addEventListener("input",()=>{r[k]=isNum?readU(el,k,GUN_U,r[k]):el.value;if(k==="nick"&&!String(r.nick).trim())delete r.nick;const nm=k==="mfr"||k==="model"||k==="nick";if(nm){if(k!=="nick")delete r.nameAuto;if(r.build&&r.build.lowerId){buildSibs(r).forEach(x=>{if(k==="nick"){if(r.nick)x.nick=r.nick;else delete x.nick;return;}x.mfr=r.mfr;x.model=r.model;delete x.nameAuto;});syncBuilds();$("rifTitle").textContent=buildName(r);}else{r.name=gunName(r);$("rifTitle").textContent=r.name||"Unnamed gun";}}queueRifles();if(nm||k==="sightHeight")syncRifleIntoLoads(r);});
   });
   root.querySelectorAll("[data-rvartab]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.rvartab===r.id)return;rifleOpen=b.dataset.rvartab;renderRifles();}));
   {const va=$("rfVarAdd");if(va)va.addEventListener("click",()=>{
@@ -10983,7 +10989,8 @@ const NOTES=F("notes","Notes","text",{w:30,alias:["notes","note","comments","com
 const KINDS=[
   {key:"guns",title:"Guns",one:"gun",sheet:"Guns",alias:["guns","gun","rifles","rifle","firearms","firearm","pistols","handguns","shotguns","weapons"],
    fields:[F("mfr","Manufacturer","text",{w:16,alias:["manufacturer","make","maker","brand","mfr","mfg","company"],tip:["Manufacturer","Who made it, like Tikka or Smith & Wesson."]}),
-     F("model","Model","text",{req:1,w:22,alias:["model","name","gun","rifle","pistol","shotgun","firearm","nickname","gun name","description","make model","make and model"],tip:["Model","Like T3x Lite. A column with the whole name (Tikka T3x Lite) works too: a maker Range Book knows is moved to Manufacturer."]}),
+     F("model","Model","text",{req:1,w:22,alias:["model","name","gun","rifle","pistol","shotgun","firearm","gun name","description","make model","make and model"],tip:["Model","Like T3x Lite. A column with the whole name (Tikka T3x Lite) works too: a maker Range Book knows is moved to Manufacturer."]}),
+     F("nick","Nickname","text",{w:16,alias:["nickname","nick name","nick","what i call it","called"],tip:["Nickname","Optional: what you call it, like Elk rifle. It shows everywhere instead of the manufacturer and model."]}),
      F("type","Type","gtype",{w:11,alias:["type","gun type","firearm type","kind","category","class"],tip:["Type","Rifle, Pistol or Shotgun. Left blank, it's guessed from the cartridge."]}),
      F("cartridge","Cartridge","cart",{w:20,alias:["cartridge","caliber","calibre","chambering","chambered","chambered for","chamber","cal","gauge"]}),
      F("serial","Serial number","text",{w:16,alias:["serial","serial number","serial no","serial num","sn","s n","serial #"]}),
@@ -11268,7 +11275,7 @@ function build(){
       // what fills in by itself: a powder's maker and kind from the list, a bullet's diameter from its cartridge
       if(K.part&&!item.mfr&&item.model&&window.RB_SPLIT_GUN){const sp=RB_SPLIT_GUN(item.model);if(sp.mfr){item.mfr=sp.mfr;item.model=sp.model;}}
       if(K.key==="guns"){if(!item.mfr&&item.model&&window.RB_SPLIT_GUN){const sp=RB_SPLIT_GUN(item.model);if(sp.mfr){item.mfr=sp.mfr;item.model=sp.model;}}
-        item.name=[item.mfr,item.model].filter(Boolean).join(" ");}
+        item.name=String(item.nick||"").trim()||[item.mfr,item.model].filter(Boolean).join(" ");}
       if(K.key==="guns"&&!item.type&&item.cartridge&&window.RB_GUN_TYPE_GUESS){const g=RB_GUN_TYPE_GUESS(item.cartridge);if(g){item.type=g;item.typeGuessed=true;}}
       if(K.key==="powders"&&item.name){const p=LISTS().POWDER_LIST.find(x=>keyOf(x[1])===keyOf(item.name)&&(!item.mfr||keyOf(x[0])===keyOf(item.mfr)));if(p){if(!item.mfr)item.mfr=p[0];if(!item.kind)item.kind=p[2];}}
       if(K.key==="ammo"&&!item.dia&&item.cartridge&&window.RB_CARTS){const d=RB_CARTS.dia(item.cartridge);if(d)item.dia=d;}
@@ -11523,7 +11530,7 @@ async function apply(){
         if(!g.type&&up&&up.cartridge&&window.RB_GUN_TYPE_GUESS){const gt=RB_GUN_TYPE_GUESS(up.cartridge);if(gt){g.type=gt;g.typeGuessed=true;}}};
       if(k==="bullets"&&x.caliber!=null)x.caliberUnit="in";
       if(ex){if(k==="guns"&&ex.mfr==null&&ex.model==null&&window.RB_SPLIT_GUN)Object.assign(ex,RB_SPLIT_GUN(ex.name));fill(ex,x,K);
-        if(k==="guns"){if(x.scopeId)ex.scopeId=x.scopeId;if(bld){ex.build=Object.assign(ex.build||{lowerId:"",upperId:""},Object.fromEntries(Object.entries(bld).filter(([,v])=>v)));}ex.name=[ex.mfr,ex.model].filter(Boolean).join(" ");}
+        if(k==="guns"){if(x.scopeId)ex.scopeId=x.scopeId;if(bld){ex.build=Object.assign(ex.build||{lowerId:"",upperId:""},Object.fromEntries(Object.entries(bld).filter(([,v])=>v)));}ex.name=String(ex.nick||"").trim()||[ex.mfr,ex.model].filter(Boolean).join(" ");}
         if(k==="barrels"&&x.gunId)ex.gunId=x.gunId;rowId[r.rid]=ex.id;bump(k,"u");continue;}
       if(k==="mags"){const {ids,miss}=magFitsIds(x.fits,E.rifles);const nn=Math.max(1,Math.min(200,parseInt(x.qty,10)||1));delete x.qty;delete x.fits;
         if(miss.length)x.notes=[x.notes,"Fits (not found in your guns): "+miss.join(", ")].filter(Boolean).join("\n");if(x.num)x.num=String(x.num).replace(/^#/,"");
@@ -11534,7 +11541,7 @@ async function apply(){
           if(numbered)m.num=String((n0>0?n0:1)+q);L.push(m);bump(k,"a");if(!q)rowId[r.rid]=m.id;}
         continue;}
       let it;
-      if(k==="guns"){it=Object.assign({id:newId("r"),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true},x);if(bld){it.build=bld;autoNm(it);}it.name=[it.mfr,it.model].filter(Boolean).join(" ");}
+      if(k==="guns"){it=Object.assign({id:newId("r"),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true},x);if(bld){it.build=bld;autoNm(it);}it.name=String(it.nick||"").trim()||[it.mfr,it.model].filter(Boolean).join(" ");}
       else if(K.part){it=Object.assign({id:newId("p"),kind:K.part,mfr:"",model:"",notes:""},x);if(K.part==="barrel"&&it.gunId==null)it.gunId="";}
       else if(k==="scopes")it=Object.assign({id:newId("s"),mfr:"",model:"",magMin:null,magMax:null,obj:null,fp:"FFP",sfpTrue:null,unit:"mil",click:null,reticle:"",notes:"",retMode:"plain",look:null,pic:null},x);
       else if(k==="ammo")it=Object.assign({id:newId("a"),mfr:"",name:"",bcm:"G1"},x);

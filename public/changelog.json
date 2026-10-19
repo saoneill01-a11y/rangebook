@@ -2,7 +2,15 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.35.0",
+      "version": "2.36.0",
+      "date": "2026-10-19",
+      "title": "Gun nicknames",
+      "items": [
+        "Guns: an optional Nickname box. When it's filled in, the nickname shows everywhere the gun does (lists, Shooting profiles, range trips, the dope card, Home, exports); otherwise it's still the manufacturer and model. The Guns list shows the manufacturer and model under a nickname, and the spreadsheet import and Excel export have a Nickname column."
+      ]
+    },
+    {
+      "version": "2.35",
       "date": "2026-10-19",
       "title": "Download and restore the whole site",
       "items": [
