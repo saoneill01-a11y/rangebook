@@ -799,8 +799,8 @@ function magSheet(d) {
   const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], ty = (m) => [m.mfr, m.model].filter(Boolean).join(" "), mn = (m) => String(m.num || "").replace(/^#/, "");
   return { name: "Magazines", rows: magList(d).slice().sort((a, b) => ty(a).localeCompare(ty(b), undefined, { numeric: true }) || mn(a).localeCompare(mn(b), undefined, { numeric: true })).map((m) => {
     const iss = Array.isArray(m.issues) ? m.issues : [], last = iss.slice().sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))[0];
-    return [mn(m), m.mfr || "", m.model || "", m.cart || "", numv(m.cap) ?? "", (m.gunIds || []).map((id) => (rows.find((r) => r.id === id) || {}).name || "").filter(Boolean).join(", "), m.where || "", m.bought || "", iss.length || null, last ? [last.date || "", last.note || ""].filter(Boolean).join(": ") : "", m.retired ? "Yes" : "", m.notes || ""]; }),
-    cols: [{ h: "Mag #", w: 8 }, { h: "Maker", w: 14 }, { h: "Model", w: 20 }, { h: "Cartridge", w: 16 }, { h: "Capacity", w: 9 }, { h: "Fits", w: 26 }, { h: "Where", w: 14 }, { h: "Bought", w: 12 }, { h: "Problems", w: 9 }, { h: "Last problem", w: 30 }, { h: "Retired", w: 8 }, { h: "Notes", w: 40, s: 5 }] };
+    return [mn(m), m.mfr || "", m.model || "", (Array.isArray(m.carts) && m.carts.length ? m.carts.join(", ") : m.cart || ""), numv(m.cap) ?? "", (m.gunIds || []).map((id) => (rows.find((r) => r.id === id) || {}).name || "").filter(Boolean).join(", "), m.where || "", m.bought || "", iss.length || null, last ? [last.date || "", last.note || ""].filter(Boolean).join(": ") : "", m.retired ? "Yes" : "", m.notes || ""]; }),
+    cols: [{ h: "Mag #", w: 8 }, { h: "Maker", w: 14 }, { h: "Model", w: 20 }, { h: "Cartridges", w: 22 }, { h: "Capacity", w: 9 }, { h: "Fits", w: 26 }, { h: "Where", w: 14 }, { h: "Bought", w: 12 }, { h: "Problems", w: 9 }, { h: "Last problem", w: 30 }, { h: "Retired", w: 8 }, { h: "Notes", w: 40, s: 5 }] };
 }
 const gearSheets = (d) => [...(canList(d).length ? [canSheet(d)] : []), ...(magList(d).length ? [magSheet(d)] : []), ...(invList(d).length ? [invSheet(d)] : [])];
 function partSheet(d) {
