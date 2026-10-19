@@ -548,6 +548,11 @@ table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
 @media(min-width:761px){.dopecombo{grid-template-columns:auto minmax(0,1fr)}.dopecombo .retpane{display:block;position:sticky;top:var(--stick,110px);border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--sunk);min-width:280px}
   .retpane .retwrap{grid-template-columns:1fr}.retpane .retsvg{max-width:300px;margin:0 auto}}
 #dopeCard table.dope tbody tr[data-dx]{cursor:pointer}
+tr.zrow td{background:color-mix(in srgb,var(--accent) 16%,transparent)!important;font-weight:600}
+.ztag{display:block;font-family:var(--body);font-size:9.5px;font-weight:700;line-height:1.05;text-transform:uppercase;color:var(--accent);white-space:normal;overflow-wrap:normal}
+.fmtbl .ztag{font-size:.5em;color:inherit;opacity:.75}
+.fieldmode tr.zrow td{background:rgba(128,128,128,.22)!important}
+@media print{#printArea tr.zrow td{background:#d8d8d8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}#printArea .ztag{color:#000}}
 #dopeCard table.dope tbody tr[data-dx]:hover td{background:color-mix(in srgb,var(--accent) 10%,transparent)}
 #dopeCard table.dope tbody tr.sel td{background:color-mix(in srgb,var(--accent) 24%,transparent)!important;font-weight:700}
 #dopeCard table.dope tbody tr.sel td:first-child{box-shadow:inset 4px 0 0 var(--accent)}
@@ -1482,7 +1487,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Weather where you are</h3>
       <p>On the <b>Conditions</b> card, <b>Use the weather where I am</b> fills in the temperature and the altitude from today's air pressure and humidity where you're standing (the altitude that gives the same air density, so humid air counts too), and tells you the density altitude, the ground's elevation and the wind. If you're within about 2 miles of one of your saved ranges that has its address, it says you're there and picks that range on the <b>Saved ranges</b> card. It needs a signal and the https:// (Cloudflare) address, since phones only share location with secure sites. Set the crosswind yourself, since it depends on which way you're shooting.</p>
       <h3>Print a dope card</h3>
-      <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the <b>MOA / MIL</b> button: tap it to switch). It uses the zero your scope is set to, the conditions and the crosswind you entered. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
+      <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the <b>MOA / MIL</b> button: tap it to switch). It uses the zero your scope is set to, the conditions and the crosswind you entered. The card and the range table also get a shaded row at each distance where the bullet crosses your line of sight for the zero you picked: the <b>near zero</b> (going up) and the <b>far zero</b> (coming back down), in order with the other distances. If one lands on a distance that's already there, that row is shaded and labeled instead. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold (plus <b>Spin R</b> and <b>Cor R</b> when spin drift or Coriolis is on), in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
       <h3>Reticle holds</h3>
       <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> button shows the unit in use; tap it to switch. It sets both the card and the reticle. When the profile's gun has a scope (<a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Scopes</a>), the scope sets it (the button is greyed out) and the reticle can look like yours, or be a picture of it. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the profile, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
@@ -3009,9 +3014,10 @@ function render(){
     return (Math.abs(hh)<0.05?"0.0":(hh>0?"R ":"L ")+Math.abs(hh).toFixed(1))+(Math.abs(vv)>=0.05?" · "+(vv>0?"U ":"D ")+Math.abs(vv).toFixed(1):"");};
   const f1=n=>{const s=n.toFixed(1);return s==="-0.0"?"0.0":s;};
   const lim=Math.min(MR,S.last);
-  for(let dd=0;U.from("yd",dd)<=lim+1e-9;dd+=step){
+  const DS=[];for(let dd=0;U.from("yd",dd)<=lim+1e-9;dd+=step)DS.push(dd);
+  for(const [dd,zt] of withZeroRows(DS,za!=null?zeroRows(S,path,za,lim).filter(r=>U.from("yd",r.dd)<=lim+1e-9):[])){
     const x=U.from("yd",dd),v=S.at(S.v,x),tt=S.at(S.t,x);
-    h+="<tr><td>"+dd.toLocaleString()+"</td><td>"+U.n("fps",v,0).toLocaleString()+"</td><td>"+U.n("ftlb",L.w*v*v/450436,0).toLocaleString()+"</td><td>"+tt.toFixed(3)+"</td>";
+    h+="<tr"+(zt?' class="zrow"':'')+"><td>"+dd.toLocaleString()+(zt?'<span class="ztag">'+ZTAG[zt]+'</span>':'')+"</td><td>"+U.n("fps",v,0).toLocaleString()+"</td><td>"+U.n("ftlb",L.w*v*v/450436,0).toLocaleString()+"</td><td>"+tt.toFixed(3)+"</td>";
     if(pz!=null){const t=f1(U.to("in",path(x,pz)));h+='<td'+(t[0]==="-"?' class="neg"':'')+'>'+t+"</td>";}
     {const p=za&&x>0?path(x,za):null;if(CM)h+="<td>"+(p!=null?f1(-p/(x*1.0472/100)):"")+"</td>";if(CL)h+="<td>"+(p!=null?f1(-p/(x*3.6/100)):"")+"</td>";}
     if(CW){const wd=drift(wind,x);h+="<td>"+f1(U.to("in",wd))+"</td><td>"+(x>0?f1(wd/(x*WF/100)):"")+"</td>"+BR.map(b=>"<td>"+(x>0?f1(drift(b,x)/(x*WF/100)):"")+"</td>").join("")+(SGd!=null?"<td>"+f1(U.to("in",spinRel(SGd,S,x,czr)||0))+"</td>":"");}
@@ -3219,6 +3225,15 @@ function zeroNotes(L,zs){
     t=fi!=null?dot(fi)+'Path is for <b>'+U.s("yd",zs[fi],0)+'</b>'+(fi===3?' ('+what(fi)+')':'')+'. No zero picked, so there\'s no Adjust: pick the circle on the zero your scope is set to, under the Bullet path chart.':d;}
   const a=$("tblZero"),b=$("dopeZero");if(a)a.innerHTML=t;if(b)b.innerHTML=d;
 }
+// where the path of zero z crosses the line of sight (near: going up, far: coming down), as shown distances
+// (whole yards or metres) for extra rows on the range table and dope card; far is left out if it's past lim
+function zeroRows(S,path,z,lim){if(!(z>0))return [];let near=null,far=null;const end=Math.floor(Math.min(lim,S.last));
+  for(let x=1;x<=end;x++){if(path(x,z)>=-0.001){if(near==null)near=x;far=x;}}
+  const out=[];if(near!=null)out.push({dd:Math.round(U.n("yd",near,0)),z:"near"});if(far!=null&&far<end)out.push({dd:Math.round(U.n("yd",far,0)),z:"far"});
+  if(out.length===2&&out[0].dd===out[1].dd)out.pop();return out;}
+// the regular distances plus the zero rows, in order; a zero row on a regular distance just marks it
+function withZeroRows(ds,zr){const m=new Map(ds.map(d=>[d,null]));zr.forEach(r=>{if(r.dd>0)m.set(r.dd,r.z);});return [...m.entries()].sort((a,b)=>a[0]-b[0]);}
+const ZTAG={near:"near zero",far:"far zero"};
 function renderDope(L,S,zs,path){
   const box=$("dopeCard");if(!box)return;
   const o=dopeOpts(L), ai=Math.round(L.adj||0)-1, za=(ai>=0&&ai<4)?zs[ai]:null;
@@ -3231,18 +3246,19 @@ function renderDope(L,S,zs,path){
   const wind=(L.wind||0)*crossFactor(L), side=windSide(L), BR=L.wbr?brackets():[];
   const drift=(spd,x)=>spd*1.46667*(S.at(S.t,x)-x*3/L.mv)*12;
   let rows="",n=0;DOPE={unit:UN,wind:L.wind||0,clock:windClock(L),side,BR,rows:[],cor:!!corOn(L),spin:S.sg!=null};
-  for(let dd=a>0?a:st;dd<=b&&n<80;dd+=st,n++){
+  const DS=[];for(let dd=a>0?a:st;dd<=b&&n<80;dd+=st,n++)DS.push(dd);
+  for(const [dd,zt] of withZeroRows(DS,zeroRows(S,path,za,lim).filter(r=>r.dd<=b))){
     const x=U.from("yd",dd);
     const p=path(x,za), up=-p/(x*UF/100), wh=drift(wind,x)/(x*UF/100), brs=BR.map(v=>drift(v,x)/(x*UF/100));
     const sp=S.sg!=null?spinRel(S.sg,S,x,za):null,ch=corOn(L)?corRel(L,S,x,za).h/(x*UF/100):null;
-    DOPE.rows.push({x:dd,up:f1(up),wind:f1(wh),brs:brs.map(f1),spin:sp!=null?f1(sp/(x*UF/100)):null,cor:ch!=null?f1(ch):null});
-    rows+="<tr data-dx=\""+dd+"\" tabindex=\"0\"><td>"+dd+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+(ch!=null?"<td>"+f1(ch)+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
+    DOPE.rows.push({x:dd,z:zt,up:f1(up),wind:f1(wh),brs:brs.map(f1),spin:sp!=null?f1(sp/(x*UF/100)):null,cor:ch!=null?f1(ch):null});
+    rows+="<tr data-dx=\""+dd+"\" tabindex=\"0\""+(zt?" class=\"zrow\"":"")+"><td>"+dd+(zt?"<span class=\"ztag\">"+ZTAG[zt]+"</span>":"")+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+(ch!=null?"<td>"+f1(ch)+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
   }
   // the distance shown on the reticle: the one you tapped, or the closest row to it
   {const R0=L.ret||{},want=num(R0.dist)>0?num(R0.dist):Math.min(lim,Math.max(za*2,U.metric?500/0.9144:500));let bi=-1,bd=1e9;
     DOPE.rows.forEach((r,i)=>{const d=Math.abs(U.from("yd",r.x)-want);if(d<bd-1e-6){bd=d;bi=i;}});
     DOPE.sel=bi;DOPE.selX=bi>=0?U.from("yd",DOPE.rows[bi].x):null;
-    if(bi>=0){const dx=DOPE.rows[bi].x;rows=rows.replace('<tr data-dx="'+dx+'" tabindex="0">','<tr data-dx="'+dx+'" tabindex="0" class="sel" aria-current="true">');}}
+    if(bi>=0){const dx=DOPE.rows[bi].x,zr=DOPE.rows[bi].z?' class="zrow"':'';rows=rows.replace('<tr data-dx="'+dx+'" tabindex="0"'+zr+'>','<tr data-dx="'+dx+'" tabindex="0" class="sel'+(zr?' zrow':'')+'" aria-current="true">');}}
   {const ub=$("d_unitBtn"),U2=o.unit==="mil"?"MIL":"MOA",O2=o.unit==="mil"?"MOA":"MIL";$("d_unitTxt").textContent=U2;ub.disabled=!!o.scope;
     ub.setAttribute("aria-label","Scope clicks in "+U2+(o.scope?", set by the gun's scope":". Tap for "+O2));ub.title=o.scope?"Set by the gun's scope":"Tap for "+O2;}
   {const sn=$("d_unitNote");if(sn){sn.hidden=!o.scope;if(o.scope){const rU=o.scope.unit==="mil"?"mil":"moa";sn.innerHTML='Set by the scope on this gun: <b>'+escL(scopeName(o.scope))+'</b>'+(num(o.scope.click)>0?' ('+o.scope.click+' '+(o.unit==="mil"?"MIL":"MOA")+' clicks)':' (click value not published: check your turrets)')+'.'+(rU!==o.unit?' Its reticle is in '+(rU==="mil"?"MIL":"MOA")+', so the reticle holds are in '+(rU==="mil"?"MIL":"MOA")+'.':'');}}}
@@ -3326,7 +3342,7 @@ function openField(){
   v.innerHTML='<div class="fmbar"><button class="btn" id="fieldClose" type="button">← Back</button><span class="fmsp"></span><button class="btn" id="fmSmall" type="button" aria-label="Smaller text">A−</button><button class="btn" id="fmBig" type="button" aria-label="Bigger text">A+</button><button class="btn" id="fmBright" type="button">'+(FIELD.bright?'Dark':'Bright')+'</button></div>'+
     '<div class="fmhead">'+box.querySelector(".dopehead").innerHTML+'</div>'+
     '<table class="fmtbl" style="font-size:'+(26*FIELD.size).toFixed(0)+'px"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Dial up<br><small>'+unit+'</small></th>'+wHead+(D.spin?'<th>Spin R<br><small>'+unit+'</small></th>':'')+(D.cor?'<th>Cor R<br><small>'+unit+'</small></th>':'')+'</tr></thead><tbody>'+
-    D.rows.map(r=>'<tr><td>'+r.x+'</td><td class="up">'+r.up+'</td>'+(BR.length?r.brs.map(v=>'<td>'+v+'</td>').join(""):'<td>'+(wind?r.wind:'–')+'</td>')+(D.spin?'<td>'+(r.spin!=null?r.spin:'–')+'</td>':'')+(D.cor?'<td>'+r.cor+'</td>':'')+'</tr>').join("")+'</tbody></table>'+
+    D.rows.map(r=>'<tr'+(r.z?' class="zrow"':'')+'><td>'+r.x+(r.z?'<span class="ztag">'+ZTAG[r.z]+'</span>':'')+'</td><td class="up">'+r.up+'</td>'+(BR.length?r.brs.map(v=>'<td>'+v+'</td>').join(""):'<td>'+(wind?r.wind:'–')+'</td>')+(D.spin?'<td>'+(r.spin!=null?r.spin:'–')+'</td>':'')+(D.cor?'<td>'+r.cor+'</td>':'')+'</tr>').join("")+'</tbody></table>'+
     '<p class="fmnote">Screen stays on while this is open'+(navigator.wakeLock?'':' (if your phone allows it)')+'. '+(BR.length?'Wind columns are full-value holds for '+BR.map(b=>U.n("mph",b,0)).join(", ").replace(/, (\d+)$/," and $1")+' '+U.u("mph")+'.':'Wind is for '+U.s("mph",wind,0)+' from '+D.clock+' o\'clock; change it on the Conditions card.')+(D.spin||D.cor?' '+(D.spin&&D.cor?'Spin R and Cor R are':D.spin?'Spin R is':'Cor R is')+' how far the bullet drifts right (minus is left): hold that much the other way, on top of the wind.':'')+'</p>';
   document.body.appendChild(v);document.body.classList.add("noscroll");keepAwake(true);
   const t=v.querySelector(".fmtbl");
