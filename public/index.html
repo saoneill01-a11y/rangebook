@@ -1684,6 +1684,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
       <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. <b>Add a suppressor from the list</b> has about 420 suppressors from 25 makers (type a maker, model, caliber, or "full auto"): picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
+      <p><b>Rated for</b> suggests cartridges and size families as you type: pick a family like <b>30 caliber</b>, <b>22 rimfire</b> or <b>6.5mm</b> if the maker rates it for any bullet up to that size, or a cartridge like <b>5.56 NATO</b> if it's rated for just that one. Range Book then checks it against the gun's cartridge on the suppressor, on the gun and on each range trip. A bullet wider than the rating gets a red <b>Don't shoot</b> warning, since it can hit the baffles. A rimfire suppressor on a centerfire cartridge, or a pistol suppressor on a rifle cartridge, gets a <b>Check first</b> note to look at the maker's manual. A suppressor on a gun it isn't rated for is also flagged on the Suppressors list. The check only goes by bullet size and type, so the manual's other limits (barrel length, full auto, mount) still apply.</p>
       <p><b>Suggestions you've typed before</b> (gun makers, magazine makers and models, inventory categories, trip places, your own cartridge names) drop down as you type. Tap the <b>×</b> next to one to take it off the list, for a typo or something you don't have any more. Your saved gear doesn't change, and it comes back if you type it in again.</p>
       <h3>Magazines</h3>
       <p><a class=goto href=#go data-go=rifles:mags>Gear &amp; Ranges › Magazines</a> keeps each magazine as its own entry, so you can tell which one is causing trouble. Give each a <b>Mag #</b>: the number or mark you put on it with a paint pen or tape (1, 2, A, red tape). Add its maker and model (mags of the same maker and model are listed together, with how many you have), capacity, which guns it <b>Fits</b>, its <b>Cartridges</b> (a mag can take several: an AR-15 mag might take 5.56, 223 and 300 Blackout; tap × to remove one, tap one of your guns' cartridges to add it, or search for another, and ticking a gun under Fits adds its cartridge), where it's kept and photos. <b>+ Add another like this</b> copies the type, cartridge, capacity and guns to a new mag with the next number. When a mag jams, fails to feed or doesn't lock the slide back, tap <b>+ Log a problem</b> on that mag with the date and what happened; the list shows how many problems each has. Tick <b>Retired</b> to keep a bad one in the list, greyed out. For a group of identical mags, <b>Set guns for all</b> next to the group's name ticks or unticks a gun on every mag in it at once (a dash means only some are marked). Each gun's page has a <b>Magazines</b> card (tap its title to fold it) listing the mags that fit it, with <b>+ Add a magazine for this gun</b>. To bring in a list, use the <b>Magazines</b> tab of the import spreadsheet (<a class=goto href=#go data-go=account:import>Account › Import</a>): <b>How many</b> makes that many numbered mags from one row, and <b>Fits</b> takes your guns' names and <b>Cartridges</b> takes one or more cartridges, each separated by commas.</p>
@@ -2303,14 +2304,16 @@ window.RB_WX=(()=>{
     const box=document.createElement("div");box.className="cartsug";box.setAttribute("role","listbox");box.hidden=true;box.id=inp.id+"_sug";inp.setAttribute("aria-controls",box.id);host.appendChild(box);
     let items=[],act=-1;
     const close=()=>{box.hidden=true;inp.setAttribute("aria-expanded","false");act=-1;};
-    const pick=(name,c)=>{close();if(inp.value!==name){inp.value=name;inp.dispatchEvent(new Event("input",{bubbles:true}));inp.dispatchEvent(new Event("change",{bubbles:true}));}if(o.onPick)o.onPick(c||find(name),name);};
+    let picking=false;
+    const pick=(name,c)=>{close();if(inp.value!==name){inp.value=name;picking=true;try{inp.dispatchEvent(new Event("input",{bubbles:true}));}finally{picking=false;}inp.dispatchEvent(new Event("change",{bubbles:true}));}if(o.onPick)o.onPick(c||find(name),name);};
     const draw=()=>{const q=inp.value.trim();const cs=q?search(q,8):[];
       const own=(o.extra?o.extra():[]).filter(s=>s&&!find(s)&&!(window.RB_FORGET&&RB_FORGET.has("cart",s))&&(!q||key(s).includes(key(q)))).slice(0,4);
-      items=[...cs.map(c=>({name:c.n,c,d:desc(c)})),...own.map(s=>({name:s,c:null,d:"yours (not in the list)"}))];
+      const more=o.more?o.more(q).map(m=>({name:m.name,c:null,d:m.d,more:true})):[];
+      items=[...more,...cs.slice(0,8-Math.min(more.length,3)).map(c=>({name:c.n,c,d:desc(c)})),...own.map(s=>({name:s,c:null,d:"yours (not in the list)"}))];
       if(!items.length||(items.length===1&&items[0].name===inp.value&&document.activeElement!==inp)){close();return;}
-      box.innerHTML=items.map((it,i)=>{const b='<button type="button" role="option" tabindex="-1" data-i="'+i+'"'+(i===act?' class="on" aria-selected="true"':'')+'><b>'+esc(it.name)+'</b><small>'+esc(it.d)+'</small></button>';return it.c?b:'<div class="sugrow">'+b+'<button type="button" class="sugx" tabindex="-1" data-x="'+i+'" aria-label="Remove '+esc(it.name)+' from these suggestions" title="Remove from suggestions">×</button></div>';}).join("");
+      box.innerHTML=items.map((it,i)=>{const b='<button type="button" role="option" tabindex="-1" data-i="'+i+'"'+(i===act?' class="on" aria-selected="true"':'')+'><b>'+esc(it.name)+'</b><small>'+esc(it.d)+'</small></button>';return it.c||it.more?b:'<div class="sugrow">'+b+'<button type="button" class="sugx" tabindex="-1" data-x="'+i+'" aria-label="Remove '+esc(it.name)+' from these suggestions" title="Remove from suggestions">×</button></div>';}).join("");
       box.hidden=false;inp.setAttribute("aria-expanded","true");};
-    inp.addEventListener("input",()=>{act=-1;if(document.activeElement===inp)draw();});
+    inp.addEventListener("input",()=>{act=-1;if(!picking&&document.activeElement===inp)draw();});
     inp.addEventListener("focus",()=>{if(inp.value.trim())draw();});
     inp.addEventListener("keydown",e=>{if(box.hidden)return;
       if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();act=(act+(e.key==="ArrowDown"?1:-1)+items.length)%items.length;draw();}
@@ -4846,6 +4849,7 @@ function renderRifles(){
       field("rf_sightHeight","Sight height over bore (in)",r.sightHeight,"number")+
       '<div class="field"><label for="rf_scope">Scope</label><select id="rf_scope" class="fieldselect"><option value="">None</option>'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b))).map(x=>'<option value="'+esc(x.id)+'"'+(r.scopeId===x.id?' selected':'')+'>'+esc(scopeLabel(x))+'</option>').join("")+'<option value="__new">+ Add a scope…</option></select>'+(r.scopeId&&scopes.some(x=>x.id===r.scopeId)?'<button class="linkbtn" type="button" id="rfScopeOpen">Open this scope ›</button>':'')+'</div>'+
       '<div class="field"><label for="rf_can">Suppressor</label><select id="rf_can" class="fieldselect"><option value="">None (pick one on each range trip)</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(r.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+'<option value="__new">+ Add a suppressor…</option></select>'+(r.canId&&cans.some(c=>c.id===r.canId)?'<button class="linkbtn" type="button" id="rfCanOpen">Open this suppressor ›</button>':'')+'</div>'+
+      (r.canId?'<div class="field wide cartinfo" id="rfCanFit" aria-live="polite">'+canFitHtml(cans.find(c=>c.id===r.canId),gunCart(r))+'</div>':'')+
       '<div class="field wide"><label for="rf_notes">Notes</label><textarea id="rf_notes" style="min-height:90px">'+esc(r.notes||"")+'</textarea></div></div>'+
       '<p class="note">Measure sight height as <a class=goto href=#go data-go=help:Measure_sight_height_(height_over_bore)>How to Use</a> explains. Changing it here also updates the Shooting profiles that use this gun.</p></section>'+
       (()=>{if(r.build)return '';const ps=partsOf(r.id);return '<section class="card" aria-label="Barrels for this gun" id="secGunParts"><h2>Barrels</h2>'+
@@ -4926,7 +4930,7 @@ function renderRifles(){
     ce.placeholder="e.g. 308 Winchester, 5.56 NATO, 9mm";
     const typeUI=()=>{root.querySelectorAll("[data-gtype]").forEach(b=>{const on=b.dataset.gtype===r.type;b.setAttribute("aria-selected",on);b.setAttribute("aria-checked",on);});const tn=$("rf_typeNote");if(tn)tn.hidden=!(r.typeGuessed&&r.type);};
     root.querySelectorAll("[data-gtype]").forEach(b=>b.addEventListener("click",()=>{r.type=b.dataset.gtype;delete r.typeGuessed;queueRifles();typeUI();}));
-    ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
+    ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();{const cf=$("rfCanFit");if(cf)cf.innerHTML=canFitHtml(cans.find(c=>c.id===r.canId),gunCart(r));}if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
     ce.addEventListener("change",()=>{if(ce.value.trim())rememberCartridge(RB_CARTS.canon(ce.value));});
     RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[]});}
   [["nick",false],["mfr",false],["model",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
@@ -5228,6 +5232,45 @@ function canRounds(c){const cl=c.cleaned||"";let trip=0,nTrips=0,since=0;
   const base=num(c.roundsBase)||0,every=num(c.cleanEvery);return {base,trip,nTrips,total:base+trip,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};}
 // put a suppressor on a gun (it comes off any other gun), or take it off
 function mountCan(cid,gid){rifles.forEach(g=>{if(g.id===gid)g.canId=cid||null;else if(cid&&g.canId===cid)g.canId=null;});queueRifles();}
+/* ----- is a suppressor rated for the gun's cartridge? (2.40) -----
+   The rating is read from Rated for (caliber): cartridges from the list ("5.56 NATO / 300 Win Mag", the biggest counts), a family
+   ("30 caliber", "22 rimfire", "6.5mm") or a size (".30 cal"); a catalog can with text it can't read uses the catalog's max bore.
+   A bullet wider than the rating can hit the baffles (danger). A rimfire can on a centerfire cartridge, or a pistol can on a
+   rifle cartridge, gets a "check first". */
+const CAN_FAM=[["22 rimfire",.224,"rimfire","Rimfire up to 22 LR / 22 WMR"],["17 caliber",.172,"","Any bullet up to .172\""],["22 caliber",.224,"","Any bullet up to .224\" (223, 5.56, 22-250…)"],["6mm",.243,"","Any bullet up to .243\""],
+  ["6.5mm",.264,"","Any bullet up to .264\""],["7mm",.284,"","Any bullet up to .284\""],["30 caliber",.308,"","Any bullet up to .308\" (308, 300 BLK, 300 Win Mag…)"],["338 caliber",.338,"","Any bullet up to .338\""],
+  ["9mm handgun",.355,"handgun","Handgun bullets up to .355\""],["40 caliber",.4,"handgun","Handgun bullets up to .400\""],["45 caliber",.452,"","Any bullet up to .452\" (45 ACP…)"],["458 caliber",.458,"","Any bullet up to .458\""],["50 caliber",.51,"","Any bullet up to .510\""]];
+const CAN_SIZE={17:.172,20:.204,22:.224,223:.224,224:.224,24:.243,243:.243,25:.257,257:.257,26:.264,264:.264,27:.277,270:.277,277:.277,28:.284,284:.284,30:.308,308:.308,300:.308,311:.311,32:.323,323:.323,33:.338,338:.338,35:.358,355:.355,357:.357,358:.358,36:.366,375:.375,40:.4,400:.4,44:.43,429:.43,45:.452,452:.452,458:.458,50:.51,510:.51};
+function canRating(c){if(!c)return null;const txt=String(c.caliber||"").trim(),K=window.RB_CARTS;let d=0,types=[];
+  if(txt&&K){const fk=K.key(txt),f=CAN_FAM.find(x=>K.key(x[0])===fk||K.key(x[0].replace(/ caliber$/," cal"))===fk);
+    if(f){d=f[1];types=[f[2]||"any"];}
+    else{const bits=txt.replace(/\(([^)]*)\)/g,",$1,").split(/[,\/;:+]|\band\b|\bthrough\b|\bto\b|\bor\b|\balso\b|\bplus\b/i)
+        .map(b=>b.replace(/\b(up to|max(imum)?|rated( for)?|and (smaller|below|under)|or (smaller|less)|smaller|bore|only)\b/gi," ").trim()).filter(Boolean);
+      for(const b of bits){const C=K.find(b);if(C&&C.d>0){if(C.d>d)d=C.d;types.push(C.t);continue;}
+        if(/rimfire/i.test(b)){if(.224>d)d=.224;types.push("rimfire");continue;}
+        const m=b.match(/^\.?(\d{2,3})\s*(cal(iber|ibre)?\.?)?$/i)||b.match(/^\.?(\d{2,3})\s*cal/i);if(m&&CAN_SIZE[m[1]]){const v=CAN_SIZE[m[1]];if(v>d)d=v;types.push("any");continue;}
+        const mm=b.match(/^(\d(?:\.\d{1,2})?)\s*mm$/i),MM={"5.56":.224,"6":.243,"6.5":.264,"7":.284,"7.62":.308,"8":.323,"9":.355,"9.3":.366};if(mm&&MM[mm[1]]){const v=MM[mm[1]];if(v>d)d=v;types.push(mm[1]==="9"?"handgun":"any");}}}}
+  if(!(d>0)&&c.cat){let mx=c.cat.maxcal;if(mx==null&&window.RB_CANS){const x=RB_CANS.find(y=>y.mfr===c.mfr&&y.model===c.model);if(x)mx=x.maxcal;}
+    if(mx>0){d=mx;types=[c.cat.type==="rimfire"?"rimfire":c.cat.type==="pistol"?"handgun":"any"];}}
+  if(!(d>0))return txt?{d:0,txt}:null;
+  const only=t=>types.length&&types.every(x=>x===t);
+  return {d,txt:txt||(RB_CARTS?RB_CARTS.dtxt(d)+'"':""),rim:only("rimfire")||(c.cat&&c.cat.type==="rimfire"&&!types.some(x=>x!=="rimfire")),hand:only("handgun")||(!!c.cat&&c.cat.type==="pistol"&&!types.some(x=>x==="rifle"||x==="any"))};}
+// the warning for suppressor c on a gun firing cartridge cart: "" when fine or unknown
+function canFitHtml(c,cart,gunLabel){if(!c||!cart||!window.RB_CARTS)return "";const G=RB_CARTS.find(cart),R=canRating(c);
+  if(!R){return "";}
+  const nm=esc(canName(c)),on=gunLabel?" on "+esc(gunLabel):"";
+  if(!G)return "";
+  if(!(R.d>0))return '<p class="note"><b>Check first:</b> Range Book can\'t tell what <b>'+esc(R.txt)+'</b> means, so it can\'t check '+nm+' against '+esc(G.n)+'. Pick a cartridge or size from the list under <b>Rated for</b>.</p>';
+  if(G.d>R.d+.004)return '<p class="err"><b>Don\'t shoot '+nm+on+'.</b> It\'s rated for '+esc(R.txt)+' (bullets up to '+RB_CARTS.dtxt(R.d)+'"), and '+esc(G.n)+' fires a '+RB_CARTS.dtxt(G.d)+'" bullet, which can hit the baffles and wreck the suppressor.</p>';
+  if(R.rim&&G.t!=="rimfire")return '<p class="err"><b>Check first:</b> '+nm+' is rated for rimfire ('+esc(R.txt)+'). Rimfire suppressors usually aren\'t built for centerfire pressure like '+esc(G.n)+'. Check the maker\'s manual before shooting it'+on+'.</p>';
+  if(R.hand&&G.t==="rifle")return '<p class="note"><b>Check first:</b> '+nm+' is rated for handgun cartridges ('+esc(R.txt)+'). Check the maker\'s manual says it can take '+esc(G.n)+'.</p>';
+  return "";}
+window.RB_CANFIT={rating:c=>canRating(c),html:(c,cart,g)=>canFitHtml(c,cart,g)};
+// the cartridge a range trip fires: its barrel's if it names one, else its gun's
+function tripCart(t){const tl=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId),g=tl&&rifles.find(r=>r.id===tl.rifleId),pt=t.partId&&parts.find(p=>p.id===t.partId);
+  return {cart:(pt&&pt.cartridge)||(g?gunCart(g):"")||"",gun:g};}
+// families offered under Rated for, alongside the cartridges
+const canFamMore=q=>{const k=RB_CARTS.key(q||"");return CAN_FAM.filter(f=>!k||RB_CARTS.key(f[0]).startsWith(k)||RB_CARTS.key(f[0]).includes(k)&&k.length>1).slice(0,3).map(f=>({name:f[0],d:f[3]}));};
 const INV_REPEAT=[["","Doesn't repeat"],["1","Every month"],["3","Every 3 months"],["6","Every 6 months"],["12","Every year"],["24","Every 2 years"]];
 const invName=x=>String(x.name||"").trim()||"Unnamed item";
 const invLow=x=>x.kind!=="equipment"&&num(x.warnAt)!=null&&num(x.qty)!=null&&num(x.qty)<=num(x.warnAt);
@@ -5284,7 +5327,7 @@ function renderCans(root){
       return '<button class="loaditem withthumb" type="button" data-canopen="'+esc(x.id)+'"><span class="lthumb">'+(th||CAN_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(canName(x))+'</span>'+
         '<span class="d">'+esc([x.caliber||"",x.serial?"Serial "+x.serial:"",x.approved?"Approved "+fmtDate(x.approved):""].filter(Boolean).join(" · "))+'</span>'+
         '<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>'+
-        '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun: picked on each range trip')+'</span></span></button>';}).join("")+'</div>';
+        '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", "))+(gs.some(g=>canFitHtml(x,gunCart(g)).includes('class="err"'))?' <span class="lowtag">· not rated for that cartridge</span>':''):'Not on a gun: picked on each range trip')+'</span></span></button>';}).join("")+'</div>';
     h+='</section>';
     root.innerHTML=h;gearHead(null);
     $("canAdd").addEventListener("click",()=>{const n={id:gearId("c"),mfr:"",model:"",caliber:"",serial:"",approved:"",notes:""};cans.push(n);freshAdd(n,{list:()=>cans,open:()=>canOpen===n.id,save:queueRifles});queueRifles();canOpen=n.id;renderRifles();window.scrollTo(0,0);const e=$("cn_mfr");if(e)e.focus();});
@@ -5299,6 +5342,7 @@ function renderCans(root){
     field("cn_caliber","Rated for (caliber)",c.caliber,"text")+field("cn_serial","Serial number",c.serial,"text")+
     field("cn_approved","Tax stamp approved",c.approved,"date")+
     '<div class="field"><label for="cn_gun">On gun</label>'+selHtml("cn_gun",[["","None: I pick it on each range trip"]].concat([...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(g=>[g.id,g.name||"Unnamed gun"])),g0?g0.id:"")+'</div>'+
+    '<div class="field wide cartinfo" id="cnFit" aria-live="polite"></div>'+
     '<div class="field wide"><label for="cn_notes">Notes</label><textarea id="cn_notes" style="min-height:70px">'+esc(c.notes||"")+'</textarea></div></div>'+
     (c.cat&&(c.cat.fa!=null||c.cat.minbarrel)?'<p class="note canlim">'+[c.cat.fa===true?"<b>Full auto rated.</b>":c.cat.fa===false?"<b>Not full auto rated.</b>":"",c.cat.minbarrel?"<b>Barrel minimum: "+c.cat.minbarrel+" in.</b>":""].filter(Boolean).join(" ")+' See the notes for the maker\'s other limits.</p>':'')+
     '<p class="note">On a gun, it\'s filled in on that gun\'s new range trips. Either way you can change it on each trip, and the trip\'s rounds count toward it.</p></section>'+
@@ -5314,10 +5358,17 @@ function renderCans(root){
     $("cnRc").innerHTML='<div class="rcount"><b>'+r2.total.toLocaleString()+'</b><span>rounds through it</span></div>'+(parts2.length?'<p class="note">'+parts2.join(" · ")+'</p>':'')+
       (r2.since!=null?'<p class="'+(r2.due?'err':'note')+'">'+r2.since.toLocaleString()+' round'+(r2.since===1?'':'s')+' since cleaning on '+esc(fmtDate(c.cleaned))+(r2.due?' — due for cleaning.':'.')+'</p>':'');};
   drawRc();bindPicField(c.id);
+  // rated for: a cartridge or a family, checked against the gun it's on
+  const drawFit=()=>{const box=$("cnFit");if(!box)return;const gs=canGuns(c),typing=document.activeElement===$("cn_caliber");
+    box.innerHTML=gs.map(g=>{const h=canFitHtml(c,gunCart(g),g.name||"Unnamed gun");return typing&&h.includes("can\'t tell")?"":h;}).join("")||(c.caliber&&!gs.length?'<p class="note">Range Book checks this against the gun it\'s on, and against the gun on each range trip.</p>':!String(c.caliber||"").trim()?'<p class="note">Fill in <b>Rated for</b> so Range Book can warn you if this goes on a gun it isn\'t rated for.</p>':"");};
+  {const ce=$("cn_caliber");ce.placeholder="e.g. 30 caliber, 22 rimfire, 5.56 NATO";
+    if(window.RB_CARTS)RB_CARTS.picker(ce,{more:canFamMore,extra:()=>comps.cartridges||[],onPick:()=>{c.caliber=ce.value.trim();queueRifles();drawFit();}});
+    ce.addEventListener("input",()=>setTimeout(drawFit));ce.addEventListener("blur",()=>setTimeout(drawFit,200));}
+  drawFit();if(c.cat&&c.cat.maxcal==null&&!window.RB_CANS)loadCanCat().then(drawFit);
   [["mfr",0],["model",0],["caliber",0],["serial",0],["approved",0],["notes",0],["roundsBase",1],["cleanEvery",1],["cleaned",0]].forEach(([k,isNum])=>{const el=$("cn_"+k);if(!el)return;
     el.addEventListener("input",()=>{c[k]=isNum?num(el.value):el.value;queueRifles();if(k==="mfr"||k==="model")$("rifTitle").textContent=canName(c);if(isNum||k==="cleaned")drawRc();});});
   $("cnCleaned").addEventListener("click",()=>{c.cleaned=todayStr();$("cn_cleaned").value=c.cleaned;queueRifles();drawRc();});
-  $("cn_gun").addEventListener("change",e=>{const v=e.target.value;if(v)mountCan(c.id,v);else{rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;});queueRifles();}});
+  $("cn_gun").addEventListener("change",e=>{const v=e.target.value;if(v)mountCan(c.id,v);else{rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;});queueRifles();}drawFit();});
   bindGearPhotos(root,c.id);
   root.querySelectorAll("[data-cantrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.cantrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("canDel").addEventListener("click",()=>{const i=cans.indexOf(c),on=canGuns(c).map(g=>g.id),tr2=trips.filter(t=>t.canId===c.id).map(t=>t.id);
@@ -5845,7 +5896,7 @@ function canFromCat(x){const U2=v=>v==null?"":v;
   const lines=[spec?"From "+x.mfr+"'s published specs: "+spec+".":"From "+x.mfr+"'s published specs.",x.mount?"Mount: "+x.mount+".":"",
     x.fa===true?"Full auto rated.":x.fa===false?"Not full auto rated.":"",x.minbarrel?"Barrel minimum: "+x.minbarrel+" in.":"",x.notes?U2(x.notes).replace(/\.?$/,"."):"",x.disc?"Discontinued model.":"","Check the manual for your exact model."].filter(Boolean);
   return {id:gearId("c"),mfr:x.mfr,model:x.model,caliber:x.cal||"",serial:"",approved:"",notes:lines.join(" "),
-    cat:{type:x.type||null,len:x.len||null,wt:x.wt||null,dia:x.dia||null,fa:x.fa==null?null:x.fa,minbarrel:x.minbarrel||null}};}
+    cat:{type:x.type||null,len:x.len||null,wt:x.wt||null,dia:x.dia||null,fa:x.fa==null?null:x.fa,minbarrel:x.minbarrel||null,maxcal:x.maxcal||null}};}
 function catPickHtml(kind){const P=CAT_PICK[kind];if(!P)return "";
   const have=new Set((comps[kind]||[]).map(P.have)),n=P.items().filter(x=>!have.has(x.key)).length;if(!n&&!P.items().length)return "";
   return '<div class="field wide"><label for="catBtn">Add a '+P.noun+' from the list</label><button type="button" id="catBtn" class="ammobtn" aria-expanded="false" aria-controls="catPanel"><span class="none">Pick one ('+n.toLocaleString()+' '+P.noun+'s)…</span></button>'+
@@ -9050,7 +9101,7 @@ function renderTrips(){
     if(ps.length||t.partId)h+='<div class="field wide"><label for="tp_part">Barrel</label><select id="tp_part" class="fieldselect"><option value="">The gun as it is</option>'+ps.map(p=>'<option value="'+esc(p.id)+'"'+(t.partId===p.id?' selected':'')+'>'+esc(partName(p))+'</option>').join("")+
       (t.partId&&!ps.some(p=>p.id===t.partId)?'<option value="'+esc(t.partId)+'" selected>'+esc((parts.find(p=>p.id===t.partId)&&partName(parts.find(p=>p.id===t.partId)))||"A barrel no longer here")+'</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>';}
   if(cans.length||t.canId)h+='<div class="field wide"><label for="tp_can">Suppressor</label><select id="tp_can" class="fieldselect"><option value="">None</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(t.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+
-      (t.canId&&!cans.some(c=>c.id===t.canId)?'<option value="'+esc(t.canId)+'" selected>A suppressor no longer here</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>';
+      (t.canId&&!cans.some(c=>c.id===t.canId)?'<option value="'+esc(t.canId)+'" selected>A suppressor no longer here</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>'+'<div class="field wide cartinfo" id="tpCanFit" aria-live="polite"></div>';
   h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">'+esc(tripWxLabel(t))+'</button><span class="note" id="tripWxNote">'+esc(tripWxTxt(t))+'</span></div>'+
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>'+
     coldHtml(t)+
@@ -9126,7 +9177,9 @@ function renderTrips(){
     if(k==="avgVel")mvRow();}));
   bindCold(t);
   {const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>{t.partId=tpp.value;t.updated=Date.now();queueTrips();});}
-  {const tc=$("tp_can");if(tc)tc.addEventListener("change",()=>{t.canId=tc.value;t.updated=Date.now();queueTrips();});}
+  {const tc=$("tp_can"),fit=()=>{const b=$("tpCanFit");if(!b)return;const tc2=tripCart(t);b.innerHTML=t.canId?canFitHtml(cans.find(c=>c.id===t.canId),tc2.cart,tc2.gun&&tc2.gun.name):"";};
+    fit();if(tc)tc.addEventListener("change",()=>{t.canId=tc.value;t.updated=Date.now();queueTrips();fit();});
+    const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>setTimeout(fit));}
   $("tripBack").addEventListener("click",()=>{tripOpen=null;tripPhotos=[];renderTrips();const s=$("secTrips");if(s)s.scrollIntoView({block:"start"});});
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
   $("tripLiveAdd").addEventListener("click",()=>livePick(t.id));
