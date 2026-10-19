@@ -2,11 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.33.0",
+      "version": "2.33.1",
       "date": "2026-10-18",
       "title": "Your reticle over Live target",
       "items": [
-        "Live target: Show my reticle draws your scope's reticle (or your reticle picture) over the camera picture, to scale for the distance, with the hold mark for a Shooting profile's zero (or a zero you type in) on the current aim point. It includes the profile's wind, spin drift and scope power, and shows on a remote iPad too."
+        "Live target: Show my reticle draws your scope's reticle (or your reticle picture) over the camera picture, to scale for the distance, with the hold mark for a Shooting profile's zero (or a zero you type in) on the current aim point. It includes the profile's wind, spin drift and scope power, and shows on a remote iPad too.",
+        "Live target on a phone: drag the bar under the camera picture to make it bigger (the rest scrolls below it; double-tap the bar to reset), and the Shot, Undo, Aim and Save buttons and the group numbers now sit right under the picture."
       ]
     },
     {

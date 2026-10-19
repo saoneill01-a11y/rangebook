@@ -665,6 +665,10 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvchip:empty{display:none}.lvchip b{color:#fff}
 .lvmain{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px}
 .lvcam{position:relative;flex:1 1 auto;min-height:180px;border-radius:10px;overflow:hidden;background:#000}
+.lvcam.sized{flex:none;height:var(--lvcamh)}
+.lvgrip{margin:-4px 0 -4px;flex:none}.lvgrip span{background:#555}
+@media(max-width:899px){.lvmain{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.lvcam{min-height:min(48vh,420px)}}
+@media(min-width:900px){.lvgrip{display:none}.lvcam.sized{flex:1 1 auto;height:auto}}
 .lvcam canvas{display:block;touch-action:manipulation;cursor:crosshair}
 :root[data-palette="night"] .lvcam canvas,:root[data-palette="night"] .watch .lvcam img{filter:grayscale(1) brightness(.55)}
 :root[data-palette="night"] .lvcam::after{content:"";position:absolute;inset:0;background:#ff2a1a;mix-blend-mode:multiply;pointer-events:none;z-index:1}
@@ -1605,6 +1609,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </ol>
       <p><b>Not a Range Book target?</b> Live target works on any paper or board. Tap <b>Not a Range Book target?</b> on the camera picture, tap the target's four corners (top-left first, then clockwise), pick or type its size, then tap each aim point in the order you'll shoot them and tap <b>Done</b>. Without the corner squares it can't follow the target if the phone moves, so keep it still; if it does move, tap <b>Tap corners again</b>. Your marks stay put.</p>
       <p><b>Your reticle over the target:</b> turn on <b>Show my reticle</b> on the Live target screen, then pick the <b>Shooting profile</b> for the gun you're shooting. Range Book draws that scope's reticle (your own reticle picture if you've added one) over the camera picture, to scale for the <b>Distance</b> you entered, with the mark you'd hold for that distance on the current aim point, so you can see where the crosshair sits and how your shots land against the reticle. The hold uses the profile's zero; type a different one in <b>Zero</b> if your scope is zeroed somewhere else (leave it blank to use the profile's). It also includes the profile's wind, spin drift and scope power, the same as the reticle on the dope card, and if the profile is set to <b>Dial it</b> it tells you how much to dial. Your choices are remembered on that phone.</p>
+      <p><b>Bigger picture on a phone:</b> drag the bar under the camera picture down to make it bigger; the buttons and numbers below it then scroll. Drag it up to make it smaller, or double-tap the bar to fit everything on the screen again. It's remembered on that phone.</p>
       <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
@@ -6921,8 +6926,12 @@ function openLive(o){
     '<div class="lvmain"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
       '<div class="lvstat"><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
       '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
+    '<div class="chgrip lvgrip" id="lvGrip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Camera picture height. Drag up or down, or use the arrow keys." title="Drag to make the camera picture bigger or smaller. Double-tap to reset."><span></span></div>'+
     '<div class="lvside">'+
       '<div class="lvinfo"><span class="lvchip">'+esc(o.title||"Target")+'</span></div>'+
+      '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
+      '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
+      '<div class="lvstats" id="lvStats"></div>'+
       '<div class="lvgrid">'+
         (groups.length?'<label>Charge for this aim<select id="lvGroup"></select></label>':'')+
         '<label>Shots<input id="lvWant" type="number" inputmode="numeric" min="1" step="1"></label>'+
@@ -6931,9 +6940,6 @@ function openLive(o){
       '<label class="lvmic lvretl"><input type="checkbox" id="lvRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale for the distance, with the hold for your zero on the aim point.</small></span></label>'+
       '<div class="lvgrid lvretopts" id="lvRetOpts" hidden><label>Shooting profile<select id="lvRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="lvRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
       '<p class="note lvretnote" id="lvRetNote" hidden></p>'+
-      '<div class="lvstats" id="lvStats"></div>'+
-      '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
-      '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
       '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i><b></b></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
       '<div class="lvsens" id="lvSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-sens="normal">Normal</button><button type="button" data-sens="supp">Suppressed</button><button type="button" data-sens="quiet">Quiet .22</button></div>'+
       '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it.</p>'+
@@ -7377,6 +7383,18 @@ function openLive(o){
   U.fill($("lvDist"),"yd",dist,0,1);
   $("lvLens").addEventListener("change",e=>switchLens(e.target.value));
   $("lvDist").addEventListener("input",e=>{const d=U.read(e.target,"yd",dist);if(d>0)dist=d;renderStats();retCalc();});
+  /* ----- the camera picture's height on a phone: drag the bar under it (remembered on this device); the rest scrolls below.
+     Double-tap the bar to go back to fitting everything on the screen. (2.33.1) ----- */
+  {const g=$("lvGrip"),KEY="rb.lvCamH",MIN=180,max=()=>Math.max(MIN,Math.round(window.innerHeight-110));
+    const set=v=>{if(v==null){camBox.classList.remove("sized");camBox.style.removeProperty("--lvcamh");try{localStorage.removeItem(KEY);}catch(e){}return;}
+      v=Math.max(MIN,Math.min(max(),Math.round(v)));camBox.classList.add("sized");camBox.style.setProperty("--lvcamh",v+"px");try{localStorage.setItem(KEY,String(v));}catch(e){}};
+    try{const v=+localStorage.getItem(KEY);if(v>=MIN)set(v);}catch(e){}
+    let d=null,tap=0;
+    g.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;e.preventDefault();try{g.setPointerCapture(e.pointerId);}catch(_){}d={y:e.clientY,h:camBox.getBoundingClientRect().height,moved:false};g.classList.add("drag");});
+    g.addEventListener("pointermove",e=>{if(!d)return;const dy=e.clientY-d.y;if(Math.abs(dy)>3)d.moved=true;if(d.moved)set(d.h+dy);});
+    const end=e=>{if(!d)return;const mv=d.moved;d=null;g.classList.remove("drag");if(!mv&&e.type==="pointerup"){const now=Date.now();if(now-tap<320){set(null);tap=0;}else tap=now;}};
+    g.addEventListener("pointerup",end);g.addEventListener("pointercancel",end);g.addEventListener("dblclick",()=>set(null));
+    g.addEventListener("keydown",e=>{const h=camBox.getBoundingClientRect().height;if(e.key==="ArrowUp"){e.preventDefault();set(h-40);}else if(e.key==="ArrowDown"){e.preventDefault();set(h+40);}else if(e.key==="Home"||e.key==="Escape")set(null);});}
   /* ----- your reticle over the target (2.33): a Shooting profile's reticle and hold, at the distance above, for the profile's
      zero or one you type in. Remembered on this device. ----- */
   let RT={on:false,prof:null,zero:null},RTR=null,RTwait=false;
