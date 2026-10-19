@@ -13,17 +13,12 @@ Free software under the [GNU AGPL-3.0](#license).
 <p>
   <img src="docs/screenshots/phone-home.png" alt="Home on a phone: rounds fired and recent range trips" width="32%">
   <img src="docs/screenshots/phone-dope.png" alt="Dope card with its MOA / MIL button, set by the gun's scope (Red Night theme)" width="32%">
-  <img src="docs/screenshots/phone-reticle.png" alt="The hold for 600 yards drawn on the scope's reticle (Red Night theme)" width="32%">
+  <img src="docs/screenshots/phone-target-gray.png" alt="The hold for 400 yards drawn on the scope's reticle, with a life-size deer behind it" width="32%">
 </p>
 <p>
   <img src="docs/screenshots/phone-ladder.png" alt="Velocity by charge with group sizes (Dark theme)" width="32%">
   <img src="docs/screenshots/phone-gun.png" alt="A gun's round count, barrel life and cleaning reminder" width="32%">
   <img src="docs/screenshots/phone-import.png" alt="Import from a spreadsheet: a gun that's already in Range Book, shown side by side" width="32%">
-</p>
-<p>
-  <img src="docs/screenshots/phone-target.png" alt="A life-size elk behind the reticle at 500 yards, in color, with its vital zone marked (Dark theme)" width="32%">
-  <img src="docs/screenshots/phone-target-gray.png" alt="A gray deer silhouette behind the reticle at 400 yards" width="32%">
-  <img src="docs/screenshots/phone-target-night.png" alt="A pronghorn behind the reticle at 400 yards (Red Night theme)" width="32%">
 </p>
 
 <sub>Screenshots use made-up data, including the built-in SAMPLE load.</sub>
