@@ -412,7 +412,9 @@ a.goto:hover{text-decoration-thickness:2px}a.goto:focus-visible{outline:2px soli
 .cred .field.chg>label{color:var(--accent)}.crtag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.crrev{font-size:14px;margin-top:4px;align-self:flex-start;text-align:left}
 .cartsug{position:absolute;left:0;right:0;top:100%;z-index:40;margin-top:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22);max-height:330px;overflow:auto;padding:4px}
 .cartsug button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;background:none;border:0;padding:8px 10px;border-radius:7px;color:var(--fg);font:inherit;font-size:15px;cursor:pointer;min-height:44px}
-.cartsug button small{color:var(--muted);font-size:13px}.cartsug button:hover,.cartsug button.on{background:var(--accent-soft)}
+.cartsug button small{color:var(--muted);font-size:13px}
+.sugrow{display:flex;align-items:stretch;border-radius:7px}.sugrow>button:first-child{flex:1 1 auto;min-width:0}.cartsug .sugx{width:auto;flex:0 0 44px;align-items:center;justify-content:center;font-size:20px;color:var(--muted);padding:0}.cartsug .sugx:hover{color:var(--err,#b3261e);background:var(--sunk)}.sugrow.on>button:first-child{background:var(--accent-soft)}
+.sugnote{font-size:12px;color:var(--muted);margin:4px 10px 6px}.cartsug button:hover,.cartsug button.on{background:var(--accent-soft)}
 .cartinfo{font-size:14px;color:var(--muted);line-height:1.45;margin-top:-4px}.cartinfo:empty{display:none}.cartinfo>div+div{margin-top:4px}
 .chip.warnchip{font-family:var(--body);vertical-align:2px;margin-left:4px;background:transparent;color:var(--warn);border:1px solid var(--warn)}
 .banner.bad{color:var(--warn)}
@@ -1659,6 +1661,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
       <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. <b>Add a suppressor from the list</b> has about 420 suppressors from 25 makers (type a maker, model, caliber, or "full auto"): picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
+      <p><b>Suggestions you've typed before</b> (gun makers, magazine makers and models, inventory categories, trip places, your own cartridge names) drop down as you type. Tap the <b>×</b> next to one to take it off the list, for a typo or something you don't have any more. Your saved gear doesn't change, and it comes back if you type it in again.</p>
       <h3>Magazines</h3>
       <p><a class=goto href=#go data-go=rifles:mags>Gear &amp; Ranges › Magazines</a> keeps each magazine as its own entry, so you can tell which one is causing trouble. Give each a <b>Mag #</b>: the number or mark you put on it with a paint pen or tape (1, 2, A, red tape). Add its maker and model (mags of the same maker and model are listed together, with how many you have), capacity, which guns it <b>Fits</b>, its <b>Cartridges</b> (a mag can take several: an AR-15 mag might take 5.56, 223 and 300 Blackout; tap × to remove one, tap one of your guns' cartridges to add it, or search for another, and ticking a gun under Fits adds its cartridge), where it's kept and photos. <b>+ Add another like this</b> copies the type, cartridge, capacity and guns to a new mag with the next number. When a mag jams, fails to feed or doesn't lock the slide back, tap <b>+ Log a problem</b> on that mag with the date and what happened; the list shows how many problems each has. Tick <b>Retired</b> to keep a bad one in the list, greyed out. For a group of identical mags, <b>Set guns for all</b> next to the group's name ticks or unticks a gun on every mag in it at once (a dash means only some are marked). Each gun's page has a <b>Magazines</b> card (tap its title to fold it) listing the mags that fit it, with <b>+ Add a magazine for this gun</b>. To bring in a list, use the <b>Magazines</b> tab of the import spreadsheet (<a class=goto href=#go data-go=account:import>Account › Import</a>): <b>How many</b> makes that many numbered mags from one row, and <b>Fits</b> takes your guns' names and <b>Cartridges</b> takes one or more cartridges, each separated by commas.</p>
       <h3>Inventory</h3>
@@ -2073,6 +2076,48 @@ window.RB_ARRANGE=function(o){
 /* a velocity far from the rest of its string (a chronograph misread or a typo): highlight it in red with a note.
    The middle of the string and its typical spread are worked out so one bad shot can't hide itself; it's flagged when it's
    more than 5 typical spreads, 75 fps and 2.5% from the middle (real strings rarely come close; a misread is usually hundreds off). Needs 3 shots. */
+/* ---------- remembered suggestions you can clean up (2.31.4) ----------
+   RB_FORGET: suggestions you removed, per list ({key:[lowercased values]}), kept in the prefs doc as "forget".
+   A removed one comes back if you type it in again.
+   Every <input list="dl_..."> (gun makers, magazine makers and models, inventory categories, trip places…) is turned into
+   RB_SUGGEST's own drop-down, which has an × on each entry; the cartridge picker's "yours" entries have one too (key "cart"). */
+window.RB_FORGET=(function(){let F={};const n=v=>String(v==null?"":v).trim().toLowerCase();const save=()=>{if(window.RB_PREFS_SAVE)RB_PREFS_SAVE();};
+  return {load(x){F=x&&typeof x==="object"&&!Array.isArray(x)?JSON.parse(JSON.stringify(x)):{};},all(){return F;},
+    has(k,v){return (F[k]||[]).includes(n(v));},
+    add(k,v){v=n(v);if(!v)return;F[k]=F[k]||[];if(!F[k].includes(v)){F[k].push(v);save();}},
+    drop(k,v){v=n(v);if(F[k]&&F[k].includes(v)){F[k]=F[k].filter(x=>x!==v);if(!F[k].length)delete F[k];save();}},
+    filter(k,list){return list.filter(v=>!this.has(k,v));}};})();
+window.RB_SUGGEST=function(inp,o){if(!inp||inp._sg)return;inp._sg=1;inp.removeAttribute("list");inp.setAttribute("autocomplete","off");
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const host=inp.parentNode;if(getComputedStyle(host).position==="static")host.style.position="relative";
+  const box=document.createElement("div");box.className="cartsug sugbox";box.setAttribute("role","listbox");box.hidden=true;host.appendChild(box);
+  inp.setAttribute("role","combobox");inp.setAttribute("aria-expanded","false");
+  let items=[],act=-1;
+  const close=()=>{box.hidden=true;act=-1;inp.setAttribute("aria-expanded","false");};
+  const draw=()=>{const q=inp.value.trim().toLowerCase(),seen=new Set();
+    const all=(o.values()||[]).map(v=>String(v==null?"":v).trim()).filter(v=>{const k=v.toLowerCase();if(!v||seen.has(k))return false;seen.add(k);return true;});
+    items=RB_FORGET.filter(o.key,all).filter(v=>!q||(v.toLowerCase().includes(q)&&v.toLowerCase()!==q)).sort((a,b)=>{const sa=a.toLowerCase().startsWith(q)?0:1,sb=b.toLowerCase().startsWith(q)?0:1;return sa-sb||a.localeCompare(b,undefined,{numeric:true});}).slice(0,40);
+    if(!items.length){close();return;}
+    box.innerHTML=items.map((v,i)=>'<div class="sugrow'+(i===act?' on':'')+'"><button type="button" role="option" tabindex="-1" data-i="'+i+'">'+esc(v)+'</button><button type="button" class="sugx" tabindex="-1" data-x="'+i+'" aria-label="Remove '+esc(v)+' from these suggestions" title="Remove from suggestions">×</button></div>').join("")+
+      '<p class="sugnote">× takes a suggestion off this list (your saved entries don\'t change). It comes back if you type it in again.</p>';
+    box.hidden=false;inp.setAttribute("aria-expanded","true");};
+  const pick=v=>{close();inp.value=v;inp.dispatchEvent(new Event("input",{bubbles:true}));inp.dispatchEvent(new Event("change",{bubbles:true}));};
+  inp.addEventListener("focus",draw);inp.addEventListener("input",()=>{act=-1;if(document.activeElement===inp)draw();});
+  inp.addEventListener("keydown",e=>{if(box.hidden)return;
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();act=(act+(e.key==="ArrowDown"?1:-1)+items.length)%items.length;draw();}
+    else if(e.key==="Enter"&&act>=0){e.preventDefault();pick(items[act]);}else if(e.key==="Escape")close();});
+  box.addEventListener("mousedown",e=>e.preventDefault());
+  box.addEventListener("click",e=>{const x=e.target.closest("[data-x]");if(x){RB_FORGET.add(o.key,items[+x.dataset.x]);draw();if(box.hidden)inp.focus();return;}
+    const b=e.target.closest("[data-i]");if(b)pick(items[+b.dataset.i]);});
+  inp.addEventListener("blur",()=>setTimeout(close,150));
+  // typing a removed one in again brings it back
+  inp.addEventListener("change",()=>{if(inp.value.trim()&&RB_FORGET.has(o.key,inp.value))RB_FORGET.drop(o.key,inp.value);});};
+// every input tied to a <datalist id="dl_..."> gets the drop-down above; its suggestions are read from the datalist each time
+(function(){const scan=()=>{document.querySelectorAll('input[list^="dl_"]').forEach(inp=>{const id=inp.getAttribute("list"),dl=document.getElementById(id);if(!dl)return;
+    RB_SUGGEST(inp,{key:id.replace(/^dl_/,"").replace(/\d+$/,""),values:()=>{const d=document.getElementById(id);return d?[...d.options].map(op=>op.value):[];}});});};
+  let raf=0;const mo=new MutationObserver(()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;scan();});});
+  const go=()=>{scan();mo.observe(document.body,{childList:true,subtree:true});};
+  if(document.body)go();else document.addEventListener("DOMContentLoaded",go);})();
 window.RB_FLY=(()=>{
   const mid=a=>{const s=a.slice().sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;};
   const find=vals=>{const v=vals.map((x,i)=>[Number(x),i]).filter(([x])=>x>0);if(v.length<3)return [];
@@ -2228,10 +2273,10 @@ window.RB_WX=(()=>{
     const close=()=>{box.hidden=true;inp.setAttribute("aria-expanded","false");act=-1;};
     const pick=(name,c)=>{close();if(inp.value!==name){inp.value=name;inp.dispatchEvent(new Event("input",{bubbles:true}));inp.dispatchEvent(new Event("change",{bubbles:true}));}if(o.onPick)o.onPick(c||find(name),name);};
     const draw=()=>{const q=inp.value.trim();const cs=q?search(q,8):[];
-      const own=(o.extra?o.extra():[]).filter(s=>s&&!find(s)&&(!q||key(s).includes(key(q)))).slice(0,4);
+      const own=(o.extra?o.extra():[]).filter(s=>s&&!find(s)&&!(window.RB_FORGET&&RB_FORGET.has("cart",s))&&(!q||key(s).includes(key(q)))).slice(0,4);
       items=[...cs.map(c=>({name:c.n,c,d:desc(c)})),...own.map(s=>({name:s,c:null,d:"yours (not in the list)"}))];
       if(!items.length||(items.length===1&&items[0].name===inp.value&&document.activeElement!==inp)){close();return;}
-      box.innerHTML=items.map((it,i)=>'<button type="button" role="option" tabindex="-1" data-i="'+i+'"'+(i===act?' class="on" aria-selected="true"':'')+'><b>'+esc(it.name)+'</b><small>'+esc(it.d)+'</small></button>').join("");
+      box.innerHTML=items.map((it,i)=>{const b='<button type="button" role="option" tabindex="-1" data-i="'+i+'"'+(i===act?' class="on" aria-selected="true"':'')+'><b>'+esc(it.name)+'</b><small>'+esc(it.d)+'</small></button>';return it.c?b:'<div class="sugrow">'+b+'<button type="button" class="sugx" tabindex="-1" data-x="'+i+'" aria-label="Remove '+esc(it.name)+' from these suggestions" title="Remove from suggestions">×</button></div>';}).join("");
       box.hidden=false;inp.setAttribute("aria-expanded","true");};
     inp.addEventListener("input",()=>{act=-1;if(document.activeElement===inp)draw();});
     inp.addEventListener("focus",()=>{if(inp.value.trim())draw();});
@@ -2240,7 +2285,7 @@ window.RB_WX=(()=>{
       else if(e.key==="Enter"&&act>=0){e.preventDefault();pick(items[act].name,items[act].c);}
       else if(e.key==="Escape"){close();}});
     box.addEventListener("mousedown",e=>e.preventDefault());
-    box.addEventListener("click",e=>{const b=e.target.closest("[data-i]");if(!b)return;const it=items[+b.dataset.i];pick(it.name,it.c);});
+    box.addEventListener("click",e=>{const x=e.target.closest("[data-x]");if(x){if(window.RB_FORGET)RB_FORGET.add("cart",items[+x.dataset.x].name);draw();return;}const b=e.target.closest("[data-i]");if(!b)return;const it=items[+b.dataset.i];pick(it.name,it.c);});
     // leaving the box: another name for a listed cartridge becomes its standard name ("308 Win" → 308 Winchester)
     inp.addEventListener("blur",()=>{setTimeout(close,120);const c=find(inp.value);if(c){if(inp.value!==c.n)pick(c.n,c);else if(o.onBlurMatch)o.onBlurMatch(c);}});
   }
@@ -5368,7 +5413,7 @@ function renderMags(root){
       (mine.length?'<div class="mcsug"><span class="note">Your guns:</span>'+mine.map(c=>'<button class="btn small" type="button" data-mcadd="'+esc(c)+'">+ '+esc(c)+'</button>').join("")+'</div>':'');
     box.querySelectorAll("[data-mcrm]").forEach(b=>b.addEventListener("click",()=>{const L=magCarts(x).slice();L.splice(+b.dataset.mcrm,1);setMagCarts(x,L);queueRifles();drawCarts();drawFits();}));
     box.querySelectorAll("[data-mcadd]").forEach(b=>b.addEventListener("click",()=>addCart(b.dataset.mcadd)));};
-  {const q=$("mg_cartq");if(window.RB_CARTS)RB_CARTS.picker(q,{onPick:(c,name)=>{addCart(c?c.n:name);q.value="";}});
+  {const q=$("mg_cartq");if(window.RB_CARTS)RB_CARTS.picker(q,{extra:()=>comps.cartridges||[],onPick:(c,name)=>{addCart(c?c.n:name);q.value="";}});
     q.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();setTimeout(()=>{if(q.value.trim()){const c=window.RB_CARTS&&RB_CARTS.find(q.value);addCart(c?c.n:q.value.trim());q.value="";}},0);}});}
   // Fits: the guns chambered for any of this mag's cartridges (and any already ticked); Show all guns lists the rest
   const drawFits=()=>{const box=$("mg_fits");if(!box)return;const on=new Set(x.gunIds||[]),cs=magCarts(x);
@@ -9714,7 +9759,7 @@ async function startApp(user,api){
   document.querySelectorAll("#themeMode [data-mode]").forEach(b=>b.addEventListener("click",()=>applyTheme({palette:THEME.palette,mode:b.dataset.mode},true)));
   // the account's preferences (theme, units) arrive with the calculator data, so the app starts in the right units
   let calc=null;{const [pr,cr]=await Promise.all([GUEST?Promise.resolve(null):A.get("/api/doc/prefs").catch(()=>null),A.get("/api/doc/calc").catch(()=>null)]);
-    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);BETA_SEEN=pr.data.betaSeen||null;if(pr.data.order)RB_ORDER.load(pr.data.order);}
+    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);BETA_SEEN=pr.data.betaSeen||null;if(pr.data.order)RB_ORDER.load(pr.data.order);if(pr.data.forget)RB_FORGET.load(pr.data.forget);}
     calc=cr?cr.data:null;}
   U.labels();
   // Units on Account: save it to the account, then reload so every screen redraws in the new units
@@ -9762,7 +9807,7 @@ const FEEDBACK_EMAIL="",FEEDBACK_GH="https://github.com/saoneill01-a11y/rangeboo
   const m=document.getElementById("fbMail"),g=document.getElementById("fbGh");if(!g)return;
   if(FEEDBACK_EMAIL){m.href="mailto:"+FEEDBACK_EMAIL+"?subject="+encodeURIComponent("Range Book feedback")+"&body="+encodeURIComponent("What happened, or what's your idea?"+body);m.hidden=false;}
   g.href=FEEDBACK_GH+"?body="+encodeURIComponent("What happened, or what's your idea?"+body);})();
-function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined,order:RB_ORDER.all()};}
+function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined,order:RB_ORDER.all(),forget:RB_FORGET.all()};}
 {let pt=null;const go=()=>{clearTimeout(pt);pt=null;if(!GUEST)API.put("/api/doc/prefs",{data:prefsData()}).catch(()=>{});};
   window.RB_PREFS_SAVE=()=>{clearTimeout(pt);pt=setTimeout(go,300);};
   // leaving the page with a change still waiting: send it now
