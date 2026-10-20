@@ -527,22 +527,30 @@ async function api(req, res, url) {
     return send(res, 200, { ok: true }, { "Set-Cookie": cookieHeader(req, "", 0) });
   }
 
+  // a printable target (no personal data in it): signed-in people, and guests when guest mode is on (2.41.3)
+  {
+    const mt = /^\/api\/targets\/([a-z0-9]+)\.pdf$/.exec(p);
+    if (mt && method === "GET") {
+      const who = getUser(req, res);
+      if (!who && !getSetting("guestEnabled", false)) throw new HttpError(401, "Please sign in.");
+      const T = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, "targets.json"), "utf8"));
+      const qp = (k, n) => String(url.searchParams.get(k) || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n);
+      const fill = { load: qp("load", 60), date: qp("date", 24), dist: qp("dist", 8), gun: qp("gun", 40) };
+      // yards or metres: the page says which (a guest has no saved settings), otherwise your setting
+      const pr = who ? getDoc(who.id, "prefs") : null, uq = qp("u", 2);
+      const units = uq === "m" ? "m" : uq === "yd" ? "yd" : pr && pr.units === "metric" ? "m" : "yd";
+      const buf = targetPdf(T, mt[1], fill.load || fill.date || fill.dist || fill.gun ? fill : null, units);
+      if (!buf) throw new HttpError(404, "No such target.");
+      res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${mt[1]}.pdf"`, "Content-Length": buf.length, ...SECURITY_HEADERS });
+      return res.end(buf);
+    }
+  }
+
   const user = getUser(req, res);
   if (!user) throw new HttpError(401, "Please sign in.");
   let m0;
 
   if (p === "/api/me" && method === "GET") return send(res, 200, { user: publicUser(user) });
-  m0 = /^\/api\/targets\/([a-z0-9]+)\.pdf$/.exec(p);
-  if (m0 && method === "GET") {
-    const T = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, "targets.json"), "utf8"));
-    const qp = (k, n) => String(url.searchParams.get(k) || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n);
-    const fill = { load: qp("load", 60), date: qp("date", 24), dist: qp("dist", 8), gun: qp("gun", 40) };
-    const pr = getDoc(user.id, "prefs");
-    const buf = targetPdf(T, m0[1], fill.load || fill.date || fill.dist || fill.gun ? fill : null, pr && pr.units === "metric" ? "m" : "yd");
-    if (!buf) throw new HttpError(404, "No such target.");
-    res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${m0[1]}.pdf"`, "Content-Length": buf.length, ...SECURITY_HEADERS });
-    return res.end(buf);
-  }
   if (p === "/api/me/accept-terms" && method === "POST") { q("UPDATE users SET accepted_terms=? WHERE id=?").run(now(), user.id); user.accepted_terms = now(); return send(res, 200, { user: publicUser(user) }); }
   if (p === "/api/me/password" && method === "POST") {
     const { current, next } = await readJson(req);
