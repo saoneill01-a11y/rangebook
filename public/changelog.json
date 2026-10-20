@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.0",
+      "version": "2.43.1",
       "date": "2026-10-20",
       "title": "Bluetooth chronograph",
       "items": [
@@ -12,6 +12,7 @@
         "Tools › Chronograph: use it on its own, with the last velocity in big numbers, the string's average, SD, spread, low and high, and Save to a range trip.",
         "Chronograph settings: battery, pause, test shot, velocity window, where the radar sits for each gun, calibration against another chronograph, screen brightness, battery gauge and clock. A pill at the bottom right shows the last velocity while it's connected.",
         "With the chronograph's sensor kit: air temperature, humidity, pressure, density altitude, ammo temperature, heading and level. Empty trip and ladder temperatures fill in from it, and Use this air in the profile and Use … for Coriolis set a Shooting profile from it.",
+        "Chronograph settings › Compass: Sensor board turned (0°, 90°, 180°, 270°), for however the compass board sits on its mount. Needs chronograph firmware 0.2.1.",
         "How to Use has a new Bluetooth chronograph section."
       ]
     },
