@@ -213,7 +213,7 @@ Bug reports, ideas and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBU
 
 ## Contact
 
-Questions, ideas or help: **[hello@rangebook.org](mailto:hello@rangebook.org)** (or **More › Account › Feedback and ideas** in the app, which fills in your version). Found a security problem? Please email it instead of opening a public issue; see [SECURITY.md](SECURITY.md).
+Questions, ideas or help: **[hello@rangebook.org](mailto:hello@rangebook.org)** (or **More › Account › Feedback and ideas** in the app, which fills in your version). Found a security problem? Please email **[security@rangebook.org](mailto:security@rangebook.org)** instead of opening a public issue; see [SECURITY.md](SECURITY.md).
 
 ## License
 

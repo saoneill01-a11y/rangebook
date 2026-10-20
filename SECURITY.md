@@ -2,7 +2,7 @@
 
 ## Reporting a problem
 
-If you find a security problem in Range Book, please email **hello@rangebook.org** with "Security" in the subject, instead of opening a public GitHub issue. A public issue would show everyone how to use the problem before there's a fix.
+If you find a security problem in Range Book, please email **[security@rangebook.org](mailto:security@rangebook.org)** instead of opening a public GitHub issue. A public issue would show everyone how to use the problem before there's a fix.
 
 Please include:
 
