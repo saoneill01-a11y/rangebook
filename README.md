@@ -200,6 +200,7 @@ Another admin can reset it from the Admin page. If you're the only admin, recrea
 - After 10 wrong passwords for an account from one address, sign-in for it pauses for 15 minutes.
 - Resetting someone's password or turning their account off signs them out everywhere.
 - Deleting a user deletes their loads, profiles and photos. Turning an account off keeps everything and can be undone.
+- To report a security problem privately, see [SECURITY.md](SECURITY.md).
 - Everyone sees a safety and no-liability notice the first time they sign in. It isn't legal advice; if you open your server to the public, have someone qualified look it over.
 
 ## Offline chronograph import
@@ -209,6 +210,10 @@ Reading RangeCraft and Garmin spreadsheet files uses a free library (SheetJS) th
 ## Contributing
 
 Bug reports, ideas and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Contact
+
+Questions, ideas or help: **[hello@rangebook.org](mailto:hello@rangebook.org)** (or **More › Account › Feedback and ideas** in the app, which fills in your version). Found a security problem? Please email it instead of opening a public issue; see [SECURITY.md](SECURITY.md).
 
 ## License
 

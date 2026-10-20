@@ -1458,7 +1458,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>You can change things on your phone at the range (even with no signal) and on your computer at home, and nothing gets lost when the phone syncs. Range Book combines the two piece by piece: if the phone changed a load's velocity and the computer changed its name, you get both; a gun, ammo, trip or load added on either one is kept; something deleted on one stays deleted unless the other changed it later. Only when both changed the very same thing (the same box on the same load, say) does one win, and it's the newer edit, by the time you made it. A device that's been open a while shows the other's changes after you pull to refresh or reopen the app.</p>
       <h3>Guest mode</h3>
       <p>If the admin has turned it on, the sign-in page has a <b>Try it as a guest</b> button. Guests can use everything, but nothing is saved: it's all gone when the page is closed or reloaded. Guests can print the <a class=goto href=#go data-go=targets>Printable targets</a> too, so someone trying Range Book can print one and try Live target or measuring a photo.</p>
-    <p><b>Feedback and ideas:</b> found something wrong, or have an idea? <a class=goto href=#go data-go=account:feedback>More › Account › Feedback and ideas</a> opens your own email app (or GitHub) addressed to the person who makes Range Book, with the version filled in. Nothing is sent from this server.</p>
+    <p><b>Feedback and ideas:</b> found something wrong, or have an idea? <a class=goto href=#go data-go=account:feedback>More › Account › Feedback and ideas</a> opens your own email app (or GitHub) addressed to the person who makes Range Book, with the version filled in. Nothing is sent from this server. You can also write to <a href="mailto:hello@rangebook.org">hello@rangebook.org</a> directly.</p>
       <p><b>Printing from the home-screen app on an iPhone or iPad:</b> a PDF (a target, a trip report or an export) opens a small panel instead of a new page. Tap <b>Print or save…</b>, then <b>Print</b> (or <b>Save to Files</b>) in the share sheet. In a browser, PDFs open in a new tab as before.</p>
     </section>
     <section class="card guide" aria-label="Shooting" id="hShoot">
@@ -1746,7 +1746,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 <p>Follow the four rules, wear eye and ear protection, and keep the powder away from the cigarette.</p></div></section>
     <section class="card guide" aria-label="License" id="hLicense"><h2>License</h2>
       <p>Range Book is free software, copyright © 2026 Sean O'Neill. You can use it, copy it, change it and share it under the <b>GNU Affero General Public License, version 3 or later</b> (AGPL). If you share a changed version, or run one as a website for other people, you have to make its source code available under the same license, so it stays free for everyone.</p>
-      <p>It comes with no warranty. The full license is in the <b>LICENSE</b> file and at <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">gnu.org</a>.<span id="srcLine" hidden> Source code for this copy: <a id="srcLink" href="#" target="_blank" rel="noopener"></a></span></p>
+      <p>It comes with no warranty. The full license is in the <b>LICENSE</b> file and at <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">gnu.org</a>. Questions about Range Book or its license: <a href="mailto:hello@rangebook.org">hello@rangebook.org</a>.<span id="srcLine" hidden> Source code for this copy: <a id="srcLink" href="#" target="_blank" rel="noopener"></a></span></p>
     </section>
     <section class="card guide" aria-label="Limits" id="hLimits">
       <h2>Limits</h2>
@@ -10603,7 +10603,7 @@ let BETA_SEEN=null;
 const appVersion=()=>{const m=document.querySelector('meta[name="rb-version"]');return m&&m.content&&m.content.indexOf("__")<0?m.content:"";};
 /* Feedback (Account → Feedback and ideas): links only, so a home server never has to send email. FEEDBACK_EMAIL is the
    project's shared mailbox; while it's blank only the GitHub button shows. Only the version is filled in. (2.18) */
-const FEEDBACK_EMAIL="",FEEDBACK_GH="https://github.com/saoneill01-a11y/rangebook/issues/new";
+const FEEDBACK_EMAIL="hello@rangebook.org",FEEDBACK_GH="https://github.com/saoneill01-a11y/rangebook/issues/new";
 (function(){const v=appVersion(),body="\n\n\n---\nRange Book "+(v||"version unknown");
   const m=document.getElementById("fbMail"),g=document.getElementById("fbGh");if(!g)return;
   if(FEEDBACK_EMAIL){m.href="mailto:"+FEEDBACK_EMAIL+"?subject="+encodeURIComponent("Range Book feedback")+"&body="+encodeURIComponent("What happened, or what's your idea?"+body);m.hidden=false;}

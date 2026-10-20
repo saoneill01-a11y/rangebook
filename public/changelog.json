@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.0",
+      "version": "2.42.1",
       "date": "2026-10-19",
       "title": "Transonic on the chart, table and dope card",
       "items": [
@@ -10,7 +10,8 @@
         "Move the mouse over a path (or tap one on a phone) to see the distance and the drop for each zero.",
         "Range table, dope card and Field mode: a red line between the distances on either side of where it goes transonic. The dope card says Transonic at … (or Subsonic from the muzzle) under its conditions, printed too.",
         "Dope card: starts shortened and scrolls on screen. Drag the bar under it to make it taller or shorter, or double-tap the bar to show it all. Printing and Field mode still show every row.",
-        "Compare trajectories: a dot marks where each bullet goes transonic."
+        "Compare trajectories: a dot marks where each bullet goes transonic.",
+        "Range Book has a contact address: hello@rangebook.org. More › Account › Feedback and ideas now has an Email feedback button that opens your email app with your version filled in."
       ]
     },
     {
