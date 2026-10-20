@@ -166,6 +166,9 @@ body.noscroll{overflow:hidden}
 @media(max-width:480px){#secTChart .wtxt{display:none}}
 @media(max-width:380px){#secTChart .zoombar{gap:4px}#secTChart .zoombar .btn{padding:4px 7px}#zoomIn,#zoomOut{min-width:32px}}
 #declutter[aria-pressed="true"],#trueScale[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.chartbox{position:relative}
+.charttip{position:absolute;z-index:3;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.22);padding:6px 9px;font-size:12.5px;line-height:1.35;display:flex;flex-direction:column;gap:1px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.charttip b{font-size:13px}.charttip span{display:flex;align-items:center;gap:6px}.charttip i{width:9px;height:9px;border-radius:50%;flex:none}.charttip small{color:var(--muted);font-size:11.5px}.charttip .ctt{margin-top:1px}
 .chgrip{height:16px;margin:-6px 0 -2px;display:flex;align-items:center;justify-content:center;cursor:ns-resize;touch-action:none;-webkit-user-select:none;user-select:none;border-radius:6px}
 .chgrip span{width:44px;height:5px;border-radius:3px;background:var(--line)}
 .chgrip:hover span,.chgrip:focus-visible span,.chgrip.drag span{background:var(--accent)}
@@ -534,6 +537,10 @@ select.fieldselect{flex:0 0 auto;width:100%;padding:9px 10px;border-radius:7px;b
 .corbtns{flex-wrap:wrap;gap:6px}.corbtns select{flex:1 1 160px;min-width:0}
 .cmpbody{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
 .cmpdeg{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--accent)}
+#tbl tr.trans td,table.dope tr.trans td,.fmtbl tr.trans td{border-top:3px solid #e03131}
+.dopetrans{font-size:12px;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:6px}.dopetrans i{display:inline-block;width:18px;border-top:3px solid #e03131}
+.dopescroll{max-height:var(--dopeh,min(360px,45vh));overflow:auto;overscroll-behavior:contain}.dopescroll table.dope thead th{position:sticky;top:0;background:var(--surface);z-index:1}
+#dopeGrip{margin-top:4px}
 table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
 .flabel{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
 .unitbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;min-width:5.6em;padding:0 12px;background:var(--accent);color:var(--accent-fg,#fff);border:1px solid var(--accent);border-radius:9px;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
@@ -624,6 +631,8 @@ table.dope tbody tr:nth-child(even){background:rgba(127,127,127,.08)}
   #printArea table.dope th,#printArea table.dope td{border-color:#000;padding:1px 4px;color:#000}
   #printArea table.dope tbody tr:nth-child(even){background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   #printArea .dopemeta{opacity:1;font-size:8pt}
+  #printArea .dopescroll{max-height:none!important;overflow:visible!important}#printArea .chgrip{display:none!important}
+  #printArea .dopetrans{font-size:8pt}#printArea table.dope tr.trans td{border-top:2.5px solid #e03131!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}#printArea .dopetrans i{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body.printlabels #printArea .lblsheet{display:grid;grid-template-columns:3.5in 3.5in;gap:0 .25in;justify-content:center}
   body.printlabels #printArea .ammolabel{border:1px dashed #bbb;border-radius:0;background:#fff;color:#000;break-inside:avoid;page-break-inside:avoid}
   @page{margin:0.4in}
@@ -1496,7 +1505,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Weather where you are</h3>
       <p>On the <b>Conditions</b> card, <b>Use the weather where I am</b> fills in the temperature and the altitude from today's air pressure and humidity where you're standing (the altitude that gives the same air density, so humid air counts too), and tells you the density altitude, the ground's elevation and the wind. If you're within about 2 miles of one of your saved ranges that has its address, it says you're there and picks that range on the <b>Saved ranges</b> card. It needs a signal and the https:// (Cloudflare) address, since phones only share location with secure sites. Set the crosswind yourself, since it depends on which way you're shooting.</p>
       <h3>Print a dope card</h3>
-      <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the <b>MOA / MIL</b> button: tap it to switch). It uses the zero your scope is set to, the conditions and the crosswind you entered. The card and the range table also get a shaded row at each distance where the bullet crosses your line of sight for the zero you picked: once going up (the near zero) and again coming back down (the far zero). Each is labeled <b>zero</b> and sits in order with the other distances; if one lands on a distance that's already there, that row is shaded and labeled instead. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
+      <p>Below the range table, <b>Dope card</b> makes a small card for your stock or range bag. Choose the first and last distance, how often, and whether your scope clicks in MOA or MIL (the <b>MOA / MIL</b> button: tap it to switch). On screen the card starts shortened and scrolls; drag the bar under it to make it taller or shorter (this device remembers), or double-tap the bar to show the whole card and again to shorten it. Printing and Field mode always show every row. It uses the zero your scope is set to, the conditions and the crosswind you entered. The card and the range table also get a shaded row at each distance where the bullet crosses your line of sight for the zero you picked: once going up (the near zero) and again coming back down (the far zero). Each is labeled <b>zero</b> and sits in order with the other distances; if one lands on a distance that's already there, that row is shaded and labeled instead. Tap <b>Print dope card</b> to print just the card (about 3½ in wide), or save it as a PDF from the print screen. On an iPhone, pinch out on the print preview to save or share it.</p>
       <p><b>Field mode</b> fills the screen with just the distance, how much to dial up and the wind hold (plus <b>Spin R</b> and <b>Cor R</b> when spin drift or Coriolis is on), in big numbers you can read at the bench. <b>A−</b> and <b>A+</b> change the size, <b>Bright</b> switches to black on white for full sun, and the screen stays on while it's open (on phones that allow it). Tap <b>← Back</b> or swipe in from the left to close it.</p>
       <h3>Reticle holds</h3>
       <p>The <b>Dope card &amp; reticle</b> card also draws a plain reticle with a dot where the target goes. Tap any distance on the card to see it: on an iPad or computer the reticle is right beside the card, and on a phone it slides up from the bottom, with <b>‹</b> and <b>›</b> buttons to step to the next distance on the card. The <b>MOA / MIL</b> button shows the unit in use; tap it to switch. It sets both the card and the reticle. When the profile's gun has a scope (<a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Scopes</a>), the scope sets it (the button is greyed out) and the reticle can look like yours, or be a picture of it. Pick <b>Hold it</b> under Reticle: elevation to hold elevation and wind on the reticle, or <b>Dial it, hold wind</b> to dial elevation and hold only the wind. It uses the conditions and crosswind on the profile, and spin drift when the bullet length and twist are filled in. It isn't any brand's reticle, so count the marks on yours.</p>
@@ -1513,6 +1522,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Every profile in the calculator has a <b>Range trips</b> log at the bottom (tap <b>Range trips</b> in the row of links at the top to jump there). Tap <b>+ New range trip</b> and fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target for this trip</b> opens a printable target with the trip's profile, date, distance and gun already filled in at the top. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, tap <b>+ Shot</b> to add one, or tap <b>− Shot</b>, tap the shots you want gone (a bad reading, an unused box) and tap <b>Delete</b>. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
       <h3>Cold-bore shot</h3>
       <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point (right or left, high or low, in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
+      <h3>Transonic</h3>
+      <p>Each path is drawn solid while the bullet is well above the speed of sound and turns <b>dashed</b> where it slows to about Mach 1.2 (transonic). Past that point drag changes quickly, the BC numbers are less reliable, and some bullets start to wobble, so treat holds out there as a starting point and confirm them on paper. A subsonic load is dashed all the way. The speed of sound depends on the temperature on the Conditions card (it's listed under the chart), so on a cold day the dashes start closer. The range table, the dope card and Field mode draw a <b>red line</b> between the last two distances on either side of it, and the dope card says <b>Transonic at …</b> under its conditions (or <b>Subsonic from the muzzle</b>). In <a class=goto href=#go data-go=tools:cmp>Tools › Compare trajectories</a>, a dot on each line marks where that bullet goes transonic.</p>
+      <h3>Read a point on the chart</h3>
+      <p>On a computer, move the mouse over a path: a small box shows the distance and how far above or below your line of sight each zero's path is there. On a phone or tablet, tap a path to see the same box; tap anywhere else to close it.</p>
       <h3>Zoom the chart</h3>
       <p>Pinch to zoom and drag with one finger to move around. A sideways pinch stretches the range, an up-and-down pinch stretches the inches. Double-tap the chart or tap <b>Reset view</b> to go back. On a computer, use the zoom buttons or pinch on a trackpad. <b>Declutter</b> hides the near and far yardage labels on the line of sight (the colored diamonds stay, and the numbers are in the zero boxes); tap it again to bring them back. The normal chart stretches the up-and-down direction a lot so you can read the drop in inches. <b>True scale</b> draws it at its real proportions, the same scale up and down as across, so you see how flat the bullet really flies; a 1,000 yd shot is 36,000 inches long, so even several feet of drop is a gentle curve. The up-and-down numbers switch to feet when they get big. Zooming in keeps the bullet centered and the proportions true. Tap it again to go back. Both buttons are highlighted while they're on and are remembered on this device. Drag the small bar under the chart up or down to make the chart shorter or taller (double-tap the bar to go back to the normal height). The picture doesn't stretch or squash: a taller chart shows more inches of drop and a shorter one shows fewer, so drag on a short chart to move up and down. The height is remembered on this device.</p>
       <h3>Printable targets</h3>
@@ -3099,9 +3112,11 @@ function render(){
   const f1=n=>{const s=n.toFixed(1);return s==="-0.0"?"0.0":s;};
   const lim=Math.min(MR,S.last);
   const DS=[];for(let dd=0;U.from("yd",dd)<=lim+1e-9;dd+=step)DS.push(dd);
+  const TX=transX(S);let tPrev=-1;
   for(const [dd,zt] of withZeroRows(DS,za!=null?zeroRows(S,path,za,lim).filter(r=>U.from("yd",r.dd)<=lim+1e-9):[])){
-    const x=U.from("yd",dd),v=S.at(S.v,x),tt=S.at(S.t,x);
-    h+="<tr"+(zt?' class="zrow"':'')+"><td>"+dd.toLocaleString()+(zt?'<span class="ztag">'+ZTAG[zt]+'</span>':'')+"</td><td>"+U.n("fps",v,0).toLocaleString()+"</td><td>"+U.n("ftlb",L.w*v*v/450436,0).toLocaleString()+"</td><td>"+tt.toFixed(3)+"</td>";
+    const x=U.from("yd",dd),v=S.at(S.v,x),tt=S.at(S.t,x),tr=TX>0&&tPrev>=0&&tPrev<TX&&x>=TX;tPrev=x;
+    const cls=[zt?"zrow":"",tr?"trans":""].filter(Boolean).join(" ");
+    h+="<tr"+(cls?' class="'+cls+'"':'')+"><td>"+dd.toLocaleString()+(zt?'<span class="ztag">'+ZTAG[zt]+'</span>':'')+"</td><td>"+U.n("fps",v,0).toLocaleString()+"</td><td>"+U.n("ftlb",L.w*v*v/450436,0).toLocaleString()+"</td><td>"+tt.toFixed(3)+"</td>";
     if(pz!=null){const t=f1(U.to("in",path(x,pz)));h+='<td'+(t[0]==="-"?' class="neg"':'')+'>'+t+"</td>";}
     {const p=za&&x>0?path(x,za):null;if(CM)h+="<td>"+(p!=null?f1(-p/(x*1.0472/100)):"")+"</td>";if(CL)h+="<td>"+(p!=null?f1(-p/(x*3.6/100)):"")+"</td>";}
     if(CW){const wd=drift(wind,x);h+="<td>"+f1(U.to("in",wd))+"</td><td>"+(x>0?f1(wd/(x*WF/100)):"")+"</td>"+BR.map(b=>"<td>"+(x>0?f1(drift(b,x)/(x*WF/100)):"")+"</td>").join("")+(SGd!=null?"<td>"+f1(U.to("in",spinRel(SGd,S,x,czr)||0))+"</td>":"");}
@@ -3331,28 +3346,46 @@ function renderDope(L,S,zs,path){
   const drift=(spd,x)=>spd*1.46667*(S.at(S.t,x)-x*3/L.mv)*12;
   let rows="",n=0;DOPE={unit:UN,wind:L.wind||0,clock:windClock(L),side,BR,rows:[],cor:!!corOn(L),spin:S.sg!=null};
   const DS=[];for(let dd=a>0?a:st;dd<=b&&n<80;dd+=st,n++)DS.push(dd);
+  // a red line between the rows where it goes transonic (Mach 1.2)
+  const TX=transX(S);let tPrev=-1;DOPE.trans=TX;
+  const rowCls=r=>[r.z?"zrow":"",r.tr?"trans":""].filter(Boolean);
   for(const [dd,zt] of withZeroRows(DS,zeroRows(S,path,za,lim).filter(r=>r.dd<=b))){
-    const x=U.from("yd",dd);
+    const x=U.from("yd",dd),tr=TX>0&&tPrev>=0&&tPrev<TX&&x>=TX;tPrev=x;
     const p=path(x,za), up=-p/(x*UF/100), wh=drift(wind,x)/(x*UF/100), brs=BR.map(v=>drift(v,x)/(x*UF/100));
     const sp=S.sg!=null?spinRel(S.sg,S,x,za):null,ch=corOn(L)?corRel(L,S,x,za).h/(x*UF/100):null;
-    DOPE.rows.push({x:dd,z:zt,up:f1(up),wind:f1(wh),brs:brs.map(f1),spin:sp!=null?f1(sp/(x*UF/100)):null,cor:ch!=null?f1(ch):null});
-    rows+="<tr data-dx=\""+dd+"\" tabindex=\"0\""+(zt?" class=\"zrow\"":"")+"><td>"+dd+(zt?"<span class=\"ztag\">"+ZTAG[zt]+"</span>":"")+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+(ch!=null?"<td>"+f1(ch)+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
+    DOPE.rows.push({x:dd,z:zt,tr,up:f1(up),wind:f1(wh),brs:brs.map(f1),spin:sp!=null?f1(sp/(x*UF/100)):null,cor:ch!=null?f1(ch):null});
+    const rc=rowCls({z:zt,tr});rows+="<tr data-dx=\""+dd+"\" tabindex=\"0\""+(rc.length?" class=\""+rc.join(" ")+"\"":"")+"><td>"+dd+(zt?"<span class=\"ztag\">"+ZTAG[zt]+"</span>":"")+"</td><td>"+f1(U.to("in",p))+"</td><td><b>"+f1(up)+"</b></td>"+(BR.length?"":"<td>"+f1(wh)+"</td>")+brs.map(v=>"<td>"+f1(v)+"</td>").join("")+(sp!=null?"<td>"+f1(sp/(x*UF/100))+"</td>":"")+(ch!=null?"<td>"+f1(ch)+"</td>":"")+"<td>"+U.n("fps",S.at(S.v,x),0)+"</td></tr>";
   }
   // the distance shown on the reticle: the one you tapped, or the closest row to it
   {const R0=L.ret||{},want=num(R0.dist)>0?num(R0.dist):Math.min(lim,Math.max(za*2,U.metric?500/0.9144:500));let bi=-1,bd=1e9;
     DOPE.rows.forEach((r,i)=>{const d=Math.abs(U.from("yd",r.x)-want);if(d<bd-1e-6){bd=d;bi=i;}});
     DOPE.sel=bi;DOPE.selX=bi>=0?U.from("yd",DOPE.rows[bi].x):null;
-    if(bi>=0){const dx=DOPE.rows[bi].x,zr=DOPE.rows[bi].z?' class="zrow"':'';rows=rows.replace('<tr data-dx="'+dx+'" tabindex="0"'+zr+'>','<tr data-dx="'+dx+'" tabindex="0" class="sel'+(zr?' zrow':'')+'" aria-current="true">');}}
+    if(bi>=0){const dx=DOPE.rows[bi].x,rc=rowCls(DOPE.rows[bi]);rows=rows.replace('<tr data-dx="'+dx+'" tabindex="0"'+(rc.length?' class="'+rc.join(" ")+'"':'')+'>','<tr data-dx="'+dx+'" tabindex="0" class="'+["sel"].concat(rc).join(" ")+'" aria-current="true">');}}
   {const ub=$("d_unitBtn"),U2=o.unit==="mil"?"MIL":"MOA",O2=o.unit==="mil"?"MOA":"MIL";$("d_unitTxt").textContent=U2;ub.disabled=!!o.scope;
     ub.setAttribute("aria-label","Scope clicks in "+U2+(o.scope?", set by the gun's scope":". Tap for "+O2));ub.title=o.scope?"Set by the gun's scope":"Tap for "+O2;}
   {const sn=$("d_unitNote");if(sn){sn.hidden=!o.scope;if(o.scope){const rU=o.scope.unit==="mil"?"mil":"moa";sn.innerHTML='Set by the scope on this gun: <b>'+escL(scopeName(o.scope))+'</b>'+(num(o.scope.click)>0?' ('+o.scope.click+' '+(o.unit==="mil"?"MIL":"MOA")+' clicks)':' (click value not published: check your turrets)')+'.'+(rU!==o.unit?' Its reticle is in '+(rU==="mil"?"MIL":"MOA")+', so the reticle holds are in '+(rU==="mil"?"MIL":"MOA")+'.':'');}}}
   const today=new Date();const ds=today.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+  const keepTop=($("dopeScroll")||{}).scrollTop||0;
   box.innerHTML='<div class="dopehead"><div class="dopename">'+esc(L.name||"Load")+'</div><div class="dopemeta">'+
     (L.rifleName?esc(L.rifleName)+" · ":"")+(o.scope?esc(scopeName(o.scope))+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
-    '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+(corOn(L)?" · Coriolis "+Math.abs(num(L.cor.lat)).toFixed(1)+"°"+(num(L.cor.lat)<0?"S":"N")+(num(L.cor.az)!=null?" firing "+Math.round(num(L.cor.az))+"°":"")+" (in Up)":"")+" · "+esc(ds)+"</div></div>"+
-    (rows?'<table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+(corOn(L)?'<th>Cor R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table>"
+    '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+(corOn(L)?" · Coriolis "+Math.abs(num(L.cor.lat)).toFixed(1)+"°"+(num(L.cor.lat)<0?"S":"N")+(num(L.cor.az)!=null?" firing "+Math.round(num(L.cor.az))+"°":"")+" (in Up)":"")+" · "+esc(ds)+"</div>"+(TX===0?'<div class="dopetrans">Subsonic from the muzzle</div>':TX>0?'<div class="dopetrans"><i aria-hidden="true"></i>Transonic at '+transTxt(TX)+'</div>':'')+"</div>"+
+    (rows?'<div class="dopescroll" id="dopeScroll"><table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Drop<br>('+U.u("in")+')</th><th>Up<br>('+UN+')</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+UN+')</th>').join(""):'<th>Wind<br>('+UN+')</th>')+(S.sg!=null?'<th>Spin R<br>('+UN+')</th>':'')+(corOn(L)?'<th>Cor R<br>('+UN+')</th>':'')+'<th>'+(U.metric?"m/s":"Fps")+'</th></tr></thead><tbody>'+rows+"</tbody></table></div>"+'<div class="chgrip" id="dopeGrip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Dope card height. Drag up or down, or use the arrow keys." title="Drag to make the card taller or shorter. Double-tap to show all of it."><span></span></div>'
          :'<p class="note">No distances in that range'+(U.n("yd",S.last,0)<o.to?" (this profile's path gets too steep to follow past "+U.s("yd",S.last,0)+")":"")+".</p>");
+  {const sc=$("dopeScroll");if(sc){sc.scrollTop=keepTop;dopeGripBind();}}
 }
+// the dope card's height (2.42): it starts shortened and scrolls; drag the bar under it (remembered on this device), double-tap to
+// show the whole card. Printing and Field mode always show every row.
+const DOPEH_KEY="rb.dopeH";
+function dopeGripBind(){const g=$("dopeGrip"),w=$("dopeScroll");if(!g||!w)return;const MIN=120,MAX=4000;
+  const apply=v=>{if(v==="all")w.style.setProperty("--dopeh","none");else if(v>0)w.style.setProperty("--dopeh",v+"px");else w.style.removeProperty("--dopeh");};
+  const set=v=>{if(v!=="all"&&v!=null)v=Math.max(MIN,Math.min(MAX,Math.round(v)));apply(v);try{if(v==null)localStorage.removeItem(DOPEH_KEY);else localStorage.setItem(DOPEH_KEY,String(v));}catch(e){}};
+  try{const v=localStorage.getItem(DOPEH_KEY);apply(v==="all"?"all":+v>=MIN?+v:null);}catch(e){}
+  let d=null,tap=0;
+  g.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;e.preventDefault();try{g.setPointerCapture(e.pointerId);}catch(_){}d={y:e.clientY,h:w.getBoundingClientRect().height,moved:false};g.classList.add("drag");});
+  g.addEventListener("pointermove",e=>{if(!d)return;const dy=e.clientY-d.y;if(Math.abs(dy)>3)d.moved=true;if(d.moved)set(d.h+dy>=w.scrollHeight-2?"all":d.h+dy);});
+  const end=e=>{if(!d)return;const mv=d.moved;d=null;g.classList.remove("drag");if(!mv&&e.type==="pointerup"){const now=Date.now();if(now-tap<320){set(w.scrollHeight>w.clientHeight+2?"all":null);tap=0;}else tap=now;}};
+  g.addEventListener("pointerup",end);g.addEventListener("pointercancel",end);
+  g.addEventListener("keydown",e=>{const h=w.getBoundingClientRect().height;if(e.key==="ArrowUp"){e.preventDefault();set(h-40);}else if(e.key==="ArrowDown"){e.preventDefault();set(h+40>=w.scrollHeight?"all":h+40);}else if(e.key==="Home"||e.key==="Escape")set(null);});}
 // the units switch sets the dope card and the reticle together
 $("d_unitBtn").addEventListener("click",()=>{const d=$("d_unit");d.value=dopeOpts(cur()).unit==="mil"?"moa":"mil";d.dispatchEvent(new Event("change"));});
 // tap a distance on the card: the reticle shows it (beside the card on a wide screen, in a sheet on a phone)
@@ -3426,7 +3459,7 @@ function openField(){
   v.innerHTML='<div class="fmbar"><button class="btn" id="fieldClose" type="button">← Back</button><span class="fmsp"></span><button class="btn" id="fmSmall" type="button" aria-label="Smaller text">A−</button><button class="btn" id="fmBig" type="button" aria-label="Bigger text">A+</button><button class="btn" id="fmBright" type="button">'+(FIELD.bright?'Dark':'Bright')+'</button></div>'+
     '<div class="fmhead">'+box.querySelector(".dopehead").innerHTML+'</div>'+
     '<table class="fmtbl" style="font-size:'+(26*FIELD.size).toFixed(0)+'px"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th><th>Dial up<br><small>'+unit+'</small></th>'+wHead+(D.spin?'<th>Spin R<br><small>'+unit+'</small></th>':'')+(D.cor?'<th>Cor R<br><small>'+unit+'</small></th>':'')+'</tr></thead><tbody>'+
-    D.rows.map(r=>'<tr'+(r.z?' class="zrow"':'')+'><td>'+r.x+(r.z?'<span class="ztag">'+ZTAG[r.z]+'</span>':'')+'</td><td class="up">'+r.up+'</td>'+(BR.length?r.brs.map(v=>'<td>'+v+'</td>').join(""):'<td>'+(wind?r.wind:'–')+'</td>')+(D.spin?'<td>'+(r.spin!=null?r.spin:'–')+'</td>':'')+(D.cor?'<td>'+r.cor+'</td>':'')+'</tr>').join("")+'</tbody></table>'+
+    D.rows.map(r=>'<tr'+((r.z||r.tr)?' class="'+[r.z?"zrow":"",r.tr?"trans":""].filter(Boolean).join(" ")+'"':'')+'><td>'+r.x+(r.z?'<span class="ztag">'+ZTAG[r.z]+'</span>':'')+'</td><td class="up">'+r.up+'</td>'+(BR.length?r.brs.map(v=>'<td>'+v+'</td>').join(""):'<td>'+(wind?r.wind:'–')+'</td>')+(D.spin?'<td>'+(r.spin!=null?r.spin:'–')+'</td>':'')+(D.cor?'<td>'+r.cor+'</td>':'')+'</tr>').join("")+'</tbody></table>'+
     '<p class="fmnote">Screen stays on while this is open'+(navigator.wakeLock?'':' (if your phone allows it)')+'. '+(BR.length?'Wind columns are full-value holds for '+BR.map(b=>U.n("mph",b,0)).join(", ").replace(/, (\d+)$/," and $1")+' '+U.u("mph")+'.':'Wind is for '+U.s("mph",wind,0)+' from '+D.clock+' o\'clock; change it on the Conditions card.')+(D.spin||D.cor?' '+(D.spin&&D.cor?'Spin R and Cor R are':D.spin?'Spin R is':'Cor R is')+' how far the bullet drifts right (minus is left): hold that much the other way, on top of the wind.':'')+'</p>';
   document.body.appendChild(v);document.body.classList.add("noscroll");keepAwake(true);
   const t=v.querySelector(".fmtbl");
@@ -3442,7 +3475,7 @@ document.getElementById("dopeField").addEventListener("click",openField);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("fieldMode"))closeField();});
 document.getElementById("dopePrint").addEventListener("click",()=>{
   let pa=document.getElementById("printArea");if(!pa){pa=document.createElement("div");pa.id="printArea";document.body.appendChild(pa);}
-  pa.innerHTML='<div class="dopecard">'+$("dopeCard").innerHTML.replace(/ class="sel" aria-current="true"/g,"")+'</div>';
+  pa.innerHTML='<div class="dopecard">'+$("dopeCard").innerHTML.replace(/ class="sel( [a-z ]+)?" aria-current="true"/g,(m,c)=>c?' class="'+c.trim()+'"':"")+'</div>';
   document.body.classList.add("printdope");window.print();});
 window.addEventListener("afterprint",()=>document.body.classList.remove("printdope"));
 
@@ -3472,6 +3505,12 @@ function niceStep(span,maxN,c){for(const v of c){if(span/v<=maxN)return v;}retur
 const YSTEPS=[0.1,0.2,0.25,0.5,1,2,2.5,5,10,20,25,50,100,200,250,500];
 const XSTEPS=[1,2,5,10,20,25,50,100,200,250,500];
 const fmtN=n=>String(Math.round(n*100)/100);
+/* where the bullet slows to Mach 1.2 (2.42): drag starts changing quickly there and BC predictions get shakier. 0 = it starts
+   out slower than that (a subsonic load); null = it stays faster all the way. Uses the speed of sound for today's temperature. */
+function transX(S){if(!S||!(S.sos>0)||!S.v)return null;const th=1.2*S.sos,lim=S.last;if(S.at(S.v,0)<=th)return 0;
+  for(let x=1;x<=lim;x++)if(S.at(S.v,x)<th)return x;return null;}
+window.RB_TRANSX=transX;
+const transTxt=TX=>U.n("yd",TX,0).toLocaleString()+" "+U.u("yd");
 function drawChart(L,S,zs,cr,path){
   LAST={L,S,zs,cr,path};
   const key=L.id+"|"+rngOf(L);if(key!==VIEWKEY){VIEW=null;VIEWKEY=key;}
@@ -3519,7 +3558,6 @@ function drawChart(L,S,zs,cr,path){
   if(V.y0<=0&&V.y1>=0)s+='<line x1="'+m.l+'" x2="'+(m.l+pw)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="var(--zero)" stroke-width="3"/>';
   const xa=Math.max(0,Math.floor(V.x0)), xb=Math.min(XMAX,Math.ceil(V.x1));
   const stepPts=Math.max(1,Math.floor((xb-xa)/(zoomed?300:(lr?200:200))));
-  const dotsX=zoomed?xt.filter(x=>(U.metric||Number.isInteger(x))&&x<=XMAX):(()=>{const a=[];for(let x=0;x<=XMAX+1e-9;x+=XU/kx/(lr?2:1))a.push(x);return a;})();
   // point-blank band and path
   const PB=PBR&&PBR.show?PBR:null;
   if(PB){const x0=Math.max(PB.near,V.x0),x1=Math.min(PB.beyond?XMAX:PB.far,V.x1);
@@ -3527,10 +3565,11 @@ function drawChart(L,S,zs,cr,path){
 }
   zs.forEach((z,i)=>{
     if(z==null||xb<xa)return;
-    let d="",first=true;
-    for(let x=xa;;x+=stepPts){if(x>xb)x=xb;d+=(first?"M":"L")+X(x).toFixed(1)+" "+Y(path(x,z)).toFixed(1);first=false;if(x>=xb)break;}
-    s+='<path d="'+d+'" fill="none" stroke="'+ZC[i]+'" stroke-width="2.4" stroke-linejoin="round"/>';
-    dotsX.forEach(x=>{s+='<circle cx="'+X(x).toFixed(1)+'" cy="'+Y(path(x,z)).toFixed(1)+'" r="2.6" fill="'+ZC[i]+'"/>';});
+    // solid while it's supersonic, dashed once it goes transonic (Mach 1.2) and on from there
+    const T=transX(S),seg=(a,b)=>{if(b<a)return "";let d="",first=true;for(let x=a;;x+=stepPts){if(x>b)x=b;d+=(first?"M":"L")+X(x).toFixed(1)+" "+Y(path(x,z)).toFixed(1);first=false;if(x>=b)break;}return d;};
+    const dS=T==null?seg(xa,xb):T>xa?seg(xa,Math.min(xb,T)):"",dD=T==null||T>=xb?"":seg(Math.max(xa,T),xb);
+    if(dS)s+='<path d="'+dS+'" fill="none" stroke="'+ZC[i]+'" stroke-width="2.4" stroke-linejoin="round"/>';
+    if(dD)s+='<path d="'+dD+'" fill="none" stroke="'+ZC[i]+'" stroke-width="2.4" stroke-linejoin="round" stroke-dasharray="7 5"/>';
   });
   s+='</g>';
   const marks=[];
@@ -3568,6 +3607,7 @@ function drawChart(L,S,zs,cr,path){
   s+=lab;
   s+='</svg>';
   box.innerHTML=s;
+  if(window.CHART_TIP){CHART_TIP.hidden=true;box.appendChild(CHART_TIP);}
 }
 function redrawChart(){if(LAST)drawChart(LAST.L,LAST.S,LAST.zs,LAST.cr,LAST.path);}
 let raf=0;function scheduleRedraw(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;redrawChart();});}
@@ -3637,6 +3677,34 @@ function zoomAbout(fx,fy,px,py){ // fx,fy <1 zooms in; px,py plot-pixel anchor
     rebase();
   };
   box.addEventListener("pointerup",end);box.addEventListener("pointercancel",end);
+  /* the distance and drop where you point (2.42): move the mouse over a path, or tap one on a touch screen */
+  const tip=document.createElement("div");tip.className="charttip";tip.hidden=true;tip.setAttribute("aria-live","polite");window.CHART_TIP=tip;box.appendChild(tip);
+  const hideTip=()=>{tip.hidden=true;const g=box.querySelector("#chartHover");if(g)g.remove();};
+  function showTip(e,tol){
+    if(!CH||!LAST||!LAST.path){hideTip();return;}
+    const r=box.getBoundingClientRect(),k=CH.W/r.width,p=toPlot(e),m=CH.m,v=curView(),L=LAST.L,S=LAST.S,P=LAST.path;
+    if(p.x<m.l||p.x>m.l+CH.pw||p.y<m.t||p.y>m.t+CH.ph){hideTip();return;}
+    const XMAX=Math.min(defView(L).x1,S.last),x=Math.round(v.x0+(p.x-m.l)/CH.pw*(v.x1-v.x0));
+    if(x<0||x>XMAX){hideTip();return;}
+    const X=q=>m.l+(q-v.x0)/(v.x1-v.x0)*CH.pw,Y=y=>m.t+(v.y1-y)/(v.y1-v.y0)*CH.ph;
+    const lines=(LAST.zs||[]).map((z,i)=>z==null?null:{i,z,y:P(x,z)}).filter(Boolean);if(!lines.length){hideTip();return;}
+    const near=Math.min(...lines.map(o=>Math.abs(Y(o.y)-p.y)));if(near>tol*k){hideTip();return;}
+    const svg=box.querySelector("svg");if(!svg){hideTip();return;}
+    let g=svg.querySelector("#chartHover");if(!g){g=document.createElementNS("http://www.w3.org/2000/svg","g");g.id="chartHover";svg.appendChild(g);}
+    const cx=X(x);g.innerHTML='<line x1="'+cx+'" x2="'+cx+'" y1="'+m.t+'" y2="'+(m.t+CH.ph)+'" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/>'+
+      lines.map(o=>'<circle cx="'+cx+'" cy="'+Y(o.y)+'" r="4.5" fill="'+ZC[o.i]+'" stroke="var(--surface)" stroke-width="2"/>').join("");
+    const T=transX(S),f1=n=>{const t=n.toFixed(1);return t==="-0.0"?"0.0":t;};
+    tip.innerHTML='<b>'+U.n("yd",x,0).toLocaleString()+' '+U.u("yd")+'</b>'+
+      lines.map(o=>'<span><i style="background:'+ZC[o.i]+'"></i>'+(o.y>0?"+":"")+f1(U.to("in",o.y))+' '+U.u("in")+(lines.length>1?' <small>'+U.s("yd",o.z,0)+' zero</small>':'')+'</span>').join("")+
+      (T!=null&&x>=T&&T>0?'<small class="ctt">Transonic</small>':T===0?'<small class="ctt">Subsonic</small>':'');
+    tip.hidden=false;
+    const ty=Math.min(...lines.map(o=>Y(o.y)))/k,tx=cx/k,tw=tip.offsetWidth,th=tip.offsetHeight;
+    let left=tx+12;if(left+tw>r.width-4)left=tx-12-tw;left=Math.max(4,left);
+    let top=ty-th-10;if(top<4)top=ty+12;tip.style.left=left+"px";tip.style.top=top+"px";}
+  box.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;if(ptrs.size){hideTip();return;}showTip(e,26);});
+  box.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")hideTip();});
+  box.addEventListener("pointerup",e=>{if(e.pointerType==="mouse"||moved||ptrs.size)return;showTip(e,34);});
+  document.addEventListener("pointerdown",e=>{if(!box.contains(e.target))hideTip();},true);
   box.addEventListener("wheel",e=>{ if(!CH||!(e.ctrlKey||e.metaKey))return; e.preventDefault(); const p=toPlot(e),f=Math.exp(e.deltaY*0.01); zoomAbout(f,f,p.x,p.y);},{passive:false});
   box.addEventListener("dblclick",()=>{VIEW=null;scheduleRedraw();});
   const center=()=>({x:CH.m.l+CH.pw/2,y:CH.m.t+CH.ph/2});
@@ -10103,11 +10171,11 @@ const INFO={
   liveFocusAnd:{t:"Silence calls (Android)",noMore:true,b:"Web apps can't turn on Do Not Disturb by themselves on Android, but it's two taps. Set it up once:<br><b>1.</b> Settings › Notifications (or Sound) › <b>Do Not Disturb</b> (called <b>Modes</b> on some phones). Under <b>People</b>, set Calls and Messages to <b>None</b> and turn off <b>Repeat callers</b>. Under <b>Apps</b>, allow none.<br><b>2.</b> At the range, swipe down twice from the top of the screen and tap <b>Do Not Disturb</b>, then come back here.<br>Also set <b>Screen timeout</b> to the longest time (Settings › Display), turn off <b>Battery Saver</b>, and test it once with a call and a text before you walk down range."},
   secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},
   secTWx:{t:"Conditions",b:"Temperature, altitude and wind change where the bullet lands. Wind starts at 0 on a new profile. <b>Use the weather where I am</b> fills in today's temperature and air pressure. Enter the wind's speed and the o'clock it comes from (3 is from the right, 9 from the left), and the shot angle for uphill or downhill shots.",h:"Weather where you are"},
-  secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size in the Point-blank range card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. <b>Short</b>, <b>Medium</b> and <b>Long</b> chart it to 200, 400 or 1,000 yd. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
+  secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size in the Point-blank range card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. <b>Short</b>, <b>Medium</b> and <b>Long</b> chart it to 200, 400 or 1,000 yd. A path turns dashed where the bullet goes transonic (Mach 1.2). Move the mouse over a path (or tap it) to see the distance and drop. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
   secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), and it becomes the first (purple) zero box under the chart; tap its circle to use it for the range table and dope card. Wind isn't included.",h:"Point-blank range"},
-  secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns (a gun's scope picks MOA or MIL for you), turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds, and drag the bar under the table to change its height.",h:"Reading the results"},
+  secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns (a gun's scope picks MOA or MIL for you), turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds, and drag the bar under the table to change its height. A red line marks where the bullet goes transonic (Mach 1.2).",h:"Reading the results"},
   "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
-  secTDope:{t:"Dope card & reticle",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and <b>MOA</b> or <b>MIL</b>, then tap <b>Print dope card</b>. Tap any distance on the card to see where the target goes on a plain reticle; on a phone it slides up, with ‹ › to step through the distances. <b>Field mode</b> shows the holds in big numbers for the bench.",h:"Print a dope card"},
+  secTDope:{t:"Dope card & reticle",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and <b>MOA</b> or <b>MIL</b>, then tap <b>Print dope card</b>. Tap any distance on the card to see where the target goes on a plain reticle; on a phone it slides up, with ‹ › to step through the distances. <b>Field mode</b> shows the holds in big numbers for the bench. A red line and the note under the conditions show where it goes transonic. Drag the bar under the card to make it taller, or double-tap it to show it all.",h:"Print a dope card"},
   secTRanges:{t:"Saved ranges",b:"Pick one of your saved ranges to see the dial and wind for each of its targets with this profile and its conditions. Add and change ranges under <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a> (<b>Edit ranges ›</b>).",h:"Saved ranges"},
   "@Range trips":{t:"Range trips",b:"A log of each day you shot this profile. Tap <b>+ New range trip</b> and fill in what you like: distance, rounds, weather, chronograph strings, target photos and the cold-bore shot. Rounds fired count toward the gun's round count and come off your ammo.",h:"Range trips"},
   "@Range trip":{t:"Range trip",b:"Fill in what you like about the day. <b>Import chronograph file</b> reads your chronograph's export, and target photos are measured when you tap one (or use <b>Live target</b> on a spotting scope). <b>Cold-bore shot</b> records where your first shot landed. <b>Print trip report</b> makes a PDF of the day.",h:"Range trips"},
@@ -11182,7 +11250,7 @@ window.RB_CMP=(function(){
     document.querySelectorAll("#cmpRng [data-cr]").forEach(b=>b.setAttribute("aria-selected",String(+b.dataset.cr===R)));
     document.querySelectorAll("#cmpUnit [data-cu]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.cu===S.unit)));
     $("cmpUnit").hidden=S.view!=="dial";
-    $("cmpWhat").textContent={path:"Where each bullet is above or below your line of sight, with every one zeroed at "+U.s("yd",S.z,0)+".",dial:"How far to dial up at each distance from the "+U.s("yd",S.z,0)+" zero.",wind:"How far a "+U.s("mph",10,0)+" full-value crosswind pushes each bullet.",vel:"How fast each bullet is still going.",en:"Each bullet's energy downrange."}[S.view];
+    $("cmpWhat").textContent={path:"Where each bullet is above or below your line of sight, with every one zeroed at "+U.s("yd",S.z,0)+".",dial:"How far to dial up at each distance from the "+U.s("yd",S.z,0)+" zero.",wind:"How far a "+U.s("mph",10,0)+" full-value crosswind pushes each bullet.",vel:"How fast each bullet is still going.",en:"Each bullet's energy downrange."}[S.view]+" A dot marks where a bullet goes transonic (Mach 1.2).";
     $("cmpLegend").innerHTML=sol.map(s=>'<span>'+swatch(s.i)+esc(s.r.label||"Bullet "+(s.i+1))+(s.err?' <i class="err">('+esc(s.err)+')</i>':'')+'</span>').join("");
     if(!ok.length){$("cmpChart").innerHTML='<p class="note">Fill in at least one bullet to see the chart.</p>';$("cmpTable").innerHTML="";return;}
     // the chart
@@ -11200,7 +11268,10 @@ window.RB_CMP=(function(){
     g+='<text x="'+(m.l+pw/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="11.5" fill="var(--muted)">Distance ('+U.u("yd")+')</text>';
     if(y0<0&&y1>0)g+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="var(--fg)" stroke-width="1.2" opacity=".7"/>';
     series.forEach(({s,pts})=>{const d=pts.filter(([x])=>!(S.view==="dial"&&x<S.z*0.5)).map(([x,y],j)=>(j?"L":"M")+X(x).toFixed(1)+" "+Y(y).toFixed(1)).join("");
-      g+='<path d="'+d+'" fill="none" stroke="'+COL[s.i%6]+'" stroke-width="2.4" stroke-linejoin="round"'+(DASH[s.i%6]?' stroke-dasharray="'+DASH[s.i%6]+'"':'')+'/>';});
+      g+='<path d="'+d+'" fill="none" stroke="'+COL[s.i%6]+'" stroke-width="2.4" stroke-linejoin="round"'+(DASH[s.i%6]?' stroke-dasharray="'+DASH[s.i%6]+'"':'')+'/>';
+      // a dot where this bullet goes transonic (Mach 1.2); dashes already tell the bullets apart here (2.42)
+      {const sos=49.0223*Math.sqrt(S.temp+459.67),last=Math.min(R,s.B.last);let T=null;if(!(s.B.at(0).v<=1.2*sos))for(let x=1;x<=last;x++)if(s.B.at(x).v<1.2*sos){T=x;break;}
+       if(T!=null&&!(S.view==="dial"&&T<S.z*0.5))g+='<circle cx="'+X(T).toFixed(1)+'" cy="'+Y(val(T,s.B,s.r.w)).toFixed(1)+'" r="5.5" fill="'+COL[s.i%6]+'" stroke="var(--surface)" stroke-width="2"><title>'+esc((s.r.label||"Bullet "+(s.i+1))+": transonic at "+U.n("yd",T,0).toLocaleString()+" "+U.u("yd"))+'</title></circle>';}});
     g+='<text x="'+(m.l+4)+'" y="'+(m.t+12)+'" font-size="11.5" fill="var(--muted)">'+esc(yLabel())+'</text></svg>';
     $("cmpChart").innerHTML=g;
     // the table: every step, one column per bullet
