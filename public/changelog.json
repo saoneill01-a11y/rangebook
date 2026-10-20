@@ -2,7 +2,21 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.2",
+      "version": "2.43.0",
+      "date": "2026-10-20",
+      "title": "Bluetooth chronograph",
+      "items": [
+        "Range Book can now take velocities straight from the RB Chrono, the do-it-yourself bench radar chronograph, over Bluetooth as you shoot. It works in Chrome or Edge on Android and computers, and in the Bluefy app on iPhone and iPad.",
+        "Range trips: Connect chronograph starts a string and fills it shot by shot, with the average and SD updating as you go. New chronograph string starts another, Send shots here picks a different string, Stop chronograph stops.",
+        "Ladder tests: Connect chronograph on a group fills its empty boxes, then moves on to the next group in the ladder.",
+        "Tools › Chronograph: use it on its own, with the last velocity in big numbers, the string's average, SD, spread, low and high, and Save to a range trip.",
+        "Chronograph settings: battery, pause, test shot, velocity window, where the radar sits for each gun, calibration against another chronograph, screen brightness, battery gauge and clock. A pill at the bottom right shows the last velocity while it's connected.",
+        "With the chronograph's sensor kit: air temperature, humidity, pressure, density altitude, ammo temperature, heading and level. Empty trip and ladder temperatures fill in from it, and Use this air in the profile and Use … for Coriolis set a Shooting profile from it.",
+        "How to Use has a new Bluetooth chronograph section."
+      ]
+    },
+    {
+      "version": "2.42",
       "date": "2026-10-19",
       "title": "Transonic on the chart, table and dope card",
       "items": [

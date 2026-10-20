@@ -812,6 +812,29 @@ header.hashelp>h1{padding-right:180px}
 #infoB{margin:0 0 14px;line-height:1.5}
 @media(min-width:761px){.infosheet{top:50%;bottom:auto;border-radius:16px;border-bottom:1px solid var(--line);transform:translateY(-40%);opacity:0;transition:transform .18s,opacity .18s;padding-bottom:18px}.infowrap.on .infosheet{transform:translateY(-50%);opacity:1}}
 @media(prefers-reduced-motion:reduce){.infosheet,.infoback{transition:none}}
+/* RB Chrono (Bluetooth chronograph): the pill while connected, the tool, the settings sheet */
+.chhud{position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:44;display:flex;align-items:center;gap:8px;padding:8px 14px 8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:15px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.18);cursor:pointer;max-width:calc(100vw - 32px);white-space:nowrap}
+@media (max-width:760px){.chhud{bottom:calc(var(--tabh,56px) + 14px + env(safe-area-inset-bottom,0px))}}
+.chhud i{width:10px;height:10px;border-radius:50%;background:var(--z3);flex:0 0 auto}
+.chhud[data-dot="lost"] i{background:var(--warn)}.chhud[data-dot="pause"] i{background:var(--muted)}
+.chhud .hv{overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}.chhud .hv small{font-size:12px;color:var(--muted);font-weight:500}
+.chhud .hb{font-size:12px;color:var(--muted);font-weight:500;border-left:1px solid var(--line);padding-left:8px}
+.chhud.flash{animation:chflash 1.2s ease-out}
+@keyframes chflash{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}100%{box-shadow:0 0 0 16px transparent}}
+@media(prefers-reduced-motion:reduce){.chhud.flash{animation:none}}
+.chlast{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;min-height:64px;margin:0 0 4px}
+.chlast .v{font-family:var(--display);font-size:68px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.chlast .u{font-size:18px;color:var(--muted);font-weight:600}
+.chdev{display:flex;flex-direction:column;gap:3px;margin:0 0 10px}
+.chenv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 10px}.chenv dt{color:var(--muted)}.chenv dd{margin:0;font-weight:600}
+.chprev{margin:0 0 8px;padding-left:18px}.chprev li{margin:4px 0}
+.chgrid{margin:8px 0}
+.chsheet h3{margin:18px 0 6px;font-size:15px}
+.chsheet .switch.inl{display:inline-flex;align-items:center}
+.btn.bton{border-color:var(--accent);color:var(--accent)}
+.btlive{outline:2px solid var(--accent);outline-offset:3px;border-radius:10px}
+body.chhudon{padding-bottom:84px}
+@media (max-width:760px){body.chhudon{padding-bottom:calc(var(--tabh,56px) + 84px + env(safe-area-inset-bottom,0px))}}
 #panel-help h3,#panel-help li{scroll-margin-top:calc(var(--stick,110px) + 8px)}
 .hflash{animation:hflash 2.2s ease-out}
 @keyframes hflash{0%,35%{background:color-mix(in srgb,var(--accent) 22%,transparent);box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent;box-shadow:0 0 0 6px transparent}}
@@ -1730,8 +1753,20 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Live target</b>: the spotting-scope camera without a profile, load or range trip. Set the bullet diameter, distance and shots per aim point, tap <b>Start Live target</b>, and use it the same way (see Live target under Reloading). <b>Save</b> keeps the target photo and its measured groups in your Range Book, listed under <b>Saved</b> on that page (with no signal, it waits on the phone and uploads later). Tap a saved one to see it, fix its marks with <b>Edit measurement</b>, or bring it into a range trip or a reloading ladder with <b>Move to</b>. A range trip also has <b>+ Saved Live target</b>. After saving, <b>Share picture</b> gives you a picture with every group drawn on it and its size, MOA, mean radius and center underneath, to keep in Photos or send to someone. Saved Live targets are in your backups too.</li>
         <li><b>Cartridges</b>: the cartridge list Range Book uses for bullet diameters and its warnings, with each one's SAAMI maximum case length and overall length, trim-to length and primer size (also under <a class=goto href=#go data-go=ref:cart>Reloading › Reference</a>) and what else is safe in that chamber. It's for reference only. Fix anything you find wrong (changed boxes are colored, with <b>Revert</b>) or add your own; <a class=goto href=#go data-go=help:Cartridges>Cartridges</a> (in the Gear &amp; Ranges help) has more.</li>
         <li><b>Targets</b>: the printable targets (see Shooting above).</li>
+        <li><b>Chronograph</b>: connects the RB Chrono bench radar chronograph over Bluetooth (see <b>Bluetooth chronograph</b> below).</li>
       </ul>
       <p>On a Shooting profile with a bullet length and twist filled in, a warning also appears at the top when the bullet isn't fully stable in that twist under today's conditions, with a <b>Check it in Tools</b> button.</p>
+      <h3 id="hChrono">Bluetooth chronograph</h3>
+      <p>Range Book can take velocities straight from the <b>RB Chrono</b>, a do-it-yourself radar chronograph that sits on the bench beside the gun, as you shoot. Nothing is typed in and nothing goes downrange.</p>
+      <p><b>What you need:</b> Bluetooth works from a web page in Chrome or Edge (Android phones, Windows, Mac and Chromebooks) and in the free <b>Bluefy</b> app on an iPhone or iPad (Safari and Chrome on iPhone can't). Range Book also has to be open through its <b>https://</b> address, the one you use away from home. In Bluefy, open that address and sign in once; Bluefy keeps its own sign-in.</p>
+      <p><b>Connecting:</b> switch the chronograph on and tap <b>Connect chronograph</b>: in <a class=goto href=#go data-go=tools:btchrono>Tools › Chronograph</a>, under <b>Chronograph</b> on a range trip, or on a group in a ladder test. Pick <b>RB Chrono</b> in the list the first time. While it's connected a small pill at the bottom right shows the last velocity and the battery; tap it for the settings. If it drops out (out of range, or the phone locked), Range Book reconnects by itself and asks for any shots it missed.</p>
+      <ul>
+        <li><b>Range trip:</b> <b>Connect chronograph</b> starts a new string (named RB Chrono and the time) and each shot fills its next box. <b>New chronograph string</b> starts another; <b>Send shots here</b> on any string sends them there instead; <b>Stop chronograph</b> stops. The trip's average and SD update as you go, even with the trip closed. If the chronograph has the sensor kit and the trip's temperature or weather is empty, they fill in from it, and each string notes the ammo temperature.</li>
+        <li><b>Ladder test:</b> <b>Connect chronograph</b> on a group fills that group's empty boxes, then moves on to the next group in the same ladder (the one with the outline). The ladder's temperature fills in from the sensors if it's empty.</li>
+        <li><b>Tools › Chronograph:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b> and <b>Save to a range trip</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
+      </ul>
+      <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot, to try things out; delete it with − Shot); the <b>velocity window</b> (it only counts readings in this range: <b>Automatic</b> uses 75% to 125% of the profile's muzzle velocity, or the ladder's velocities so far); <b>where the radar sits</b> beside and behind the muzzle, for each gun; <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
+      <p><b>Sensor kit</b> (optional): with temperature, humidity and pressure sensors, an ammo probe and a compass fitted, <b>Conditions</b> in Tools › Chronograph shows the air, density altitude, ammo temperature, which way it's pointing and whether it's level. <b>Use this air in the profile</b> sets a Shooting profile's temperature and altitude from it (the same way <b>Use the weather where I am</b> does). <b>Use … for Coriolis</b> sets the profile's direction of fire. Calibrate the compass once in Settings (turn it slowly through a full circle), then <b>Match my phone</b> to line it up with your phone's compass. For Coriolis a heading within 10 or 15 degrees is plenty.</p>
     </section>
     <section class="card guide terms" aria-label="The fine print" id="hFine"><h2>The fine print</h2><div class="termsbody"><h2>Shooting is dangerous.</h2>
 <p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p>
@@ -1783,7 +1818,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved unless you ask.</p></header>
-    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="lib"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16 5l3.6-.9 3 15.5-3.6.9z"/></svg></span><span class="t">Library</span><span class="d">Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Look anything up, fix it for your own use, or add it to yours.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph file check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="lib"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16 5l3.6-.9 3 15.5-3.6.9z"/></svg></span><span class="t">Library</span><span class="d">Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Look anything up, fix it for your own use, or add it to yours.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph file check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="btchrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18.5a9 9 0 0 1 0-13"/><path d="M9.5 15a4.5 4.5 0 0 1 0-6"/><circle cx="13" cy="12" r="1.4"/><path d="M16 12h5"/></svg></span><span class="t">Chronograph</span><span class="d">Connect your RB Chrono radar chronograph over Bluetooth: each velocity as you shoot, the string's average, SD and spread, and the air and direction from its sensors.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <p class="note toolsarr" id="toolsArr">Press and hold a tool to move it (on a computer, drag it).<span id="toolsReorder" hidden> <button class="linkbtn" type="button" id="toolsReorderGo">Put them back in the usual order</button></span></p>
     <div class="tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
       <section class="card qcbar"><p class="note toolnote">The full Shooting calculator, without making a profile: pick a gun and ammo or type the numbers, and every card below works (chart, point-blank range, range table, true-up, dope card, saved ranges). Nothing is saved to your profiles; this device remembers the last numbers until you tap <b>Reset</b>.</p>
@@ -1864,6 +1899,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="row"><label class="btn primary" for="chIn" style="cursor:pointer">Pick a chronograph file</label><input id="chIn" type="file" multiple accept=".xlsx,.xls,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" hidden><button class="btn" id="chClear" type="button" hidden>Clear</button></div>
       <div id="chOut" aria-live="polite"></div>
     </section>
+    <div class="tool col" data-toolsec="btchrono" aria-label="Chronograph" hidden><div id="btRoot" class="col"></div></div>
     <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden>
       <p class="note toolnote">Type in either box.</p>
       <div id="cv_rows"></div>
@@ -2204,6 +2240,11 @@ window.RB_WX=(()=>{
   const W={
     dir:d=>isFinite(d)?dirs[Math.round(d/45)%8]:"",
     ok:(r)=>!!r&&isFinite(r.lat)&&isFinite(r.lon),
+    // the air from temperature (°F), humidity (%) and station pressure (hPa): pressure altitude, the altitude the
+    // calculator uses (the pressure altitude with the same air density at this temperature, so humidity counts) and density altitude, in ft
+    air(T,RH,P){const tc=(T-32)*5/9,tk=tc+273.15,pv=RH!=null&&isFinite(RH)?RH/100*6.1078*Math.pow(10,7.5*tc/(tc+237.3)):0;
+      const rho=(P-pv)*100/(287.05*tk)+pv*100/(461.495*tk),pa=p=>(1-Math.pow(p/1013.25,0.190284))*145366.45;
+      return {pAlt:pa(P),alt:pa(rho*287.05*tk/100),dAlt:(1-Math.pow(rho/1.225,0.234969))*145442.16};},
     // where the phone is (only on https:// sites)
     here(){return new Promise((ok,no)=>{
       if(!window.isSecureContext||!navigator.geolocation)return no(new Error("Your phone only shares its location with https:// sites. Open Range Book through its https:// address to use this."));
@@ -2216,13 +2257,9 @@ window.RB_WX=(()=>{
       if(!r.ok)throw new Error("weather");
       const j=await r.json(),c=j.current||{},T=c.temperature_2m,P=c.surface_pressure,RH=c.relative_humidity_2m;
       if(!(isFinite(T)&&P>300))throw new Error("weather");
-      const tc=(T-32)*5/9,tk=tc+273.15,pv=isFinite(RH)?RH/100*6.1078*Math.pow(10,7.5*tc/(tc+237.3)):0;
-      const rho=(P-pv)*100/(287.05*tk)+pv*100/(461.495*tk),pa=p=>(1-Math.pow(p/1013.25,0.190284))*145366.45;
+      const A=W.air(T,isFinite(RH)?RH:null,P);
       return {temp:T,rh:isFinite(RH)?RH:null,dew:isFinite(c.dew_point_2m)?c.dew_point_2m:null,hpa:P,inHg:P*0.0295300,
-        pAlt:pa(P),
-        // the altitude the calculator uses: the pressure altitude with the same air density at this temperature, so humidity counts too
-        alt:pa(rho*287.05*tk/100),
-        dAlt:(1-Math.pow(rho/1.225,0.234969))*145442.16,
+        pAlt:A.pAlt,alt:A.alt,dAlt:A.dAlt,
         wind:isFinite(c.wind_speed_10m)?c.wind_speed_10m:null,dir:isFinite(c.wind_direction_10m)?c.wind_direction_10m:null,gust:isFinite(c.wind_gusts_10m)?c.wind_gusts_10m:null,
         elev:isFinite(j.elevation)?j.elevation*3.28084:null,at:Date.now()};
     },
@@ -2250,6 +2287,349 @@ window.RB_WX=(()=>{
     mapUrl(r){const ll=f4(r.lat)+","+f4(r.lon);return /iPhone|iPad|Macintosh/.test(navigator.userAgent)?"https://maps.apple.com/?ll="+ll+"&q="+encodeURIComponent(r.name||"Range"):"https://www.google.com/maps/search/?api=1&query="+ll;}
   };
   return W;
+})();
+</script>
+<script>
+/* ---------- RB Chrono: the bench radar chronograph, over Bluetooth (Web Bluetooth: Chrome on Android and computers, Bluefy on iPhone/iPad) ----------
+   One chronograph at a time. Shots arrive as JSON on the Shot characteristic; each one goes to the session's live string (Tools → Chronograph)
+   and to whatever screen asked for them (a range trip's string or a ladder's group: the "sink"). Velocities are always fps from the device.
+   The radar position per gun and a manual velocity window are kept in the account's preferences; everything else lives on the chronograph. */
+window.RB_BTCHRONO=(function(){
+  const SVC="239d0001-5192-4fb5-95ad-180af63137b3",uuid=n=>"239d000"+n+"-5192-4fb5-95ad-180af63137b3";
+  const KEYS=[["shot",2],["status",3],["cmd",4],["cfg",5],["env",6]];
+  const $=id=>document.getElementById(id),U=()=>window.U;
+  const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const td=new TextDecoder(),te=new TextEncoder();
+  let dev=null,C={},H={},state="off",wantOn=false,relinking=false,retry=0,lastRx=0;
+  let st=null,cfg=null,env=null,boot=null,lastN=0,last=null,note="";   // last: the last good reading
+  const seen=new Set(),subs=new Set();
+  let sink=null,wq=Promise.resolve();
+  // the session: strings of shots, newest last. Kept in memory only (a range trip or ladder is where they're saved).
+  const S={strings:[{id:"s1",name:"String 1",at:Date.now(),shots:[]}],n:1};
+  let P={pos:{},win:null};   // saved in prefs: radar position per gun (metres), manual window (fps)
+  const savePrefs=()=>{if(window.RB_PREFS_SAVE)RB_PREFS_SAVE();};
+
+  /* ----- can this browser do it? ----- */
+  const ios=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  function support(){if(!window.isSecureContext)return "https";if(!navigator.bluetooth)return ios()?"ios":"browser";return "";}
+  function supportMsg(w){
+    if(w==="https")return "Bluetooth only works when Range Book is opened through its https:// address (the one you use away from home), not a local http:// address.";
+    if(w==="ios")return "Safari and Chrome on iPhone and iPad can't use Bluetooth from a web page. Open Range Book in the free Bluefy app (from the App Store) and connect from there.";
+    if(w==="browser")return "This browser can't use Bluetooth from a web page. Use Chrome or Edge (Android, Windows, Mac or a Chromebook), or Bluefy on an iPhone or iPad.";
+    return "";}
+
+  /* ----- talking to it ----- */
+  function setState(s){state=s;emit();}
+  const emit=()=>{subs.forEach(f=>{try{f();}catch(e){console.error("chrono",e);}});paint();hud();};
+  function send(cmd){
+    wq=wq.then(async()=>{if(!C.cmd||state!=="on")return;const b=te.encode(cmd);
+      try{if(C.cmd.writeValueWithResponse)await C.cmd.writeValueWithResponse(b);else await C.cmd.writeValue(b);}catch(e){console.warn("chrono send",cmd,e);}
+      await sleep(30);}).catch(()=>{});
+    return wq;}
+  async function readOne(k){const c=C[k];if(!c)return;try{const v=await c.readValue();handle(k,td.decode(v),true);}catch(e){}}
+  function got(k,ev){lastRx=Date.now();handle(k,td.decode(ev.target.value),false);}
+  function handle(k,txt,whole){
+    let j=null;try{j=JSON.parse(txt);}catch(e){
+      // a phone with a small Bluetooth packet size cuts long messages short: read the whole value instead
+      if(!whole&&k!=="shot")readOne(k);return;}
+    if(!j||typeof j!=="object")return;
+    if(k==="status"){st=j;if(j.b&&j.b!==boot){boot=j.b;lastN=num(j.shots)||0;seen.clear();}}
+    else if(k==="cfg")cfg=j;
+    else if(k==="env"){if(j.compass){note=j.compass==="calibrated"?"Compass calibrated.":"The compass didn't see enough turning. Try again, turning it slowly through a full circle.";calStep=0;}
+      else{env=Object.assign({},j,{at:Date.now()});if(sink&&sink.env)try{sink.env(air());}catch(e){console.error(e);}}}
+    else if(k==="shot")shot(j);
+    emit();
+  }
+  function shot(j){
+    const key=j.b+":"+j.n;if(seen.has(key))return;seen.add(key);
+    if(j.b&&j.b!==boot){boot=j.b;lastN=0;}
+    lastN=Math.max(lastN,num(j.n)||0);
+    const s={n:j.n,ok:!!j.ok&&num(j.v)>0,v:num(j.v),why:j.why||"",q:num(j.q),test:!!j.test,at:Date.now(),ammo:env&&num(env.am)!=null?num(env.am)*9/5+32:null};
+    if(!s.ok){note="Shot "+s.n+": no reading"+(s.why?", "+whyTxt(s.why):"")+".";return;}
+    last=s;
+    note="";
+    const cur=S.strings[S.strings.length-1];cur.shots.push(s);
+    if(sink&&sink.shot){try{s.to=sink.label||"";sink.shot(s);}catch(e){console.error("chrono sink",e);}}
+    flash();
+  }
+  const whyTxt=w=>({weak:"the echo was too weak (aim the radar along the bore and closer to the muzzle)",short:"it lost the bullet too soon",noisy:"the reading was too scattered","out of range":"outside the velocity window","no signal":"nothing on the radar"})[w]||w;
+  function bind(k){const c=C[k];if(!c)return;if(!H[k])H[k]=ev=>got(k,ev);c.removeEventListener("characteristicvaluechanged",H[k]);c.addEventListener("characteristicvaluechanged",H[k]);return c.startNotifications();}
+  async function link(){
+    setState("connecting");
+    const srv=await dev.gatt.connect(),svc=await srv.getPrimaryService(SVC);C={};
+    for(const [k,n] of KEYS){try{C[k]=await svc.getCharacteristic(uuid(n));}catch(e){if(k!=="env")throw e;}}
+    for(const k of ["shot","status","cfg","env"])if(C[k])await bind(k);
+    await readOne("status");await readOne("cfg");await readOne("env");
+    const resume=boot&&lastN>0&&st&&st.b===boot;
+    lastRx=Date.now();retry=0;setState("on");
+    send("TIME "+Math.floor(Date.now()/1000));
+    send("UNITS "+(U()&&U().metric?"mps":"fps"));
+    // the same power-up as before the dropout: ask for anything it measured while we weren't listening
+    if(resume)send("SYNC "+lastN);
+    applySink(true);
+  }
+  async function connect(){
+    const w=support();if(w)throw new Error(supportMsg(w));
+    wantOn=true;if(state==="on")return;
+    if(!dev){setState("picking");
+      try{dev=await navigator.bluetooth.requestDevice({filters:[{services:[SVC]},{namePrefix:"RB Chrono"}],optionalServices:[SVC]});}
+      catch(e){wantOn=false;setState("off");if(e&&e.name==="NotFoundError")throw new Error("");throw new Error("Couldn't open Bluetooth: "+(e&&e.message||e));}
+      dev.addEventListener("gattserverdisconnected",lost);}
+    try{await link();}catch(e){if(dev&&dev.gatt.connected)dev.gatt.disconnect();setState(wantOn?"lost":"off");
+      if(wantOn)relink();throw new Error("Found the chronograph but couldn't connect. Is it switched on and within about 30 ft? It keeps trying by itself.");}
+  }
+  function lost(){C={};if(!wantOn){setState("off");return;}setState("lost");relink();}
+  async function relink(){
+    if(relinking)return;relinking=true;
+    while(wantOn&&state!=="on"&&dev){retry++;await sleep(Math.min(20000,800*Math.pow(1.5,Math.min(retry,9))));if(!wantOn||state==="on")break;
+      try{await link();}catch(e){setState("lost");}}
+    relinking=false;}
+  function disconnect(forget){wantOn=false;sink=null;try{if(dev&&dev.gatt.connected)dev.gatt.disconnect();}catch(e){}C={};if(forget)dev=null;setState("off");}
+  // the page came back on screen: try again now rather than waiting out the back-off
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&wantOn&&state==="lost"){retry=0;if(!relinking)relink();}});
+  // no word for a while (the status comes every 2 s): show it as out of touch
+  setInterval(()=>{if(state==="on"&&Date.now()-lastRx>9000)hud();},3000);
+
+  /* ----- where shots go ----- */
+  const clampW=(a,b)=>[Math.max(300,Math.round(a)),Math.min(4500,Math.round(b))];
+  function winFor(s){if(P.win&&P.win.lo>0&&P.win.hi>P.win.lo)return clampW(P.win.lo,P.win.hi);const e=s&&num(s.expect);return e>0?clampW(e*0.75,e*1.25):[300,4500];}
+  function posFor(g){const p=(g&&P.pos[g])||P.pos._||{};return {lat:num(p.lat)!=null?num(p.lat):0.10,behind:num(p.behind)!=null?num(p.behind):0.10};}
+  function applySink(force){
+    if(state!=="on")return;const w=winFor(sink),p=posFor(sink&&sink.gunId);
+    if(force||!cfg||Math.abs((num(cfg.vmin)||0)-w[0])>1||Math.abs((num(cfg.vmax)||0)-w[1])>1)send("SET vmin="+w[0]+" vmax="+w[1]);
+    if(force||!cfg||Math.abs((num(cfg.lat)||0)-p.lat)>0.002||Math.abs((num(cfg.behind)||0)-p.behind)>0.002)send("SET lat="+p.lat.toFixed(3)+" behind="+p.behind.toFixed(3));
+    if(sink&&!sink.strung){sink.strung=true;send("STRING");}
+    send("GET");}
+  // a new place for shots starts a new string in the session too, named after it
+  function attach(s){sink=s;s.strung=false;note="";const cur=S.strings[S.strings.length-1];
+    if(cur.shots.length){S.n++;S.strings.push({id:"s"+S.n,name:s.label||"String "+S.n,at:Date.now(),shots:[]});}else if(s.label)cur.name=s.label;
+    applySink(false);emit();}
+  function detach(prefix){if(sink&&(sink.key===prefix||sink.key.startsWith(prefix+":"))){sink=null;applySink(false);emit();}}
+
+  /* ----- the air from the add-on sensors, in Range Book's units (°F, ft, hPa) ----- */
+  function air(){
+    if(!env||Date.now()-env.at>60000)return null;const t=num(env.t),rh=num(env.rh),p=num(env.p);
+    const o={tempF:t!=null?t*9/5+32:null,rh,hpa:p,ammoF:num(env.am)!=null?num(env.am)*9/5+32:null,hd:num(env.hd),pi:num(env.pi),ro:num(env.ro),cc:num(env.cc)};
+    if(o.tempF!=null&&p>300&&window.RB_WX&&RB_WX.air)Object.assign(o,RB_WX.air(o.tempF,rh,p));
+    return o;}
+
+  /* ----- marking the Connect buttons on whatever screen is showing ----- */
+  // a button with data-btkey="trip:<id>" (or lad:…) shows data-bt0 when not connected, data-bt1 when connected
+  // but shots go elsewhere, data-bt2 when this is where they go. An empty label hides it.
+  function paint(){
+    document.querySelectorAll("[data-btkey]").forEach(el=>{const k=el.dataset.btkey,here=!!sink&&(sink.key===k||sink.key.startsWith(k+":"));
+      const lv=state==="off"||state==="picking"?0:here?2:1,t=el.dataset["bt"+lv]||"";
+      if(el.textContent!==t)el.textContent=t;el.hidden=!t;el.classList.toggle("bton",here&&lv===2);el.setAttribute("aria-pressed",String(here&&lv===2));});
+    document.querySelectorAll("[data-btlive]").forEach(el=>el.classList.toggle("btlive",!!sink&&state!=="off"&&sink.key===el.dataset.btlive));
+  }
+
+  /* ----- the little pill that stays on screen while connected ----- */
+  let pill=null,flashT=null;
+  function hud(){
+    if(!pill){if(!document.body)return;pill=document.createElement("button");pill.type="button";pill.className="chhud";pill.hidden=true;
+      pill.addEventListener("click",()=>settings());document.body.appendChild(pill);}
+    document.body.classList.toggle("chhudon",state!=="off");
+    if(state==="off"){pill.hidden=true;return;}
+    const stale=state==="on"&&Date.now()-lastRx>9000,u=U();
+    const dot=state==="on"&&!stale?(st&&st.arm===0?"pause":"on"):"lost";
+    const v=last&&last.ok?(u?u.n("fps",last.v,0):Math.round(last.v)):null;
+    pill.hidden=false;pill.dataset.dot=dot;
+    pill.innerHTML='<i aria-hidden="true"></i><span class="hv">'+(state==="picking"?"Choose the chronograph…":state==="connecting"?"Connecting…":state==="lost"||stale?"Chronograph out of reach":v!=null?esc(v.toLocaleString())+' <small>'+esc(u?u.u("fps"):"fps")+'</small>':st&&st.arm===0?"Paused":"Listening")+'</span>'+
+      (st&&num(st.bat)>=0&&state==="on"?'<span class="hb">'+Math.round(st.bat)+'%</span>':'');
+    pill.setAttribute("aria-label","Chronograph: "+pill.textContent+". Open its settings.");
+  }
+  function flash(){if(!pill)return;pill.classList.remove("flash");void pill.offsetWidth;pill.classList.add("flash");clearTimeout(flashT);flashT=setTimeout(()=>pill.classList.remove("flash"),1200);}
+
+  /* ----- settings sheet ----- */
+  let sh=null,calStep=0,shGun="";
+  function settings(){
+    if(!sh){sh=document.createElement("div");sh.className="infowrap chsheet";sh.hidden=true;
+      sh.innerHTML='<div class="infoback" data-chclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-label="Chronograph"><div class="infohead"><h2>Chronograph</h2><button class="infox" type="button" data-chclose aria-label="Close">✕</button></div><div id="chSet"></div></div>';
+      document.body.appendChild(sh);
+      sh.addEventListener("click",e=>{if(e.target.closest("[data-chclose]"))closeSheet();});
+      document.addEventListener("keydown",e=>{if(e.key==="Escape"&&sh&&!sh.hidden)closeSheet();});}
+    sh.hidden=false;requestAnimationFrame(()=>sh.classList.add("on"));drawSet();}
+  function closeSheet(){if(!sh)return;sh.classList.remove("on");setTimeout(()=>{if(sh&&!sh.classList.contains("on"))sh.hidden=true;},180);}
+  subs.add(()=>{if(sh&&!sh.hidden&&!(document.activeElement&&document.activeElement.tagName==="INPUT"&&sh.contains(document.activeElement)))drawSet();});
+  const fpsIn=(id,v,ph)=>'<input id="'+id+'" type="number" inputmode="numeric" step="1" placeholder="'+esc(ph||"")+'" value="'+(v==null?"":esc(U().n("fps",v,0)))+'">';
+  function guns(){return (window.RB_TRIPS&&RB_TRIPS.guns)?RB_TRIPS.guns():[];}
+  function drawSet(){
+    const box=sh&&sh.querySelector("#chSet");if(!box)return;const u=U(),on=state==="on";
+    if(!on){
+      const w=support();
+      const h0=(w?'<p class="note">'+esc(supportMsg(w))+'</p>':
+        '<p>'+(state==="lost"?'<b>Out of reach.</b> Range Book keeps trying to reconnect by itself. Check the chronograph is switched on and within about 30 ft.':state==="connecting"?'Connecting…':'Not connected.')+'</p>')+
+        (note?'<p class="note">'+esc(note)+'</p>':'')+
+        '<div class="row">'+(!w&&state!=="connecting"?'<button class="btn primary" type="button" id="chsGo">Connect</button>':'')+(state!=="off"?'<button class="btn" type="button" id="chsOff">Stop trying</button>':'')+'<button class="btn" type="button" id="chsTool">Open the Chronograph tool</button></div>';
+      if(box._h!==h0){box._h=h0;box.innerHTML=h0;bindCommon(box);}return;}
+    const s=st||{},c=cfg||{},sens=String(s.sens||""),A=air();
+    const g=shGun||(sink&&sink.gunId)||"",pos=posFor(g),win=P.win;
+    const inU=v=>u.n("in",v/0.0254,1);
+    let h='<div class="chdev"><div><b>'+esc(dev&&dev.name||"RB Chrono")+'</b> <span class="note">'+(s.arm===0?"paused":"listening")+'</span></div>'+
+      '<div class="note">'+[num(s.bat)>=0?"Battery "+Math.round(s.bat)+"% ("+num(s.bv).toFixed(2)+" V)":"Battery gauge not wired",s.sd?"SD card OK":"No SD card",s.t===0?"Radar board not answering":"",num(s.ovr)>0?num(s.ovr)+" missed samples":"","Firmware "+esc(s.fw||"?")+" / "+esc(s.efw||"?")].filter(Boolean).join(" · ")+'</div>'+
+      (sink?'<div class="note">Shots go to <b>'+esc(sink.label||"")+'</b> <button class="linkbtn" type="button" id="chsDetach">Stop</button></div>':'')+'</div>';
+    if(note)h+='<p class="note" role="status">'+esc(note)+'</p>';
+    h+='<div class="row"><button class="btn'+(s.arm===0?' primary':'')+'" type="button" id="chsArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="chsTest">Test shot</button><button class="btn" type="button" id="chsTool">Open the Chronograph tool</button></div>';
+    // velocity window
+    h+='<h3>Velocity window</h3><p class="note">It only counts readings in this range, which stops echoes and other guns from counting. <b>Automatic</b> uses 75% to 125% of the load\'s muzzle velocity when shots go to a range trip or ladder; with no load it accepts '+esc(u.s("fps",300,0,true))+' to '+esc(u.s("fps",4500,0,true))+'.</p>'+
+      '<div class="segtabs" role="radiogroup" aria-label="Velocity window"><button type="button" role="radio" data-chwin="auto" aria-selected="'+(!win)+'">Automatic</button><button type="button" role="radio" data-chwin="man" aria-selected="'+(!!win)+'">Set it myself</button></div>'+
+      (win?'<div class="grid chgrid"><div class="field"><label for="chsLo">Slowest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsLo",win.lo)+'</div><div class="field"><label for="chsHi">Fastest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsHi",win.hi)+'</div></div>':'')+
+      '<p class="note">Now: '+esc(u.s("fps",num(c.vmin)||300,0,true))+' to '+esc(u.s("fps",num(c.vmax)||4500,0,true))+'.</p>';
+    // radar position
+    const GL=guns();
+    h+='<h3>Where the radar sits</h3><p class="note">Measured from the bore line at the muzzle: how far to the side, and how far back from the muzzle. It corrects the reading for the angle; a guess within an inch or two is fine.</p>'+
+      '<div class="grid chgrid">'+(GL.length?'<div class="field wide"><label for="chsGun">For</label><select id="chsGun" class="fieldselect"><option value="">Any gun (default)</option>'+(window.RB_GUNOPTS?RB_GUNOPTS(GL,g,esc):GL.map(r=>'<option value="'+esc(r.id)+'"'+(r.id===g?' selected':'')+'>'+esc(r.name)+'</option>').join(""))+'</select></div>':'')+
+      '<div class="field"><label for="chsLat">To the side ('+esc(u.u("in"))+')</label><input id="chsLat" type="number" inputmode="decimal" step="any" value="'+esc(inU(pos.lat))+'"></div>'+
+      '<div class="field"><label for="chsBeh">Behind the muzzle ('+esc(u.u("in"))+')</label><input id="chsBeh" type="number" inputmode="decimal" step="any" value="'+esc(inU(pos.behind))+'"></div></div>';
+    // calibration
+    const cs=S.strings[S.strings.length-1].shots.filter(x=>x.ok&&!x.test),avg=cs.length?cs.reduce((a,x)=>a+x.v,0)/cs.length:null;
+    h+='<h3>Calibration</h3><p class="note">Each radar is a little off from its labelled frequency, up to about 0.4% (10 fps at 2,700). Shoot a string over another chronograph you trust at the same time, then put both averages here. Now: '+(num(c.cal)?(num(c.cal)>0?"+":"")+Math.round(num(c.cal))+" ppm":"not calibrated")+'.</p>'+
+      '<div class="grid chgrid"><div class="field"><label for="chsRef">The other chronograph\'s average</label>'+fpsIn("chsRef",null,u.u("fps"))+'</div><div class="field"><label for="chsOur">This one\'s average, same shots</label>'+fpsIn("chsOur",avg!=null?Math.round(avg):null,u.u("fps"))+'</div></div>'+
+      '<div class="row"><button class="btn" type="button" id="chsCal">Calibrate</button>'+(num(c.cal)?'<button class="btn" type="button" id="chsCal0">Clear calibration</button>':'')+'<span class="note" id="chsCalNote"></span></div>';
+    // compass (add-on)
+    if(sens.includes("C")){const cc=A?A.cc:num(s.cc);
+      h+='<h3>Compass</h3><p class="note">'+(cc===2?'Calibrated.':cc===1?'<b>Calibrating:</b> turn the chronograph slowly through a full circle on the bench, tipping it forwards and back a little, then tap Finish.':'Not calibrated yet: calibrate it once, away from the truck and steel benches.')+'</p>'+
+        '<div class="row">'+(cc===1?'<button class="btn primary" type="button" id="chsCcStop">Finish</button>':'<button class="btn" type="button" id="chsCcGo">Calibrate compass</button>')+'<button class="btn" type="button" id="chsCcPhone">Match my phone</button>'+
+        '<label class="switch inl" for="chsRev"><input id="chsRev" type="checkbox" role="switch"'+(num(c.hrev)?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt">Turns backwards</span></label></div>'+
+        '<p class="note">Match my phone: hold your phone flat, pointing the same way as the chronograph, and it copies the phone\'s heading. If the heading goes down when you turn it clockwise, turn on <b>Turns backwards</b>.</p>';}
+    // the rest
+    const br=num(c.bright);
+    h+='<h3>Screen</h3><div class="segtabs" role="radiogroup" aria-label="Screen brightness">'+["Dim","Low","Medium","High","Brightest"].map((t,i)=>'<button type="button" role="radio" data-chbr="'+i+'" aria-selected="'+((br==null?2:br)===i)+'">'+t+'</button>').join("")+'</div>'+
+      '<h3>More</h3>'+
+      '<label class="switch" for="chsSave"><input id="chsSave" type="checkbox" role="switch"'+(num(c.save)!==0?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Save raw radar recordings</b><span class="note">Each shot\'s recording goes on the SD card, to send to Claude if readings look wrong.</span></span></label>'+
+      '<div class="grid chgrid"><div class="field"><label for="chsBat">Battery voltage from a multimeter</label><input id="chsBat" type="number" inputmode="decimal" step="0.01" placeholder="3.95"></div>'+
+      '<div class="field"><label for="chsTrig">Trigger sensitivity (dB)</label><input id="chsTrig" type="number" inputmode="decimal" step="0.5" value="'+esc(num(c.trig)!=null?num(c.trig):"")+'"><span class="note">Lower catches quieter guns; higher ignores more noise. 9 is the usual.</span></div></div>'+
+      '<div class="row"><button class="btn" type="button" id="chsBatGo">Set the battery gauge</button><button class="btn" type="button" id="chsClock">Set its clock</button></div>'+
+      '<p class="note">Its clock is set from your phone each time it connects, so recordings on the SD card have the right date and time.</p>'+
+      '<div class="row"><button class="btn" type="button" id="chsOff">Disconnect</button><button class="btn danger" type="button" id="chsForget">Use a different chronograph</button></div>';
+    if(box._h===h)return;box._h=h;box.innerHTML=h;bindCommon(box);
+    const on_=(id,ev,f)=>{const e=box.querySelector("#"+id);if(e)e.addEventListener(ev,f);};
+    on_("chsDetach","click",()=>{if(sink)detach(sink.key);});
+    on_("chsArm","click",()=>send(st&&st.arm===0?"ARM":"DISARM").then(()=>send("STATUS")));
+    on_("chsTest","click",()=>send("TEST"));
+    box.querySelectorAll("[data-chwin]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.chwin==="auto")P.win=null;else{const w=winFor(sink);P.win={lo:w[0],hi:w[1]};}savePrefs();applySink(false);drawSet();}));
+    const winIn=()=>{const lo=num(box.querySelector("#chsLo").value),hi=num(box.querySelector("#chsHi").value);if(lo>0&&hi>lo){P.win={lo:Math.round(U().from("fps",lo)),hi:Math.round(U().from("fps",hi))};savePrefs();applySink(false);}};
+    on_("chsLo","change",winIn);on_("chsHi","change",winIn);
+    on_("chsGun","change",e=>{shGun=e.target.value;drawSet();});
+    const posIn=()=>{const la=num(box.querySelector("#chsLat").value),be=num(box.querySelector("#chsBeh").value);if(la==null||be==null)return;
+      const m=v=>Math.round(U().from("in",v)*0.0254*1000)/1000,k=box.querySelector("#chsGun")?box.querySelector("#chsGun").value||"_":"_";
+      P.pos[k]={lat:Math.min(1,Math.abs(m(la))),behind:Math.max(-1,Math.min(1,m(be)))};savePrefs();applySink(false);};
+    on_("chsLat","change",posIn);on_("chsBeh","change",posIn);
+    on_("chsCal","click",()=>{const r=num(box.querySelector("#chsRef").value),o=num(box.querySelector("#chsOur").value),n=box.querySelector("#chsCalNote");
+      if(!(r>0&&o>0)){n.textContent="Put in both averages.";return;}const ratio=r/o;
+      if(Math.abs(ratio-1)>0.02){n.textContent="Those are more than 2% apart, more than a radar is ever off. Check they're the same shots.";return;}
+      const ppm=Math.round((num(c.cal)||0)+(ratio-1)*1e6);note="Calibrated: "+(ppm>0?"+":"")+ppm+" ppm. Readings are now "+((ratio-1)*100).toFixed(2)+"% "+(ratio>1?"higher":"lower")+".";send("SET cal="+ppm).then(()=>send("GET"));});
+    on_("chsCal0","click",()=>{note="Calibration cleared.";send("SET cal=0").then(()=>send("GET"));});
+    on_("chsCcGo","click",()=>{send("COMPASS CAL START");calStep=1;});
+    on_("chsCcStop","click",()=>send("COMPASS CAL STOP"));
+    on_("chsCcPhone","click",()=>{if(window.RB_COMPASS)RB_COMPASS.open(hd=>{send("COMPASS MATCH "+Math.round(hd));note="Heading set to match your phone.";});});
+    on_("chsRev","change",e=>send("COMPASS REVERSE "+(e.target.checked?1:0)));
+    box.querySelectorAll("[data-chbr]").forEach(b=>b.addEventListener("click",()=>send("BRIGHT "+b.dataset.chbr)));
+    on_("chsSave","change",e=>send("SET save="+(e.target.checked?1:0)));
+    on_("chsTrig","change",e=>{const v=num(e.target.value);if(v>=4&&v<=30)send("SET trig="+v);});
+    on_("chsBatGo","click",()=>{const v=num(box.querySelector("#chsBat").value);if(v>2.5&&v<4.5)send("BATV "+v.toFixed(2)).then(()=>{note="Battery gauge set.";emit();});});
+    on_("chsClock","click",()=>send("TIME "+Math.floor(Date.now()/1000)).then(()=>{note="Clock set to "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+".";emit();}));
+    on_("chsForget","click",()=>{disconnect(true);note="";});
+  }
+  function bindCommon(box){
+    const g=box.querySelector("#chsGo");if(g)g.addEventListener("click",()=>connect().catch(e=>{note=e.message;emit();}));
+    const o=box.querySelector("#chsOff");if(o)o.addEventListener("click",()=>disconnect(false));
+    const t=box.querySelector("#chsTool");if(t)t.addEventListener("click",()=>{closeSheet();if(window.RB_TOOLS)RB_TOOLS.open("btchrono");});
+  }
+
+  /* ----- Tools → Chronograph ----- */
+  let tool=null;
+  const sdPop=a=>{const n=a.length,m=a.reduce((x,y)=>x+y,0)/n;return Math.sqrt(a.reduce((x,y)=>x+(y-m)**2,0)/n);};
+  function strStats(sh){const a=sh.filter(x=>x.ok).map(x=>x.v);if(!a.length)return null;return {n:a.length,avg:a.reduce((x,y)=>x+y,0)/a.length,sd:a.length>1?sdPop(a):null,es:Math.max(...a)-Math.min(...a),lo:Math.min(...a),hi:Math.max(...a)};}
+  function newString(){const cur=S.strings[S.strings.length-1];if(!cur.shots.length)return;S.n++;S.strings.push({id:"s"+S.n,name:"String "+S.n,at:Date.now(),shots:[]});send("STRING");emit();}
+  function toolDraw(){
+    const root=$("btRoot");if(!root||root.closest("[hidden]"))return;
+    const u=U(),w=support(),on=state==="on",cur=S.strings[S.strings.length-1],ss=strStats(cur.shots),A=air(),s=st||{};
+    const fps=v=>esc(u.n("fps",v,0).toLocaleString());
+    // 1. the device
+    let h='<section class="card" aria-label="The chronograph"><h2>Device</h2>';
+    if(w)h+='<p class="note">'+esc(supportMsg(w))+'</p>';
+    else if(!on)h+='<p class="note">'+(state==="lost"?'<b>Out of reach.</b> Range Book keeps trying to reconnect by itself.':state==="connecting"||state==="picking"?'Connecting…':'Switch the chronograph on, then connect. Your phone remembers it after the first time.')+'</p>'+
+      '<div class="row"><button class="btn primary" type="button" id="btGo"'+(state==="connecting"||state==="picking"?' disabled':'')+'>Connect chronograph</button>'+(state!=="off"?'<button class="btn" type="button" id="btStop">Stop trying</button>':'')+'</div>';
+    else h+='<div class="chdev"><div><b>'+esc(dev&&dev.name||"RB Chrono")+'</b> <span class="chip'+(s.arm===0?' off':'')+'">'+(s.arm===0?"Paused":"Listening")+'</span></div><div class="note">'+[num(s.bat)>=0?"Battery "+Math.round(s.bat)+"%":"",s.sd?"SD card OK":"No SD card",s.t===0?"Radar board not answering":""].filter(Boolean).join(" · ")+'</div>'+
+      (sink?'<div class="note">Shots also go to <b>'+esc(sink.label)+'</b> <button class="linkbtn" type="button" id="btDetach">Stop</button></div>':'')+'</div>'+
+      '<div class="row"><button class="btn" type="button" id="btSet">Settings</button><button class="btn" type="button" id="btArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="btTest">Test shot</button></div>';
+    if(note)h+='<p class="note" role="status">'+esc(note)+'</p>';
+    h+='</section>\u0001';
+    // 2. the live string
+    h+='<section class="card" aria-label="Live string"><div class="chlast" aria-live="polite">'+(last&&last.ok?'<span class="v">'+fps(last.v)+'</span><span class="u">'+esc(u.u("fps"))+'</span><span class="note">Shot '+cur.shots.length+(last.test?' (test)':'')+'</span>':'<span class="note">'+(on?'Waiting for a shot…':'The last velocity shows here, big enough to read from the bench.')+'</span>')+'</div>'+
+      '<h3>'+esc(cur.name)+'</h3>'+
+      (cur.shots.length?'<div class="shots" data-shotset="bt_'+esc(cur.id)+'">'+cur.shots.map((x,k)=>'<div class="shot"><label for="bts_'+k+'">'+(k+1)+'</label><input id="bts_'+k+'" type="number" readonly value="'+esc(u.n("fps",x.v,0))+'"'+(x.test?' title="Test shot"':'')+'></div>').join("")+'</div>':'<p class="note">No shots in this string yet.</p>')+
+      (ss?'<div class="stats"><span>Avg <b>'+fps(ss.avg)+'</b></span>'+(ss.sd!=null?'<span>SD <b>'+esc(u.n("fps",ss.sd,1))+'</b></span><span>ES <b>'+fps(ss.es)+'</b></span>':'')+'<span>Low <b>'+fps(ss.lo)+'</b></span><span>High <b>'+fps(ss.hi)+'</b></span><span><b>'+ss.n+'</b> shots</span></div>':'')+
+      (cur.shots.length&&cur.shots.some(x=>x.ammo!=null)?'<p class="note">Ammo temperature '+esc(u.s("F",cur.shots.filter(x=>x.ammo!=null).slice(-1)[0].ammo,0))+'.</p>':'')+
+      '<div class="row"><button class="btn" type="button" id="btNew"'+(cur.shots.length?'':' disabled')+'>New string</button><button class="btn" type="button" id="btUndo"'+(cur.shots.length?'':' disabled')+'>− Last shot</button><button class="btn" type="button" id="btSave"'+(ss?'':' disabled')+'>Save to a range trip</button><button class="btn" type="button" id="btCopy"'+(ss?'':' disabled')+'>Copy</button></div><div id="btSaveBox"></div>';
+    const prev=S.strings.slice(0,-1).filter(x=>x.shots.length).reverse();
+    if(prev.length)h+='<h3>Earlier strings</h3><ul class="chprev">'+prev.map(x=>{const q=strStats(x.shots);return '<li><b>'+esc(x.name)+'</b> '+(q?q.n+' shots · avg '+fps(q.avg)+(q.sd!=null?' · SD '+esc(u.n("fps",q.sd,1))+' · ES '+fps(q.es):''):'')+' <button class="linkbtn" type="button" data-btsave="'+esc(x.id)+'">Save to a range trip</button></li>';}).join("")+'</ul>';
+    h+='<p class="note">These stay until you close Range Book. Save a string to a range trip to keep it.</p></section>\u0001';
+    // 3. conditions from the add-on sensors
+    h+='<section class="card" aria-label="Conditions"><h2>Conditions</h2>';
+    if(!on)h+='<p class="note">With the sensor kit fitted, the air temperature, humidity, pressure, ammo temperature and which way you\'re shooting show here.</p>';
+    else if(!A||(A.tempF==null&&A.hd==null&&A.ammoF==null&&A.pi==null))h+='<p class="note">No add-on sensors found. The build guide\'s <b>Sensors</b> tab shows how to add temperature, humidity, pressure, an ammo probe and a compass.</p>';
+    else{
+      const rows=[];
+      if(A.tempF!=null)rows.push(["Air",esc(u.s("F",A.tempF,0))+(A.rh!=null?" · "+Math.round(A.rh)+"% humidity":"")]);
+      if(A.hpa!=null)rows.push(["Pressure",(u.metric?Math.round(A.hpa)+" hPa":(A.hpa*0.02953).toFixed(2)+" inHg")+" (at the bench, not sea level)"]);
+      if(A.dAlt!=null)rows.push(["Density altitude",esc(u.s("ft",Math.round(A.dAlt/10)*10,0,true))]);
+      if(A.ammoF!=null)rows.push(["Ammo",esc(u.s("F",A.ammoF,0))]);
+      if(A.hd!=null)rows.push(["Pointing",Math.round(A.hd)+"° "+(window.RB_WX?RB_WX.dir(A.hd):"")+(A.cc===2?"":" (compass not calibrated)")]);
+      if(A.pi!=null)rows.push(["Level",Math.abs(A.ro)<0.5&&Math.abs(A.pi)<0.5?"Level":[Math.abs(A.ro)>=0.5?"tipped "+Math.abs(A.ro).toFixed(1)+"° "+(A.ro>0?"right":"left"):"",Math.abs(A.pi)>=0.5?"nose "+(A.pi>0?"up ":"down ")+Math.abs(A.pi).toFixed(1)+"°":""].filter(Boolean).join(", ")]);
+      h+='<dl class="chenv">'+rows.map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join("")+'</dl>';
+      const PL=(window.RB_TRAJ&&RB_TRAJ.all())||[];
+      if(PL.length){const sel=tool&&tool.prof&&PL.some(p=>p.id===tool.prof)?tool.prof:(RB_TRAJ.where&&RB_TRAJ.where())||(PL.find(p=>p.fav)||PL[0]).id;
+        h+='<div class="grid chgrid"><div class="field wide"><label for="btProf">Shooting profile</label><select id="btProf" class="fieldselect">'+PL.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===sel?' selected':'')+'>'+esc(p.name)+'</option>').join("")+'</select></div></div>'+
+          '<div class="row">'+(A.alt!=null?'<button class="btn" type="button" id="btAir">Use this air in the profile</button>':'')+(A.hd!=null?'<button class="btn" type="button" id="btCor">Use '+Math.round(A.hd)+'° for Coriolis</button>':'')+'</div><p class="note" id="btAirNote"></p>';}
+    }
+    h+='</section>';
+    // three parts, each replaced only when it changed, so a button isn't swapped out from under a finger
+    if(root.children.length!==3)root.innerHTML="<div></div><div></div><div></div>";
+    h.split("\u0001").forEach((x,i)=>{const el=root.children[i];if(el._h!==x){el._h=x;el.innerHTML=x;}});
+    const once=e=>{if(!e||e._b)return null;e._b=1;return e;};
+    const on_=(id,f)=>{const e=once($(id));if(e)e.addEventListener("click",f);};
+    on_("btGo",()=>connect().catch(e=>{note=e.message;emit();}));on_("btStop",()=>disconnect(false));
+    on_("btSet",settings);on_("btDetach",()=>{if(sink)detach(sink.key);});
+    on_("btArm",()=>send(st&&st.arm===0?"ARM":"DISARM").then(()=>send("STATUS")));on_("btTest",()=>send("TEST"));
+    on_("btNew",newString);
+    on_("btUndo",()=>{const x=cur.shots.pop();if(!x)return;last=cur.shots[cur.shots.length-1]||null;emit();
+      if(window.RB_UNDO)RB_UNDO("Removed shot "+(cur.shots.length+1),()=>{cur.shots.push(x);last=x;emit();});});
+    on_("btCopy",()=>{const t=cur.shots.filter(x=>x.ok).map(x=>u.n("fps",x.v,0)).join("\n");
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{note="Copied "+cur.shots.length+" velocities.";emit();},()=>{note="Couldn't copy here.";emit();});});
+    const saveBox=id=>{const x=S.strings.find(o=>o.id===id),b=$("btSaveBox");if(!x||!b)return;
+      const TL=window.RB_TRIPS&&RB_TRIPS.list?RB_TRIPS.list():[];
+      if(!TL.length){b.innerHTML='<p class="note">There are no range trips yet. Open a Shooting profile and add a range trip, then save the string to it here.</p>';return;}
+      b.innerHTML='<div class="grid chgrid"><div class="field wide"><label for="btTrip">Range trip for '+esc(x.name)+'</label><select id="btTrip" class="fieldselect">'+TL.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.label)+'</option>').join("")+'</select></div></div><div class="row"><button class="btn primary" type="button" id="btTripGo">Save</button><button class="btn" type="button" id="btTripNo">Cancel</button></div>';
+      $("btTripNo").addEventListener("click",()=>{b.innerHTML="";});
+      $("btTripGo").addEventListener("click",()=>{const tid=$("btTrip").value,sh=x.shots.filter(o=>o.ok);
+        const am=sh.filter(o=>o.ammo!=null);
+        const ok=RB_TRIPS.addString(tid,{name:"RB Chrono · "+x.name,shots:sh.map(o=>Math.round(o.v)),ammoF:am.length?Math.round(am.reduce((a,o)=>a+o.ammo,0)/am.length):null},air());
+        b.innerHTML='<p class="note">'+(ok?'Saved to the range trip.':'That range trip is gone.')+'</p>';});};
+    on_("btSave",()=>saveBox(cur.id));
+    root.querySelectorAll("[data-btsave]").forEach(b=>{if(once(b))b.addEventListener("click",()=>saveBox(b.dataset.btsave));});
+    const pf=once($("btProf"));if(pf)pf.addEventListener("change",()=>{tool=tool||{};tool.prof=pf.value;});
+    on_("btAir",()=>{const A2=air(),id=$("btProf").value;if(!A2||A2.alt==null)return;const ok=RB_TRAJ.applyWx&&RB_TRAJ.applyWx(id,{temp:A2.tempF,alt:A2.alt});
+      $("btAirNote").textContent=ok?"Set the profile to "+u.s("F",A2.tempF,0)+" and altitude "+u.s("ft",Math.round(A2.alt/10)*10,0,true)+" (the altitude with the same air density, so humidity counts too).":"Couldn't find that profile.";});
+    on_("btCor",()=>{const A2=air(),id=$("btProf").value;if(!A2||A2.hd==null)return;const ok=RB_TRAJ.setCor&&RB_TRAJ.setCor(id,{az:Math.round(A2.hd)});
+      $("btAirNote").textContent=ok?"Direction of fire set to "+Math.round(A2.hd)+"°. Coriolis shows on the profile's Long chart once it's turned on there.":"Couldn't find that profile.";});
+  }
+  subs.add(()=>{if(document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#btSaveBox"))return;toolDraw();});
+
+  return {
+    supported:()=>!support(),supportMsg:()=>supportMsg(support()),
+    state:()=>state,on:()=>state==="on",status:()=>st,config:()=>cfg,air,last:()=>last,
+    connect,disconnect,send,settings,attach,detach,sinkKey:()=>sink?sink.key:null,sink:()=>sink,paint,
+    sub(f){subs.add(f);return ()=>subs.delete(f);},
+    showTool(){toolDraw();},
+    prefs(){return Object.keys(P.pos).length||P.win?JSON.parse(JSON.stringify(P)):undefined;},
+    loadPrefs(o){if(o&&typeof o==="object")P={pos:o.pos&&typeof o.pos==="object"?o.pos:{},win:o.win&&o.win.lo>0?o.win:null};},
+    // for tests: what the module has seen
+    _session:()=>S
+  };
 })();
 </script>
 <script>
@@ -2732,6 +3112,10 @@ window.RB_TRAJ={
   cur(){if(TVIEW!=="detail"||SCR)return null;const L=cur();return L?{id:L.id,name:L.name,rifleId:L.rifleId||null,partId:L.partId,cal:L.cal,mv:L.mv,mvtemp:num(L.mvtemp),tsens:num(L.tsens),temp:num(L.temp)}:null;},
   // a velocity measured at a known temperature (e.g. a range trip's average): it becomes the load's muzzle velocity "measured at" that temperature
   setMV(v,temp){const L=cur();L.mv=v;delete L.mvSrc;if(temp!=null&&isFinite(temp))L.mvtemp=Math.round(temp);fillInputs();render();save();if(!IN_OPEN)$("inSum").textContent=inSummary(L);},
+  // the air from the chronograph's sensors (w.temp °F, w.alt ft) into any profile
+  applyWx(id,w){const L=state.loads.find(l=>l.id===id);if(!L)return false;wxToProfile(L,w);if(L===cur()&&TVIEW==="detail"&&!SCR){fillInputs();render();}save();return true;},
+  // Coriolis settings (e.g. the direction of fire from the chronograph's compass) into any profile
+  setCor(id,o){const L=state.loads.find(l=>l.id===id);if(!L)return false;L.cor=Object.assign({},L.cor||{},o);if(L===cur()&&TVIEW==="detail"&&!SCR){fillCor(L);render();}save();return true;},
   setTempSens(perTen,mvtemp){const L=cur();L.tsens=Math.round(perTen*10)/10;if(mvtemp!=null&&num(L.mvtemp)==null)L.mvtemp=Math.round(mvtemp);fillInputs();render();save();},
   listChanged(){if(TVIEW==="list")fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
@@ -8558,7 +8942,7 @@ function renderDetail(){
     if(!lg.length)h+='<p class="ladempty">No groups in this ladder yet.</p>';
     lg.forEach(g=>{
       const i=L.groups.indexOf(g),col=COLORS[i%COLORS.length];
-      h+='<div class="gcard" style="--gc:'+col+'"><div class="ghead"><span class="t" id="gt_'+g.id+'" style="color:'+col+'">'+esc(gName(g,i))+'</span><span class="chip maxchip" id="gmax_'+g.id+'" hidden></span>'+
+      h+='<div class="gcard" style="--gc:'+col+'" data-btlive="lad:'+esc(openId)+':'+g.id+'"><div class="ghead"><span class="t" id="gt_'+g.id+'" style="color:'+col+'">'+esc(gName(g,i))+'</span><span class="chip maxchip" id="gmax_'+g.id+'" hidden></span>'+
         '<button class="btn danger edit-only" type="button" data-gdel="'+g.id+'">Delete group</button></div>';
       h+='<div class="grid">'+
         field("g_"+g.id+"_charge","Charge (gr)",g.charge,"number")+
@@ -8568,7 +8952,7 @@ function renderDetail(){
       (g.shots||[]).forEach((v,j)=>{
         h+='<div class="shot" data-k="'+j+'"><label for="s_'+g.id+'_'+j+'">'+(j+1)+'</label><input id="s_'+g.id+'_'+j+'" data-g="'+g.id+'" data-s="'+j+'" type="number" inputmode="numeric" step="1" enterkeyhint="next" placeholder="'+U.u("fps")+'" value="'+(v==null?"":esc(U.n("fps",v,0)))+'"></div>';
       });
-      h+='</div>'+shotPickBar(g.id)+'<div class="row"><button class="btn edit-only" type="button" data-addshot="'+g.id+'">+ Shot</button><button class="btn edit-only" type="button" data-pickshot="'+g.id+'"'+((g.shots||[]).length?'':' hidden')+'>− Shot</button><button class="btn edit-only" type="button" data-import="'+g.id+'">Import chronograph file</button><div class="stats" id="st_'+g.id+'"></div></div><div class="sbs" id="sb_'+g.id+'"></div>'+pressHtml(g,canEdit)+'</div>';
+      h+='</div>'+shotPickBar(g.id)+'<div class="row"><button class="btn edit-only" type="button" data-addshot="'+g.id+'">+ Shot</button><button class="btn edit-only" type="button" data-pickshot="'+g.id+'"'+((g.shots||[]).length?'':' hidden')+'>− Shot</button><button class="btn edit-only" type="button" data-import="'+g.id+'">Import chronograph file</button><button class="btn edit-only" type="button" data-btg="'+g.id+'" data-btkey="lad:'+esc(openId)+':'+g.id+'" data-bt0="Connect chronograph" data-bt1="Send chronograph shots here" data-bt2="Stop chronograph">Connect chronograph</button><div class="stats" id="st_'+g.id+'"></div></div><div class="sbs" id="sb_'+g.id+'"></div>'+pressHtml(g,canEdit)+'</div>';
     });
     h+='<div class="ladphotos" id="lp_'+lad.id+'"></div>';
     h+='<div class="row edit-only"><button class="btn primary" type="button" data-ladd="'+lad.id+'">+ Add group</button><button class="btn" type="button" data-limport="'+lad.id+'">Import chronograph file as new group</button><button class="btn" type="button" data-llbl="'+lad.id+'"'+(lg.some(g=>num(g.charge)>0)?'':' hidden')+'>Ladder label</button></div><div class="lblrow" id="llr_'+lad.id+'" hidden></div></div></div>';
@@ -8710,6 +9094,13 @@ function renderDetail(){
     const i=L.groups.findIndex(x=>x.id===b.dataset.gdel),g=L.groups[i],lid=openId;L.groups=L.groups.filter(x=>x.id!==b.dataset.gdel);touched(true);
     RB_UNDO("Deleted group"+(g&&g.charge!=null?" ("+g.charge+" gr)":""),()=>{const L2=loads.get(lid);if(!L2||!g)return;L2.groups.splice(Math.min(i,L2.groups.length),0,g);if(openId===lid)touched(true);else queueSave(lid);});
   }));
+  // RB Chrono: shots fill this group's boxes, then move on to the next group in the ladder
+  $("relRoot").querySelectorAll("[data-btg]").forEach(b=>b.addEventListener("click",async()=>{
+    if(!window.RB_BTCHRONO)return;const lid=openId,gid=b.dataset.btg;
+    if(RB_BTCHRONO.sinkKey()==="lad:"+lid+":"+gid){RB_BTCHRONO.detach("lad:"+lid);return;}
+    try{await RB_BTCHRONO.connect();}catch(e){if(e.message)alertNote(b,e.message);return;}
+    const sk=ladChronoSink(lid,gid);if(sk)RB_BTCHRONO.attach(sk);}));
+  if(window.RB_BTCHRONO)RB_BTCHRONO.paint();
   // importTarget: a group's id (fill it, then the next empty groups in its ladder) or {lad} (new groups in that ladder)
   let importTarget=null;
   $("relRoot").querySelectorAll("[data-import]").forEach(b=>b.addEventListener("click",()=>{
@@ -8839,6 +9230,25 @@ function renderDetail(){
   function touched(structural){queueSave(openId);if(structural)renderDetail();else refreshComputed();}
 }
 
+/* ---------- RB Chrono into a ladder: fill the group's empty boxes; when it's full, go on to the next group in the same ladder
+   that still has an empty box (or none yet). The ladder's temperature fills in from the chronograph's sensors if it's empty. ---------- */
+function ladChronoSink(lid,gid){
+  const L=loads.get(lid);if(!L)return null;const g0=(L.groups||[]).find(x=>x.id===gid);if(!g0)return null;
+  const all=(L.groups||[]).flatMap(x=>x.shots||[]).filter(v=>v>0),exp=all.length?all.reduce((a,v)=>a+v,0)/all.length:null;
+  const lab=(L2,g)=>(L2.title||"Load")+" · "+gName(g,L2.groups.indexOf(g));
+  const S={key:"lad:"+lid+":"+gid,label:lab(L,g0),gunId:L.rifleId||null,expect:exp,
+    shot(s){const L2=loads.get(lid);if(!L2||L2.locked||!isMine(lid))return;let g=(L2.groups||[]).find(x=>x.id===gid);if(!g)return;
+      const empty=x=>(x.shots||[]).indexOf(null);
+      if(empty(g)<0&&(g.shots||[]).length){const lad=(L2.ladders||[]).find(l=>l.id===g.ladderId),gs=lad?ladderGroups(L2,lad):[];
+        const nx=gs.slice(gs.indexOf(g)+1).find(x=>empty(x)>=0||!(x.shots||[]).length);
+        if(nx){g=nx;gid=nx.id;S.key="lad:"+lid+":"+gid;S.label=lab(L2,nx);}}
+      g.shots=g.shots||[];const k=empty(g),v=Math.round(s.v);if(k>=0)g.shots[k]=v;else g.shots.push(v);
+      const lad=(L2.ladders||[]).find(l=>l.id===g.ladderId),A=window.RB_BTCHRONO&&RB_BTCHRONO.air();
+      if(lad&&num(lad.temp)==null&&A&&A.tempF!=null)lad.temp=Math.round(A.tempF);
+      queueSave(lid);if(openId===lid)renderDetail();}};
+  return S;
+}
+function alertNote(near,txt){const p=document.createElement("p");p.className="note err";p.textContent=txt;const r=near.closest(".row")||near;r.after(p);setTimeout(()=>p.remove(),9000);}
 /* ---------- chronograph import ---------- */
 let xlsxLib=null;
 function loadXLSX(){
@@ -9230,6 +9640,28 @@ function openTrip(id){
   const sec=$("secTrips");if(sec)sec.scrollIntoView({block:"start"});
   API.get("/api/trips/"+id+"/photos").then(r=>{if(tripOpen!==id)return;tripPhotos=r.photos||[];renderTripPhotos();},()=>{});
 }
+/* RB Chrono into a range trip: each shot fills the string's next empty box (or adds one). Works with the trip closed too. */
+let TRIP_HOOK=null;
+function tripChronoSink(tid,sid){
+  const T0=trips.find(o=>o.id===tid);if(!T0)return null;
+  const TL=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===T0.trajId),sp=T0.trajId&&window.RB_TRAJ&&RB_TRAJ.spec?RB_TRAJ.spec(T0.trajId):null;
+  const S={key:"trip:"+tid+":"+sid,label:(T0.place||"Range trip")+(T0.date?" · "+fmtDate(T0.date):""),gunId:TL&&TL.rifleId||null,expect:sp&&num(sp.mv)||null,
+    shot(s){const t=trips.find(o=>o.id===tid);if(!t)return;t.strings=t.strings||[];let x=t.strings.find(o=>o.id===sid);
+      if(!x){x={id:sid,name:"RB Chrono",date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);}
+      x.shots=x.shots||[];const k=x.shots.indexOf(null),v=Math.round(s.v);if(k>=0)x.shots[k]=v;else x.shots.push(v);
+      if(s.ammo!=null){x.ammoN=(x.ammoN||0)+1;x.ammoF=Math.round(((num(x.ammoF)||0)*(x.ammoN-1)+s.ammo)/x.ammoN*10)/10;}
+      tripAir(t);t.updated=Date.now();
+      if(tripOpen===tid&&TRIP_HOOK&&TRIP_HOOK.id===tid&&$("tripChrono")){const a=document.activeElement;TRIP_HOOK.totals();TRIP_HOOK.render(a&&a.id&&a.id.startsWith("ts_")?a.id:null);TRIP_HOOK.fields();}
+      else{const all=t.strings.flatMap(o=>o.shots||[]),st=all.some(v=>v!=null)?stats({shots:all},null):null;t.avgVel=st?Math.round(st.avg):null;t.sd=st&&st.n>1?st.sd:null;}
+      queueTrips();},
+    env(){const t=trips.find(o=>o.id===tid);if(t&&tripAir(t)){t.updated=Date.now();queueTrips();if(tripOpen===tid&&TRIP_HOOK&&TRIP_HOOK.id===tid)TRIP_HOOK.fields();}}};
+  return S;
+}
+// the chronograph's air sensors fill in the trip's temperature and air while they're still empty
+function tripAir(t){const A=window.RB_BTCHRONO&&RB_BTCHRONO.air();if(!A)return false;let ch=false;
+  if(num(t.temp)==null&&A.tempF!=null){t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",A.tempF)))*100)/100:Math.round(A.tempF);ch=true;}
+  if((!t.wx||!t.wx.at)&&A.hpa!=null&&A.dAlt!=null){t.wx={rh:A.rh!=null?Math.round(A.rh):null,hpa:Math.round(A.hpa*10)/10,dAlt:Math.round(A.dAlt/10)*10,elev:null,at:Date.now(),range:"",src:"chrono"};ch=true;}
+  return ch;}
 function newTrip(){
   const T=tripTraj;if(!T)return;
   const prev=trips.filter(t=>t.trajId===T.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")))[0];
@@ -9285,7 +9717,7 @@ const tripRanges=()=>(window.RB_TRAJ&&RB_TRAJ.rg&&RB_TRAJ.rg.list())||[];
 const tripRange=t=>{const n=String(t.place||"").trim().toLowerCase();return n?tripRanges().find(r=>RB_WX.ok(r)&&String(r.name||"").trim().toLowerCase()===n)||null:null;};
 const tripWxLabel=t=>{const r=tripRange(t);return r?"Use the weather at "+(r.name||"this range"):"Use the weather where I am";};
 const tripWxTxt=t=>{const w=t.wx;if(!w||!w.at)return "";const P=U.metric?Math.round(w.hpa)+" hPa":(w.hpa*0.02953).toFixed(2)+" inHg";
-  return "Weather"+(w.range?" at "+w.range:"")+" at "+new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+": "+[w.rh!=null?w.rh+"% humidity":"",P,"density altitude "+U.s("ft",w.dAlt,0,true),w.elev!=null?"elevation "+U.s("ft",w.elev,0,true):""].filter(Boolean).join(" · ")+".";};
+  return (w.src==="chrono"?"Chronograph sensors":"Weather"+(w.range?" at "+w.range:""))+" at "+new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+": "+[w.rh!=null?w.rh+"% humidity":"",P,"density altitude "+U.s("ft",w.dAlt,0,true),w.elev!=null?"elevation "+U.s("ft",w.elev,0,true):""].filter(Boolean).join(" · ")+".";};
 const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["wind","Wind","text","e.g. 5 mph from 3 o'clock"],["avgVel","Average velocity (fps)","number","optional"],["sd","SD (fps)","number","optional"]];
 /* velocity vs temperature: each trip's average velocity against its temperature, with a best-fit line.
    Its slope is the powder's temperature sensitivity for this load, which the calculator can use. */
@@ -9393,7 +9825,7 @@ function renderTrips(){
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>'+
     coldHtml(t)+
     '<h3>Chronograph</h3><div id="tripChrono"></div>'+
-    '<div class="row"><label class="btn" for="tripChronoIn" style="cursor:pointer">Import chronograph file</label><input id="tripChronoIn" type="file" multiple accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn" id="tripShotAdd" type="button">+ Type in shots</button><span class="note" id="tripChronoMsg"></span></div>'+
+    '<div class="row"><label class="btn" for="tripChronoIn" style="cursor:pointer">Import chronograph file</label><input id="tripChronoIn" type="file" multiple accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn" id="tripShotAdd" type="button">+ Type in shots</button><button class="btn" id="tripBt" type="button" data-btkey="trip:'+esc(t.id)+'" data-bt0="Connect chronograph" data-bt1="Send chronograph shots here" data-bt2="Stop chronograph">Connect chronograph</button><button class="btn" id="tripBtNew" type="button" data-btkey="trip:'+esc(t.id)+'" data-bt0="" data-bt1="" data-bt2="New chronograph string" hidden>New chronograph string</button><span class="note" id="tripChronoMsg"></span></div>'+
     '<div class="row" id="tripMvRow"></div>'+
     '<h3>Targets</h3><p class="tripbest" id="tripBest" hidden></p><div class="photos" id="tripPhotoGrid"></div>'+
     '<div class="row"><label class="btn primary" for="tripPhotoIn" style="cursor:pointer">+ Add target photo</label><input id="tripPhotoIn" type="file" accept="image/*" multiple hidden><button class="btn" id="tripLive" type="button">Live target</button><button class="btn" id="tripLiveAdd" type="button">+ Saved Live target</button><span class="savestate" id="tripPhotoState"></span></div>'+
@@ -9420,7 +9852,8 @@ function renderTrips(){
     if(!S.length){box.innerHTML='<p class="note">Import the file from your RangeCraft, Garmin Xero, MagnetoSpeed or LabRadar, or tap <b>+ Type in shots</b> to enter the velocities yourself. The average and SD fill in from the shots.</p>';return;}
     let h='<div class="tstrings">';
     S.forEach((x,i)=>{x.id=x.id||newId();
-      h+='<div class="tstr"><div class="tstrhead"><b>'+esc(x.name||("String "+(i+1)))+'</b>'+(x.date?'<span class="note">'+esc(fmtDate(x.date))+'</span>':'')+'<button class="btn small danger" type="button" data-sdel="'+i+'" aria-label="Remove this string">Remove</button></div>'+
+      h+='<div class="tstr" data-btlive="trip:'+esc(t.id)+':'+esc(x.id)+'"><div class="tstrhead"><b>'+esc(x.name||("String "+(i+1)))+'</b>'+(x.date?'<span class="note">'+esc(fmtDate(x.date))+'</span>':'')+(num(x.ammoF)!=null?'<span class="note">ammo '+esc(U.s("F",num(x.ammoF),0))+'</span>':'')+
+        '<button class="btn small" type="button" data-btstr="'+i+'" data-btkey="trip:'+esc(t.id)+':'+esc(x.id)+'" data-bt0="" data-bt1="Send shots here" data-bt2="Shots go here" hidden>Send shots here</button><button class="btn small danger" type="button" data-sdel="'+i+'" aria-label="Remove this string">Remove</button></div>'+
         '<div class="tstrstats" id="tss_'+esc(x.id)+'">'+strStats(x)+'</div>'+
         '<div class="shots" data-shotset="'+esc(x.id)+'">'+(x.shots||[]).map((v,k)=>'<div class="shot" data-k="'+k+'"><label for="ts_'+esc(x.id)+'_'+k+'">'+(k+1)+'</label><input id="ts_'+esc(x.id)+'_'+k+'" data-ts="'+i+'" data-k="'+k+'" type="number" inputmode="numeric" step="1" enterkeyhint="next" placeholder="'+U.u("fps")+'" value="'+(v==null?"":esc(U.n("fps",Number(v),0)))+'"></div>').join("")+'</div>'+
         shotPickBar(x.id)+
@@ -9437,11 +9870,28 @@ function renderTrips(){
     box.querySelectorAll("[data-taddshot]").forEach(b=>b.addEventListener("click",()=>{const x=t.strings[+b.dataset.taddshot];if(!x)return;x.shots=x.shots||[];x.shots.push(null);changed();renderChrono("ts_"+x.id+"_"+(x.shots.length-1));}));
     bindShotPick(box,(sid,ks)=>{const x=(t.strings||[]).find(o=>o.id===sid);if(!x)return;const gone=removeShots(x.shots,ks);changed();renderChrono();
       RB_UNDO("Deleted "+shotsLabel(gone),()=>{restoreShots(x.shots,gone);t.updated=Date.now();chronoTotals();queueTrips();if(tripOpen===t.id)renderChrono();});});
-    box.querySelectorAll("[data-sdel]").forEach(b=>b.addEventListener("click",()=>(()=>{const i=+b.dataset.sdel,st=t.strings[i];t.strings.splice(i,1);chronoTotals();queueTrips();renderChrono();
+    box.querySelectorAll("[data-btstr]").forEach(b=>b.addEventListener("click",()=>{const x=t.strings[+b.dataset.btstr];if(!x)return;
+      if(window.RB_BTCHRONO&&RB_BTCHRONO.sinkKey()==="trip:"+t.id+":"+x.id){RB_BTCHRONO.detach("trip:"+t.id);return;}chronoGo(x.id);}));
+    if(window.RB_BTCHRONO)RB_BTCHRONO.paint();
+    box.querySelectorAll("[data-sdel]").forEach(b=>b.addEventListener("click",()=>(()=>{const i=+b.dataset.sdel,st=t.strings[i];if(window.RB_BTCHRONO)RB_BTCHRONO.detach("trip:"+t.id+":"+st.id);t.strings.splice(i,1);chronoTotals();queueTrips();renderChrono();
       RB_UNDO("Deleted chronograph string",()=>{t.strings.splice(Math.min(i,t.strings.length),0,st);chronoTotals();queueTrips();if(tripOpen===t.id)renderChrono();});})()));
     if(focusId){const f=$(focusId);if(f){f.focus();f.scrollIntoView({block:"nearest"});}}
   };
   renderChrono();
+  // RB Chrono: shots from the Bluetooth chronograph fill a string as they're measured (Tools → Chronograph has the device's settings)
+  TRIP_HOOK={id:t.id,totals:chronoTotals,render:renderChrono,fields(){U.fill($("tp_temp"),"F",t.temp,0,1);const n=$("tripWxNote");if(n)n.textContent=tripWxTxt(t);}};
+  const chronoGo=async sid=>{
+    if(!window.RB_BTCHRONO)return;const msg=$("tripChronoMsg");msg.classList.remove("err");
+    try{await RB_BTCHRONO.connect();}catch(e){if(e.message){msg.classList.add("err");msg.textContent=e.message;}return;}
+    t.strings=t.strings||[];
+    if(!sid){const L0=t.strings[t.strings.length-1];
+      if(L0&&L0.chrono&&!(L0.shots||[]).some(v=>v!=null))sid=L0.id;
+      else{const x={id:newId(),name:"RB Chrono "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);sid=x.id;t.updated=Date.now();queueTrips();}}
+    const sk=tripChronoSink(t.id,sid);if(!sk)return;RB_BTCHRONO.attach(sk);
+    if(tripAir(t)){t.updated=Date.now();queueTrips();TRIP_HOOK.fields();}
+    renderChrono();const x=t.strings.find(o=>o.id===sid);msg.textContent="Shots from the chronograph go into "+(x&&x.name||"this string")+".";};
+  $("tripBt").addEventListener("click",()=>{if(window.RB_BTCHRONO&&String(RB_BTCHRONO.sinkKey()||"").startsWith("trip:"+t.id+":")){RB_BTCHRONO.detach("trip:"+t.id);$("tripChronoMsg").textContent="";return;}chronoGo(null);});
+  $("tripBtNew").addEventListener("click",()=>chronoGo(null));
   // typing velocities in yourself: a new "Typed in" string with 5 empty boxes, like a new group
   $("tripShotAdd").addEventListener("click",()=>{t.strings=t.strings||[];const x={id:newId(),name:"Typed in",date:t.date||null,manual:true,shots:[null,null,null,null,null]};
     t.strings.push(x);t.updated=Date.now();queueTrips();renderChrono("ts_"+x.id+"_0");});
@@ -9491,7 +9941,7 @@ function renderTrips(){
   });
   const del=$("tripDel");
   del.addEventListener("click",()=>{
-    const i=trips.indexOf(t);trips=trips.filter(x=>x.id!==t.id);tripOpen=null;tripPhotos=[];queueTrips();renderTrips();
+    const i=trips.indexOf(t);if(window.RB_BTCHRONO)RB_BTCHRONO.detach("trip:"+t.id);trips=trips.filter(x=>x.id!==t.id);tripOpen=null;tripPhotos=[];queueTrips();renderTrips();
     RB_UNDO("Deleted range trip"+(t.date?" from "+fmtDate(t.date):""),()=>{trips.splice(Math.min(i,trips.length),0,t);queueTrips();renderTrips();},()=>API.del("/api/trips/"+t.id+"/photos").catch(onWriteError));});
   $("tripWx").addEventListener("click",async()=>{
     const note=$("tripWxNote"),btn=$("tripWx");btn.disabled=true;
@@ -9515,6 +9965,15 @@ function renderTrips(){
 window.RB_TARGETS=()=>renderTargets($("targetsRoot"));
 window.RB_TRIPS={
   show(){renderTrips();},
+  // for Tools → Chronograph: the guns (radar position per gun), the trips newest first, and saving a string into one
+  guns(){return rifles.slice();},
+  peek(id){const t=trips.find(o=>o.id===id);return t?JSON.parse(JSON.stringify(t)):null;},
+  list(){const PL=(window.RB_TRAJ&&RB_TRAJ.all())||[];return trips.slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0)).slice(0,40)
+    .map(t=>{const p=PL.find(x=>x.id===t.trajId);return {id:t.id,label:[t.date?fmtDate(t.date):"",t.place||"",p?p.name:""].filter(Boolean).join(" · ")||"Range trip"};});},
+  addString(id,x){const t=trips.find(o=>o.id===id);if(!t)return false;t.strings=t.strings||[];
+    t.strings.push({id:newId(),name:x.name||"RB Chrono",date:t.date||todayISO(),chrono:true,shots:(x.shots||[]).slice(),ammoF:x.ammoF!=null?x.ammoF:undefined});
+    tripAir(t);const all=t.strings.flatMap(o=>o.shots||[]),st=all.some(v=>v!=null)?stats({shots:all},null):null;t.avgVel=st?Math.round(st.avg):null;t.sd=st&&st.n>1?st.sd:null;
+    t.updated=Date.now();queueTrips();if(tripOpen===id)renderTrips();return true;},
   count(id){return trips.filter(t=>t.trajId===id).length;},
   dropTraj(id){const gone=trips.filter(t=>t.trajId===id);if(!gone.length)return;gone.forEach(t=>API.del("/api/trips/"+t.id+"/photos").catch(()=>{}));trips=trips.filter(t=>t.trajId!==id);queueTrips();}
 };
@@ -10212,7 +10671,7 @@ const INFO={
   "@Live target":{head:1,t:"Live target",b:"Put your phone on a spotting scope and it marks each shot on a printed target as it lands. Set the bullet diameter, distance and shots per aim point and tap <b>Start Live target</b>. Saved targets are listed under <b>Saved</b>, where <b>Move to</b> puts one into a range trip or a ladder. <b>Watch</b> shows a phone's Live target on this screen.",h:"Live target (phone on a spotting scope)"},
   "@Printable targets":{t:"Printable targets",b:"Tap <b>Open PDF to print</b> and print at <b>Actual size</b>. Photograph the target with all four corner squares showing and Range Book measures the groups by itself, or point Live target at it. The two-page targets tape together into one big target.",h:"Printable targets"}
 };
-const HELP_TOOL={twist:"tool:Stability",moa:"tool:MOA/MIL",powder:"tool:Powder",conv:"tool:Convert",hit:"tool:Hit chance",live:"Live target (phone on a spotting scope)",cart:"Cartridges",lib:"Library"};
+const HELP_TOOL={btchrono:"Bluetooth chronograph",twist:"tool:Stability",moa:"tool:MOA/MIL",powder:"tool:Powder",conv:"tool:Convert",hit:"tool:Hit chance",live:"Live target (phone on a spotting scope)",cart:"Cartridges",lib:"Library"};
 const shownEl=id=>{const e=$(id);return !!(e&&!e.hidden&&e.offsetParent);};
 // the How to Use topic closest to what's on screen
 function helpTopic(tab){
@@ -10560,7 +11019,7 @@ async function startApp(user,api){
   document.querySelectorAll("#themeMode [data-mode]").forEach(b=>b.addEventListener("click",()=>applyTheme({palette:THEME.palette,mode:b.dataset.mode},true)));
   // the account's preferences (theme, units) arrive with the calculator data, so the app starts in the right units
   let calc=null;{const [pr,cr]=await Promise.all([GUEST?Promise.resolve(null):A.get("/api/doc/prefs").catch(()=>null),A.get("/api/doc/calc").catch(()=>null)]);
-    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);BETA_SEEN=pr.data.betaSeen||null;if(pr.data.order)RB_ORDER.load(pr.data.order);if(pr.data.forget)RB_FORGET.load(pr.data.forget);}
+    if(pr&&pr.data){if(pr.data.theme)applyTheme(pr.data.theme,false);if(pr.data.units)U.set(pr.data.units);BETA_SEEN=pr.data.betaSeen||null;if(pr.data.order)RB_ORDER.load(pr.data.order);if(pr.data.forget)RB_FORGET.load(pr.data.forget);if(pr.data.chrono&&window.RB_BTCHRONO)RB_BTCHRONO.loadPrefs(pr.data.chrono);}
     calc=cr?cr.data:null;}
   U.labels();
   // Units on Account: save it to the account, then reload so every screen redraws in the new units
@@ -10608,7 +11067,7 @@ const FEEDBACK_EMAIL="hello@rangebook.org",FEEDBACK_GH="https://github.com/saone
   const m=document.getElementById("fbMail"),g=document.getElementById("fbGh");if(!g)return;
   if(FEEDBACK_EMAIL){m.href="mailto:"+FEEDBACK_EMAIL+"?subject="+encodeURIComponent("Range Book feedback")+"&body="+encodeURIComponent("What happened, or what's your idea?"+body);m.hidden=false;}
   g.href=FEEDBACK_GH+"?body="+encodeURIComponent("What happened, or what's your idea?"+body);})();
-function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined,order:RB_ORDER.all(),forget:RB_FORGET.all()};}
+function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",betaSeen:BETA_SEEN||undefined,order:RB_ORDER.all(),forget:RB_FORGET.all(),chrono:window.RB_BTCHRONO?RB_BTCHRONO.prefs():undefined};}
 {let pt=null;const go=()=>{clearTimeout(pt);pt=null;if(!GUEST)API.put("/api/doc/prefs",{data:prefsData()}).catch(()=>{});};
   window.RB_PREFS_SAVE=()=>{clearTimeout(pt);pt=setTimeout(go,300);};
   // leaving the page with a change still waiting: send it now
@@ -10768,6 +11227,7 @@ function startTabTour(tab){
       {el:()=>q('[data-tooltile="traj"]'),t:"Trajectory calculator",b:"The whole Shooting calculator without making a profile: pick a gun and ammo or type the numbers. <b>Save as a Shooting profile</b> keeps it; <b>Reset</b> starts over.",go:tiles},
       {el:()=>q('[data-tooltile="cmp"]'),t:"Compare trajectories",b:"Up to six bullets on one chart with the same zero and air: path, dial, wind drift, speed or energy.",go:tiles},
       {el:()=>q('[data-tooltile="chrono"]'),t:"Chronograph file check",b:"See how Range Book reads your chronograph's export, string by string, before you import it. Suspicious shots are marked.",go:tiles},
+      {el:()=>q('[data-tooltile="btchrono"]'),t:"Chronograph",b:"Connect the RB Chrono bench radar chronograph over Bluetooth. Velocities show as you shoot, and a range trip or ladder can take them straight into its boxes.",go:tiles},
       {el:()=>q('[data-tooltile="lib"]'),t:"Library",b:"Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Tap anything to see all of it, fix a number for your own use (<b>Revert</b> puts it back), or add it to yours.",go:tiles},
       {el:()=>q('[data-tooltile="hit"]'),t:"Hit chance",b:info("@Hit chance"),go:tiles},
       {el:()=>q('[data-tooltile="live"]'),t:"Live target",b:info("@Live target"),go:tiles},
@@ -10958,8 +11418,8 @@ API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)l
 window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
-  const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono"];
-  const TITLES={cmp:"Compare trajectories",chrono:"Chronograph file check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
+  const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono","btchrono"];
+  const TITLES={cmp:"Compare trajectories",chrono:"Chronograph file check",btchrono:"Chronograph",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
   let tool=null, pending=null, rel=null, ready=false;
   const TILE_DEFAULT=[...document.querySelectorAll("#toolTiles [data-tooltile]")].map(b=>b.dataset.tooltile);      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -10979,7 +11439,7 @@ window.RB_TOOLS=(function(){
     $("toolsBack").textContent="‹ Tools";
     if(tool==="lib"&&window.RB_LIBPAGE)RB_LIBPAGE.show(libSub);
     if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
-    if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();
+    if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();if(tool==="btchrono"&&window.RB_BTCHRONO)RB_BTCHRONO.showTool();
     if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
   }
   /* ----- hit chance: the shot lands in a spread made of your group, velocity spread, wind call and range error ----- */
