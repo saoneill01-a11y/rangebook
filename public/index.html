@@ -1765,7 +1765,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Ladder test:</b> <b>Connect chronograph</b> on a group fills that group's empty boxes, then moves on to the next group in the same ladder (the one with the outline). The ladder's temperature fills in from the sensors if it's empty.</li>
         <li><b>Tools › Chronograph:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b> and <b>Save to a range trip</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
       </ul>
-      <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot, to try things out; delete it with − Shot); the <b>velocity window</b> (it only counts readings in this range: <b>Automatic</b> uses 75% to 125% of the profile's muzzle velocity, or the ladder's velocities so far); <b>where the radar sits</b> beside and behind the muzzle, for each gun; <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
+      <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot to check the connection: it shows on the pill and in Tools › Chronograph, but never goes into a trip or ladder or counts in a string's numbers); the <b>velocity window</b> (it only counts readings in this range: <b>Automatic</b> uses 75% to 125% of the profile's muzzle velocity, or the ladder's velocities so far); <b>where the radar sits</b> beside and behind the muzzle, for each gun; <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
       <p><b>Sensor kit</b> (optional): with temperature, humidity and pressure sensors, an ammo probe and a compass fitted, <b>Conditions</b> in Tools › Chronograph shows the air, density altitude, ammo temperature, which way it's pointing and whether it's level. <b>Use this air in the profile</b> sets a Shooting profile's temperature and altitude from it (the same way <b>Use the weather where I am</b> does). <b>Use … for Coriolis</b> sets the profile's direction of fire. Calibrate the compass once in Settings (turn it slowly through a full circle), then <b>Match my phone</b> to line it up with your phone's compass. For Coriolis a heading within 10 or 15 degrees is plenty.</p>
     </section>
     <section class="card guide terms" aria-label="The fine print" id="hFine"><h2>The fine print</h2><div class="termsbody"><h2>Shooting is dangerous.</h2>
@@ -2323,19 +2323,25 @@ window.RB_BTCHRONO=(function(){
   /* ----- talking to it ----- */
   function setState(s){state=s;emit();}
   const emit=()=>{subs.forEach(f=>{try{f();}catch(e){console.error("chrono",e);}});paint();hud();};
+  // Bluetooth does one operation at a time: every read and write goes through this queue
+  const gatt=fn=>(wq=wq.then(fn).catch(e=>console.warn("chrono",e)));
   function send(cmd){
-    wq=wq.then(async()=>{if(!C.cmd||state!=="on")return;const b=te.encode(cmd);
+    return gatt(async()=>{if(!C.cmd||state!=="on")return;const b=te.encode(cmd);
       try{if(C.cmd.writeValueWithResponse)await C.cmd.writeValueWithResponse(b);else await C.cmd.writeValue(b);}catch(e){console.warn("chrono send",cmd,e);}
-      await sleep(30);}).catch(()=>{});
-    return wq;}
-  async function readOne(k){const c=C[k];if(!c)return;try{const v=await c.readValue();handle(k,td.decode(v),true);}catch(e){}}
+      await sleep(30);});}
+  const pendingRead=new Set();
+  function readOne(k){if(pendingRead.has(k))return wq;pendingRead.add(k);
+    return gatt(async()=>{pendingRead.delete(k);const c=C[k];if(!c)return;try{const v=await c.readValue();handle(k,td.decode(v),true);}catch(e){}});}
   function got(k,ev){lastRx=Date.now();handle(k,td.decode(ev.target.value),false);}
   function handle(k,txt,whole){
     let j=null;try{j=JSON.parse(txt);}catch(e){
       // a phone with a small Bluetooth packet size cuts long messages short: read the whole value instead
-      if(!whole&&k!=="shot")readOne(k);return;}
+      if(!whole)readOne(k);return;}
     if(!j||typeof j!=="object")return;
-    if(k==="status"){st=j;if(j.b&&j.b!==boot){boot=j.b;lastN=num(j.shots)||0;seen.clear();}}
+    if(k==="status"){st=j;
+      // first time we hear of this chronograph: older shots aren't wanted. A different boot id later means it was
+      // switched off and on while we weren't connected: everything since then is new (SYNC from 0).
+      if(j.b&&j.b!==boot){lastN=boot==null?(num(j.shots)||0):0;boot=j.b;seen.clear();}}
     else if(k==="cfg")cfg=j;
     else if(k==="env"){if(j.compass){note=j.compass==="calibrated"?"Compass calibrated.":"The compass didn't see enough turning. Try again, turning it slowly through a full circle.";calStep=0;}
       else{env=Object.assign({},j,{at:Date.now()});if(sink&&sink.env)try{sink.env(air());}catch(e){console.error(e);}}}
@@ -2346,23 +2352,26 @@ window.RB_BTCHRONO=(function(){
     const key=j.b+":"+j.n;if(seen.has(key))return;seen.add(key);
     if(j.b&&j.b!==boot){boot=j.b;lastN=0;}
     lastN=Math.max(lastN,num(j.n)||0);
-    const s={n:j.n,ok:!!j.ok&&num(j.v)>0,v:num(j.v),why:j.why||"",q:num(j.q),test:!!j.test,at:Date.now(),ammo:env&&num(env.am)!=null?num(env.am)*9/5+32:null};
+    const A=air(),s={n:j.n,ok:!!j.ok&&num(j.v)>0,v:num(j.v),why:j.why||"",q:num(j.q),test:!!j.test,at:Date.now(),ammo:A&&A.ammoF!=null?A.ammoF:null};
     if(!s.ok){note="Shot "+s.n+": no reading"+(s.why?", "+whyTxt(s.why):"")+".";return;}
     last=s;
     note="";
     const cur=S.strings[S.strings.length-1];cur.shots.push(s);
-    if(sink&&sink.shot){try{s.to=sink.label||"";sink.shot(s);}catch(e){console.error("chrono sink",e);}}
+    // a test shot only shows here and on the pill; it never goes into a trip or ladder
+    if(s.test)note="Test shot: it isn't saved anywhere and doesn't count in the string's numbers.";
+    else if(sink&&sink.shot){try{s.to=sink.label||"";sink.shot(s);}catch(e){console.error("chrono sink",e);}}
     flash();
   }
   const whyTxt=w=>({weak:"the echo was too weak (aim the radar along the bore and closer to the muzzle)",short:"it lost the bullet too soon",noisy:"the reading was too scattered","out of range":"outside the velocity window","no signal":"nothing on the radar"})[w]||w;
   function bind(k){const c=C[k];if(!c)return;if(!H[k])H[k]=ev=>got(k,ev);c.removeEventListener("characteristicvaluechanged",H[k]);c.addEventListener("characteristicvaluechanged",H[k]);return c.startNotifications();}
   async function link(){
     setState("connecting");
+    const prevBoot=boot;
     const srv=await dev.gatt.connect(),svc=await srv.getPrimaryService(SVC);C={};
     for(const [k,n] of KEYS){try{C[k]=await svc.getCharacteristic(uuid(n));}catch(e){if(k!=="env")throw e;}}
     for(const k of ["shot","status","cfg","env"])if(C[k])await bind(k);
     await readOne("status");await readOne("cfg");await readOne("env");
-    const resume=boot&&lastN>0&&st&&st.b===boot;
+    const resume=prevBoot!=null&&!!boot;
     lastRx=Date.now();retry=0;setState("on");
     send("TIME "+Math.floor(Date.now()/1000));
     send("UNITS "+(U()&&U().metric?"mps":"fps"));
@@ -2373,6 +2382,11 @@ window.RB_BTCHRONO=(function(){
   async function connect(){
     const w=support();if(w)throw new Error(supportMsg(w));
     wantOn=true;if(state==="on")return;
+    if(state==="picking")throw new Error("");
+    // already reconnecting by itself: wait for it rather than starting a second connection
+    if(state==="lost"||state==="connecting"){retry=0;if(!relinking&&state==="lost")relink();
+      for(let i=0;i<60&&state!=="on";i++)await sleep(250);
+      if(state==="on")return;throw new Error("Still trying to reach the chronograph. Check it's switched on and within about 30 ft; it keeps trying by itself.");}
     if(!dev){setState("picking");
       try{dev=await navigator.bluetooth.requestDevice({filters:[{services:[SVC]},{namePrefix:"RB Chrono"}],optionalServices:[SVC]});}
       catch(e){wantOn=false;setState("off");if(e&&e.name==="NotFoundError")throw new Error("");throw new Error("Couldn't open Bluetooth: "+(e&&e.message||e));}
@@ -2443,16 +2457,18 @@ window.RB_BTCHRONO=(function(){
   function flash(){if(!pill)return;pill.classList.remove("flash");void pill.offsetWidth;pill.classList.add("flash");clearTimeout(flashT);flashT=setTimeout(()=>pill.classList.remove("flash"),1200);}
 
   /* ----- settings sheet ----- */
-  let sh=null,calStep=0,shGun="";
+  let sh=null,calStep=0,shGun="",calAt=0;const clearIns=new Set();
   function settings(){
     if(!sh){sh=document.createElement("div");sh.className="infowrap chsheet";sh.hidden=true;
       sh.innerHTML='<div class="infoback" data-chclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-label="Chronograph"><div class="infohead"><h2>Chronograph</h2><button class="infox" type="button" data-chclose aria-label="Close">✕</button></div><div id="chSet"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener("click",e=>{if(e.target.closest("[data-chclose]"))closeSheet();});
+      sh.addEventListener("input",e=>{if(e.target.tagName==="INPUT")e.target.dataset.dirty="1";});
       document.addEventListener("keydown",e=>{if(e.key==="Escape"&&sh&&!sh.hidden)closeSheet();});}
     sh.hidden=false;requestAnimationFrame(()=>sh.classList.add("on"));drawSet();}
   function closeSheet(){if(!sh)return;sh.classList.remove("on");setTimeout(()=>{if(sh&&!sh.classList.contains("on"))sh.hidden=true;},180);}
   subs.add(()=>{if(sh&&!sh.hidden&&!(document.activeElement&&document.activeElement.tagName==="INPUT"&&sh.contains(document.activeElement)))drawSet();});
+  const calIn=(id,v)=>'<input id="'+id+'" type="number" inputmode="decimal" step="any" placeholder="'+esc(U().u("fps"))+'" value="'+(v==null?"":esc(U().n("fps",v,1)))+'">';
   const fpsIn=(id,v,ph)=>'<input id="'+id+'" type="number" inputmode="numeric" step="1" placeholder="'+esc(ph||"")+'" value="'+(v==null?"":esc(U().n("fps",v,0)))+'">';
   function guns(){return (window.RB_TRIPS&&RB_TRIPS.guns)?RB_TRIPS.guns():[];}
   function drawSet(){
@@ -2484,9 +2500,9 @@ window.RB_BTCHRONO=(function(){
       '<div class="field"><label for="chsLat">To the side ('+esc(u.u("in"))+')</label><input id="chsLat" type="number" inputmode="decimal" step="any" value="'+esc(inU(pos.lat))+'"></div>'+
       '<div class="field"><label for="chsBeh">Behind the muzzle ('+esc(u.u("in"))+')</label><input id="chsBeh" type="number" inputmode="decimal" step="any" value="'+esc(inU(pos.behind))+'"></div></div>';
     // calibration
-    const cs=S.strings[S.strings.length-1].shots.filter(x=>x.ok&&!x.test),avg=cs.length?cs.reduce((a,x)=>a+x.v,0)/cs.length:null;
+    const cs=S.strings[S.strings.length-1].shots.filter(x=>x.ok&&!x.test&&x.at>calAt),avg=cs.length?cs.reduce((a,x)=>a+x.v,0)/cs.length:null;
     h+='<h3>Calibration</h3><p class="note">Each radar is a little off from its labelled frequency, up to about 0.4% (10 fps at 2,700). Shoot a string over another chronograph you trust at the same time, then put both averages here. Now: '+(num(c.cal)?(num(c.cal)>0?"+":"")+Math.round(num(c.cal))+" ppm":"not calibrated")+'.</p>'+
-      '<div class="grid chgrid"><div class="field"><label for="chsRef">The other chronograph\'s average</label>'+fpsIn("chsRef",null,u.u("fps"))+'</div><div class="field"><label for="chsOur">This one\'s average, same shots</label>'+fpsIn("chsOur",avg!=null?Math.round(avg):null,u.u("fps"))+'</div></div>'+
+      '<div class="grid chgrid"><div class="field"><label for="chsRef">The other chronograph\'s average</label>'+calIn("chsRef",null)+'</div><div class="field"><label for="chsOur">This one\'s average, same shots</label>'+calIn("chsOur",avg)+'</div></div>'+
       '<div class="row"><button class="btn" type="button" id="chsCal">Calibrate</button>'+(num(c.cal)?'<button class="btn" type="button" id="chsCal0">Clear calibration</button>':'')+'<span class="note" id="chsCalNote"></span></div>';
     // compass (add-on)
     if(sens.includes("C")){const cc=A?A.cc:num(s.cc);
@@ -2496,7 +2512,7 @@ window.RB_BTCHRONO=(function(){
         '<p class="note">Match my phone: hold your phone flat, pointing the same way as the chronograph, and it copies the phone\'s heading. If the heading goes down when you turn it clockwise, turn on <b>Turns backwards</b>.</p>';}
     // the rest
     const br=num(c.bright);
-    h+='<h3>Screen</h3><div class="segtabs" role="radiogroup" aria-label="Screen brightness">'+["Dim","Low","Medium","High","Brightest"].map((t,i)=>'<button type="button" role="radio" data-chbr="'+i+'" aria-selected="'+((br==null?2:br)===i)+'">'+t+'</button>').join("")+'</div>'+
+    h+='<h3>Screen</h3><div class="segtabs" role="radiogroup" aria-label="Screen brightness">'+["Dim","Medium","Bright","Brightest"].map((t,i)=>'<button type="button" role="radio" data-chbr="'+(i+1)+'" aria-selected="'+((br==null?3:Math.max(1,br))===i+1)+'">'+t+'</button>').join("")+'</div>'+
       '<h3>More</h3>'+
       '<label class="switch" for="chsSave"><input id="chsSave" type="checkbox" role="switch"'+(num(c.save)!==0?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Save raw radar recordings</b><span class="note">Each shot\'s recording goes on the SD card, to send to Claude if readings look wrong.</span></span></label>'+
       '<div class="grid chgrid"><div class="field"><label for="chsBat">Battery voltage from a multimeter</label><input id="chsBat" type="number" inputmode="decimal" step="0.01" placeholder="3.95"></div>'+
@@ -2504,7 +2520,11 @@ window.RB_BTCHRONO=(function(){
       '<div class="row"><button class="btn" type="button" id="chsBatGo">Set the battery gauge</button><button class="btn" type="button" id="chsClock">Set its clock</button></div>'+
       '<p class="note">Its clock is set from your phone each time it connects, so recordings on the SD card have the right date and time.</p>'+
       '<div class="row"><button class="btn" type="button" id="chsOff">Disconnect</button><button class="btn danger" type="button" id="chsForget">Use a different chronograph</button></div>';
-    if(box._h===h)return;box._h=h;box.innerHTML=h;bindCommon(box);
+    if(box._h===h)return;
+    // what someone typed but hasn't used yet survives the redraw
+    const keep={};box.querySelectorAll("input[data-dirty]").forEach(i=>{if(i.id&&!clearIns.has(i.id))keep[i.id]=i.value;});clearIns.clear();
+    box._h=h;box.innerHTML=h;bindCommon(box);
+    Object.keys(keep).forEach(id=>{const i=box.querySelector("#"+id);if(i&&i.type!=="checkbox"){i.value=keep[id];i.dataset.dirty="1";}});
     const on_=(id,ev,f)=>{const e=box.querySelector("#"+id);if(e)e.addEventListener(ev,f);};
     on_("chsDetach","click",()=>{if(sink)detach(sink.key);});
     on_("chsArm","click",()=>send(st&&st.arm===0?"ARM":"DISARM").then(()=>send("STATUS")));
@@ -2520,16 +2540,16 @@ window.RB_BTCHRONO=(function(){
     on_("chsCal","click",()=>{const r=num(box.querySelector("#chsRef").value),o=num(box.querySelector("#chsOur").value),n=box.querySelector("#chsCalNote");
       if(!(r>0&&o>0)){n.textContent="Put in both averages.";return;}const ratio=r/o;
       if(Math.abs(ratio-1)>0.02){n.textContent="Those are more than 2% apart, more than a radar is ever off. Check they're the same shots.";return;}
-      const ppm=Math.round((num(c.cal)||0)+(ratio-1)*1e6);note="Calibrated: "+(ppm>0?"+":"")+ppm+" ppm. Readings are now "+((ratio-1)*100).toFixed(2)+"% "+(ratio>1?"higher":"lower")+".";send("SET cal="+ppm).then(()=>send("GET"));});
-    on_("chsCal0","click",()=>{note="Calibration cleared.";send("SET cal=0").then(()=>send("GET"));});
+      const ppm=Math.round((num(c.cal)||0)+(ratio-1)*1e6);calAt=Date.now();clearIns.add("chsRef");clearIns.add("chsOur");note="Calibrated: "+(ppm>0?"+":"")+ppm+" ppm. Readings are now "+((ratio-1)*100).toFixed(2)+"% "+(ratio>1?"higher":"lower")+".";send("SET cal="+ppm).then(()=>send("GET"));});
+    on_("chsCal0","click",()=>{calAt=Date.now();note="Calibration cleared.";send("SET cal=0").then(()=>send("GET"));});
     on_("chsCcGo","click",()=>{send("COMPASS CAL START");calStep=1;});
     on_("chsCcStop","click",()=>send("COMPASS CAL STOP"));
     on_("chsCcPhone","click",()=>{if(window.RB_COMPASS)RB_COMPASS.open(hd=>{send("COMPASS MATCH "+Math.round(hd));note="Heading set to match your phone.";});});
-    on_("chsRev","change",e=>send("COMPASS REVERSE "+(e.target.checked?1:0)));
+    on_("chsRev","change",e=>{note="Now tap Match my phone again.";send("COMPASS REVERSE "+(e.target.checked?1:0));});
     box.querySelectorAll("[data-chbr]").forEach(b=>b.addEventListener("click",()=>send("BRIGHT "+b.dataset.chbr)));
     on_("chsSave","change",e=>send("SET save="+(e.target.checked?1:0)));
     on_("chsTrig","change",e=>{const v=num(e.target.value);if(v>=4&&v<=30)send("SET trig="+v);});
-    on_("chsBatGo","click",()=>{const v=num(box.querySelector("#chsBat").value);if(v>2.5&&v<4.5)send("BATV "+v.toFixed(2)).then(()=>{note="Battery gauge set.";emit();});});
+    on_("chsBatGo","click",()=>{const v=num(box.querySelector("#chsBat").value);clearIns.add("chsBat");if(v>2.5&&v<4.5)send("BATV "+v.toFixed(2)).then(()=>{note="Battery gauge set.";emit();});});
     on_("chsClock","click",()=>send("TIME "+Math.floor(Date.now()/1000)).then(()=>{note="Clock set to "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+".";emit();}));
     on_("chsForget","click",()=>{disconnect(true);note="";});
   }
@@ -2542,7 +2562,7 @@ window.RB_BTCHRONO=(function(){
   /* ----- Tools → Chronograph ----- */
   let tool=null;
   const sdPop=a=>{const n=a.length,m=a.reduce((x,y)=>x+y,0)/n;return Math.sqrt(a.reduce((x,y)=>x+(y-m)**2,0)/n);};
-  function strStats(sh){const a=sh.filter(x=>x.ok).map(x=>x.v);if(!a.length)return null;return {n:a.length,avg:a.reduce((x,y)=>x+y,0)/a.length,sd:a.length>1?sdPop(a):null,es:Math.max(...a)-Math.min(...a),lo:Math.min(...a),hi:Math.max(...a)};}
+  function strStats(sh){const a=sh.filter(x=>x.ok&&!x.test).map(x=>x.v);if(!a.length)return null;return {n:a.length,avg:a.reduce((x,y)=>x+y,0)/a.length,sd:a.length>1?sdPop(a):null,es:Math.max(...a)-Math.min(...a),lo:Math.min(...a),hi:Math.max(...a)};}
   function newString(){const cur=S.strings[S.strings.length-1];if(!cur.shots.length)return;S.n++;S.strings.push({id:"s"+S.n,name:"String "+S.n,at:Date.now(),shots:[]});send("STRING");emit();}
   function toolDraw(){
     const root=$("btRoot");if(!root||root.closest("[hidden]"))return;
@@ -2559,7 +2579,7 @@ window.RB_BTCHRONO=(function(){
     if(note)h+='<p class="note" role="status">'+esc(note)+'</p>';
     h+='</section>\u0001';
     // 2. the live string
-    h+='<section class="card" aria-label="Live string"><div class="chlast" aria-live="polite">'+(last&&last.ok?'<span class="v">'+fps(last.v)+'</span><span class="u">'+esc(u.u("fps"))+'</span><span class="note">Shot '+cur.shots.length+(last.test?' (test)':'')+'</span>':'<span class="note">'+(on?'Waiting for a shot…':'The last velocity shows here, big enough to read from the bench.')+'</span>')+'</div>'+
+    h+='<section class="card" aria-label="Live string"><div class="chlast" aria-live="polite">'+(last&&last.ok?'<span class="v">'+fps(last.v)+'</span><span class="u">'+esc(u.u("fps"))+'</span><span class="note">'+(cur.shots.includes(last)?'Shot '+(cur.shots.indexOf(last)+1):'Last shot')+(last.test?' (test)':'')+'</span>':'<span class="note">'+(on?'Waiting for a shot…':'The last velocity shows here, big enough to read from the bench.')+'</span>')+'</div>'+
       '<h3>'+esc(cur.name)+'</h3>'+
       (cur.shots.length?'<div class="shots" data-shotset="bt_'+esc(cur.id)+'">'+cur.shots.map((x,k)=>'<div class="shot"><label for="bts_'+k+'">'+(k+1)+'</label><input id="bts_'+k+'" type="number" readonly value="'+esc(u.n("fps",x.v,0))+'"'+(x.test?' title="Test shot"':'')+'></div>').join("")+'</div>':'<p class="note">No shots in this string yet.</p>')+
       (ss?'<div class="stats"><span>Avg <b>'+fps(ss.avg)+'</b></span>'+(ss.sd!=null?'<span>SD <b>'+esc(u.n("fps",ss.sd,1))+'</b></span><span>ES <b>'+fps(ss.es)+'</b></span>':'')+'<span>Low <b>'+fps(ss.lo)+'</b></span><span>High <b>'+fps(ss.hi)+'</b></span><span><b>'+ss.n+'</b> shots</span></div>':'')+
@@ -9091,7 +9111,7 @@ function renderDetail(){
     const nx=$("s_"+g.id+"_"+(g.shots.length-1));if(nx)nx.focus();
   }));
   $("relRoot").querySelectorAll("[data-gdel]").forEach(b=>b.addEventListener("click",()=>{
-    const i=L.groups.findIndex(x=>x.id===b.dataset.gdel),g=L.groups[i],lid=openId;L.groups=L.groups.filter(x=>x.id!==b.dataset.gdel);touched(true);
+    const i=L.groups.findIndex(x=>x.id===b.dataset.gdel),g=L.groups[i],lid=openId;if(window.RB_BTCHRONO)RB_BTCHRONO.detach("lad:"+lid+":"+b.dataset.gdel);L.groups=L.groups.filter(x=>x.id!==b.dataset.gdel);touched(true);
     RB_UNDO("Deleted group"+(g&&g.charge!=null?" ("+g.charge+" gr)":""),()=>{const L2=loads.get(lid);if(!L2||!g)return;L2.groups.splice(Math.min(i,L2.groups.length),0,g);if(openId===lid)touched(true);else queueSave(lid);});
   }));
   // RB Chrono: shots fill this group's boxes, then move on to the next group in the ladder
@@ -9650,15 +9670,17 @@ function tripChronoSink(tid,sid){
       if(!x){x={id:sid,name:"RB Chrono",date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);}
       x.shots=x.shots||[];const k=x.shots.indexOf(null),v=Math.round(s.v);if(k>=0)x.shots[k]=v;else x.shots.push(v);
       if(s.ammo!=null){x.ammoN=(x.ammoN||0)+1;x.ammoF=Math.round(((num(x.ammoF)||0)*(x.ammoN-1)+s.ammo)/x.ammoN*10)/10;}
-      tripAir(t);t.updated=Date.now();
-      if(tripOpen===tid&&TRIP_HOOK&&TRIP_HOOK.id===tid&&$("tripChrono")){const a=document.activeElement;TRIP_HOOK.totals();TRIP_HOOK.render(a&&a.id&&a.id.startsWith("ts_")?a.id:null);TRIP_HOOK.fields();}
+      const aired=tripAir(t);t.updated=Date.now();
+      if(tripOpen===tid&&TRIP_HOOK&&TRIP_HOOK.id===tid&&$("tripChrono")){const a=document.activeElement;TRIP_HOOK.totals();TRIP_HOOK.render(a&&a.id&&a.id.startsWith("ts_")?a.id:null);if(aired)TRIP_HOOK.fields();}
       else{const all=t.strings.flatMap(o=>o.shots||[]),st=all.some(v=>v!=null)?stats({shots:all},null):null;t.avgVel=st?Math.round(st.avg):null;t.sd=st&&st.n>1?st.sd:null;}
       queueTrips();},
     env(){const t=trips.find(o=>o.id===tid);if(t&&tripAir(t)){t.updated=Date.now();queueTrips();if(tripOpen===tid&&TRIP_HOOK&&TRIP_HOOK.id===tid)TRIP_HOOK.fields();}}};
   return S;
 }
-// the chronograph's air sensors fill in the trip's temperature and air while they're still empty
-function tripAir(t){const A=window.RB_BTCHRONO&&RB_BTCHRONO.air();if(!A)return false;let ch=false;
+// the chronograph's air sensors fill in the trip's temperature and air while they're still empty: once per trip
+// (so clearing the box yourself sticks), and only on the day of the trip
+const TRIP_AIRED=new Set();
+function tripAir(t){const A=window.RB_BTCHRONO&&RB_BTCHRONO.air();if(!A||TRIP_AIRED.has(t.id)||(t.date&&t.date!==todayISO()))return false;TRIP_AIRED.add(t.id);let ch=false;
   if(num(t.temp)==null&&A.tempF!=null){t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",A.tempF)))*100)/100:Math.round(A.tempF);ch=true;}
   if((!t.wx||!t.wx.at)&&A.hpa!=null&&A.dAlt!=null){t.wx={rh:A.rh!=null?Math.round(A.rh):null,hpa:Math.round(A.hpa*10)/10,dAlt:Math.round(A.dAlt/10)*10,elev:null,at:Date.now(),range:"",src:"chrono"};ch=true;}
   return ch;}
