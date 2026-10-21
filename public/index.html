@@ -826,6 +826,7 @@ header.hashelp>h1{padding-right:180px}
 .chlast .v{font-family:var(--display);font-size:68px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .chlast .u{font-size:18px;color:var(--muted);font-weight:600}
 .chdev{display:flex;flex-direction:column;gap:3px;margin:0 0 10px}
+.chfw{width:100%;height:12px;margin:4px 0}
 .chenv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 10px}.chenv dt{color:var(--muted)}.chenv dd{margin:0;font-weight:600}
 .chprev{margin:0 0 8px;padding-left:18px}.chprev li{margin:4px 0}
 .chgrid{margin:8px 0}
@@ -2296,7 +2297,7 @@ window.RB_WX=(()=>{
    The radar position per gun and a manual velocity window are kept in the account's preferences; everything else lives on the chronograph. */
 window.RB_BTCHRONO=(function(){
   const SVC="239d0001-5192-4fb5-95ad-180af63137b3",uuid=n=>"239d000"+n+"-5192-4fb5-95ad-180af63137b3";
-  const KEYS=[["shot",2],["status",3],["cmd",4],["cfg",5],["env",6]];
+  const KEYS=[["shot",2],["status",3],["cmd",4],["cfg",5],["env",6],["ota",7]];
   const $=id=>document.getElementById(id),U=()=>window.U;
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
@@ -2329,6 +2330,47 @@ window.RB_BTCHRONO=(function(){
     return gatt(async()=>{if(!C.cmd||state!=="on")return;const b=te.encode(cmd);
       try{if(C.cmd.writeValueWithResponse)await C.cmd.writeValueWithResponse(b);else await C.cmd.writeValue(b);}catch(e){console.warn("chrono send",cmd,e);}
       await sleep(30);});}
+  /* ----- Bluetooth-board (ESP32) firmware update. The firmware file ships with Range Book (blip/firmware.json says
+     which); it goes over in numbered pieces, Blip checks each one's place and the whole file's MD5, and only switches
+     on the next restart. A piece that goes missing is sent again; nothing is lost if the link drops. ----- */
+  let FW=null,ota={busy:false,pct:0,msg:""};
+  function loadFw(){if(FW!==null)return;FW=undefined;fetch("blip/firmware.json",{cache:"no-cache"}).then(r=>r.ok?r.json():false).then(j=>{FW=j||false;emit();}).catch(()=>{FW=false;emit();});}
+  const verCmp=(a,b)=>{const x=String(a||"0").split(".").map(Number),y=String(b||"0").split(".").map(Number);for(let i=0;i<3;i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1;}return 0;};
+  async function otaSend(buf,md5){
+    const ch=C.ota,len=buf.byteLength,u8=new Uint8Array(buf);
+    const wr=b=>ch.writeValueWithResponse?ch.writeValueWithResponse(b):ch.writeValue(b);
+    const rd=async()=>{try{return JSON.parse(td.decode(await ch.readValue()));}catch(e){return {};}};
+    try{
+      await wr(te.encode("B"+len+" "+md5));let s=await rd();
+      if(s.ota!=="ready")throw new Error("Blip didn't accept the update"+(s.why?" ("+s.why+")":"")+".");
+      const CH=176;let off=0,nr=!!ch.writeValueWithoutResponse,k=0,back=0;
+      while(off<len){
+        if(state!=="on")throw new Error("The connection dropped, so the update stopped. Blip is still on its old firmware: reconnect and try again.");
+        const n=Math.min(CH,len-off),p=new Uint8Array(5+n);
+        p[0]=68;p[1]=off&255;p[2]=(off>>8)&255;p[3]=(off>>16)&255;p[4]=(off>>>24)&255;p.set(u8.subarray(off,off+n),5);
+        try{if(nr)await ch.writeValueWithoutResponse(p);else await wr(p);}catch(e){if(nr){nr=false;continue;}throw e;}
+        off+=n;
+        if(++k%16===0||off>=len){
+          s=await rd();
+          if(s.ota==="error")throw new Error("The update stopped ("+(s.why||"error")+"). Blip is still on its old firmware.");
+          const g=num(s.got);
+          if(g!=null&&g!==off){if(g<off&&++back>60)throw new Error("Too many pieces went missing. Move the phone closer and try again.");off=g;}
+          ota.pct=Math.round(off/len*100);emit();}
+      }
+      await wr(te.encode("E"));s=await rd();
+      if(s.ota!=="done")throw new Error("Blip didn't take the update"+(s.why?" ("+s.why+")":"")+". It's still on its old firmware.");
+      ota={busy:false,pct:100,msg:"Updated. Blip is restarting and reconnects by itself in a few seconds. It keeps the new firmware once it has run for 15 seconds; if it doesn't start properly, it goes back to the old one."};
+    }catch(e){try{await wr(te.encode("A"));}catch(x){}ota={busy:false,pct:0,msg:e.message||"The update stopped."};}
+    emit();
+  }
+  async function updateEsp(){
+    if(ota.busy||!C.ota||!FW||!FW.esp)return;
+    ota={busy:true,pct:0,msg:""};emit();
+    let buf=null;
+    try{const r=await fetch("blip/"+FW.esp.file,{cache:"no-cache"});if(!r.ok)throw 0;buf=await r.arrayBuffer();}catch(e){}
+    if(!buf||buf.byteLength!==FW.esp.size){ota={busy:false,pct:0,msg:"Couldn't load the firmware file from Range Book."};emit();return;}
+    await gatt(()=>otaSend(buf,FW.esp.md5));
+  }
   const pendingRead=new Set();
   function readOne(k){if(pendingRead.has(k))return wq;pendingRead.add(k);
     return gatt(async()=>{pendingRead.delete(k);const c=C[k];if(!c)return;try{const v=await c.readValue();handle(k,td.decode(v),true);}catch(e){}});}
@@ -2368,7 +2410,7 @@ window.RB_BTCHRONO=(function(){
     setState("connecting");
     const prevBoot=boot;
     const srv=await dev.gatt.connect(),svc=await srv.getPrimaryService(SVC);C={};
-    for(const [k,n] of KEYS){try{C[k]=await svc.getCharacteristic(uuid(n));}catch(e){if(k!=="env")throw e;}}
+    for(const [k,n] of KEYS){try{C[k]=await svc.getCharacteristic(uuid(n));}catch(e){if(k!=="env"&&k!=="ota")throw e;}}
     for(const k of ["shot","status","cfg","env"])if(C[k])await bind(k);
     await readOne("status");await readOne("cfg");await readOne("env");
     const resume=prevBoot!=null&&!!boot;
@@ -2524,6 +2566,7 @@ window.RB_BTCHRONO=(function(){
       '<div class="field"><label for="chsTrig">Trigger sensitivity (dB)</label><input id="chsTrig" type="number" inputmode="decimal" step="0.5" value="'+esc(num(c.trig)!=null?num(c.trig):"")+'"><span class="note">Lower catches quieter guns; higher ignores more noise. 9 is the usual.</span></div></div>'+
       '<div class="row"><button class="btn" type="button" id="chsBatGo">Set the battery gauge</button><button class="btn" type="button" id="chsClock">Set its clock</button></div>'+
       '<p class="note">Its clock is set from your phone each time it connects, so recordings on the SD card have the right date and time.</p>'+
+      fwHtml(s)+
       '<div class="row"><button class="btn" type="button" id="chsOff">Disconnect</button><button class="btn danger" type="button" id="chsForget">Use a different chronograph</button></div>';
     if(box._h===h)return;
     // what someone typed but hasn't used yet survives the redraw
@@ -2556,10 +2599,23 @@ window.RB_BTCHRONO=(function(){
     box.querySelectorAll("[data-chbr]").forEach(b=>b.addEventListener("click",()=>send("BRIGHT "+b.dataset.chbr)));
     on_("chsSave","change",e=>send("SET save="+(e.target.checked?1:0)));
     on_("chsAnim","change",e=>send("ANIM "+(e.target.checked?1:0)));
+    on_("chsFw","click",()=>{ota.msg="";updateEsp();});
     on_("chsTrig","change",e=>{const v=num(e.target.value);if(v>=4&&v<=30)send("SET trig="+v);});
     on_("chsBatGo","click",()=>{const v=num(box.querySelector("#chsBat").value);clearIns.add("chsBat");if(v>2.5&&v<4.5)send("BATV "+v.toFixed(2)).then(()=>{note="Battery gauge set.";emit();});});
     on_("chsClock","click",()=>send("TIME "+Math.floor(Date.now()/1000)).then(()=>{note="Clock set to "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+".";emit();}));
     on_("chsForget","click",()=>{disconnect(true);note="";});
+  }
+  function fwHtml(s){
+    loadFw();
+    let h='<h3>Firmware</h3><p class="note">Radar board (Teensy) '+esc(s.fw||"?")+' · Bluetooth board (ESP32) '+esc(s.efw||"?")+'. The radar board is updated with the USB cable (build guide, Firmware tab).</p>';
+    if(ota.busy)return h+'<progress class="chfw" max="100" value="'+ota.pct+'" aria-label="Firmware update progress"></progress><p class="note" role="status">Updating the Bluetooth board: '+ota.pct+'%. Keep the phone close with its screen on, and don\'t shoot until it\'s done (about 2 minutes).</p>';
+    if(ota.msg)h+='<p class="note" role="status">'+esc(ota.msg)+'</p>';
+    if(!C.ota)return h+'<p class="note">This Bluetooth board\'s firmware can\'t update over Bluetooth. Load firmware 0.2.2 or later on it once with its USB-C cable; after that, updates come from here.</p>';
+    if(FW===undefined||FW===null||ota.pct===100)return h;
+    if(!FW||!FW.esp)return h+'<p class="note">This copy of Range Book has no Blip firmware file in it.</p>';
+    const v=FW.esp.version,newer=verCmp(v,s.efw)>0;
+    return h+(newer?'<p class="note">Version '+esc(v)+' is available for the Bluetooth board.</p>':'')+
+      '<div class="row"><button class="btn'+(newer?' primary':'')+'" type="button" id="chsFw">'+(newer?'Update the Bluetooth board to '+esc(v):'Reinstall '+esc(v))+'</button></div>';
   }
   function bindCommon(box){
     const g=box.querySelector("#chsGo");if(g)g.addEventListener("click",()=>connect().catch(e=>{note=e.message;emit();}));
