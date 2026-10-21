@@ -2512,6 +2512,8 @@ window.RB_BTCHRONO=(function(){
         '<p class="note">Match my phone: hold your phone flat, pointing the same way as the chronograph, and it copies the phone\'s heading.'+(sens.includes("L")?'':' If the heading goes down when you turn it clockwise, turn on <b>Turns backwards</b>.')+'</p>'+
         '<p class="note"><b>Sensor board turned</b> (how the compass board sits on its mount). Lift the front of the chronograph: Conditions should say <i>nose up</i>. If it says tipped left or right, or nose down, pick the next one.</p>'+
         '<div class="segtabs" role="radiogroup" aria-label="Sensor board turned">'+[0,90,180,270].map(d=>'<button type="button" role="radio" data-chrot="'+d+'" aria-selected="'+((num(c.hrot)||0)===d)+'">'+d+'\u00b0</button>').join("")+'</div>';}
+    // bubble level on the chronograph's own screen
+    if(sens.includes("L"))h+='<h3>Level</h3><p class="note">For a minute after it\'s switched on, the chronograph\'s screen shows a bubble level: move it until the bubble sits in the middle circle and the screen says LEVEL. Show it again any time:</p><div class="row"><button class="btn" type="button" id="chsLvl">Show the level on its screen</button></div>';
     // the rest
     const br=num(c.bright);
     h+='<h3>Screen</h3><div class="segtabs" role="radiogroup" aria-label="Screen brightness">'+["Dim","Medium","Bright","Brightest"].map((t,i)=>'<button type="button" role="radio" data-chbr="'+(i+1)+'" aria-selected="'+((br==null?3:Math.max(1,br))===i+1)+'">'+t+'</button>').join("")+'</div>'+
@@ -2549,6 +2551,7 @@ window.RB_BTCHRONO=(function(){
     on_("chsCcPhone","click",()=>{if(window.RB_COMPASS)RB_COMPASS.open(hd=>{send("COMPASS MATCH "+Math.round(hd));note="Heading set to match your phone.";});});
     box.querySelectorAll("[data-chrot]").forEach(b=>b.addEventListener("click",()=>{note="Sensor board set to "+b.dataset.chrot+"\u00b0. Match my phone again after changing it.";send("COMPASS ROT "+b.dataset.chrot);}));
     on_("chsRev","change",e=>{note="Now tap Match my phone again.";send("COMPASS REVERSE "+(e.target.checked?1:0));});
+    on_("chsLvl","click",()=>{send("LEVEL");note="The bubble level is on the chronograph's screen for a minute.";});
     box.querySelectorAll("[data-chbr]").forEach(b=>b.addEventListener("click",()=>send("BRIGHT "+b.dataset.chbr)));
     on_("chsSave","change",e=>send("SET save="+(e.target.checked?1:0)));
     on_("chsTrig","change",e=>{const v=num(e.target.value);if(v>=4&&v<=30)send("SET trig="+v);});
