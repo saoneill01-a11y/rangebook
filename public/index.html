@@ -2517,6 +2517,7 @@ window.RB_BTCHRONO=(function(){
     // the rest
     const br=num(c.bright);
     h+='<h3>Screen</h3><div class="segtabs" role="radiogroup" aria-label="Screen brightness">'+["Dim","Medium","Bright","Brightest"].map((t,i)=>'<button type="button" role="radio" data-chbr="'+(i+1)+'" aria-selected="'+((br==null?3:Math.max(1,br))===i+1)+'">'+t+'</button>').join("")+'</div>'+
+      '<label class="switch" for="chsAnim"><input id="chsAnim" type="checkbox" role="switch"'+(num(c.anim)===1?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Bullet animation after each shot</b><span class="note">A bullet flies across the chronograph\'s screen and writes the velocity behind it. Needs chronograph firmware 0.2.2.</span></span></label>'+
       '<h3>More</h3>'+
       '<label class="switch" for="chsSave"><input id="chsSave" type="checkbox" role="switch"'+(num(c.save)!==0?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Save raw radar recordings</b><span class="note">Each shot\'s recording goes on the SD card, to send to Claude if readings look wrong.</span></span></label>'+
       '<div class="grid chgrid"><div class="field"><label for="chsBat">Battery voltage from a multimeter</label><input id="chsBat" type="number" inputmode="decimal" step="0.01" placeholder="3.95"></div>'+
@@ -2554,6 +2555,7 @@ window.RB_BTCHRONO=(function(){
     on_("chsLvl","click",()=>{send("LEVEL");note="The bubble level is on the chronograph's screen for a minute.";});
     box.querySelectorAll("[data-chbr]").forEach(b=>b.addEventListener("click",()=>send("BRIGHT "+b.dataset.chbr)));
     on_("chsSave","change",e=>send("SET save="+(e.target.checked?1:0)));
+    on_("chsAnim","change",e=>send("ANIM "+(e.target.checked?1:0)));
     on_("chsTrig","change",e=>{const v=num(e.target.value);if(v>=4&&v<=30)send("SET trig="+v);});
     on_("chsBatGo","click",()=>{const v=num(box.querySelector("#chsBat").value);clearIns.add("chsBat");if(v>2.5&&v<4.5)send("BATV "+v.toFixed(2)).then(()=>{note="Battery gauge set.";emit();});});
     on_("chsClock","click",()=>send("TIME "+Math.floor(Date.now()/1000)).then(()=>{note="Clock set to "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+".";emit();}));

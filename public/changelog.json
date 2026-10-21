@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.4",
+      "version": "2.43.5",
       "date": "2026-10-20",
       "title": "Bluetooth chronograph",
       "items": [
@@ -16,6 +16,7 @@
         "Chronograph settings › Compass: Turns backwards only shows when the compass has no level sensor (with one, it isn't needed), the calibration steps say to tip it well over for the best tilted heading, and the calibration note gives the radar's real spread (up to about 0.5%). Needs chronograph firmware 0.2.2.",
         "Chronograph settings › Level: Show the level on its screen puts a bubble level on the chronograph's own display for a minute (it also shows for a minute after switching on). Needs chronograph firmware 0.2.2 and the sensor kit's level board.",
         "How to Use has a new Bluetooth chronograph section.",
+        "Chronograph settings › Screen: Bullet animation after each shot plays a short bullet across the chronograph's own screen that writes the velocity. Needs chronograph firmware 0.2.2.",
         "The chronograph has a name: Range Book Blip. It shows as RB Blip when you connect (older firmware still shows RB Chrono and still connects)."
       ]
     },
