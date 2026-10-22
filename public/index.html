@@ -1896,10 +1896,15 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="banner" id="au_out" hidden></div>
     </section>
     <section class="card" aria-label="Guest access"><h2>Guest access</h2>
-      <label class="toggle" for="guestToggle"><input type="checkbox" id="guestToggle"> Show a <b>Try it as a guest</b> button on the sign-in page</label>
+      <label class="toggle" for="guestToggle"><input type="checkbox" id="guestToggle"> <span>Show a <b>Try it as a guest</b> button on the sign-in page</span></label>
       <p class="note">Guests can use everything without an account, but nothing they enter is saved and they can't see anyone's data. Any number of people can be guests at once.</p>
       <span class="savestate" id="guestState"></span>
     </section>
+    <section class="card" aria-label="Community sharing"><h2>Community sharing</h2>
+      <label class="toggle" for="boxShareToggle"><input type="checkbox" id="boxShareToggle"> Share ammo with everyone: box photos and loads people share</label>
+      <p class="note">On: a photo of a box of catalog ammo is seen by everyone here, so the next person can tell it's the right box, and people can tick <b>Share this load with everyone</b> on factory ammo they entered themselves. Off: everyone sees only their own box photos, new ones stay private even if you turn sharing back on later, shared loads are hidden from <b>+ Add ammo</b>, and nobody can share a new one. Photos and loads that were already shared are hidden, and come back if you turn it on again. On a big public server, off is safer: someone will eventually add the wrong box or the wrong numbers.</p>
+      <span class="savestate" id="boxShareState"></span>
+      <p class="note">Shared photos people have added (you see them here even with sharing off, so you can clean up). Delete any that don't match the load or shouldn't be there.</p><div id="au_boxes" class="sharelist"><p class="note">Loading…</p></div></section>
     <section class="card" aria-label="Backups"><h2>Backups</h2>
       <div id="bk_info" class="note">Loading…</div>
       <div class="row"><button class="btn" id="bk_now" type="button">Back up now</button><span class="savestate" id="bk_state"></span></div>
@@ -1916,11 +1921,6 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="banner" id="rs_out" hidden></div>
       </div>
     </section>
-    <section class="card" aria-label="Community sharing"><h2>Community sharing</h2>
-      <label class="toggle" for="boxShareToggle"><input type="checkbox" id="boxShareToggle"> Share ammo with everyone: box photos and loads people share</label>
-      <p class="note">On: a photo of a box of catalog ammo is seen by everyone here, so the next person can tell it's the right box, and people can tick <b>Share this load with everyone</b> on factory ammo they entered themselves. Off: everyone sees only their own box photos, new ones stay private even if you turn sharing back on later, shared loads are hidden from <b>+ Add ammo</b>, and nobody can share a new one. Photos and loads that were already shared are hidden, and come back if you turn it on again. On a big public server, off is safer: someone will eventually add the wrong box or the wrong numbers.</p>
-      <span class="savestate" id="boxShareState"></span>
-      <p class="note">Shared photos people have added (you see them here even with sharing off, so you can clean up). Delete any that don't match the load or shouldn't be there.</p><div id="au_boxes" class="sharelist"><p class="note">Loading…</p></div></section>
     <section class="card" aria-label="Users"><h2>Users</h2><p class="note">The <b>super admin</b> is the first admin, unless they've handed it on. Other admins can't delete, turn off, demote, rename, reset the password of, or download the data of the super admin, so nobody you make an admin can lock the owner out. Only the super admin can hand the role to another admin (<b>Make super admin</b>), and they stay an admin afterwards.</p><div id="au_list" class="sharelist"><p class="note">Loading…</p></div></section>
   </div>
   <div class="panel" id="panel-account" role="tabpanel" hidden>
