@@ -177,7 +177,7 @@ if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "accepted_terms"
 const ladderIdOf = (v) => (typeof v === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(v) ? v : null);
 const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
 // sharing ammo with everyone (box photos of catalog ammo, loads people share, and their photos) is on unless the
-// admin turns it off (Admin › Community box photos, 2.42.5), e.g. on a big public server
+// admin turns it off (Admin › Community sharing, 2.42.5), e.g. on a big public server
 const shareBoxPhotos = () => getSetting("shareAmmo", true) !== false;
 const getSetting = (k, d) => { const r = q("SELECT value FROM settings WHERE key=?").get(k); return r ? JSON.parse(r.value) : d; };
 const setSetting = (k, v) => q("INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(k, JSON.stringify(v));
@@ -741,7 +741,7 @@ async function api(req, res, url) {
   }
 
   /* ---- ammo box photos: a photo of catalog ammo is shared with everyone; a photo of your own entry is private ----
-     The admin can turn sharing off (Admin › Community box photos, 2.42.5; it covers shared loads too): then everyone sees only their own box photos,
+     The admin can turn sharing off (Admin › Community sharing, 2.42.5; it covers shared loads too): then everyone sees only their own box photos,
      new ones are saved private (even for catalog ammo), and ?all=1 still lists the shared ones for an admin to clean up. */
   if (p === "/api/boxphotos" && method === "GET") {
     const sharing = shareBoxPhotos(), adminAll = user.is_admin && url.searchParams.get("all") === "1";
