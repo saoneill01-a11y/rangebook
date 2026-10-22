@@ -179,6 +179,18 @@ const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { r
 // sharing ammo with everyone (box photos of catalog ammo, loads people share, and their photos) is on unless the
 // admin turns it off (Admin › Community sharing, 2.42.5), e.g. on a big public server
 const shareBoxPhotos = () => getSetting("shareAmmo", true) !== false;
+/* The super admin (2.42.7): the first admin account, or whoever it's been handed to. Other admins can't delete, turn off,
+   demote, rename, export or reset the password of this account, and only it can hand the role on, download the whole
+   site or restore it. Stored as the setting "superAdmin" (a user id); if that's missing or no longer an active admin
+   (an older Range Book, a restore), it goes to the oldest active admin. */
+function superId() {
+  const v = getSetting("superAdmin", null);
+  if (v != null && q("SELECT 1 AS ok FROM users WHERE id=? AND is_admin=1 AND disabled=0").get(v)) return v;
+  const r = q("SELECT id FROM users WHERE is_admin=1 AND disabled=0 ORDER BY created_at, id LIMIT 1").get();
+  if (r) { setSetting("superAdmin", r.id); return r.id; }
+  return null;
+}
+const isSuper = (u) => !!u && u.id === superId();
 const getSetting = (k, d) => { const r = q("SELECT value FROM settings WHERE key=?").get(k); return r ? JSON.parse(r.value) : d; };
 const setSetting = (k, v) => q("INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(k, JSON.stringify(v));
 const now = () => Date.now();
@@ -231,6 +243,7 @@ function firstRun() {
   const info = q("INSERT INTO users(username,display_name,pass,is_admin,must_change,created_at) VALUES(?,?,?,?,?,?)")
     .run(ADMIN_USERNAME, ADMIN_USERNAME, hashPassword(pw), 1, ADMIN_PASSWORD ? 0 : 1, now());
   const adminId = Number(info.lastInsertRowid);
+  setSetting("superAdmin", adminId);
   console.log("======================================================");
   console.log(` Range Book: created admin account "${ADMIN_USERNAME}"`);
   if (!ADMIN_PASSWORD) console.log(` Temporary password: ${pw}   (you'll be asked to change it)`);
@@ -349,7 +362,7 @@ async function readJson(req, limit = 1024 * 1024) {
   try { return JSON.parse(buf.toString("utf8")); } catch { throw new HttpError(400, "The request wasn't valid JSON."); }
 }
 const ID_RE = /^[A-Za-z0-9_-]{1,64}$/;
-const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, isAdmin: !!u.is_admin, mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms });
+const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, isAdmin: !!u.is_admin, isSuper: !!u.is_admin && isSuper(u), mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms });
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -502,6 +515,7 @@ async function api(req, res, url) {
     try {
       if (!needsSetup()) throw new HttpError(409, "Range Book is already set up. Sign in instead.");
       uid = Number(q("INSERT INTO users(username,display_name,pass,is_admin,must_change,created_at) VALUES(?,?,?,1,0,?)").run(username, name, hashPassword(pw), now()).lastInsertRowid);
+      setSetting("superAdmin", uid);
       db.exec("COMMIT");
     } catch (e) { db.exec("ROLLBACK"); throw e; }
     console.log(` Range Book: admin account "${username}" created from the setup page.`);
@@ -1075,6 +1089,8 @@ async function api(req, res, url) {
       return send(res, 200, { backups: listBackups(), keep: BACKUP_KEEP, hour: BACKUP_HOUR, lastError: lastBackupError });
     }
     /* ---- the whole site in one file (2.35): download it, or bring it back on a fresh install ---- */
+    // the whole site holds everyone's data and passwords: the super admin's job (2.42.7)
+    if ((p.startsWith("/api/admin/site-backup") || p.startsWith("/api/admin/site-restore")) && !isSuper(user)) throw new HttpError(403, "Only the super admin can download or restore the whole site.");
     if (p === "/api/admin/site-backup" && method === "GET") return send(res, 200, siteInfo());
     if (p === "/api/admin/site-backup.tar.gz" && method === "GET") return sendSiteBackup(res);
     if (p === "/api/admin/site-restore/start" && method === "POST") {
@@ -1102,11 +1118,21 @@ async function api(req, res, url) {
       if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); if ("shareAmmo" in b) setSetting("shareAmmo", !!b.shareAmmo); }
       return send(res, 200, { guestEnabled: !!getSetting("guestEnabled", false), shareAmmo: shareBoxPhotos() });
     }
+    if (p === "/api/admin/super" && method === "POST") {
+      if (!isSuper(user)) throw new HttpError(403, "Only the super admin can hand that role on.");
+      const b = await readJson(req), to = q("SELECT * FROM users WHERE id=?").get(Number(b.id));
+      if (!to || !to.is_admin || to.disabled) throw new HttpError(400, "Pick another admin whose account is turned on.");
+      if (to.id === user.id) return send(res, 200, { superId: user.id });
+      setSetting("superAdmin", to.id);
+      console.log(`Super admin handed from "${user.username}" to "${to.username}".`);
+      return send(res, 200, { superId: to.id });
+    }
     if (p === "/api/admin/users" && method === "GET") {
+      const sid = superId();
       const rows = q(`SELECT u.id, u.username, u.display_name, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login,
                         (SELECT COUNT(*) FROM loads l WHERE l.owner_id=u.id) AS loads
                       FROM users u ORDER BY u.username COLLATE NOCASE`).all();
-      return send(res, 200, { users: rows.map((r) => ({ id: r.id, username: r.username, name: r.display_name, isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id })) });
+      return send(res, 200, { users: rows.map((r) => ({ id: r.id, username: r.username, name: r.display_name, isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
     }
     if (p === "/api/admin/users" && method === "POST") {
       const b = await readJson(req);
@@ -1120,13 +1146,18 @@ async function api(req, res, url) {
       return send(res, 200, { id: Number(info.lastInsertRowid), username, tempPassword: pw });
     }
     const ax = /^\/api\/admin\/users\/(\d+)\/export\.(xlsx|pdf|zip)$/.exec(p);
-    if (ax && method === "GET") return sendExport(res, +ax[1], ax[2]);
+    if (ax && method === "GET") {
+      if (+ax[1] === superId() && !isSuper(user)) throw new HttpError(403, "Only the super admin can download the super admin's data.");
+      return sendExport(res, +ax[1], ax[2]);
+    }
     m = /^\/api\/admin\/users\/(\d+)(\/reset-password)?$/.exec(p);
     if (m) {
       const id = +m[1];
       const target = q("SELECT * FROM users WHERE id=?").get(id);
       if (!target) throw new HttpError(404, "User not found.");
       const otherAdmins = q("SELECT COUNT(*) AS n FROM users WHERE is_admin=1 AND disabled=0 AND id<>?").get(id).n;
+      const targetSuper = id === superId();
+      if (targetSuper && !isSuper(user)) throw new HttpError(403, "That's the super admin's account. Only they can change it.");
       if (m[2] && method === "POST") {
         const b = await readJson(req);
         const pw = b.password ? String(b.password) : tempPassword();
@@ -1138,6 +1169,7 @@ async function api(req, res, url) {
       if (!m[2] && method === "PATCH") {
         const b = await readJson(req);
         if ("isAdmin" in b) {
+          if (!b.isAdmin && targetSuper) throw new HttpError(400, "You're the super admin. Hand that on to another admin first, then remove your admin.");
           if (!b.isAdmin && target.is_admin && !otherAdmins) throw new HttpError(400, "There has to be at least one admin.");
           q("UPDATE users SET is_admin=? WHERE id=?").run(b.isAdmin ? 1 : 0, id);
         }
@@ -1233,6 +1265,7 @@ if (process.env.RESET_ADMIN_PASSWORD) {
   else if (!u) console.log(`RESET_ADMIN_PASSWORD ignored: no user named "${ADMIN_USERNAME}".`);
   else {
     q("UPDATE users SET pass=?, must_change=1, disabled=0, is_admin=1 WHERE id=?").run(hashPassword(process.env.RESET_ADMIN_PASSWORD), u.id);
+    setSetting("superAdmin", u.id); // whoever can restart the server with this setting owns it
     q("DELETE FROM sessions WHERE user_id=?").run(u.id);
     console.log(`Password for "${ADMIN_USERNAME}" was reset from RESET_ADMIN_PASSWORD. Remove that setting now.`);
   }

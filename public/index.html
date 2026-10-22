@@ -219,6 +219,7 @@ img{max-width:100%}
 .chip.off{background:var(--line)}
 .chip.warn{color:var(--warn)}
 .chip.me{background:var(--accent);color:var(--accent-fg)}
+.chip.super{background:var(--accent);color:var(--accent-fg);outline:2px solid var(--accent-soft)}
 .secret{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
 .secret code{font-family:var(--mono);font-size:18px;padding:6px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);user-select:all}
 .sharelist{display:flex;flex-direction:column;gap:8px}
@@ -1648,7 +1649,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Back up, export and import</h3>
       <p>Tap <a class=goto href=#go data-go=account>More › Account</a> (or <b>Account</b> at the top on a computer). <b>Download backup</b> saves everything in your account in one .zip file, photos included. <b>Download Excel</b> and <b>Download PDF</b> are for reading and printing (the PDF includes your target photos).</p>
       <p>To bring data back in, or move it to another Range Book, use <b>Import</b> on the same page and pick a backup or an Excel export (Excel files don't carry photos). Importing <b>adds</b> to your account: anything already there is left alone and nothing is deleted, so importing the same file twice doesn't double anything.</p>
-      <p><b>The whole site (admins):</b> on the <b>Admin</b> page, <b>Download site backup</b> saves every account and everything in it (data, photos, videos and files; document vaults stay locked) in one .tar.gz file on the device you're using. Keep it somewhere other than the server. To bring a whole site back, set up a fresh Range Book (an empty data folder), sign in with the account it asks you to make, and on the Admin page tap <b>Choose backup file</b>, pick the file and tap <b>Restore</b> twice. Every account comes back with its own password, so then sign in with your old account. It also takes a .zip of one of the nightly backup folders. It only works on a fresh install, so it can never wipe out a Range Book that's in use.</p>
+      <p><b>Super admin:</b> the first admin on a Range Book is its <b>super admin</b> (marked on the Admin page). Other admins can't delete, turn off, remove as admin, rename, reset the password of, or download the data of that account, so someone you make an admin can't lock you out. Only the super admin can download or restore the whole site, and only they can hand the role to another admin: on that person's card tap <b>Make super admin</b> twice. You stay an admin afterwards. The super admin can't remove their own admin without handing the role on first.</p>
+      <p><b>The whole site (super admin):</b> on the <b>Admin</b> page, <b>Download site backup</b> saves every account and everything in it (data, photos, videos and files; document vaults stay locked) in one .tar.gz file on the device you're using. Keep it somewhere other than the server. To bring a whole site back, set up a fresh Range Book (an empty data folder), sign in with the account it asks you to make, and on the Admin page tap <b>Choose backup file</b>, pick the file and tap <b>Restore</b> twice. Every account comes back with its own password, so then sign in with your old account. It also takes a .zip of one of the nightly backup folders. It only works on a fresh install, so it can never wipe out a Range Book that's in use.</p>
       <h3>Import from a spreadsheet</h3>
       <p>To add a lot of gear at once, tap <a class=goto href=#go data-go=account:import>Account › Import from a spreadsheet</a> (or <b>Import from a spreadsheet</b> on the Gear &amp; Ranges and Components lists). <b>Download the template</b> gets an Excel file with a tab each for guns, scopes, lowers, uppers, barrels, factory ammo, bullets, powders, primers and brass, with drop-down lists for cartridges and other choices, and a tip on columns like Twist when you click a cell. To bring in a gun built from a lower and an upper, list them on the <b>Lowers</b> and <b>Uppers</b> tabs, then on the <b>Guns</b> tab fill in its <b>Lower</b> and <b>Upper</b> columns (Manufacturer and Model can stay blank; it's named after the lower, and its specs come from the upper). Several rows with the same lower become one gun with several uppers. On the <b>Barrels</b> tab, <b>On gun</b> is the complete gun the barrel goes on. They can name gear that's already in Range Book or a row in the same file. Fill it in with Excel, Numbers or Google Sheets, save it as .xlsx (or a single tab as .csv), and pick it with <b>Choose a file to import</b>. Your own spreadsheet works too: Range Book matches the columns by their headings (Make and Model are joined into a gun's name, S/N is the serial number, and so on).</p>
       <p>Nothing is saved until you tap <b>Import</b>, and before then it asks about anything it isn't sure of: a column it doesn't recognize (pick what it is, add it to Notes, or leave it out), a cartridge, BC type, primer size or scope it doesn't know (pick the right one, or keep it as typed), a number or date it can't read (fix it, or leave it blank), and anything already in Range Book (the same gun by serial number or name, the same scope, ammo or component). For those it shows what's different and you pick <b>Skip</b>, <b>Update it</b> (only the boxes filled in on the spreadsheet change) or <b>Add as new</b>; rows that match exactly are left alone. <b>Download it with my gear filled in</b> gets a copy of everything you have, so you can fix things in the spreadsheet and import it back as updates.</p>
@@ -1896,6 +1898,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div id="bk_info" class="note">Loading…</div>
       <div class="row"><button class="btn" id="bk_now" type="button">Back up now</button><span class="savestate" id="bk_state"></span></div>
       <p class="note">A copy of everyone's data and photos is saved every night on the server, in the <b>backups</b> folder inside Range Book's appdata folder. The last 14 days are kept. To restore one, see the README.</p>
+      <p class="note" id="bk_superonly" hidden>Downloading or restoring the whole site is up to the super admin, <b id="bk_supername"></b>.</p>
+      <div id="bk_site">
       <h3 class="bkh">Download the whole site</h3>
       <p class="note">One file with every account and everything in it: data, photos, videos and files (document vaults stay locked). Keep it somewhere other than the server, like your computer or cloud storage. <span id="bk_size"></span></p>
       <div class="row"><a class="btn primary" id="bk_dl" href="/api/admin/site-backup.tar.gz" download>Download site backup</a></div>
@@ -1904,13 +1908,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="row rsrow"><label class="btn" for="rs_file">Choose backup file</label><input type="file" id="rs_file" accept=".gz,.tgz,.tar,.zip,application/gzip,application/x-gzip,application/x-tar,application/zip" hidden><span class="note" id="rs_name"></span></div>
       <div class="row"><button class="btn" id="rs_go" type="button" disabled>Restore</button><span class="savestate" id="rs_state"></span></div>
       <div class="banner" id="rs_out" hidden></div>
+      </div>
     </section>
     <section class="card" aria-label="Community sharing"><h2>Community sharing</h2>
       <label class="toggle" for="boxShareToggle"><input type="checkbox" id="boxShareToggle"> Share ammo with everyone: box photos and loads people share</label>
       <p class="note">On: a photo of a box of catalog ammo is seen by everyone here, so the next person can tell it's the right box, and people can tick <b>Share this load with everyone</b> on factory ammo they entered themselves. Off: everyone sees only their own box photos, new ones stay private even if you turn sharing back on later, shared loads are hidden from <b>+ Add ammo</b>, and nobody can share a new one. Photos and loads that were already shared are hidden, and come back if you turn it on again. On a big public server, off is safer: someone will eventually add the wrong box or the wrong numbers.</p>
       <span class="savestate" id="boxShareState"></span>
       <p class="note">Shared photos people have added (you see them here even with sharing off, so you can clean up). Delete any that don't match the load or shouldn't be there.</p><div id="au_boxes" class="sharelist"><p class="note">Loading…</p></div></section>
-    <section class="card" aria-label="Users"><h2>Users</h2><div id="au_list" class="sharelist"><p class="note">Loading…</p></div></section>
+    <section class="card" aria-label="Users"><h2>Users</h2><p class="note">The <b>super admin</b> is the first admin, unless they've handed it on. Other admins can't delete, turn off, demote, rename, reset the password of, or download the data of the super admin, so nobody you make an admin can lock the owner out. Only the super admin can hand the role to another admin (<b>Make super admin</b>), and they stay an admin afterwards.</p><div id="au_list" class="sharelist"><p class="note">Loading…</p></div></section>
   </div>
   <div class="panel" id="panel-account" role="tabpanel" hidden>
     <header><h1>Account</h1><p class="sub" id="acctWho"></p></header>
@@ -10928,21 +10933,28 @@ async function loadAdmin(){
   const box=$("au_list");
   try{
     const r=await API.get("/api/admin/users");
+    r.users.sort((a,b)=>(b.isSuper-a.isSuper)); // the owner's card first
+    const meSuper=!!r.meSuper,sup=r.users.find(x=>x.isSuper);
+    if(ME)ME.isSuper=meSuper;
+    $("bk_site").hidden=!meSuper;$("bk_superonly").hidden=meSuper;$("bk_supername").textContent=sup?(sup.name||sup.username):"";
     let h="";
     r.users.forEach(u=>{
-      const badges=[u.isAdmin?'<span class="chip">Admin</span>':'',u.disabled?'<span class="chip off">Turned off</span>':'',u.mustChange?'<span class="chip warn">Hasn\'t set a password yet</span>':'',u.isMe?'<span class="chip me">You</span>':''].join("");
+      const locked=u.isSuper&&!meSuper; // the owner's account: hands off
+      const badges=[u.isSuper?'<span class="chip super">Super admin</span>':u.isAdmin?'<span class="chip">Admin</span>':'',u.disabled?'<span class="chip off">Turned off</span>':'',u.mustChange?'<span class="chip warn">Hasn\'t set a password yet</span>':'',u.isMe?'<span class="chip me">You</span>':''].join("");
       h+='<div class="ucard" data-u="'+u.id+'"><div class="uhead"><div><div class="uname">'+esc(u.name||u.username)+'</div><div class="note">'+esc(u.username)+' · '+u.loads+' load'+(u.loads===1?'':'s')+' · last sign-in '+esc(when(u.lastLogin))+'</div></div><div class="chips">'+badges+'</div></div>'+
-        '<div class="row unameedit" data-nameedit hidden><input type="text" maxlength="80" aria-label="Display name" value="'+esc(u.name||"")+'" placeholder="'+esc(u.username)+'"><button class="btn primary" type="button" data-act="namesave">Save</button><button class="btn" type="button" data-act="namecancel">Cancel</button></div>'+
+        (locked?'':'<div class="row unameedit" data-nameedit hidden><input type="text" maxlength="80" aria-label="Display name" value="'+esc(u.name||"")+'" placeholder="'+esc(u.username)+'"><button class="btn primary" type="button" data-act="namesave">Save</button><button class="btn" type="button" data-act="namecancel">Cancel</button></div>')+
+        (locked?'<p class="note">This is the super admin. Only they can change this account.</p>':
         '<div class="row"><button class="btn" type="button" data-act="name">Edit name</button>'+(u.isMe?'':'<button class="btn" type="button" data-act="reset">Reset password</button>')+
-        '<button class="btn" type="button" data-act="admin">'+(u.isAdmin?'Remove admin':'Make admin')+'</button>'+
+        (u.isSuper?'':'<button class="btn" type="button" data-act="admin">'+(u.isAdmin?'Remove admin':'Make admin')+'</button>')+
+        (meSuper&&u.isAdmin&&!u.isSuper&&!u.disabled?'<button class="btn" type="button" data-act="super">Make super admin</button>':'')+
         '<a class="btn" href="/api/admin/users/'+u.id+'/export.xlsx" download>Export Excel</a><a class="btn" href="/api/admin/users/'+u.id+'/export.pdf" download>Export PDF</a><a class="btn" href="/api/admin/users/'+u.id+'/export.zip" download>Backup</a>'+
         (u.isMe?'':'<button class="btn" type="button" data-act="toggle">'+(u.disabled?'Turn on':'Turn off')+'</button><button class="btn danger" type="button" data-act="delete">Delete</button>')+
-        '</div><div class="banner" data-out hidden></div></div>';
+        '</div>')+'<div class="banner" data-out hidden></div></div>';
     });
     box.innerHTML=h;
     box.querySelectorAll(".ucard").forEach(card=>{
       const id=+card.dataset.u,u=r.users.find(x=>x.id===id),out=card.querySelector("[data-out]");
-      card.querySelector("[data-nameedit] input").addEventListener("keydown",e=>{if(e.key==="Enter")card.querySelector('[data-act="namesave"]').click();if(e.key==="Escape")card.querySelector('[data-act="namecancel"]').click();});
+      if(card.querySelector("[data-nameedit]"))card.querySelector("[data-nameedit] input").addEventListener("keydown",e=>{if(e.key==="Enter")card.querySelector('[data-act="namesave"]').click();if(e.key==="Escape")card.querySelector('[data-act="namecancel"]').click();});
       card.querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click",async()=>{
         const act=b.dataset.act;
         const confirmTwice=(label,fn)=>{const key=act+id;if(adminArmed===key){adminArmed=null;fn();return;}adminArmed=key;const old=b.textContent;b.textContent=label;setTimeout(()=>{if(adminArmed===key){adminArmed=null;b.textContent=old;}},4000);};
@@ -10955,6 +10967,7 @@ async function loadAdmin(){
             if(u.isMe&&ME){ME.name=nm||ME.username;const w=$("whoName");if(w)w.textContent=ME.name;const a=$("acctWho");if(a)a.textContent=ME.name+" ("+ME.username+")"+(ME.isAdmin?" · admin":"");const mw=$("moreWho");if(mw)mw.textContent=ME.name!==ME.username?ME.name+" · "+ME.username:ME.username;}
             loadAdmin();}
           if(act==="admin"){await API.patch("/api/admin/users/"+id,{isAdmin:!u.isAdmin});loadAdmin();}
+          if(act==="super")confirmTwice("Tap again: "+(u.name||u.username)+" becomes super admin",async()=>{try{await API.post("/api/admin/super",{id});loadAdmin();}catch(e){showResult(out,esc(e.message),true);}});
           if(act==="toggle"){await API.patch("/api/admin/users/"+id,{disabled:!u.disabled});loadAdmin();}
           if(act==="delete")confirmTwice("Tap again: deletes their loads and photos",async()=>{try{await API.del("/api/admin/users/"+id);loadAdmin();}catch(e){showResult(out,esc(e.message),true);}});
         }catch(e){showResult(out,esc(e.message),true);}

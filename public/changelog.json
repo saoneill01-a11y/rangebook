@@ -2,10 +2,14 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.6",
-      "date": "2026-10-19",
+      "version": "2.42.7",
+      "date": "2026-10-21",
       "title": "Transonic on the chart, table and dope card",
       "items": [
+        "Admin: the first admin is now the super admin, marked on the Admin page and listed first. Other admins can't delete, turn off, remove as admin, rename, reset the password of, or download the data of the super admin, so nobody you make an admin can lock you out of your own server.",
+        "Only the super admin can download or restore the whole site.",
+        "The super admin can hand the role to another admin with Make super admin (tap twice) and stays an admin. They can't remove their own admin until they've handed it on.",
+        "On a Range Book that already has several admins, the oldest admin account becomes the super admin. RESET_ADMIN_PASSWORD makes that account the super admin again.",
         "Tools: Chronograph file check is now called Chronograph import check.",
         "Bullet path: each path turns dashed where the bullet slows to Mach 1.2 (transonic), and stays dashed from there. A subsonic load is dashed all the way. The 50-yard dots on the paths are gone.",
         "Move the mouse over a path (or tap one on a phone) to see the distance and the drop for each zero.",
