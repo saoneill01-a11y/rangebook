@@ -219,6 +219,8 @@ img{max-width:100%}
 .chip.off{background:var(--line)}
 .chip.warn{color:var(--warn)}
 .chip.me{background:var(--accent);color:var(--accent-fg)}
+#bkKeyOut .secret code{word-break:break-all;font-size:14px;min-width:0}
+.bkscript{white-space:pre;overflow-x:auto;max-width:100%;font-size:12px;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0;max-height:360px;overflow:auto}
 .chip.super{background:var(--accent);color:var(--accent-fg);outline:2px solid var(--accent-soft)}
 .secret{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
 .secret code{font-family:var(--mono);font-size:18px;padding:6px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);user-select:all}
@@ -1657,6 +1659,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To bring data back in, or move it to another Range Book, use <b>Import</b> on the same page and pick a backup or an Excel export (Excel files don't carry photos). Importing <b>adds</b> to your account: anything already there is left alone and nothing is deleted, so importing the same file twice doesn't double anything.</p>
       <p><b>Super admin:</b> the first admin on a Range Book is its <b>super admin</b> (marked on the Admin page). Other admins can't delete, turn off, remove as admin, rename, reset the password of, or download the data of that account, so someone you make an admin can't lock you out. Only the super admin can download or restore the whole site, and only they can hand the role to another admin: on that person's card tap <b>Make super admin</b> twice. You stay an admin afterwards. The super admin can't remove their own admin without handing the role on first.</p>
       <p><b>The whole site (super admin):</b> on the <b>Admin</b> page, <b>Download site backup</b> saves every account and everything in it (data, photos, videos and files; document vaults stay locked) in one .tar.gz file on the device you're using. Keep it somewhere other than the server. To bring a whole site back, set up a fresh Range Book (an empty data folder), sign in with the account it asks you to make, and on the Admin page tap <b>Choose backup file</b>, pick the file and tap <b>Restore</b> twice. Every account comes back with its own password, so then sign in with your old account. It also takes a .zip of one of the nightly backup folders. It only works on a fresh install, so it can never wipe out a Range Book that's in use.</p>
+      <p><b>Nightly copy to another computer (super admin):</b> if Range Book runs somewhere else, like a cloud host, your home server can download the whole site every night. On the <b>Admin</b> page under <b>Nightly copy to another computer</b>, tap <b>Turn on</b>. Copy the backup key and the ready-made script it shows (they're only shown once). On Unraid, install <b>User Scripts</b> from Apps, add a script, paste it in, change <b>DEST</b> to the folder you want, and set it to run daily. It keeps the newest 30 and says FAILED if a download doesn't work. The Admin page shows when the key was last used. Anyone with the key can download everything, so if it gets out, tap <b>Make a new key</b> (the old one stops working) or <b>Turn off</b>.</p>
       <h3>Import from a spreadsheet</h3>
       <p>To add a lot of gear at once, tap <a class=goto href=#go data-go=account:import>Account › Import from a spreadsheet</a> (or <b>Import from a spreadsheet</b> on the Gear &amp; Ranges and Components lists). <b>Download the template</b> gets an Excel file with a tab each for guns, scopes, lowers, uppers, barrels, factory ammo, bullets, powders, primers and brass, with drop-down lists for cartridges and other choices, and a tip on columns like Twist when you click a cell. To bring in a gun built from a lower and an upper, list them on the <b>Lowers</b> and <b>Uppers</b> tabs, then on the <b>Guns</b> tab fill in its <b>Lower</b> and <b>Upper</b> columns (Manufacturer and Model can stay blank; it's named after the lower, and its specs come from the upper). Several rows with the same lower become one gun with several uppers. On the <b>Barrels</b> tab, <b>On gun</b> is the complete gun the barrel goes on. They can name gear that's already in Range Book or a row in the same file. Fill it in with Excel, Numbers or Google Sheets, save it as .xlsx (or a single tab as .csv), and pick it with <b>Choose a file to import</b>. Your own spreadsheet works too: Range Book matches the columns by their headings (Make and Model are joined into a gun's name, S/N is the serial number, and so on).</p>
       <p>Nothing is saved until you tap <b>Import</b>, and before then it asks about anything it isn't sure of: a column it doesn't recognize (pick what it is, add it to Notes, or leave it out), a cartridge, BC type, primer size or scope it doesn't know (pick the right one, or keep it as typed), a number or date it can't read (fix it, or leave it blank), and anything already in Range Book (the same gun by serial number or name, the same scope, ammo or component). For those it shows what's different and you pick <b>Skip</b>, <b>Update it</b> (only the boxes filled in on the spreadsheet change) or <b>Add as new</b>; rows that match exactly are left alone. <b>Download it with my gear filled in</b> gets a copy of everything you have, so you can fix things in the spreadsheet and import it back as updates.</p>
@@ -1914,6 +1917,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3 class="bkh">Download the whole site</h3>
       <p class="note">One file with every account and everything in it: data, photos, videos and files (document vaults stay locked). Keep it somewhere other than the server, like your computer or cloud storage. <span id="bk_size"></span></p>
       <div class="row"><a class="btn primary" id="bk_dl" href="/api/admin/site-backup.tar.gz" download>Download site backup</a></div>
+      <h3 class="bkh">Nightly copy to another computer</h3>
+      <p class="note">Lets another computer, like a home server, download the site backup on a schedule without signing in. It uses a <b>backup key</b> instead of a password. Anyone with the key can download everything on this Range Book, so keep it private, and make a new one (or turn it off) if it gets out.</p>
+      <p class="note" id="bkKeyState">Loading…</p>
+      <div class="row"><button class="btn" id="bkKeyNew" type="button">Turn on</button><button class="btn danger" id="bkKeyOff" type="button" hidden>Turn off</button></div>
+      <div class="banner" id="bkKeyOut" hidden></div>
       <h3 class="bkh">Restore the whole site</h3>
       <p class="note" id="rs_why">Brings back everything from a site backup: every account (with its password), all the data and all the files. It only works on a fresh install, so it can't wipe out a Range Book that's in use.</p>
       <div class="row rsrow"><label class="btn" for="rs_file">Choose backup file</label><input type="file" id="rs_file" accept=".gz,.tgz,.tar,.zip,application/gzip,application/x-gzip,application/x-tar,application/zip" hidden><span class="note" id="rs_name"></span></div>
@@ -10926,6 +10934,30 @@ $("rs_go").addEventListener("click",async()=>{
     go.disabled=false;
   }
 });
+/* backup key (2.42.10): lets a home server fetch the site backup every night */
+function bkScript(key){
+  return '#!/bin/bash\n# Range Book: download the whole-site backup and keep the newest ones\nURL="'+location.origin+'"\nKEY="'+key+'"\nDEST="/mnt/user/backups/rangebook"   # folder to keep the backups in\nKEEP=30                            # how many to keep\n\nmkdir -p "$DEST"\nF="$DEST/rangebook-site-$(date +%Y-%m-%d).tar.gz"\nif curl -fsS --retry 3 -H "Authorization: Bearer $KEY" -o "$F.part" "$URL/api/backup/site.tar.gz" && gzip -t "$F.part"; then\n  mv "$F.part" "$F"; echo "Saved $F"\nelse\n  rm -f "$F.part"; echo "Range Book backup FAILED"; exit 1\nfi\nls -1t "$DEST"/rangebook-site-*.tar.gz | tail -n +$((KEEP+1)) | xargs -r rm --\n';
+}
+async function loadBackupKey(){
+  const st=$("bkKeyState");if(!st)return;
+  try{const k=await API.get("/api/admin/backup-key");
+    st.innerHTML=k.on?'<b>On.</b> Key made '+esc(when(k.created))+'. '+(k.lastUsed?'Last download: <b>'+esc(new Date(k.lastUsed.at).toLocaleString())+'</b>.':'Not used yet.'):'<b>Off.</b> Nothing can download the site without signing in.';
+    $("bkKeyNew").textContent=k.on?"Make a new key":"Turn on";$("bkKeyNew").dataset.on=k.on?"1":"";$("bkKeyOff").hidden=!k.on;
+  }catch(e){st.textContent=e.message;}
+}
+function bkArm(b,label,fn){if(b.dataset.armed==="1"){b.dataset.armed="";fn();return;}const old=b.textContent;b.dataset.armed="1";b.textContent=label;setTimeout(()=>{if(b.dataset.armed==="1"){b.dataset.armed="";b.textContent=old;}},4000);}
+$("bkKeyNew").addEventListener("click",()=>{
+  const b=$("bkKeyNew"),out=$("bkKeyOut");
+  const go=async()=>{try{const r=await API.post("/api/admin/backup-key",{});const sc=bkScript(r.key);
+    out.hidden=false;out.classList.remove("bad");
+    out.innerHTML='<b>Your backup key.</b> Copy it now: this is the only time it\'s shown.<div class="secret"><code>'+esc(r.key)+'</code><button class="btn" type="button" data-cp="key">Copy key</button></div>'+
+      '<p class="note">On Unraid, install <b>User Scripts</b> from Apps, add a new script, paste this in (change <b>DEST</b> to the folder you want), and set it to run daily. The key and this site\'s address are already filled in.</p>'+
+      '<pre class="bkscript">'+esc(sc)+'</pre><div class="row"><button class="btn" type="button" data-cp="script">Copy script</button></div>';
+    out.querySelectorAll("[data-cp]").forEach(c=>c.addEventListener("click",()=>{const t=c.dataset.cp==="key"?r.key:sc;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{c.textContent="Copied";},()=>{c.textContent="Select it and copy";});}));
+    loadBackupKey();}catch(e){showResult(out,esc(e.message),true);}};
+  if(b.dataset.on==="1")bkArm(b,"Tap again: the old key stops working",go);else go();
+});
+$("bkKeyOff").addEventListener("click",()=>bkArm($("bkKeyOff"),"Tap again to turn off",async()=>{try{await API.del("/api/admin/backup-key");$("bkKeyOut").hidden=true;loadBackupKey();}catch(e){showResult($("bkKeyOut"),esc(e.message),true);}}));
 async function loadAdminBoxes(){
   const box=$("au_boxes");if(!box)return;
   try{const r=await API.get("/api/boxphotos?all=1");const list=(r.photos||[]).filter(b=>b.item);
@@ -10942,7 +10974,7 @@ async function loadAdmin(){
     r.users.sort((a,b)=>(b.isSuper-a.isSuper)); // the owner's card first
     const meSuper=!!r.meSuper,sup=r.users.find(x=>x.isSuper);
     if(ME)ME.isSuper=meSuper;
-    $("bk_site").hidden=!meSuper;$("bk_superonly").hidden=meSuper;$("bk_supername").textContent=sup?(sup.name||sup.username):"";
+    $("bk_site").hidden=!meSuper;if(meSuper)loadBackupKey();$("bk_superonly").hidden=meSuper;$("bk_supername").textContent=sup?(sup.name||sup.username):"";
     let h="";
     r.users.forEach(u=>{
       const locked=u.isSuper&&!meSuper; // the owner's account: hands off

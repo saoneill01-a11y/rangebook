@@ -563,6 +563,21 @@ async function api(req, res, url) {
     }
   }
 
+  /* ---- the whole site for a scheduled download (2.42.10): another computer (a home server) fetches the site backup with
+     the backup key in an "Authorization: Bearer" header instead of signing in. Only a hash of the key is kept. ---- */
+  if (p === "/api/backup/site.tar.gz" && (method === "GET" || method === "HEAD")) {
+    const ip = clientIp(req), fk = "bk:" + ip;
+    if (throttled(fk)) throw new HttpError(429, "Too many wrong keys. Try again in 15 minutes.");
+    const k = getSetting("backupKey", null), auth = String(req.headers.authorization || "");
+    const tok = /^Bearer\s+/i.test(auth) ? auth.replace(/^Bearer\s+/i, "").trim() : "";
+    const ok = !!(k && k.hash && tok) && crypto.timingSafeEqual(Buffer.from(sha256hex(tok)), Buffer.from(k.hash));
+    if (!ok) { noteFail(fk); throw new HttpError(401, k ? "That backup key isn't right." : "Scheduled backups are turned off on this Range Book."); }
+    setSetting("backupKeyUsed", { at: now(), ip });
+    console.log(`Site backup downloaded with the backup key (from ${ip}).`);
+    if (method === "HEAD") return send(res, 200, "");
+    return sendSiteBackup(res);
+  }
+
   const user = getUser(req, res);
   if (!user) throw new HttpError(401, "Please sign in.");
   let m0;
@@ -1090,8 +1105,19 @@ async function api(req, res, url) {
     }
     /* ---- the whole site in one file (2.35): download it, or bring it back on a fresh install ---- */
     // the whole site holds everyone's data and passwords: the super admin's job (2.42.7)
-    if ((p.startsWith("/api/admin/site-backup") || p.startsWith("/api/admin/site-restore")) && !isSuper(user)) throw new HttpError(403, "Only the super admin can download or restore the whole site.");
+    if ((p.startsWith("/api/admin/site-backup") || p.startsWith("/api/admin/site-restore") || p === "/api/admin/backup-key") && !isSuper(user)) throw new HttpError(403, "Only the super admin can download or restore the whole site.");
     if (p === "/api/admin/site-backup" && method === "GET") return send(res, 200, siteInfo());
+    // the backup key for scheduled downloads: shown once when it's made, then only its hash is kept
+    if (p === "/api/admin/backup-key") {
+      if (method === "GET") { const k = getSetting("backupKey", null); return send(res, 200, { on: !!(k && k.hash), created: k ? k.created : null, lastUsed: k ? getSetting("backupKeyUsed", null) : null }); }
+      if (method === "POST") {
+        const key = "rbk_" + crypto.randomBytes(30).toString("base64url");
+        setSetting("backupKey", { hash: sha256hex(key), created: now() }); setSetting("backupKeyUsed", null);
+        console.log(`New backup key made by "${user.username}".`);
+        return send(res, 200, { key });
+      }
+      if (method === "DELETE") { setSetting("backupKey", null); setSetting("backupKeyUsed", null); console.log(`Backup key turned off by "${user.username}".`); return send(res, 200, { on: false }); }
+    }
     if (p === "/api/admin/site-backup.tar.gz" && method === "GET") return sendSiteBackup(res);
     if (p === "/api/admin/site-restore/start" && method === "POST") {
       const inf = siteInfo(); if (!inf.fresh) throw new HttpError(409, inf.why);
@@ -1314,6 +1340,7 @@ function tarHeader(name, size, mtime) {
   h.write(sum.toString(8).padStart(6, "0") + "\0 ", 148);
   return h;
 }
+const sha256hex = (t) => crypto.createHash("sha256").update(String(t)).digest("hex");
 function sendSiteBackup(res) {
   const tmp = path.join(DATA_DIR, ".site-" + process.pid + "-" + Date.now() + ".db");
   db.exec(`VACUUM INTO '${tmp.replace(/'/g, "''")}'`);

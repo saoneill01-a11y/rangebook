@@ -168,6 +168,8 @@ These backups sit on the same disk as your data, so they protect against mistake
 
 **From the Admin page (super admin only):** **Download site backup** saves the whole site (every account, all the data, photos, videos and files) in one `.tar.gz` file on whatever device you're using, so you can keep a copy off the server without logging in to it. To bring it back, start a fresh Range Book (an empty data folder), sign in with the account it asks you to set up, and on the Admin page use **Restore the whole site** with that file (or a `.zip` of a nightly backup folder). The upload goes in pieces, so it works through a Cloudflare Tunnel too. Every account comes back with its own password. It only runs on a fresh install (one account, no pictures or files), and what was there is kept in `pre-restore-<time>/` in the data folder.
 
+**Nightly copy to another computer (super admin only):** if Range Book runs on a cloud host, another computer (say, an Unraid server at home) can download the whole-site backup on a schedule. On the Admin page, under **Nightly copy to another computer**, tap **Turn on**. It shows a backup key once, plus a ready-made script with the key and your site's address filled in. On Unraid, install **User Scripts** from Apps, add a new script, paste it in, change `DEST` to the folder you want and set it to run daily. The script downloads `/api/backup/site.tar.gz` with the key in an `Authorization: Bearer` header, checks the file, and keeps the newest 30. Only a hash of the key is stored; anyone with the key can download everything, so tap **Make a new key** (the old one stops working) or **Turn off** if it gets out. Ten wrong keys from one address lock that address out for 15 minutes.
+
 **To restore** a nightly backup by hand:
 
 ```sh
