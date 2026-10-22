@@ -36,7 +36,10 @@
         "Dope card: starts shortened and scrolls on screen. Drag the bar under it to make it taller or shorter, or double-tap the bar to show it all. Printing and Field mode still show every row.",
         "Compare trajectories: a dot marks where each bullet goes transonic.",
         "Range Book has a contact address: hello@rangebook.org. More › Account › Feedback and ideas now has an Email feedback button that opens your email app with your version filled in.",
-        "Security problems can be reported privately to security@rangebook.org (see SECURITY.md)."
+        "Security problems can be reported privately to security@rangebook.org (see SECURITY.md).",
+        "Fixed: in guest mode, the shortcut bar on a profile (Inputs, Conditions and so on) stopped too far down the page once you scrolled, leaving a gap under the tabs. It now sits right under them, the same as when you're signed in.",
+        "Admin › Community box photos: a switch to turn off sharing ammo with everyone. Off, everyone sees only their own box photos (new ones stay private even if sharing is turned back on later), shared loads are hidden from + Add ammo, and nobody can share a new load. The admin still sees the shared photos to clean up.",
+        "Admin: Community box photos is now called Community sharing, since it covers shared loads too."
       ]
     },
     {

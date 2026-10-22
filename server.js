@@ -176,6 +176,9 @@ if (!q("PRAGMA table_info(photos)").all().some((c) => c.name === "ladder_id")) d
 if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "accepted_terms")) db.exec("ALTER TABLE users ADD COLUMN accepted_terms INTEGER");
 const ladderIdOf = (v) => (typeof v === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(v) ? v : null);
 const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
+// sharing ammo with everyone (box photos of catalog ammo, loads people share, and their photos) is on unless the
+// admin turns it off (Admin › Community sharing, 2.42.5), e.g. on a big public server
+const shareBoxPhotos = () => getSetting("shareAmmo", true) !== false;
 const getSetting = (k, d) => { const r = q("SELECT value FROM settings WHERE key=?").get(k); return r ? JSON.parse(r.value) : d; };
 const setSetting = (k, v) => q("INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(k, JSON.stringify(v));
 const now = () => Date.now();
@@ -711,13 +714,15 @@ async function api(req, res, url) {
   }
   /* ---- factory loads people chose to share with everyone on this server ---- */
   if (p === "/api/sharedammo" && method === "GET") {
+    if (!shareBoxPhotos() && !(user.is_admin && url.searchParams.get("all") === "1")) return send(res, 200, { shared: false, ammo: [] });
     const rows = q("SELECT s.id, s.owner_id, s.data, s.updated_at, u.display_name, u.username FROM shared_ammo s LEFT JOIN users u ON u.id=s.owner_id ORDER BY s.updated_at DESC").all();
-    return send(res, 200, { ammo: rows.map((r) => ({ id: r.id, data: JSON.parse(r.data), by: r.display_name || r.username || "a former member", mine: r.owner_id != null && r.owner_id === user.id, at: r.updated_at })) });
+    return send(res, 200, { shared: shareBoxPhotos(), ammo: rows.map((r) => ({ id: r.id, data: JSON.parse(r.data), by: r.display_name || r.username || "a former member", mine: r.owner_id != null && r.owner_id === user.id, at: r.updated_at })) });
   }
   m = /^\/api\/sharedammo\/([A-Za-z0-9_-]{1,80})$/.exec(p);
   if (m) {
     const row = q("SELECT * FROM shared_ammo WHERE id=?").get(m[1]);
     if (method === "PUT") {
+      if (!shareBoxPhotos()) throw new HttpError(403, "Sharing loads with everyone is turned off on this Range Book.");
       if (row && row.owner_id !== user.id) throw new HttpError(403, "Someone else shared this one.");
       const b = await readJson(req);
       const keep = ["mfr", "name", "cartridge", "bullet", "weight", "bc", "bcm", "dia", "boxVel", "testBarrel"], d = {};
@@ -735,10 +740,15 @@ async function api(req, res, url) {
     }
   }
 
-  /* ---- ammo box photos: a photo of catalog ammo is shared with everyone; a photo of your own entry is private ---- */
+  /* ---- ammo box photos: a photo of catalog ammo is shared with everyone; a photo of your own entry is private ----
+     The admin can turn sharing off (Admin › Community sharing, 2.42.5; it covers shared loads too): then everyone sees only their own box photos,
+     new ones are saved private (even for catalog ammo), and ?all=1 still lists the shared ones for an admin to clean up. */
   if (p === "/api/boxphotos" && method === "GET") {
-    const rows = q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.cat_item IS NOT NULL OR b.owner_id=? OR b.ammo_id IN (SELECT id FROM shared_ammo) ORDER BY b.created_at DESC").all(user.id);
-    return send(res, 200, { photos: rows.map((r) => ({ id: r.id, item: r.cat_item, ammo: r.cat_item ? null : r.ammo_id, w: r.w, h: r.h, at: r.created_at, by: r.display_name || r.username || "a former member", mine: r.owner_id != null && r.owner_id === user.id, url: `/api/photos/${r.id}` })) });
+    const sharing = shareBoxPhotos(), adminAll = user.is_admin && url.searchParams.get("all") === "1";
+    const rows = sharing || adminAll
+      ? q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.cat_item IS NOT NULL OR b.owner_id=? OR b.ammo_id IN (SELECT id FROM shared_ammo) ORDER BY b.created_at DESC").all(user.id)
+      : q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.owner_id=? ORDER BY b.created_at DESC").all(user.id);
+    return send(res, 200, { shared: sharing, photos: rows.map((r) => ({ id: r.id, item: r.cat_item, ammo: r.cat_item ? null : r.ammo_id, w: r.w, h: r.h, at: r.created_at, by: r.display_name || r.username || "a former member", mine: r.owner_id != null && r.owner_id === user.id, url: `/api/photos/${r.id}` })) });
   }
   if (p === "/api/boxphotos" && method === "POST") {
     const body = await readJson(req, 4 * 1024 * 1024);
@@ -749,8 +759,11 @@ async function api(req, res, url) {
     const buf = Buffer.from(mm[2], "base64");
     const pid = crypto.randomUUID(), file = `${pid}.${mm[1] === "jpeg" ? "jpg" : mm[1]}`;
     fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
-    q("INSERT INTO box_photos(id,cat_item,ammo_id,owner_id,file,w,h,created_at) VALUES(?,?,?,?,?,?,?,?)").run(pid, item, item ? null : ammoId, user.id, file, body.w | 0 || null, body.h | 0 || null, now());
-    return send(res, 200, { photo: { id: pid, item, ammo: item ? null : ammoId, w: body.w | 0 || null, h: body.h | 0 || null, at: now(), by: user.display_name || user.username, mine: true, url: `/api/photos/${pid}` } });
+    // with sharing off, a catalog box photo is kept as a private photo of your own ammo entry
+    const catItem = shareBoxPhotos() ? item : null, ownAmmo = catItem ? null : (ammoId || null);
+    if (!catItem && !ownAmmo) throw new HttpError(400, "Which ammo is this a photo of?");
+    q("INSERT INTO box_photos(id,cat_item,ammo_id,owner_id,file,w,h,created_at) VALUES(?,?,?,?,?,?,?,?)").run(pid, catItem, ownAmmo, user.id, file, body.w | 0 || null, body.h | 0 || null, now());
+    return send(res, 200, { photo: { id: pid, item: catItem, ammo: ownAmmo, w: body.w | 0 || null, h: body.h | 0 || null, at: now(), by: user.display_name || user.username, mine: true, url: `/api/photos/${pid}` } });
   }
   m = /^\/api\/boxphotos\/([A-Za-z0-9-]{1,80})$/.exec(p);
   if (m && method === "DELETE") {
@@ -1026,7 +1039,7 @@ async function api(req, res, url) {
     if (ph) access = canRead(user, ph.load_id);
     else { ph = q("SELECT * FROM trip_photos WHERE id=? AND owner_id=?").get(m[1], user.id); table = "trip_photos"; if (ph) access = "owner"; }
     if (!ph) { const g = q("SELECT * FROM gun_photos WHERE id=? AND owner_id=?").get(m[1], user.id); if (g) { if (method !== "GET") throw new HttpError(400, "Use the gun photo controls for this one."); ph = g; table = "gun_photos"; access = "shared"; } }
-    if (!ph) { const b = q("SELECT * FROM box_photos WHERE id=?").get(m[1]); if (b && (b.cat_item || b.owner_id === user.id || (b.ammo_id && q("SELECT 1 AS ok FROM shared_ammo WHERE id=?").get(b.ammo_id)))) { if (method !== "GET") throw new HttpError(400, "Use the box photo controls for this one."); ph = b; table = "box_photos"; access = "shared"; } }
+    if (!ph) { const b = q("SELECT * FROM box_photos WHERE id=?").get(m[1]); if (b && (b.owner_id === user.id || ((shareBoxPhotos() || user.is_admin) && (b.cat_item || (b.ammo_id && q("SELECT 1 AS ok FROM shared_ammo WHERE id=?").get(b.ammo_id)))))) { if (method !== "GET") throw new HttpError(400, "Use the box photo controls for this one."); ph = b; table = "box_photos"; access = "shared"; } }
     if (!ph || !access) throw new HttpError(404, "Photo not found.");
     if (method === "GET") {
       const fp = path.join(PHOTO_DIR, path.basename(ph.file));
@@ -1086,8 +1099,8 @@ async function api(req, res, url) {
       finally { fs.rmSync(dir, { recursive: true, force: true }); }
     }}
     if (p === "/api/admin/settings") {
-      if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); }
-      return send(res, 200, { guestEnabled: !!getSetting("guestEnabled", false) });
+      if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); if ("shareAmmo" in b) setSetting("shareAmmo", !!b.shareAmmo); }
+      return send(res, 200, { guestEnabled: !!getSetting("guestEnabled", false), shareAmmo: shareBoxPhotos() });
     }
     if (p === "/api/admin/users" && method === "GET") {
       const rows = q(`SELECT u.id, u.username, u.display_name, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login,

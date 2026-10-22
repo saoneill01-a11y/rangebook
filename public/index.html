@@ -1721,9 +1721,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Factory ammo</h3>
       <p>On <a class=goto href=#go data-go=rifles:ammo>Gear &amp; Ranges › Ammo</a>, tap <b>+ Add ammo</b>. It works like adding a scope: a search box, the factory loads in tiles grouped by cartridge (smallest bullet first), <b>+ Enter factory ammo yourself</b>, and <b>+ Reloaded ammo</b> to make an entry from one of your Reloading recipes. Type a cartridge, maker or weight to narrow it down. There are about 155 popular loads in 56 cartridges, from 17 HMR to 50 BMG (Hornady, Federal, Sig Sauer, Remington, CCI, Speer, Nosler and Barnes; rifle, rimfire and handgun) with the bullet, BC and box velocity already filled in from the maker's published data (Nosler and Barnes velocities come from gun-shop listings instead, with the BC from the makers' bullet data); tap one to add it to your list. Not listed? Tap <b>+ Enter factory ammo yourself</b> on the same screen and fill in the maker, cartridge, bullet, weight, BC, the velocity on the box (and your measured velocity if you've chronographed it), plus rounds bought, price and lot number. <b>Use in calculator</b> (pick the gun first if you like) makes a profile on <a class=goto href=#go data-go=traj>Shooting</a> with those numbers. You can also pick the ammo in a Shooting profile's <b>Ammunition</b> box. Tap it to open a short list: your reloaded ammo, your factory ammo, and the catalog loads for that load's cartridge. Type in its search box (a maker, powder, bullet weight or cartridge) to search everything, including the whole catalog. Picking a catalog load fills in the numbers and adds it to your Ammunition for you. The range trips you log on that profile count down your rounds on hand (bought minus fired), and <b>+ Bought more</b> adds a new box. Set <b>Warn when fewer than</b> and Home tells you when you're running low. If your range trips have average velocities, it offers to use their average as your measured velocity.</p>
       <h3>Sharing factory loads</h3>
-      <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b>. It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up under their cartridge on the <b>+ Add ammo</b> screen, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
+      <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b> (it isn't there if an admin has turned sharing off under Admin › Community sharing). It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up under their cartridge on the <b>+ Add ammo</b> screen, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
       <h3>Box photos</h3>
-      <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
+      <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. (An admin can turn that sharing off under <b>Admin › Community sharing</b>; then everyone's box photos are private, and loads can't be shared either.) Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
       <p>The tabs along the top are <b>Guns</b>, <b>Scopes</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
       <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. Tap <b>+ Add suppressor</b> for the list of about 430 suppressors, grouped by maker the same way as scopes (type a maker, model, caliber, "rimfire" or "full auto"), or <b>+ Enter a suppressor yourself</b>. <b>+ Add a suppressor…</b> on a gun's page opens the same screen and puts the new one on that gun. Picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
@@ -1943,7 +1943,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="row"><button class="btn" id="rs_go" type="button" disabled>Restore</button><span class="savestate" id="rs_state"></span></div>
       <div class="banner" id="rs_out" hidden></div>
     </section>
-    <section class="card" aria-label="Community box photos"><h2>Community box photos</h2><p class="note">Photos people added to catalog ammo. Everyone can see these, so delete any that don't match the load or shouldn't be there.</p><div id="au_boxes" class="sharelist"><p class="note">Loading…</p></div></section>
+    <section class="card" aria-label="Community sharing"><h2>Community sharing</h2>
+      <label class="toggle" for="boxShareToggle"><input type="checkbox" id="boxShareToggle"> Share ammo with everyone: box photos and loads people share</label>
+      <p class="note">On: a photo of a box of catalog ammo is seen by everyone here, so the next person can tell it's the right box, and people can tick <b>Share this load with everyone</b> on factory ammo they entered themselves. Off: everyone sees only their own box photos, new ones stay private even if you turn sharing back on later, shared loads are hidden from <b>+ Add ammo</b>, and nobody can share a new one. Photos and loads that were already shared are hidden, and come back if you turn it on again. On a big public server, off is safer: someone will eventually add the wrong box or the wrong numbers.</p>
+      <span class="savestate" id="boxShareState"></span>
+      <p class="note">Shared photos people have added (you see them here even with sharing off, so you can clean up). Delete any that don't match the load or shouldn't be there.</p><div id="au_boxes" class="sharelist"><p class="note">Loading…</p></div></section>
     <section class="card" aria-label="Users"><h2>Users</h2><div id="au_list" class="sharelist"><p class="note">Loading…</p></div></section>
   </div>
   <div class="panel" id="panel-account" role="tabpanel" hidden>
@@ -4959,13 +4963,15 @@ function addFromCatalog(c){
 }
 /* ---- ammo box photos: catalog loads share theirs with everyone; your own entries keep theirs private ---- */
 let gunPhotos=[],gunUp=0,boxes=[],boxUp=0,sharedAmmo=[],ammoCatTab="maker",shareTimers={},ammoCal=null,ammoAdding=false;
-const boxesFor=a=>a.catItem?boxes.filter(b=>b.item===a.catItem):boxes.filter(b=>b.ammo===a.id||(a.sharedFrom&&b.ammo===a.sharedFrom));
+let BOX_SHARED=true; // the admin can turn off sharing box photos (2.42.5)
+window.RB_BOXSHARE=on=>{BOX_SHARED=!!on;Promise.all([loadBoxes(),loadShared()]).then(()=>{if(typeof gunArea!=="undefined"&&gunArea==="ammo")renderRifles();});};
+const boxesFor=a=>a.catItem?boxes.filter(b=>b.item===a.catItem||(!b.item&&b.ammo===a.id)):boxes.filter(b=>b.ammo===a.id||(a.sharedFrom&&b.ammo===a.sharedFrom));
 const SHARE_KEYS=["mfr","name","cartridge","bullet","weight","bc","bcm","dia","boxVel","testBarrel"];
-function pushShared(a,now){clearTimeout(shareTimers[a.id]);const go=()=>{const d={};SHARE_KEYS.forEach(k=>{if(a[k]!=null&&a[k]!=="")d[k]=a[k];});
+function pushShared(a,now){clearTimeout(shareTimers[a.id]);if(!BOX_SHARED)return;const go=()=>{const d={};SHARE_KEYS.forEach(k=>{if(a[k]!=null&&a[k]!=="")d[k]=a[k];});
   API.put("/api/sharedammo/"+a.id,{data:d}).then(()=>loadShared()).catch(e=>{const el=$("ammoShareMsg");if(el){el.classList.add("err");el.textContent=e.message;}});};
   if(now)go();else shareTimers[a.id]=setTimeout(go,1200);}
 function unshare(id){clearTimeout(shareTimers[id]);return API.del("/api/sharedammo/"+id).then(()=>loadShared()).catch(onWriteError);}
-function loadShared(){if(window.GUEST)return Promise.resolve();return API.get("/api/sharedammo").then(r=>{sharedAmmo=(r&&r.ammo)||[];},()=>{});}
+function loadShared(){if(window.GUEST)return Promise.resolve();return API.get("/api/sharedammo").then(r=>{sharedAmmo=(r&&r.ammo)||[];if(r&&r.shared===false)BOX_SHARED=false;},()=>{});}
 function addFromShared(sh){const d=sh.data||{};
   const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),...d,bcm:d.bcm==="G7"?"G7":"G1",sharedFrom:sh.id,notes:"Shared by "+sh.by+" on this Range Book. Check it against your box."};
   ammo.push(a);queueAmmo();ammoCat=false;ammoOpen=a.id;renderRifles();window.scrollTo(0,0);}
@@ -4996,13 +5002,13 @@ const gunPhotosOf=id=>gunPhotos.filter(p=>p.rifle===id);
 async function uploadBox(a,files){
   for(const f of files){
     boxUp++;renderRifles();
-    try{const {data,w,h}=await smallJpeg(f);const r=await API.post("/api/boxphotos",{data,w,h,item:a.catItem||null,ammo:a.sharedFrom||a.id});
+    try{const {data,w,h}=await smallJpeg(f);const r=await API.post("/api/boxphotos",{data,w,h,item:BOX_SHARED?a.catItem||null:null,ammo:BOX_SHARED?a.sharedFrom||a.id:a.id});
       if(r&&r.photo)boxes.unshift(r.photo);else if(r&&r.queued)banner("No signal: the box photo will upload when you're back online.",false);}
     catch(e){if(e&&(e.status||e.network))onWriteError(e);else banner("That picture couldn't be read. Try a JPEG or PNG photo.",true);}
     finally{boxUp--;renderRifles();}
   }
 }
-function loadBoxes(){if(window.GUEST)return Promise.resolve();return Promise.all([API.get("/api/gunphotos").then(r=>{gunPhotos=(r&&r.photos)||[];try{if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}catch(e){}},()=>{}),API.get("/api/boxphotos").then(r=>{boxes=(r&&r.photos)||[];},()=>{}),loadShared()]);}
+function loadBoxes(){if(window.GUEST)return Promise.resolve();return Promise.all([API.get("/api/gunphotos").then(r=>{gunPhotos=(r&&r.photos)||[];try{if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}catch(e){}},()=>{}),API.get("/api/boxphotos").then(r=>{boxes=(r&&r.photos)||[];BOX_SHARED=!(r&&r.shared===false);},()=>{}),loadShared()]);}
 const AMMO_FIELDS=[["mfr","Manufacturer","text"],["name","Product line","text","e.g. Precision Hunter, Gold Medal Match"],["cartridge","Cartridge","text"],["bullet","Bullet","text","e.g. 178 gr ELD-X"],
   ["weight","Bullet weight (gr)","number"],["bc","Ballistic coefficient","number"],["bcm","BC type","bcm"],["dia","Bullet diameter (in)","number","optional"],["blen","Bullet length (in)","number","optional, for spin drift"],
   ["_v","Velocity","group"],["boxVel","Velocity on the box (fps)","number"],["testBarrel","Box test barrel (in)","number","optional"],["measVel","Your measured velocity (fps)","number","optional"],
@@ -5213,12 +5219,13 @@ function renderAmmo(root){
   });
   h+='</div>'+(a.src?'<p class="note">Filled in from the catalog. <a href="'+esc(a.src)+'" target="_blank" rel="noopener">'+((AMMO_CATALOG.find(x=>x.item===a.catItem)||{}).dealer?"See the dealer\'s listing</a> (the velocity isn\'t from "+esc(a.mfr)+" directly)":"See it on the maker\'s site</a>")+'.</p>':'')+
     (RL?reloadSrcHtml(a):'')+
-    (!RL&&!a.catItem&&!a.sharedFrom&&!window.GUEST?'<label class="toggle" style="margin-top:10px"><input type="checkbox" id="ammoShare"'+(a.shared?' checked':'')+'> Share this load with everyone on this Range Book</label><p class="note" id="ammoShareMsg">Shares the maker, product, cartridge, bullet, weight, BC, diameter and box velocity (and its box photo), so others can find it under its cartridge when they tap <b>+ Add ammo</b>. Your rounds, price, lot, measured velocity and notes stay private.</p>':'')+
+    (!RL&&!a.catItem&&!a.sharedFrom&&!window.GUEST&&!BOX_SHARED?'<p class="note" style="margin-top:10px">Sharing loads with everyone is turned off on this Range Book'+(a.shared?', so other people can\'t see this one.':'.')+'</p>':'')+
+    (!RL&&!a.catItem&&!a.sharedFrom&&!window.GUEST&&BOX_SHARED?'<label class="toggle" style="margin-top:10px"><input type="checkbox" id="ammoShare"'+(a.shared?' checked':'')+'> Share this load with everyone on this Range Book</label><p class="note" id="ammoShareMsg">Shares the maker, product, cartridge, bullet, weight, BC, diameter and box velocity (and its box photo), so others can find it under its cartridge when they tap <b>+ Add ammo</b>. Your rounds, price, lot, measured velocity and notes stay private.</p>':'')+
     (a.sharedFrom?'<p class="note">Copied from a load someone shared here.</p>':'')+'</section>';
   if(!RL){const bx=boxesFor(a);
     h+='<section class="card" aria-label="Box photo" id="ammoBoxPh"><h2>Box</h2>'+(bx.length?'<div class="boxgrid">'+bx.map(b=>'<figure class="boxph"><a href="'+esc(b.url)+'" target="_blank" rel="noopener"><img src="'+esc(b.url)+'" alt="Ammo box" loading="lazy"></a><figcaption>'+(a.catItem?'by '+esc(b.mine?'you':b.by):'')+((b.mine||(ME&&ME.isAdmin))?' <button class="btn small danger" type="button" data-bxdel="'+esc(b.id)+'">Delete</button>':'')+'</figcaption></figure>').join("")+'</div>':'<p class="note">No photo of this box yet.</p>')+
       (window.GUEST?'<p class="note">Box photos need an account.</p>':'<div class="row"><label class="btn" for="boxIn" style="cursor:pointer">+ Add a photo of the box</label><input id="boxIn" type="file" accept="image/*" hidden><span class="savestate">'+(boxUp?'Uploading…':'')+'</span></div>'+
-      '<p class="note">'+(a.catItem?'This load is in the catalog, so the photo is shared with everyone on this Range Book to help them recognize the box. Admins can remove photos that don\'t match.':(a.shared||a.sharedFrom)?'This load is shared, so its photo is shared with everyone on this Range Book too. Admins can remove photos that don\'t match.':'Only you can see this photo unless you share the load.')+' A quick phone snap is plenty; it\'s shrunk before it\'s saved.</p>')+'</section>';}
+      '<p class="note">'+(!BOX_SHARED?'Only you can see this photo. (Sharing box photos with everyone is turned off on this Range Book.)':a.catItem?'This load is in the catalog, so the photo is shared with everyone on this Range Book to help them recognize the box. Admins can remove photos that don\'t match.':(a.shared||a.sharedFrom)?'This load is shared, so its photo is shared with everyone on this Range Book too. Admins can remove photos that don\'t match.':'Only you can see this photo unless you share the load.')+' A quick phone snap is plenty; it\'s shrunk before it\'s saved.</p>')+'</section>';}
   h+='<section class="card" aria-label="Rounds" id="ammoRounds"><h2>Rounds</h2><div id="ammoBox"></div>'+
     '<div class="row"><input id="ammoBuyN" type="number" inputmode="numeric" placeholder="Rounds" style="max-width:110px" aria-label="'+(RL?'Rounds loaded':'Rounds bought')+'"><button class="btn" id="ammoBuy" type="button">'+(RL?'+ Loaded more':'+ Bought more')+'</button></div>'+(RL&&a.loadId?'<p class="note">Batches you log on the Reloading recipe at '+(num(a.charge)!=null?num(a.charge)+' gr':'this charge')+' are added here automatically.</p>':'')+'</section>'+
     '<section class="card" aria-label="Use in calculator"><h2>Shooting profiles</h2><div id="ammoLoads"></div>'+
@@ -10886,9 +10893,11 @@ document.addEventListener("keydown",e=>{
 });
 {const bb=document.createElement("button");bb.type="button";bb.id="helpBackBtn";bb.className="helpback";bb.hidden=true;bb.innerHTML='‹ <span>Back</span>';bb.addEventListener("click",helpBack);document.body.appendChild(bb);}
 window.RB_HELP={go:helpGo,topic:helpTopic,info:openInfo,keys:()=>Object.keys(INFO)};
-function measurePins(){const r=document.documentElement,tb=document.querySelector(".topbar"),tabs=document.querySelector(".tabs"),gb=$("guestBanner");if(!tb)return;
+// where the sticky bars stop: under the top bar (and the tabs on a wide screen). The guest and update banners scroll away
+// with the page, so they don't count (counting the guest banner left a gap under the tabs; 2.42.3)
+function measurePins(){const r=document.documentElement,tb=document.querySelector(".topbar"),tabs=document.querySelector(".tabs");if(!tb)return;
   const wide=window.matchMedia("(min-width:761px)").matches,GAP=14;
-  let top=tb.offsetHeight+GAP;if(gb&&!gb.hidden)top+=gb.offsetHeight+GAP;if(wide&&tabs)top+=tabs.offsetHeight+GAP;
+  let top=tb.offsetHeight+GAP;if(wide&&tabs)top+=tabs.offsetHeight+GAP;
   r.style.setProperty("--toph",tb.offsetHeight+"px");r.style.setProperty("--jtop",top+"px");
   const j=[...document.querySelectorAll(".jump")].find(x=>x.offsetParent);r.style.setProperty("--stick",(top+(j?j.offsetHeight:0)+8)+"px");}
 window.addEventListener("resize",measurePins);
@@ -11376,7 +11385,13 @@ function alertBox(msg){const n=document.createElement("p");n.className="err";n.t
 let adminArmed=null;
 function initAdmin(){
   const gt=$("guestToggle");
-  API.get("/api/admin/settings").then(r=>{gt.checked=!!r.guestEnabled;},()=>{});
+  const bs=$("boxShareToggle");
+  API.get("/api/admin/settings").then(r=>{gt.checked=!!r.guestEnabled;if(bs)bs.checked=r.shareAmmo!==false;},()=>{});
+  if(bs)bs.addEventListener("change",async()=>{
+    const st=$("boxShareState");st.textContent="Saving…";
+    try{const r=await API.put("/api/admin/settings",{shareAmmo:bs.checked});bs.checked=r.shareAmmo!==false;if(window.RB_BOXSHARE)RB_BOXSHARE(bs.checked);st.textContent=bs.checked?"Box photos and shared loads are shared with everyone.":"Sharing is off: everyone sees only their own box photos, and no loads are shared.";}
+    catch(e){st.textContent=e.message;bs.checked=!bs.checked;}
+  });
   gt.addEventListener("change",async()=>{
     const st=$("guestState");st.textContent="Saving…";
     try{const r=await API.put("/api/admin/settings",{guestEnabled:gt.checked});gt.checked=!!r.guestEnabled;st.textContent=gt.checked?"Guest button is on.":"Guest button is off.";}
@@ -11457,7 +11472,7 @@ $("rs_go").addEventListener("click",async()=>{
 });
 async function loadAdminBoxes(){
   const box=$("au_boxes");if(!box)return;
-  try{const r=await API.get("/api/boxphotos");const list=(r.photos||[]).filter(b=>b.item);
+  try{const r=await API.get("/api/boxphotos?all=1");const list=(r.photos||[]).filter(b=>b.item);
     box.innerHTML=list.length?'<div class="boxgrid">'+list.map(b=>'<figure class="boxph"><a href="'+esc(b.url)+'" target="_blank" rel="noopener"><img src="'+esc(b.url)+'" alt="" loading="lazy"></a><figcaption><b>'+esc(window.RB_CATLABEL?RB_CATLABEL(b.item):b.item)+'</b><br>by '+esc(b.by)+' · '+esc(new Date(b.at).toLocaleDateString())+' <button class="btn small danger" type="button" data-abx="'+esc(b.id)+'">Delete</button></figcaption></figure>').join("")+'</div>':'<p class="note">No community box photos yet.</p>';
     box.querySelectorAll("[data-abx]").forEach(bt=>bt.addEventListener("click",async()=>{if(bt.dataset.armed!=="1"){bt.dataset.armed="1";bt.textContent="Tap again";setTimeout(()=>{bt.dataset.armed="";bt.textContent="Delete";},4000);return;}
       try{await API.del("/api/boxphotos/"+bt.dataset.abx);loadAdminBoxes();}catch(e){bt.textContent=e.message;}}));
