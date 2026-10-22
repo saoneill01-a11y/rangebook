@@ -2,14 +2,14 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.8",
+      "version": "2.43.9",
       "date": "2026-10-20",
       "title": "Bluetooth chronograph",
       "items": [
         "Range Book can now take velocities straight from the Range Book BLIPR, the do-it-yourself bench radar chronograph, over Bluetooth as you shoot. It works in Chrome or Edge on Android and computers, and in the Bluefy app on iPhone and iPad.",
         "Range trips: Connect chronograph starts a string and fills it shot by shot, with the average and SD updating as you go. New chronograph string starts another, Send shots here picks a different string, Stop chronograph stops.",
         "Ladder tests: Connect chronograph on a group fills its empty boxes, then moves on to the next group in the ladder.",
-        "Tools › Chronograph: use it on its own, with the last velocity in big numbers, the string's average, SD, spread, low and high, and Save to a range trip.",
+        "Tools › BLIPR Chronograph: use it on its own, with the last velocity in big numbers, the string's average, SD, spread, low and high, and Save to a range trip.",
         "Chronograph settings: battery, pause, test shot, velocity window, where the radar sits for each gun, calibration against another chronograph, screen brightness, battery gauge and clock. A pill at the bottom right shows the last velocity while it's connected.",
         "With the chronograph's sensor kit: air temperature, humidity, pressure, density altitude, ammo temperature, heading and level. Empty trip and ladder temperatures fill in from it, and Use this air in the profile and Use … for Coriolis set a Shooting profile from it.",
         "Chronograph settings › Compass: Sensor board turned (0°, 90°, 180°, 270°), for however the compass board sits on its mount. Needs chronograph firmware 0.2.1.",
@@ -17,7 +17,8 @@
         "Chronograph settings › Level: Show the level on its screen puts a bubble level on the chronograph's own display for a minute (it also shows for a minute after switching on). Needs chronograph firmware 0.2.2 and the sensor kit's level board.",
         "How to Use has a new Bluetooth chronograph section.",
         "Chronograph settings › Look: pick how BLIPR's own screen shows each shot (Classic, Big number, Stats or Retro), with pictures of each, and Invert the screen for dark text on a lit screen in bright sun. Needs BLIPR firmware 0.2.2.",
-        "Tools › Chronograph says which BLIPR firmware this Range Book carries before you connect, and points to Settings › Firmware when an update is ready.",
+        "Tools: the Bluetooth chronograph tile is now called BLIPR Chronograph.",
+        "Tools › BLIPR Chronograph says which BLIPR firmware this Range Book carries before you connect, and points to Settings › Firmware when an update is ready.",
         "Chronograph settings › Firmware: update BLIPR's Bluetooth board over Bluetooth, about 2 minutes. Range Book carries the firmware file; BLIPR checks every piece and only switches to the new firmware once the whole file has arrived intact, and goes back to the old one if the new one doesn't start properly. Needs BLIPR firmware 0.2.2 already on the board.",
         "Chronograph settings › Screen: Bullet animation after each shot plays a short bullet across the chronograph's own screen that writes the velocity. Needs chronograph firmware 0.2.2.",
         "The chronograph has a name: Range Book BLIPR (Ballistic Launch Inspection Portable Radar). It shows as RB BLIPR when you connect; test firmware that still says RB BLIPR or RB Chrono connects too."
@@ -28,6 +29,7 @@
       "date": "2026-10-19",
       "title": "Transonic on the chart, table and dope card",
       "items": [
+        "Tools: Chronograph file check is now called Chronograph import check.",
         "Bullet path: each path turns dashed where the bullet slows to Mach 1.2 (transonic), and stays dashed from there. A subsonic load is dashed all the way. The 50-yard dots on the paths are gone.",
         "Move the mouse over a path (or tap one on a phone) to see the distance and the drop for each zero.",
         "Range table, dope card and Field mode: a red line between the distances on either side of where it goes transonic. The dope card says Transonic at … (or Subsonic from the muzzle) under its conditions, printed too.",
