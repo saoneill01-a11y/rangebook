@@ -2065,6 +2065,8 @@ window.U=(function(){
   U.labels=root=>{(root||document).querySelectorAll("[data-unit]").forEach(e=>{e.textContent=U.u(e.dataset.unit);});};
   return U;
 })();
+/* a barrel length as shown: exact to 2 decimals and no trailing zeros (10 in, 10.25 in, 10.5 in); whole mm in metric (2.42.12) */
+window.BBL=v=>U.s("dim",v,U.metric?0:2);
 /* bullet diameter can be typed in inches (caliber) or millimetres; it's always stored in inches */
 window.DIA={
   show(inches,unit){if(inches==null||!isFinite(inches))return "";return unit==="mm"?String(Math.round(inches*25.4*100)/100):String(Math.round(inches*10000)/10000);},
@@ -3836,7 +3838,7 @@ function fillRifle(){
   {let changed=false;if(rs>0&&L.sh!==rs){L.sh=rs;L._rifleSh=rs;U.fill($("f_sh"),"in",rs,2,3);changed=true;}if(tw>0&&L.twist!==tw){L.twist=tw;L._rifleTw=tw;U.fill($("f_twist"),"dim",tw,1,2);changed=true;}
     if(changed){save();setTimeout(()=>{try{render();}catch(e){}},0);}}
   {const a=$("f_sh").closest(".field"),b=$("f_twist").closest(".field");if(a)a.hidden=rs>0;if(b)b.hidden=tw>0;}
-  if(r){const bits=[];if(r.cartridge)bits.push(r.cartridge);if(r.barrel)bits.push((num(r.barrel)!=null&&/^\s*[\d.]+\s*(in|")?\s*$/.test(r.barrel)?U.s("dim",num(r.barrel),0):r.barrel+" in")+" barrel");if(tw>0)bits.push("1:"+(U.metric?U.s("dim",tw,0):tw)+" twist");if(rs>0)bits.push("sight height "+U.s("in",rs,U.metric?1:2));t=bits.join(" · ");
+  if(r){const bits=[];if(r.cartridge)bits.push(r.cartridge);if(r.barrel)bits.push((num(r.barrel)!=null&&/^\s*[\d.]+\s*(in|")?\s*$/.test(r.barrel)?BBL(num(r.barrel)):r.barrel+" in")+" barrel");if(tw>0)bits.push("1:"+(U.metric?U.s("dim",tw,0):tw)+" twist");if(rs>0)bits.push("sight height "+U.s("in",rs,U.metric?1:2));t=bits.join(" · ");
     if(rs>0||tw>0)t+=(t?". ":"")+"Change these on the Gear & Ranges tab.";}
   else if(!RIFLES.length)t="Add guns on the Gear & Ranges tab to pick one here.";
   note.innerHTML=goLinks(escT(t));note.hidden=!t;
@@ -3883,7 +3885,7 @@ function fillAmmo(){
     info.innerHTML='<div class="compcard ammoinfo"><div class="ccfacts">'+f("Type",rl?"Reloaded":"Factory")+(rl?'':f("Maker",[a.mfr,a.name].filter(Boolean).join(" ")))+f("Cartridge",a.cartridge)+
       f("Bullet",[num(a.weight)&&!/\bgr\b/i.test(a.bullet||"")?num(a.weight)+" gr":"",a.bullet].filter(Boolean).join(" "))+f("BC",num(a.bc)?num(a.bc)+" "+(a.bcm==="G7"?"G7":"G1"):"")+f("Diameter",num(a.dia)?(U.metric?U.s("dim",num(a.dia),2):String(num(a.dia)).replace(/^0\./,".")+" in"):"")+f("Length",ablen(a)?U.s("dim",ablen(a),U.metric?1:3):"")+
       (rl?f("Powder",[num(a.charge)?num(a.charge)+" gr":"",a.powder].filter(Boolean).join(" "))+f("Primer",a.primer)+f("Brass",a.brass)+f("COAL",num(a.coal)?U.s("dim",num(a.coal),U.metric?2:3):""):"")+
-      f("Velocity",v?U.s("fps",v,0,true)+(num(a.measVel)?" measured":" on the box"+(num(a.testBarrel)?" ("+U.s("dim",num(a.testBarrel),0)+" barrel)":"")):"")+'</div><button class="linkbtn" type="button" id="f_ammoEdit">Edit</button></div>';
+      f("Velocity",v?U.s("fps",v,0,true)+(num(a.measVel)?" measured":" on the box"+(num(a.testBarrel)?" ("+BBL(num(a.testBarrel))+" barrel)":"")):"")+'</div><button class="linkbtn" type="button" id="f_ammoEdit">Edit</button></div>';
     $("f_ammoEdit").addEventListener("click",()=>{if(window.RB_OPEN_AMMO)RB_OPEN_AMMO(a.id,cur().id);});
   }else info.innerHTML="";
   const note=$("f_ammoNote");note.textContent=a?"The bullet details come from this ammo; change them on the Gear & Ranges tab (Edit). Muzzle velocity below starts from its velocity and is yours to adjust for this gun. Range trips here count down your rounds on hand.":"Pick your own ammo (factory or reloaded), anything from the factory catalog, or enter new factory ammo. A catalog pick is added to your Ammunition on the Gear & Ranges tab.";note.hidden=!note.textContent;note.innerHTML=goLinks(escT(note.textContent));
@@ -3986,7 +3988,7 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const num=v=>{if(v===""||v==null)return null;const n=parseFloat(v);return isFinite(n)?n:null;};
 // form fields that carry units (forms built from field lists): key → [kind, decimals shown in metric, decimals in imperial]
-const FIELD_U={boxVel:["fps",0,0],measVel:["fps",0,0],testBarrel:["dim",0,1],blen:["dim",1,3],coal:["dim",2,3],length:["dim",1,3],caseLength:["dim",2,3],dia:["dim",2,4],distance:["yd",0,0],temp:["F",0,1],avgVel:["fps",0,0],sd:["fps",1,1]};
+const FIELD_U={boxVel:["fps",0,0],measVel:["fps",0,0],testBarrel:["dim",0,2],blen:["dim",1,3],coal:["dim",2,3],length:["dim",1,3],caseLength:["dim",2,3],dia:["dim",2,4],distance:["yd",0,0],temp:["F",0,1],avgVel:["fps",0,0],sd:["fps",1,1]};
 const POWDER_U={onHand:["lb",3,3],lowAt:["lb",3,3],priceQty:["lb",3,3]};
 const GUN_U={barrel:["dim",0,2],twist:["dim",1,2],sightHeight:["in",2,3]};
 // velocities, SD/ES (also velocities) and energy, shown in the account's units
@@ -4330,7 +4332,7 @@ function splitGunName(n){const t=String(n||"").trim();if(!t)return {mfr:"",model
 const gunMakeModel=r=>[r.mfr,r.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ");
 const gunName=r=>String(r.nick||"").trim()||gunMakeModel(r);
 window.RB_SPLIT_GUN=splitGunName;window.RB_GUN_MAKERS=GUN_MAKERS;
-function rifleSummary(r){return [r.cartridge||"",num(r.barrel)?U.s("dim",num(r.barrel),0)+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
+function rifleSummary(r){return [r.cartridge||"",num(r.barrel)?BBL(num(r.barrel))+" barrel":(r.barrel?r.barrel+" in barrel":""),num(r.twist)?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":"",num(r.sightHeight)>0?"sight height "+U.s("in",num(r.sightHeight),U.metric?1:2):""].filter(Boolean).join(" · ");}
 /* round count: starting count + rounds from range trips (loads in the calculator using this rifle) + shots in load-development groups */
 /* ---------- lowers, uppers and barrels (2.15) ----------
    Kept in the rifles doc as parts:[{id, kind:"lower"|"upper"|"barrel", mfr, model, serial (lowers), gunId (barrels),
@@ -4365,7 +4367,7 @@ function syncBuilds(){
     const mfr=auto?(lo&&lo.mfr)||"":head.mfr||"",model=auto?(lo&&lo.model)||"":head.model||"";
     const up=x=>partById(x.build.upperId);
     let labs=sibs.map(x=>{const u=up(x);return u?(u.cartridge||partName(u)):"No upper yet";});
-    labs=labs.map((l,i)=>{if(labs.filter(m=>m===l).length<2)return l;const u=up(sibs[i]),b=u&&num(u.barrel);return u&&u.cartridge&&b?l+" "+U.s("dim",b,b%1?1:0):l;});
+    labs=labs.map((l,i)=>{if(labs.filter(m=>m===l).length<2)return l;const u=up(sibs[i]),b=u&&num(u.barrel);return u&&u.cartridge&&b?l+" "+BBL(b):l;});
     labs=labs.map((l,i)=>{if(labs.filter(m=>m===l).length<2)return l;const u=up(sibs[i]);return u&&u.cartridge?u.cartridge+" · "+partName(u):l;});
     const nick=String(head.nick||"").trim();
     sibs.forEach((x,i)=>{const want={mfr,model,varLabel:labs[i]};if(nick||x.nick)want.nick=nick;want.name=buildName(want)+" · "+labs[i];
@@ -4403,7 +4405,7 @@ function makeGun(p){const r={id:"r"+Date.now().toString(36)+Math.random().toStri
   r.build[p.kind+"Id"]=p.id;rifles.push(r);queueRifles();partOpen=null;partFromGun=null;rifleOpen=r.id;renderRifles();window.scrollTo(0,0);}
 window.RB_PARTS=()=>parts;
 function partItemHtml(p){const rc=partRounds(p),g=rifles.find(r=>r.id===p.gunId),us=gunsUsing(p);
-  const d=p.kind==="lower"?(p.serial?"Serial "+p.serial:""):[p.cartridge||"",num(p.barrel)?U.s("dim",num(p.barrel),0)+" barrel":"",num(p.twist)?"1:"+(U.metric?U.s("dim",num(p.twist),0):num(p.twist))+" twist":""].filter(Boolean).join(" · ");
+  const d=p.kind==="lower"?(p.serial?"Serial "+p.serial:""):[p.cartridge||"",num(p.barrel)?BBL(num(p.barrel))+" barrel":"",num(p.twist)?"1:"+(U.metric?U.s("dim",num(p.twist),0):num(p.twist))+" twist":""].filter(Boolean).join(" · ");
   const where=p.kind==="barrel"?(g?'On '+esc(g.name||"Unnamed gun"):'Not on a gun'):(us.length?(p.kind==="lower"?'In '+esc(buildName(us[0]))+(us.length>1?' with '+us.length+' uppers':''):'In '+[...new Set(us.map(r=>r.name||"Unnamed gun"))].map(esc).join(", ")):'Not in a gun yet');
   const used=!rifleOpen&&(p.kind==="barrel"?!!g:us.length>0);
   return '<button class="loaditem'+(used?' used':'')+'" type="button" data-ptopen="'+esc(p.id)+'"><span class="t">'+esc(partName(p))+' <span class="chip">'+partKind(p)+'</span></span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+
@@ -4722,7 +4724,7 @@ function renderAmmo(root){
       $("ammoAddRel").addEventListener("click",()=>{const b=$("relAddBox");b.hidden=!b.hidden;if(!b.hidden)drawRelAdd(b,null,a=>{ammoAdding=false;ammoOpen=a.id;renderRifles();window.scrollTo(0,0);});});
       bindAddScreen({onQ:v=>{ammoCatQ=v;},bind:shdel,
         items:()=>{const cat=libItems("ammo").map(it=>{const c=it.x,cb=catBox(c.item);return Object.assign(it,{thumb:cb?'<img alt="" loading="lazy" src="'+esc(cb.url)+'">':"",
-            d:U.s("fps",c.v,0,true)+(c.tb?" ("+U.s("dim",c.tb,0)+" barrel)":"")+" · "+(c.bc!=null?"BC "+c.bc+" G1"+(c.g7?" / "+c.g7+" G7":""):"no published BC"),
+            d:U.s("fps",c.v,0,true)+(c.tb?" ("+BBL(c.tb)+" barrel)":"")+" · "+(c.bc!=null?"BC "+c.bc+" G1"+(c.g7?" / "+c.g7+" G7":""):"no published BC"),
             m:it.m||(c.dealer?"Velocity from a dealer, BC from "+c.mfr:"Maker data"),words:it.words+" "+catLabel(c)});});
           const sh=picks.filter(p=>p.kind==="shared").map(p=>{const x=p.x,d=x.data||{},bx=boxes.find(b=>b.ammo===x.id);
             return {shared:x,t:p.label||"Unnamed ammo",g:p.cal,gk:num(d.dia)||(window.RB_CARTS&&RB_CARTS.dia(p.cal))||0,cls:"sharedload",thumb:bx?'<img alt="" loading="lazy" src="'+esc(bx.url)+'">':"",words:p.search,
@@ -4932,7 +4934,7 @@ function renderRifles(){
         const pick=(k,list,lab)=>'<div class="field"><label for="rf_'+k+'">'+lab+'</label><select id="rf_'+k+'" class="fieldselect" data-gpart="'+k+'">'+(B[k+"Id"]&&list.some(p=>p.id===B[k+"Id"])?'':'<option value="" selected>Pick one…</option>')+list.sort(k==="upper"?(a,b)=>(a.cartridge?0:1)-(b.cartridge?0:1)||String(a.cartridge||"").localeCompare(String(b.cartridge||""),undefined,{numeric:true})||by(a,b):by).map(p=>'<option value="'+esc(p.id)+'"'+(B[k+"Id"]===p.id?' selected':'')+'>'+esc((k==="upper"?(p.cartridge||"No cartridge set")+" · ":"")+partName(p)+(k==="upper"&&B.lowerId&&rifles.some(x=>x!==r&&x.build&&x.build.lowerId===B.lowerId&&x.build.upperId===p.id)?" (already on this gun)":""))+'</option>').join("")+'<option value="__new">+ Add '+(k==="lower"?"a lower":"an upper")+'…</option></select>'+
           (B[k+"Id"]&&partById(B[k+"Id"])?'<button class="btn small" type="button" data-gpartopen="'+esc(B[k+"Id"])+'">Open this '+k+' ›</button>':'')+'</div>';
         const sp=gunSpec(r),up=partById(B.upperId),lo=partById(B.lowerId),sc=sp.scopeId&&scopes.find(x=>x.id===sp.scopeId);
-        const facts=[["Cartridge",sp.cartridge||""],["Barrel",num(sp.barrel)?U.s("dim",num(sp.barrel),0):""],["Twist",num(sp.twist)?"1:"+(U.metric?U.s("dim",num(sp.twist),0):num(sp.twist)):""],["Sight height",num(sp.sightHeight)>0?U.s("in",num(sp.sightHeight),U.metric?1:2):""],["Scope",sc?scopeLabel(sc):""],["Serial number",lo&&lo.serial?lo.serial:""]].filter(f=>f[1]);
+        const facts=[["Cartridge",sp.cartridge||""],["Barrel",num(sp.barrel)?BBL(num(sp.barrel)):""],["Twist",num(sp.twist)?"1:"+(U.metric?U.s("dim",num(sp.twist),0):num(sp.twist)):""],["Sight height",num(sp.sightHeight)>0?U.s("in",num(sp.sightHeight),U.metric?1:2):""],["Scope",sc?scopeLabel(sc):""],["Serial number",lo&&lo.serial?lo.serial:""]].filter(f=>f[1]);
         return t+pick("lower",lows,"Lower")+pick("upper",ups,"Upper")+
           '<div class="field wide"><div class="compcard"><div class="ccfacts">'+(facts.length?facts.map(f=>'<span><i>'+esc(f[0])+'</i>'+esc(f[1])+'</span>').join(""):'<span class="note">Pick a lower and an upper.</span>')+'</div></div><span class="note">The cartridge, barrel, twist, sight height and scope come from the upper, and the serial number from the lower. Change them on their own pages.</span></div>';})()+
       field("rf_cartridge","Cartridge (chambered for)",r.cartridge,"text"," wide")+'<div class="field wide cartinfo" id="rf_cartNote"></div>'+
@@ -5988,7 +5990,7 @@ const LIB_DEF={
     fields:[["mfr","Maker","text"],["name","Name","text"],["size","Size","sel",()=>PRIMER_SIZES.map(z=>[z,z])]]},
   ammo:{title:"Factory ammo",one:"factory load",mine:"Gear & Ranges › Ammo",list:()=>AMMO_CATALOG,
     key:a=>a.item,label:a=>a.mfr+" "+a.line+" "+a.bullet,
-    sub:a=>[a.v?U.s("fps",a.v,0,true)+(a.tb?" ("+U.s("dim",a.tb,0)+" barrel)":""):"",a.bc?"BC "+a.bc+" G1":"no BC published",a.g7?"G7 "+a.g7:""].filter(Boolean).join(" · "),
+    sub:a=>[a.v?U.s("fps",a.v,0,true)+(a.tb?" ("+BBL(a.tb)+" barrel)":""):"",a.bc?"BC "+a.bc+" G1":"no BC published",a.g7?"G7 "+a.g7:""].filter(Boolean).join(" · "),
     group:a=>a.cart,gk:a=>a.dia||0,words:a=>a.item+" "+a.w,
     fields:[["mfr","Maker","text"],["line","Line","text"],["cart","Cartridge","text"],["bullet","Bullet","text"],["w","Bullet weight (gr)","num"],["dia","Bullet diameter (in)","num"],["v","Box velocity (fps)","num"],["tb","Test barrel (in)","num"],["bc","G1 BC","num"],["g7","G7 BC","num"]]},
   scopes:{title:"Scopes",one:"scope",mine:"Gear & Ranges › Scopes",list:()=>SCOPE_CAT,load:()=>loadScopeCat(),

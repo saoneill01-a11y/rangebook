@@ -576,7 +576,7 @@ function exportPdf(d, readPhoto) {
   }
   if (rifles.length) {
     pdf.y += 10; pdf.text(pdf.M, pdf.y, "Guns", { size: 16, bold: true }); pdf.y += 6;
-    pdf.table([{ h: "Gun", w: 140 }, { h: "Serial number", w: 95 }, { h: "Barrel", w: 60 }, { h: "Twist", w: 45 }, { h: "Sight ht", w: 45, align: "right" }, { h: "Notes", w: content - 385 }], rifles.map((r) => [r.name, r.serial || "", numv(r.barrel) != null ? cs("dim", r.barrel, 0) : r.barrel, twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist), numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : "", (r.notes || "").replace(/\s+/g, " ")]));
+    pdf.table([{ h: "Gun", w: 140 }, { h: "Serial number", w: 95 }, { h: "Barrel", w: 60 }, { h: "Twist", w: 45 }, { h: "Sight ht", w: 45, align: "right" }, { h: "Notes", w: content - 385 }], rifles.map((r) => [r.name, r.serial || "", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel, twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist), numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : "", (r.notes || "").replace(/\s+/g, " ")]));
     pdf.y += 8;
   }
   if (brass.length) {
@@ -837,7 +837,7 @@ function gunsPdf(d, readPhoto) {
   if (!guns.length) { pdf.y += 10; pdf.para("No guns yet.", { size: 10, color: MUTED }); }
   else {
     pdf.table([{ h: "Gun", w: 170 }, { h: "Serial number", w: 110 }, { h: "Barrel", w: 55 }, { h: "Twist", w: 50 }, { h: "Rounds", w: 55, align: "right" }, { h: "Photos", w: content - 440, align: "right" }],
-      guns.map((r) => [r.name || "Unnamed gun", r.serial || "", numv(r.barrel) != null ? cs("dim", r.barrel, 0) : r.barrel ? r.barrel + " in" : "", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist), gunRounds(r, d).total || "", photos.filter((p) => p.rifle_id === r.id).length || ""]));
+      guns.map((r) => [r.name || "Unnamed gun", r.serial || "", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : "", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist), gunRounds(r, d).total || "", photos.filter((p) => p.rifle_id === r.id).length || ""]));
   }
   for (const r of guns) {
     pdf.addPage();
@@ -845,7 +845,7 @@ function gunsPdf(d, readPhoto) {
     pdf.text(pdf.M, pdf.y + 8, "GUN", { size: 9, bold: true, color: ACC });
     pdf.y += 30; pdf.text(pdf.M, pdf.y, r.name || "Unnamed gun", { size: 18, bold: true });
     pdf.y += 12; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y); pdf.y += 6;
-    const facts = [["Type", gunType(r)], ["Built from", r.builtFrom || ""], ["Cartridge", r.cartridge || ""], ["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, 0) : r.barrel ? r.barrel + " in" : ""], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""], ["Scope", scopeTxt(r, d)],
+    const facts = [["Type", gunType(r)], ["Built from", r.builtFrom || ""], ["Cartridge", r.cartridge || ""], ["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : ""], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""], ["Scope", scopeTxt(r, d)],
       ["Round count", rc.total ? rc.total.toLocaleString("en-US") + (rc.base ? ` (${rc.base.toLocaleString("en-US")} before Range Book)` : "") : ""], ["Barrel life", rc.life ? rc.life.toLocaleString("en-US") + " rounds" + (rc.pct != null ? `, ${rc.pct}% used` : "") : ""],
       ["Barrel fitted", r.barrelSince ? fmtDate(r.barrelSince) : ""], ["Last cleaned", r.cleaned ? fmtDate(r.cleaned) + (rc.since != null ? ` (${rc.since} rounds since)` : "") : ""], ["Clean every", numv(r.cleanEvery) ? numv(r.cleanEvery) + " rounds" : ""]].filter((x) => x[1]);
     const colW = content / 2;
