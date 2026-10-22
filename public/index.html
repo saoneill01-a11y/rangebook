@@ -220,6 +220,8 @@ img{max-width:100%}
 .chip.warn{color:var(--warn)}
 .chip.me{background:var(--accent);color:var(--accent-fg)}
 #bkKeyOut .secret code{word-break:break-all;font-size:14px;min-width:0}
+.bcform input{flex:1 1 200px;min-width:0}
+#rs_passrow input{flex:1 1 200px;min-width:0}
 .bkscript{white-space:pre;overflow-x:auto;max-width:100%;font-size:12px;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0;max-height:360px;overflow:auto}
 .chip.super{background:var(--accent);color:var(--accent-fg);outline:2px solid var(--accent-soft)}
 .secret{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
@@ -1659,6 +1661,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>To bring data back in, or move it to another Range Book, use <b>Import</b> on the same page and pick a backup or an Excel export (Excel files don't carry photos). Importing <b>adds</b> to your account: anything already there is left alone and nothing is deleted, so importing the same file twice doesn't double anything.</p>
       <p><b>Super admin:</b> the first admin on a Range Book is its <b>super admin</b> (marked on the Admin page). Other admins can't delete, turn off, remove as admin, rename, reset the password of, or download the data of that account, so someone you make an admin can't lock you out. Only the super admin can download or restore the whole site, and only they can hand the role to another admin: on that person's card tap <b>Make super admin</b> twice. You stay an admin afterwards. The super admin can't remove their own admin without handing the role on first.</p>
       <p><b>The whole site (super admin):</b> on the <b>Admin</b> page, <b>Download site backup</b> saves every account and everything in it (data, photos, videos and files; document vaults stay locked) in one .tar.gz file on the device you're using. Keep it somewhere other than the server. To bring a whole site back, set up a fresh Range Book (an empty data folder), sign in with the account it asks you to make, and on the Admin page tap <b>Choose backup file</b>, pick the file and tap <b>Restore</b> twice. Every account comes back with its own password, so then sign in with your old account. It also takes a .zip of one of the nightly backup folders. It only works on a fresh install, so it can never wipe out a Range Book that's in use.</p>
+      <p><b>Encrypting site backups (super admin, optional):</b> on the <b>Admin</b> page under <b>Encrypt site backups</b>, type a passphrase of 12 or more characters twice and tap <b>Save passphrase</b>. From then on every site backup you download, by hand or with the nightly copy, is locked with it (the file ends in .enc), and <b>Restore the whole site</b> asks for it. Range Book can't recover a lost passphrase, so keep it in a password manager. If you change it or turn it off, backups made before still need the passphrase they were made with. Leave it off if you don't want encrypted backups.</p>
       <p><b>Nightly copy to another computer (super admin):</b> if Range Book runs somewhere else, like a cloud host, your home server can download the whole site every night. On the <b>Admin</b> page under <b>Nightly copy to another computer</b>, tap <b>Turn on</b>. Copy the backup key and the ready-made script it shows (they're only shown once). On Unraid, install <b>User Scripts</b> from Apps, add a script, paste it in, change <b>DEST</b> to the folder you want, and set it to run daily. It keeps the newest 30 and says FAILED if a download doesn't work. The Admin page shows when the key was last used. Anyone with the key can download everything, so if it gets out, tap <b>Make a new key</b> (the old one stops working) or <b>Turn off</b>.</p>
       <h3>Import from a spreadsheet</h3>
       <p>To add a lot of gear at once, tap <a class=goto href=#go data-go=account:import>Account › Import from a spreadsheet</a> (or <b>Import from a spreadsheet</b> on the Gear &amp; Ranges and Components lists). <b>Download the template</b> gets an Excel file with a tab each for guns, scopes, lowers, uppers, barrels, factory ammo, bullets, powders, primers and brass, with drop-down lists for cartridges and other choices, and a tip on columns like Twist when you click a cell. To bring in a gun built from a lower and an upper, list them on the <b>Lowers</b> and <b>Uppers</b> tabs, then on the <b>Guns</b> tab fill in its <b>Lower</b> and <b>Upper</b> columns (Manufacturer and Model can stay blank; it's named after the lower, and its specs come from the upper). Several rows with the same lower become one gun with several uppers. On the <b>Barrels</b> tab, <b>On gun</b> is the complete gun the barrel goes on. They can name gear that's already in Range Book or a row in the same file. Fill it in with Excel, Numbers or Google Sheets, save it as .xlsx (or a single tab as .csv), and pick it with <b>Choose a file to import</b>. Your own spreadsheet works too: Range Book matches the columns by their headings (Make and Model are joined into a gun's name, S/N is the serial number, and so on).</p>
@@ -1917,6 +1920,12 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3 class="bkh">Download the whole site</h3>
       <p class="note">One file with every account and everything in it: data, photos, videos and files (document vaults stay locked). Keep it somewhere other than the server, like your computer or cloud storage. <span id="bk_size"></span></p>
       <div class="row"><a class="btn primary" id="bk_dl" href="/api/admin/site-backup.tar.gz" download>Download site backup</a></div>
+      <h3 class="bkh">Encrypt site backups (optional)</h3>
+      <p class="note">Off: a site backup is a plain .tar.gz that anyone holding the file can open. On: every site backup you download (here and with the nightly copy below) is locked with a passphrase you choose, and <b>Restore the whole site</b> asks for it. Range Book only keeps a key made from the passphrase, never the passphrase itself, and <b>can't get it back if you lose it</b>: without it, those backups can't be opened. Keep it in a password manager. Backups in the server's own backups folder aren't changed.</p>
+      <p class="note" id="bcState">Loading…</p>
+      <div class="row bcform" id="bcForm" hidden><input type="password" id="bcPass" autocomplete="new-password" placeholder="Backup passphrase (12+ characters)" aria-label="Backup passphrase"><input type="password" id="bcPass2" autocomplete="new-password" placeholder="Type it again" aria-label="Type the passphrase again"><button class="btn primary" id="bcSave" type="button">Save passphrase</button><button class="btn" id="bcCancel" type="button" hidden>Cancel</button></div>
+      <div class="row" id="bcBtns" hidden><button class="btn" id="bcChange" type="button">Change passphrase</button><button class="btn danger" id="bcOff" type="button">Turn off</button></div>
+      <div class="banner" id="bcOut" hidden></div>
       <h3 class="bkh">Nightly copy to another computer</h3>
       <p class="note">Lets another computer, like a home server, download the site backup on a schedule without signing in. It uses a <b>backup key</b> instead of a password. Anyone with the key can download everything on this Range Book, so keep it private, and make a new one (or turn it off) if it gets out.</p>
       <p class="note" id="bkKeyState">Loading…</p>
@@ -1924,7 +1933,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="banner" id="bkKeyOut" hidden></div>
       <h3 class="bkh">Restore the whole site</h3>
       <p class="note" id="rs_why">Brings back everything from a site backup: every account (with its password), all the data and all the files. It only works on a fresh install, so it can't wipe out a Range Book that's in use.</p>
-      <div class="row rsrow"><label class="btn" for="rs_file">Choose backup file</label><input type="file" id="rs_file" accept=".gz,.tgz,.tar,.zip,application/gzip,application/x-gzip,application/x-tar,application/zip" hidden><span class="note" id="rs_name"></span></div>
+      <div class="row rsrow"><label class="btn" for="rs_file">Choose backup file</label><input type="file" id="rs_file" accept=".gz,.tgz,.tar,.zip,.enc,application/gzip,application/x-gzip,application/x-tar,application/zip" hidden><span class="note" id="rs_name"></span></div>
+      <div class="row" id="rs_passrow" hidden><input type="password" id="rs_pass" autocomplete="off" placeholder="Backup passphrase" aria-label="Backup passphrase"><span class="note">This backup is encrypted.</span></div>
       <div class="row"><button class="btn" id="rs_go" type="button" disabled>Restore</button><span class="savestate" id="rs_state"></span></div>
       <div class="banner" id="rs_out" hidden></div>
       </div>
@@ -10895,7 +10905,7 @@ function showBackups(r){
 }
 async function loadBackups(){try{showBackups(await API.get("/api/admin/backups"));}catch(e){$("bk_info").textContent=e.message;}loadSiteInfo();}
 /* the whole site (2.35): download it, or restore it on a fresh install (uploaded in pieces, so big files get through) */
-let SITE=null,rsFile=null;
+let SITE=null,rsFile=null,rsEnc=false,rsPending=null;
 const mb=n=>n>=1e9?(n/1e9).toFixed(1)+" GB":Math.max(1,Math.round(n/1e6))+" MB";
 async function loadSiteInfo(){
   try{SITE=await API.get("/api/admin/site-backup");$("bk_size").textContent="About "+mb(SITE.bytes)+" ("+SITE.users+" account"+(SITE.users===1?"":"s")+", "+SITE.files.toLocaleString()+" photo"+(SITE.files===1?"":"s")+" and files). Big sites take a while; keep this screen open until it's done.";}
@@ -10905,17 +10915,22 @@ async function loadSiteInfo(){
 function rsReady(){
   const why=$("rs_why"),go=$("rs_go");if(!why)return;
   if(SITE&&!SITE.fresh){why.innerHTML='Brings back everything from a site backup, on a fresh install only. <b>This Range Book is already in use</b>: '+esc(SITE.why.replace(/^This Range Book already has /,"it has ").replace(/ Restoring only works.*$/,"").replace(/\.$/,""))+'. To restore here, set Range Book up again with an empty data folder first (see the README).';}
-  go.disabled=!(SITE&&SITE.fresh&&rsFile);
+  go.disabled=!(SITE&&SITE.fresh&&rsFile&&(!rsEnc||$("rs_pass").value));
 }
-$("rs_file").addEventListener("change",e=>{rsFile=e.target.files[0]||null;$("rs_name").textContent=rsFile?rsFile.name+" ("+mb(rsFile.size)+")":"";$("rs_out").hidden=true;rsReady();});
+$("rs_file").addEventListener("change",async e=>{rsFile=e.target.files[0]||null;$("rs_name").textContent=rsFile?rsFile.name+" ("+mb(rsFile.size)+")":"";$("rs_out").hidden=true;
+  if(rsPending){fetch("/api/admin/site-restore/"+rsPending+"/cancel",{method:"POST",credentials:"same-origin",headers:{"X-Requested-With":"rangebook"}}).catch(()=>{});rsPending=null;}
+  rsEnc=false;if(rsFile){try{const h=new Uint8Array(await rsFile.slice(0,6).arrayBuffer());rsEnc=String.fromCharCode(...h.slice(0,5))==="RBENC"&&h[5]===1;}catch(x){}}
+  $("rs_passrow").hidden=!rsEnc;if(!rsEnc)$("rs_pass").value="";rsReady();});
+$("rs_pass").addEventListener("input",rsReady);
 $("rs_go").addEventListener("click",async()=>{
   const go=$("rs_go"),st=$("rs_state"),out=$("rs_out");if(!rsFile)return;
   if(go.dataset.armed!=="1"){go.dataset.armed="1";go.textContent="Tap again to restore";setTimeout(()=>{go.dataset.armed="";go.textContent="Restore";},5000);return;}
   go.dataset.armed="";go.textContent="Restore";go.disabled=true;out.hidden=true;
   const H={"X-Requested-With":"rangebook"};
   const call=async(u,body,ct)=>{const r=await fetch(u,{method:"POST",credentials:"same-origin",headers:Object.assign({},H,ct?{"Content-Type":ct}:{}),body});const j=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(j.error||("Error "+r.status));e.status=r.status;e.have=j.have;throw e;}return j;};
-  let id=null;
+  let id=rsPending;rsPending=null;
   try{
+    if(!id){
     const s0=await call("/api/admin/site-restore/start","{}","application/json");id=s0.id;const C=s0.chunk||32*1024*1024;
     let off=0,fails=0;
     while(off<rsFile.size){
@@ -10923,21 +10938,43 @@ $("rs_go").addEventListener("click",async()=>{
       try{const r=await call("/api/admin/site-restore/"+id+"/chunk?off="+off,rsFile.slice(off,off+C),"application/octet-stream");off=r.have;fails=0;}
       catch(e){if(e.status===409&&e.have!=null){off=e.have;continue;}if(++fails>4)throw e;await new Promise(r=>setTimeout(r,1500*fails));}
     }
+    }
     st.textContent="Restoring… (this can take a minute)";
-    const r=await call("/api/admin/site-restore/"+id+"/finish","{}","application/json");id=null;
+    const r=await call("/api/admin/site-restore/"+id+"/finish",JSON.stringify({passphrase:$("rs_pass").value}),"application/json");id=null;
     st.textContent="";out.hidden=false;out.classList.remove("bad");
     out.innerHTML='<b>Restored.</b> '+r.users+' account'+(r.users===1?'':'s')+' and '+r.files.toLocaleString()+' file'+(r.files===1?'':'s')+' (photos, videos and documents) are back. The account you set this install up with is gone; sign in with your account from the backup'+(r.admins&&r.admins.length?' (admin: <b>'+r.admins.map(esc).join('</b>, <b>')+'</b>)':'')+', with its old password. What was here before is saved in <b>'+esc(r.kept)+'</b> in the data folder.<div class="row"><button class="btn primary" type="button" id="rs_signin">Sign in</button></div>';
     $("rs_signin").addEventListener("click",()=>location.reload());
   }catch(e){
     st.textContent="";out.hidden=false;out.classList.add("bad");out.textContent=e.message||"The restore didn't work.";
+    // a missing or wrong passphrase: the upload is kept on the server, so the next Restore only tries the passphrase
+    if(e.status===422&&id){rsPending=id;id=null;rsEnc=true;$("rs_passrow").hidden=false;$("rs_pass").focus();$("rs_pass").select();}
     if(id)fetch("/api/admin/site-restore/"+id+"/cancel",{method:"POST",credentials:"same-origin",headers:H}).catch(()=>{});
     go.disabled=false;
   }
 });
 /* backup key (2.42.10): lets a home server fetch the site backup every night */
 function bkScript(key){
-  return '#!/bin/bash\n# Range Book: download the whole-site backup and keep the newest ones\nURL="'+location.origin+'"\nKEY="'+key+'"\nDEST="/mnt/user/backups/rangebook"   # folder to keep the backups in\nKEEP=30                            # how many to keep\n\nmkdir -p "$DEST"\nF="$DEST/rangebook-site-$(date +%Y-%m-%d).tar.gz"\nif curl -fsS --retry 3 -H "Authorization: Bearer $KEY" -o "$F.part" "$URL/api/backup/site.tar.gz" && gzip -t "$F.part"; then\n  mv "$F.part" "$F"; echo "Saved $F"\nelse\n  rm -f "$F.part"; echo "Range Book backup FAILED"; exit 1\nfi\nls -1t "$DEST"/rangebook-site-*.tar.gz | tail -n +$((KEEP+1)) | xargs -r rm --\n';
+  return '#!/bin/bash\n# Range Book: download the whole-site backup and keep the newest ones\nURL="'+location.origin+'"\nKEY="'+key+'"\nDEST="/mnt/user/backups/rangebook"   # folder to keep the backups in\nKEEP=30                            # how many to keep\n\nmkdir -p "$DEST"\nF="$DEST/rangebook-site-$(date +%Y-%m-%d).tar.gz"\nif curl -fsS --retry 3 -H "Authorization: Bearer $KEY" -o "$F.part" "$URL/api/backup/site.tar.gz"; then\n  if [ "$(head -c 5 "$F.part" | tr -dc A-Z)" = "RBENC" ] && [ "$(stat -c %s "$F.part")" -gt 1000 ]; then\n    mv "$F.part" "$F.enc"; echo "Saved $F.enc (encrypted)"\n  elif gzip -t "$F.part" 2>/dev/null; then\n    mv "$F.part" "$F"; echo "Saved $F"\n  else\n    rm -f "$F.part"; echo "Range Book backup FAILED: the file was damaged"; exit 1\n  fi\nelse\n  rm -f "$F.part"; echo "Range Book backup FAILED"; exit 1\nfi\nls -1t "$DEST"/rangebook-site-*.tar.gz "$DEST"/rangebook-site-*.tar.gz.enc 2>/dev/null | tail -n +$((KEEP+1)) | xargs -r rm --\n';
 }
+async function loadBackupCrypt(){
+  const st=$("bcState");if(!st)return;
+  try{const c=await API.get("/api/admin/backup-crypt");bcShow(c);}catch(e){st.textContent=e.message;}
+}
+function bcShow(c){
+  $("bcState").innerHTML=c.on?'<b>On.</b> Site backups are encrypted (passphrase set '+esc(when(c.set))+').':'<b>Off.</b> Site backups are not encrypted.';
+  $("bcForm").hidden=c.on;$("bcBtns").hidden=!c.on;$("bcCancel").hidden=true;$("bcPass").value=$("bcPass2").value="";$("bcSave").textContent="Save passphrase";
+  $("bk_dl").textContent="Download site backup"+(c.on?" (encrypted)":"");
+}
+$("bcSave").addEventListener("click",async()=>{
+  const a=$("bcPass").value,b=$("bcPass2").value,out=$("bcOut");
+  if(a.length<12){showResult(out,"Use at least 12 characters. A few words with spaces works well.",true);return;}
+  if(a!==b){showResult(out,"The two passphrases don't match.",true);return;}
+  try{const c=await API.put("/api/admin/backup-crypt",{passphrase:a});bcShow(c);showResult(out,"<b>Saved.</b> Site backups are encrypted from now on. Backups you downloaded before still open with "+(c.on&&$("bcCancel").dataset.was==="1"?"the old passphrase":"no passphrase")+".",false);$("bcCancel").dataset.was="";}
+  catch(e){showResult(out,esc(e.message),true);}
+});
+$("bcChange").addEventListener("click",()=>{$("bcForm").hidden=false;$("bcBtns").hidden=true;$("bcCancel").hidden=false;$("bcCancel").dataset.was="1";$("bcSave").textContent="Save new passphrase";$("bcOut").hidden=true;$("bcPass").focus();});
+$("bcCancel").addEventListener("click",()=>{$("bcCancel").dataset.was="";loadBackupCrypt();});
+$("bcOff").addEventListener("click",()=>bkArm($("bcOff"),"Tap again: backups won't be encrypted",async()=>{try{const c=await API.del("/api/admin/backup-crypt");bcShow(c);showResult($("bcOut"),"Turned off. New site backups aren't encrypted. Backups you downloaded while it was on still need their passphrase.",false);}catch(e){showResult($("bcOut"),esc(e.message),true);}}));
 async function loadBackupKey(){
   const st=$("bkKeyState");if(!st)return;
   try{const k=await API.get("/api/admin/backup-key");
@@ -10974,7 +11011,7 @@ async function loadAdmin(){
     r.users.sort((a,b)=>(b.isSuper-a.isSuper)); // the owner's card first
     const meSuper=!!r.meSuper,sup=r.users.find(x=>x.isSuper);
     if(ME)ME.isSuper=meSuper;
-    $("bk_site").hidden=!meSuper;if(meSuper)loadBackupKey();$("bk_superonly").hidden=meSuper;$("bk_supername").textContent=sup?(sup.name||sup.username):"";
+    $("bk_site").hidden=!meSuper;if(meSuper){loadBackupKey();loadBackupCrypt();}$("bk_superonly").hidden=meSuper;$("bk_supername").textContent=sup?(sup.name||sup.username):"";
     let h="";
     r.users.forEach(u=>{
       const locked=u.isSuper&&!meSuper; // the owner's account: hands off

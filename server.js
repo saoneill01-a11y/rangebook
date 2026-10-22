@@ -1105,8 +1105,21 @@ async function api(req, res, url) {
     }
     /* ---- the whole site in one file (2.35): download it, or bring it back on a fresh install ---- */
     // the whole site holds everyone's data and passwords: the super admin's job (2.42.7)
-    if ((p.startsWith("/api/admin/site-backup") || p.startsWith("/api/admin/site-restore") || p === "/api/admin/backup-key") && !isSuper(user)) throw new HttpError(403, "Only the super admin can download or restore the whole site.");
+    if ((p.startsWith("/api/admin/site-backup") || p.startsWith("/api/admin/site-restore") || p.startsWith("/api/admin/backup-")) && !isSuper(user)) throw new HttpError(403, "Only the super admin can download or restore the whole site.");
     if (p === "/api/admin/site-backup" && method === "GET") return send(res, 200, siteInfo());
+    // the optional backup passphrase: only the key made from it is kept
+    if (p === "/api/admin/backup-crypt") {
+      if (method === "PUT") {
+        const b = await readJson(req), pass = String(b.passphrase || "");
+        if (pass.length < 12) throw new HttpError(400, "Use at least 12 characters. A few words with spaces works well.");
+        const salt = crypto.randomBytes(16);
+        setSetting("backupCrypt", { salt: salt.toString("base64"), key: encKey(pass, salt).toString("base64"), set: now() });
+        console.log(`Site backups now encrypted (passphrase set by "${user.username}").`);
+      }
+      if (method === "DELETE") { setSetting("backupCrypt", null); console.log(`Site backup encryption turned off by "${user.username}".`); }
+      const c = backupCrypt();
+      return send(res, 200, { on: !!c, set: c ? c.set : null });
+    }
     // the backup key for scheduled downloads: shown once when it's made, then only its hash is kept
     if (p === "/api/admin/backup-key") {
       if (method === "GET") { const k = getSetting("backupKey", null); return send(res, 200, { on: !!(k && k.hash), created: k ? k.created : null, lastUsed: k ? getSetting("backupKeyUsed", null) : null }); }
@@ -1137,8 +1150,12 @@ async function api(req, res, url) {
         const buf = await readBody(req, RESTORE_CHUNK + 1024);
         fs.appendFileSync(up, buf); return send(res, 200, { have: have + buf.length });
       }
-      try { const r = siteRestore(dir, user); return send(res, 200, r); }
-      finally { fs.rmSync(dir, { recursive: true, force: true }); }
+      const b = await readJson(req).catch(() => ({}));
+      // a missing or wrong passphrase keeps the upload, so it can be tried again without sending the file again
+      let keep = false;
+      try { const r = siteRestore(dir, user, b && b.passphrase ? String(b.passphrase) : ""); return send(res, 200, r); }
+      catch (e) { keep = e instanceof HttpError && e.status === 422; throw e; }
+      finally { if (!keep) fs.rmSync(dir, { recursive: true, force: true }); }
     }}
     if (p === "/api/admin/settings") {
       if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); if ("shareAmmo" in b) setSetting("shareAmmo", !!b.shareAmmo); }
@@ -1341,15 +1358,38 @@ function tarHeader(name, size, mtime) {
   return h;
 }
 const sha256hex = (t) => crypto.createHash("sha256").update(String(t)).digest("hex");
+/* Encrypted site backups (2.42.11, optional): with a backup passphrase set, every whole-site download is
+   "RBENC" 0x01 + salt(16) + iv(12) + AES-256-GCM(gzipped tar) + tag(16). Only the key derived from the passphrase is
+   kept (setting "backupCrypt"), never the passphrase, and Restore the whole site asks for it. */
+const ENC_MAGIC = Buffer.from([0x52, 0x42, 0x45, 0x4e, 0x43, 0x01]);
+const ENC_KDF = { N: 32768, r: 8, p: 1, maxmem: 96 * 1024 * 1024 };
+const encKey = (pass, salt) => crypto.scryptSync(String(pass).normalize("NFC"), salt, 32, ENC_KDF);
+function backupCrypt() {
+  const c = getSetting("backupCrypt", null);
+  return c && c.key && c.salt ? { key: Buffer.from(c.key, "base64"), salt: Buffer.from(c.salt, "base64"), set: c.set } : null;
+}
+function decryptSiteBackup(buf, pass) {
+  if (!pass) throw new HttpError(422, "This backup is encrypted. Enter its backup passphrase, then tap Restore again.");
+  if (buf.length < ENC_MAGIC.length + 28 + 16) throw new HttpError(400, "That encrypted backup is cut short.");
+  const salt = buf.subarray(6, 22), iv = buf.subarray(22, 34), tag = buf.subarray(buf.length - 16);
+  const d = crypto.createDecipheriv("aes-256-gcm", encKey(pass, salt), iv); d.setAuthTag(tag);
+  try { return Buffer.concat([d.update(buf.subarray(34, buf.length - 16)), d.final()]); }
+  catch { throw new HttpError(422, "That passphrase doesn't open this backup (or the file is damaged). Check it and tap Restore again."); }
+}
 function sendSiteBackup(res) {
   const tmp = path.join(DATA_DIR, ".site-" + process.pid + "-" + Date.now() + ".db");
   db.exec(`VACUUM INTO '${tmp.replace(/'/g, "''")}'`);
   const day = localDate(), names = fs.readdirSync(PHOTO_DIR).filter((n) => !n.startsWith("."));
   const info = Buffer.from(JSON.stringify({ app: "Range Book", kind: "site-backup", format: 1, version: APP_VERSION, created: new Date().toISOString(),
     users: q("SELECT COUNT(*) AS n FROM users").get().n, files: names.length }, null, 2));
-  res.writeHead(200, { "Content-Type": "application/gzip", "Content-Disposition": `attachment; filename="RangeBook-site-backup-${day}.tar.gz"`, "Cache-Control": "no-store", ...SECURITY_HEADERS });
+  const ck = backupCrypt();
+  res.writeHead(200, { "Content-Type": ck ? "application/octet-stream" : "application/gzip", "Content-Disposition": `attachment; filename="RangeBook-site-backup-${day}.tar.gz${ck ? ".enc" : ""}"`, "Cache-Control": "no-store", ...SECURITY_HEADERS });
   const gz = zlib.createGzip({ level: 1 });
-  gz.pipe(res);
+  if (ck) {
+    const iv = crypto.randomBytes(12), c = crypto.createCipheriv("aes-256-gcm", ck.key, iv);
+    res.write(Buffer.concat([ENC_MAGIC, ck.salt, iv]));
+    gz.pipe(c); c.pipe(res, { end: false }); c.on("end", () => res.end(c.getAuthTag()));
+  } else gz.pipe(res);
   const pad = (n) => (n % 512 ? Buffer.alloc(512 - (n % 512)) : null);
   const entries = [["site-backup.json", null], ["rangebook.db", tmp], ...names.map((n) => ["photos/" + n, path.join(PHOTO_DIR, n)])];
   let i = 0, done = false;
@@ -1382,10 +1422,11 @@ function* tarEntries(buf) {
     if (type === "0" || type === "\0") yield [name, data];
   }
 }
-function siteRestore(dir, user) {
+function siteRestore(dir, user, pass) {
   const inf = siteInfo(); if (!inf.fresh) throw new HttpError(409, inf.why);
   let buf = fs.readFileSync(path.join(dir, "upload"));
   if (buf.length < 100) throw new HttpError(400, "That file is empty.");
+  if (buf.subarray(0, ENC_MAGIC.length).equals(ENC_MAGIC)) buf = decryptSiteBackup(buf, pass);
   let list;
   if (buf[0] === 0x1f && buf[1] === 0x8b) { try { buf = zlib.gunzipSync(buf, { maxOutputLength: 2 ** 31 }); } catch { throw new HttpError(400, "That file couldn't be unpacked."); } }
   if (buf.length >= 512 && buf.toString("utf8", 257, 262) === "ustar") list = [...tarEntries(buf)];
