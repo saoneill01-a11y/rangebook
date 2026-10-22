@@ -1115,6 +1115,11 @@ select.fieldselect.pick{background:var(--accent-soft);border-color:var(--accent-
 :root[data-camo][data-theme="dark"]::before,:root[data-camo][data-palette="night"]::before{background:color-mix(in srgb,var(--fg) 10%,transparent)}
 @media print{:root[data-camo]::before{display:none}}
 #themeCamo{margin-top:8px}
+/* the small "Powered by" line at the bottom of every page (2.42.14) */
+.sitefoot{text-align:center;font-size:12px;color:var(--muted);opacity:.8;margin:28px 0 8px}
+.sitefoot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.sitefoot a:hover{color:var(--accent)}
+@media print{.sitefoot{display:none}}
 .themegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .themebtn{display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);cursor:pointer;font:inherit;color:var(--fg);text-align:left}
 .themebtn[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
@@ -1992,6 +1997,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div id="sxRoot" class="col"></div>
   </div>
 </div>
+<footer class="sitefoot" id="siteFoot">Powered by Range Book · <a href="https://rangebook.org" target="_blank" rel="noopener">rangebook.org</a></footer>
 
 <script>
 /* PDFs on an iPhone or iPad home-screen app (2.18.2): iOS opens a same-site PDF inside the app with no Back, Share or Print,
