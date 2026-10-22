@@ -10332,9 +10332,11 @@ document.addEventListener("keydown",e=>{
 });
 {const bb=document.createElement("button");bb.type="button";bb.id="helpBackBtn";bb.className="helpback";bb.hidden=true;bb.innerHTML='‹ <span>Back</span>';bb.addEventListener("click",helpBack);document.body.appendChild(bb);}
 window.RB_HELP={go:helpGo,topic:helpTopic,info:openInfo,keys:()=>Object.keys(INFO)};
-function measurePins(){const r=document.documentElement,tb=document.querySelector(".topbar"),tabs=document.querySelector(".tabs"),gb=$("guestBanner");if(!tb)return;
+// where the sticky bars stop: under the top bar (and the tabs on a wide screen). The guest and update banners scroll away
+// with the page, so they don't count (counting the guest banner left a gap under the tabs; 2.42.3)
+function measurePins(){const r=document.documentElement,tb=document.querySelector(".topbar"),tabs=document.querySelector(".tabs");if(!tb)return;
   const wide=window.matchMedia("(min-width:761px)").matches,GAP=14;
-  let top=tb.offsetHeight+GAP;if(gb&&!gb.hidden)top+=gb.offsetHeight+GAP;if(wide&&tabs)top+=tabs.offsetHeight+GAP;
+  let top=tb.offsetHeight+GAP;if(wide&&tabs)top+=tabs.offsetHeight+GAP;
   r.style.setProperty("--toph",tb.offsetHeight+"px");r.style.setProperty("--jtop",top+"px");
   const j=[...document.querySelectorAll(".jump")].find(x=>x.offsetParent);r.style.setProperty("--stick",(top+(j?j.offsetHeight:0)+8)+"px");}
 window.addEventListener("resize",measurePins);
