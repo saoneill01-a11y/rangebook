@@ -2,13 +2,14 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.12",
+      "version": "2.42.13",
       "date": "2026-10-22",
       "title": "Transonic on the chart, table and dope card",
       "items": [
         "Admin › Backups: Nightly copy to another computer. The super admin can turn on a backup key so a home server can download the whole-site backup every night without signing in. It shows a ready-made Unraid User Scripts script with the key and your site's address filled in, and when the key was last used. Make a new key or turn it off at any time.",
         "Admin › Backups: Encrypt site backups (optional). Set a passphrase and every site backup you download, by hand or with the nightly copy, is locked with it. Restore the whole site asks for the passphrase, and a wrong one can be tried again without uploading the file again. Leave it off to keep plain backups.",
         "Barrel lengths keep their decimals: 10.25 or 10.5 inches shows as entered (whole numbers still show as 10, not 10.00) on guns, barrels, uppers, factory ammo test barrels and in PDF exports. They were being rounded to the nearest inch.",
+        "Account › Theme: an optional camo background, Woodland or Digital. It's a faint pattern behind the page in your theme's own colors (so it works with every theme, light or dark, and stays red in Red Night), and it follows your account to your other devices. Plain turns it off.",
         "Admin: Community sharing now sits right under Guest access, and the Guest access switch's label no longer breaks into columns on a phone.",
         "Two new color themes under More › Account › Theme: Plum (a dusky wine-purple) and Lavender (a soft, dusty purple). Each has a light and a dark version.",
         "Admin: the first admin is now the super admin, marked on the Admin page and listed first. Other admins can't delete, turn off, remove as admin, rename, reset the password of, or download the data of the super admin, so nobody you make an admin can lock you out of your own server.",
