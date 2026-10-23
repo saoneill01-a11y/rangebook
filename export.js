@@ -810,10 +810,10 @@ function opticSheet(d) {
   const U = (v) => (v === "mil" ? "MIL" : v === "moa" ? "MOA" : "");
   return { name: "Optics", rows: opticList(d).slice().sort((a, b) => nm(a).localeCompare(nm(b), undefined, { numeric: true })).map((x) => {
     const dk = dotK(x);
-    return [x.mfr || "", x.model || "", KIND[x.kind] || "Scope", x.serial || "", dk ? "" : numv(x.magMin), dk ? "" : numv(x.magMax), dk ? "" : numv(x.obj), dk ? "" : x.fp || "", dk ? "" : numv(x.sfpTrue),
+    return [x.mfr || "", x.model || "", x.nick || "", KIND[x.kind] || "Scope", x.serial || "", dk ? "" : numv(x.magMin), dk ? "" : numv(x.magMax), dk ? "" : numv(x.obj), dk ? "" : x.fp || "", dk ? "" : numv(x.sfpTrue),
       dk ? "" : U(x.unit), dk ? "" : U(x.turret), numv(x.click), dk ? "" : x.reticle || "", dk ? numv(x.dot) : "", dk ? numv(x.ring) : "", dk ? numv(x.magnifier) : "",
       rows.filter((r) => r.scopeId === x.id).map((r) => r.name || "").join(", "), x.notes || ""]; }),
-    cols: [{ h: "Maker", w: 14 }, { h: "Model", w: 26 }, { h: "Kind", w: 12 }, { h: "Serial number", w: 16 }, { h: "Power from (x)", w: 11 }, { h: "Power to (x)", w: 11 }, { h: "Objective (mm)", w: 11 }, { h: "Focal plane", w: 11 }, { h: "SFP marks true at (x)", w: 13 },
+    cols: [{ h: "Maker", w: 14 }, { h: "Model", w: 26 }, { h: "Nickname", w: 14 }, { h: "Kind", w: 12 }, { h: "Serial number", w: 16 }, { h: "Power from (x)", w: 11 }, { h: "Power to (x)", w: 11 }, { h: "Objective (mm)", w: 11 }, { h: "Focal plane", w: 11 }, { h: "SFP marks true at (x)", w: 13 },
       { h: "Reticle units", w: 11 }, { h: "Turret units", w: 11 }, { h: "Click value", w: 10 }, { h: "Reticle name", w: 20 }, { h: "Dot size (MOA)", w: 11 }, { h: "Ring (MOA)", w: 10 }, { h: "Magnifier (x)", w: 11 }, { h: "On gun", w: 24 }, { h: "Notes", w: 40, s: 5 }] };
 }
 const gearSheets = (d) => [...(opticList(d).length ? [opticSheet(d)] : []), ...(canList(d).length ? [canSheet(d)] : []), ...(magList(d).length ? [magSheet(d)] : []), ...(invList(d).length ? [invSheet(d)] : [])];
@@ -826,7 +826,8 @@ function partSheet(d) {
 }
 const gunList = (d) => (d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : []).map((r) => specX(r, d)).sort((a, b) => (GUN_ORDER[a.type] ?? 9) - (GUN_ORDER[b.type] ?? 9) || String(a.name || "").localeCompare(String(b.name || ""), undefined, { numeric: true }));
 // the scope on a gun (Guns & Ammo → Scopes), as one line
-const scopeTxt = (r, d) => { const L = d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : [], x = r.scopeId && L.find((y) => y.id === r.scopeId); if (!x) return "";
+const scopeTxt = (r, d) => { const L = d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : [], x0 = r.scopeId && L.find((y) => y.id === r.scopeId); if (!x0) return "";
+  const x = String(x0.nick || "").trim() ? Object.assign({}, x0, { mfr: String(x0.nick).trim(), model: "(" + [x0.mfr, x0.model].filter(Boolean).join(" ") + ")" }) : x0;
   // a red dot or holographic sight (2.42.16): its kind and dot instead of focal plane and units
   if (x.kind === "dot" || x.kind === "holo") { const t = (v) => String(+(+v).toFixed(2)); return [[x.mfr, x.model].filter(Boolean).join(" "), [x.kind === "holo" ? "holographic" : "red dot", numv(x.dot) ? t(x.dot) + " MOA dot" : "", numv(x.ring) ? t(x.ring) + " MOA ring" : "", numv(x.magnifier) ? numv(x.magnifier) + "x magnifier" : ""].filter(Boolean).join(", ")].filter(Boolean).join(" · "); }
   return [[x.mfr, x.model].filter(Boolean).join(" "), [x.kind === "prism" ? "prism" : "", x.fp, x.unit === "mil" ? "MIL" : "MOA", numv(x.click) ? numv(x.click) + " clicks" : ""].filter(Boolean).join(", ")].filter(Boolean).join(" · "); };

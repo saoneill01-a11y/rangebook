@@ -3326,7 +3326,7 @@ function renderRanges(){
 $("rg_pick").addEventListener("change",e=>{state.rangeCur=e.target.value||null;save();renderRanges();});
 $("rg_go").addEventListener("click",()=>{if(window.RB_GEAR_RANGES)RB_GEAR_RANGES(rgList().length?state.rangeCur:"__new");});
 // the holds for one distance drawn on a plain reticle: the dot is where the target goes
-const scopeName=sc=>[sc.mfr,sc.model].filter(Boolean).join(" ")||"Unnamed scope";
+const scopeName=sc=>String(sc.nick||"").trim()||[sc.mfr,sc.model].filter(Boolean).join(" ")||"Unnamed scope";
 window.addEventListener("rb-retko",()=>{try{render();}catch(e){}});
 function renderReticle(L,S,zs,path){
   const box=$("retBox");if(!box)return;
@@ -5157,8 +5157,9 @@ function renderGearRanges(root){
     if(out)RB_UNDO("Deleted "+(r.name||"the range"),()=>{G.put(out.r,out.i);rangeOpen=out.r.id;if(gunArea==="ranges")renderRifles();});});
 }
 /* ---------- scopes (Gear & Ranges → Scopes): kept with the guns, one per gun ---------- */
-let scopes=[],scopeOpen=null,scopeAdding=false,scopeQ="",scopeFromGun=null,scopeForGun=null,SCOPE_CAT=null,retUp=0;
-const scopeLabel=x=>[x.mfr,x.model].filter(Boolean).join(" ")||"Unnamed scope";
+let scopes=[],scopeOpen=null,scopeAdding=false,scopeQ="",scopeFromGun=null,scopeForGun=null,SCOPE_CAT=null,DOT_CAT=null,retUp=0;
+const nickOf=x=>String(x&&x.nick||"").trim();
+const scopeLabel=x=>nickOf(x)||[x.mfr,x.model].filter(Boolean).join(" ")||(isDotSight(x)?"Unnamed red dot":"Unnamed scope");
 const turretU=x=>x.turret==="mil"||x.turret==="moa"?x.turret:(x.unit==="mil"?"mil":"moa");
 /* reticle mark spacing from the library (2.42.15): markMain = the main (longer or numbered) marks, markSub = the smallest
    regular marks on the horizontal line, both in the reticle's unit. marksLook turns them into the plain reticle's look. */
@@ -5180,13 +5181,15 @@ const unitTxt=x=>{const t=turretU(x),U2=t==="mil"?"MIL":"MOA";return (t!==(x.uni
 const KIND_OPT={scope:"scope",dot:"red dot",holo:"holographic sight",prism:"prism sight"};
 const KIND_NAME={dot:"Red dot",holo:"Holographic",prism:"Prism"};
 const DOT_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M6 18V9.5A3.5 3.5 0 0 1 9.5 6h5A3.5 3.5 0 0 1 18 9.5V18"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>';
-const scopeSpec=x=>isDotSight(x)?[KIND_NAME[x.kind],dotDesc(x),num(x.magnifier)>0?num(x.magnifier)+"x magnifier":""].filter(Boolean).join(" · "):(x.kind==="prism"?"Prism · ":"")+[num(x.magMin)&&num(x.magMax)?num(x.magMin)+"-"+num(x.magMax)+"x":"",x.fp==="SFP"?"second focal plane":x.fp==="FFP"?"first focal plane":"",unitTxt(x)].filter(Boolean).join(" · ");
+const scopeSpec=x=>isDotSight(x)?[KIND_NAME[x.kind],dotDesc(x),num(x.magnifier)>0?num(x.magnifier)+"x magnifier":""].filter(Boolean).join(" · "):(x.kind==="prism"?"Prism · ":"")+[num(x.magMin)&&num(x.magMax)?(num(x.magMin)===num(x.magMax)?num(x.magMax)+"x":num(x.magMin)+"-"+num(x.magMax)+"x"):"",x.fp==="SFP"?"second focal plane":x.fp==="FFP"?"first focal plane":"",unitTxt(x)].filter(Boolean).join(" · ");
 function scopesChanged(){queueRifles();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}
 // a gun has one scope, and a scope is on one gun
 function mountScope(sid,rid){rifles.forEach(g=>{if(g.id===rid)g.scopeId=sid||null;else if(sid&&g.scopeId===sid)g.scopeId=null;});queueRifles();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}
 window.RB_SCOPE_SAVE=(id,patch)=>{const x=scopes.find(y=>y.id===id);if(!x)return;Object.assign(x,patch);scopesChanged();if(gunArea==="scopes"&&scopeOpen===id&&!$("panel-rifles").hidden)renderRifles();};
 // the newest picture uploaded for a scope (kept with the gun photos, private to you)
 window.RB_RETPIC=id=>{const ps=gunPhotos.filter(q=>q.rifle===id);return ps.length?ps[ps.length-1]:null;};
+// red dot, holographic and prism sights (2.42.18), from public/dots.json
+function loadDotCat(){return DOT_CAT?Promise.resolve(DOT_CAT):fetch("/dots.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>{DOT_CAT=j.dots||[];LIBED.apply("dots");return DOT_CAT;});}
 function loadScopeCat(){return SCOPE_CAT?Promise.resolve(SCOPE_CAT):fetch("/scopes.json?v="+encodeURIComponent((document.querySelector('meta[name="rb-version"]')||{}).content||""),{cache:"no-cache"}).then(r=>r.json()).then(j=>{SCOPE_CAT=j.scopes||[];LIBED.apply("scopes");return SCOPE_CAT;});}
 function newScope(f){const x=Object.assign({id:"s"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),mfr:"",model:"",magMin:null,magMax:null,obj:null,fp:"FFP",sfpTrue:null,unit:"mil",click:0.1,reticle:"",notes:"",retMode:"plain",look:null,pic:null},f||{});
   scopes.push(x);if(scopeForGun&&rifles.some(g=>g.id===scopeForGun))mountScope(x.id,scopeForGun);scopeForGun=null;scopesChanged();scopeAdding=false;scopeOpen=x.id;return x;}
@@ -5864,15 +5867,18 @@ function renderScopes(root){
   const sc=scopeOpen&&scopes.find(x=>x.id===scopeOpen),onGun=x=>rifles.filter(g=>g.scopeId===x.id);
   let h;
   if(scopeAdding){
-    h=addScreenHtml({title:"Add an optic",q:scopeQ,ph:"Search scopes: maker, model, MIL or MOA",own:"+ Enter a scope yourself",
+    h=addScreenHtml({title:"Add an optic",q:scopeQ,ph:"Search: maker, model, MIL, MOA or red dot",own:"+ Enter a scope yourself",
       more:'<button class="btn" type="button" data-addsight="dot">+ Red dot</button><button class="btn" type="button" data-addsight="holo">+ Holographic</button><button class="btn" type="button" data-addsight="prism">+ Prism</button>',
-      note:'Pick your scope to fill in its power, focal plane, units, click value and reticle marks from the maker\'s published specs, or enter it yourself. For a red dot, holographic or prism sight, tap its button. To fix something in the scope list, open it in <a class=goto href=#go data-go=tools:lib:scopes>Tools › Library</a>.'});
+      note:'Pick yours to fill in its specs from the maker\'s published numbers: a scope\'s power, focal plane, units, click value and reticle marks, or a red dot\'s dot size, ring and click value. Type <b>red dot</b> to see just the sights. Not listed? Enter it yourself with the buttons. To fix something in a list, open it in Tools › Library (<a class=goto href=#go data-go=tools:lib:scopes>Scopes</a> or <a class=goto href=#go data-go=tools:lib:dots>Red dots</a>).'});
   }else if(!sc){
     h='<section class="card" aria-label="Optics list"><div class="row"><button class="btn primary" id="scopeAdd" type="button">+ Add optic</button></div>';
     if(!scopes.length)h+='<p class="note">No optics yet. Add the scope or sight on each gun. A scope\'s units and click value then set the dope card for every profile that uses that gun, and the reticle on the card can look like yours. A red dot or holographic sight gives holds in inches and dot widths instead.</p>';
-    else h+='<div class="cartgroup">'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true})).map(x=>{const gs=onGun(x);
+    else{const item=x=>{const gs=onGun(x);
       const sp=picOf(x.id);
-      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc(scopeSpec(x))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';}).join("")+'</div>';
+      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
+      const grp=x=>isDotSight(x)?"dot":x.kind==="prism"?"prism":"scope",by=(a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true});
+      [["scope","Scopes"],["dot","Red dots and holographic sights"],["prism","Prism sights"]].forEach(([gk,gl])=>{const L=scopes.filter(x=>grp(x)===gk).sort(by);if(!L.length)return;
+        h+='<div class="cartgroup"><div class="cartname">'+gl+' <span class="note">'+L.length+'</span></div>'+L.map(item).join("")+'</div>';});}
     h+='</section>';
   }else{
     const gs=onGun(sc),MIL=sc.unit==="mil",ph=RB_RETPIC(sc.id),usePic=sc.retMode==="pic";
@@ -5883,7 +5889,7 @@ function renderScopes(root){
     if(DOTK){
       const dots=[[1,"1 MOA"],[2,"2 MOA"],[3,"3 MOA"],[3.25,"3.25 MOA"],[4,"4 MOA"],[6,"6 MOA"],[8,"8 MOA"]],dv=num(sc.dot)>0?num(sc.dot):2;if(!dots.some(d=>d[0]===dv))dots.push([dv,dv+" MOA"]);
       h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Optic"><h2>Details</h2><div class="grid">'+
-        picFieldHtml(sc.id,scopeLabel(sc),DOT_ICON)+kindTabs+field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+field("sc_serial","Serial number",sc.serial,"text")+
+        picFieldHtml(sc.id,scopeLabel(sc),DOT_ICON)+kindTabs+field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+field("sc_nick","Nickname (optional)",sc.nick,"text")+field("sc_serial","Serial number",sc.serial,"text")+
         '<div class="field"><label for="sc_dot">Dot</label>'+sel("sc_dot",dots,dv)+'</div>'+
         '<div class="field"><label for="sc_ring">Ring around it</label>'+sel("sc_ring",[["","None"],[32,"32 MOA circle"],[50,"50 MOA circle"],[65,"65 MOA ring"],[68,"68 MOA ring"]],num(sc.ring)>0?num(sc.ring):"")+'</div>'+
         '<div class="field"><label for="sc_magnifier">Magnifier</label>'+sel("sc_magnifier",[["","None"],[2,"2x"],[3,"3x"],[4,"4x"],[5,"5x"],[6,"6x"]],num(sc.magnifier)>0?num(sc.magnifier):"")+'</div>'+
@@ -5896,7 +5902,7 @@ function renderScopes(root){
         '<div class="row endrow"><button class="btn danger" type="button" id="scopeDel">Delete '+KW+'</button></div>';
     }else{
     h='<div class="row"><span class="savestate" id="rifleState"></span></div><section class="card" aria-label="Scope"><h2>Details</h2><div class="grid">'+
-      picFieldHtml(sc.id,scopeLabel(sc),SCOPE_ICON)+kindTabs+field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+field("sc_serial","Serial number",sc.serial,"text")+
+      picFieldHtml(sc.id,scopeLabel(sc),SCOPE_ICON)+kindTabs+field("sc_mfr","Maker",sc.mfr,"text")+field("sc_model","Model",sc.model,"text"," wide")+field("sc_nick","Nickname (optional)",sc.nick,"text")+field("sc_serial","Serial number",sc.serial,"text")+
       field("sc_magMin","Power from (x)",sc.magMin,"number")+field("sc_magMax","Power to (x)",sc.magMax,"number")+field("sc_obj","Objective (mm)",sc.obj,"number")+
       '<div class="field"><label for="sc_fp">Focal plane</label>'+sel("sc_fp",[["FFP","First (FFP)"],["SFP","Second (SFP)"]],sc.fp)+'</div>'+
       (sc.fp==="SFP"?field("sc_sfpTrue","Marks true at power (x)",sc.sfpTrue,"number"):'')+
@@ -5926,7 +5932,9 @@ function renderScopes(root){
   $("rifSeg").hidden=!!(sc||scopeAdding);$("rifHeadBack").hidden=!(sc||scopeAdding);$("rifHeadBack").textContent=scopeFromGun&&rifles.some(r=>r.id===scopeFromGun)&&sc?"‹ "+(rifles.find(r=>r.id===scopeFromGun).name||"Gun"):"‹ Optics";$("rifSub").hidden=!!(sc||scopeAdding);
   $("rifTitle").textContent=sc?scopeLabel(sc):scopeAdding?"Add an optic":"Gear & Ranges";
   if(scopeAdding){
-    bindAddScreen({load:loadScopeCat,onQ:v=>{scopeQ=v;},items:()=>libItems("scopes"),onPick:it=>libAdd("scopes",it.i),
+    bindAddScreen({load:()=>Promise.all([loadScopeCat(),loadDotCat().catch(()=>[])]),onQ:v=>{scopeQ=v;},
+      items:()=>{const a=libItems("scopes");if(!a)return null;const b=DOT_CAT?libItems("dots")||[]:[];return a.map(x=>Object.assign(x,{lk:"scopes"})).concat(b.map(x=>Object.assign(x,{lk:"dots"})));},
+      onPick:it=>libAdd(it.lk||"scopes",it.i),
       onOwn:()=>{const x=newScope({});if(x)freshAdd(x,{list:()=>scopes,open:()=>scopeOpen===x.id,save:scopesChanged});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();}});
     root.querySelectorAll("[data-addsight]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.addsight,x=newScope(k==="prism"?{kind:"prism",unit:"moa",click:0.5,magMin:3,magMax:3}:{kind:k,unit:"moa",click:k==="holo"?0.5:1,fp:null,dot:k==="holo"?1:2,ring:k==="holo"?68:null});
       if(x)freshAdd(x,{list:()=>scopes,open:()=>scopeOpen===x.id,save:scopesChanged});renderRifles();window.scrollTo(0,0);const el=$("sc_mfr");if(el)el.focus();}));
@@ -5947,8 +5955,8 @@ function renderScopes(root){
     if(isDotSight(sc)){sc.unit="moa";sc.turret=null;if(!(num(sc.dot)>0))sc.dot=k==="holo"?1:2;if(k==="holo"&&!(num(sc.ring)>0))sc.ring=68;if(!(num(sc.click)>0)||num(sc.click)<0.25)sc.click=k==="holo"?0.5:1;}
     scopesChanged();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}));
   ["dot","ring","magnifier"].forEach(k=>{const el=$("sc_"+k);if(el)el.addEventListener("change",()=>{sc[k]=el.value===""?null:+el.value;scopesChanged();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);prev();});});
-  [["mfr",false],["model",false],["serial",false],["magMin",true],["magMax",true],["obj",true],["sfpTrue",true],["reticle",false],["notes",false]].forEach(([k,isNum])=>{const el=$("sc_"+k);if(!el)return;
-    el.addEventListener("input",()=>{sc[k]=isNum?num(el.value):el.value;scopesChanged();if(k==="mfr"||k==="model")$("rifTitle").textContent=scopeLabel(sc);});});
+  [["mfr",false],["model",false],["nick",false],["serial",false],["magMin",true],["magMax",true],["obj",true],["sfpTrue",true],["reticle",false],["notes",false]].forEach(([k,isNum])=>{const el=$("sc_"+k);if(!el)return;
+    el.addEventListener("input",()=>{sc[k]=isNum?num(el.value):el.value;scopesChanged();if(k==="mfr"||k==="model"||k==="nick")$("rifTitle").textContent=scopeLabel(sc);});});
   if($("sc_fp"))$("sc_fp").addEventListener("change",e=>{sc.fp=e.target.value;scopesChanged();renderRifles();});
   if($("sc_unit"))$("sc_unit").addEventListener("change",e=>{sc.unit=e.target.value;if(!sc.turret)sc.click=sc.unit==="mil"?0.1:0.25;else if(sc.turret===sc.unit)sc.turret=null;sc.look=null;if(sc.pic)sc.pic=null;scopesChanged();renderRifles();});
   if($("sc_turret"))$("sc_turret").addEventListener("change",e=>{const v=e.target.value;sc.turret=v&&v!==sc.unit?v:null;sc.click=turretU(sc)==="mil"?0.1:0.25;scopesChanged();renderRifles();});
@@ -6099,6 +6107,11 @@ const LIB_DEF={
     fields:[["mfr","Maker","text"],["model","Model","text"],["mag0","Power from (x)","num"],["mag1","Power to (x)","num"],["obj","Objective (mm)","num"],
       ["fp","Focal plane","sel",[["FFP","First (FFP)"],["SFP","Second (SFP)"]]],["sfpTrue","Marks true at power (x)","num"],["unit","Reticle","sel",[["mil","MIL (MRAD)"],["moa","MOA"]]],
       ["turret","Turrets","sel",[["","Same as the reticle"],["mil","MIL (MRAD)"],["moa","MOA"]]],["click","One click is","num"],["reticle","Reticle name","text"],["markMain","Main reticle marks every","num"],["markSub","Smallest marks every","num"]]},
+  dots:{title:"Red dots",one:"red dot",mine:"Gear & Ranges › Optics",list:()=>DOT_CAT,load:()=>loadDotCat(),
+    key:s=>s.mfr+"|"+s.model,label:s=>s.model,group:s=>s.mfr,
+    sub:s=>[s.kind==="holo"?"Holographic":s.kind==="prism"?"Prism, "+(num(s.power)||1)+"x":"Red dot",num(s.dot)>0?fmtMk(num(s.dot))+" MOA dot"+(Array.isArray(s.dots)&&s.dots.length?" (also "+s.dots.map(fmtMk).join(", ")+")":""):"",num(s.ring)>0?fmtMk(num(s.ring))+" MOA ring":"",num(s.click)>0?fmtMk(num(s.click))+" MOA clicks":"",s.mount||""].filter(Boolean).join(" · "),
+    words:s=>"red dot reflex sight "+(s.kind==="holo"?"holographic holo":s.kind==="prism"?"prism":"")+" "+(s.mount||""),
+    fields:[["mfr","Maker","text"],["model","Model","text"],["kind","Kind","sel",[["dot","Red dot"],["holo","Holographic"],["prism","Prism"]]],["dot","Dot (MOA)","num"],["ring","Ring (MOA)","num"],["power","Power (x)","num"],["click","One click is (MOA)","num"],["mount","Mount","text"]]},
   cans:{title:"Suppressors",one:"suppressor",mine:"Gear & Ranges › Suppressors",list:()=>window.RB_CANS,load:()=>loadCanCat(),
     key:x=>x.mfr+"|"+x.model,label:x=>x.model,group:x=>x.mfr,
     sub:x=>[x.cal,x.fa===true?"Full auto rated":"",x.minbarrel?x.minbarrel+" in barrel minimum":"",x.disc?"Discontinued":""].filter(Boolean).join(" · "),
@@ -6150,6 +6163,10 @@ function libAdd(kind,i){const x=(LIB_DEF[kind].list()||[])[i];if(!x)return;
   if(kind==="bullets"||kind==="powders"||kind==="primers"){const c=compFromCat(kind,i);if(!c)return;comps[kind].push(c);queueComps();compKind=kind;compAdding=false;compOpen=c.id;showTab("brass");renderComps();window.scrollTo(0,0);return;}
   gunArea=kind;rifleOpen=null;
   if(kind==="ammo"){ammoAdding=false;showTab("rifles");addFromCatalog(x);return;}
+  if(kind==="dots"){gunArea="scopes";const pw=num(x.power)>0?num(x.power):1;
+    newScope(x.kind==="prism"?{kind:"prism",mfr:x.mfr,model:x.model,magMin:pw,magMax:pw,fp:"FFP",unit:"moa",click:num(x.click)>0?num(x.click):0.5,src:x.src,notes:x.mount?"Mount: "+x.mount:""}
+      :{kind:x.kind==="holo"?"holo":"dot",mfr:x.mfr,model:x.model,dot:num(x.dot)>0?num(x.dot):2,ring:num(x.ring)>0?num(x.ring):null,unit:"moa",fp:null,click:num(x.click)>0?num(x.click):null,src:x.src,notes:x.mount?"Mount: "+x.mount:""});
+    showTab("rifles");renderRifles();window.scrollTo(0,0);return;}
   if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src,look:marksLook(x)});}
   if(kind==="cans"){const n=canFromCat(x);cans.push(n);if(canForGun&&rifles.some(g=>g.id===canForGun))mountCan(n.id,canForGun);canForGun=null;canAdding=false;canOpen=n.id;queueRifles();}
   showTab("rifles");renderRifles();window.scrollTo(0,0);}
@@ -6207,6 +6224,7 @@ window.RB_LIBPAGE=(function(){
       row("primers","Primers","With their sizes.",n.primers,ed("primers"))+
       row("ammo","Factory ammo","In "+n.loadCarts+" cartridges, with BC and box velocity.",n.loads,ed("ammo"))+
       row("scopes","Scopes","Power, focal plane, click value and reticle.",n.scopes,ed("scopes"))+
+      row("dots","Red dots","Red dot, holographic and prism sights: dot size, ring, click value and mount.",n.dots,ed("dots"))+
       row("cans","Suppressors",(n.canMakers!=null?n.canMakers+" makers. ":"")+"Caliber rating, size, full auto and barrel-length limits.",n.cans,ed("cans"))+'</div>'+
       '<h3>Reloading reference</h3><div class="cartgroup">'+row("ref:dia","Bullet diameters","Which cartridges share a bullet.",n.dia)+row("ref:burn","Powder burn order","Fastest to slowest.",n.burn)+
       row("ref:press","Pressure signs","What each looks like and what to do.",n.press)+row("ref:gloss","Glossary","Reloading terms explained.",n.gloss)+'</div>'+
@@ -6406,13 +6424,13 @@ function loadBulletCat(){if(window.RB_BULLETS)return Promise.resolve(window.RB_B
 /* counts of the built-in lists, for Home's Built in Library card and Reloading › Reference › Library.
    Bullets and scopes come from their own files, so load() fetches them first (once). */
 window.RB_LIB={
-  load(){return Promise.all([loadBulletCat(),loadScopeCat().catch(()=>[]),loadCanCat()]);},
+  load(){return Promise.all([loadBulletCat(),loadScopeCat().catch(()=>[]),loadDotCat().catch(()=>[]),loadCanCat()]);},
   counts(){const B=window.RB_BULLETS,R=(window.RB_REF&&RB_REF.counts&&RB_REF.counts())||{};
     return {bullets:B?B.length:null,bulletMakers:B?new Set(B.map(b=>b.mfr)).size:null,bulletBC:B?B.filter(b=>b.g1||b.g7).length:null,
       byMaker:B?[...B.reduce((m,b)=>m.set(b.mfr,(m.get(b.mfr)||0)+1),new Map())].sort((a,b)=>b[1]-a[1]):[],
       cartridges:window.RB_CARTS?RB_CARTS.baseCount():null,powders:POWDER_LIST.length,powderMakers:new Set(POWDER_LIST.map(p=>p[0])).size,
       primers:PRIMER_LIST.length,loads:AMMO_CATALOG.length,loadCarts:new Set(AMMO_CATALOG.map(a=>a.cart)).size,
-      scopes:SCOPE_CAT?SCOPE_CAT.length:null,cans:window.RB_CANS?RB_CANS.length:null,canMakers:window.RB_CANS?new Set(RB_CANS.map(x=>x.mfr)).size:null,burn:R.burn,dia:R.dia,press:R.press,gloss:R.gloss};}
+      scopes:SCOPE_CAT?SCOPE_CAT.length:null,dots:DOT_CAT?DOT_CAT.length:null,cans:window.RB_CANS?RB_CANS.length:null,canMakers:window.RB_CANS?new Set(RB_CANS.map(x=>x.mfr)).size:null,burn:R.burn,dia:R.dia,press:R.press,gloss:R.gloss};}
 };
 let compAdding=false,compAddQ="";
 function renderComps(){
@@ -11801,6 +11819,7 @@ const KINDS=[
      F("turret","Turret units","turret",{w:11,alias:["turret units","turret unit","turrets","turret","adjustment units"]}),
      F("click","Click value","click",{w:11,alias:["click value","click","clicks","per click","adjustment","click size"],tip:["Click value","One click, in the turret units: 0.1 (MIL) or 0.25 (MOA). 1/4 works too."]}),
      F("reticle","Reticle name","text",{w:20,alias:["reticle","reticle name","reticle type"]}),
+     F("nick","Nickname","text",{w:14,alias:["nickname","nick","nick name","called"]}),
      F("kind","Kind","okind",{w:13,alias:["kind","optic type","sight type","type","kind of optic"],tip:["Kind","Scope, Red dot, Holographic or Prism. Blank is a scope."]}),
      F("serial","Serial number","text",{w:16,alias:["serial","serial number","serial no","sn","s n"]}),
      F("dot","Dot size (MOA)","num",{w:11,alias:["dot","dot size","dot moa","dot size moa"],tip:["Dot size","Red dot or holographic: the dot in MOA, like 2."]}),
@@ -11808,7 +11827,7 @@ const KINDS=[
      F("magnifier","Magnifier (x)","num",{w:11,alias:["magnifier","magnifier x","magnifier power"]}),
      F("onGun","On gun","guns",{w:24,alias:["on gun","on guns","mounted on","gun","guns"],tip:["On gun","The gun it's on, by its name in Range Book. Several guns can be separated by commas."]}),
      NOTES],
-   example:["Vortex","Viper PST Gen II 5-25x50","5","25","50","FFP","","MIL","MIL","0.1","EBR-2C","Scope","","","","","","Example: delete this row"]},
+   example:["Vortex","Viper PST Gen II 5-25x50","5","25","50","FFP","","MIL","MIL","0.1","EBR-2C","","Scope","","","","","","Example: delete this row"]},
   {key:"lowers",title:"Lowers",one:"lower",sheet:"Lowers",part:"lower",alias:["lowers","lower","lower receivers","lower receiver"],
    fields:[F("mfr","Manufacturer","text",{w:16,alias:["manufacturer","make","maker","brand","mfr"]}),
      F("model","Model","text",{req:1,w:22,alias:["model","name","lower","description"]}),
@@ -12021,7 +12040,7 @@ function guessKind(name,heads){const n=norm(name);
 function findHeaderRow(rows){for(let i=0;i<Math.min(rows.length,12);i++){const r=rows[i]||[];if(r.filter(c=>typeof c==="string"&&c.trim()).length>=2)return i;}return 0;}
 
 /* ---- the rows, read with the current choices ---- */
-function scopeLabel(x){return [x.mfr,x.model].filter(Boolean).join(" ")||"Unnamed scope";}
+function scopeLabel(x){return String(x.nick||"").trim()||[x.mfr,x.model].filter(Boolean).join(" ")||"Unnamed scope";}
 function build(){
   const out={rows:[],asks:new Map(),bad:[],missing:[]};
   const fileScopes=[];
