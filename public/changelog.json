@@ -8,6 +8,7 @@
       "items": [
         "Gear & Ranges › Optics: the list is split into Scopes, Red dots and holographic sights, and Prism sights.",
         "Optics have an optional Nickname. When it's filled in, it's what you see on the list, the gun's page and the dope card, with the maker and model under it on the list. It's in the spreadsheet import and the Excel export too.",
+        "Tools › Library has Red dots: 76 popular red dot, holographic and prism sights from Aimpoint, EOTech, Holosun, Leupold, Primary Arms, Sig Sauer, Trijicon, Vortex and others, with dot size, ring, click value and mount. + Add optic searches them along with the scopes (type red dot to see only the sights), and picking one fills it in.",
         "Gear & Ranges: Scopes is now Optics, and holds red dots, holographic and prism sights too. + Add optic has + Red dot, + Holographic and + Prism buttons, and each optic's page has a Kind choice at the top.",
         "A red dot or holographic sight has its dot size, the ring around it (32, 50, 65 or 68 MOA), a magnifier and a serial number. Scopes have a serial number now too.",
         "On a gun with a red dot, the dope card gives holds instead of clicks: Hold in inches (cm) with ↑ and ↓, Hold in dot widths to the nearest quarter, and wind in inches. The MOA / MIL switch and the dial choice go away. Tap a distance to see the dot over the target, to scale, with a sentence like Put the dot 7.8 in above the target. Field mode, printing and Live target's Show my reticle use the dot too.",
