@@ -2,8 +2,8 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.9",
-      "date": "2026-10-20",
+      "version": "2.43.10",
+      "date": "2026-10-23",
       "title": "Bluetooth chronograph",
       "items": [
         "Range Book can now take velocities straight from the Range Book BLIPR, the do-it-yourself bench radar chronograph, over Bluetooth as you shoot. It works in Chrome or Edge on Android and computers, and in the Bluefy app on iPhone and iPad.",
@@ -21,7 +21,9 @@
         "Tools › BLIPR Chronograph says which BLIPR firmware this Range Book carries before you connect, and points to Settings › Firmware when an update is ready.",
         "Chronograph settings › Firmware: update BLIPR's Bluetooth board over Bluetooth, about 2 minutes. Range Book carries the firmware file; BLIPR checks every piece and only switches to the new firmware once the whole file has arrived intact, and goes back to the old one if the new one doesn't start properly. Needs BLIPR firmware 0.2.2 already on the board.",
         "Chronograph settings › Screen: Bullet animation after each shot plays a short bullet across the chronograph's own screen that writes the velocity. Needs chronograph firmware 0.2.2.",
-        "The chronograph has a name: Range Book BLIPR (Ballistic Launch Inspection Portable Radar). It shows as RB BLIPR when you connect; test firmware that still says RB BLIPR or RB Chrono connects too."
+        "The chronograph has a name: Range Book BLIPR (Ballistic Launch Inspection Portable Radar). It shows as RB BLIPR when you connect; test firmware that still says RB BLIPR or RB Chrono connects too.",
+        "Chronograph settings › Compass: Turns backwards is there for every compass now, including the DFRobot 10-DoF board. If the heading goes down when you turn BLIPR clockwise, turn it on and match your phone again.",
+        "BLIPR firmware 0.2.3 (install it from chronograph settings › Firmware): the sensor kit can use the DFRobot Gravity 10-DoF board, which does the compass, the level and the air pressure on one board."
       ]
     },
     {
