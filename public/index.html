@@ -2533,7 +2533,7 @@ window.RB_WX=(()=>{
       '<div class="lookprev" id="lkPrev"></div>'+
       '<div class="grid lookgrid">'+
       '<div class="field"><label>Main marks</label>'+opt("main",MAINS[unit],lk.main)+'</div>'+
-      '<div class="field"><label>Small marks between</label>'+opt("sub",[[0,"None"],[1,"One (halfway)"],[4,"Four"],[9,"Nine"]],lk.sub)+'</div>'+
+      '<div class="field"><label>Small marks between</label>'+opt("sub",[[0,"None"],[1,"One (halfway)"],[3,"Three (quarters)"],[4,"Four"],[9,"Nine"]],lk.sub)+'</div>'+
       '<div class="field"><label>Holdover dots</label>'+opt("tree",[["grid","A full grid below the center"],["tree","A tree that widens as it goes down"],["none","None"]],lk.tree)+'</div>'+
       '<div class="field"><label>Numbers</label>'+opt("num",[[1,"On every main mark"],[2,"Every 2nd main mark"],[5,"Every 5th main mark"],[0,"None"]],lk.num)+'</div>'+
       '<div class="field"><label>Center</label>'+opt("center",[["cross","Lines meet in the middle"],["open","Open center"],["dot","Open center with a dot"]],lk.center)+'</div>'+
@@ -5121,6 +5121,19 @@ function renderGearRanges(root){
 let scopes=[],scopeOpen=null,scopeAdding=false,scopeQ="",scopeFromGun=null,scopeForGun=null,SCOPE_CAT=null,retUp=0;
 const scopeLabel=x=>[x.mfr,x.model].filter(Boolean).join(" ")||"Unnamed scope";
 const turretU=x=>x.turret==="mil"||x.turret==="moa"?x.turret:(x.unit==="mil"?"mil":"moa");
+/* reticle mark spacing from the library (2.42.15): markMain = the main (longer or numbered) marks, markSub = the smallest
+   regular marks on the horizontal line, both in the reticle's unit. marksLook turns them into the plain reticle's look. */
+const fmtMk=v=>String(+(+v).toFixed(2));
+const marksTxt=x=>{const M=num(x.markMain),m=num(x.markSub),u=x.unit==="mil"?"MIL":"MOA";if(!(M>0)&&!(m>0))return "";
+  if(M>0&&m>0&&m<M)return "marks every "+fmtMk(M)+" "+u+", "+fmtMk(m)+" between";return "marks every "+fmtMk(M>0?M:m)+" "+u;};
+function marksLook(x){
+  // only when the smallest marks are known: they're what you measure with
+  const mil=x.unit==="mil",m=num(x.markSub);let M=num(x.markMain);if(!(m>0))return null;
+  const MAINS=mil?[1,0.5]:[1,2,5,10],near=(L,v)=>L.reduce((a,b)=>Math.abs(b-v)<Math.abs(a-v)?b:a);
+  if(!(M>0))M=mil?1:(m>=2?m:2);
+  const main=near(MAINS,M),n=m>0?Math.round(main/m)-1:0;
+  return {main,sub:near([0,1,3,4,9],Math.max(0,n))};
+}
 const unitTxt=x=>{const t=turretU(x),U2=t==="mil"?"MIL":"MOA";return (t!==(x.unit==="mil"?"mil":"moa")?(x.unit==="mil"?"MIL":"MOA")+" reticle, "+U2+" turrets":U2)+(num(x.click)>0?", "+num(x.click)+" "+U2+" clicks":", click value not published");};
 const scopeSpec=x=>[num(x.magMin)&&num(x.magMax)?num(x.magMin)+"-"+num(x.magMax)+"x":"",x.fp==="SFP"?"second focal plane":x.fp==="FFP"?"first focal plane":"",unitTxt(x)].filter(Boolean).join(" · ");
 function scopesChanged(){queueRifles();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);}
@@ -6010,11 +6023,11 @@ const LIB_DEF={
     group:a=>a.cart,gk:a=>a.dia||0,words:a=>a.item+" "+a.w,
     fields:[["mfr","Maker","text"],["line","Line","text"],["cart","Cartridge","text"],["bullet","Bullet","text"],["w","Bullet weight (gr)","num"],["dia","Bullet diameter (in)","num"],["v","Box velocity (fps)","num"],["tb","Test barrel (in)","num"],["bc","G1 BC","num"],["g7","G7 BC","num"]]},
   scopes:{title:"Scopes",one:"scope",mine:"Gear & Ranges › Scopes",list:()=>SCOPE_CAT,load:()=>loadScopeCat(),
-    key:s=>s.mfr+"|"+s.model,label:s=>s.model,sub:s=>[unitTxt(s),s.fp,s.reticle].filter(Boolean).join(" · "),group:s=>s.mfr,
+    key:s=>s.mfr+"|"+s.model,label:s=>s.model,sub:s=>[unitTxt(s),s.fp,s.reticle,marksTxt(s)].filter(Boolean).join(" · "),group:s=>s.mfr,
     words:s=>(s.unit==="mil"?"mil mrad":"moa"),
     fields:[["mfr","Maker","text"],["model","Model","text"],["mag0","Power from (x)","num"],["mag1","Power to (x)","num"],["obj","Objective (mm)","num"],
       ["fp","Focal plane","sel",[["FFP","First (FFP)"],["SFP","Second (SFP)"]]],["sfpTrue","Marks true at power (x)","num"],["unit","Reticle","sel",[["mil","MIL (MRAD)"],["moa","MOA"]]],
-      ["turret","Turrets","sel",[["","Same as the reticle"],["mil","MIL (MRAD)"],["moa","MOA"]]],["click","One click is","num"],["reticle","Reticle name","text"]]},
+      ["turret","Turrets","sel",[["","Same as the reticle"],["mil","MIL (MRAD)"],["moa","MOA"]]],["click","One click is","num"],["reticle","Reticle name","text"],["markMain","Main reticle marks every","num"],["markSub","Smallest marks every","num"]]},
   cans:{title:"Suppressors",one:"suppressor",mine:"Gear & Ranges › Suppressors",list:()=>window.RB_CANS,load:()=>loadCanCat(),
     key:x=>x.mfr+"|"+x.model,label:x=>x.model,group:x=>x.mfr,
     sub:x=>[x.cal,x.fa===true?"Full auto rated":"",x.minbarrel?x.minbarrel+" in barrel minimum":"",x.disc?"Discontinued":""].filter(Boolean).join(" · "),
@@ -6066,7 +6079,7 @@ function libAdd(kind,i){const x=(LIB_DEF[kind].list()||[])[i];if(!x)return;
   if(kind==="bullets"||kind==="powders"||kind==="primers"){const c=compFromCat(kind,i);if(!c)return;comps[kind].push(c);queueComps();compKind=kind;compAdding=false;compOpen=c.id;showTab("brass");renderComps();window.scrollTo(0,0);return;}
   gunArea=kind;rifleOpen=null;
   if(kind==="ammo"){ammoAdding=false;showTab("rifles");addFromCatalog(x);return;}
-  if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src});}
+  if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src,look:marksLook(x)});}
   if(kind==="cans"){const n=canFromCat(x);cans.push(n);if(canForGun&&rifles.some(g=>g.id===canForGun))mountCan(n.id,canForGun);canForGun=null;canAdding=false;canOpen=n.id;queueRifles();}
   showTab("rifles");renderRifles();window.scrollTo(0,0);}
 

@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.14",
-      "date": "2026-10-22",
+      "version": "2.42.15",
+      "date": "2026-10-23",
       "title": "Transonic on the chart, table and dope card",
       "items": [
+        "Library › Scopes: each scope can have its reticle's mark spacing (main marks and the smallest marks, in MIL or MOA). Adding a scope from the Library sets Range Book's reticle to match. The reticle look also has Three (quarters) small marks between main marks.",
         "Admin › Backups: Nightly copy to another computer. The super admin can turn on a backup key so a home server can download the whole-site backup every night without signing in. It shows a ready-made Unraid User Scripts script with the key and your site's address filled in, and when the key was last used. Make a new key or turn it off at any time.",
         "Admin › Backups: Encrypt site backups (optional). Set a passphrase and every site backup you download, by hand or with the nightly copy, is locked with it. Restore the whole site asks for the passphrase, and a wrong one can be tried again without uploading the file again. Leave it off to keep plain backups.",
         "Barrel lengths keep their decimals: 10.25 or 10.5 inches shows as entered (whole numbers still show as 10, not 10.00) on guns, barrels, uppers, factory ammo test barrels and in PDF exports. They were being rounded to the nearest inch.",
