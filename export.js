@@ -813,7 +813,9 @@ function partSheet(d) {
 const gunList = (d) => (d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : []).map((r) => specX(r, d)).sort((a, b) => (GUN_ORDER[a.type] ?? 9) - (GUN_ORDER[b.type] ?? 9) || String(a.name || "").localeCompare(String(b.name || ""), undefined, { numeric: true }));
 // the scope on a gun (Guns & Ammo → Scopes), as one line
 const scopeTxt = (r, d) => { const L = d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : [], x = r.scopeId && L.find((y) => y.id === r.scopeId); if (!x) return "";
-  return [[x.mfr, x.model].filter(Boolean).join(" "), [x.fp, x.unit === "mil" ? "MIL" : "MOA", numv(x.click) ? numv(x.click) + " clicks" : ""].filter(Boolean).join(", ")].filter(Boolean).join(" · "); };
+  // a red dot or holographic sight (2.42.16): its kind and dot instead of focal plane and units
+  if (x.kind === "dot" || x.kind === "holo") { const t = (v) => String(+(+v).toFixed(2)); return [[x.mfr, x.model].filter(Boolean).join(" "), [x.kind === "holo" ? "holographic" : "red dot", numv(x.dot) ? t(x.dot) + " MOA dot" : "", numv(x.ring) ? t(x.ring) + " MOA ring" : "", numv(x.magnifier) ? numv(x.magnifier) + "x magnifier" : ""].filter(Boolean).join(", ")].filter(Boolean).join(" · "); }
+  return [[x.mfr, x.model].filter(Boolean).join(" "), [x.kind === "prism" ? "prism" : "", x.fp, x.unit === "mil" ? "MIL" : "MOA", numv(x.click) ? numv(x.click) + " clicks" : ""].filter(Boolean).join(", ")].filter(Boolean).join(" · "); };
 const twistTxt = (t) => (t == null || t === "" ? "" : /^\s*1\s*:/.test(String(t)) ? String(t) : "1:" + t);
 function gunsXlsx(d) {
   useUnits(d);
