@@ -1716,7 +1716,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>A target behind the reticle</h3>
       <p>Under the reticle on the dope card, <b>Target behind it</b> puts a target in the scope view: a 4, 6, 8, 10 or 12 inch circle, a 2/3 IPSC silhouette, or a pronghorn, coyote, deer, elk or prairie dog. It's drawn life size for the distance you picked on the card (and for the power you picked, on a second focal plane scope), so you see how big it really looks. The animals are life-size silhouettes facing left, with their vital zone (heart and lungs, just behind the front leg) marked with a dashed ring. The <b>Gray</b> and <b>Color</b> buttons next to the menu switch the animals between plain gray and their natural colors; Range Book remembers which you like. In <b>Hold it</b> mode the target sits on the mark you hold; with <b>Dial it, hold wind</b> it sits on the crosshair, moved over for the wind. Your own reticle picture works too: Range Book makes its light background see-through so the target shows behind the lines.</p>
       <h3>Your own reticle picture</h3>
-      <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The best picture is the maker's drawing of the reticle on a white background; a photo through the scope works too if you point it at something bright and even (a white wall or an overcast sky) at full power with the reticle sharp. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
+      <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. If the scope came from the Library, the window tells you how far apart its marks are, which mark to tap and fills in its distance, so you don't have to look it up. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The best picture is the maker's drawing of the reticle on a white background; a photo through the scope works too if you point it at something bright and even (a white wall or an overcast sky) at full power with the reticle sharp. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
       <h3>Ammunition</h3>
       <p><a class=goto href=#go data-go=rifles:ammo>Gear &amp; Ranges › Ammo</a> keeps the ammo you shoot, in two lists: <b>Reloaded ammo</b> and <b>Factory ammo</b>. Each one counts the rounds you have on hand (loaded or bought, minus what your range trips fire) and can warn you when you're running low.</p>
       <p><b>Subsonic ammo:</b> the button next to <b>Cartridge</b> says <b>Supersonic</b>; tap it and it changes to <b>Subsonic</b> (tap again to switch back). Do the same on a reloading recipe, next to its <b>Cartridge</b>. Subsonic recipes and ammo get a <b>Subsonic</b> tag in the Reloading and Ammo lists, and so does any Shooting profile that uses that ammo. Reloaded ammo made from a recipe follows the recipe's setting.</p>
@@ -2566,13 +2566,13 @@ window.RB_WX=(()=>{
   /* set the scale of a reticle picture: tap the center, then a mark a known distance from it */
   function calibrate(o){
     const unit=o.unit==="mil"?"mil":"moa",UN=unit==="mil"?"MIL":"MOA";const c0=o.cal||{};
-    let cx=c0.cx!=null?c0.cx:null,cy=c0.cy!=null?c0.cy:null,mx=c0.mx!=null?c0.mx:null,my=c0.my!=null?c0.my:null,val=c0.val||(unit==="mil"?5:10),mode=cx==null?"c":"m",zoom=1;
+    let cx=c0.cx!=null?c0.cx:null,cy=c0.cy!=null?c0.cy:null,mx=c0.mx!=null?c0.mx:null,my=c0.my!=null?c0.my:null,val=c0.val||o.val||(unit==="mil"?5:10),mode=cx==null?"c":"m",zoom=1;
     const W=win("calwin",'<div class="infohead"><h2>Set the scale</h2><button class="infox" type="button" data-wclose aria-label="Close">✕</button></div>'+
-      '<p class="calstep" id="calStep"></p>'+
+      (o.hint?'<p class="note calhint">'+o.hint+'</p>':'')+'<p class="calstep" id="calStep"></p>'+
       '<div class="row calmodes" role="group" aria-label="What a tap places"><button class="btn small" type="button" data-cm="c">Center</button><button class="btn small" type="button" data-cm="m">Mark</button><span class="grow"></span><button class="btn small" type="button" id="calOut" aria-label="Zoom out">−</button><button class="btn small" type="button" id="calIn" aria-label="Zoom in">+</button></div>'+
       '<div class="calbox" id="calBox"><div class="calinner" id="calInner"><img id="calImg" alt="Your reticle picture" src="'+escR(o.url)+'" draggable="false"><svg id="calSvg" viewBox="0 0 '+o.w+' '+o.h+'" preserveAspectRatio="none"></svg></div></div>'+
       '<div class="row calval"><label for="calV">That mark is</label><input id="calV" type="number" inputmode="decimal" step="any" min="0.1" value="'+val+'"><span>'+UN+' from the center</span></div>'+
-      '<p class="note">Use a mark far from the center for the best accuracy, like the 5 '+(unit==="mil"?"MIL":"MOA")+' mark on the line to the right. Zoom in with + to place it exactly. If your picture\'s marks are only true at one power (second focal plane), use a picture of the reticle as the maker draws it.</p>'+
+      '<p class="note">Use a mark far from the center for the best accuracy'+(o.hint?'':', like the 5 '+(unit==="mil"?"MIL":"MOA")+' mark on the line to the right')+'. Zoom in with + to place it exactly. If your picture\'s marks are only true at one power (second focal plane), use a picture of the reticle as the maker draws it.</p>'+
       '<div class="row lookbtns"><span class="grow"></span><button class="btn" type="button" data-wclose>Cancel</button><button class="btn primary" type="button" id="calSave">Save</button></div>');
     const E=id=>W.el.querySelector("#"+id),img=E("calImg"),sv=E("calSvg");
     const draw=()=>{
@@ -5208,8 +5208,22 @@ async function uploadRetPic(sc,file){
   catch(e){if(e&&(e.status||e.network))onWriteError(e);else banner("That picture couldn't be read. Try a JPEG or PNG.",true);}
   retUp--;renderRifles();
 }
+/* Set the scale with help (2.42.19): the scope's mark spacing from the library says which mark to tap and how far it is */
+function scopeMarks(sc){if(num(sc.markSub)>0||num(sc.markMain)>0)return {M:num(sc.markMain),m:num(sc.markSub),ret:String(sc.reticle||"").split(";")[0].trim()};
+  const k=v=>String(v||"").toLowerCase().replace(/[^a-z0-9]+/g,""),hit=(SCOPE_CAT||[]).find(x=>k(x.mfr)===k(sc.mfr)&&k(x.model)===k(sc.model)&&x.unit===sc.unit);
+  return hit&&(num(hit.markSub)>0||num(hit.markMain)>0)?{M:num(hit.markMain),m:num(hit.markSub),ret:String(hit.reticle||"").split(";")[0].trim()}:null;}
+function calHint(sc){const mk=scopeMarks(sc),MIL=sc.unit==="mil",UN=MIL?"MIL":"MOA";
+  const sfp=sc.fp==="SFP"?' Second focal plane: use the maker\'s drawing, or a photo taken at <b>'+(num(sc.sfpTrue)||num(sc.magMax)||"the power the marks are true at")+(num(sc.sfpTrue)||num(sc.magMax)?'x':'')+'</b>, where the marks are true.':'';
+  if(!mk)return {hint:'Range Book doesn\'t have this reticle\'s mark spacing. Check the manual or the maker\'s reticle drawing for how far apart the marks are.'+sfp};
+  const M=mk.M>0?mk.M:(MIL?1:null),m=mk.m>0?mk.m:null,f=v=>String(+(+v).toFixed(2));
+  // a mark far out: 5 MIL, or 10 or 20 MOA, on a main mark
+  const far=MIL?(M&&M<=1?5:M*5):(M?(M>=5?20:10):10),cnt=M?Math.round(far/M):null;
+  const sp=M&&m&&m<M?'main marks every <b>'+f(M)+' '+UN+'</b> with smaller marks every <b>'+f(m)+'</b>':'marks every <b>'+f(m||M)+' '+UN+'</b>';
+  return {val:far,hint:'From the Library'+(mk.ret?', the '+esc(mk.ret):'')+' has '+sp+'. Tap the center, then the mark <b>'+f(far)+' '+UN+'</b> out to the right'+(cnt&&M&&m&&m<M?' (the '+cnt+(cnt===1?'st':cnt===2?'nd':cnt===3?'rd':'th')+' main mark)':'')+', and leave '+f(far)+' below. If your reticle is a different one, check its manual.'+sfp};}
 function calScope(sc){const ph=RB_RETPIC(sc.id);if(!ph)return;
-  const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{const now=scopes.find(y=>y.id===sc.id);if(now){now.pic=cal;now.retMode="pic";}else{sc.pic=cal;sc.retMode="pic";scopes.push(sc);}scopesChanged();renderRifles();}});
+  if(!SCOPE_CAT&&sc.mfr){loadScopeCat().catch(()=>{}).then(()=>calScope(sc));return;}
+  const ch=calHint(sc);
+  const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,hint:ch.hint,val:ch.val,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{const now=scopes.find(y=>y.id===sc.id);if(now){now.pic=cal;now.retMode="pic";}else{sc.pic=cal;sc.retMode="pic";scopes.push(sc);}scopesChanged();renderRifles();}});
   if(ph.w&&ph.h)go(ph.w,ph.h);else{const im=new Image();im.onload=()=>go(im.naturalWidth,im.naturalHeight);im.src=ph.url;}}
 /* ---------- Document vault (2.20) ----------
    Tax stamps, receipts and other papers, locked in the browser before they're uploaded. A random 256-bit vault key encrypts
@@ -6167,7 +6181,7 @@ function libAdd(kind,i){const x=(LIB_DEF[kind].list()||[])[i];if(!x)return;
     newScope(x.kind==="prism"?{kind:"prism",mfr:x.mfr,model:x.model,magMin:pw,magMax:pw,fp:"FFP",unit:"moa",click:num(x.click)>0?num(x.click):0.5,src:x.src,notes:x.mount?"Mount: "+x.mount:""}
       :{kind:x.kind==="holo"?"holo":"dot",mfr:x.mfr,model:x.model,dot:num(x.dot)>0?num(x.dot):2,ring:num(x.ring)>0?num(x.ring):null,unit:"moa",fp:null,click:num(x.click)>0?num(x.click):null,src:x.src,notes:x.mount?"Mount: "+x.mount:""});
     showTab("rifles");renderRifles();window.scrollTo(0,0);return;}
-  if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src,look:marksLook(x)});}
+  if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src,look:marksLook(x),markMain:x.markMain||null,markSub:x.markSub||null});}
   if(kind==="cans"){const n=canFromCat(x);cans.push(n);if(canForGun&&rifles.some(g=>g.id===canForGun))mountCan(n.id,canForGun);canForGun=null;canAdding=false;canOpen=n.id;queueRifles();}
   showTab("rifles");renderRifles();window.scrollTo(0,0);}
 
