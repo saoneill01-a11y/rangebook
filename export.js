@@ -802,7 +802,21 @@ function magSheet(d) {
     return [mn(m), m.mfr || "", m.model || "", (Array.isArray(m.carts) && m.carts.length ? m.carts.join(", ") : m.cart || ""), numv(m.cap) ?? "", (m.gunIds || []).map((id) => (rows.find((r) => r.id === id) || {}).name || "").filter(Boolean).join(", "), m.where || "", m.bought || "", iss.length || null, last ? [last.date || "", last.note || ""].filter(Boolean).join(": ") : "", m.retired ? "Yes" : "", m.notes || ""]; }),
     cols: [{ h: "Mag #", w: 8 }, { h: "Maker", w: 14 }, { h: "Model", w: 20 }, { h: "Cartridges", w: 22 }, { h: "Capacity", w: 9 }, { h: "Fits", w: 26 }, { h: "Where", w: 14 }, { h: "Bought", w: 12 }, { h: "Problems", w: 9 }, { h: "Last problem", w: 30 }, { h: "Retired", w: 8 }, { h: "Notes", w: 40, s: 5 }] };
 }
-const gearSheets = (d) => [...(canList(d).length ? [canSheet(d)] : []), ...(magList(d).length ? [magSheet(d)] : []), ...(invList(d).length ? [invSheet(d)] : [])];
+// every scope and sight (2.42.16), with the columns the spreadsheet import reads back
+const opticList = (d) => (d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : []);
+function opticSheet(d) {
+  const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], KIND = { dot: "Red dot", holo: "Holographic", prism: "Prism" };
+  const nm = (x) => [x.mfr, x.model].filter(Boolean).join(" ") || "Unnamed optic", dotK = (x) => x.kind === "dot" || x.kind === "holo";
+  const U = (v) => (v === "mil" ? "MIL" : v === "moa" ? "MOA" : "");
+  return { name: "Optics", rows: opticList(d).slice().sort((a, b) => nm(a).localeCompare(nm(b), undefined, { numeric: true })).map((x) => {
+    const dk = dotK(x);
+    return [x.mfr || "", x.model || "", KIND[x.kind] || "Scope", x.serial || "", dk ? "" : numv(x.magMin), dk ? "" : numv(x.magMax), dk ? "" : numv(x.obj), dk ? "" : x.fp || "", dk ? "" : numv(x.sfpTrue),
+      dk ? "" : U(x.unit), dk ? "" : U(x.turret), numv(x.click), dk ? "" : x.reticle || "", dk ? numv(x.dot) : "", dk ? numv(x.ring) : "", dk ? numv(x.magnifier) : "",
+      rows.filter((r) => r.scopeId === x.id).map((r) => r.name || "").join(", "), x.notes || ""]; }),
+    cols: [{ h: "Maker", w: 14 }, { h: "Model", w: 26 }, { h: "Kind", w: 12 }, { h: "Serial number", w: 16 }, { h: "Power from (x)", w: 11 }, { h: "Power to (x)", w: 11 }, { h: "Objective (mm)", w: 11 }, { h: "Focal plane", w: 11 }, { h: "SFP marks true at (x)", w: 13 },
+      { h: "Reticle units", w: 11 }, { h: "Turret units", w: 11 }, { h: "Click value", w: 10 }, { h: "Reticle name", w: 20 }, { h: "Dot size (MOA)", w: 11 }, { h: "Ring (MOA)", w: 10 }, { h: "Magnifier (x)", w: 11 }, { h: "On gun", w: 24 }, { h: "Notes", w: 40, s: 5 }] };
+}
+const gearSheets = (d) => [...(opticList(d).length ? [opticSheet(d)] : []), ...(canList(d).length ? [canSheet(d)] : []), ...(magList(d).length ? [magSheet(d)] : []), ...(invList(d).length ? [invSheet(d)] : [])];
 function partSheet(d) {
   const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], ord = { lower: 0, upper: 1, barrel: 2 };
   return { name: "Lowers uppers barrels", rows: partList(d).slice().sort((a, b) => (ord[a.kind] ?? 2) - (ord[b.kind] ?? 2) || partNm(a).localeCompare(partNm(b), undefined, { numeric: true })).map((p) => { const rc = partRoundsX(p, d);
@@ -825,7 +839,7 @@ function gunsXlsx(d) {
     return [gunMfr(r), gunModel(r), r.nick || "", gunType(r), r.builtFrom || "", r.cartridge || "", r.serial || "", numv(r.barrel) != null ? cv("dim", r.barrel, METRIC ? 0 : null) : r.barrel || "", twistTxt(numv(r.twist) != null && METRIC ? cv("dim", r.twist, 0) : r.twist), cv("in", r.sightHeight, METRIC ? 2 : null), scopeTxt(r, d), rc.total || null, rc.life, rc.pct, r.barrelSince ? { date: r.barrelSince } : null, r.cleaned ? { date: r.cleaned } : null, numv(r.cleanEvery), rc.since, uses || null, (d.gunPhotos || []).filter((p) => p.rifle_id === r.id).length || null, r.notes || ""];
   });
   const extra = [...(partList(d).length ? [partSheet(d)] : []), ...gearSheets(d)];
-  return buildXlsx([{ name: "Guns", selected: true, rows, cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 24 }, { h: "Nickname", w: 16 }, { h: "Type", w: 10 }, { h: "Built from (lower + upper)", w: 30 }, { h: "Cartridge", w: 20 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 11 }, { h: "Twist" + (METRIC ? " (mm)" : ""), w: 9 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Scope", w: 34 }, { h: "Round count", w: 12 }, { h: "Barrel life", w: 11 }, { h: "Barrel life used (%)", w: 17 }, { h: "Barrel fitted", w: 13 }, { h: "Last cleaned", w: 13 }, { h: "Clean every", w: 11 }, { h: "Rounds since cleaning", w: 18 }, { h: "Loads using it", w: 13 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] }, ...extra]);
+  return buildXlsx([{ name: "Guns", selected: true, rows, cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 24 }, { h: "Nickname", w: 16 }, { h: "Type", w: 10 }, { h: "Built from (lower + upper)", w: 30 }, { h: "Cartridge", w: 20 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 11 }, { h: "Twist" + (METRIC ? " (mm)" : ""), w: 9 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Optic", w: 34 }, { h: "Round count", w: 12 }, { h: "Barrel life", w: 11 }, { h: "Barrel life used (%)", w: 17 }, { h: "Barrel fitted", w: 13 }, { h: "Last cleaned", w: 13 }, { h: "Clean every", w: 11 }, { h: "Rounds since cleaning", w: 18 }, { h: "Loads using it", w: 13 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] }, ...extra]);
 }
 function gunsPdf(d, readPhoto) {
   useUnits(d);
@@ -847,7 +861,7 @@ function gunsPdf(d, readPhoto) {
     pdf.text(pdf.M, pdf.y + 8, "GUN", { size: 9, bold: true, color: ACC });
     pdf.y += 30; pdf.text(pdf.M, pdf.y, r.name || "Unnamed gun", { size: 18, bold: true });
     pdf.y += 12; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y); pdf.y += 6;
-    const facts = [["Type", gunType(r)], ["Built from", r.builtFrom || ""], ["Cartridge", r.cartridge || ""], ["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : ""], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""], ["Scope", scopeTxt(r, d)],
+    const facts = [["Type", gunType(r)], ["Built from", r.builtFrom || ""], ["Cartridge", r.cartridge || ""], ["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : ""], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""], [(() => { const L = d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : [], x = r.scopeId && L.find((y) => y.id === r.scopeId); return x && x.kind && x.kind !== "scope" ? "Sight" : "Scope"; })(), scopeTxt(r, d)],
       ["Round count", rc.total ? rc.total.toLocaleString("en-US") + (rc.base ? ` (${rc.base.toLocaleString("en-US")} before Range Book)` : "") : ""], ["Barrel life", rc.life ? rc.life.toLocaleString("en-US") + " rounds" + (rc.pct != null ? `, ${rc.pct}% used` : "") : ""],
       ["Barrel fitted", r.barrelSince ? fmtDate(r.barrelSince) : ""], ["Last cleaned", r.cleaned ? fmtDate(r.cleaned) + (rc.since != null ? ` (${rc.since} rounds since)` : "") : ""], ["Clean every", numv(r.cleanEvery) ? numv(r.cleanEvery) + " rounds" : ""]].filter((x) => x[1]);
     const colW = content / 2;

@@ -1678,7 +1678,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Encrypting site backups (super admin, optional):</b> on the <b>Admin</b> page under <b>Encrypt site backups</b>, type a passphrase of 12 or more characters twice and tap <b>Save passphrase</b>. From then on every site backup you download, by hand or with the nightly copy, is locked with it (the file ends in .enc), and <b>Restore the whole site</b> asks for it. Range Book can't recover a lost passphrase, so keep it in a password manager. If you change it or turn it off, backups made before still need the passphrase they were made with. Leave it off if you don't want encrypted backups.</p>
       <p><b>Nightly copy to another computer (super admin):</b> if Range Book runs somewhere else, like a cloud host, your home server can download the whole site every night. On the <b>Admin</b> page under <b>Nightly copy to another computer</b>, tap <b>Turn on</b>. Copy the backup key and the ready-made script it shows (they're only shown once). On Unraid, install <b>User Scripts</b> from Apps, add a script, paste it in, change <b>DEST</b> to the folder you want, and set it to run daily. It keeps the newest 30 and says FAILED if a download doesn't work. The Admin page shows when the key was last used. Anyone with the key can download everything, so if it gets out, tap <b>Make a new key</b> (the old one stops working) or <b>Turn off</b>.</p>
       <h3>Import from a spreadsheet</h3>
-      <p>To add a lot of gear at once, tap <a class=goto href=#go data-go=account:import>Account › Import from a spreadsheet</a> (or <b>Import from a spreadsheet</b> on the Gear &amp; Ranges and Components lists). <b>Download the template</b> gets an Excel file with a tab each for guns, scopes, lowers, uppers, barrels, factory ammo, bullets, powders, primers and brass, with drop-down lists for cartridges and other choices, and a tip on columns like Twist when you click a cell. To bring in a gun built from a lower and an upper, list them on the <b>Lowers</b> and <b>Uppers</b> tabs, then on the <b>Guns</b> tab fill in its <b>Lower</b> and <b>Upper</b> columns (Manufacturer and Model can stay blank; it's named after the lower, and its specs come from the upper). Several rows with the same lower become one gun with several uppers. On the <b>Barrels</b> tab, <b>On gun</b> is the complete gun the barrel goes on. They can name gear that's already in Range Book or a row in the same file. Fill it in with Excel, Numbers or Google Sheets, save it as .xlsx (or a single tab as .csv), and pick it with <b>Choose a file to import</b>. Your own spreadsheet works too: Range Book matches the columns by their headings (Make and Model are joined into a gun's name, S/N is the serial number, and so on).</p>
+      <p>To add a lot of gear at once, tap <a class=goto href=#go data-go=account:import>Account › Import from a spreadsheet</a> (or <b>Import from a spreadsheet</b> on the Gear &amp; Ranges and Components lists). <b>Download the template</b> gets an Excel file with a tab each for guns, optics, lowers, uppers, barrels, factory ammo, bullets, powders, primers and brass, with drop-down lists for cartridges and other choices, and a tip on columns like Twist when you click a cell. To bring in a gun built from a lower and an upper, list them on the <b>Lowers</b> and <b>Uppers</b> tabs, then on the <b>Guns</b> tab fill in its <b>Lower</b> and <b>Upper</b> columns (Manufacturer and Model can stay blank; it's named after the lower, and its specs come from the upper). Several rows with the same lower become one gun with several uppers. On the <b>Optics</b> tab, <b>Kind</b> says whether it's a Scope, Red dot, Holographic or Prism sight (blank is a scope); a red dot or holographic sight needs only <b>Dot size</b>, <b>Ring</b> and <b>Magnifier</b>, not the scope columns, and <b>On gun</b> puts it on the gun with that name. On the <b>Barrels</b> tab, <b>On gun</b> is the complete gun the barrel goes on. They can name gear that's already in Range Book or a row in the same file. Fill it in with Excel, Numbers or Google Sheets, save it as .xlsx (or a single tab as .csv), and pick it with <b>Choose a file to import</b>. Your own spreadsheet works too: Range Book matches the columns by their headings (Make and Model are joined into a gun's name, S/N is the serial number, and so on).</p>
       <p>Nothing is saved until you tap <b>Import</b>, and before then it asks about anything it isn't sure of: a column it doesn't recognize (pick what it is, add it to Notes, or leave it out), a cartridge, BC type, primer size or scope it doesn't know (pick the right one, or keep it as typed), a number or date it can't read (fix it, or leave it blank), and anything already in Range Book (the same gun by serial number or name, the same scope, ammo or component). For those it shows what's different and you pick <b>Skip</b>, <b>Update it</b> (only the boxes filled in on the spreadsheet change) or <b>Add as new</b>; rows that match exactly are left alone. <b>Download it with my gear filled in</b> gets a copy of everything you have, so you can fix things in the spreadsheet and import it back as updates.</p>
     </section>
     <section class="card guide" aria-label="Gear & Ranges" id="hGuns">
@@ -11779,7 +11779,7 @@ const KINDS=[
      F("barrel","Barrel length","num",{unit:"dim",w:14,alias:["barrel","barrel length","bbl","bbl length","barrel len"]}),
      F("twist","Twist","twist",{unit:"dim",w:14,alias:["twist","twist rate","rifling","rifling twist","rate of twist","barrel twist"],tip:["Twist","Just the number: 1 turn in 8 inches is 8. 1:8 works too."]}),
      F("sightHeight","Sight height","num",{unit:"in",w:13,alias:["sight height","scope height","height over bore","sight height over bore","sight ht"]}),
-     F("scopeId","Scope","scope",{w:26,alias:["scope","optic","optics","sight","scope model"],tip:["Scope","Pick one of your scopes, or type the maker and model of one on the Scopes tab."]}),
+     F("scopeId","Optic","scope",{w:26,alias:["optic","scope","optics","sight","scope model","red dot"],tip:["Optic","Pick one of your scopes or sights, or type the maker and model of one on the Optics tab."]}),
      F("lowerId","Lower","ref",{ref:"lowers",w:22,alias:["lower","lower receiver","receiver"],tip:["Lower","For a gun made of a lower and an upper: pick a lower, or type the maker and model of one on the Lowers tab. Leave Lower and Upper blank for a complete gun."]}),
      F("upperId","Upper","ref",{ref:"uppers",w:22,alias:["upper","upper receiver"],tip:["Upper","Pick an upper, or type the maker and model of one on the Uppers tab. A gun with a lower and an upper takes the upper's cartridge, barrel, twist, sight height and scope."]}),
      F("barrelLife","Barrel life (rounds)","int",{w:13,alias:["barrel life","barrel life rounds","expected barrel life"]}),
@@ -11789,7 +11789,7 @@ const KINDS=[
      F("cleaned","Last cleaned","date",{w:13,alias:["last cleaned","cleaned","cleaning date","date cleaned"]}),
      NOTES],
    example:["Tikka","T3x Lite","Rifle","6.5 Creedmoor","T12345","24","8","1.75","Vortex Viper PST Gen II 5-25x50","","","3000","250","","200","2026-09-01","Example: delete this row"]},
-  {key:"scopes",title:"Scopes",one:"scope",sheet:"Scopes",alias:["scopes","scope","optics","optic","sights"],
+  {key:"scopes",title:"Optics",one:"optic",sheet:"Optics",alias:["optics","optic","scopes","scope","sights","red dots"],
    fields:[F("mfr","Maker","text",{req:1,w:14,alias:["maker","manufacturer","mfr","make","brand"]}),
      F("model","Model","text",{req:1,w:26,alias:["model","name","scope","scope model","optic"]}),
      F("magMin","Power from (x)","num",{w:11,alias:["power from","min power","low power","magnification min","mag min","power low"]}),
@@ -11801,8 +11801,14 @@ const KINDS=[
      F("turret","Turret units","turret",{w:11,alias:["turret units","turret unit","turrets","turret","adjustment units"]}),
      F("click","Click value","click",{w:11,alias:["click value","click","clicks","per click","adjustment","click size"],tip:["Click value","One click, in the turret units: 0.1 (MIL) or 0.25 (MOA). 1/4 works too."]}),
      F("reticle","Reticle name","text",{w:20,alias:["reticle","reticle name","reticle type"]}),
+     F("kind","Kind","okind",{w:13,alias:["kind","optic type","sight type","type","kind of optic"],tip:["Kind","Scope, Red dot, Holographic or Prism. Blank is a scope."]}),
+     F("serial","Serial number","text",{w:16,alias:["serial","serial number","serial no","sn","s n"]}),
+     F("dot","Dot size (MOA)","num",{w:11,alias:["dot","dot size","dot moa","dot size moa"],tip:["Dot size","Red dot or holographic: the dot in MOA, like 2."]}),
+     F("ring","Ring (MOA)","num",{w:10,alias:["ring","ring moa","circle","circle moa","ring size"],tip:["Ring","The ring or circle around the dot in MOA, like 65 or 68. Blank if none."]}),
+     F("magnifier","Magnifier (x)","num",{w:11,alias:["magnifier","magnifier x","magnifier power"]}),
+     F("onGun","On gun","guns",{w:24,alias:["on gun","on guns","mounted on","gun","guns"],tip:["On gun","The gun it's on, by its name in Range Book. Several guns can be separated by commas."]}),
      NOTES],
-   example:["Vortex","Viper PST Gen II 5-25x50","5","25","50","FFP","","MIL","MIL","0.1","EBR-2C","Example: delete this row"]},
+   example:["Vortex","Viper PST Gen II 5-25x50","5","25","50","FFP","","MIL","MIL","0.1","EBR-2C","Scope","","","","","","Example: delete this row"]},
   {key:"lowers",title:"Lowers",one:"lower",sheet:"Lowers",part:"lower",alias:["lowers","lower","lower receivers","lower receiver"],
    fields:[F("mfr","Manufacturer","text",{w:16,alias:["manufacturer","make","maker","brand","mfr"]}),
      F("model","Model","text",{req:1,w:22,alias:["model","name","lower","description"]}),
@@ -11819,7 +11825,7 @@ const KINDS=[
      F("barrel","Barrel length","num",{unit:"dim",w:12,alias:["barrel","barrel length","bbl"]}),
      F("twist","Twist","twist",{unit:"dim",w:10,alias:["twist","twist rate","rate of twist"],tip:["Twist","Just the number: 1 turn in 7 inches is 7. 1:7 works too."]}),
      F("sightHeight","Sight height","num",{unit:"in",w:12,alias:["sight height","scope height","height over bore"]}),
-     F("scopeId","Scope","scope",{w:24,alias:["scope","optic","optics","sight"],tip:["Scope","Pick one of your scopes, or type the maker and model of one on the Scopes tab."]}),
+     F("scopeId","Optic","scope",{w:24,alias:["optic","scope","optics","sight","red dot"],tip:["Optic","Pick one of your scopes or sights, or type the maker and model of one on the Optics tab."]}),
      F("barrelLife","Barrel life (rounds)","int",{w:13,alias:["barrel life"]}),
      F("roundsBase","Rounds fired before Range Book","int",{w:16,alias:["round count","rounds fired","rounds","rounds before range book"]}),
      F("cleanEvery","Clean every (rounds)","int",{w:13,alias:["clean every","cleaning interval"]}),
@@ -11834,7 +11840,7 @@ const KINDS=[
      F("barrel","Barrel length","num",{unit:"dim",w:12,alias:["barrel length","length","bbl"]}),
      F("twist","Twist","twist",{unit:"dim",w:10,alias:["twist","twist rate","rate of twist"],tip:["Twist","Blank: the gun's. Just the number: 1 turn in 8 inches is 8."]}),
      F("sightHeight","Sight height","num",{unit:"in",w:12,alias:["sight height","scope height","height over bore"]}),
-     F("scopeId","Scope","scope",{w:24,alias:["scope","optic","optics","sight"]}),
+     F("scopeId","Optic","scope",{w:24,alias:["optic","scope","optics","sight","red dot"]}),
      F("barrelLife","Barrel life (rounds)","int",{w:13,alias:["barrel life"]}),
      F("roundsBase","Rounds fired before Range Book","int",{w:16,alias:["round count","rounds fired","rounds","rounds before range book"]}),
      F("cleanEvery","Clean every (rounds)","int",{w:13,alias:["clean every","cleaning interval"]}),
@@ -11974,6 +11980,7 @@ function readCell(f,raw,colUnit,ctx){
       // shotgun gauges aren't in the cartridge list: 12 ga, 20-gauge, .410 are kept as "12 Gauge", ".410 Bore"
       const g=/^(\d{1,2})\s*-?\s*(ga|ga\.|gauge)\b/i.exec(s);if(g)return {v:g[1]+" Gauge"};if(/^\.?410\b/.test(s))return {v:".410 Bore"};return {ask:true};}
     case "bcm":{if(/g\s*7/.test(n))return {v:"G7"};if(/g\s*1\b|g1/.test(n))return {v:"G1"};return {ask:true};}
+    case "okind":{if(/holo|eotech/.test(n))return {v:"holo"};if(/prism/.test(n))return {v:"prism"};if(/red\s*dot|reflex|\bdot\b|\brds\b/.test(n))return {v:"dot"};if(/scope|lpvo|rifle\s*scope|\boptic\b/.test(n))return {v:"scope"};return {ask:true};}
     case "fp":{if(/^(ffp|first|front|1st|f)/.test(n))return {v:"FFP"};if(/^(sfp|second|rear|2nd|s)/.test(n))return {v:"SFP"};return {ask:true};}
     case "mm":case "turret":{if(/mil|mrad|milrad/.test(n))return {v:"mil"};if(/moa|minute/.test(n))return {v:"moa"};if(f.type==="turret"&&/same|reticle/.test(n))return {v:null};return {ask:true};}
     case "click":{const v=numIn(raw);if(v==null||v<=0||v>2)return {bad:true};return {v:Math.round(v*1000)/1000};}
@@ -12113,7 +12120,9 @@ function findExisting(k,x){const L=listFor(k);
   // a gun with a serial number also matches by name when the saved one has no serial
   return L.find(e=>dupKey(k,e)===dk)||(k==="guns"&&x.serial?L.find(e=>!e.serial&&keyOf(e.name)===keyOf(x.name)&&keyOf(x.name)):null)
     ||(["powders","primers","bullets"].includes(k)&&!x.mfr?L.find(e=>keyOf(e.name)===keyOf(x.name)&&(k!=="bullets"||keyOf(e.weight)===keyOf(x.weight))):null)||null;}
+const OKIND_TXT={scope:"Scope",dot:"Red dot",holo:"Holographic",prism:"Prism"};
 const showV=(f,v)=>{if(v==null||v==="")return "";
+  if(f.type==="okind")return OKIND_TXT[v]||String(v);
   if(f.type==="ref"){const t=String(v);if(t.startsWith("new:"))return t.slice(4)+" (new)";if(t.startsWith("row:"))return "one in this file";const x=refList(f.ref).find(y=>"id:"+y.id===t);return x?refLabel(f.ref,x):t;}if(f.type==="gtype")return String(v).charAt(0).toUpperCase()+String(v).slice(1);if(f.k==="scopeId"&&String(v).startsWith("new:"))return String(v).slice(4)+" (new)";if(f.k==="scopeId"){const sc=String(v).startsWith("row:")?null:S.existing.scopes.find(x=>x.id===String(v).replace(/^id:/,""));return sc?scopeLabel(sc):String(v).startsWith("row:")?"a scope in this file":String(v);}
   if(f.type==="mm"||f.type==="turret")return String(v).toUpperCase();
   if(f.unit&&typeof v==="number"&&window.U&&f.unit!=="gr"){const k=f.unit==="dim"?"dim":f.unit;try{return U.s(k,v,f.unit==="fps"?0:k==="lb"?1:3);}catch(e){}}
@@ -12122,6 +12131,8 @@ function diffs(K,ex,x){const out=[];K.fields.forEach(f=>{let v=x[f.k];if(v==null
   if(f.k==="scopeId"){e=e?"id:"+e:null;}
   if(f.type==="ref"){e=f.k==="gunId"?ex.gunId:(ex.build?ex.build[f.k]:null);e=e?"id:"+e:null;if(String(v).startsWith("row:")||String(v).startsWith("new:"))e=e||null;}
   if(f.k==="caliber"&&K.key==="bullets"){e=ex.caliber;}
+  if(K.key==="scopes"&&f.k==="kind")e=ex.kind||"scope";
+  if(K.key==="scopes"&&f.k==="onGun"){const gs=(S.existing.rifles||[]).filter(g=>g.scopeId===ex.id).map(g=>keyOf(g.name)).sort().join(","),want=String(v).split(/\s*,\s*/).map(keyOf).sort().join(",");if(gs===want)return;e=(S.existing.rifles||[]).filter(g=>g.scopeId===ex.id).map(g=>g.name).join(", ");}
   if(f.k==="qty")return;if(f.k==="fits"){e=magFitsTxt(ex,S.existing.rifles);}if(f.k==="carts"){e=(Array.isArray(ex.carts)?ex.carts:ex.cart?[ex.cart]:[]).join(", ");}
   const same=typeof v==="number"?Math.abs((+e)-v)<=Math.max(1e-6,Math.abs(v)*5e-4):keyOf(e)===keyOf(v);if(!same)out.push({f,old:e,now:v});});return out;}
 
@@ -12245,6 +12256,7 @@ function askPick(dk,a,d){const f=a.f;let opts=[];
       (d!==undefined&&d!=="__keep"&&!opts.some(o=>o[0]===d)?'<option value="'+esc(d)+'" selected>'+esc(d)+'</option>':'')+'</select><input class="text" placeholder="Or search all cartridges" data-sxcartq="'+esc(dk)+'" aria-label="Search all cartridges"></div>';}
   if(f.type==="bcm")opts=[["G1","G1"],["G7","G7"]];
   else if(f.type==="fp")opts=[["FFP","First focal plane (FFP)"],["SFP","Second focal plane (SFP)"]];
+  else if(f.type==="okind")opts=[["scope","Scope"],["dot","Red dot"],["holo","Holographic"],["prism","Prism"]];
   else if(f.type==="mm"||f.type==="turret")opts=[["mil","MIL (MRAD)"],["moa","MOA"]];
   else if(f.type==="size")opts=LISTS().PRIMER_SIZES.map(z=>[z,z]);
   else if(f.type==="pkind")opts=[["Ball","Ball"],["Extruded","Extruded"],["Flake","Flake"]];
@@ -12285,7 +12297,7 @@ async function apply(){
   st.textContent="Importing…";
   try{
     const E=await loadExisting(),B=build(),rows=S.lastGo.map(g=>B.rows.find(r=>r.rid===g.rid)).filter(Boolean);
-    const rowId={},count={};const bump=(k,w)=>{count[k]=count[k]||{a:0,u:0};count[k][w]++;};
+    const rowId={},count={},OM=[];const bump=(k,w)=>{count[k]=count[k]||{a:0,u:0};count[k][w]++;};
     const fill=(dst,src,K)=>{K.fields.forEach(f=>{const v=src[f.k];if(v==null||v==="")return;if(f.k==="type"&&src.typeGuessed&&dst.type)return;dst[f.k]=v;if(f.k==="type"){if(src.typeGuessed)dst.typeGuessed=true;else delete dst.typeGuessed;}});if(src.caliberUnit)dst.caliberUnit=src.caliberUnit;};
     const target=(k,r)=>{const L=k==="mags"?E.mags:kindBy(k).part?E.parts:k==="guns"?E.rifles:k==="scopes"?E.scopes:k==="ammo"?E.ammo:E.comps[kindBy(k).comp];return {L,ex:r.dupOf&&S.dup[r.rid]==="update"?L.find(x=>x.id===r.dupOf.id):null};};
     // scopes, then lowers and uppers, then guns, then barrels, so each can point at the ones before it
@@ -12297,6 +12309,7 @@ async function apply(){
       E.parts.push(pp);rowId[key]=pp.id;bump(kind,"a");return pp.id;};
     const resolve=(kind,v)=>{v=String(v||"");if(v.startsWith("id:"))return v.slice(3);if(v.startsWith("row:"))return rowId[v.slice(4)]||"";if(v.startsWith("new:")&&kind!=="guns")return newPartFor(kind,v.slice(4));return "";};
     for(const r of ordered){const K=r.kind,k=K.key,x=Object.assign({},r.item);delete x._id;
+      let mountTo=null;if(k==="scopes"&&x.onGun!=null){mountTo=String(x.onGun);delete x.onGun;} // the Optics tab's On gun, put on after every row is in
       const {L,ex}=target(k,r);
       if(k==="guns"&&x.scopeId&&String(x.scopeId).startsWith("new:")){const t=String(x.scopeId).slice(4),w=t.split(/\s+/);
         if(!rowId["new:"+t]){const sc={id:newId("s"),mfr:w.length>1?w[0]:"",model:w.length>1?w.slice(1).join(" "):t,magMin:null,magMax:null,obj:null,fp:"FFP",sfpTrue:null,unit:"mil",click:0.1,reticle:"",notes:"Added from "+S.file+". Check the reticle units and click value.",retMode:"plain",look:null,pic:null};
@@ -12313,7 +12326,7 @@ async function apply(){
       if(k==="bullets"&&x.caliber!=null)x.caliberUnit="in";
       if(ex){if(k==="guns"&&ex.mfr==null&&ex.model==null&&window.RB_SPLIT_GUN)Object.assign(ex,RB_SPLIT_GUN(ex.name));fill(ex,x,K);
         if(k==="guns"){if(x.scopeId)ex.scopeId=x.scopeId;if(bld){ex.build=Object.assign(ex.build||{lowerId:"",upperId:""},Object.fromEntries(Object.entries(bld).filter(([,v])=>v)));}ex.name=String(ex.nick||"").trim()||[ex.mfr,ex.model].filter(Boolean).join(" ");}
-        if(k==="barrels"&&x.gunId)ex.gunId=x.gunId;rowId[r.rid]=ex.id;bump(k,"u");continue;}
+        if(k==="barrels"&&x.gunId)ex.gunId=x.gunId;if(mountTo)OM.push([ex.id,mountTo]);rowId[r.rid]=ex.id;bump(k,"u");continue;}
       if(k==="mags"){const {ids,miss}=magFitsIds(x.fits,E.rifles);const nn=Math.max(1,Math.min(200,parseInt(x.qty,10)||1));delete x.qty;delete x.fits;
         if(miss.length)x.notes=[x.notes,"Fits (not found in your guns): "+miss.join(", ")].filter(Boolean).join("\n");if(x.num)x.num=String(x.num).replace(/^#/,"");
         if(x.carts!=null){x.carts=String(x.carts).split(/\s*,\s*/).filter(Boolean);x.cart=x.carts[0]||"";}
@@ -12328,8 +12341,13 @@ async function apply(){
       else if(k==="scopes")it=Object.assign({id:newId("s"),mfr:"",model:"",magMin:null,magMax:null,obj:null,fp:"FFP",sfpTrue:null,unit:"mil",click:null,reticle:"",notes:"",retMode:"plain",look:null,pic:null},x);
       else if(k==="ammo")it=Object.assign({id:newId("a"),mfr:"",name:"",bcm:"G1"},x);
       else{it=Object.assign({id:newId("c"),mfr:"",name:"",notes:""},x);if(k==="bullets"&&!it.bcm)it.bcm="G1";}
-      if(k==="scopes"){if(it.turret===it.unit)it.turret=null;if(it.click==null)it.click=(it.turret||it.unit)==="mil"?0.1:0.25;}
-      L.push(it);rowId[r.rid]=it.id;bump(k,"a");}
+      if(k==="scopes"){if(it.kind==="scope")delete it.kind;
+        if(isDotSight(it)){it.unit="moa";it.turret=null;it.fp=null;if(!(+it.dot>0))it.dot=it.kind==="holo"?1:2;if(it.kind==="holo"&&it.ring==null)it.ring=68;if(it.click==null)it.click=it.kind==="holo"?0.5:1;}
+        else{if(it.turret===it.unit)it.turret=null;if(it.click==null)it.click=(it.turret||it.unit)==="mil"?0.1:0.25;}}
+      L.push(it);if(mountTo)OM.push([it.id,mountTo]);rowId[r.rid]=it.id;bump(k,"a");}
+    // an optic's On gun (names, comma-separated): put it on each gun by that name, unless that gun's own row picked another
+    OM.forEach(([oid,names])=>String(names).split(/\s*,\s*/).filter(Boolean).forEach(nmx=>{const kk=keyOf(nmx);const g=E.rifles.find(g=>keyOf(g.name)===kk||keyOf(g.nick)===kk);
+      if(g&&(!g.scopeId||!E.scopes.some(o=>o.id===g.scopeId)||!ordered.some(rr=>rr.kind.key==="guns"&&rowId[rr.rid]===g.id&&rr.item.scopeId))){g.scopeId=oid;count.guns=count.guns||{a:0,u:0};}}));
     const put=[];
     if(count.guns||count.scopes||count.lowers||count.uppers||count.barrels||count.mags){const R=await API.get("/api/doc/rifles");const d=Object.assign({},R&&R.data||{},{rows:E.rifles,scopes:E.scopes,parts:E.parts,mags:E.mags});put.push(API.put("/api/doc/rifles",{data:d}));}
     if(count.ammo){const A=await API.get("/api/doc/ammo");put.push(API.put("/api/doc/ammo",{data:Object.assign({},A&&A.data||{},{rows:E.ammo})}));}
@@ -12349,6 +12367,7 @@ function introHtml(){return '<section class="card"><h2>1. Get the template</h2><
   '<section class="card"><h2>2. Import it</h2><p class="note">Pick the filled-in file, or any spreadsheet of yours (.xlsx or .csv). Range Book matches the columns by their headings and shows you everything before anything is saved: columns and values it doesn\'t recognize, and anything that\'s already here.</p><div class="row"><input id="sxFile" type="file" accept=".xlsx,.csv,.tsv,.txt,.xls,.numbers,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" hidden><button class="btn primary" type="button" id="sxPick">Choose a file to import</button></div></section>';}
 function bindIntro(){bindPick();$("sxTpl").onclick=()=>template(false);$("sxTplMine").onclick=()=>template(true);}
 function cellOut(f,v){if(v==null||v==="")return null;
+  if(f.type==="okind")return OKIND_TXT[v]||null;
   if(f.type==="date")return {date:v};
   if(f.type==="mm"||f.type==="turret")return String(v).toUpperCase();
   if(f.type==="gtype")return String(v).charAt(0).toUpperCase()+String(v).slice(1);
@@ -12362,17 +12381,17 @@ async function template(mine){
   const carts=window.RB_CARTS?RB_CARTS.list.map(c=>c.n).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})):[];
   const scopes=E.scopes.map(scopeLabel);
   const P=E.parts||[],nm=x=>pLabel(x),lows=P.filter(p=>p.kind==="lower").map(nm).filter(Boolean),ups=P.filter(p=>p.kind==="upper").map(nm).filter(Boolean),gunsL=E.rifles.filter(r=>!r.build).map(r=>r.name||nm(r)).filter(Boolean);
-  const lists={carts,sizes:LISTS().PRIMER_SIZES,scopes:scopes.length?scopes:["(add scopes on the Scopes tab)"],lowers:lows.length?lows:["(add lowers on the Lowers tab)"],uppers:ups.length?ups:["(add uppers on the Uppers tab)"],guns:gunsL.length?gunsL:["(add guns on the Guns tab)"]};
+  const lists={carts,sizes:LISTS().PRIMER_SIZES,scopes:scopes.length?scopes:["(add optics on the Optics tab)"],lowers:lows.length?lows:["(add lowers on the Lowers tab)"],uppers:ups.length?ups:["(add uppers on the Uppers tab)"],guns:gunsL.length?gunsL:["(add guns on the Guns tab)"]};
   const listCol={carts:"A",sizes:"B",scopes:"C",lowers:"D",uppers:"E",guns:"F"},listRef=k=>"Lists!$"+listCol[k]+"$2:$"+listCol[k]+"$"+(lists[k].length+1);
   const sheets=[];
   const readme=["How to use this file",
-    "1. Each tab is one kind of gear: Guns, Scopes, Lowers, Uppers, Barrels, Magazines, Factory ammo, Bullets, Powders, Primers and Brass. Fill in the ones you need and leave the rest empty.",
+    "1. Each tab is one kind of gear: Guns, Optics, Lowers, Uppers, Barrels, Magazines, Factory ammo, Bullets, Powders, Primers and Brass. Fill in the ones you need and leave the rest empty.",
     "   For an AR or any gun made of a lower and an upper: put the lower on the Lowers tab and the upper on the Uppers tab, then add a row on the Guns tab with that Lower and Upper picked (the name can be left blank). One lower can be in several guns. Barrels go on complete guns: pick the gun under On gun.",
     "2. One row per thing. Only the columns marked * are needed; leave anything you don't know blank.",
     "3. The grey row on each tab is an example. Delete it or leave it; it's never imported.",
     "4. Cartridge, BC type, focal plane, units and primer size have drop-down lists, but you can type anything. Range Book asks about names it doesn't recognize when you import.",
     "5. Numbers can be plain (24) or have their unit (24 in, 610 mm, 2,700 fps, $32.99). Twist can be 8 or 1:8. Dates like 2025-05-31 or 5/31/2025.",
-    "6. A gun's Scope: pick one of your scopes, or type the maker and model of one on the Scopes tab of this file.",
+    "6. A gun's Optic: pick one of your scopes or sights, or type the maker and model of one on the Optics tab of this file. On the Optics tab, Kind says what it is (Scope, Red dot, Holographic or Prism); for a red dot or holographic sight, fill in Dot size and Ring instead of the scope columns.",
     "7. Save it (as .xlsx, or .csv for a single tab), then in Range Book go to Account → Import → Import from a spreadsheet and pick the file.",
     "8. Before anything is saved you see what will be added, and you're asked about anything that's already in Range Book: skip it, update it, or add it as new.",
     mine?"9. This copy has your gear in it. The last column (Range Book ID) links each row to the one in Range Book, so leave it as it is. Change a row and import the file to update it; add rows at the bottom for new things.":"",
@@ -12382,13 +12401,14 @@ async function template(mine){
     const have=!mine?[]:K.key==="mags"?(E.mags||[]):K.part?P.filter(p=>p.kind===K.part):K.key==="guns"?E.rifles:K.key==="scopes"?E.scopes:K.key==="ammo"?E.ammo.filter(a=>a.kind!=="reload"):(E.comps[K.comp]||[]);
     const rows=mine?have.map(x=>fields.map(f=>{if(f.k==="_id")return {v:x.id,s:7};if(f.k==="scopeId"){const sc=E.scopes.find(s=>s.id===x.scopeId);return sc?scopeLabel(sc):null;}
       if(f.k==="lowerId"||f.k==="upperId"){const q=x.build&&P.find(p=>p.id===x.build[f.k]);return q?nm(q):null;}
-      if(f.k==="gunId"){const g=E.rifles.find(r=>r.id===x.gunId);return g?g.name||nm(g):null;}if(f.k==="fits")return magFitsTxt(x,E.rifles)||null;if(f.k==="qty")return null;if(f.k==="carts"&&K.key==="mags")return (Array.isArray(x.carts)?x.carts:x.cart?[x.cart]:[]).join(", ")||null;return cellOut(f,x[f.k]);}))
+      if(f.k==="gunId"){const g=E.rifles.find(r=>r.id===x.gunId);return g?g.name||nm(g):null;}if(f.k==="fits")return magFitsTxt(x,E.rifles)||null;if(f.k==="onGun")return E.rifles.filter(g=>g.scopeId===x.id).map(g=>g.name||nm(g)).join(", ")||null;if(f.k==="qty")return null;if(f.k==="carts"&&K.key==="mags")return (Array.isArray(x.carts)?x.carts:x.cart?[x.cart]:[]).join(", ")||null;return cellOut(f,x[f.k]);}))
       :[K.example.map((v,i)=>{if(v==="")return null;const f=K.fields[i];let x=/^\d+(\.\d+)?$/.test(v)?+v:v;if(typeof x==="number"&&f&&f.unit)x=cellOut(f,x);return {v:x,s:7};})];
     const val=[];fields.forEach((f,i)=>{
       const p=f.tip||(f.type==="date"?[f.h,"A date, like 2025-05-31."]:null);
       if(f.type==="cart")val.push({col:i,src:listRef("carts"),prompt:p});
       else if(f.type==="bcm")val.push({col:i,src:["G1","G7"],prompt:p});
       else if(f.type==="fp")val.push({col:i,src:["FFP","SFP"],prompt:p});
+      else if(f.type==="okind")val.push({col:i,src:["Scope","Red dot","Holographic","Prism"],prompt:p});
       else if(f.type==="mm")val.push({col:i,src:["MIL","MOA"],prompt:p});
       else if(f.type==="turret")val.push({col:i,src:["MIL","MOA"],prompt:p||["Turret units","Leave blank if the same as the reticle."]});
       else if(f.type==="size")val.push({col:i,src:listRef("sizes"),prompt:p});
