@@ -179,6 +179,18 @@ const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { r
 // sharing ammo with everyone (box photos of catalog ammo, loads people share, and their photos) is on unless the
 // admin turns it off (Admin › Community sharing, 2.42.5), e.g. on a big public server
 const shareBoxPhotos = () => getSetting("shareAmmo", true) !== false;
+/* The super admin (2.42.7): the first admin account, or whoever it's been handed to. Other admins can't delete, turn off,
+   demote, rename, export or reset the password of this account, and only it can hand the role on, download the whole
+   site or restore it. Stored as the setting "superAdmin" (a user id); if that's missing or no longer an active admin
+   (an older Range Book, a restore), it goes to the oldest active admin. */
+function superId() {
+  const v = getSetting("superAdmin", null);
+  if (v != null && q("SELECT 1 AS ok FROM users WHERE id=? AND is_admin=1 AND disabled=0").get(v)) return v;
+  const r = q("SELECT id FROM users WHERE is_admin=1 AND disabled=0 ORDER BY created_at, id LIMIT 1").get();
+  if (r) { setSetting("superAdmin", r.id); return r.id; }
+  return null;
+}
+const isSuper = (u) => !!u && u.id === superId();
 const getSetting = (k, d) => { const r = q("SELECT value FROM settings WHERE key=?").get(k); return r ? JSON.parse(r.value) : d; };
 const setSetting = (k, v) => q("INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(k, JSON.stringify(v));
 const now = () => Date.now();
@@ -231,6 +243,7 @@ function firstRun() {
   const info = q("INSERT INTO users(username,display_name,pass,is_admin,must_change,created_at) VALUES(?,?,?,?,?,?)")
     .run(ADMIN_USERNAME, ADMIN_USERNAME, hashPassword(pw), 1, ADMIN_PASSWORD ? 0 : 1, now());
   const adminId = Number(info.lastInsertRowid);
+  setSetting("superAdmin", adminId);
   console.log("======================================================");
   console.log(` Range Book: created admin account "${ADMIN_USERNAME}"`);
   if (!ADMIN_PASSWORD) console.log(` Temporary password: ${pw}   (you'll be asked to change it)`);
@@ -349,7 +362,7 @@ async function readJson(req, limit = 1024 * 1024) {
   try { return JSON.parse(buf.toString("utf8")); } catch { throw new HttpError(400, "The request wasn't valid JSON."); }
 }
 const ID_RE = /^[A-Za-z0-9_-]{1,64}$/;
-const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, isAdmin: !!u.is_admin, mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms });
+const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, isAdmin: !!u.is_admin, isSuper: !!u.is_admin && isSuper(u), mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms });
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -502,6 +515,7 @@ async function api(req, res, url) {
     try {
       if (!needsSetup()) throw new HttpError(409, "Range Book is already set up. Sign in instead.");
       uid = Number(q("INSERT INTO users(username,display_name,pass,is_admin,must_change,created_at) VALUES(?,?,?,1,0,?)").run(username, name, hashPassword(pw), now()).lastInsertRowid);
+      setSetting("superAdmin", uid);
       db.exec("COMMIT");
     } catch (e) { db.exec("ROLLBACK"); throw e; }
     console.log(` Range Book: admin account "${username}" created from the setup page.`);
@@ -547,6 +561,21 @@ async function api(req, res, url) {
       res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${mt[1]}.pdf"`, "Content-Length": buf.length, ...SECURITY_HEADERS });
       return res.end(buf);
     }
+  }
+
+  /* ---- the whole site for a scheduled download (2.42.10): another computer (a home server) fetches the site backup with
+     the backup key in an "Authorization: Bearer" header instead of signing in. Only a hash of the key is kept. ---- */
+  if (p === "/api/backup/site.tar.gz" && (method === "GET" || method === "HEAD")) {
+    const ip = clientIp(req), fk = "bk:" + ip;
+    if (throttled(fk)) throw new HttpError(429, "Too many wrong keys. Try again in 15 minutes.");
+    const k = getSetting("backupKey", null), auth = String(req.headers.authorization || "");
+    const tok = /^Bearer\s+/i.test(auth) ? auth.replace(/^Bearer\s+/i, "").trim() : "";
+    const ok = !!(k && k.hash && tok) && crypto.timingSafeEqual(Buffer.from(sha256hex(tok)), Buffer.from(k.hash));
+    if (!ok) { noteFail(fk); throw new HttpError(401, k ? "That backup key isn't right." : "Scheduled backups are turned off on this Range Book."); }
+    setSetting("backupKeyUsed", { at: now(), ip });
+    console.log(`Site backup downloaded with the backup key (from ${ip}).`);
+    if (method === "HEAD") return send(res, 200, "");
+    return sendSiteBackup(res);
   }
 
   const user = getUser(req, res);
@@ -1075,7 +1104,33 @@ async function api(req, res, url) {
       return send(res, 200, { backups: listBackups(), keep: BACKUP_KEEP, hour: BACKUP_HOUR, lastError: lastBackupError });
     }
     /* ---- the whole site in one file (2.35): download it, or bring it back on a fresh install ---- */
+    // the whole site holds everyone's data and passwords: the super admin's job (2.42.7)
+    if ((p.startsWith("/api/admin/site-backup") || p.startsWith("/api/admin/site-restore") || p.startsWith("/api/admin/backup-")) && !isSuper(user)) throw new HttpError(403, "Only the super admin can download or restore the whole site.");
     if (p === "/api/admin/site-backup" && method === "GET") return send(res, 200, siteInfo());
+    // the optional backup passphrase: only the key made from it is kept
+    if (p === "/api/admin/backup-crypt") {
+      if (method === "PUT") {
+        const b = await readJson(req), pass = String(b.passphrase || "");
+        if (pass.length < 12) throw new HttpError(400, "Use at least 12 characters. A few words with spaces works well.");
+        const salt = crypto.randomBytes(16);
+        setSetting("backupCrypt", { salt: salt.toString("base64"), key: encKey(pass, salt).toString("base64"), set: now() });
+        console.log(`Site backups now encrypted (passphrase set by "${user.username}").`);
+      }
+      if (method === "DELETE") { setSetting("backupCrypt", null); console.log(`Site backup encryption turned off by "${user.username}".`); }
+      const c = backupCrypt();
+      return send(res, 200, { on: !!c, set: c ? c.set : null });
+    }
+    // the backup key for scheduled downloads: shown once when it's made, then only its hash is kept
+    if (p === "/api/admin/backup-key") {
+      if (method === "GET") { const k = getSetting("backupKey", null); return send(res, 200, { on: !!(k && k.hash), created: k ? k.created : null, lastUsed: k ? getSetting("backupKeyUsed", null) : null }); }
+      if (method === "POST") {
+        const key = "rbk_" + crypto.randomBytes(30).toString("base64url");
+        setSetting("backupKey", { hash: sha256hex(key), created: now() }); setSetting("backupKeyUsed", null);
+        console.log(`New backup key made by "${user.username}".`);
+        return send(res, 200, { key });
+      }
+      if (method === "DELETE") { setSetting("backupKey", null); setSetting("backupKeyUsed", null); console.log(`Backup key turned off by "${user.username}".`); return send(res, 200, { on: false }); }
+    }
     if (p === "/api/admin/site-backup.tar.gz" && method === "GET") return sendSiteBackup(res);
     if (p === "/api/admin/site-restore/start" && method === "POST") {
       const inf = siteInfo(); if (!inf.fresh) throw new HttpError(409, inf.why);
@@ -1095,18 +1150,32 @@ async function api(req, res, url) {
         const buf = await readBody(req, RESTORE_CHUNK + 1024);
         fs.appendFileSync(up, buf); return send(res, 200, { have: have + buf.length });
       }
-      try { const r = siteRestore(dir, user); return send(res, 200, r); }
-      finally { fs.rmSync(dir, { recursive: true, force: true }); }
+      const b = await readJson(req).catch(() => ({}));
+      // a missing or wrong passphrase keeps the upload, so it can be tried again without sending the file again
+      let keep = false;
+      try { const r = siteRestore(dir, user, b && b.passphrase ? String(b.passphrase) : ""); return send(res, 200, r); }
+      catch (e) { keep = e instanceof HttpError && e.status === 422; throw e; }
+      finally { if (!keep) fs.rmSync(dir, { recursive: true, force: true }); }
     }}
     if (p === "/api/admin/settings") {
       if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); if ("shareAmmo" in b) setSetting("shareAmmo", !!b.shareAmmo); }
       return send(res, 200, { guestEnabled: !!getSetting("guestEnabled", false), shareAmmo: shareBoxPhotos() });
     }
+    if (p === "/api/admin/super" && method === "POST") {
+      if (!isSuper(user)) throw new HttpError(403, "Only the super admin can hand that role on.");
+      const b = await readJson(req), to = q("SELECT * FROM users WHERE id=?").get(Number(b.id));
+      if (!to || !to.is_admin || to.disabled) throw new HttpError(400, "Pick another admin whose account is turned on.");
+      if (to.id === user.id) return send(res, 200, { superId: user.id });
+      setSetting("superAdmin", to.id);
+      console.log(`Super admin handed from "${user.username}" to "${to.username}".`);
+      return send(res, 200, { superId: to.id });
+    }
     if (p === "/api/admin/users" && method === "GET") {
+      const sid = superId();
       const rows = q(`SELECT u.id, u.username, u.display_name, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login,
                         (SELECT COUNT(*) FROM loads l WHERE l.owner_id=u.id) AS loads
                       FROM users u ORDER BY u.username COLLATE NOCASE`).all();
-      return send(res, 200, { users: rows.map((r) => ({ id: r.id, username: r.username, name: r.display_name, isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id })) });
+      return send(res, 200, { users: rows.map((r) => ({ id: r.id, username: r.username, name: r.display_name, isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
     }
     if (p === "/api/admin/users" && method === "POST") {
       const b = await readJson(req);
@@ -1120,13 +1189,18 @@ async function api(req, res, url) {
       return send(res, 200, { id: Number(info.lastInsertRowid), username, tempPassword: pw });
     }
     const ax = /^\/api\/admin\/users\/(\d+)\/export\.(xlsx|pdf|zip)$/.exec(p);
-    if (ax && method === "GET") return sendExport(res, +ax[1], ax[2]);
+    if (ax && method === "GET") {
+      if (+ax[1] === superId() && !isSuper(user)) throw new HttpError(403, "Only the super admin can download the super admin's data.");
+      return sendExport(res, +ax[1], ax[2]);
+    }
     m = /^\/api\/admin\/users\/(\d+)(\/reset-password)?$/.exec(p);
     if (m) {
       const id = +m[1];
       const target = q("SELECT * FROM users WHERE id=?").get(id);
       if (!target) throw new HttpError(404, "User not found.");
       const otherAdmins = q("SELECT COUNT(*) AS n FROM users WHERE is_admin=1 AND disabled=0 AND id<>?").get(id).n;
+      const targetSuper = id === superId();
+      if (targetSuper && !isSuper(user)) throw new HttpError(403, "That's the super admin's account. Only they can change it.");
       if (m[2] && method === "POST") {
         const b = await readJson(req);
         const pw = b.password ? String(b.password) : tempPassword();
@@ -1138,6 +1212,7 @@ async function api(req, res, url) {
       if (!m[2] && method === "PATCH") {
         const b = await readJson(req);
         if ("isAdmin" in b) {
+          if (!b.isAdmin && targetSuper) throw new HttpError(400, "You're the super admin. Hand that on to another admin first, then remove your admin.");
           if (!b.isAdmin && target.is_admin && !otherAdmins) throw new HttpError(400, "There has to be at least one admin.");
           q("UPDATE users SET is_admin=? WHERE id=?").run(b.isAdmin ? 1 : 0, id);
         }
@@ -1233,6 +1308,7 @@ if (process.env.RESET_ADMIN_PASSWORD) {
   else if (!u) console.log(`RESET_ADMIN_PASSWORD ignored: no user named "${ADMIN_USERNAME}".`);
   else {
     q("UPDATE users SET pass=?, must_change=1, disabled=0, is_admin=1 WHERE id=?").run(hashPassword(process.env.RESET_ADMIN_PASSWORD), u.id);
+    setSetting("superAdmin", u.id); // whoever can restart the server with this setting owns it
     q("DELETE FROM sessions WHERE user_id=?").run(u.id);
     console.log(`Password for "${ADMIN_USERNAME}" was reset from RESET_ADMIN_PASSWORD. Remove that setting now.`);
   }
@@ -1281,15 +1357,39 @@ function tarHeader(name, size, mtime) {
   h.write(sum.toString(8).padStart(6, "0") + "\0 ", 148);
   return h;
 }
+const sha256hex = (t) => crypto.createHash("sha256").update(String(t)).digest("hex");
+/* Encrypted site backups (2.42.11, optional): with a backup passphrase set, every whole-site download is
+   "RBENC" 0x01 + salt(16) + iv(12) + AES-256-GCM(gzipped tar) + tag(16). Only the key derived from the passphrase is
+   kept (setting "backupCrypt"), never the passphrase, and Restore the whole site asks for it. */
+const ENC_MAGIC = Buffer.from([0x52, 0x42, 0x45, 0x4e, 0x43, 0x01]);
+const ENC_KDF = { N: 32768, r: 8, p: 1, maxmem: 96 * 1024 * 1024 };
+const encKey = (pass, salt) => crypto.scryptSync(String(pass).normalize("NFC"), salt, 32, ENC_KDF);
+function backupCrypt() {
+  const c = getSetting("backupCrypt", null);
+  return c && c.key && c.salt ? { key: Buffer.from(c.key, "base64"), salt: Buffer.from(c.salt, "base64"), set: c.set } : null;
+}
+function decryptSiteBackup(buf, pass) {
+  if (!pass) throw new HttpError(422, "This backup is encrypted. Enter its backup passphrase, then tap Restore again.");
+  if (buf.length < ENC_MAGIC.length + 28 + 16) throw new HttpError(400, "That encrypted backup is cut short.");
+  const salt = buf.subarray(6, 22), iv = buf.subarray(22, 34), tag = buf.subarray(buf.length - 16);
+  const d = crypto.createDecipheriv("aes-256-gcm", encKey(pass, salt), iv); d.setAuthTag(tag);
+  try { return Buffer.concat([d.update(buf.subarray(34, buf.length - 16)), d.final()]); }
+  catch { throw new HttpError(422, "That passphrase doesn't open this backup (or the file is damaged). Check it and tap Restore again."); }
+}
 function sendSiteBackup(res) {
   const tmp = path.join(DATA_DIR, ".site-" + process.pid + "-" + Date.now() + ".db");
   db.exec(`VACUUM INTO '${tmp.replace(/'/g, "''")}'`);
   const day = localDate(), names = fs.readdirSync(PHOTO_DIR).filter((n) => !n.startsWith("."));
   const info = Buffer.from(JSON.stringify({ app: "Range Book", kind: "site-backup", format: 1, version: APP_VERSION, created: new Date().toISOString(),
     users: q("SELECT COUNT(*) AS n FROM users").get().n, files: names.length }, null, 2));
-  res.writeHead(200, { "Content-Type": "application/gzip", "Content-Disposition": `attachment; filename="RangeBook-site-backup-${day}.tar.gz"`, "Cache-Control": "no-store", ...SECURITY_HEADERS });
+  const ck = backupCrypt();
+  res.writeHead(200, { "Content-Type": ck ? "application/octet-stream" : "application/gzip", "Content-Disposition": `attachment; filename="RangeBook-site-backup-${day}.tar.gz${ck ? ".enc" : ""}"`, "Cache-Control": "no-store", ...SECURITY_HEADERS });
   const gz = zlib.createGzip({ level: 1 });
-  gz.pipe(res);
+  if (ck) {
+    const iv = crypto.randomBytes(12), c = crypto.createCipheriv("aes-256-gcm", ck.key, iv);
+    res.write(Buffer.concat([ENC_MAGIC, ck.salt, iv]));
+    gz.pipe(c); c.pipe(res, { end: false }); c.on("end", () => res.end(c.getAuthTag()));
+  } else gz.pipe(res);
   const pad = (n) => (n % 512 ? Buffer.alloc(512 - (n % 512)) : null);
   const entries = [["site-backup.json", null], ["rangebook.db", tmp], ...names.map((n) => ["photos/" + n, path.join(PHOTO_DIR, n)])];
   let i = 0, done = false;
@@ -1322,10 +1422,11 @@ function* tarEntries(buf) {
     if (type === "0" || type === "\0") yield [name, data];
   }
 }
-function siteRestore(dir, user) {
+function siteRestore(dir, user, pass) {
   const inf = siteInfo(); if (!inf.fresh) throw new HttpError(409, inf.why);
   let buf = fs.readFileSync(path.join(dir, "upload"));
   if (buf.length < 100) throw new HttpError(400, "That file is empty.");
+  if (buf.subarray(0, ENC_MAGIC.length).equals(ENC_MAGIC)) buf = decryptSiteBackup(buf, pass);
   let list;
   if (buf[0] === 0x1f && buf[1] === 0x8b) { try { buf = zlib.gunzipSync(buf, { maxOutputLength: 2 ** 31 }); } catch { throw new HttpError(400, "That file couldn't be unpacked."); } }
   if (buf.length >= 512 && buf.toString("utf8", 257, 262) === "ustar") list = [...tarEntries(buf)];
