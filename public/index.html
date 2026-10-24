@@ -930,7 +930,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 /* load lists */
 .loaditem.withthumb{flex-direction:row;align-items:center;gap:12px}
 .lthumb{width:60px;height:60px;border-radius:8px;overflow:hidden;flex:none;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent)}
-.lthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.lthumb img{width:100%;height:100%;object-fit:contain;display:block}
+.lthumb:has(>img){background:transparent} /* 2.42.28: the whole picture shows; the rest of the square is see-through */
 .tripsroot{margin-top:14px}
 .tripsroot:empty{display:none}
 .tripsroot h3{margin:18px 0 6px;font-size:15px}
@@ -963,7 +964,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .shotadd input{flex:1 1 200px;min-width:0}
 .triphead{margin-bottom:6px}
 .picrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.picbox{width:140px;height:105px;border-radius:10px;overflow:hidden;flex:none;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent);border:1px solid var(--line)}
-.picbox img{width:100%;height:100%;object-fit:cover;display:block}.picbox svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.4}
+.picbox img{width:100%;height:100%;object-fit:contain;display:block}
+.picbox:has(>img){background:var(--sunk)}.picbox svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.4}
 .picbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1 1 160px;min-width:0}.picbtns .note{flex:1 0 100%;margin:0}
 .lthumb svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6}
 .ltext{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -1062,7 +1064,12 @@ textarea.notebody{min-height:260px;line-height:1.5;font-size:16px;resize:vertica
 .segtabs{display:flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .segtabs button{flex:1 1 0;padding:8px 4px;border:0;border-radius:7px;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
 .segtabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
-.selbtn{display:flex;gap:8px;align-items:center}.selbtn select{flex:1 1 auto;min-width:0}.selbtn .btn{flex:none}
+.selbtn{display:flex;gap:8px;align-items:center}.selbtn select{flex:1 1 auto;min-width:0}
+.selbtn .ammobtn{flex:1 1 auto;min-width:0}
+#f_rifleLbl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.apick .fitwarn{color:var(--warn)}
+/* 2.42.33: the "this gun doesn't fit" warning on a profile stays in view under the bar with the links */
+#trajFit:not([hidden]){position:sticky;top:calc(var(--stick,110px) - 4px);z-index:14;box-shadow:0 6px 14px -6px rgba(0,0,0,.35)}.selbtn .btn{flex:none}
 .cmpbul{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 10px;background:var(--sunk)}
 .cmpbul .cmphead{display:flex;gap:8px;align-items:center;margin-bottom:8px}.cmpbul .cmphead input{flex:1 1 auto;min-width:0;font-weight:600}
 .cmpsw{width:28px;height:4px;border-radius:2px;flex:none}.cmpsw svg{display:block}
@@ -1256,7 +1263,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .unameedit input{font:inherit;color:var(--fg);padding:8px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);flex:1 1 180px;min-width:0}
 .boxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:8px}
 .boxph{margin:0;display:flex;flex-direction:column;gap:4px}
-.boxph img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:var(--sunk);display:block}
+.boxph img{width:100%;aspect-ratio:4/3;object-fit:contain;border-radius:8px;border:1px solid var(--line);background:var(--sunk);display:block}
 .gungrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 .boxph figcaption{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .ammocat{margin-top:12px;display:flex;flex-direction:column;gap:10px}
@@ -1332,7 +1339,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="field wide"><label for="f_cart">Cartridge</label><input id="f_cart" class="name" type="text" autocomplete="off" list="dl_cart" placeholder="e.g. 308 Winchester"></div>
     </div>
     <fieldset class="ingrp"><legend>Gun &amp; ammo</legend><div class="grid">
-      <div class="field wide"><label for="f_rifle">Gun</label><div class="selbtn"><select id="f_rifle" class="fieldselect"></select><button class="btn" type="button" id="f_rifleEdit" hidden>Edit</button></div><span class="note" id="f_rifleNote"></span></div>
+      <div class="field wide"><label for="f_rifleBtn">Gun</label><div class="selbtn"><select id="f_rifle" class="fieldselect" hidden aria-hidden="true" tabindex="-1"></select><button type="button" id="f_rifleBtn" class="ammobtn" aria-expanded="false" aria-controls="rifPick"><span id="f_rifleLbl"></span></button><button class="btn" type="button" id="f_rifleEdit" hidden>Edit</button></div>
+        <div class="ammopick" id="rifPick" hidden><input id="f_rifleQ" type="search" placeholder="Search: name, maker, cartridge…" autocomplete="off" aria-label="Search guns"><div id="rifPickList" class="ammopicklist" role="listbox" aria-label="Guns"></div></div><span class="note" id="f_rifleNote"></span></div>
       <div class="field wide subfield" id="f_partBox" hidden><label for="f_part">Barrel</label><select id="f_part" class="fieldselect"></select><span class="note" id="f_partNote"></span></div>
       <div class="field wide"><label for="f_ammoBtn">Ammunition</label><button type="button" id="f_ammoBtn" class="ammobtn" aria-expanded="false" aria-controls="ammoPick"><span id="f_ammoLbl"></span></button>
         <div class="ammopick" id="ammoPick" hidden><input id="f_ammoQ" type="search" placeholder="Search: varget, hornady 168, 6.5 creed…" autocomplete="off" aria-label="Search ammunition"><div id="ammoPickList" class="ammopicklist" role="listbox" aria-label="Ammunition"></div></div><div id="f_ammoInfo"></div><span class="note" id="f_ammoNote"></span></div>
@@ -1492,10 +1500,12 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Getting around</h3>
       <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, <b>Recent reloading</b> (the loads you've worked on lately), your <b>Most used guns</b> (your favorites first, then the guns with the most rounds, with their photos; up to six, and <b>All guns ›</b> for the rest), and <b>Built in Library</b>: how many bullets, cartridges, powders, factory ammo, scopes and primers are built in. Tap a number to open that list, or <b>Open Library ›</b> for the Library page under Reloading › Reference, which lists everything built in with its count and shows the bullets by maker. On a computer, Recent range trips and Recent reloading sit side by side, Most used guns gets its own column on the right (on a narrower screen like a tablet it goes under them), and Built in Library runs across the bottom; on a phone the cards are one under another. <b>Arrange Home</b> at the bottom puts the cards in your order and turns off the ones you don't need. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and Account) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
       <p>When a note or this page mentions another part of Range Book, the name is an underlined link in your theme's color, like <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a>. Tap it to go straight there. A path with <b>›</b> shows where it is, so you can also find it yourself.</p>
+      <p><b>Getting back.</b> A page you opened from a list (a gun, an optic, a suppressor, a shooting profile, a load…) has a back link at the top, like <b>‹ Guns</b>. On a computer, once you scroll down past it, the same link floats at the bottom left so you can click it from anywhere on the page; the page leaves room at the bottom so it never covers the last button. On a phone or tablet, swipe in from the left edge (or use Android's Back button) instead.</p>
+      <p><b>Paste or drop a picture.</b> On a computer you don't have to hunt for the file: copy a picture (or take a screenshot) and press <b>Ctrl+V</b> (<b>⌘V</b> on a Mac), or drag a picture or file from your desktop onto the page. It goes to the <b>+ Add</b> button on the screen you're on, just like picking it with that button: a gun's or scope's photos, a reticle picture, target photos, box photos, documents, or a file to import. When a screen has more than one, drop it on the card you want (it gets a dashed outline). Pasting while you're typing in a box pastes text as usual.</p>
       <p><b>Arrange Home</b> at the bottom of Home lets you put its cards in your own order (drag <b>⠿</b>, or use <b>▲</b> and <b>▼</b> on a computer) and turn off the ones you don't need. <b>Usual order</b> puts everything back. It's saved to your account, so every phone and computer shows the same Home.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <a class=goto href=#go data-go=log>Shooting › Range log</a>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting profiles, ammunition from your inventory, or factory ammo from the catalog that you don't have yet (it lists the catalog loads for the gun's cartridge, and the search box finds any other). Picking ammo makes the Shooting profile for that gun the first time, and a catalog pick is added to your Ammunition list with no rounds on hand, so you can count what you shoot from it. It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
-      <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, profiles, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, profile, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
+      <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, profiles, guns, optics, suppressors, inventory, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. On Gear &amp; Ranges it also finds a serial number, with or without its dashes and spaces. When you delete something (a load, profile, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
       <h3>Add it to your iPhone home screen</h3>
       <p>Open this page in Safari, tap the Share button, then <b>Add to Home Screen</b>. It gets its own icon and opens full screen.</p>
       <p>When the server has a new version, the app tells you with a banner that floats at the bottom of the screen (just above the tabs on a phone), so you see it wherever you are on the page: tap <b>Reload now</b> to switch to it (you land back where you were). It checks when the app opens, when you switch back to Range Book and every minute while it's open, so there's no need to close the app.</p>
@@ -1519,7 +1529,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>A new account's Shooting list starts with a single <b>SAMPLE · 6.5 Creedmoor</b> profile, and on a new Range Book the first account also gets a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
       <h3>Fill in the fields</h3>
       <ul>
-        <li><b>Gun</b>: pick one of your guns from <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a> and its sight height fills in. <b>Edit</b> beside it opens that gun on Gear &amp; Ranges, with a <b>‹ Back to</b> button to return to the profile. Profiles sent over from Reloading come with the gun already picked. If you change the gun's sight height on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>, the calculator follows unless you've typed in your own.</li>
+        <li><b>Gun</b>: tap it and pick one of your guns from <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a> (search by name, maker or cartridge); its sight height fills in. Guns chambered for the profile's cartridge are listed first, and the rest are marked as not fitting. If you pick one that doesn't fit, the warning stays at the top while you scroll, with <b>Pick another gun</b>. <b>Edit</b> beside it opens that gun on Gear &amp; Ranges, with a <b>‹ Back to</b> button to return to the profile. Profiles sent over from Reloading come with the gun already picked. If you change the gun's sight height on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>, the calculator follows unless you've typed in your own.</li>
         <li><b>Ammunition</b>: tap it to pick your own factory or reloaded ammo, or a load from the factory catalog. Fill in the <b>Cartridge</b> first and the list shows only ammo for that cartridge (and ammo that's safe in it, like 223 Remington for a 5.56 gun); tap <b>Show all cartridges</b> at the top of the list to see everything. The bullet weight, BC, diameter and length fill in from the ammo. If the ammo has no bullet length, Range Book uses its reloading recipe's, or the length saved on its bullet under Components.</li>
         <li><b>Bullet weight</b>: from the ammo box.</li>
         <li><b>Muzzle velocity</b>: the box number comes from a test barrel and is often 50–150 fps faster than your gun. A chronograph reading is best.</li>
@@ -1605,7 +1615,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>Enter each group's size in <b>Group size</b> (center to center of the two widest holes), or measure it from a target photo (below). The <b>Distance</b> is entered once at the top of the ladder. The MOA is worked out for you, so groups shot at different distances can be compared.</li>
       </ol>
       <h3>Reference</h3>
-      <p><a class=goto href=#go data-go=ref>Reloading › Reference</a> has reference lists for reloading. Pick one with the buttons at the top (<b>Library</b> opens <a class=goto href=#go data-go=tools:lib>Tools › Library</a>, with every built-in list):</p>
+      <p><a class=goto href=#go data-go=ref>Reloading › Reference</a> has reference lists for reloading. Pick one with the buttons at the top (<b>Library</b> opens <a class=goto href=#go data-go=tools:lib>Tools › Library</a>, with every built-in list; its <b>‹ Reference</b> button brings you back here):</p>
       <ul>
         <li><b>Cartridges</b>: every cartridge Range Book knows, with its bullet diameter, maximum case length, the usual trim-to length (0.010" under the maximum), maximum overall length and primer size. Tap one for notes (like brass that takes a different primer) or to fix it for your own use. It's the same list as Cartridges in <a class=goto href=#go data-go=tools:lib:cart>Tools › Library</a>.</li>
         <li><b>Bullet diameters</b>: the cartridges grouped by the bullet diameter they actually use, so you can see which share bullets, with the common mix-ups (.308 vs .311, .355 vs .357, .452 vs .458). Tap a cartridge to open it.</li>
@@ -1731,7 +1741,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Round count and barrel life</h3>
       <p>Each gun's page has a <b>Round count</b>. It adds the rounds from range trips on Shooting profiles that use that gun, the shots in your load-development groups on Reloading loads that use it, and the <b>Rounds before Range Book</b> you enter. Fill in <b>Barrel life</b> to see a bar of how much is used (it turns red at 80%, and Home warns you). Set <b>Clean every</b> and tap <b>Cleaned today</b> after cleaning to see the rounds since then; Home tells you when it's due. When you fit a new barrel, set <b>Barrel fitted on</b> to that date and <b>Rounds before Range Book</b> to 0.</p>
       <h3>Optics</h3>
-      <p><a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Optics</a> keeps your scopes. Each scope and suppressor has a <b>Picture</b> at the top of its Details: tap <b>+ Add picture</b> (or <b>Replace picture</b>, or <b>Remove</b>), and it shows on the list. A scope's picture is separate from the picture of its reticle. Tap <b>+ Add scope</b> and search the list of about 120 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Most of the list also has the reticle's mark spacing (how far apart the main marks and the smallest marks are, like <b>marks every 1 MIL, 0.2 between</b>), and on a second focal plane scope the power the marks are true at; picking one of those sets Range Book's plain reticle to match, so you don't have to with <b>Change how it looks</b>. Drop-chart (BDC) and plain duplex reticles don't have evenly spaced marks, so they keep the standard look. When a model comes with more than one reticle, the spacing is for the first one listed. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting profile that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
+      <p><a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Optics</a> keeps your scopes. Each scope and suppressor has a <b>Picture</b> at the top of its Details: tap <b>+ Add picture</b> (or <b>Replace picture</b>, or <b>Remove</b>), and it shows on the list. A scope's picture is separate from the picture of its reticle. Tap <b>+ Add scope</b> and search the list of about 130 popular scopes (type a maker, a model, or MIL or MOA) to fill in the power, focal plane, units, click value and reticle name from the maker's published specs, or tap <b>+ Enter a scope yourself</b>. Most of the list also has the reticle's mark spacing (how far apart the main marks and the smallest marks are, like <b>marks every 1 MIL, 0.2 between</b>), and on a second focal plane scope the power the marks are true at; picking one of those sets Range Book's plain reticle to match, so you don't have to with <b>Change how it looks</b>. For many it also sets the general layout: holdover dots as a grid or a tree (or none), and an open center or a center dot. It's still Range Book's own plain reticle, not the maker's drawing. Drop-chart (BDC) and plain duplex reticles don't have evenly spaced marks, so they keep the standard look. Scopes with a bullet drop reticle say so on the list and on the optic's page: its marks won't line up with the even marks Range Book draws, so use the maker's chart to see which mark matches a hold, or upload a picture of your reticle. When a model comes with more than one reticle, the spacing is for the first one listed. Check the click value against your turrets (a few makers don't publish it, so it shows as <b>Not published</b> until you pick yours). If your turrets aren't in the same units as the reticle (a MIL reticle with MOA turrets, say), set <b>Turrets</b>: the dope card then dials in the turret's units and the reticle holds stay in the reticle's. Put it on a gun with <b>On gun</b> on the scope's page, or with <b>Scope</b> on the gun's page (a gun has one scope). Every Shooting profile that uses that gun then takes its MOA or MIL from the scope, so the dope card's <b>Scope clicks in</b> switch follows it, and the scope's name goes on the card.</p>
       <h3>Red dots and holographic sights</h3>
       <p>Red dots, holographic and prism sights go in <a class=goto href=#go data-go=rifles:scopes>Gear &amp; Ranges › Optics</a> with your scopes. Tap <b>+ Add optic</b> and search: the list has about 75 popular red dot, holographic and prism sights as well as the scopes (type <b>red dot</b> to see only the sights), with their dot size, ring, click value and mount. Not listed? Tap <b>+ Red dot</b>, <b>+ Holographic</b> or <b>+ Prism</b> (or change <b>Kind</b> at the top of an optic's page). The Optics list is split into Scopes, Red dots and holographic sights, and Prism sights, and any optic can have a <b>Nickname</b>: when it's filled in, it's the name you see everywhere. A red dot or holographic sight has its maker, model, serial number, <b>Dot</b> size in MOA, the <b>Ring</b> around it if it has one (like a 65 MOA ring or a 68 MOA EOTech ring), a <b>Magnifier</b> if you run one behind it, and its click value (only used for zeroing). Put it on a gun with <b>On gun</b>, and set the gun's <b>Sight height</b>: the distance from the center of the bore to the center of the dot.</p>
       <p>A red dot has no turrets to dial, so on a gun with one the dope card changes: <b>Hold</b> says how far above (↑) or below (↓) the target to put the dot, in inches (cm in metric), and <b>Hold (dots)</b> says the same in dot widths, to the nearest quarter (with a 2 MOA dot, 1½ dots is 3 MOA). <b>Center</b> means hold right on it. Wind is in inches too. The MOA / MIL switch and the dial choice go away. Tap a distance and the picture beside the card shows the dot over the target, to scale, with a sentence like "Put the dot 7.9 in above the target". Field mode and printing use the same columns, and Live target's <b>Show my reticle</b> draws the dot. A prism sight works like a fixed-power scope, with its reticle in MOA or MIL.</p>
@@ -1741,7 +1751,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>A target behind the reticle</h3>
       <p>Under the reticle on the dope card, <b>Target behind it</b> puts a target in the scope view: a 4, 6, 8, 10 or 12 inch circle, a 2/3 IPSC silhouette, or a pronghorn, coyote, deer, elk or prairie dog. It's drawn life size for the distance you picked on the card (and for the power you picked, on a second focal plane scope), so you see how big it really looks. The animals are life-size silhouettes facing left, with their vital zone (heart and lungs, just behind the front leg) marked with a dashed ring. The <b>Gray</b> and <b>Color</b> buttons next to the menu switch the animals between plain gray and their natural colors; Range Book remembers which you like. In <b>Hold it</b> mode the target sits on the mark you hold; with <b>Dial it, hold wind</b> it sits on the crosshair, moved over for the wind. Your own reticle picture works too: Range Book makes its light background see-through so the target shows behind the lines.</p>
       <h3>Your own reticle picture</h3>
-      <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The best picture is the maker's drawing of the reticle on a white background; a photo through the scope works too if you point it at something bright and even (a white wall or an overcast sky) at full power with the reticle sharp. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
+      <p>For your exact reticle, use a picture of it. On the scope's page, under <b>Reticle</b>, pick <b>A picture of my reticle</b> and tap <b>+ Upload a picture</b>: a straight-on picture of just the reticle, like the drawing in the scope's manual or on the maker's website (a screenshot is fine). Then set its scale: tap the exact center of the crosshair, tap a mark on the line a known distance away (the farther the better, like the 5 MIL mark), and enter that distance. If the scope came from the Library, the window tells you how far apart its marks are, which mark to tap and fills in its distance, so you don't have to look it up. <b>+</b> zooms in so you can place them exactly, and <b>Center</b> or <b>Mark</b> lets you move one. Tap <b>Save</b>, and the dope card puts the dot on your own reticle. The best picture is the maker's drawing of the reticle on a white background; a photo through the scope works too if you point it at something bright and even (a white wall or an overcast sky) at full power with the reticle sharp. The picture is private to you and is in your backups. <b>Set the scale</b> redoes it, and <b>Remove picture</b> goes back to the plain reticle.</p>
       <h3>Ammunition</h3>
       <p><a class=goto href=#go data-go=rifles:ammo>Gear &amp; Ranges › Ammo</a> keeps the ammo you shoot, in two lists: <b>Reloaded ammo</b> and <b>Factory ammo</b>. Each one counts the rounds you have on hand (loaded or bought, minus what your range trips fire) and can warn you when you're running low.</p>
       <p><b>Subsonic ammo:</b> the button next to <b>Cartridge</b> says <b>Supersonic</b>; tap it and it changes to <b>Subsonic</b> (tap again to switch back). Do the same on a reloading recipe, next to its <b>Cartridge</b>. Subsonic recipes and ammo get a <b>Subsonic</b> tag in the Reloading and Ammo lists, and so does any Shooting profile that uses that ammo. Reloaded ammo made from a recipe follows the recipe's setting.</p>
@@ -2903,13 +2913,13 @@ window.RB_BTCHRONO=(function(){
   window.RB_FILTER=function(scope,key,min){
     if(!scope)return;const items=[...scope.querySelectorAll("button.loaditem")];
     if(items.length<(min||8)&&!FQ[key])return;
-    const inp=document.createElement("input");inp.type="search";inp.className="lfilter";inp.placeholder="Search";inp.setAttribute("aria-label","Search this list");inp.value=FQ[key]||"";
+    const inp=document.createElement("input");inp.type="search";inp.className="lfilter";inp.placeholder=scope.dataset.findph||"Search";inp.setAttribute("aria-label","Search this list");inp.value=FQ[key]||"";
     const none=document.createElement("p");none.className="note";none.textContent="Nothing matches.";none.hidden=true;
     const anchor=scope.querySelector(":scope>.row")||scope.querySelector(".row");
     if(anchor)anchor.after(inp);else scope.prepend(inp);
     const first=items[0]&&items[0].closest(".cartgroup")||items[0];if(first)first.before(none);
     const run=()=>{const q=inp.value.trim().toLowerCase().split(/\s+/).filter(Boolean);FQ[key]=inp.value;let shown=0;
-      items.forEach(it=>{const g=it.closest(".cartgroup"),gn=g&&g.querySelector(".cartname");const txt=(it.textContent+" "+(gn?gn.textContent:"")).toLowerCase();const ok=q.every(w=>txt.includes(w));it.hidden=!ok;if(it.parentElement.classList.contains("gtile"))it.parentElement.hidden=!ok;if(ok)shown++;});
+      items.forEach(it=>{const g=it.closest(".cartgroup"),gn=g&&g.querySelector(".cartname");const txt=(it.textContent+" "+(it.dataset.find||"")+" "+(gn?gn.textContent:"")).toLowerCase(),bare=txt.replace(/[^a-z0-9]/g,"");const ok=q.every(w=>{const b=w.replace(/[^a-z0-9]/g,"");return txt.includes(w)||(b.length>2&&bare.includes(b));});it.hidden=!ok;if(it.parentElement.classList.contains("gtile"))it.parentElement.hidden=!ok;if(ok)shown++;});
       scope.querySelectorAll(".cartgroup").forEach(g=>{const its=[...g.querySelectorAll("button.loaditem")];if(its.length)g.hidden=its.every(i=>i.hidden);});
       none.hidden=!!shown;};
     inp.addEventListener("input",run);if(inp.value)run();
@@ -3039,13 +3049,13 @@ window.RB_BTCHRONO=(function(){
   /* set the scale of a reticle picture: tap the center, then a mark a known distance from it */
   function calibrate(o){
     const unit=o.unit==="mil"?"mil":"moa",UN=unit==="mil"?"MIL":"MOA";const c0=o.cal||{};
-    let cx=c0.cx!=null?c0.cx:null,cy=c0.cy!=null?c0.cy:null,mx=c0.mx!=null?c0.mx:null,my=c0.my!=null?c0.my:null,val=c0.val||(unit==="mil"?5:10),mode=cx==null?"c":"m",zoom=1;
+    let cx=c0.cx!=null?c0.cx:null,cy=c0.cy!=null?c0.cy:null,mx=c0.mx!=null?c0.mx:null,my=c0.my!=null?c0.my:null,val=c0.val||o.val||(unit==="mil"?5:10),mode=cx==null?"c":"m",zoom=1;
     const W=win("calwin",'<div class="infohead"><h2>Set the scale</h2><button class="infox" type="button" data-wclose aria-label="Close">✕</button></div>'+
-      '<p class="calstep" id="calStep"></p>'+
+      (o.hint?'<p class="note calhint">'+o.hint+'</p>':'')+'<p class="calstep" id="calStep"></p>'+
       '<div class="row calmodes" role="group" aria-label="What a tap places"><button class="btn small" type="button" data-cm="c">Center</button><button class="btn small" type="button" data-cm="m">Mark</button><span class="grow"></span><button class="btn small" type="button" id="calOut" aria-label="Zoom out">−</button><button class="btn small" type="button" id="calIn" aria-label="Zoom in">+</button></div>'+
       '<div class="calbox" id="calBox"><div class="calinner" id="calInner"><img id="calImg" alt="Your reticle picture" src="'+escR(o.url)+'" draggable="false"><svg id="calSvg" viewBox="0 0 '+o.w+' '+o.h+'" preserveAspectRatio="none"></svg></div></div>'+
       '<div class="row calval"><label for="calV">That mark is</label><input id="calV" type="number" inputmode="decimal" step="any" min="0.1" value="'+val+'"><span>'+UN+' from the center</span></div>'+
-      '<p class="note">Use a mark far from the center for the best accuracy, like the 5 '+(unit==="mil"?"MIL":"MOA")+' mark on the line to the right. Zoom in with + to place it exactly. If your picture\'s marks are only true at one power (second focal plane), use a picture of the reticle as the maker draws it.</p>'+
+      '<p class="note">Use a mark far from the center for the best accuracy'+(o.hint?'':', like the 5 '+(unit==="mil"?"MIL":"MOA")+' mark on the line to the right')+'. Zoom in with + to place it exactly. If your picture\'s marks are only true at one power (second focal plane), use a picture of the reticle as the maker draws it.</p>'+
       '<div class="row lookbtns"><span class="grow"></span><button class="btn" type="button" data-wclose>Cancel</button><button class="btn primary" type="button" id="calSave">Save</button></div>');
     const E=id=>W.el.querySelector("#"+id),img=E("calImg"),sv=E("calSvg");
     const draw=()=>{
@@ -3560,7 +3570,8 @@ function spinNote(L0,L,SG){
 function render(){
   syncAutoNames();
   const L0=cur(), err=$("err");
-  {const fb=$("trajFit"),f=fitCheck(L0,true);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.err.concat(f.caution.map(t=>'<b>Check first:</b> '+t)).join("<br>")+(f.err.length?' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</span>':'');}}
+  {const fb=$("trajFit"),f=fitCheck(L0,true);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.err.concat(f.caution.map(t=>'<b>Check first:</b> '+t)).join("<br>")+(f.err.length?' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</span> <button class="linkbtn" type="button" id="trajFitGun">Pick another gun</button>':'');
+    const fg=$("trajFitGun");if(fg)fg.onclick=()=>{setInOpen(true);const b=$("f_rifleBtn");b.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>{if($("rifPick").hidden)openRifPick();},350);};}}
   const L=Object.assign({},L0,{mv:effMV(L0)}); // what the bullet actually does today
   const bad=[];
   if(!(L.mv>0))bad.push("muzzle velocity");
@@ -4306,7 +4317,7 @@ function zoomAbout(fx,fy,px,py){ // fx,fy <1 zooms in; px,py plot-pixel anchor
 function newLoad(){
   sweepNewProf();const L=freshScratch();L.id="u"+Date.now().toString(36);L.builtin=false;L.nameAuto=true;L.name="New profile";L.temp=59;L.alt=0;
   state.loads.push(L);NEWPROF=L.id;state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
-  try{$("f_rifle").focus({preventScroll:true});}catch(e){}
+  try{$("f_rifleBtn").focus({preventScroll:true});}catch(e){}
 }
 RB_CARTS.picker($("f_cart"),{extra:()=>[...new Set(state.loads.map(l=>l.cart).filter(Boolean))],onPick:c=>{const L=cur();if(c&&!(num(L.cal)>0)){L.cal=c.d;L.calUnit="in";$("f_cal_u").value="in";$("f_cal").value=DIA.show(c.d,"in");save();}render();}});
 $("twistCheck").addEventListener("click",()=>{readInputs();if(window.RB_TOOLS)RB_TOOLS.open("twist",{traj:cur().id});});
@@ -4364,6 +4375,8 @@ function fillRifle(){
   let h='<option value="">No gun</option>'+RB_GUNOPTS(RIFLES,null,escT);
   if(L.rifleId&&!r)h+='<option value="'+escT(L.rifleId)+'">'+escT(L.rifleName||"Gun")+' (not in your Guns list)</option>';
   sel.innerHTML=h;sel.value=L.rifleId||"";
+  $("f_rifleLbl").innerHTML=r?escT(r.name||"Unnamed gun"):L.rifleId?escT(L.rifleName||"Gun")+' <span class="none">(not in your Guns list)</span>':'<span class="none">'+(RIFLES.length?'No gun. Tap to pick one':'No guns yet')+'</span>';
+  if(!$("rifPick").hidden)drawRifPick();
   const note=$("f_rifleNote");let t="";
   // with a gun picked, its sight height and twist are used (and edited on Gear & Ranges), so their boxes below are hidden
   const rs=r?num(r.sightHeight):null,tw=r?num(r.twist):null;
@@ -4398,6 +4411,36 @@ $("f_rifle").addEventListener("change",()=>{
     if(!L.cart&&r.cartridge){L.cart=window.RB_CARTS?RB_CARTS.canon(r.cartridge):r.cartridge;$("f_cart").value=L.cart;}}
   save();fillRifle();scopeCols(L);render();
 });
+/* ---- gun picker (2.42.33): looks like the ammunition picker; guns chambered for this profile's cartridge come first ---- */
+function drawRifPick(){
+  const box=$("rifPickList");if(!box)return;const L=cur(),words=pkNorm($("f_rifleQ").value).split(" ").filter(Boolean);
+  const hit=r=>{const n=pkNorm([r.name,r.mfr,r.model,r.nick,r.cartridge,r.varLabel].join(" "));return words.every(w=>n.includes(w));};
+  const mc=loadCart(L),C=mc&&window.RB_CARTS?RB_CARTS.find(mc):null,cartName=C?C.n:mc;
+  const fit=r=>{if(!mc||!window.RB_CARTS)return "";if(!r.cartridge)return "none";const f=RB_CARTS.fits(r.cartridge,mc);return !f.ok?"no":f.caution?"check":"yes";};
+  const desc=(r,fk)=>[r.cartridge||"No cartridge set",num(r.barrel)?BBL(num(r.barrel))+" barrel":"",num(r.twist)>0?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":""].filter(Boolean).join(" · ")+(fk==="check"?" · check first":"");
+  const row=(v,tx,d,warn)=>'<button type="button" class="apick'+((L.rifleId||"")===v?' on':'')+'" role="option" data-gv="'+escT(v)+'">'+escT(tx)+(d?'<small'+(warn?' class="fitwarn"':'')+'>'+escT(d)+'</small>':'')+'</button>';
+  const by=(a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{numeric:true});
+  const list=RIFLES.filter(hit).sort(by);
+  let h=words.length?'':row("","No gun","Type the sight height and twist yourself");
+  if(mc){const yes=list.filter(r=>["yes","check"].includes(fit(r))),no=list.filter(r=>fit(r)==="no"),none=list.filter(r=>fit(r)==="none");
+    if(yes.length)h+='<div class="pickhead">Chambered for '+escT(cartName)+'</div>'+yes.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,fit(r)))).join("");
+    if(none.length)h+='<div class="pickhead">Cartridge not set</div>'+none.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,"none"))).join("");
+    if(no.length)h+='<div class="pickhead">Other guns (not for '+escT(cartName)+')</div>'+no.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,"no"),true)).join("");
+    h='<p class="pickmore pickcart">Guns chambered for <b>'+escT(cartName)+'</b> (this profile\'s cartridge) are at the top.</p>'+h;}
+  else{if(list.length)h+='<div class="pickhead">Your guns</div>'+list.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,""))).join("");
+    if(RIFLES.length&&!words.length)h+='<p class="pickmore">Fill in the Cartridge to put the guns that fit it at the top.</p>';}
+  if(!RIFLES.length)h+='<p class="pickmore">No guns yet. Add them on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</p>';
+  else if(words.length&&!list.length)h+='<p class="pickmore">No gun matches. Try fewer words.</p>';
+  box.innerHTML=h;
+  box.querySelectorAll("[data-gv]").forEach(b=>b.addEventListener("click",()=>{const s=$("f_rifle");if(s.value!==b.dataset.gv){s.value=b.dataset.gv;s.dispatchEvent(new Event("change"));}closeRifPick(true);}));
+}
+function openRifPick(){$("rifPick").hidden=false;$("f_rifleBtn").setAttribute("aria-expanded","true");$("f_rifleQ").value="";drawRifPick();$("f_rifleQ").focus();}
+function closeRifPick(focusBtn){if($("rifPick").hidden)return;$("rifPick").hidden=true;$("f_rifleBtn").setAttribute("aria-expanded","false");if(focusBtn)$("f_rifleBtn").focus();}
+$("f_rifleBtn").addEventListener("click",()=>{$("rifPick").hidden?openRifPick():closeRifPick();});
+$("f_rifleQ").addEventListener("input",drawRifPick);
+$("f_rifleQ").addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();closeRifPick(true);}
+  if(e.key==="Enter"){e.preventDefault();const f=$("rifPickList").querySelector("[data-gv]");if(f)f.click();}});
+document.addEventListener("click",e=>{const p=$("rifPick");if(p&&!p.hidden&&!p.contains(e.target)&&!$("f_rifleBtn").contains(e.target))closeRifPick();});
 // the range table's Adjust column in the scope's units (MOA or MIL turrets); you can still tick the other one
 function scopeCols(L){const o=dopeOpts(L);if(!o.scope)return;const want=o.unit==="mil"?"mil":"moa",other=want==="mil"?"moa":"mil";
   if(TBLCOLS[want]&&!TBLCOLS[other])return;TBLCOLS[want]=true;TBLCOLS[other]=false;
@@ -5427,7 +5470,7 @@ function renderRifles(){
       list.sort((x,y)=>(gk==="__fav"?gunFavN(x.sibs)-gunFavN(y.sibs):0)||x.n.localeCompare(y.n,undefined,{numeric:true})).forEach(({r,sibs,n:gname})=>{
         if(r.build&&r.build.lowerId){const lo=partById(r.build.lowerId),lr=lo?partRounds(lo):null,nl=sibs.reduce((a,x)=>a+usedBy(x.id).length,0),gp=sibs.map(x=>gunPhotosOf(x.id)[0]).find(Boolean);
           const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-          h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
+          h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([lo&&lo.serial,...sibs.map(x=>x.serial)].filter(Boolean).map(s=>"serial "+s).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
             '<span class="d">'+esc([r.nick&&gunMakeModel(r)?gunMakeModel(r):"",sibs.length+(sibs.length===1?' upper':' uppers'),lo&&lo.serial?'Serial '+lo.serial:''].filter(Boolean).join(' · '))+'</span>'+
             '<span class="varchips">'+sibs.map(x=>'<span class="varchip" data-rvar="'+esc(x.id)+'">'+esc(x.varLabel||"No upper yet")+'</span>').join("")+'</span>'+
             (lr&&lr.total?'<span class="best"><b>'+lr.total.toLocaleString()+'</b> rounds on the lower'+(lr.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'')+
@@ -5437,7 +5480,7 @@ function renderRifles(){
         const rt=rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
         const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-        h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
+        h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([r.serial?"serial "+r.serial:"",lo0&&lo0.serial?"serial "+lo0.serial:""].filter(Boolean).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
           '<span class="m">'+(n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,r.name||"this gun")+'</div>';
       });
       h+='</div>';});
@@ -5641,18 +5684,20 @@ const turretU=x=>x.turret==="mil"||x.turret==="moa"?x.turret:(x.unit==="mil"?"mi
 /* reticle mark spacing from the library (2.42.15): markMain = the main (longer or numbered) marks, markSub = the smallest
    regular marks on the horizontal line, both in the reticle's unit. marksLook turns them into the plain reticle's look. */
 const fmtMk=v=>String(+(+v).toFixed(2));
-const marksTxt=x=>{const M=num(x.markMain),m=num(x.markSub),u=x.unit==="mil"?"MIL":"MOA";if(!(M>0)&&!(m>0))return "";
+const marksTxt=x=>{const M=num(x.markMain),m=num(x.markSub),u=x.unit==="mil"?"MIL":"MOA",lay=[{grid:"grid",tree:"tree",none:""}[x.tree]||"",{open:"open center",dot:"center dot"}[x.center]||""].filter(Boolean).join(", ");
+  if(!(M>0)&&!(m>0))return [x.bdc?"bullet drop reticle, no even marks":"",lay].filter(Boolean).join(" · ");if(lay)return marksTxt(Object.assign({},x,{tree:null,center:null}))+" · "+lay;
   if(M>0&&m>0&&m<M)return "marks every "+fmtMk(M)+" "+u+", "+fmtMk(m)+" between";return "marks every "+fmtMk(M>0?M:m)+" "+u;};
 function marksLook(x){
-  // only when the smallest marks are known: they're what you measure with
-  const mil=x.unit==="mil",m=num(x.markSub);let M=num(x.markMain);if(!(m>0))return null;
+  // the layout (holdover dots and center) comes along even without the spacing; the marks only when the smallest are known
+  const lay={};if(["grid","tree","none"].includes(x.tree))lay.tree=x.tree;if(["cross","open","dot"].includes(x.center))lay.center=x.center;
+  const mil=x.unit==="mil",m=num(x.markSub);let M=num(x.markMain);if(!(m>0))return Object.keys(lay).length?lay:null;
   const MAINS=mil?[1,0.5]:[1,2,5,10],near=(L,v)=>L.reduce((a,b)=>Math.abs(b-v)<Math.abs(a-v)?b:a);
   if(!(M>0))M=mil?1:(m>=2?m:2);
   // MOA reticles numbered every 10 still get a longer mark every 5 here, so the holdover dots aren't 10 MOA apart
   const main=mil?near(MAINS,M):near(MAINS,Math.min(M,5)),n=m>0?Math.round(main/m)-1:0;
   // numbers every 10 MOA (every 5 on a 1 MOA reticle; every 2 main marks in MIL) so they stay readable whatever the spacing
   const numEvery=mil?2:(main>=10?1:main===5?2:5);
-  return {main,sub:near([0,1,3,4,9],Math.max(0,n)),num:numEvery};
+  return Object.assign({main,sub:near([0,1,3,4,9],Math.max(0,n)),num:numEvery},lay);
 }
 const unitTxt=x=>{const t=turretU(x),U2=t==="mil"?"MIL":"MOA";return (t!==(x.unit==="mil"?"mil":"moa")?(x.unit==="mil"?"MIL":"MOA")+" reticle, "+U2+" turrets":U2)+(num(x.click)>0?", "+num(x.click)+" "+U2+" clicks":", click value not published");};
 const KIND_OPT={scope:"scope",dot:"red dot",holo:"holographic sight",prism:"prism sight"};
@@ -5685,8 +5730,27 @@ async function uploadRetPic(sc,file){
   catch(e){if(e&&(e.status||e.network))onWriteError(e);else banner("That picture couldn't be read. Try a JPEG or PNG.",true);}
   retUp--;renderRifles();
 }
+/* Set the scale with help (2.42.19): the scope's mark spacing from the library says which mark to tap and how far it is */
+function scopeCatHit(sc){const k=v=>String(v||"").toLowerCase().replace(/[^a-z0-9]+/g,"");return (SCOPE_CAT||[]).find(x=>k(x.mfr)===k(sc.mfr)&&k(x.model)===k(sc.model)&&x.unit===sc.unit)||null;}
+/* bullet drop reticles (2.42.24): marks are set for distances with one load, not evenly spaced */
+function scopeBdc(sc){if(sc.bdc)return true;if(num(sc.markSub)>0||num(sc.markMain)>0)return false;const h=scopeCatHit(sc);return !!(h&&h.bdc);}
+window.scopeBdc=scopeBdc;
+function scopeMarks(sc){if(num(sc.markSub)>0||num(sc.markMain)>0)return {M:num(sc.markMain),m:num(sc.markSub),ret:String(sc.reticle||"").split(";")[0].trim()};
+  const k=v=>String(v||"").toLowerCase().replace(/[^a-z0-9]+/g,""),hit=(SCOPE_CAT||[]).find(x=>k(x.mfr)===k(sc.mfr)&&k(x.model)===k(sc.model)&&x.unit===sc.unit);
+  return hit&&(num(hit.markSub)>0||num(hit.markMain)>0)?{M:num(hit.markMain),m:num(hit.markSub),ret:String(hit.reticle||"").split(";")[0].trim()}:null;}
+function calHint(sc){const mk=scopeMarks(sc),MIL=sc.unit==="mil",UN=MIL?"MIL":"MOA";
+  const sfp=sc.fp==="SFP"?' Second focal plane: use the maker\'s drawing, or a photo taken at <b>'+(num(sc.sfpTrue)||num(sc.magMax)||"the power the marks are true at")+(num(sc.sfpTrue)||num(sc.magMax)?'x':'')+'</b>, where the marks are true.':'';
+  if(!mk&&scopeBdc(sc))return {hint:'This is a bullet drop reticle: its marks are set for certain distances with a certain load, so they aren\'t evenly spaced. Measure from the maker\'s drawing: pick two marks whose distance apart the manual gives in '+UN+' and enter that.'+sfp};
+  if(!mk)return {hint:'Range Book doesn\'t have this reticle\'s mark spacing. Check the manual or the maker\'s reticle drawing for how far apart the marks are.'+sfp};
+  const M=mk.M>0?mk.M:(MIL?1:null),m=mk.m>0?mk.m:null,f=v=>String(+(+v).toFixed(2));
+  // a mark far out: 5 MIL, or 10 or 20 MOA, on a main mark
+  const far=MIL?(M&&M<=1?5:M*5):(M?(M>=5?20:10):10),cnt=M?Math.round(far/M):null;
+  const sp=M&&m&&m<M?'main marks every <b>'+f(M)+' '+UN+'</b> with smaller marks every <b>'+f(m)+'</b>':'marks every <b>'+f(m||M)+' '+UN+'</b>';
+  return {val:far,hint:'From the Library'+(mk.ret?', the '+esc(mk.ret):'')+' has '+sp+'. Tap the center, then the mark <b>'+f(far)+' '+UN+'</b> out to the right'+(cnt&&M&&m&&m<M?' (the '+cnt+(cnt===1?'st':cnt===2?'nd':cnt===3?'rd':'th')+' main mark)':'')+', and leave '+f(far)+' below. If your reticle is a different one, check its manual.'+sfp};}
 function calScope(sc){const ph=RB_RETPIC(sc.id);if(!ph)return;
-  const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{const now=scopes.find(y=>y.id===sc.id);if(now){now.pic=cal;now.retMode="pic";}else{sc.pic=cal;sc.retMode="pic";scopes.push(sc);}scopesChanged();renderRifles();}});
+  if(!SCOPE_CAT&&sc.mfr){loadScopeCat().catch(()=>{}).then(()=>calScope(sc));return;}
+  const ch=calHint(sc);
+  const go=(w,h)=>RB_RET.calibrate({url:ph.url,w,h,unit:sc.unit,hint:ch.hint,val:ch.val,cal:sc.pic&&sc.pic.w===w?sc.pic:null,onSave:cal=>{const now=scopes.find(y=>y.id===sc.id);if(now){now.pic=cal;now.retMode="pic";}else{sc.pic=cal;sc.retMode="pic";scopes.push(sc);}scopesChanged();renderRifles();}});
   if(ph.w&&ph.h)go(ph.w,ph.h);else{const im=new Image();im.onload=()=>go(im.naturalWidth,im.naturalHeight);im.src=ph.url;}}
 /* ---------- Document vault (2.20) ----------
    Tax stamps, receipts and other papers, locked in the browser before they're uploaded. A random 256-bit vault key encrypts
@@ -5990,6 +6054,7 @@ function renderCans(root){
     root.innerHTML=h;gearHead(null);
     $("canAdd").addEventListener("click",()=>{canAdding=true;canAddQ="";canForGun=null;renderRifles();window.scrollTo(0,0);});
     root.querySelectorAll("[data-canopen]").forEach(b=>b.addEventListener("click",()=>{canOpen=b.dataset.canopen;canFromGun=null;renderRifles();window.scrollTo(0,0);}));
+    if(window.RB_FILTER)RB_FILTER(root.querySelector('[aria-label="Suppressors list"]'),"cans");
     return;
   }
   const g0=canGuns(c)[0],rc=canRounds(c),tr=trips.filter(t=>t.canId===c.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
@@ -6352,7 +6417,7 @@ function renderScopes(root){
     if(!scopes.length)h+='<p class="note">No optics yet. Add the scope or sight on each gun. A scope\'s units and click value then set the dope card for every profile that uses that gun, and the reticle on the card can look like yours. A red dot or holographic sight gives holds in inches and dot widths instead.</p>';
     else{const item=x=>{const gs=onGun(x);
       const sp=picOf(x.id);
-      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
+      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'" data-find="'+esc(x.serial?"serial "+x.serial:"")+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
       const grp=x=>isDotSight(x)?"dot":x.kind==="prism"?"prism":"scope",by=(a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true});
       [["scope","Scopes"],["dot","Red dots and holographic sights"],["prism","Prism sights"]].forEach(([gk,gl])=>{const L=scopes.filter(x=>grp(x)===gk).sort(by);if(!L.length)return;
         h+='<div class="cartgroup"><div class="cartname">'+gl+' <span class="note">'+L.length+'</span></div>'+L.map(item).join("")+'</div>';});}
@@ -6395,7 +6460,7 @@ function renderScopes(root){
       '<section class="card" aria-label="Reticle"><h2>Reticle</h2>'+
       '<div class="row" role="radiogroup" aria-label="Which reticle"><label class="toggle"><input type="radio" name="sc_ret" value="plain"'+(!usePic?' checked':'')+'> Plain reticle</label><label class="toggle"><input type="radio" name="sc_ret" value="pic"'+(usePic?' checked':'')+'> A picture of my reticle</label></div>'+
       '<div class="retwrap scret"><div id="scPrev"></div><div>'+
-      (!usePic?'<p class="note">A plain '+(MIL?'MIL':'MOA')+' reticle. Make it look like yours (where the marks are, holdover dots, numbers, the center) so it\'s easy to count.</p><div class="row"><button class="btn" type="button" id="scLook">Change how it looks</button></div>'
+      (!usePic?'<p class="note">A plain '+(MIL?'MIL':'MOA')+' reticle. Make it look like yours (where the marks are, holdover dots, numbers, the center) so it\'s easy to count.</p>'+(window.scopeBdc&&window.scopeBdc(sc)?'<p class="note">'+(sc.reticle?esc(String(sc.reticle).split(";")[0].trim())+' is':'Your reticle is')+' a bullet drop reticle. Its marks are set for certain distances with a certain load, so they aren\'t evenly spaced and won\'t line up with the even '+(MIL?'MIL':'MOA')+' marks here. Your dope card holds are in '+(MIL?'MIL':'MOA')+'; use the maker\'s chart to see which of your marks matches a hold, or upload a picture of your reticle.</p>':'')+'<div class="row"><button class="btn" type="button" id="scLook">Change how it looks</button></div>'
         :(window.GUEST?'<p class="note">Reticle pictures need an account.</p>':
           (ph?(sc.pic&&sc.pic.ppu>0?'<p class="note">Your picture, with the scale set: '+esc(String(sc.pic.val))+' '+(MIL?'MIL':'MOA')+' from the center. The dope card puts the dot on it.</p>':'<p class="err">Set the scale so Range Book knows how big the marks are. Until then the dope card uses the plain reticle.</p>'):
             '<p class="note">Upload a picture of just your reticle, straight on. Best is the maker\'s drawing of it, from their website or the manual, on a white background (a screenshot is fine). A photo through the scope works too: point it at something bright and even, like a white wall or an overcast sky, turn it to full power with the reticle sharp, and hold the phone straight behind the eyepiece. It stays private to you.</p>')+
@@ -6420,6 +6485,7 @@ function renderScopes(root){
   if(!sc){
     $("scopeAdd").addEventListener("click",()=>{scopeAdding=true;scopeQ="";renderRifles();window.scrollTo(0,0);const q=$("scopeQ");if(q)q.focus();});
     root.querySelectorAll("[data-sopen]").forEach(b=>b.addEventListener("click",()=>{scopeOpen=b.dataset.sopen;scopeFromGun=null;renderRifles();window.scrollTo(0,0);}));
+    if(window.RB_FILTER)RB_FILTER(root.querySelector('[aria-label="Optics list"]'),"scopes");
     return;
   }
   if(window.foldAll)foldAll(root,"scope");
@@ -6583,7 +6649,8 @@ const LIB_DEF={
     words:s=>(s.unit==="mil"?"mil mrad":"moa"),
     fields:[["mfr","Maker","text"],["model","Model","text"],["mag0","Power from (x)","num"],["mag1","Power to (x)","num"],["obj","Objective (mm)","num"],
       ["fp","Focal plane","sel",[["FFP","First (FFP)"],["SFP","Second (SFP)"]]],["sfpTrue","Marks true at power (x)","num"],["unit","Reticle","sel",[["mil","MIL (MRAD)"],["moa","MOA"]]],
-      ["turret","Turrets","sel",[["","Same as the reticle"],["mil","MIL (MRAD)"],["moa","MOA"]]],["click","One click is","num"],["reticle","Reticle name","text"],["markMain","Main reticle marks every","num"],["markSub","Smallest marks every","num"]]},
+      ["turret","Turrets","sel",[["","Same as the reticle"],["mil","MIL (MRAD)"],["moa","MOA"]]],["click","One click is","num"],["reticle","Reticle name","text"],["markMain","Main reticle marks every","num"],["markSub","Smallest marks every","num"],["bdc","Bullet drop reticle","sel",[["","No"],["1","Yes, no even marks"]]],
+      ["tree","Holdover dots","sel",[["","Not set"],["grid","A full grid"],["tree","A tree that widens"],["none","None"]]],["center","Center","sel",[["","Not set"],["cross","Lines meet"],["open","Open center"],["dot","Open center with a dot"]]]]},
   dots:{title:"Red dots",one:"red dot",mine:"Gear & Ranges › Optics",list:()=>DOT_CAT,load:()=>loadDotCat(),
     key:s=>s.mfr+"|"+s.model,label:s=>s.model,group:s=>s.mfr,
     sub:s=>[s.kind==="holo"?"Holographic":s.kind==="prism"?"Prism, "+(num(s.power)||1)+"x":"Red dot",num(s.dot)>0?fmtMk(num(s.dot))+" MOA dot"+(Array.isArray(s.dots)&&s.dots.length?" (also "+s.dots.map(fmtMk).join(", ")+")":""):"",num(s.ring)>0?fmtMk(num(s.ring))+" MOA ring":"",num(s.click)>0?fmtMk(num(s.click))+" MOA clicks":"",s.mount||""].filter(Boolean).join(" · "),
@@ -6644,7 +6711,7 @@ function libAdd(kind,i){const x=(LIB_DEF[kind].list()||[])[i];if(!x)return;
     newScope(x.kind==="prism"?{kind:"prism",mfr:x.mfr,model:x.model,magMin:pw,magMax:pw,fp:"FFP",unit:"moa",click:num(x.click)>0?num(x.click):0.5,src:x.src,notes:x.mount?"Mount: "+x.mount:""}
       :{kind:x.kind==="holo"?"holo":"dot",mfr:x.mfr,model:x.model,dot:num(x.dot)>0?num(x.dot):2,ring:num(x.ring)>0?num(x.ring):null,unit:"moa",fp:null,click:num(x.click)>0?num(x.click):null,src:x.src,notes:x.mount?"Mount: "+x.mount:""});
     showTab("rifles");renderRifles();window.scrollTo(0,0);return;}
-  if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src,look:marksLook(x)});}
+  if(kind==="scopes"){newScope({mfr:x.mfr,model:x.model,magMin:(x.mag||[])[0],magMax:(x.mag||[])[1],obj:x.obj,fp:x.fp,sfpTrue:x.sfpTrue,unit:x.unit,turret:x.turret||null,click:x.click,reticle:x.reticle,src:x.src,look:marksLook(x),markMain:x.markMain||null,markSub:x.markSub||null,bdc:x.bdc?true:null});}
   if(kind==="cans"){const n=canFromCat(x);cans.push(n);if(canForGun&&rifles.some(g=>g.id===canForGun))mountCan(n.id,canForGun);canForGun=null;canAdding=false;canOpen=n.id;queueRifles();}
   showTab("rifles");renderRifles();window.scrollTo(0,0);}
 
@@ -6688,7 +6755,7 @@ function libItems(kind,skip){const D=LIB_DEF[kind],L=D.list();if(!L||!L.length)r
 window.RB_LIBPAGE=(function(){
   let list=null,q="",open=null,lim=150;
   const TITLE=k=>k==="cart"?"Cartridges":LIB_DEF[k].title;
-  function head(){const b=$("toolsBack"),t=$("toolsTitle");if(b)b.textContent=list?"‹ Library":"‹ Tools";if(t)t.textContent=list?TITLE(list):"Library";}
+  function head(){const b=$("toolsBack"),t=$("toolsTitle");if(b)b.textContent=list?"‹ Library":(window.RB_TOOLS&&RB_TOOLS.fromLabel&&RB_TOOLS.fromLabel())||"‹ Tools";if(t)t.textContent=list?TITLE(list):"Library";}
   function landing(){const n=RB_LIB.counts(),f=v=>v==null?"…":v.toLocaleString();
     if(n.bullets==null||n.scopes==null||n.cans==null)RB_LIB.load().then(()=>{if(!list&&visible())draw();});
     const row=(go,name,d,v,ed)=>'<button class="loaditem librow" type="button" data-libgo="'+go+'"><span class="ltext"><span class="t">'+name+(ed?' <span class="chip crchg">'+ed+' edited</span>':'')+'</span><span class="d">'+d+'</span></span>'+(v!==undefined?'<b class="libn">'+f(v)+'</b>':'')+'</button>';
@@ -10975,13 +11042,18 @@ function helpGo(topic){
 const GO_CARD={backup:"Back up and export",import:"Import",units:"Units",theme:"Theme",tabs:"Phone tab bar",feedback:"Feedback",vault:"Document vault",password:"Change password",adduser:"Add a user"};
 function flashEl(el){if(!el)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{el.scrollIntoView({block:"start",behavior:"smooth"});const f=el.querySelector("h2")||el;
   clearTimeout(f._hft);f.classList.remove("hflash");void f.offsetWidth;f.classList.add("hflash");f._hft=setTimeout(()=>f.classList.remove("hflash"),2200);}));}
+const GO_BACKNAME={home:"Home",traj:"Shooting",rel:"Reloading",ref:"Reference",brass:"Components",rnotes:"Notes",rifles:"Gear & Ranges",log:"Range log",account:"Account",admin:"Admin",help:"How to Use",sheetimp:"Import"};
 window.RB_GO=function(spec){
   closeInfo(true);closeMore();document.querySelectorAll(".arrwrap").forEach(e=>e.remove());
   const hi=spec.indexOf("#",1),main=hi>0?spec.slice(0,hi):spec,anchor=hi>0?spec.slice(hi+1):"";
   const ci=main.indexOf(":"),tab=ci>0?main.slice(0,ci):main,sub=ci>0?main.slice(ci+1).replace(/_/g," "):"";
   if(tab==="help"){helpGo(sub||"#hStart");return;}
   if(tab==="tour"){$("more-tour").click();return;}
-  if(tab==="tools"){if(window.RB_TOOLS)RB_TOOLS.open(sub||null);else showTab("tools");if(anchor)flashEl($(anchor));return;}
+  if(tab==="tools"){
+    /* 2.42.34: the Library opened from another page (Reloading › Reference, Home, a note's link) keeps a way back there */
+    let from=null;if(/^(lib|cart)/.test(sub)){const here=tabs.find(k=>{const p=$("panel-"+k);return p&&!p.hidden;});
+      if(here&&here!=="tools"&&GO_BACKNAME[here])from={tab:here,label:GO_BACKNAME[here],y:window.scrollY};}
+    if(window.RB_TOOLS)RB_TOOLS.open(sub||null,from?{from}:undefined);else showTab("tools");if(anchor)flashEl($(anchor));return;}
   showTab(tab);
   if(tab==="rifles"&&sub){const b=document.querySelector('#rifSeg [data-garea="'+sub+'"]');if(b)b.click();}
   if(tab==="brass"&&sub){const b=document.querySelector('#compTabs [data-ck="'+sub+'"]');if(b)b.click();}
@@ -11744,7 +11816,7 @@ window.RB_TOOLS=(function(){
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
   const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono","btchrono"];
   const TITLES={cmp:"Compare trajectories",chrono:"Chronograph import check",btchrono:"BLIPR Chronograph",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
-  let tool=null, pending=null, rel=null, ready=false;
+  let tool=null, pending=null, rel=null, ready=false, FROM=null;
   const TILE_DEFAULT=[...document.querySelectorAll("#toolTiles [data-tooltile]")].map(b=>b.dataset.tooltile);      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   // a box in the person's units <-> the imperial value behind it
@@ -11760,7 +11832,7 @@ window.RB_TOOLS=(function(){
     $("toolTiles").hidden=!!tool;$("toolsArr").hidden=!!tool;
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
-    $("toolsBack").textContent="‹ Tools";
+    $("toolsBack").textContent=tool&&FROM?"‹ "+FROM.label:"‹ Tools";
     if(tool==="lib"&&window.RB_LIBPAGE)RB_LIBPAGE.show(libSub);
     if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
     if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();if(tool==="btchrono"&&window.RB_BTCHRONO)RB_BTCHRONO.showTool();
@@ -11932,7 +12004,9 @@ window.RB_TOOLS=(function(){
     $("pw_j").addEventListener("change",powderCalc);$("pw_from").addEventListener("change",e=>powderFill(e.target.value));
     document.querySelectorAll("[data-tooltile]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tooltile;
       if(t==="targets"){if(window.APP_showTab)APP_showTab("targets");return;}view(t);window.scrollTo(0,0);}));
-    $("toolsBack").addEventListener("click",()=>{if(tool==="lib"&&window.RB_LIBPAGE&&RB_LIBPAGE.back())return;view(null);window.scrollTo(0,0);});
+    $("toolsBack").addEventListener("click",()=>{if(tool==="lib"&&window.RB_LIBPAGE&&RB_LIBPAGE.back())return;
+      if(FROM){const f=FROM;FROM=null;if(window.APP_showTab)APP_showTab(f.tab);requestAnimationFrame(()=>window.scrollTo(0,f.y||0));return;}
+      view(null);window.scrollTo(0,0);});
     // your own order for the tiles: press and hold (or drag with a mouse) to move one
     const tileOrder=()=>{RB_ORDER.apply("tools",$("toolTiles"),"[data-tooltile]","data-tooltile");$("toolsReorder").hidden=!RB_ORDER.get("tools");};
     tileOrder();RB_ORDER.on(tileOrder);
@@ -11954,9 +12028,10 @@ window.RB_TOOLS=(function(){
   }
   return {
     // showTab tells us Tools (or its Targets page) is on screen: the Tools tab opens to the tiles
-    shown(t,R){rel=R||rel;setup();if(t==="tools"){view(pending);pending=null;}},
+    shown(t,R){rel=R||rel;setup();if(t==="tools"){if(pending==null)FROM=null;view(pending);pending=null;}},
+    fromLabel(){return FROM?"‹ "+FROM.label:null;},
     // open a tool from elsewhere, e.g. Shooting's twist warning
-    open(t,o){pending=t;if(o&&o.hit)hitPick=o.hit;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
+    open(t,o){pending=t;FROM=(o&&o.from)||null;if(o&&o.hit)hitPick=o.hit;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
   };
 })();
 </script>
@@ -13005,5 +13080,104 @@ async function template(mine){
 function open(from){FROM=from||"account";if(S&&S.done)S=null;if(window.APP_showTab)APP_showTab("sheetimp");const b=$("sheetBack");if(b)b.textContent="‹ "+({rifles:"Gear & Ranges",brass:"Components",account:"Account"}[FROM]||"Back");draw();}
 document.addEventListener("DOMContentLoaded",()=>{});
 return {open,back:()=>{if(window.APP_showTab)APP_showTab(FROM);},_test:{readCell,guessMap,guessKind,parseCsv,parseDate,KINDS}};
+})();
+</script>
+<style>
+.rbsay[hidden]{display:none}
+.rbdrop{outline:3px dashed var(--accent)!important;outline-offset:3px;border-radius:12px}
+#rbDropTip,.rbsay{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:999px;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.3);pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.rbsay{border-radius:12px;width:max-content;max-width:min(440px,calc(100vw - 32px));font-weight:500;line-height:1.4}
+</style>
+<script>
+/* Paste or drop a picture (2.42.26): a file pasted (Ctrl/Cmd+V) or dropped on the page goes to the upload button showing on the screen,
+   as if it had been picked with that button. The button in the card under the mouse wins; an open window (dialog) wins over the page. */
+(()=>{
+const vis=el=>!!(el&&el.offsetParent!==null&&el.getClientRects().length);
+const face=i=>i.closest("label")||(i.id&&document.querySelector('label[for="'+CSS.escape(i.id)+'"]'))||i.parentElement;
+const okType=(i,f)=>{const a=(i.getAttribute("accept")||"").split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);if(!a.length)return true;
+  const n=(f.name||"").toLowerCase(),t=(f.type||"").toLowerCase();
+  return a.some(x=>x.startsWith(".")?n.endsWith(x):x.endsWith("/*")?t.startsWith(x.slice(0,-1)):t===x);};
+function targets(files){const dlg=[...document.querySelectorAll('[role="dialog"]')].filter(vis).pop();
+  return [...(dlg||document).querySelectorAll('input[type="file"]')].filter(i=>!i.disabled&&vis(face(i))&&files.every(f=>okType(i,f)));}
+let lastXY=null;const pt=e=>{lastXY=[e.clientX,e.clientY];};document.addEventListener("pointerdown",pt,true);document.addEventListener("pointermove",pt,{passive:true,capture:true});
+const under=()=>lastXY?document.elementFromPoint(lastXY[0],lastXY[1]):null;
+const inView=i=>{const r=face(i).getBoundingClientRect();return r.bottom>0&&r.top<innerHeight;};
+function pick(files,near){const ts=targets(files);if(!ts.length)return null;
+  for(let el=near&&near.closest?near:null;el&&el!==document.body;el=el.parentElement){const h=ts.find(i=>el.contains(i));if(h)return h;}
+  return ts.find(inView)||ts[0];}
+function where(inp){const s=inp.closest("section,[role=dialog]");const h=s&&s.querySelector("h2,h3");return h?h.childNodes[0]&&h.childNodes[0].textContent.trim()||h.textContent.trim():"";}
+function give(inp,files){const w=where(inp);if(w)say("Adding "+(files.length>1&&inp.multiple?files.length+" files":"it")+" to "+w.charAt(0)+w.slice(1).toLowerCase()+".");if(!inp.multiple)files=files.slice(0,1);const dt=new DataTransfer();files.forEach(f=>dt.items.add(f));
+  inp.files=dt.files;inp.dispatchEvent(new Event("change",{bubbles:true}));}
+const place=el=>{let b=24;el.style.visibility="hidden";let n=document.elementFromPoint(innerWidth/2,innerHeight-4);el.style.visibility="";
+  for(;n&&n!==document.body;n=n.parentElement){const cs=getComputedStyle(n);if(cs.position==="fixed"||cs.position==="sticky"){const r=n.getBoundingClientRect();if(r.top>innerHeight/2)b=innerHeight-r.top+14;break;}}
+  el.style.bottom=b+"px";};
+let sayT=null;const say=m=>{let d=document.getElementById("rbDropSay");if(!d){d=document.createElement("div");d.id="rbDropSay";d.className="rbsay";d.setAttribute("role","status");document.body.appendChild(d);}
+  d.textContent=m;d.hidden=false;place(d);clearTimeout(sayT);sayT=setTimeout(()=>{d.hidden=true;},4500);};
+const named=f=>{if(f.name&&f.name!=="image.png")return f;const ext=((f.type||"").split("/")[1]||"png").replace("jpeg","jpg");
+  return new File([f],"pasted-"+new Date().toISOString().slice(0,19).replace(/[:T]/g,"-")+"."+ext,{type:f.type});};
+/* paste */
+document.addEventListener("paste",e=>{const cd=e.clipboardData;if(!cd)return;const files=[...cd.files].map(named);if(!files.length)return;
+  const ae=document.activeElement;if(ae&&(ae.isContentEditable||/^(TEXTAREA|INPUT)$/.test(ae.tagName)&&!/^(file|button|checkbox|radio|range|submit)$/.test(ae.type||""))&&[...cd.types].includes("text/plain"))return; /* text copied from Word or Excel also carries a picture: keep it text */
+  const inp=pick(files,under()||(document.activeElement!==document.body?document.activeElement:null));
+  if(!inp){say("Nothing on this screen takes a picture. Open a page with an + Add picture or + Add photos button, then paste.");return;}
+  e.preventDefault();give(inp,files);});
+/* drag and drop */
+let tip=null,hl=null,depth=0;
+const hasFiles=e=>e.dataTransfer&&[...(e.dataTransfer.types||[])].includes("Files");
+function clear(){depth=0;if(tip){tip.remove();tip=null;}if(hl){hl.classList.remove("rbdrop");hl=null;}}
+function mark(near){const ts=targets([]);let inp=null;
+  for(let el=near;el&&el!==document.body&&!inp;el=el.parentElement)inp=ts.find(i=>el.contains(i))||null;inp=inp||ts[0]||null;
+  const box=inp?(inp.closest("section,.card")||face(inp)):null;if(box!==hl){if(hl)hl.classList.remove("rbdrop");hl=box;if(hl)hl.classList.add("rbdrop");}
+  if(!tip){tip=document.createElement("div");tip.id="rbDropTip";document.body.appendChild(tip);place(tip);}
+  tip.textContent=inp?"Drop to add it here":"Nothing on this screen takes a file";}
+document.addEventListener("dragenter",e=>{if(!hasFiles(e))return;depth++;mark(e.target);});
+document.addEventListener("dragover",e=>{if(!hasFiles(e))return;e.preventDefault();mark(e.target);});
+document.addEventListener("dragleave",e=>{if(!hasFiles(e))return;depth--;if(depth<=0)clear();});
+document.addEventListener("drop",e=>{if(!hasFiles(e))return;e.preventDefault();const near=e.target;clear();
+  const files=[...e.dataTransfer.files];if(!files.length)return;const inp=pick(files,near);
+  if(!inp){const any=targets([]).length;say(any?"That kind of file can't go here.":"Nothing on this screen takes a file. Open a page with an + Add button, then drop it there.");return;}
+  give(inp,files);});
+window.addEventListener("blur",clear);
+window.RB_DROP={targets,pick};
+})();
+</script>
+<style>
+.backfloat{position:fixed;left:16px;bottom:24px;z-index:35;border:0;background:var(--accent);color:var(--accent-fg);font:inherit;font-weight:600;font-size:15px;padding:11px 18px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer;max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .15s,transform .15s}
+.backfloat[hidden]{display:block;opacity:0;transform:translateY(12px);pointer-events:none;visibility:hidden}
+.backfloat:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+html.rbbackpad .panel:not([hidden])::after{content:"";display:block;height:12px}
+html.rbbackpad .sitefoot{padding-bottom:64px}
+@media print{.backfloat{display:none!important}}
+</style>
+<script>
+/* Floating back button (2.42.29): once the page's own "‹ Guns" (or ‹ Profiles, ‹ Loads…) link scrolls out of sight,
+   the same link floats at the bottom left. Each page with a back link gets extra room at the bottom so the bubble never hides the last thing. */
+(()=>{
+const fb=document.createElement("button");fb.type="button";fb.className="backfloat";fb.hidden=true;document.body.appendChild(fb);
+let cur=null;
+const shown=el=>!!(el&&!el.hidden&&el.offsetParent!==null&&el.getClientRects().length);
+function current(){return [...document.querySelectorAll(".panel:not([hidden]) .backbtn")].find(shown)||null;}
+function bottomGap(){let b=24;const pts=[[innerWidth/2,innerHeight-4],[24,innerHeight-4]];
+  for(const [x,y] of pts){let n=document.elementFromPoint(x,y);for(;n&&n!==document.body&&n!==document.documentElement;n=n.parentElement){if(n===fb)break;const cs=getComputedStyle(n);
+    if(cs.position==="fixed"){const r=n.getBoundingClientRect();if(r.top>innerHeight/2&&r.bottom>=innerHeight-2)b=Math.max(b,innerHeight-r.top+14);break;}}} /* only a bar pinned to the bottom of the window, not something in the page that sticks while it scrolls by */
+  return b;}
+/* phones and tablets swipe back from the left edge (or use Android's Back), so the bubble is only for a mouse */
+const touchOnly=matchMedia("(pointer: coarse)");
+function update(){const bb=touchOnly.matches&&("ontouchstart" in window)?null:current();cur=bb;document.documentElement.classList.toggle("rbbackpad",!!bb);
+  if(!bb||document.querySelector('[role="dialog"]:not([hidden])')&&[...document.querySelectorAll('[role="dialog"]')].some(shown)){if(!fb.hidden)fb.hidden=true;return;}
+  /* how far down the bar that stays at the top reaches (its full box, so gaps inside it don't count as "visible") */
+  let cover=0;for(let n=document.elementFromPoint(Math.max(1,bb.getBoundingClientRect().left+4),2);n&&n!==document.body&&n!==document.documentElement;n=n.parentElement){const cs=getComputedStyle(n);if(cs.position==="fixed"||cs.position==="sticky"){cover=Math.max(0,n.getBoundingClientRect().bottom);break;}}
+  const r=bb.getBoundingClientRect();
+  /* show once half the link is out of sight; hide only when all of it is back, so it doesn't blink at the edge */
+  const off=fb.hidden?(r.top+r.height/2<cover||r.top>innerHeight):!(r.top>=cover&&r.bottom<=innerHeight);
+  if(off){const t=bb.textContent.trim();if(fb.textContent!==t)fb.textContent=t;fb.setAttribute("aria-label",bb.getAttribute("aria-label")||t);fb.style.bottom=bottomGap()+"px";}
+  if(fb.hidden!==!off)fb.hidden=!off;}
+let raf=0;const soon=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;update();});};
+addEventListener("scroll",soon,{passive:true});addEventListener("resize",soon);try{touchOnly.addEventListener("change",soon);}catch(e){}addEventListener("popstate",()=>setTimeout(update,60));
+document.addEventListener("click",e=>{if(e.target===fb)return;setTimeout(update,60);setTimeout(update,400);},true);
+fb.addEventListener("click",()=>{const bb=cur||current();fb.hidden=true;if(bb)bb.click();setTimeout(update,80);});
+new MutationObserver(ms=>{if(ms.some(m=>m.target!==fb))soon();}).observe(document.body,{subtree:true,attributes:true,attributeFilter:["hidden"]});
+update();
+window.RB_BACKFLOAT=update;
 })();
 </script>
