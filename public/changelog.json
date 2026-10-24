@@ -2,10 +2,13 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.9",
+      "version": "2.43.10",
       "date": "2026-10-24",
-      "title": "Reticle pictures mark themselves, 200 more factory loads",
+      "title": "Bigger text, and the effective range numbers in a pop-up",
       "items": [
+        "Text size: under More › Account › Text size, pick Normal, Large or Larger. Every word in Range Book gets bigger; charts, pictures and printed pages stay the same size. It follows your account to your other devices.",
+        "Effective range: the numbers moved off the page into a pop-up. The button under the chart still turns the line on and off, and the pencil next to it opens the minimum speed and energy (it opens by itself the first time, when there aren't any yet). The chart stays uncluttered.",
+        "On a phone, the dope card's columns fit again: a drop of 100 inches or more shows as a whole number (no tenths), and the bottom tab bar puts a long name like Gear & Ranges on two lines instead of running into the next one.",
         "Reticle pictures: after you upload a picture of your reticle, Set the scale finds the center of the crosshair by itself. For a scope from the Library it also finds the mark to use (like the one 5 MIL out) and fills in its distance, with small orange rings where the marks should be along the line, so you can check it at a glance and tap Save. If it's off, tap Center or Mark and move it, or tap Auto to have it look again.",
         "Factory ammo: about 200 more loads from Winchester, Remington, Sig Sauer, Norma, Federal, Berger, Nosler, Hornady, Black Hills, Lapua and PMC, for about 355 in 77 cartridges. Hunting loads whose bullet maker publishes a minimum expansion speed have it filled in.",
         "Tools › Library and the + Add screens show long lists in caliber order from the start, so newly added entries aren't hidden past the first page.",
