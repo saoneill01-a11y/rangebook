@@ -2,11 +2,19 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.34",
+      "version": "2.43.0",
+      "date": "2026-10-23",
+      "title": "Back to where you were",
+      "items": [
+        "Tools › Library opened from somewhere else (Reloading › Reference, Home's Built in Library, or a link in a note) now has a back button to where you were, like ‹ Reference, instead of ‹ Tools. Opened from the Tools tab, it still says ‹ Tools.",
+        "Version 2.43 starts here. Everything in 2.42 (red dots and sights, the scope reticle library, paste or drop pictures, serial number search, the floating back button, the new gun picker on profiles) is listed below."
+      ]
+    },
+    {
+      "version": "2.42",
       "date": "2026-10-23",
       "title": "Transonic on the chart, table and dope card",
       "items": [
-        "Tools › Library opened from somewhere else (Reloading › Reference, Home's Built in Library, or a link in a note) now has a back button to where you were, like ‹ Reference, instead of ‹ Tools. Opened from the Tools tab, it still says ‹ Tools.",
         "Shooting › a profile: the Gun picker now works like the Ammunition picker, with a search box and each gun's cartridge, barrel and twist. Guns chambered for the profile's cartridge are at the top; guns that don't fit are listed after them in red.",
         "Shooting › a profile: when the gun doesn't fit the profile's cartridge, the warning stays pinned at the top as you scroll, and has a Pick another gun button.",
         "On a computer, the back link (‹ Guns, ‹ Profiles, ‹ Loads and so on) now follows you: once you scroll down past it on a gun, optic, suppressor, profile, load or any other page with one, it floats at the bottom left. Click it to go back. Those pages scroll a little further at the bottom so the bubble never covers the last button. Phones and tablets don't show it, since you can swipe in from the left edge to go back.",
