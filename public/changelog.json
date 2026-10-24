@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.13",
+      "version": "2.43.14",
       "date": "2026-10-24",
       "title": "Bigger text, and the effective range numbers in a pop-up",
       "items": [
+        "Gear & Ranges: when you open a gun (or a suppressor, optic, magazine or anything else from a list) and go back, the list opens where you left it instead of at the top.",
         "Threaded barrel: a new box on guns, uppers and spare barrels. Only a threaded barrel lists suppressors: an unthreaded gun's page skips the suppressor list, its Shooting profiles skip the Suppressor card, and its range trips don't ask for one. Guns that already list suppressors are marked threaded for you. The spreadsheet import has a Threaded barrel column, and the guns export shows it.",
         "Suppressors on a gun also leave out ones rated only for handgun cartridges when the gun shoots a rifle cartridge (a 9mm can on a 6.5 Creedmoor, say), the same way rimfire-only cans are left off centerfire guns.",
         "Spreadsheet import: the example row on the Guns tab of the template was one column off (Rifle sat under Nickname); it lines up again.",
