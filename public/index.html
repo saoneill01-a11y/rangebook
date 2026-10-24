@@ -1471,7 +1471,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Arrange Home</b> at the bottom of Home lets you put its cards in your own order (drag <b>⠿</b>, or use <b>▲</b> and <b>▼</b> on a computer) and turn off the ones you don't need. <b>Usual order</b> puts everything back. It's saved to your account, so every phone and computer shows the same Home.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <a class=goto href=#go data-go=log>Shooting › Range log</a>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting profiles, ammunition from your inventory, or factory ammo from the catalog that you don't have yet (it lists the catalog loads for the gun's cartridge, and the search box finds any other). Picking ammo makes the Shooting profile for that gun the first time, and a catalog pick is added to your Ammunition list with no rounds on hand, so you can count what you shoot from it. It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
-      <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, profiles, guns, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. When you delete something (a load, profile, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
+      <p>Tap a card's title (Point-blank range, Range table, Groups, Photos, the sections of this How to Use page and so on) to fold it out of the way; tap it again to open it. Range Book remembers which cards you closed on that phone or computer. Long lists (loads, profiles, guns, optics, suppressors, inventory, range trips, components) get a <b>Search</b> box at the top: type part of a name, cartridge, place or date. On Gear &amp; Ranges it also finds a serial number, with or without its dashes and spaces. When you delete something (a load, profile, gun, trip, photo, group, component or ammunition), a note at the bottom says so with an <b>Undo</b> button for a few seconds. If you close Range Book and come back within 12 hours, it opens where you left off.</p>
       <h3>Add it to your iPhone home screen</h3>
       <p>Open this page in Safari, tap the Share button, then <b>Add to Home Screen</b>. It gets its own icon and opens full screen.</p>
       <p>When the server has a new version, the app tells you with a banner that floats at the bottom of the screen (just above the tabs on a phone), so you see it wherever you are on the page: tap <b>Reload now</b> to switch to it (you land back where you were). It checks when the app opens, when you switch back to Range Book and every minute while it's open, so there's no need to close the app.</p>
@@ -2431,13 +2431,13 @@ window.RB_WX=(()=>{
   window.RB_FILTER=function(scope,key,min){
     if(!scope)return;const items=[...scope.querySelectorAll("button.loaditem")];
     if(items.length<(min||8)&&!FQ[key])return;
-    const inp=document.createElement("input");inp.type="search";inp.className="lfilter";inp.placeholder="Search";inp.setAttribute("aria-label","Search this list");inp.value=FQ[key]||"";
+    const inp=document.createElement("input");inp.type="search";inp.className="lfilter";inp.placeholder=scope.dataset.findph||"Search";inp.setAttribute("aria-label","Search this list");inp.value=FQ[key]||"";
     const none=document.createElement("p");none.className="note";none.textContent="Nothing matches.";none.hidden=true;
     const anchor=scope.querySelector(":scope>.row")||scope.querySelector(".row");
     if(anchor)anchor.after(inp);else scope.prepend(inp);
     const first=items[0]&&items[0].closest(".cartgroup")||items[0];if(first)first.before(none);
     const run=()=>{const q=inp.value.trim().toLowerCase().split(/\s+/).filter(Boolean);FQ[key]=inp.value;let shown=0;
-      items.forEach(it=>{const g=it.closest(".cartgroup"),gn=g&&g.querySelector(".cartname");const txt=(it.textContent+" "+(gn?gn.textContent:"")).toLowerCase();const ok=q.every(w=>txt.includes(w));it.hidden=!ok;if(it.parentElement.classList.contains("gtile"))it.parentElement.hidden=!ok;if(ok)shown++;});
+      items.forEach(it=>{const g=it.closest(".cartgroup"),gn=g&&g.querySelector(".cartname");const txt=(it.textContent+" "+(it.dataset.find||"")+" "+(gn?gn.textContent:"")).toLowerCase(),bare=txt.replace(/[^a-z0-9]/g,"");const ok=q.every(w=>{const b=w.replace(/[^a-z0-9]/g,"");return txt.includes(w)||(b.length>2&&bare.includes(b));});it.hidden=!ok;if(it.parentElement.classList.contains("gtile"))it.parentElement.hidden=!ok;if(ok)shown++;});
       scope.querySelectorAll(".cartgroup").forEach(g=>{const its=[...g.querySelectorAll("button.loaditem")];if(its.length)g.hidden=its.every(i=>i.hidden);});
       none.hidden=!!shown;};
     inp.addEventListener("input",run);if(inp.value)run();
@@ -4951,7 +4951,7 @@ function renderRifles(){
       list.sort((x,y)=>(gk==="__fav"?gunFavN(x.sibs)-gunFavN(y.sibs):0)||x.n.localeCompare(y.n,undefined,{numeric:true})).forEach(({r,sibs,n:gname})=>{
         if(r.build&&r.build.lowerId){const lo=partById(r.build.lowerId),lr=lo?partRounds(lo):null,nl=sibs.reduce((a,x)=>a+usedBy(x.id).length,0),gp=sibs.map(x=>gunPhotosOf(x.id)[0]).find(Boolean);
           const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-          h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
+          h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([lo&&lo.serial,...sibs.map(x=>x.serial)].filter(Boolean).map(s=>"serial "+s).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
             '<span class="d">'+esc([r.nick&&gunMakeModel(r)?gunMakeModel(r):"",sibs.length+(sibs.length===1?' upper':' uppers'),lo&&lo.serial?'Serial '+lo.serial:''].filter(Boolean).join(' · '))+'</span>'+
             '<span class="varchips">'+sibs.map(x=>'<span class="varchip" data-rvar="'+esc(x.id)+'">'+esc(x.varLabel||"No upper yet")+'</span>').join("")+'</span>'+
             (lr&&lr.total?'<span class="best"><b>'+lr.total.toLocaleString()+'</b> rounds on the lower'+(lr.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'')+
@@ -4961,7 +4961,7 @@ function renderRifles(){
         const rt=rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
         const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-        h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
+        h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([r.serial?"serial "+r.serial:"",lo0&&lo0.serial?"serial "+lo0.serial:""].filter(Boolean).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
           '<span class="m">'+(n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,r.name||"this gun")+'</div>';
       });
       h+='</div>';});
@@ -5535,6 +5535,7 @@ function renderCans(root){
     root.innerHTML=h;gearHead(null);
     $("canAdd").addEventListener("click",()=>{canAdding=true;canAddQ="";canForGun=null;renderRifles();window.scrollTo(0,0);});
     root.querySelectorAll("[data-canopen]").forEach(b=>b.addEventListener("click",()=>{canOpen=b.dataset.canopen;canFromGun=null;renderRifles();window.scrollTo(0,0);}));
+    if(window.RB_FILTER)RB_FILTER(root.querySelector('[aria-label="Suppressors list"]'),"cans");
     return;
   }
   const g0=canGuns(c)[0],rc=canRounds(c),tr=trips.filter(t=>t.canId===c.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
@@ -5897,7 +5898,7 @@ function renderScopes(root){
     if(!scopes.length)h+='<p class="note">No optics yet. Add the scope or sight on each gun. A scope\'s units and click value then set the dope card for every profile that uses that gun, and the reticle on the card can look like yours. A red dot or holographic sight gives holds in inches and dot widths instead.</p>';
     else{const item=x=>{const gs=onGun(x);
       const sp=picOf(x.id);
-      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
+      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'" data-find="'+esc(x.serial?"serial "+x.serial:"")+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
       const grp=x=>isDotSight(x)?"dot":x.kind==="prism"?"prism":"scope",by=(a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true});
       [["scope","Scopes"],["dot","Red dots and holographic sights"],["prism","Prism sights"]].forEach(([gk,gl])=>{const L=scopes.filter(x=>grp(x)===gk).sort(by);if(!L.length)return;
         h+='<div class="cartgroup"><div class="cartname">'+gl+' <span class="note">'+L.length+'</span></div>'+L.map(item).join("")+'</div>';});}
@@ -5965,6 +5966,7 @@ function renderScopes(root){
   if(!sc){
     $("scopeAdd").addEventListener("click",()=>{scopeAdding=true;scopeQ="";renderRifles();window.scrollTo(0,0);const q=$("scopeQ");if(q)q.focus();});
     root.querySelectorAll("[data-sopen]").forEach(b=>b.addEventListener("click",()=>{scopeOpen=b.dataset.sopen;scopeFromGun=null;renderRifles();window.scrollTo(0,0);}));
+    if(window.RB_FILTER)RB_FILTER(root.querySelector('[aria-label="Optics list"]'),"scopes");
     return;
   }
   if(window.foldAll)foldAll(root,"scope");
