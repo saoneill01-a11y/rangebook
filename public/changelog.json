@@ -2,13 +2,14 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.24",
+      "version": "2.42.25",
       "date": "2026-10-23",
       "title": "Transonic on the chart, table and dope card",
       "items": [
         "Tools › Library › Scopes: added the Primary Arms GLx 4-16x50 FFP with the ACSS Apollo 6.5CR/.224V reticle (MIL, 0.1 MIL clicks, marks every 1 MIL with smaller marks every 0.2).",
         "Tools › Library › Scopes: added the Primary Arms SLx 4-14x44 FFP with the ACSS HUD DMR .308 reticle (MIL, 0.1 MIL clicks). It's a bullet drop reticle, so there's no even mark spacing to fill in.",
         "Scopes with a bullet drop reticle (like the ACSS HUD DMR, Sig BDC and Hellfire, Vortex AR-BDC3 and Burris Ballistic E3) now say so: the Library and + Add optic show \"bullet drop reticle, no even marks\", the optic's page explains that its marks won't line up with the even marks Range Book draws and that dope card holds are in MIL or MOA, and Set the scale tells you how to measure from the maker's drawing. 15 library scopes are marked, and Tools › Library has a Bullet drop reticle box to mark others.",
+        "Tools › Library › Scopes: added the Primary Arms SLx 1-6x24 SFP Gen III with the ACSS 5.56/5.45/.308 reticle (MOA, 0.5 MOA clicks, bullet drop marks true at 6x).",
         "Gear & Ranges › Optics: the list is split into Scopes, Red dots and holographic sights, and Prism sights.",
         "Optics have an optional Nickname. When it's filled in, it's what you see on the list, the gun's page and the dope card, with the maker and model under it on the list. It's in the spreadsheet import and the Excel export too.",
         "Tools › Library has Red dots: 76 popular red dot, holographic and prism sights from Aimpoint, EOTech, Holosun, Leupold, Primary Arms, Sig Sauer, Trijicon, Vortex and others, with dot size, ring, click value and mount. + Add optic searches them along with the scopes (type red dot to see only the sights), and picking one fills it in.",
