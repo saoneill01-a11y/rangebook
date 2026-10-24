@@ -1467,6 +1467,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Getting around</h3>
       <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, <b>Recent reloading</b> (the loads you've worked on lately), your <b>Most used guns</b> (your favorites first, then the guns with the most rounds, with their photos; up to six, and <b>All guns ›</b> for the rest), and <b>Built in Library</b>: how many bullets, cartridges, powders, factory ammo, scopes and primers are built in. Tap a number to open that list, or <b>Open Library ›</b> for the Library page under Reloading › Reference, which lists everything built in with its count and shows the bullets by maker. On a computer, Recent range trips and Recent reloading sit side by side, Most used guns gets its own column on the right (on a narrower screen like a tablet it goes under them), and Built in Library runs across the bottom; on a phone the cards are one under another. <b>Arrange Home</b> at the bottom puts the cards in your order and turns off the ones you don't need. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and Account) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
       <p>When a note or this page mentions another part of Range Book, the name is an underlined link in your theme's color, like <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a>. Tap it to go straight there. A path with <b>›</b> shows where it is, so you can also find it yourself.</p>
+      <p><b>Paste or drop a picture.</b> On a computer you don't have to hunt for the file: copy a picture (or take a screenshot) and press <b>Ctrl+V</b> (<b>⌘V</b> on a Mac), or drag a picture or file from your desktop onto the page. It goes to the <b>+ Add</b> button on the screen you're on, just like picking it with that button: a gun's or scope's photos, a reticle picture, target photos, box photos, documents, or a file to import. When a screen has more than one, drop it on the card you want (it gets a dashed outline). Pasting while you're typing in a box pastes text as usual.</p>
       <p><b>Arrange Home</b> at the bottom of Home lets you put its cards in your own order (drag <b>⠿</b>, or use <b>▲</b> and <b>▼</b> on a computer) and turn off the ones you don't need. <b>Usual order</b> puts everything back. It's saved to your account, so every phone and computer shows the same Home.</p>
       <p>The <b>Range log</b> (the <b>Range log</b> button on Home, or <a class=goto href=#go data-go=log>Shooting › Range log</a>) lists every day you've shot, newest first and grouped by month: your range trips, plus each day you shot groups for a Reloading load (one entry per load per day, with the number of groups, the charges, rounds and the best group). At the top are this year's days at the range, rounds, trips and load-development days, and your best group of the year. Tap <b>Range trips</b> or <b>Load development</b> to show just one kind, pick a gun to see only its days, or search by place, load or date. Tap an entry to open that trip, or that load's groups.</p>
       <p><b>Start a range day</b> on Home asks which gun you're shooting, then what you're shooting through it: one of your Shooting profiles, ammunition from your inventory, or factory ammo from the catalog that you don't have yet (it lists the catalog loads for the gun's cartridge, and the search box finds any other). Picking ammo makes the Shooting profile for that gun the first time, and a catalog pick is added to your Ammunition list with no rounds on hand, so you can count what you shoot from it. It opens a new range trip dated today and, if your phone shares its location, fills in the temperature and wind. You can also start one from a gun's page.</p>
@@ -12472,5 +12473,64 @@ async function template(mine){
 function open(from){FROM=from||"account";if(S&&S.done)S=null;if(window.APP_showTab)APP_showTab("sheetimp");const b=$("sheetBack");if(b)b.textContent="‹ "+({rifles:"Gear & Ranges",brass:"Components",account:"Account"}[FROM]||"Back");draw();}
 document.addEventListener("DOMContentLoaded",()=>{});
 return {open,back:()=>{if(window.APP_showTab)APP_showTab(FROM);},_test:{readCell,guessMap,guessKind,parseCsv,parseDate,KINDS}};
+})();
+</script>
+<style>
+.rbsay[hidden]{display:none}
+.rbdrop{outline:3px dashed var(--accent)!important;outline-offset:3px;border-radius:12px}
+#rbDropTip,.rbsay{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:999px;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.3);pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.rbsay{border-radius:12px;width:max-content;max-width:min(440px,calc(100vw - 32px));font-weight:500;line-height:1.4}
+</style>
+<script>
+/* Paste or drop a picture (2.42.26): a file pasted (Ctrl/Cmd+V) or dropped on the page goes to the upload button showing on the screen,
+   as if it had been picked with that button. The button in the card under the mouse wins; an open window (dialog) wins over the page. */
+(()=>{
+const vis=el=>!!(el&&el.offsetParent!==null&&el.getClientRects().length);
+const face=i=>i.closest("label")||(i.id&&document.querySelector('label[for="'+CSS.escape(i.id)+'"]'))||i.parentElement;
+const okType=(i,f)=>{const a=(i.getAttribute("accept")||"").split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);if(!a.length)return true;
+  const n=(f.name||"").toLowerCase(),t=(f.type||"").toLowerCase();
+  return a.some(x=>x.startsWith(".")?n.endsWith(x):x.endsWith("/*")?t.startsWith(x.slice(0,-1)):t===x);};
+function targets(files){const dlg=[...document.querySelectorAll('[role="dialog"]')].filter(vis).pop();
+  return [...(dlg||document).querySelectorAll('input[type="file"]')].filter(i=>!i.disabled&&vis(face(i))&&files.every(f=>okType(i,f)));}
+let lastXY=null;const pt=e=>{lastXY=[e.clientX,e.clientY];};document.addEventListener("pointerdown",pt,true);document.addEventListener("pointermove",pt,{passive:true,capture:true});
+const under=()=>lastXY?document.elementFromPoint(lastXY[0],lastXY[1]):null;
+const inView=i=>{const r=face(i).getBoundingClientRect();return r.bottom>0&&r.top<innerHeight;};
+function pick(files,near){const ts=targets(files);if(!ts.length)return null;
+  for(let el=near&&near.closest?near:null;el&&el!==document.body;el=el.parentElement){const h=ts.find(i=>el.contains(i));if(h)return h;}
+  return ts.find(inView)||ts[0];}
+function where(inp){const s=inp.closest("section,[role=dialog]");const h=s&&s.querySelector("h2,h3");return h?h.childNodes[0]&&h.childNodes[0].textContent.trim()||h.textContent.trim():"";}
+function give(inp,files){const w=where(inp);if(w)say("Adding "+(files.length>1&&inp.multiple?files.length+" files":"it")+" to "+w.charAt(0)+w.slice(1).toLowerCase()+".");if(!inp.multiple)files=files.slice(0,1);const dt=new DataTransfer();files.forEach(f=>dt.items.add(f));
+  inp.files=dt.files;inp.dispatchEvent(new Event("change",{bubbles:true}));}
+const place=el=>{let b=24;el.style.visibility="hidden";let n=document.elementFromPoint(innerWidth/2,innerHeight-4);el.style.visibility="";
+  for(;n&&n!==document.body;n=n.parentElement){const cs=getComputedStyle(n);if(cs.position==="fixed"||cs.position==="sticky"){const r=n.getBoundingClientRect();if(r.top>innerHeight/2)b=innerHeight-r.top+14;break;}}
+  el.style.bottom=b+"px";};
+let sayT=null;const say=m=>{let d=document.getElementById("rbDropSay");if(!d){d=document.createElement("div");d.id="rbDropSay";d.className="rbsay";d.setAttribute("role","status");document.body.appendChild(d);}
+  d.textContent=m;d.hidden=false;place(d);clearTimeout(sayT);sayT=setTimeout(()=>{d.hidden=true;},4500);};
+const named=f=>{if(f.name&&f.name!=="image.png")return f;const ext=((f.type||"").split("/")[1]||"png").replace("jpeg","jpg");
+  return new File([f],"pasted-"+new Date().toISOString().slice(0,19).replace(/[:T]/g,"-")+"."+ext,{type:f.type});};
+/* paste */
+document.addEventListener("paste",e=>{const cd=e.clipboardData;if(!cd)return;const files=[...cd.files].map(named);if(!files.length)return;
+  const ae=document.activeElement;if(ae&&(ae.isContentEditable||/^(TEXTAREA|INPUT)$/.test(ae.tagName)&&!/^(file|button|checkbox|radio|range|submit)$/.test(ae.type||""))&&[...cd.types].includes("text/plain"))return; /* text copied from Word or Excel also carries a picture: keep it text */
+  const inp=pick(files,under()||(document.activeElement!==document.body?document.activeElement:null));
+  if(!inp){say("Nothing on this screen takes a picture. Open a page with an + Add picture or + Add photos button, then paste.");return;}
+  e.preventDefault();give(inp,files);});
+/* drag and drop */
+let tip=null,hl=null,depth=0;
+const hasFiles=e=>e.dataTransfer&&[...(e.dataTransfer.types||[])].includes("Files");
+function clear(){depth=0;if(tip){tip.remove();tip=null;}if(hl){hl.classList.remove("rbdrop");hl=null;}}
+function mark(near){const ts=targets([]);let inp=null;
+  for(let el=near;el&&el!==document.body&&!inp;el=el.parentElement)inp=ts.find(i=>el.contains(i))||null;inp=inp||ts[0]||null;
+  const box=inp?(inp.closest("section,.card")||face(inp)):null;if(box!==hl){if(hl)hl.classList.remove("rbdrop");hl=box;if(hl)hl.classList.add("rbdrop");}
+  if(!tip){tip=document.createElement("div");tip.id="rbDropTip";document.body.appendChild(tip);place(tip);}
+  tip.textContent=inp?"Drop to add it here":"Nothing on this screen takes a file";}
+document.addEventListener("dragenter",e=>{if(!hasFiles(e))return;depth++;mark(e.target);});
+document.addEventListener("dragover",e=>{if(!hasFiles(e))return;e.preventDefault();mark(e.target);});
+document.addEventListener("dragleave",e=>{if(!hasFiles(e))return;depth--;if(depth<=0)clear();});
+document.addEventListener("drop",e=>{if(!hasFiles(e))return;e.preventDefault();const near=e.target;clear();
+  const files=[...e.dataTransfer.files];if(!files.length)return;const inp=pick(files,near);
+  if(!inp){const any=targets([]).length;say(any?"That kind of file can't go here.":"Nothing on this screen takes a file. Open a page with an + Add button, then drop it there.");return;}
+  give(inp,files);});
+window.addEventListener("blur",clear);
+window.RB_DROP={targets,pick};
 })();
 </script>
