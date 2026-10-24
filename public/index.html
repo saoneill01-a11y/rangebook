@@ -905,7 +905,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 /* load lists */
 .loaditem.withthumb{flex-direction:row;align-items:center;gap:12px}
 .lthumb{width:60px;height:60px;border-radius:8px;overflow:hidden;flex:none;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent)}
-.lthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.lthumb img{width:100%;height:100%;object-fit:contain;display:block}
+.lthumb:has(>img){background:transparent} /* 2.42.28: the whole picture shows; the rest of the square is see-through */
 .tripsroot{margin-top:14px}
 .tripsroot:empty{display:none}
 .tripsroot h3{margin:18px 0 6px;font-size:15px}
@@ -938,7 +939,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .shotadd input{flex:1 1 200px;min-width:0}
 .triphead{margin-bottom:6px}
 .picrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.picbox{width:140px;height:105px;border-radius:10px;overflow:hidden;flex:none;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent);border:1px solid var(--line)}
-.picbox img{width:100%;height:100%;object-fit:cover;display:block}.picbox svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.4}
+.picbox img{width:100%;height:100%;object-fit:contain;display:block}
+.picbox:has(>img){background:var(--sunk)}.picbox svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.4}
 .picbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1 1 160px;min-width:0}.picbtns .note{flex:1 0 100%;margin:0}
 .lthumb svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6}
 .ltext{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -1231,7 +1233,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .unameedit input{font:inherit;color:var(--fg);padding:8px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);flex:1 1 180px;min-width:0}
 .boxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:8px}
 .boxph{margin:0;display:flex;flex-direction:column;gap:4px}
-.boxph img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:var(--sunk);display:block}
+.boxph img{width:100%;aspect-ratio:4/3;object-fit:contain;border-radius:8px;border:1px solid var(--line);background:var(--sunk);display:block}
 .gungrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 .boxph figcaption{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .ammocat{margin-top:12px;display:flex;flex-direction:column;gap:10px}
