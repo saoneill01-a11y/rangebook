@@ -1039,7 +1039,12 @@ textarea.notebody{min-height:260px;line-height:1.5;font-size:16px;resize:vertica
 .segtabs{display:flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .segtabs button{flex:1 1 0;padding:8px 4px;border:0;border-radius:7px;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
 .segtabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
-.selbtn{display:flex;gap:8px;align-items:center}.selbtn select{flex:1 1 auto;min-width:0}.selbtn .btn{flex:none}
+.selbtn{display:flex;gap:8px;align-items:center}.selbtn select{flex:1 1 auto;min-width:0}
+.selbtn .ammobtn{flex:1 1 auto;min-width:0}
+#f_rifleLbl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.apick .fitwarn{color:var(--warn)}
+/* 2.42.33: the "this gun doesn't fit" warning on a profile stays in view under the bar with the links */
+#trajFit:not([hidden]){position:sticky;top:calc(var(--stick,110px) - 4px);z-index:14;box-shadow:0 6px 14px -6px rgba(0,0,0,.35)}.selbtn .btn{flex:none}
 .cmpbul{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 10px;background:var(--sunk)}
 .cmpbul .cmphead{display:flex;gap:8px;align-items:center;margin-bottom:8px}.cmpbul .cmphead input{flex:1 1 auto;min-width:0;font-weight:600}
 .cmpsw{width:28px;height:4px;border-radius:2px;flex:none}.cmpsw svg{display:block}
@@ -1309,7 +1314,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="field wide"><label for="f_cart">Cartridge</label><input id="f_cart" class="name" type="text" autocomplete="off" list="dl_cart" placeholder="e.g. 308 Winchester"></div>
     </div>
     <fieldset class="ingrp"><legend>Gun &amp; ammo</legend><div class="grid">
-      <div class="field wide"><label for="f_rifle">Gun</label><div class="selbtn"><select id="f_rifle" class="fieldselect"></select><button class="btn" type="button" id="f_rifleEdit" hidden>Edit</button></div><span class="note" id="f_rifleNote"></span></div>
+      <div class="field wide"><label for="f_rifleBtn">Gun</label><div class="selbtn"><select id="f_rifle" class="fieldselect" hidden aria-hidden="true" tabindex="-1"></select><button type="button" id="f_rifleBtn" class="ammobtn" aria-expanded="false" aria-controls="rifPick"><span id="f_rifleLbl"></span></button><button class="btn" type="button" id="f_rifleEdit" hidden>Edit</button></div>
+        <div class="ammopick" id="rifPick" hidden><input id="f_rifleQ" type="search" placeholder="Search: name, maker, cartridge…" autocomplete="off" aria-label="Search guns"><div id="rifPickList" class="ammopicklist" role="listbox" aria-label="Guns"></div></div><span class="note" id="f_rifleNote"></span></div>
       <div class="field wide subfield" id="f_partBox" hidden><label for="f_part">Barrel</label><select id="f_part" class="fieldselect"></select><span class="note" id="f_partNote"></span></div>
       <div class="field wide"><label for="f_ammoBtn">Ammunition</label><button type="button" id="f_ammoBtn" class="ammobtn" aria-expanded="false" aria-controls="ammoPick"><span id="f_ammoLbl"></span></button>
         <div class="ammopick" id="ammoPick" hidden><input id="f_ammoQ" type="search" placeholder="Search: varget, hornady 168, 6.5 creed…" autocomplete="off" aria-label="Search ammunition"><div id="ammoPickList" class="ammopicklist" role="listbox" aria-label="Ammunition"></div></div><div id="f_ammoInfo"></div><span class="note" id="f_ammoNote"></span></div>
@@ -1498,7 +1504,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>A new account's Shooting list starts with a single <b>SAMPLE · 6.5 Creedmoor</b> profile, and on a new Range Book the first account also gets a matching worked-up ladder on Reloading. They're made up to show how things fit together, and they're marked with a warning: don't load or shoot anything from them without checking a current load manual. Delete them whenever you like.</p>
       <h3>Fill in the fields</h3>
       <ul>
-        <li><b>Gun</b>: pick one of your guns from <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a> and its sight height fills in. <b>Edit</b> beside it opens that gun on Gear &amp; Ranges, with a <b>‹ Back to</b> button to return to the profile. Profiles sent over from Reloading come with the gun already picked. If you change the gun's sight height on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>, the calculator follows unless you've typed in your own.</li>
+        <li><b>Gun</b>: tap it and pick one of your guns from <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a> (search by name, maker or cartridge); its sight height fills in. Guns chambered for the profile's cartridge are listed first, and the rest are marked as not fitting. If you pick one that doesn't fit, the warning stays at the top while you scroll, with <b>Pick another gun</b>. <b>Edit</b> beside it opens that gun on Gear &amp; Ranges, with a <b>‹ Back to</b> button to return to the profile. Profiles sent over from Reloading come with the gun already picked. If you change the gun's sight height on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>, the calculator follows unless you've typed in your own.</li>
         <li><b>Ammunition</b>: tap it to pick your own factory or reloaded ammo, or a load from the factory catalog. Fill in the <b>Cartridge</b> first and the list shows only ammo for that cartridge (and ammo that's safe in it, like 223 Remington for a 5.56 gun); tap <b>Show all cartridges</b> at the top of the list to see everything. The bullet weight, BC, diameter and length fill in from the ammo. If the ammo has no bullet length, Range Book uses its reloading recipe's, or the length saved on its bullet under Components.</li>
         <li><b>Bullet weight</b>: from the ammo box.</li>
         <li><b>Muzzle velocity</b>: the box number comes from a test barrel and is often 50–150 fps faster than your gun. A chronograph reading is best.</li>
@@ -3087,7 +3093,8 @@ function spinNote(L0,L,SG){
 function render(){
   syncAutoNames();
   const L0=cur(), err=$("err");
-  {const fb=$("trajFit"),f=fitCheck(L0,true);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.err.concat(f.caution.map(t=>'<b>Check first:</b> '+t)).join("<br>")+(f.err.length?' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</span>':'');}}
+  {const fb=$("trajFit"),f=fitCheck(L0,true);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.err.concat(f.caution.map(t=>'<b>Check first:</b> '+t)).join("<br>")+(f.err.length?' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</span> <button class="linkbtn" type="button" id="trajFitGun">Pick another gun</button>':'');
+    const fg=$("trajFitGun");if(fg)fg.onclick=()=>{setInOpen(true);const b=$("f_rifleBtn");b.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>{if($("rifPick").hidden)openRifPick();},350);};}}
   const L=Object.assign({},L0,{mv:effMV(L0)}); // what the bullet actually does today
   const bad=[];
   if(!(L.mv>0))bad.push("muzzle velocity");
@@ -3833,7 +3840,7 @@ function zoomAbout(fx,fy,px,py){ // fx,fy <1 zooms in; px,py plot-pixel anchor
 function newLoad(){
   sweepNewProf();const L=freshScratch();L.id="u"+Date.now().toString(36);L.builtin=false;L.nameAuto=true;L.name="New profile";L.temp=59;L.alt=0;
   state.loads.push(L);NEWPROF=L.id;state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
-  try{$("f_rifle").focus({preventScroll:true});}catch(e){}
+  try{$("f_rifleBtn").focus({preventScroll:true});}catch(e){}
 }
 RB_CARTS.picker($("f_cart"),{extra:()=>[...new Set(state.loads.map(l=>l.cart).filter(Boolean))],onPick:c=>{const L=cur();if(c&&!(num(L.cal)>0)){L.cal=c.d;L.calUnit="in";$("f_cal_u").value="in";$("f_cal").value=DIA.show(c.d,"in");save();}render();}});
 $("twistCheck").addEventListener("click",()=>{readInputs();if(window.RB_TOOLS)RB_TOOLS.open("twist",{traj:cur().id});});
@@ -3891,6 +3898,8 @@ function fillRifle(){
   let h='<option value="">No gun</option>'+RB_GUNOPTS(RIFLES,null,escT);
   if(L.rifleId&&!r)h+='<option value="'+escT(L.rifleId)+'">'+escT(L.rifleName||"Gun")+' (not in your Guns list)</option>';
   sel.innerHTML=h;sel.value=L.rifleId||"";
+  $("f_rifleLbl").innerHTML=r?escT(r.name||"Unnamed gun"):L.rifleId?escT(L.rifleName||"Gun")+' <span class="none">(not in your Guns list)</span>':'<span class="none">'+(RIFLES.length?'No gun. Tap to pick one':'No guns yet')+'</span>';
+  if(!$("rifPick").hidden)drawRifPick();
   const note=$("f_rifleNote");let t="";
   // with a gun picked, its sight height and twist are used (and edited on Gear & Ranges), so their boxes below are hidden
   const rs=r?num(r.sightHeight):null,tw=r?num(r.twist):null;
@@ -3925,6 +3934,36 @@ $("f_rifle").addEventListener("change",()=>{
     if(!L.cart&&r.cartridge){L.cart=window.RB_CARTS?RB_CARTS.canon(r.cartridge):r.cartridge;$("f_cart").value=L.cart;}}
   save();fillRifle();scopeCols(L);render();
 });
+/* ---- gun picker (2.42.33): looks like the ammunition picker; guns chambered for this profile's cartridge come first ---- */
+function drawRifPick(){
+  const box=$("rifPickList");if(!box)return;const L=cur(),words=pkNorm($("f_rifleQ").value).split(" ").filter(Boolean);
+  const hit=r=>{const n=pkNorm([r.name,r.mfr,r.model,r.nick,r.cartridge,r.varLabel].join(" "));return words.every(w=>n.includes(w));};
+  const mc=loadCart(L),C=mc&&window.RB_CARTS?RB_CARTS.find(mc):null,cartName=C?C.n:mc;
+  const fit=r=>{if(!mc||!window.RB_CARTS)return "";if(!r.cartridge)return "none";const f=RB_CARTS.fits(r.cartridge,mc);return !f.ok?"no":f.caution?"check":"yes";};
+  const desc=(r,fk)=>[r.cartridge||"No cartridge set",num(r.barrel)?BBL(num(r.barrel))+" barrel":"",num(r.twist)>0?"1:"+(U.metric?U.s("dim",num(r.twist),0):num(r.twist))+" twist":""].filter(Boolean).join(" · ")+(fk==="check"?" · check first":"");
+  const row=(v,tx,d,warn)=>'<button type="button" class="apick'+((L.rifleId||"")===v?' on':'')+'" role="option" data-gv="'+escT(v)+'">'+escT(tx)+(d?'<small'+(warn?' class="fitwarn"':'')+'>'+escT(d)+'</small>':'')+'</button>';
+  const by=(a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{numeric:true});
+  const list=RIFLES.filter(hit).sort(by);
+  let h=words.length?'':row("","No gun","Type the sight height and twist yourself");
+  if(mc){const yes=list.filter(r=>["yes","check"].includes(fit(r))),no=list.filter(r=>fit(r)==="no"),none=list.filter(r=>fit(r)==="none");
+    if(yes.length)h+='<div class="pickhead">Chambered for '+escT(cartName)+'</div>'+yes.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,fit(r)))).join("");
+    if(none.length)h+='<div class="pickhead">Cartridge not set</div>'+none.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,"none"))).join("");
+    if(no.length)h+='<div class="pickhead">Other guns (not for '+escT(cartName)+')</div>'+no.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,"no"),true)).join("");
+    h='<p class="pickmore pickcart">Guns chambered for <b>'+escT(cartName)+'</b> (this profile\'s cartridge) are at the top.</p>'+h;}
+  else{if(list.length)h+='<div class="pickhead">Your guns</div>'+list.map(r=>row(r.id,r.name||"Unnamed gun",desc(r,""))).join("");
+    if(RIFLES.length&&!words.length)h+='<p class="pickmore">Fill in the Cartridge to put the guns that fit it at the top.</p>';}
+  if(!RIFLES.length)h+='<p class="pickmore">No guns yet. Add them on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</p>';
+  else if(words.length&&!list.length)h+='<p class="pickmore">No gun matches. Try fewer words.</p>';
+  box.innerHTML=h;
+  box.querySelectorAll("[data-gv]").forEach(b=>b.addEventListener("click",()=>{const s=$("f_rifle");if(s.value!==b.dataset.gv){s.value=b.dataset.gv;s.dispatchEvent(new Event("change"));}closeRifPick(true);}));
+}
+function openRifPick(){$("rifPick").hidden=false;$("f_rifleBtn").setAttribute("aria-expanded","true");$("f_rifleQ").value="";drawRifPick();$("f_rifleQ").focus();}
+function closeRifPick(focusBtn){if($("rifPick").hidden)return;$("rifPick").hidden=true;$("f_rifleBtn").setAttribute("aria-expanded","false");if(focusBtn)$("f_rifleBtn").focus();}
+$("f_rifleBtn").addEventListener("click",()=>{$("rifPick").hidden?openRifPick():closeRifPick();});
+$("f_rifleQ").addEventListener("input",drawRifPick);
+$("f_rifleQ").addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();closeRifPick(true);}
+  if(e.key==="Enter"){e.preventDefault();const f=$("rifPickList").querySelector("[data-gv]");if(f)f.click();}});
+document.addEventListener("click",e=>{const p=$("rifPick");if(p&&!p.hidden&&!p.contains(e.target)&&!$("f_rifleBtn").contains(e.target))closeRifPick();});
 // the range table's Adjust column in the scope's units (MOA or MIL turrets); you can still tick the other one
 function scopeCols(L){const o=dopeOpts(L);if(!o.scope)return;const want=o.unit==="mil"?"mil":"moa",other=want==="mil"?"moa":"mil";
   if(TBLCOLS[want]&&!TBLCOLS[other])return;TBLCOLS[want]=true;TBLCOLS[other]=false;
