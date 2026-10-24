@@ -1295,6 +1295,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 #ammoCatQ,#rnQ,#f_ammoQ,#powQ{font:inherit;color:var(--fg);padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);width:100%}
 #ammoBuyN{font:inherit;color:var(--fg);padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);width:110px}
 .lifebar{height:12px;border-radius:99px;background:var(--sunk);border:1px solid var(--line);overflow:hidden}
+.ustore{margin:6px 0 4px}.ucard .lifebar{margin:0 0 8px;max-width:360px}.uquotaedit{gap:6px;align-items:center;flex-wrap:wrap}.uquotaedit input{max-width:110px}#acctStorage .lifebar{margin:6px 0 4px}
 .lifebar span{display:block;height:100%;background:var(--accent);border-radius:99px}
 .lifebar.warn span{background:var(--warn)}
 </style>
@@ -1549,6 +1550,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Changed something on another phone or computer? In the home-screen app, scroll to the very top of the page and <b>pull down</b> until it says <b>Release to refresh</b>, then let go. Anything you were still typing is saved first, then the app reloads with the newest data and puts you back where you were. (In a browser tab, use the browser's own refresh.)</p>
       <h3>Where your data lives</h3>
       <p>Everything saves to your account automatically, so it follows you to any phone or computer you sign in on.</p>
+      <p><b>Storage.</b> <a class=goto href=#go data-go=account>More › Account › Storage</a> shows how much you've saved on the server: photos, documents, files and everything else. The admin can set a limit for each person. When yours is full, new pictures, files and imports are turned away with a note (delete some you don't need, or ask the admin for more room); everything else you change still saves.</p>
+      <p><b>For admins:</b> under <a class=goto href=#go data-go=admin>Admin › Storage per person</a>, set how many MB each person can keep (blank is no limit), and tap <b>Save</b>. Each person's card shows what they're using; <b>Storage limit</b> on it gives them the server's limit, <b>No limit</b>, or a limit of their own. The limit applies to admins too, so give yourself <b>No limit</b> if you need it.</p>
       <h3>No signal at the range</h3>
       <p>Open Range Book once on your phone through its https:// address while you have a signal. After that it opens even with no signal, showing your loads and photos as of the last time it synced. Anything you change or add (shots, groups, photos, measurements) is kept on the phone, and a yellow <b>Offline</b> tag at the top shows how many changes are waiting. They upload by themselves when you get a signal again. Don't sign out while changes are waiting, or they're lost.</p>
       <h3>Using more than one phone or computer</h3>
@@ -2028,6 +2031,11 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p class="note">On: a photo of a box of catalog ammo is seen by everyone here, so the next person can tell it's the right box, and people can tick <b>Share this load with everyone</b> on factory ammo they entered themselves. Off: everyone sees only their own box photos, new ones stay private even if you turn sharing back on later, shared loads are hidden from <b>+ Add ammo</b>, and nobody can share a new one. Photos and loads that were already shared are hidden, and come back if you turn it on again. On a big public server, off is safer: someone will eventually add the wrong box or the wrong numbers.</p>
       <span class="savestate" id="boxShareState"></span>
       <p class="note">Shared photos people have added (you see them here even with sharing off, so you can clean up). Delete any that don't match the load or shouldn't be there.</p><div id="au_boxes" class="sharelist"><p class="note">Loading…</p></div></section>
+    <section class="card" aria-label="Storage per person"><h2>Storage per person</h2>
+      <div class="row"><div class="field" style="max-width:220px"><label for="quotaMB">Each person can keep up to (MB)</label><input id="quotaMB" type="number" inputmode="numeric" min="0" step="1" placeholder="No limit"></div><button class="btn primary" type="button" id="quotaSave" style="align-self:flex-end">Save</button></div>
+      <p class="note">Everything a person saves counts: photos, documents in the vault, files on notes, and their loads, profiles and other data. When they reach it, new pictures and files (and imports) are turned away with a note to delete some or ask you; everything else still saves. Leave it blank for no limit. 1,000 MB is 1 GB. To give one person more or less, use <b>Storage limit</b> on their card below. The limit applies to admins too.</p>
+      <span class="savestate" id="quotaState"></span>
+    </section>
     <section class="card" aria-label="Backups"><h2>Backups</h2>
       <div id="bk_info" class="note">Loading…</div>
       <div class="row"><button class="btn" id="bk_now" type="button">Back up now</button><span class="savestate" id="bk_state"></span></div>
@@ -2060,6 +2068,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-account" role="tabpanel" hidden>
     <header><h1>Account</h1><p class="sub" id="acctWho"></p></header>
+    <section class="card" aria-label="Storage" id="acctStorage" hidden><h2>Storage</h2><div id="acctStorageBody"></div></section>
     <section class="card" aria-label="Back up and export"><h2>Back up and export</h2>
       <p class="note"><b>Download backup</b> saves everything in your account in one .zip file, photos included: loads, ladders, Shooting profiles, guns, suppressors, inventory, ammo, components, range trips and notes, plus your document vault, still locked. Import it here (or on another Range Book) to get it all back.</p>
       <div class="row"><a class="btn primary" href="/api/backup.zip" download>Download backup</a></div>
@@ -10989,6 +10998,7 @@ function showTab(t,remember){
   if(t==="home"&&REL)REL.onHome();
   if(t==="targets"&&window.RB_TARGETS)RB_TARGETS();
   if(t==="account"&&window.RB_VAULT_ACCT)RB_VAULT_ACCT();
+  if(t==="account"&&!window.GUEST)drawMyStorage();
   if((t==="tools"||t==="targets")&&window.RB_TOOLS)RB_TOOLS.shown(t,REL);
   if(t!=="tools"&&window.RB_TIMER)RB_TIMER.hide("tools");
   if(t!=="train"&&window.RB_TRAIN)RB_TRAIN.leave();
@@ -11714,10 +11724,22 @@ function alertBox(msg){const n=document.createElement("p");n.className="err";n.t
 
 /* ---------- admin ---------- */
 let adminArmed=null;
+/* ---- storage per person (2.43.16): how much someone has saved on the server, against the admin's limit ---- */
+const fmtBytes=b=>{b=+b||0;return b>=1073741824?(b/1073741824).toFixed(1).replace(/\.0$/,"")+" GB":(b/1048576).toFixed(b<10485760?1:0)+" MB";};
+const storeBar=(used,lim)=>{if(!lim)return '';const pct=Math.min(100,used/lim*100);return '<div class="lifebar'+(pct>=90?' warn':'')+'" role="img" aria-label="'+Math.round(pct)+'% used"><span style="width:'+pct.toFixed(1)+'%"></span></div>';};
+async function drawMyStorage(){const sec=$("acctStorage"),b=$("acctStorageBody");if(!sec||!b)return;
+  try{const r=await API.get("/api/me/storage");sec.hidden=false;
+    b.innerHTML=r.limit?'<p class="tline">You\'re using <b>'+fmtBytes(r.used)+'</b> of your <b>'+fmtBytes(r.limit)+'</b>.</p>'+storeBar(r.used,r.limit)+
+      '<p class="note">Photos, documents, files and everything else you\'ve saved count toward it. When it\'s full, new pictures and files can\'t be added until you delete some (your other changes still save). The admin can give you more room.</p>'
+      :'<p class="tline">You\'re using <b>'+fmtBytes(r.used)+'</b>.</p><p class="note">Photos, documents, files and everything else you\'ve saved. There\'s no limit on this Range Book.</p>';}
+  catch(e){sec.hidden=true;}}
 function initAdmin(){
   const gt=$("guestToggle");
   const bs=$("boxShareToggle");
-  API.get("/api/admin/settings").then(r=>{gt.checked=!!r.guestEnabled;if(bs)bs.checked=r.shareAmmo!==false;},()=>{});
+  API.get("/api/admin/settings").then(r=>{gt.checked=!!r.guestEnabled;if(bs)bs.checked=r.shareAmmo!==false;const qi=$("quotaMB");if(qi)qi.value=r.quotaMB>0?r.quotaMB:"";},()=>{});
+  {const qb=$("quotaSave");if(qb)qb.addEventListener("click",async()=>{const st=$("quotaState"),qi=$("quotaMB"),v=qi.value.trim();st.textContent="Saving…";
+    try{const r=await API.put("/api/admin/settings",{quotaMB:v===""?0:Number(v)});qi.value=r.quotaMB>0?r.quotaMB:"";st.textContent=r.quotaMB>0?"Everyone can keep up to "+fmtBytes(r.quotaMB*1048576)+", unless you've set them their own.":"No limit for anyone, unless you've set them their own.";loadAdmin();}
+    catch(e){st.textContent=e.message;}});}
   if(bs)bs.addEventListener("change",async()=>{
     const st=$("boxShareState");st.textContent="Saving…";
     try{const r=await API.put("/api/admin/settings",{shareAmmo:bs.checked});bs.checked=r.shareAmmo!==false;if(window.RB_BOXSHARE)RB_BOXSHARE(bs.checked);st.textContent=bs.checked?"Box photos and shared loads are shared with everyone.":"Sharing is off: everyone sees only their own box photos, and no loads are shared.";}
@@ -11869,14 +11891,17 @@ async function loadAdmin(){
     const meSuper=!!r.meSuper,sup=r.users.find(x=>x.isSuper);
     if(ME)ME.isSuper=meSuper;
     $("bk_site").hidden=!meSuper;if(meSuper){loadBackupKey();loadBackupCrypt();}$("bk_superonly").hidden=meSuper;$("bk_supername").textContent=sup?(sup.name||sup.username):"";
-    let h="";
+    let h="";const sq=r.quotaMB||0;
     r.users.forEach(u=>{
       const locked=u.isSuper&&!meSuper; // the owner's account: hands off
       const badges=[u.isSuper?'<span class="chip super">Super admin</span>':u.isAdmin?'<span class="chip">Admin</span>':'',u.disabled?'<span class="chip off">Turned off</span>':'',u.mustChange?'<span class="chip warn">Hasn\'t set a password yet</span>':'',u.isMe?'<span class="chip me">You</span>':''].join("");
       h+='<div class="ucard" data-u="'+u.id+'"><div class="uhead"><div><div class="uname">'+esc(u.name||u.username)+'</div><div class="note">'+esc(u.username)+' · '+u.loads+' load'+(u.loads===1?'':'s')+' · last sign-in '+esc(when(u.lastLogin))+'</div></div><div class="chips">'+badges+'</div></div>'+
+        '<p class="note ustore">Storage: <b>'+fmtBytes(u.used)+'</b>'+(u.limit?' of '+fmtBytes(u.limit):'')+(u.quota==null?(sq?' (the server\'s limit)':' (no limit)'):u.quota===-1?' (no limit, set for them)':' (set for them)')+'</p>'+storeBar(u.used,u.limit)+
+        (locked?'':'<div class="row uquotaedit" data-quotaedit hidden><select class="fieldselect" aria-label="Storage limit" data-qsel><option value="server"'+(u.quota==null?' selected':'')+'>The server\'s limit ('+(sq?fmtBytes(sq*1048576):'no limit')+')</option><option value="none"'+(u.quota===-1?' selected':'')+'>No limit</option><option value="mb"'+(u.quota>0?' selected':'')+'>Their own limit…</option></select>'+
+          '<input type="number" inputmode="numeric" min="1" step="1" aria-label="Their limit in MB" placeholder="MB" data-qmb value="'+(u.quota>0?u.quota:"")+'"'+(u.quota>0?'':' hidden')+'><span class="note" data-qmbl'+(u.quota>0?'':' hidden')+'>MB</span><button class="btn primary" type="button" data-act="quotasave">Save</button><button class="btn" type="button" data-act="quotacancel">Cancel</button></div>')+
         (locked?'':'<div class="row unameedit" data-nameedit hidden><input type="text" maxlength="80" aria-label="Display name" value="'+esc(u.name||"")+'" placeholder="'+esc(u.username)+'"><button class="btn primary" type="button" data-act="namesave">Save</button><button class="btn" type="button" data-act="namecancel">Cancel</button></div>')+
         (locked?'<p class="note">This is the super admin. Only they can change this account.</p>':
-        '<div class="row"><button class="btn" type="button" data-act="name">Edit name</button>'+(u.isMe?'':'<button class="btn" type="button" data-act="reset">Reset password</button>')+
+        '<div class="row"><button class="btn" type="button" data-act="name">Edit name</button><button class="btn" type="button" data-act="quota">Storage limit</button>'+(u.isMe?'':'<button class="btn" type="button" data-act="reset">Reset password</button>')+
         (u.isSuper?'':'<button class="btn" type="button" data-act="admin">'+(u.isAdmin?'Remove admin':'Make admin')+'</button>')+
         (meSuper&&u.isAdmin&&!u.isSuper&&!u.disabled?'<button class="btn" type="button" data-act="super">Make super admin</button>':'')+
         '<a class="btn" href="/api/admin/users/'+u.id+'/export.xlsx" download>Export Excel</a><a class="btn" href="/api/admin/users/'+u.id+'/export.pdf" download>Export PDF</a><a class="btn" href="/api/admin/users/'+u.id+'/export.zip" download>Backup</a>'+
@@ -11892,6 +11917,11 @@ async function loadAdmin(){
         const confirmTwice=(label,fn)=>{const key=act+id;if(adminArmed===key){adminArmed=null;fn();return;}adminArmed=key;const old=b.textContent;b.textContent=label;setTimeout(()=>{if(adminArmed===key){adminArmed=null;b.textContent=old;}},4000);};
         try{
           if(act==="reset")confirmTwice("Tap again to reset",async()=>{try{const x=await API.post("/api/admin/users/"+id+"/reset-password",{});showResult(out,'New temporary password for <b>'+esc(u.username)+'</b>. They\'ve been signed out everywhere.',false,x.tempPassword);}catch(e){showResult(out,esc(e.message),true);}});
+          const qe=card.querySelector("[data-quotaedit]");
+          if(act==="quota"&&qe){qe.hidden=false;const sel=qe.querySelector("[data-qsel]");sel.onchange=()=>{const own=sel.value==="mb";qe.querySelector("[data-qmb]").hidden=!own;qe.querySelector("[data-qmbl]").hidden=!own;if(own)qe.querySelector("[data-qmb]").focus();};sel.focus();return;}
+          if(act==="quotacancel"&&qe){qe.hidden=true;return;}
+          if(act==="quotasave"&&qe){const v=qe.querySelector("[data-qsel]").value,mb=qe.querySelector("[data-qmb]").value.trim();
+            await API.patch("/api/admin/users/"+id,{quota:v==="server"?null:v==="none"?"none":mb});loadAdmin();if(u.isMe)drawMyStorage();return;}
           const ed=card.querySelector("[data-nameedit]"),inp=ed.querySelector("input");
           if(act==="name"){ed.hidden=false;inp.focus();inp.select();}
           if(act==="namecancel"){ed.hidden=true;inp.value=u.name||"";}

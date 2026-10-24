@@ -174,6 +174,8 @@ if (!q("PRAGMA table_info(photos)").all().some((c) => c.name === "measure")) db.
 // which ladder test (inside the load's data) a target photo was shot with
 if (!q("PRAGMA table_info(photos)").all().some((c) => c.name === "ladder_id")) db.exec("ALTER TABLE photos ADD COLUMN ladder_id TEXT");
 if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "accepted_terms")) db.exec("ALTER TABLE users ADD COLUMN accepted_terms INTEGER");
+// storage limit for one person (2.43.16): NULL = the server's limit, -1 = no limit, a number = that many MB
+if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "quota_mb")) db.exec("ALTER TABLE users ADD COLUMN quota_mb INTEGER");
 const ladderIdOf = (v) => (typeof v === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(v) ? v : null);
 const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
 // sharing ammo with everyone (box photos of catalog ammo, loads people share, and their photos) is on unless the
@@ -194,6 +196,39 @@ const isSuper = (u) => !!u && u.id === superId();
 const getSetting = (k, d) => { const r = q("SELECT value FROM settings WHERE key=?").get(k); return r ? JSON.parse(r.value) : d; };
 const setSetting = (k, v) => q("INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(k, JSON.stringify(v));
 const now = () => Date.now();
+/* ---- storage per person (2.43.16): everything someone has saved on the server (photos, documents, files, and their loads,
+   profiles and other data) counts toward a limit the admin sets for everyone (setting quotaMB; 0 = none), which can be
+   changed for one person on the Admin page. Only uploads are refused when it's full; typing and saving data never is. ---- */
+const MB = 1024 * 1024;
+function userUsage(uid) {
+  let b = 0;
+  const st = (f) => { try { return fs.statSync(path.join(PHOTO_DIR, path.basename(f))).size; } catch { return 0; } };
+  for (const t of ["photos", "trip_photos", "box_photos", "gun_photos"]) for (const r of q(`SELECT file FROM ${t} WHERE owner_id=?`).all(uid)) b += st(r.file);
+  for (const t of ["vault_docs", "gear_files"]) b += q(`SELECT COALESCE(SUM(size),0) AS s FROM ${t} WHERE owner_id=?`).get(uid).s || 0;
+  b += q("SELECT COALESCE(SUM(LENGTH(data)),0) AS s FROM loads WHERE owner_id=?").get(uid).s || 0;
+  b += q("SELECT COALESCE(SUM(LENGTH(data)),0) AS s FROM user_docs WHERE user_id=?").get(uid).s || 0;
+  b += q("SELECT COALESCE(SUM(LENGTH(data)),0) AS s FROM shared_ammo WHERE owner_id=?").get(uid).s || 0;
+  return b;
+}
+const serverQuotaMB = () => Math.max(0, Math.round(Number(getSetting("quotaMB", 0)) || 0));
+// bytes this person may keep, or null for no limit
+function userLimit(uid) {
+  const r = q("SELECT quota_mb FROM users WHERE id=?").get(uid);
+  const o = r ? r.quota_mb : null;
+  if (o === -1) return null;
+  if (o > 0) return o * MB;
+  const g = serverQuotaMB();
+  return g > 0 ? g * MB : null;
+}
+const fmtMB = (b) => (b >= 1024 * MB ? (b / 1024 / MB).toFixed(1).replace(/\.0$/, "") + " GB" : (b / MB).toFixed(b < 10 * MB ? 1 : 0) + " MB");
+// refuse an upload that would go over this person's limit
+function needRoom(user, add) {
+  if (!user || !user.id) return;
+  const lim = userLimit(user.id);
+  if (lim == null) return;
+  const used = userUsage(user.id);
+  if (used + add > lim) throw new HttpError(413, `There's no room for that. You've used ${fmtMB(used)} of your ${fmtMB(lim)} on this Range Book. Delete photos or files you don't need, or ask the admin for more room.`);
+}
 // Live target remote sessions (in memory): id -> { uid, device, frame, state, cmds, waiters, ... }
 const REMOTE = new Map();
 function remoteEnd(id) { const r = REMOTE.get(id); if (!r) return; REMOTE.delete(id); for (const w of r.waiters) w(); r.waiters.clear(); }
@@ -587,6 +622,7 @@ async function api(req, res, url) {
   let m0;
 
   if (p === "/api/me" && method === "GET") return send(res, 200, { user: publicUser(user) });
+  if (p === "/api/me/storage" && method === "GET") return send(res, 200, { used: userUsage(user.id), limit: userLimit(user.id) });
   if (p === "/api/me/accept-terms" && method === "POST") { q("UPDATE users SET accepted_terms=? WHERE id=?").run(now(), user.id); user.accepted_terms = now(); return send(res, 200, { user: publicUser(user) }); }
   if (p === "/api/me/password" && method === "POST") {
     const { current, next } = await readJson(req);
@@ -609,6 +645,7 @@ async function api(req, res, url) {
   if (p === "/api/import" && method === "POST") {
     const buf = await readBody(req, 200 * 1024 * 1024);
     if (!buf.length) throw new HttpError(400, "Pick a file to import.");
+    needRoom(user, buf.length); // a backup unpacks to about its own size or more
     let r;
     try { r = backups().importInto(user.id, buf); } catch (e) { throw new HttpError(400, e && e.message ? e.message : "That file couldn't be imported."); }
     console.log(` Import into ${user.username}: ${r.kind}, ${r.loads.added} loads added, ${r.photos.added} photos added`);
@@ -737,6 +774,7 @@ async function api(req, res, url) {
       const mm = /^data:image\/(jpeg|png|webp);base64,(.+)$/.exec(body.data || "");
       if (!mm) throw new HttpError(400, "That isn't a JPEG, PNG or WebP image.");
       const buf = Buffer.from(mm[2], "base64");
+      needRoom(user, buf.length);
       const pid = crypto.randomUUID(), file = `${pid}.${mm[1] === "jpeg" ? "jpg" : mm[1]}`;
       fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
       const lad = ladderIdOf(body.ladderId);
@@ -790,6 +828,7 @@ async function api(req, res, url) {
     const mm = /^data:image\/(jpeg|png|webp);base64,(.+)$/.exec(body.data || "");
     if (!mm) throw new HttpError(400, "That isn't a JPEG, PNG or WebP image.");
     const buf = Buffer.from(mm[2], "base64");
+    needRoom(user, buf.length);
     const pid = crypto.randomUUID(), file = `${pid}.${mm[1] === "jpeg" ? "jpg" : mm[1]}`;
     fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
     // with sharing off, a catalog box photo is kept as a private photo of your own ammo entry
@@ -819,6 +858,7 @@ async function api(req, res, url) {
     const mm = /^data:image\/(jpeg|png|webp);base64,(.+)$/.exec(body.data || "");
     if (!mm) throw new HttpError(400, "That isn't a JPEG, PNG or WebP image.");
     const buf = Buffer.from(mm[2], "base64");
+    needRoom(user, buf.length);
     const pid = crypto.randomUUID(), file = `${pid}.${mm[1] === "jpeg" ? "jpg" : mm[1]}`;
     fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
     q("INSERT INTO gun_photos(id,rifle_id,owner_id,file,w,h,created_at) VALUES(?,?,?,?,?,?,?)").run(pid, rid, user.id, file, body.w | 0 || null, body.h | 0 || null, now());
@@ -868,6 +908,7 @@ async function api(req, res, url) {
     if (!meta || typeof meta.iv !== "string" || typeof meta.ct !== "string" || meta.iv.length > 32 || meta.ct.length > 2048) throw new HttpError(400, "That document's details aren't valid.");
     const buf = await readBody(req, 20 * 1024 * 1024);
     if (buf.length < 29) throw new HttpError(400, "That document is empty.");
+    needRoom(user, buf.length);
     const id = crypto.randomUUID(), file = id + ".rbv";
     fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
     q("INSERT INTO vault_docs(id,owner_id,item_id,meta,file,size,created_at) VALUES(?,?,?,?,?,?,?)").run(id, user.id, item, JSON.stringify({ iv: meta.iv, ct: meta.ct }), file, buf.length, now());
@@ -903,6 +944,7 @@ async function api(req, res, url) {
     const type = String(req.headers["content-type"] || "application/octet-stream").split(";")[0].trim().toLowerCase().slice(0, 100);
     const buf = await readBody(req, 20 * 1024 * 1024);
     if (!buf.length) throw new HttpError(400, "That file is empty.");
+    needRoom(user, buf.length);
     const id = crypto.randomUUID(), file = id + ".rbf";
     fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
     q("INSERT INTO gear_files(id,owner_id,item_id,name,type,file,size,created_at) VALUES(?,?,?,?,?,?,?,?)").run(id, user.id, item, name, type, file, buf.length, now());
@@ -947,6 +989,7 @@ async function api(req, res, url) {
       const mm = /^data:image\/(jpeg|png|webp);base64,(.+)$/.exec(body.data || "");
       if (!mm) throw new HttpError(400, "That isn't a JPEG, PNG or WebP image.");
       const buf = Buffer.from(mm[2], "base64");
+      needRoom(user, buf.length);
       const pid = crypto.randomUUID(), file = `${pid}.${mm[1] === "jpeg" ? "jpg" : mm[1]}`;
       fs.writeFileSync(path.join(PHOTO_DIR, file), buf);
       q("INSERT INTO trip_photos(id,trip_id,owner_id,caption,file,w,h,created_at) VALUES(?,?,?,?,?,?,?,?)")
@@ -1040,6 +1083,7 @@ async function api(req, res, url) {
       mtext = JSON.stringify(body.measure);
       if (mtext.length > 50000) throw new HttpError(400, "That measurement has too many marks.");
     }
+    needRoom(user, Math.floor(mm[2].length * 3 / 4));
     const pid = crypto.randomUUID(), file = `${pid}.${mm[1] === "jpeg" ? "jpg" : mm[1]}`;
     fs.writeFileSync(path.join(PHOTO_DIR, file), Buffer.from(mm[2], "base64"));
     const at = Number(body.created) > 0 && Number(body.created) <= now() ? Math.round(Number(body.created)) : now();
@@ -1162,8 +1206,9 @@ async function api(req, res, url) {
       finally { if (!keep) fs.rmSync(dir, { recursive: true, force: true }); }
     }}
     if (p === "/api/admin/settings") {
-      if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); if ("shareAmmo" in b) setSetting("shareAmmo", !!b.shareAmmo); }
-      return send(res, 200, { guestEnabled: !!getSetting("guestEnabled", false), shareAmmo: shareBoxPhotos() });
+      if (method === "PUT") { const b = await readJson(req); if ("guestEnabled" in b) setSetting("guestEnabled", !!b.guestEnabled); if ("shareAmmo" in b) setSetting("shareAmmo", !!b.shareAmmo);
+        if ("quotaMB" in b) { const v = b.quotaMB === "" || b.quotaMB == null ? 0 : Number(b.quotaMB); if (!(v >= 0 && v <= 10000000)) throw new HttpError(400, "Enter a number of MB, or leave it blank for no limit."); setSetting("quotaMB", Math.round(v)); } }
+      return send(res, 200, { guestEnabled: !!getSetting("guestEnabled", false), shareAmmo: shareBoxPhotos(), quotaMB: serverQuotaMB() });
     }
     if (p === "/api/admin/super" && method === "POST") {
       if (!isSuper(user)) throw new HttpError(403, "Only the super admin can hand that role on.");
@@ -1176,10 +1221,10 @@ async function api(req, res, url) {
     }
     if (p === "/api/admin/users" && method === "GET") {
       const sid = superId();
-      const rows = q(`SELECT u.id, u.username, u.display_name, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login,
+      const rows = q(`SELECT u.id, u.username, u.display_name, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login, u.quota_mb,
                         (SELECT COUNT(*) FROM loads l WHERE l.owner_id=u.id) AS loads
                       FROM users u ORDER BY u.username COLLATE NOCASE`).all();
-      return send(res, 200, { users: rows.map((r) => ({ id: r.id, username: r.username, name: r.display_name, isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
+      return send(res, 200, { quotaMB: serverQuotaMB(), users: rows.map((r) => ({ used: userUsage(r.id), quota: r.quota_mb == null ? null : r.quota_mb, limit: userLimit(r.id), id: r.id, username: r.username, name: r.display_name, isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
     }
     if (p === "/api/admin/users" && method === "POST") {
       const b = await readJson(req);
@@ -1226,6 +1271,9 @@ async function api(req, res, url) {
           if (b.disabled) q("DELETE FROM sessions WHERE user_id=?").run(id);
         }
         if ("name" in b) q("UPDATE users SET display_name=? WHERE id=?").run(String(b.name || "").trim().slice(0, 80), id);
+        // storage limit: null = the server's, "none" = no limit, or a number of MB
+        if ("quota" in b) { const v = b.quota; let o = null; if (v === "none" || v === -1) o = -1; else if (v != null && v !== "") { o = Math.round(Number(v)); if (!(o >= 1 && o <= 10000000)) throw new HttpError(400, "Enter a number of MB (1 or more)."); }
+          q("UPDATE users SET quota_mb=? WHERE id=?").run(o, id); }
         return send(res, 200, { ok: true });
       }
       if (!m[2] && method === "DELETE") {
