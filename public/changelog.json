@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.0",
-      "date": "2026-10-23",
-      "title": "Back to where you were",
+      "version": "2.43.1",
+      "date": "2026-10-24",
+      "title": "Sunrise and sunset",
       "items": [
+        "Gear & Ranges › Ranges: a range with a spot on the map shows sunrise and sunset for today and tomorrow on its Weather card. They're worked out on your phone, so no signal is needed, and once you've looked up the range's weather they're in the range's own time zone (with the zone shown when it isn't your phone's). A range trip at a saved range, or one where you tapped the weather button, shows sunrise and sunset for the trip's date. These are the times only: Range Book doesn't say when shooting or hunting is allowed.",
         "Tools › Library opened from somewhere else (Reloading › Reference, Home's Built in Library, or a link in a note) now has a back button to where you were, like ‹ Reference, instead of ‹ Tools. Opened from the Tools tab, it still says ‹ Tools.",
         "Version 2.43 starts here. Everything in 2.42 (red dots and sights, the scope reticle library, paste or drop pictures, serial number search, the floating back button, the new gun picker on profiles) is listed below."
       ]

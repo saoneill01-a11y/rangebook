@@ -1000,6 +1000,7 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .wxrow{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .wxrow .note{flex:1 1 200px}
 .rgloc .row{margin:0 0 4px}.rgpick{display:flex;flex-direction:column;gap:8px;margin:6px 0}.rgopt{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}.rgopt .t{color:var(--fg);overflow-wrap:anywhere}.rgopt .row{margin:0;align-items:center;gap:6px 12px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
+.grid>.sunline{grid-column:1/-1;margin:0}
 .wxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0 6px}.wxgrid div{background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
 .wxgrid dt{font-size:12.5px;color:var(--muted)}.wxgrid dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
 @media (max-width:420px){.wxgrid{grid-template-columns:1fr 1fr}}
@@ -1548,7 +1549,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Save the places you shoot under <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a>: tap <b>+ New range</b>, give it a name, its address, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Changes save as you type. Under <b>Dope</b>, pick a Shooting profile to see the dial and wind for every target with it; the size column shows each target in MOA or MIL, so you can see how much room you have, and <b>Use these conditions</b> sets that profile's temperature and altitude to the range's usual ones. Each Shooting profile also has a <b>Saved ranges</b> card: pick a range there to see the same thing for that profile, and <b>Edit ranges ›</b> takes you to the range. Range names show up under <b>Where</b> on range trips.</p>
       <p>A range's targets are listed nearest first. If you walk or shoot them in another order, drag <b>⠿</b> beside a target to move it; the dope follows your order. <b>Sort by distance</b> puts them back nearest first.</p>
       <h3>A range's address and weather</h3>
-      <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>. Range Book shows what it found (up to five places, each with <b>See it on a map</b>) and asks which one is right: tap <b>Yes, use it</b> or <b>Use this one</b> and the full address goes into the Address box; <b>No</b> keeps what you had. Or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then the range's <b>Weather</b> card shows today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there; tap <b>Refresh</b> for the latest. Under <b>Dope</b>, and on a profile's <b>Saved ranges</b> card, <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
+      <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>. Range Book shows what it found (up to five places, each with <b>See it on a map</b>) and asks which one is right: tap <b>Yes, use it</b> or <b>Use this one</b> and the full address goes into the Address box; <b>No</b> keeps what you had. Or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then the range's <b>Weather</b> card shows today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there; tap <b>Refresh</b> for the latest. Above the weather are <b>sunrise and sunset</b> for today and tomorrow, worked out on your phone (no signal needed), in the range's own time zone once you've looked up its weather (with the zone shown, like MDT, when it isn't your phone's). A range trip at a saved range, or one where you tapped the weather button, shows sunrise and sunset for the trip's date too. These are just the times: Range Book doesn't say when shooting or hunting is allowed, so check your local rules. Under <b>Dope</b>, and on a profile's <b>Saved ranges</b> card, <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
       <h3>Put the cards in your order</h3>
       <p><b>Arrange these cards</b>, under the last card on a profile, lets you drag the cards (Inputs, Conditions, Bullet path, Point-blank range, Range table, True up velocity, Dope card &amp; reticle, Saved ranges) into the order you want, for example the dope card first. It's one order for every profile and the Tools trajectory calculator, and the links along the top follow it. On a big screen, Inputs and Conditions keep the left column and the rest the right, each in your order. <b>Usual order</b> puts them back.</p>
       <h3>The inputs fold up on a phone</h3>
@@ -2281,7 +2282,7 @@ window.RB_WX=(()=>{
         {enableHighAccuracy:true,timeout:15000,maximumAge:300000});});},
     // today's weather at a spot: °F, mph, ft, hPa
     async get(lat,lon){
-      const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+f4(lat)+"&longitude="+f4(lon)+"&current=temperature_2m,relative_humidity_2m,dew_point_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=fahrenheit&wind_speed_unit=mph");
+      const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+f4(lat)+"&longitude="+f4(lon)+"&current=temperature_2m,relative_humidity_2m,dew_point_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto");
       if(!r.ok)throw new Error("weather");
       const j=await r.json(),c=j.current||{},T=c.temperature_2m,P=c.surface_pressure,RH=c.relative_humidity_2m;
       if(!(isFinite(T)&&P>300))throw new Error("weather");
@@ -2293,8 +2294,26 @@ window.RB_WX=(()=>{
         alt:pa(rho*287.05*tk/100),
         dAlt:(1-Math.pow(rho/1.225,0.234969))*145442.16,
         wind:isFinite(c.wind_speed_10m)?c.wind_speed_10m:null,dir:isFinite(c.wind_direction_10m)?c.wind_direction_10m:null,gust:isFinite(c.wind_gusts_10m)?c.wind_gusts_10m:null,
-        elev:isFinite(j.elevation)?j.elevation*3.28084:null,at:Date.now()};
+        elev:isFinite(j.elevation)?j.elevation*3.28084:null,tz:typeof j.timezone==="string"&&j.timezone!=="GMT"?j.timezone:null,at:Date.now()};
     },
+    /* sunrise and sunset (2.43.1) for a spot on a day ("YYYY-MM-DD"), worked out on the phone (no signal needed): the usual
+       sunrise equation, good to about a minute, for the top of the sun at a flat horizon (what almanacs list). Returns times
+       in ms, or {up:true}/{down:true} when the sun doesn't set or rise that day. Times only; Range Book doesn't say when
+       shooting or hunting is allowed. */
+    sun(lat,lon,ymd){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(ymd||""));if(!m||!isFinite(lat)||!isFinite(lon))return null;
+      const rad=Math.PI/180,jd=Date.UTC(+m[1],+m[2]-1,+m[3],12)/864e5+2440587.5,n=Math.round(jd-2451545),J=n-lon/360,
+        M=((357.5291+0.98560028*J)%360+360)%360,C=1.9148*Math.sin(M*rad)+0.02*Math.sin(2*M*rad)+0.0003*Math.sin(3*M*rad),
+        L=(M+C+180+102.9372)%360,Jt=2451545+J+0.0053*Math.sin(M*rad)-0.0069*Math.sin(2*L*rad),
+        sd=Math.sin(L*rad)*Math.sin(23.4397*rad),cd=Math.cos(Math.asin(sd)),
+        cw=(Math.sin(-0.833*rad)-Math.sin(lat*rad)*sd)/(Math.cos(lat*rad)*cd),ms=j=>Math.round((j-2440587.5)*864e5);
+      if(cw<-1)return {up:true};if(cw>1)return {down:true};const w=Math.acos(cw)/rad/360;return {rise:ms(Jt-w),set:ms(Jt+w)};},
+    // today's date at a spot ("YYYY-MM-DD"), in its time zone when known
+    today(tz,plus){const d=new Date(Date.now()+(plus||0)*864e5);try{return new Intl.DateTimeFormat("en-CA",tz?{timeZone:tz}:{}).format(d);}catch(e){return new Intl.DateTimeFormat("en-CA").format(d);}},
+    // "Sunrise 7:47 AM · sunset 6:02 PM", in the spot's time zone when it isn't the phone's (then with the zone, like MDT)
+    sunTxt(o){if(!o)return "";if(o.up)return "The sun doesn't set";if(o.down)return "The sun doesn't rise";
+      const mine=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){return "";}})(),other=o.tz&&o.tz!==mine;
+      const f=t=>{try{return new Date(t).toLocaleTimeString([],Object.assign({hour:"numeric",minute:"2-digit"},other?{timeZone:o.tz,timeZoneName:"short"}:{}));}catch(e){return new Date(t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}};
+      return "Sunrise "+f(o.rise)+" · sunset "+f(o.set);},
     // the ground's height at a spot (ft)
     async elev(lat,lon){try{const r=await fetch("https://api.open-meteo.com/v1/elevation?latitude="+f4(lat)+"&longitude="+f4(lon));if(!r.ok)return null;const j=await r.json(),e=j.elevation&&j.elevation[0];return isFinite(e)?e*3.28084:null;}catch(e){return null;}},
     // an address or place name to places on the map (up to 5): OpenStreetMap first, then Open-Meteo's town lookup
@@ -3256,10 +3275,15 @@ const wxTime=w=>new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-d
 function rangeWxHtml(r){
   if(!RB_WX.ok(r))return '<p class="note">Add the range\'s address under <b>Details</b> (or tap <b>I\'m here now</b> there) to see the weather at it.</p>';
   const w=RWX[r.id];
-  return '<div class="row"><button class="btn" type="button" id="rgWxGo">'+(w?'Refresh':'Get today\'s weather')+'</button><span class="note" id="rgWxNote">'+(w?'As of '+wxTime(w)+'.':'')+'</span></div>'+
+  return rangeSunHtml(r)+'<div class="row"><button class="btn" type="button" id="rgWxGo">'+(w?'Refresh':'Get today\'s weather')+'</button><span class="note" id="rgWxNote">'+(w?'As of '+wxTime(w)+'.':'')+'</span></div>'+
     (w?'<dl class="wxgrid">'+rangeWxRows(w).map(([k,v])=>'<div><dt>'+k+'</dt><dd>'+escL(v)+'</dd></div>').join("")+'</dl><p class="note">Density altitude is how high the air feels to a bullet, with the temperature and humidity counted in. Use it on a profile with <b>Use today\'s weather here</b> under <b>Dope</b> (or on the profile\'s Ranges card).</p>':'');
 }
-async function rangeWxGet(r,force){const w0=RWX[r.id];if(!force&&w0&&Date.now()-w0.at<10*60000)return w0;const w=await RB_WX.get(r.lat,r.lon);RWX[r.id]=w;return w;}
+// sunrise and sunset at a saved range, today and tomorrow (2.43.1); no signal needed. Times are in the range's own time zone
+// once its weather has been looked up (r.tz), otherwise the phone's.
+function rangeSunHtml(r){if(!RB_WX.ok(r))return "";const d=[0,1].map(k=>{const s=RB_WX.sun(+r.lat,+r.lon,RB_WX.today(r.tz,k));return s?RB_WX.sunTxt(Object.assign({tz:r.tz},s)):"";});
+  const dd=t=>t.split(" · ").map(x=>escL(x.charAt(0).toUpperCase()+x.slice(1))).join("<br>");
+  return d[0]?'<dl class="wxgrid sungrid"><div><dt>Today</dt><dd>'+dd(d[0])+'</dd></div>'+(d[1]?'<div><dt>Tomorrow</dt><dd>'+dd(d[1])+'</dd></div>':'')+'</dl>':"";}
+async function rangeWxGet(r,force){const w0=RWX[r.id];if(!force&&w0&&Date.now()-w0.at<10*60000)return w0;const w=await RB_WX.get(r.lat,r.lon);RWX[r.id]=w;if(w.tz&&r.tz!==w.tz){r.tz=w.tz;save();}return w;}
 function bindRangeWx(box,r,redraw){const b=box.querySelector("#rgWxGo");if(!b)return;b.addEventListener("click",async()=>{b.disabled=true;$("rgWxNote").textContent="Getting the weather…";
   try{await rangeWxGet(r,true);redraw();}catch(e){$("rgWxNote").textContent="Couldn't get the weather. You need a signal for this.";b.disabled=false;}});}
 function rangeEditHtml(r){
@@ -3285,9 +3309,9 @@ function bindRangeEdit(box,r,changed,redraw){
   $("rg_notes").addEventListener("input",e=>{r.notes=e.target.value;ch();});
   $("rg_addr").addEventListener("input",e=>{r.address=e.target.value;ch();});
   {const note=$("rg_locNote"),fb=$("rg_find"),hb=$("rg_here");
-    const bindForget=()=>{const f=$("rg_forget");if(f)f.addEventListener("click",()=>{r.lat=r.lon=r.elev=null;delete RWX[r.id];ch();redraw();});};bindForget();
+    const bindForget=()=>{const f=$("rg_forget");if(f)f.addEventListener("click",()=>{r.lat=r.lon=r.elev=null;delete r.tz;delete RWX[r.id];ch();redraw();});};bindForget();
     // a new spot: also its ground height, which fills in the altitude if it's empty
-    const setSpot=async(p,how)=>{r.lat=Math.round(p.lat*1e5)/1e5;r.lon=Math.round(p.lon*1e5)/1e5;delete RWX[r.id];const e=await RB_WX.elev(r.lat,r.lon);r.elev=e!=null?Math.round(e):null;
+    const setSpot=async(p,how)=>{r.lat=Math.round(p.lat*1e5)/1e5;r.lon=Math.round(p.lon*1e5)/1e5;delete r.tz;delete RWX[r.id];const e=await RB_WX.elev(r.lat,r.lon);r.elev=e!=null?Math.round(e):null;
       if(num(r.alt)==null&&r.elev!=null)r.alt=r.elev;ch();redraw();const n=$("rg_locNote");if(n)n.insertAdjacentHTML("afterbegin",escL(how)+' ');};
     // look it up, then ask which (if any) is the right place before saving it
     fb.addEventListener("click",async()=>{const q=$("rg_addr").value.trim()||r.name||"";if(!q){note.textContent="Type the address first.";$("rg_addr").focus();return;}
@@ -9511,6 +9535,10 @@ const tripRange=t=>{const n=String(t.place||"").trim().toLowerCase();return n?tr
 const tripWxLabel=t=>{const r=tripRange(t);return r?"Use the weather at "+(r.name||"this range"):"Use the weather where I am";};
 const tripWxTxt=t=>{const w=t.wx;if(!w||!w.at)return "";const P=U.metric?Math.round(w.hpa)+" hPa":(w.hpa*0.02953).toFixed(2)+" inHg";
   return "Weather"+(w.range?" at "+w.range:"")+" at "+new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+": "+[w.rh!=null?w.rh+"% humidity":"",P,"density altitude "+U.s("ft",w.dAlt,0,true),w.elev!=null?"elevation "+U.s("ft",w.elev,0,true):""].filter(Boolean).join(" · ")+".";};
+// sunrise and sunset on the trip's day (2.43.1): at its saved range (worked out on the phone), or where the weather was taken
+const tripSunTxt=t=>{const d=String(t.date||"");if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return "";const r=tripRange(t),ws=t.wx&&t.wx.sun;
+  if(r){const s=RB_WX.sun(+r.lat,+r.lon,d);return s?RB_WX.sunTxt(Object.assign({tz:r.tz||(ws&&ws.tz)||null},s))+" at "+(r.name||"this range")+".":"";}
+  if(ws&&ws.d===d)return RB_WX.sunTxt(ws)+(t.wx.range?" at "+t.wx.range:" where the weather was taken")+".";return "";};
 const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["wind","Wind","text","e.g. 5 mph from 3 o'clock"],["avgVel","Average velocity (fps)","number","optional"],["sd","SD (fps)","number","optional"]];
 /* velocity vs temperature: each trip's average velocity against its temperature, with a best-fit line.
    Its slope is the powder's temperature sensitivity for this load, which the calculator can use. */
@@ -9614,7 +9642,7 @@ function renderTrips(){
       (t.partId&&!ps.some(p=>p.id===t.partId)?'<option value="'+esc(t.partId)+'" selected>'+esc((parts.find(p=>p.id===t.partId)&&partName(parts.find(p=>p.id===t.partId)))||"A barrel no longer here")+'</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>';}
   if(cans.length||t.canId)h+='<div class="field wide"><label for="tp_can">Suppressor</label><select id="tp_can" class="fieldselect"><option value="">None</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(t.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+
       (t.canId&&!cans.some(c=>c.id===t.canId)?'<option value="'+esc(t.canId)+'" selected>A suppressor no longer here</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>'+'<div class="field wide cartinfo" id="tpCanFit" aria-live="polite"></div>';
-  h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">'+esc(tripWxLabel(t))+'</button><span class="note" id="tripWxNote">'+esc(tripWxTxt(t))+'</span></div>'+
+  h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">'+esc(tripWxLabel(t))+'</button><span class="note" id="tripWxNote">'+esc(tripWxTxt(t))+'</span></div>'+'<p class="note sunline" id="tripSun"'+(tripSunTxt(t)?'':' hidden')+'>'+esc(tripSunTxt(t))+'</p>'+
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>'+
     coldHtml(t)+
     '<h3>Chronograph</h3><div id="tripChrono"></div>'+
@@ -9729,12 +9757,14 @@ function renderTrips(){
       t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",w.temp)))*100)/100:Math.round(w.temp);
       if(w.wind!=null)t.wind=U.s("mph",w.wind,0)+" from the "+(w.dir!=null?RB_WX.dir(w.dir):"?")+(w.gust!=null&&w.gust>w.wind+3?", gusts "+U.n("mph",w.gust,0):"");
       t.wx={rh:w.rh!=null?Math.round(w.rh):null,hpa:Math.round(w.hpa*10)/10,dAlt:Math.round(w.dAlt/10)*10,elev:w.elev!=null?Math.round(w.elev):null,at:w.at,range:at?at.name||"":""};
+      {const sn=RB_WX.sun(p.lat,p.lon,t.date);if(sn&&/^\d{4}-/.test(String(t.date||"")))t.wx.sun=Object.assign({d:t.date,tz:w.tz||null},sn);}
       U.fill($("tp_temp"),"F",t.temp,0,1);$("tp_wind").value=t.wind||"";queueTrips();
-      note.textContent=tripWxTxt(t);btn.textContent=tripWxLabel(t);
+      note.textContent=tripWxTxt(t);btn.textContent=tripWxLabel(t);sunUp();
     }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter it yourself.";}
     btn.disabled=false;
   });
-  $("tp_place").addEventListener("input",()=>{$("tripWx").textContent=tripWxLabel(t);});
+  const sunUp=()=>{const e=$("tripSun");if(!e)return;const x=tripSunTxt(t);e.textContent=x;e.hidden=!x;};
+  $("tp_place").addEventListener("input",()=>{$("tripWx").textContent=tripWxLabel(t);sunUp();});$("tp_date").addEventListener("input",sunUp);$("tp_date").addEventListener("change",sunUp);
   renderTripPhotos();
 }
 window.RB_TARGETS=()=>renderTargets($("targetsRoot"));
