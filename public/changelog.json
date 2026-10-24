@@ -2,10 +2,13 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.4",
+      "version": "2.43.5",
       "date": "2026-10-24",
       "title": "All your groups, effective range, bullet drop marks",
       "items": [
+        "Tools › Library: Bullets and Factory ammo now have a Min. expansion speed, the lowest impact speed the maker says the bullet opens up at, for every one whose maker publishes it (Nosler AccuBond, AccuBond Long Range, Partition and Ballistic Tip, Hornady ELD-X, Berger hunting bullets, Lapua Naturalis, Federal Terminal Ascent). They show as \"opens down to …\" in the list, and you can edit them like any other number. A Shooting profile using that ammo offers the number under Effective range (yours, if you've changed it).",
+        "Bullet drop marks: 14 scopes in the Library now know where their bullet drop marks are, from the makers' manuals (Vortex AR-BDC3, Sig Sauer MSR BDC, MOA BDC-1, Hellfire FL-4 and FL-6, and Buckmasters, Athlon BDC 600, Burris Ballistic E3, Primary Arms HUD DMR .308, Swarovski BRX), so the Bullet drop marks switch works on them without typing anything. Primary Arms doesn't publish the angles for its ACSS 5.56 reticle, so type those in if you have them.",
+        "Library fixes: the Burris Fullfield 4-16x50 and Swarovski Z5 3.5-18x44 marks are true at their highest power (16x and 18x).",
         "Range trips: once a trip has two or more measured groups, its Targets section shows All groups together: every group on one target in its own color, with their size all together, the mean radius and where the center is. Line them up around the aim point (where it really hits) or around each group's own center (just how tight it shoots).",
         "Shooting › a profile: a new All your groups card under the range trips puts every measured group from every trip with that profile on one target, in MOA: mean radius, the typical group with the best and worst, and the average center (a check on your zero). Show all trips, the last 90 days or, on a gun with more than one barrel, just this barrel. Trips from before this version are read once in the background to fill it in.",
         "The effective range line is now on the dope card too (on screen and printed) and in Field mode, the same way as the transonic line: an orange dashed line at that distance, and Effective range … under the card's conditions.",
