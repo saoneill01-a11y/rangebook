@@ -1847,7 +1847,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Training</b> (a tab on a computer, or <a class=goto href=#go data-go=train>More › Training</a> on a phone; you can put it on the phone's bar under <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a>) is for practice with the shot timer, kept apart from your range trips.</p>
       <h3>Training profiles</h3>
       <p>A <b>training profile</b> is what you train with: tap <b>+ New training profile</b>, give it a name, and pick the <b>Gun</b>, its <b>Barrel</b> or <b>Suppressor</b> if it has them, and the <b>Ammo</b> (ammo for the gun's cartridge is listed first). Each day you practice is a <b>session</b>: open the profile and tap <b>Start a session today</b> (or <b>Continue today's session</b>). In the session, tap a drill under <b>Run a drill</b>: the shot timer opens right there, with <b>‹</b> back to the session. Run it as many times as you like; each <b>Save to this session</b> adds a run. The session lists every run, drill by drill, with the best and average time, the average first shot and your hits. Fill in <b>Other rounds fired</b> for shots you didn't time (warm-up, zeroing), and change the date, place, suppressor or ammo for that day if they were different.</p>
-      <p>Every round a session fires (each shot in its runs, plus the other rounds) counts toward its gun, barrel, suppressor and ammo, the same as a range trip: the gun's round count and barrel life, a suppressor's cleaning reminder, the ammo you have left, and Home's rounds fired. Sessions don't show up in the Range log. A profile's <b>Progress</b> card charts each drill's average time from session to session, and <b>Compare two sessions</b> puts any two side by side, drill by drill: runs, best and average time, first shot, split and hits, with what changed (better is in your accent color). Runs saved from the timer without a profile, and runs from before profiles, are under <b>Without a profile</b> and don't count toward any gun.</p>
+      <p>Every round a session fires (each shot in its runs, plus the other rounds) counts toward its gun, barrel, suppressor and ammo, the same as a range trip: the gun's round count and barrel life, a suppressor's cleaning reminder, the ammo you have left, and Home's rounds fired. Sessions don't show up in the Range log. A profile's <b>Progress</b> card charts each drill's average time from session to session, and <b>Compare two sessions</b> puts any two side by side, drill by drill: runs, best and average time, first shot, split and hits, with what changed (better is in your accent color). Runs saved from the timer without a profile, and runs from before profiles, are under <b>Without a profile</b> and don't count toward any gun. A new training profile, session or drill that you leave without changing anything isn't kept, the same as <b>+ Add</b> everywhere else.</p>
       <h3>Drills</h3>
       <p>Six common drills are built in (Bill drill, El Presidente, FAST, 5×5, Failure to stop and Draw to first shot); <b>+ New drill</b> under <b>Drills</b> adds your own with its shots, distance, par time and how it's shot. Tap a drill to change your par time (or edit your own drill). The timer stops by itself after a drill's last shot. Dry-fire reps are counted on the Training page (the last 7 days and in all); they aren't timed, so they don't go in the averages.</p>
       <h3>Shot timer</h3>
@@ -12302,7 +12302,26 @@ window.RB_CHTOOL=(function(){
     return loading;}
   // tell the rest of Range Book the round counts may have changed (guns, barrels, suppressors, ammo, Home)
   function changed(){if(window.RB_TRAIN_CHANGED)try{RB_TRAIN_CHANGED();}catch(e){}}
-  function save(){dirty++;const my=dirty;clearTimeout(saveT);saveT=setTimeout(()=>{saving=saving.then(()=>API.put("/api/doc/training",{data:JSON.parse(JSON.stringify(T))})).then(()=>{if(dirty===my)dirty=0;},e=>{dirty=0;if(window.onWriteError)onWriteError(e);});},400);changed();}
+  /* a new drill, training profile or session that's still just as it was made isn't kept (2.43.11), the same as + Add
+     elsewhere: it isn't saved, and it's dropped when you go somewhere else in Training. FRESH: id -> {kind, snap}. */
+  const FRESH=new Map();
+  const freshAdd=(kind,x)=>{FRESH.set(x.id,{kind,snap:JSON.stringify(x)});return x;};
+  const freshSame=x=>{const f=x&&FRESH.get(x.id);return !!f&&JSON.stringify(x)===f.snap;};
+  const listOf=k=>k==="drill"?T.drills:k==="profile"?T.profiles:T.sessions;
+  function sweepFresh(){
+    const isOpen=(k,id)=>k==="drill"?V.view==="drill"&&V.did===id:k==="profile"?(V.view==="profile"||V.view==="compare")&&V.pid===id:(V.view==="session"||V.view==="timer")&&V.sid===id;
+    // sessions and drills first, so a profile knows whether a kept session still uses it
+    for(const kind of ["session","drill","profile"])FRESH.forEach((f,id)=>{if(f.kind!==kind||isOpen(kind,id))return;
+      const A=listOf(kind),x=A.find(y=>y.id===id);
+      if(kind==="profile"&&x&&T.sessions.some(q=>q.profileId===id)){if(T.sessions.some(q=>q.profileId===id&&!FRESH.has(q.id))){FRESH.delete(id);save();}return;}
+      if(kind==="drill"&&T.sessions.some(q=>q.runs.some(r=>r.drill===id))){FRESH.delete(id);return;}
+      FRESH.delete(id);if(x&&JSON.stringify(x)===f.snap)A.splice(A.indexOf(x),1);});}
+  // what's saved: everything but new items nobody has changed yet
+  // (one a kept session or run points to is kept)
+  const saveData=()=>{const d=JSON.parse(JSON.stringify(T));if(FRESH.size){d.sessions=d.sessions.filter(x=>!freshSame(x));
+      d.profiles=d.profiles.filter(x=>!freshSame(x)||d.sessions.some(q=>q.profileId===x.id));d.drills=d.drills.filter(x=>!freshSame(x)||d.sessions.some(q=>q.runs.some(r=>r.drill===x.id)));}
+    return d;};
+  function save(){dirty++;const my=dirty;clearTimeout(saveT);saveT=setTimeout(()=>{saving=saving.then(()=>API.put("/api/doc/training",{data:saveData()})).then(()=>{if(dirty===my)dirty=0;},e=>{dirty=0;if(window.onWriteError)onWriteError(e);});},400);changed();}
   const editing=()=>{const a=document.activeElement,r=$("trRoot");return !!(a&&r&&r.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName));};
   const drills=()=>BUILT.map(b=>Object.assign({},b,{par:T.par[b.id]!==undefined?T.par[b.id]:b.par,built:true})).concat(T.drills.map(d=>Object.assign({},d)));
   const drillOf=id=>drills().find(d=>d.id===id)||null;
@@ -12321,8 +12340,8 @@ window.RB_CHTOOL=(function(){
   const gunCans=gid=>(gid&&window.RB_GUNCANS?RB_GUNCANS(gid):[]);
   const canName=(gid,cid)=>{const c=gunCans(gid).find(x=>x.id===cid);return c?c.name:"";};
   const gearTxt=o=>[gunOf(o.gunId)&&gunOf(o.gunId).name,o.partId&&(barrels(o.gunId).find(b=>b.id===o.partId)||{}).name,ammoOf(o.ammoId)&&ammoOf(o.ammoId).name,o.canId&&canName(o.gunId,o.canId)].filter(Boolean).join(" · ");
-  function newSession(pid){const p=profOf(pid),s={id:newId("ts"),profileId:pid||null,date:todayISO(),at:Date.now(),place:"",notes:"",extra:null,runs:[]};
-    if(p){s.gunId=p.gunId||null;s.partId=p.partId||null;s.canId=p.canId||null;s.ammoId=p.ammoId||null;}T.sessions.push(s);save();return s;}
+  function newSession(pid,fresh){const p=profOf(pid),s={id:newId("ts"),profileId:pid||null,date:todayISO(),at:Date.now(),place:"",notes:"",extra:null,runs:[]};
+    if(p){s.gunId=p.gunId||null;s.partId=p.partId||null;s.canId=p.canId||null;s.ammoId=p.ammoId||null;}T.sessions.push(s);if(fresh)freshAdd("session",s);else save();return s;}
   // today's session for a profile (the newest one), or a new one
   function todaySession(pid){return sessionsOf(pid).find(s=>s.date===todayISO())||newSession(pid);}
 
@@ -12486,6 +12505,7 @@ window.RB_CHTOOL=(function(){
   function go2(v){if(V.view==="timer"&&v.view!=="timer")unmount("train");V=v;render();window.scrollTo(0,0);}
   function render(){const root=$("trRoot");if(!root)return;
     if(!loaded){root.innerHTML='<p class="note">Loading…</p>';load().then(render);return;}
+    sweepFresh();
     if(V.view==="profile"&&V.pid&&!profOf(V.pid))V={view:"home"};
     if((V.view==="session"||V.view==="timer")&&!sessOf(V.sid))V={view:"home"};
     ({home:renderHome,profile:renderProfile,session:renderSession,timer:renderTimer,drill:renderDrill,compare:renderCompare}[V.view]||renderHome)(root);}
@@ -12507,9 +12527,9 @@ window.RB_CHTOOL=(function(){
     root.innerHTML=h;
     root.querySelectorAll("[data-trp]").forEach(b=>b.addEventListener("click",()=>go2({view:"profile",pid:b.dataset.trp||null})));
     root.querySelectorAll("[data-trd]").forEach(b=>b.addEventListener("click",()=>go2({view:"drill",did:b.dataset.trd,from:{view:"home"}})));
-    $("trProfAdd").addEventListener("click",()=>{const p={id:newId("tp"),name:"",gunId:null,partId:null,canId:null,ammoId:null,notes:"",created:Date.now()};T.profiles.push(p);save();go2({view:"profile",pid:p.id});setTimeout(()=>{const n=$("tp_name");if(n)n.focus();},30);});
+    $("trProfAdd").addEventListener("click",()=>{const p={id:newId("tp"),name:"",gunId:null,partId:null,canId:null,ammoId:null,notes:"",created:Date.now()};T.profiles.push(freshAdd("profile",p));go2({view:"profile",pid:p.id});setTimeout(()=>{const n=$("tp_name");if(n)n.focus();},30);});
     $("trTimer").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("timer",{from:{tab:"train",label:"Training",y:window.scrollY}});});
-    $("trAdd").addEventListener("click",()=>{const d={id:newId(),name:"",shots:5,dist:7,par:null,how:""};T.drills.push(d);save();go2({view:"drill",did:d.id,from:{view:"home"}});setTimeout(()=>{const n=$("trd_name");if(n)n.focus();},30);});
+    $("trAdd").addEventListener("click",()=>{const d={id:newId(),name:"",shots:5,dist:7,par:null,how:""};T.drills.push(freshAdd("drill",d));go2({view:"drill",did:d.id,from:{view:"home"}});setTimeout(()=>{const n=$("trd_name");if(n)n.focus();},30);});
   }
   const sel=(id,opts,v)=>'<select id="'+id+'" class="fieldselect">'+opts.map(([k,t,g])=>g?'<optgroup label="'+esc(g)+'">':'<option value="'+esc(k)+'"'+(k===(v||"")?' selected':'')+'>'+esc(t)+'</option>').join("")+'</select>';
   // the gun, barrel, suppressor and ammo pickers (a profile, or one session)
@@ -12546,7 +12566,7 @@ window.RB_CHTOOL=(function(){
       $("tpDel").addEventListener("click",()=>{const i=T.profiles.indexOf(p),gone=T.sessions.filter(s=>s.profileId===p.id);T.profiles.splice(i,1);T.sessions=T.sessions.filter(s=>s.profileId!==p.id);save();go2({view:"home"});
         if(window.RB_UNDO)RB_UNDO("Deleted "+(p.name||"the profile")+(gone.length?" and its "+gone.length+" session"+(gone.length===1?"":"s"):""),()=>{T.profiles.splice(i,0,p);T.sessions=T.sessions.concat(gone);save();render();});});}
     {const t=$("tsGoToday");if(t)t.addEventListener("click",()=>go2({view:"session",sid:today.id}));}
-    $("tsNew").addEventListener("click",()=>{const s=newSession(pid);go2({view:"session",sid:s.id});});
+    $("tsNew").addEventListener("click",()=>{const s=newSession(pid,true);go2({view:"session",sid:s.id});});
     {const c=$("tsCmp");if(c)c.addEventListener("click",()=>go2({view:"compare",pid,a:ss[1].id,b:ss[0].id}));}
     root.querySelectorAll("[data-tss]").forEach(b=>b.addEventListener("click",()=>go2({view:"session",sid:b.dataset.tss})));
   }
