@@ -1013,7 +1013,10 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .grid>.sunline{grid-column:1/-1;margin:0}
 .grpall{margin:10px 0 4px}.grpall .segtabs,#secAllGroups .segtabs{max-width:440px}.grpall:empty{display:none}.grpwrap{margin:10px 0 8px}.grpsvg{width:220px;height:220px;display:block}
 .grpkey{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);margin:2px 0 6px}.grpk{display:inline-flex;align-items:center;gap:6px}.grpk i{width:10px;height:10px;border-radius:50%;flex:none}
-#secAllGroups .segtabs{margin:0 0 8px}.segtabs button:disabled{opacity:.45;cursor:not-allowed}
+#secAllGroups .segtabs{margin:0 0 8px}
+.segtabs.small{padding:2px;gap:2px;border-radius:8px;flex:0 0 auto}.segtabs.small button{padding:3px 10px;font-size:12.5px}
+.canshift .lbl{font-size:12.5px;color:var(--muted)}.canbox .segtabs{flex-wrap:wrap;max-width:100%}.canzero{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.canzero .segtabs button{padding:4px 10px;font-size:13px}#canSum{margin:6px 0 0}.canrows{display:flex;flex-direction:column;gap:6px;margin:6px 0 8px}.canrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tstrhead .strcan{margin:0 0 0 auto}.tstrhead .segtabs.small{margin-left:0}.tstrhead .segtabs.small+.btn{margin-left:0}.segtabs button:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:480px){.grpsvg{margin:0 auto}}
 .bdcbox{margin:14px 0 6px}.bdcbox .tablewrap{margin-top:10px}.bdcbox table.bdctbl td .note{font-size:11.5px}.bdcedit{margin-top:6px}.bdcedit .field{margin:8px 0 4px}
 .wxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0 6px}.wxgrid div{background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
@@ -1363,6 +1366,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="field"><label for="f_angle">Shot angle, up or down (°)</label><input id="f_angle" type="number" inputmode="decimal" step="any" min="-89" max="89" placeholder="0 = level"></div>
       <div class="field wide"><label class="switch" for="f_wbr"><input id="f_wbr" type="checkbox" role="switch"><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Wind brackets</b><span class="note" id="wbrNote">Add 5, 10 and 15 mph full-value wind holds to the range table and dope card</span></span></label></div>
       <div class="field wide corbox" id="corBox" hidden></div>
+      <div class="field wide canbox" id="canBox" hidden></div>
       <div class="field wide" id="wxCalcBox"><p class="note" id="wxCalc" style="margin:0"></p></div>
     </div>
   </section>
@@ -1578,6 +1582,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>All your groups</h3>
       <p>Once a range trip has two or more measured groups, its <b>Targets</b> section shows <b>All groups together</b>: every group from that day on one target, each in its own color, with how big they are all together, the mean radius (the average distance of the shots from their center) and where the center is. <b>Around the aim point</b> lines them up on the aim point you marked, so you see where the gun really hits, zero shifts included; <b>Around each center</b> moves each group onto its own center, so you see only how tight it shoots. Groups at one distance are in inches (cm); mixed distances are in MOA. A group without an aim point is left out around the aim point, and the card says so.</p>
       <p>The profile's <b>All your groups</b> card (under the trip list) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 10%.</p>
+      <h3>Suppressor on or off</h3>
+      <p>A suppressor often moves the point of impact a little and changes the speed. Range Book can measure it from your own range trips, without a second profile. On a range trip, pick the suppressor under <b>Suppressor</b>, shoot some groups with it on and some with it off, and measure them with the aim point marked. Under <b>All groups together</b>, <b>Suppressor on or off</b> lists every group: they start as <b>On</b>, so tap <b>Off</b> on the ones you shot without it. Each chronograph string has the same <b>On</b>/<b>Off</b> for the speed. The trip then shows the difference (for example "0.6 MOA higher and 0.3 MOA right, 18 fps faster").</p>
+      <p>The gun's page adds up every trip like that for each suppressor. On the gun's Shooting profiles, <b>Conditions › Suppressor</b> picks <b>Off</b> or a suppressor (it follows what's on the gun until you pick), and <b>Zeroed with</b> says how you zeroed. When they differ, the measured shift is added: the speed to the trajectory, the up and down part to the chart, range table, dope card and reticle, and the sideways part to the reticle hold. The dope card says so under its conditions. Zeroed with it and shooting with it, nothing changes.</p>
       <h3>Cold-bore shot</h3>
       <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point (right or left, high or low, in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
       <h3>Transonic</h3>
@@ -2898,7 +2905,7 @@ window.RB_TRAJ={
     if(x>B.last)return {err:"That's farther than this profile can follow."};
     const o=dopeOpts(L0),sc=o.scope,R0=L0.ret||{},DS=sightOf(sc),RU=DS?"moa":sc?(sc.unit==="mil"?"mil":"moa"):o.unit,UF=RU==="mil"?3.6:1.0472,per=x*UF/100;
     const a=B.at(x),up=-a.path/per,wd=a.drift/per,sp=a.spin/per,cr=a.cor/per,dial=R0.mode==="dial"&&!DS;
-    const dx0=(B.side==="right"?-wd:B.side==="left"?wd:0)+sp+cr,dy0=dial?0:up;
+    const dx0=(B.side==="right"?-wd:B.side==="left"?wd:0)+sp+cr+(a.can||0)/per,dy0=dial?0:up;
     const sfp=sc&&!DS&&sc.fp==="SFP",mag=sc?[num(sc.magMin),num(sc.magMax)]:[null,null],tp=sfp?(num(sc.sfpTrue)||mag[1]||null):null;
     let pw=sfp&&tp?(num(R0.power)>0?num(R0.power):tp):null;if(pw&&mag[0]&&mag[1])pw=Math.min(mag[1],Math.max(mag[0],pw));
     const kf=sfp&&tp&&pw?pw/tp:1,pic=sc&&!DS&&sc.retMode==="pic"&&sc.pic&&sc.pic.ppu>0&&window.RB_RETPIC?RB_RETPIC(sc.id):null;
@@ -2907,7 +2914,7 @@ window.RB_TRAJ={
   // the same, for a load that isn't saved (Tools → Trajectory calculator)
   solveObj(L0,o){
     if(!L0.zpb)migZ(L0);
-    o=o||{};const L=Object.assign({},L0,o,{mv:effMV(L0)});
+    o=o||{};const CAM=(()=>{const C=canAdj(L0);return canMoves(C)?C:null;})(),L=Object.assign({},L0,o,{mv:effMV(L0)+(CAM?CAM.fps:0)});
     if(!(L.mv>0&&L.bc>0&&L.w>0)||L.sh==null)return {err:"Fill in the Shooting profile's velocity, BC, bullet weight and sight height first."};
     const ai=Math.round(L.adj||0)-1;let z=(ai>=0&&ai<4)?num(L.z[ai]):null;
     if(ai===3&&!(z>0)&&L.sh!=null){const S0=simulate(L),A0=angleCos(L0);const P=pbrCalc(L,S0,(x,zz)=>S0.at(S0.G,x)*A0+x*(L.sh-S0.at(S0.G,zz))/zz-L.sh);if(P){z=P.z;L0.z[3]=P.z;}}
@@ -2918,7 +2925,7 @@ window.RB_TRAJ={
     const dr=(spd,x)=>spd*1.46667*(S.at(S.t,x)-x*3/L.mv)*12,sg=stability(L,S);
     return {name:L0.name||"Untitled profile",z,last:Math.min(S.MR,S.last,Sd.last),mv:L.mv,unit:dopeOpts(L0).unit,wind:(L.wind||0)*crossFactor(L),side:windSide(L),clock:windClock(L),sg,temp:L.temp,alt:L.alt,
       cor:!!corOn(L),
-      at(x){const c=corRel(L,S,x,z);return {path:Sd.at(Sd.G,x)*AC+sight(x)+c.v,cor:c.h,drift1:dr(1,x),drift:dr((L.wind||0)*crossFactor(L),x),spin:sg!=null?(spinRel(sg,S,x,z)||0):0,v:Sd.at(Sd.v,x),t:Sd.at(Sd.t,x)};}};
+      at(x){const c=corRel(L,S,x,z),cu=CAM?x*1.0472/100:0;return {path:Sd.at(Sd.G,x)*AC+sight(x)+c.v+(CAM?CAM.up*cu:0),can:CAM?CAM.right*cu:0,cor:c.h,drift1:dr(1,x),drift:dr((L.wind||0)*crossFactor(L),x),spin:sg!=null?(spinRel(sg,S,x,z)||0):0,v:Sd.at(Sd.v,x),t:Sd.at(Sd.t,x)};}};
   }
 };
 /* your own order for a profile's cards (one order for every profile and the Tools calculator). On a phone or tablet the cards
@@ -2953,7 +2960,7 @@ function fillInputs(){
   $("f_bcm").value=L.bcm==="G7"?"G7":"G1";
   $("f_cal_u").value=L.calUnit==="mm"?"mm":"in";$("f_cal").value=DIA.show(L.cal,$("f_cal_u").value);
   for(let i=0;i<3;i++)fillZero(i,L.z[i]);
-  fillRng(L);fillCor(L);fillEff(L);
+  fillRng(L);fillCor(L);fillEff(L);fillCan(L);
   $("f_wclock").value=String(windClock(L));$("f_wbr").checked=!!L.wbr;
   {const pb=L.pbr||{};U.fill($("pb_size"),"in",pb.size,1,2);}
   fillDope();
@@ -3029,6 +3036,30 @@ function fillEff(L){const box=$("effBox"),btn=$("effBtn");if(!box||!btn)return;c
 function effSumTxt(L,S){if(!(L.eff&&L.eff.on))return "";if(!effOn(L))return "Enter a minimum speed or energy to mark it.";const E=effX(L,S);
   if(!E)return "It stays above your minimum"+(num(L.eff.e)>0&&num(L.eff.v)>0?"s":"")+" out to "+U.s("yd",Math.min(S.last,S.MR||S.last),0,true)+".";
   return E.x===0?"It's already "+effWhy(L,E)+" at the muzzle.":"Effective range: "+U.s("yd",E.x,0)+". Past that it's "+effWhy(L,E)+".";}
+// --- suppressor (Conditions card, 2.43.6): the gun's measured shift with a suppressor, added when the profile is set to a
+// suppressor state other than the one it was zeroed in. L.canSel: unset = what's on the gun, "off", or a suppressor id;
+// L.canZero: "off" (default) or the suppressor it was zeroed with. The adjustment is shift(now) − shift(zeroed). ---
+function canAdj(L){const r=L&&rifleOf(L);if(!r||!window.RB_CANINFO)return null;const I=RB_CANINFO(r.id);if(!I||(!I.cans.length&&!I.mounted))return null;
+  const has=id=>id==="off"||I.cans.some(c=>c.id===id),sel=L.canSel&&has(L.canSel)?L.canSel:(I.mounted||"off"),zero=L.canZero&&has(L.canZero)?L.canZero:"off";
+  const sh=id=>{if(id==="off")return {up:0,right:0,fps:0,ok:true};const c=I.cans.find(x=>x.id===id),s2=c&&c.shift;return s2?{up:s2.up||0,right:s2.right||0,fps:s2.fps||0,ok:true}:{up:0,right:0,fps:0,ok:false};};
+  const a=sh(sel),b=sh(zero),nm=id=>id==="off"?"":(I.cans.find(c=>c.id===id)||{}).name||"the suppressor";
+  return {I,sel,zero,up:a.up-b.up,right:a.right-b.right,fps:a.fps-b.fps,missing:!a.ok?nm(sel):!b.ok?nm(zero):null,follow:!L.canSel||!has(L.canSel),name:nm(sel)};}
+const canMoves=C=>!!C&&(Math.abs(C.up)>=.05||Math.abs(C.right)>=.05||Math.abs(C.fps)>=.5);
+function canAdjTxt(C){const f=v=>Math.abs(v).toFixed(1),b=[];if(Math.abs(C.up)>=.05)b.push(f(C.up)+" MOA "+(C.up>0?"higher":"lower"));if(Math.abs(C.right)>=.05)b.push(f(C.right)+" MOA "+(C.right>0?"right":"left"));
+  if(Math.abs(C.fps)>=.5)b.push(U.n("fps",Math.abs(C.fps),0)+" "+U.u("fps")+" "+(C.fps>0?"faster":"slower"));return b.join(", ");}
+function fillCan(L){const box=$("canBox");if(!box)return;const C=canAdj(L);fillCan.k=C?JSON.stringify([C.sel,C.zero,C.up,C.right,C.fps,C.missing,C.follow,C.I.cans.map(c=>c.id+c.name),C.I.mounted]):"";if(!C){box.hidden=true;box.innerHTML="";return;}box.hidden=false;
+  const opts=[["off","Off"]].concat(C.I.cans.map(c=>[c.id,c.name+(c.id===C.I.mounted?" (on the gun)":"")])),tabs=(attr,v,lab)=>'<div class="segtabs canseg" role="radiogroup" aria-label="'+lab+'">'+opts.map(([k,t])=>'<button type="button" role="radio" '+attr+'="'+escL(k)+'" aria-checked="'+(k===v)+'" aria-selected="'+(k===v)+'">'+escL(t)+'</button>').join("")+'</div>';
+  box.innerHTML='<label>Suppressor</label>'+tabs("data-csel",C.sel,"Suppressor")+'<div class="canzero"><span class="note">Zeroed with</span>'+tabs("data-czero",C.zero,"Zeroed with")+'</div><p class="note" id="canSum"></p>';
+  box.querySelectorAll("[data-csel]").forEach(b=>b.addEventListener("click",()=>{const c=cur();c.canSel=b.dataset.csel;save();fillCan(c);render();}));
+  box.querySelectorAll("[data-czero]").forEach(b=>b.addEventListener("click",()=>{const c=cur();if(b.dataset.czero==="off")delete c.canZero;else c.canZero=b.dataset.czero;save();fillCan(c);render();}));
+  canSumFill(L);}
+function canSumFill(L){const n=$("canSum");if(!n)return;const C=canAdj(L);if(!C){n.textContent="";return;}
+  let t=C.missing?"No shift measured yet for "+C.missing+" on this gun. On a range trip with it, mark which groups (and chronograph strings) had it on and which didn't.":
+    canMoves(C)?"Compared with your zero, it hits "+canAdjTxt(C)+". The chart, range table, dope card and reticle include it.":
+    C.sel===C.zero?"The same as when you zeroed, so nothing to add.":"The measured difference is too small to matter.";
+  n.innerHTML=escL(t)+(C.follow?' <span class="note">Following what\'s on the gun.</span>':' <button class="linkbtn" type="button" id="canFollow">Use what\'s on the gun</button>');
+  const fb=$("canFollow");if(fb)fb.addEventListener("click",()=>{const c=cur();delete c.canSel;save();fillCan(c);render();});}
+window.RB_CANCHANGED=()=>{try{if(TVIEW==="detail"&&!SCR){fillCan(cur());render();}}catch(e){}};
 // --- Coriolis controls (Conditions card, Long chart only) ---
 function fillCor(L){const box=$("corBox");if(!box)return;const lr=rngOf(L)==="l";box.hidden=!lr;if(!lr){box.innerHTML="";return;}
   const c=L.cor||{},RS=rgList().filter(r=>num(r.lat)!=null);
@@ -3188,7 +3219,9 @@ function render(){
   const L0=cur(), err=$("err");
   {const fb=$("trajFit"),f=fitCheck(L0,true);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.err.concat(f.caution.map(t=>'<b>Check first:</b> '+t)).join("<br>")+(f.err.length?' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</span> <button class="linkbtn" type="button" id="trajFitGun">Pick another gun</button>':'');
     const fg=$("trajFitGun");if(fg)fg.onclick=()=>{setInOpen(true);const b=$("f_rifleBtn");b.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>{if($("rifPick").hidden)openRifPick();},350);};}}
-  const L=Object.assign({},L0,{mv:effMV(L0)}); // what the bullet actually does today
+  const CA=canAdj(L0),CAM=canMoves(CA)?CA:null; // a suppressor that isn't the way it was zeroed (2.43.6)
+  {const k=CA?JSON.stringify([CA.sel,CA.zero,CA.up,CA.right,CA.fps,CA.missing,CA.follow,CA.I.cans.map(c=>c.id+c.name),CA.I.mounted]):"";if(k!==fillCan.k){fillCan.k=k;fillCan(L0);}}
+  const L=Object.assign({},L0,{mv:effMV(L0)+(CAM?CAM.fps:0)}); // what the bullet actually does today
   const bad=[];
   if(!(L.mv>0))bad.push("muzzle velocity");
   if(!(L.bc>0))bad.push("ballistic coefficient");
@@ -3200,7 +3233,8 @@ function render(){
   const S=simulate(L), MR=S.MR, sh=L.sh;
   const AC=angleCos(L);
   const path0=(x,z)=>S.at(S.G,x)*AC+x*(sh-S.at(S.G,z))/z-sh; // zeroed level; at an angle only cos(angle) of the drop counts
-  const COR=corOn(L),path=COR?(x,z)=>path0(x,z)+corRel(L,S,x,z).v:path0; // Coriolis up/down, when it's on
+  const COR=corOn(L),path1=COR?(x,z)=>path0(x,z)+corRel(L,S,x,z).v:path0; // Coriolis up/down, when it's on
+  const path=CAM&&Math.abs(CAM.up)>=.05?(x,z)=>path1(x,z)+CAM.up*x*1.0472/100:path1; // and the suppressor's shift up or down
   // the point-blank zero is zero 4 (the first box)
   {const P=pbrCalc(L,S,path);PBR=P&&!P.none?P:null;const v=PBR?PBR.z:null;if(!Array.isArray(L0.z))L0.z=[null,null,null,null];if(L0.z[3]!==v){L0.z[3]=v;save();}L.z=L0.z.slice();}
   const pbSize=PBR?PBR.size:((num((L.pbr||{}).size)>0)?num(L.pbr.size):6);
@@ -3478,7 +3512,8 @@ function renderReticle(L,S,zs,path){
   const wd=wind*1.46667*(S.at(S.t,x)-x*3/L.mv)*12/per,sp=S.sg!=null?(spinRel(S.sg,S,x,za)||0)/per:0;
   // where the bullet goes from the center, in reticle units (right and down are positive)
   const cr=corOn(L)?corRel(L,S,x,za).h/per:0;
-  const dx0=(side==="right"?-wd:side==="left"?wd:0)+sp+cr,dial=R0.mode==="dial"&&!DS,dy0=dial?0:up;
+  const CAr=(()=>{const C=canAdj(L);return canMoves(C)?C.right*1.0472*x/100/per:0;})(); // the suppressor's shift sideways
+  const dx0=(side==="right"?-wd:side==="left"?wd:0)+sp+cr+CAr,dial=R0.mode==="dial"&&!DS,dy0=dial?0:up;
   // second focal plane: the marks are only true at one power; at another power the same hold covers more or fewer marks
   const sfp=sc&&!DS&&sc.fp==="SFP",mag=sc?[num(sc.magMin),num(sc.magMax)]:[null,null],tp=sfp?(num(sc.sfpTrue)||mag[1]||null):null;
   let pw=sfp&&tp?(num(R0.power)>0?num(R0.power):tp):null;if(pw&&mag[0]&&mag[1])pw=Math.min(mag[1],Math.max(mag[0],pw));
@@ -3501,7 +3536,7 @@ function renderReticle(L,S,zs,path){
   if(BM&&!dial&&up>0){const n=BM.length,near=BM.reduce((a,m,i)=>Math.abs(m.b-up)<Math.abs(BM[a].b-up)?i:a,0),tol=Math.max(.15,BM[near].b*.04),nm=i=>ordTxt(i)+' bullet drop mark';
     lines.push(Math.abs(BM[near].b-up)<=tol?'That\'s your <b>'+nm(near)+'</b>.':up<BM[0].b?'That\'s above your '+nm(0)+'.':up>BM[n-1].b?'That\'s below your last ('+nm(n-1)+').':(()=>{const i=BM.findIndex(m=>m.b>up);return 'That\'s between your '+ordTxt(i-1)+' and '+nm(i)+'.';})());}
   const WU=v=>DS?Math.abs(U.to("in",v*per)).toFixed(1)+(U.metric?' cm':' in'):f1(v)+' '+UN;
-  const why=[];if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+WU(wd)+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+WU(sp)+' right');if(Math.abs(cr)>=.05)why.push('Coriolis '+WU(cr)+' '+(cr>0?'right':'left'));else if(corOn(L))why.push('Coriolis is under 0.1 '+UN+' here');
+  const why=[];if(Math.abs(CAr)>=.05)why.push('the suppressor moves it '+WU(CAr)+' '+(CAr>0?'right':'left'));if(wind)why.push(U.s("mph",L.wind||0,0)+' wind from '+windClock(L)+' o\'clock pushes it '+WU(wd)+' '+(side==="right"?'left':side==="left"?'right':''));if(Math.abs(sp)>=.05)why.push('spin drift '+WU(sp)+' right');if(Math.abs(cr)>=.05)why.push('Coriolis '+WU(cr)+' '+(cr>0?'right':'left'));else if(corOn(L))why.push('Coriolis is under 0.1 '+UN+' here');
   let pwr='';
   if(sfp){
     if(tp){const lo=Math.ceil(mag[0]||1),hi=Math.floor(mag[1]||tp),opts=[];for(let m=lo;m<=hi;m++)opts.push(m);if(!opts.includes(tp))opts.push(tp);opts.sort((a,b)=>a-b);
@@ -3598,6 +3633,7 @@ function renderDope(L,S,zs,path){
   box.innerHTML='<div class="dopehead"><div class="dopename">'+esc(L.name||"Load")+'</div><div class="dopemeta">'+
     (L.rifleName?esc(L.rifleName)+" · ":"")+(o.scope?esc(scopeName(o.scope))+(DOT?" ("+esc(dotDesc(o.scope))+")":"")+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
     '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+(corOn(L)?" · Coriolis "+Math.abs(num(L.cor.lat)).toFixed(1)+"°"+(num(L.cor.lat)<0?"S":"N")+(num(L.cor.az)!=null?" firing "+Math.round(num(L.cor.az))+"°":"")+" (in Up)":"")+" · "+esc(ds)+"</div>"+(TX===0?'<div class="dopetrans">Subsonic from the muzzle</div>':TX>0?'<div class="dopetrans"><i aria-hidden="true"></i>Transonic at '+transTxt(TX)+'</div>':'')+
+    (()=>{const C=canAdj(L);return canMoves(C)?'<div class="dopetrans">'+esc((C.sel==="off"?"Suppressor off":"Suppressor on ("+C.name+")")+" (zeroed "+(C.zero==="off"?"without one":"with one")+"): "+canAdjTxt(C)+" included"+(Math.abs(C.right)>=.05?" (the sideways part is in the reticle hold, not the Wind column)":""))+'</div>':'';})()+
     (EX===0?'<div class="dopetrans">'+esc(DOPE.eff.why.replace(/^./,c=>c.toUpperCase()))+' from the muzzle</div>':EX>0?'<div class="dopetrans"><i class="ke" aria-hidden="true"></i>Effective range '+transTxt(EX)+'</div>':'')+"</div>"+
     (rows?'<div class="dopescroll" id="dopeScroll"><table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th>'+(DOT
       ?'<th>Hold<br>('+U.u("in")+')</th><th>Hold<br>(dots)</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+U.u("in")+')</th>').join(""):'<th>Wind<br>('+U.u("in")+')</th>')+(S.sg!=null?'<th>Spin R<br>('+U.u("in")+')</th>':'')+(corOn(L)?'<th>Cor R<br>('+U.u("in")+')</th>':'')
@@ -5197,6 +5233,7 @@ function renderRifles(){
       '<div class="field"><label for="rf_scope">Optic</label><select id="rf_scope" class="fieldselect"><option value="">None</option>'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b))).map(x=>'<option value="'+esc(x.id)+'"'+(r.scopeId===x.id?' selected':'')+'>'+esc(scopeLabel(x))+'</option>').join("")+'<option value="__new">+ Add an optic…</option></select>'+(r.scopeId&&scopes.some(x=>x.id===r.scopeId)?'<button class="linkbtn" type="button" id="rfScopeOpen">Open this '+esc(KIND_OPT[(scopes.find(x=>x.id===r.scopeId)||{}).kind]||"scope")+' ›</button>':'')+'</div>'+
       '<div class="field"><label for="rf_can">Suppressor</label><select id="rf_can" class="fieldselect"><option value="">None (pick one on each range trip)</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(r.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+'<option value="__new">+ Add a suppressor…</option></select>'+(r.canId&&cans.some(c=>c.id===r.canId)?'<button class="linkbtn" type="button" id="rfCanOpen">Open this suppressor ›</button>':'')+'</div>'+
       (r.canId?'<div class="field wide cartinfo" id="rfCanFit" aria-live="polite">'+canFitHtml(cans.find(c=>c.id===r.canId),gunCart(r))+'</div>':'')+
+      gunCanShiftHtml(r)+
       '<div class="field wide"><label for="rf_notes">Notes</label><textarea id="rf_notes" style="min-height:90px">'+esc(r.notes||"")+'</textarea></div></div>'+
       '<p class="note">Measure sight height as <a class=goto href=#go data-go=help:Measure_sight_height_(height_over_bore)>How to Use</a> explains. Changing it here also updates the Shooting profiles that use this gun.</p></section>'+
       (()=>{if(r.build)return '';const ps=partsOf(r.id);return '<section class="card" aria-label="Barrels for this gun" id="secGunParts"><h2>Barrels</h2>'+
@@ -9631,6 +9668,40 @@ function grpLines(R,k,unit,mode){const f=v=>(v*k).toFixed(2),lr=v=>Math.abs(v*k)
   const both=k!==1?' ('+(R.es).toFixed(2)+' MOA)':'',bothm=k!==1?' ('+(R.mr).toFixed(2)+' MOA)':'';
   return '<p class="tline">All together: <b>'+f(R.es)+' '+unit+'</b>'+both+'</p><p class="tline">Mean radius: <b>'+f(R.mr)+' '+unit+'</b>'+bothm+'</p>'+
     (mode==="aim"?'<p class="tline">Center: '+([ud(R.cy),lr(R.cx)].filter(Boolean).join(", ")||"right on the aim point")+'</p>':'');}
+/* suppressor on or off (2.43.6): on a trip with a suppressor picked, every measured group and chronograph string counts as
+   shot with it unless you mark it off (t.cs[groupKey]=false, string.can=false). Comparing the two, trip by trip, gives the
+   gun and suppressor's shift: how far the group centers move (MOA, aim point needed) and how much faster it goes. */
+const canOnG=(t,k)=>!!t.canId&&!(t.cs&&t.cs[k]===false);
+const canOnS=(t,x)=>!!t.canId&&x.can!==false;
+const gCenter=g=>[g.p.reduce((a,q)=>a+q[0],0)/g.p.length,g.p.reduce((a,q)=>a+q[1],0)/g.p.length];
+function tripCanShift(t){if(!t.canId)return null;const G=((t.sum&&t.sum.g)||[]).filter(g=>g.a),on=G.filter(g=>canOnG(t,g.k)),off=G.filter(g=>!canOnG(t,g.k));
+  const mid=a=>{const c=a.map(gCenter);return [c.reduce((s2,q)=>s2+q[0],0)/c.length,c.reduce((s2,q)=>s2+q[1],0)/c.length];};
+  let up=null,right=null;if(on.length&&off.length){const A=mid(on),B=mid(off);right=A[0]-B[0];up=A[1]-B[1];}
+  const S=t.strings||[],vs=w=>S.filter(x=>canOnS(t,x)===w).flatMap(x=>(x.shots||[]).filter(v=>Number(v)>0).map(Number)),v1=vs(true),v0=vs(false);
+  const fps=v1.length&&v0.length?v1.reduce((a,b)=>a+b,0)/v1.length-v0.reduce((a,b)=>a+b,0)/v0.length:null;
+  return {up,right,fps,gOn:on.length,gOff:off.length,sOn:S.filter(x=>canOnS(t,x)).length,sOff:S.filter(x=>!canOnS(t,x)).length};}
+// a gun with a suppressor, from every trip with both (groups weighted by the smaller of on and off; speed one vote per trip)
+function canShift(gunId,canId){const P=Object.fromEntries(((window.RB_TRAJ&&RB_TRAJ.all())||[]).map(x=>[x.id,x.rifleId]));
+  let wu=0,su=0,sr=0,wv=0,sv=0,tr=0,gOn=0,gOff=0,last=null;
+  trips.forEach(t=>{if(!gunId||t.canId!==canId||P[t.trajId]!==gunId)return;const s2=tripCanShift(t);if(!s2)return;let used=false;
+    if(s2.up!=null){const w=Math.min(s2.gOn,s2.gOff);wu+=w;su+=s2.up*w;sr+=s2.right*w;gOn+=s2.gOn;gOff+=s2.gOff;used=true;}
+    if(s2.fps!=null){wv++;sv+=s2.fps;used=true;}
+    if(used){tr++;if(!last||String(t.date||"")>last)last=String(t.date||"");}});
+  if(!wu&&!wv)return null;return {up:wu?su/wu:null,right:wu?sr/wu:null,fps:wv?sv/wv:null,trips:tr,gOn,gOff,last};}
+// the gun page: each suppressor's measured shift on this gun (2.43.6)
+function gunCanShiftHtml(r){const I=window.RB_CANINFO(r.id);if(!I)return "";const withS=I.cans.filter(c=>c.shift);
+  if(!withS.length)return r.canId?'<div class="field wide"><p class="note" style="margin:0">To see how much the suppressor moves your point of impact, shoot groups with it on and off on a range trip and mark them (under the trip\'s targets).</p></div>':"";
+  return '<div class="field wide canshift"><span class="lbl">With a suppressor on (from your range trips)</span>'+withS.map(c=>{const s2=c.shift;return '<p class="tline" style="margin:4px 0 0"><b>'+esc(c.name)+'</b>: '+esc(canShiftTxt(s2))+' <span class="note">('+s2.trips+' trip'+(s2.trips===1?'':'s')+(s2.up!=null?', '+s2.gOn+' group'+(s2.gOn===1?'':'s')+' on, '+s2.gOff+' off':'')+')</span></p>';}).join("")+
+    '<p class="note" style="margin:4px 0 0">This gun\'s Shooting profiles use it when the suppressor isn\'t the way you zeroed (Conditions › Suppressor).</p></div>';}
+// for the Shooting profile: the gun's mounted suppressor, and every suppressor with a measured shift on this gun
+window.RB_CANINFO=gunId=>{const g=rifles.find(r=>r.id===gunId);if(!g)return null;const ids=new Set(trips.filter(t=>t.canId).map(t=>t.canId));if(g.canId)ids.add(g.canId);
+  const list=[...ids].map(id=>{const c=cans.find(x=>x.id===id);return c?{id,name:canName(c),shift:canShift(gunId,id)}:null;}).filter(x=>x&&(x.shift||x.id===g.canId));
+  return {mounted:g.canId&&cans.some(c=>c.id===g.canId)?g.canId:null,cans:list};};
+// "0.6 MOA higher and 0.3 MOA right, 18 fps faster"
+function canShiftTxt(s2){if(!s2)return "";const b=[];const f=v=>Math.abs(v).toFixed(1);
+  if(s2.up!=null)b.push(Math.abs(s2.up)<.05&&Math.abs(s2.right)<.05?"the same point of impact":[Math.abs(s2.up)<.05?"":f(s2.up)+" MOA "+(s2.up>0?"higher":"lower"),Math.abs(s2.right)<.05?"":f(s2.right)+" MOA "+(s2.right>0?"right":"left")].filter(Boolean).join(" and "));
+  if(s2.fps!=null)b.push(Math.abs(s2.fps)<.5?"the same speed":U.n("fps",Math.abs(s2.fps),0)+" "+U.u("fps")+" "+(s2.fps>0?"faster":"slower"));return b.join(", ");}
+window.RB_CANSHIFTTXT=canShiftTxt;
 // A · on a range trip: every measured group from its photos
 function tripAllHtml(t){const G=(t.sum&&t.sum.g)||[];if(G.length<2)return "";
   const anyAim=G.some(g=>g.a);if(GRP_MODE==="aim"&&!anyAim)GRP_MODE="center";
@@ -9643,9 +9714,16 @@ function tripAllHtml(t){const G=(t.sum&&t.sum.g)||[];if(G.length<2)return "";
     '<div class="coldwrap grpwrap">'+grpPlot(R,col,kk,unit,"All groups from this trip")+'<div><p class="tline"><b>'+R.n+' shots</b> in '+R.use.length+' groups'+(one?' at '+U.s("yd",ds[0],0):'')+'</p>'+grpLines(R,kk,unit,GRP_MODE)+'</div></div>'+
     '<div class="grpkey">'+R.use.map(g=>'<span class="grpk" data-gk="'+esc(g.k)+'"><i style="background:'+col(g)+'"></i>'+esc(lab(g))+' · '+g.p.length+' shots'+(g.sz!=null?' · '+(one?U.n("in",g.sz*k,2)+' '+U.u("in"):g.sz.toFixed(2)+' MOA'):'')+'</span>').join("")+'</div>'+
     (R.left?'<p class="note">'+R.left+' group'+(R.left===1?' has':'s have')+' no aim point marked, so '+(R.left===1?'it\'s':'they\'re')+' left out here. Mark the aim point when you measure to include '+(R.left===1?'it':'them')+'.</p>':'')+
-    '<p class="note">The dashed circle is the mean radius (the average distance of the shots from their center). Around the aim point shows where the gun really hits; around each center shows only how tight it shoots.'+(one?'':' The groups were at different distances, so it\'s in MOA.')+'</p>';}
+    '<p class="note">The dashed circle is the mean radius (the average distance of the shots from their center). Around the aim point shows where the gun really hits; around each center shows only how tight it shoots.'+(one?'':' The groups were at different distances, so it\'s in MOA.')+'</p>'+tripCanHtml(t,G,lab,col);}
+function tripCanHtml(t,G,lab,col){if(!t.canId)return "";const c=cans.find(x=>x.id===t.canId),s2=tripCanShift(t);
+  return '<h3>Suppressor on or off</h3><p class="note" style="margin-top:0">Mark the groups you shot without the '+esc(c?canName(c):"suppressor")+'. Comparing them with the ones shot with it shows how much it moves your point of impact (aim point needed); mark the chronograph strings too, for the speed.</p>'+
+    '<div class="canrows">'+G.map(g=>{const on=canOnG(t,g.k);return '<div class="canrow"><span class="grpk"><i style="background:'+col(g)+'"></i>'+esc(lab(g))+(g.a?'':' <span class="note">(no aim point)</span>')+'</span><div class="segtabs small" role="radiogroup" aria-label="Suppressor on '+esc(lab(g))+'">'+[[1,"On"],[0,"Off"]].map(([v,tx])=>'<button type="button" role="radio" data-cs="'+esc(g.k)+'" data-v="'+v+'" aria-checked="'+(on===!!v)+'" aria-selected="'+(on===!!v)+'">'+tx+'</button>').join("")+'</div></div>';}).join("")+'</div>'+
+    (s2&&(s2.up!=null||s2.fps!=null)?'<p class="tline">This trip, with it on: <b>'+esc(canShiftTxt(s2))+'</b>.</p><p class="note">The gun\'s page and its Shooting profiles use every trip like this together.</p>':'<p class="note">Once at least one group (or string) is on and one is off, this shows the difference.</p>');}
 function bindGrpMode(root,redraw){root.querySelectorAll("[data-gm]").forEach(b=>b.addEventListener("click",()=>{if(b.disabled)return;GRP_MODE=b.dataset.gm;try{localStorage.setItem("rb.grpMode",GRP_MODE);}catch(e){}redraw();}));}
-function drawTripAll(t){const box=$("tripAll");if(!box)return;const h=tripAllHtml(t);box.innerHTML=h;box.hidden=!h;bindGrpMode(box,()=>drawTripAll(t));}
+function drawTripAll(t){const box=$("tripAll");if(!box)return;const h=tripAllHtml(t);box.innerHTML=h;box.hidden=!h;bindGrpMode(box,()=>drawTripAll(t));
+  box.querySelectorAll("[data-cs]").forEach(b=>b.addEventListener("click",()=>{t.cs=t.cs||{};if(b.dataset.v==="1")delete t.cs[b.dataset.cs];else t.cs[b.dataset.cs]=false;if(!Object.keys(t.cs).length)delete t.cs;t.updated=Date.now();queueTrips();drawTripAll(t);canPing();}));}
+// tell the Shooting profile the shift changed
+function canPing(){if(window.RB_CANCHANGED)RB_CANCHANGED();}
 // B · on a profile: every measured group from every trip with it
 function profGroupsHtml(T,list){
   const hasPart=list.some(x=>x.partId)||!!T.partId,f=GRP_FILTER==="barrel"&&!hasPart?"all":GRP_FILTER,cut=Date.now()-90*864e5;
@@ -9911,7 +9989,9 @@ function renderTrips(){
     if(!S.length){box.innerHTML='<p class="note">Import the file from your RangeCraft, Garmin Xero, MagnetoSpeed or LabRadar, or tap <b>+ Type in shots</b> to enter the velocities yourself. The average and SD fill in from the shots.</p>';return;}
     let h='<div class="tstrings">';
     S.forEach((x,i)=>{x.id=x.id||newId();
-      h+='<div class="tstr"><div class="tstrhead"><b>'+esc(x.name||("String "+(i+1)))+'</b>'+(x.date?'<span class="note">'+esc(fmtDate(x.date))+'</span>':'')+'<button class="btn small danger" type="button" data-sdel="'+i+'" aria-label="Remove this string">Remove</button></div>'+
+      h+='<div class="tstr"><div class="tstrhead"><b>'+esc(x.name||("String "+(i+1)))+'</b>'+(x.date?'<span class="note">'+esc(fmtDate(x.date))+'</span>':'')+
+        (t.canId?'<span class="note strcan">Suppressor</span><div class="segtabs small" role="radiogroup" aria-label="Suppressor on this string">'+[[1,"On"],[0,"Off"]].map(([v,tx])=>'<button type="button" role="radio" data-scan="'+i+'" data-v="'+v+'" aria-checked="'+(canOnS(t,x)===!!v)+'" aria-selected="'+(canOnS(t,x)===!!v)+'">'+tx+'</button>').join("")+'</div>':'')+
+        '<button class="btn small danger" type="button" data-sdel="'+i+'" aria-label="Remove this string">Remove</button></div>'+
         '<div class="tstrstats" id="tss_'+esc(x.id)+'">'+strStats(x)+'</div>'+
         '<div class="shots" data-shotset="'+esc(x.id)+'">'+(x.shots||[]).map((v,k)=>'<div class="shot" data-k="'+k+'"><label for="ts_'+esc(x.id)+'_'+k+'">'+(k+1)+'</label><input id="ts_'+esc(x.id)+'_'+k+'" data-ts="'+i+'" data-k="'+k+'" type="number" inputmode="numeric" step="1" enterkeyhint="next" placeholder="'+U.u("fps")+'" value="'+(v==null?"":esc(U.n("fps",Number(v),0)))+'"></div>').join("")+'</div>'+
         shotPickBar(x.id)+
@@ -9919,6 +9999,7 @@ function renderTrips(){
     h+='<p class="note" id="tssAll">'+allStats()+'</p>';
     box.innerHTML=h+'</div>';
     const changed=()=>{t.updated=Date.now();chronoTotals();queueTrips();};
+    box.querySelectorAll("[data-scan]").forEach(b=>b.addEventListener("click",()=>{const x=t.strings[+b.dataset.scan];if(!x)return;if(b.dataset.v==="1")delete x.can;else x.can=false;changed();renderChrono();drawTripAll(t);canPing();}));
     box.querySelectorAll("[data-ts]").forEach(inp=>{
       inp.addEventListener("input",()=>{const x=t.strings[+inp.dataset.ts];if(!x)return;const n=num(inp.value);x.shots[+inp.dataset.k]=n==null?null:Math.round(U.from("fps",n));changed();
         const e1=$("tss_"+x.id);if(e1)e1.innerHTML=strStats(x);const e2=$("tssAll");if(e2)e2.textContent=allStats();});
@@ -9956,7 +10037,7 @@ function renderTrips(){
   bindCold(t);
   {const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>{t.partId=tpp.value;t.updated=Date.now();queueTrips();});}
   {const tc=$("tp_can"),fit=()=>{const b=$("tpCanFit");if(!b)return;const tc2=tripCart(t);b.innerHTML=t.canId?canFitHtml(cans.find(c=>c.id===t.canId),tc2.cart,tc2.gun&&tc2.gun.name):"";};
-    fit();if(tc)tc.addEventListener("change",()=>{t.canId=tc.value;t.updated=Date.now();queueTrips();fit();});
+    fit();if(tc)tc.addEventListener("change",()=>{t.canId=tc.value;t.updated=Date.now();queueTrips();fit();renderChrono();drawTripAll(t);canPing();});
     const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>setTimeout(fit));}
   $("tripBack").addEventListener("click",()=>{tripOpen=null;tripPhotos=[];renderTrips();const s=$("secTrips");if(s)s.scrollIntoView({block:"start"});});
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
@@ -10268,7 +10349,7 @@ async function refresh(first){
     const [L,B,U,R,CP,TR,AM,NT]=await Promise.all([API.get("/api/loads"),API.get("/api/doc/brass"),API.get("/api/users"),API.get("/api/doc/rifles"),API.get("/api/doc/components").catch(()=>({data:null})),API.get("/api/doc/trips").catch(()=>null),API.get("/api/doc/ammo").catch(()=>null),window.GUEST?Promise.resolve(null):API.get("/api/doc/notes").catch(()=>null)]);
     if(NT&&!notesDirty&&!notesEditing()){notes=NT.data&&Array.isArray(NT.data.rows)?NT.data.rows:[];renderNotes();}
     applyLoads(L.loads||[]);
-    if(TR&&!tripsDirty&&!tripsEditing()){setTrips(TR.data);tripsLoaded=true;renderTrips();if(window.RB_TRAJ)RB_TRAJ.listChanged();}
+    if(TR&&!tripsDirty&&!tripsEditing()){setTrips(TR.data);tripsLoaded=true;renderTrips();if(window.RB_TRAJ)RB_TRAJ.listChanged();canPing();}
     if(!compsDirty&&!compsEditing()){setComps(CP&&CP.data);try{buildDatalists();}catch(e){}
       // older saved bullets with no diameter: fill it in from a load that uses them
       let fixed=false;comps.bullets.forEach(c=>{if(num(c.caliber)!=null)return;for(const [id,L] of loads)if(L.bulletId===c.id){const d=num(L.bulletDia)!=null?num(L.bulletDia):guessDiaStrict(L);if(d){c.caliber=d;c.caliberUnit="in";fixed=true;}break;}});
