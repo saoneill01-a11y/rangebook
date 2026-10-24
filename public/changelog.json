@@ -2,10 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.7",
+      "version": "2.43.8",
       "date": "2026-10-24",
-      "title": "Shot timer and Training",
+      "title": "Training profiles and sessions, suppressors per gun",
       "items": [
+        "Training: training profiles. A profile is what you train with: a gun and its ammo (and barrel or suppressor). Each day you practice is a session: open the profile, start a session, and run drills in it. You can run the same drill as many times as you like. The session shows every run drill by drill, with the best and average time, first shot and hits, and a box for other rounds you didn't time.",
+        "Training: Compare two sessions puts any two days side by side, drill by drill (runs, best and average time, first shot, split and hits), with what got better. A profile's Progress card charts each drill's average from session to session.",
+        "Training: rounds fired in sessions now count toward the gun's round count and barrel life, its barrel or suppressor, the ammo you have left, and Home's rounds fired, the same as range trips. They stay out of the Range log. Runs you saved before profiles are kept under Without a profile.",
+        "Training: tapping a drill in a session opens the shot timer right in the Training tab, and ‹ goes back to the session (it used to jump to Tools and come back to Tools). Open the shot timer on the Training page goes to Tools with ‹ Training to come back.",
+        "Shot timer: while it runs, the button is a bright red STOP that's easy to see in every theme. On its own in Tools, you pick a training profile when you save, and the run goes into today's session for it.",
+        "Gear & Ranges › Guns: a gun now lists every suppressor you use on it (tick them on the gun's page, or under Used on on the suppressor's page), instead of one suppressor on it.",
+        "Shooting › a profile: the suppressor has its own Suppressor card. Pick which of the gun's suppressors you're shooting with (or None) and which it was zeroed with. New range trips with the profile start with the one you're shooting with, so its rounds count toward it.",
         "New: Tools › Shot timer. Tap Start, wait for the beep (random 2 to 5 seconds, 3 seconds, or right away) and shoot: the phone's microphone hears each shot, and you get the first-shot time and every split, to the hundredth. A par time adds a second beep and tells you how far over or under you were. It knows its own beeps by their pitch, so they never count as shots. Remove anything that wasn't a shot with ×, fill in your hits and save. Sensitivity, an echo filter for indoor ranges, and Dry fire (beeps only, no microphone).",
         "Bluetooth speaker: pair one in your phone's settings and the beep plays through it (no special browser needed). Set Speaker to Bluetooth and tap Measure the delay once: the timer beeps five times, listens for itself and takes the Bluetooth delay off every run.",
         "New tab: Training, with your drills and saved runs. Six common drills are built in (Bill drill, El Presidente, FAST, 5×5, Failure to stop, Draw to first shot) and you can add your own. Each shows your best and last time and a chart of your runs; open one for every run and Start this drill. On a phone it's under More (you can put it on the bar).",

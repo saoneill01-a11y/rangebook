@@ -1011,6 +1011,16 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .wxrow .note{flex:1 1 200px}
 .rgloc .row{margin:0 0 4px}.rgpick{display:flex;flex-direction:column;gap:8px;margin:6px 0}.rgopt{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}.rgopt .t{color:var(--fg);overflow-wrap:anywhere}.rgopt .row{margin:0;align-items:center;gap:6px 12px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
 .grid>.sunline{grid-column:1/-1;margin:0}
+/* training profiles and sessions, the STOP button, suppressor lists (2.43.8–2.43.9) */
+.trgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px}
+.trrun{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;height:auto;min-height:52px;padding:9px 12px;white-space:normal}.trrun span{font-size:12.5px;color:var(--muted);font-weight:400}
+.trdgrp{margin:6px 0 16px}.trprog{margin:6px 0 14px}.trprog .trspark{margin:4px 0 0}.trdh{margin:10px 0 2px;font-size:16px}.trdsum{margin:0 0 6px}
+table.trtbl td,table.trtbl th{padding:6px 5px}table.trtbl td:last-child,table.trtbl th:last-child{width:28px;text-align:center}table.trcmp td:last-child,table.trcmp th:last-child{width:auto;text-align:left}table.trcmp{font-size:13px;width:100%}table.trcmp td,table.trcmp th{padding:6px 4px;font-size:13px}table.trcmp td:first-child{white-space:normal!important;font-family:var(--body);font-size:12.5px;width:34%}
+.trchg{font-weight:700}.trchg.good{color:var(--accent)}.trchg.bad{color:var(--warn)}table.trcmp td:first-child{white-space:nowrap;color:var(--muted)}
+.btn.tmstop{background:#e03131;color:#fff;border:2px solid #fff;box-shadow:0 0 0 3px rgba(224,49,49,.4);font-weight:700;letter-spacing:.04em}
+:root[data-palette="night"] .btn.tmstop{background:#ff3b30;color:#160302;border-color:#ffb3ab;box-shadow:0 0 0 3px rgba(255,59,48,.35)}
+.tmsq{display:inline-block;width:.7em;height:.7em;background:currentColor;margin-right:.45em;vertical-align:-.02em;border-radius:2px}
+.canpick{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
 /* shot timer and Training (2.43.7) */
 .tmdrill{align-items:center;gap:10px}.tmdrill select{flex:1 1 220px;min-width:0}.tmhow{margin:6px 0 0}
 .tmbig{font:600 72px/1.05 var(--mono);text-align:center;letter-spacing:-1px;margin:14px 0 2px;font-variant-numeric:tabular-nums}
@@ -1323,7 +1333,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div id="homeRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-traj" role="tabpanel" aria-labelledby="tab-traj" hidden>
-  <nav class="jump pinname" id="trajJump" hidden aria-label="Jump to"><div class="jumplinks"><a href="#secTInputs">Inputs</a><a href="#secTWx">Conditions</a><a href="#secTChart">Chart</a><a href="#secTPbr">Point-blank</a><a href="#secTTable">Table</a><a href="#secTDope">Dope card</a><a href="#secTrips" id="trajJumpTrips">Range trips</a></div><span class="jumpname" id="trajJumpName"></span></nav>
+  <nav class="jump pinname" id="trajJump" hidden aria-label="Jump to"><div class="jumplinks"><a href="#secTInputs">Inputs</a><a href="#secTWx">Conditions</a><a href="#secTCan" id="trajJumpCan" hidden>Suppressor</a><a href="#secTChart">Chart</a><a href="#secTPbr">Point-blank</a><a href="#secTTable">Table</a><a href="#secTDope">Dope card</a><a href="#secTrips" id="trajJumpTrips">Range trips</a></div><span class="jumpname" id="trajJumpName"></span></nav>
   <header class="phead">
     <button class="backbtn" id="trajBack" type="button" hidden aria-label="All profiles">‹ Profiles</button>
     <h1 id="trajTitle">Shooting</h1>
@@ -1380,9 +1390,12 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="field"><label for="f_angle">Shot angle, up or down (°)</label><input id="f_angle" type="number" inputmode="decimal" step="any" min="-89" max="89" placeholder="0 = level"></div>
       <div class="field wide"><label class="switch" for="f_wbr"><input id="f_wbr" type="checkbox" role="switch"><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Wind brackets</b><span class="note" id="wbrNote">Add 5, 10 and 15 mph full-value wind holds to the range table and dope card</span></span></label></div>
       <div class="field wide corbox" id="corBox" hidden></div>
-      <div class="field wide canbox" id="canBox" hidden></div>
       <div class="field wide" id="wxCalcBox"><p class="note" id="wxCalc" style="margin:0"></p></div>
     </div>
+  </section>
+  <section class="card" aria-label="Suppressor" id="secTCan" hidden>
+    <h2>Suppressor</h2>
+    <div class="canbox" id="canBox"></div>
   </section>
 
 
@@ -1598,7 +1611,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The profile's <b>All your groups</b> card (under the trip list) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 10%.</p>
       <h3>Suppressor on or off</h3>
       <p>A suppressor often moves the point of impact a little and changes the speed. Range Book can measure it from your own range trips, without a second profile. On a range trip, pick the suppressor under <b>Suppressor</b>, shoot some groups with it on and some with it off, and measure them with the aim point marked. Under <b>All groups together</b>, <b>Suppressor on or off</b> lists every group: they start as <b>On</b>, so tap <b>Off</b> on the ones you shot without it. Each chronograph string has the same <b>On</b>/<b>Off</b> for the speed. The trip then shows the difference (for example "0.6 MOA higher and 0.3 MOA right, 18 fps faster").</p>
-      <p>The gun's page adds up every trip like that for each suppressor. On the gun's Shooting profiles, <b>Conditions › Suppressor</b> picks <b>Off</b> or a suppressor (it follows what's on the gun until you pick), and <b>Zeroed with</b> says how you zeroed. When they differ, the measured shift is added: the speed to the trajectory, the up and down part to the chart, range table, dope card and reticle, and the sideways part to the reticle hold. The dope card says so under its conditions. Zeroed with it and shooting with it, nothing changes.</p>
+      <p>The gun's page adds up every trip like that for each suppressor. On the gun's Shooting profiles, the <b>Suppressor</b> card picks what you're <b>Shooting with</b> (<b>None</b> or one of the suppressors ticked on the gun's page) and what it was <b>Zeroed with</b>. New range trips with the profile start with the suppressor you're shooting with. When they differ, the measured shift is added: the speed to the trajectory, the up and down part to the chart, range table, dope card and reticle, and the sideways part to the reticle hold. The dope card says so under its conditions. Zeroed with it and shooting with it, nothing changes.</p>
       <h3>Cold-bore shot</h3>
       <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point (right or left, high or low, in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
       <h3>Transonic</h3>
@@ -1788,7 +1801,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. (An admin can turn that sharing off under <b>Admin › Community sharing</b>; then everyone's box photos are private, and loads can't be shared either.) Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
       <p>The tabs along the top are <b>Guns</b>, <b>Optics</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.</p>
       <h3>Suppressors</h3>
-      <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. Tap <b>+ Add suppressor</b> for the list of about 430 suppressors, grouped by maker the same way as scopes (type a maker, model, caliber, "rimfire" or "full auto"), or <b>+ Enter a suppressor yourself</b>. <b>+ Add a suppressor…</b> on a gun's page opens the same screen and puts the new one on that gun. Picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. If it lives on one gun, pick that gun under <b>On gun</b> (or pick the suppressor on the gun's page, like a scope); it's then filled in on that gun's new range trips. If it moves between guns, leave it off: each range trip has a <b>Suppressor</b> box where you pick the one you shot, and you can always change it there. The trip's rounds count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
+      <p>Add each suppressor under <a class=goto href=#go data-go=rifles:cans>Gear &amp; Ranges › Suppressors</a> with its maker, model, caliber rating, serial number and the date the tax stamp was approved. Tap <b>+ Add suppressor</b> for the list of about 430 suppressors, grouped by maker the same way as scopes (type a maker, model, caliber, "rimfire" or "full auto"), or <b>+ Enter a suppressor yourself</b>. <b>+ Add a suppressor</b> on a gun's page opens the same screen and adds the new one to that gun's list. Picking one fills in the maker, model and caliber rating, and puts the maker's published length, weight, diameter, mount, full auto rating, barrel-length minimum and other limits in its notes. Those limits also show under <b>Details</b>. Check them against your can's manual, since makers change ratings between versions. Tick the guns you use it on under <b>Used on</b> (or tick it under <b>Suppressors used on this gun</b> on the gun's page); a suppressor can be on as many guns' lists as you like. Then each Shooting profile for those guns picks the one it's shot with on its <b>Suppressor</b> card, and new range trips with that profile start with it. Each range trip also has a <b>Suppressor</b> box you can change. The rounds from range trips and training sessions count toward that suppressor, so each one keeps its own round count (add <b>Rounds before Range Book</b> for what it had already seen), with a cleaning reminder like a gun's. Its page lists the range trips shot with it.</p>
       <p><b>Rated for</b> suggests cartridges and size families as you type: pick a family like <b>30 caliber</b>, <b>22 rimfire</b> or <b>6.5mm</b> if the maker rates it for any bullet up to that size, or a cartridge like <b>5.56 NATO</b> if it's rated for just that one. Range Book then checks it against the gun's cartridge on the suppressor, on the gun and on each range trip. A bullet wider than the rating gets a red <b>Don't shoot</b> warning, since it can hit the baffles. A rimfire suppressor on a centerfire cartridge, or a pistol suppressor on a rifle cartridge, gets a <b>Check first</b> note to look at the maker's manual. A suppressor on a gun it isn't rated for is also flagged on the Suppressors list. The check only goes by bullet size and type, so the manual's other limits (barrel length, full auto, mount) still apply.</p>
       <p><b>Suggestions you've typed before</b> (gun makers, magazine makers and models, inventory categories, trip places, your own cartridge names) drop down as you type. Tap the <b>×</b> next to one to take it off the list, for a typo or something you don't have any more. Your saved gear doesn't change, and it comes back if you type it in again.</p>
       <h3>Magazines</h3>
@@ -1822,9 +1835,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>On a Shooting profile with a bullet length and twist filled in, a warning also appears at the top when the bullet isn't fully stable in that twist under today's conditions, with a <b>Check it in Tools</b> button.</p>
     </section>
     <section class="card guide" aria-label="Training" id="hTrain"><h2>Training</h2>
-      <p><b>Training</b> (a tab on a computer, or <a class=goto href=#go data-go=train>More › Training</a> on a phone; you can put it on the phone's bar under <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a>) keeps your drills and every shot timer run you save. Each drill shows its shots, distance and par time, your best and last time and a small chart of your runs. Tap one to see every run (date, time, first shot, the fastest and slowest split, hits and gun), change your par time, or tap <b>Start this drill</b>. Six common drills are built in (Bill drill, El Presidente, FAST, 5×5, Failure to stop and Draw to first shot); <b>+ New drill</b> adds your own with its shots, distance, par and how it's shot. Runs without a drill are under <b>Free runs</b>. Delete a run with <b>×</b> (you can undo it).</p>
+      <p><b>Training</b> (a tab on a computer, or <a class=goto href=#go data-go=train>More › Training</a> on a phone; you can put it on the phone's bar under <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a>) is for practice with the shot timer, kept apart from your range trips.</p>
+      <h3>Training profiles</h3>
+      <p>A <b>training profile</b> is what you train with: tap <b>+ New training profile</b>, give it a name, and pick the <b>Gun</b>, its <b>Barrel</b> or <b>Suppressor</b> if it has them, and the <b>Ammo</b> (ammo for the gun's cartridge is listed first). Each day you practice is a <b>session</b>: open the profile and tap <b>Start a session today</b> (or <b>Continue today's session</b>). In the session, tap a drill under <b>Run a drill</b>: the shot timer opens right there, with <b>‹</b> back to the session. Run it as many times as you like; each <b>Save to this session</b> adds a run. The session lists every run, drill by drill, with the best and average time, the average first shot and your hits. Fill in <b>Other rounds fired</b> for shots you didn't time (warm-up, zeroing), and change the date, place, suppressor or ammo for that day if they were different.</p>
+      <p>Every round a session fires (each shot in its runs, plus the other rounds) counts toward its gun, barrel, suppressor and ammo, the same as a range trip: the gun's round count and barrel life, a suppressor's cleaning reminder, the ammo you have left, and Home's rounds fired. Sessions don't show up in the Range log. A profile's <b>Progress</b> card charts each drill's average time from session to session, and <b>Compare two sessions</b> puts any two side by side, drill by drill: runs, best and average time, first shot, split and hits, with what changed (better is in your accent color). Runs saved from the timer without a profile, and runs from before profiles, are under <b>Without a profile</b> and don't count toward any gun.</p>
+      <h3>Drills</h3>
+      <p>Six common drills are built in (Bill drill, El Presidente, FAST, 5×5, Failure to stop and Draw to first shot); <b>+ New drill</b> under <b>Drills</b> adds your own with its shots, distance, par time and how it's shot. Tap a drill to change your par time (or edit your own drill). The timer stops by itself after a drill's last shot. Dry-fire reps are counted on the Training page (the last 7 days and in all); they aren't timed, so they don't go in the averages.</p>
       <h3>Shot timer</h3>
-      <p><a class=goto href=#go data-go=tools:timer>Tools › Shot timer</a> works like a shot timer at a match. Pick a drill (or none), tap <b>Start</b> and wait for the beep: <b>Random</b> waits 2 to 5 seconds, <b>3 s</b> always 3, <b>Now</b> beeps right away. Then shoot: the phone's microphone hears each shot and shows its time, with the first shot and every split. With a <b>Par time</b> a second, higher beep marks it, and the result says how far over or under par you were. It stops by itself after the drill's last shot, or tap <b>Stop</b>. Then fill in your hits, pick the gun if you like, and tap <b>Save to Training</b>; tap <b>×</b> next to anything that wasn't a shot first (an echo, the next bay). The screen stays on while it's open.</p>
+      <p>The shot timer works like one at a match, inside a training session or on its own under <a class=goto href=#go data-go=tools:timer>Tools › Shot timer</a>. Pick a drill (or none), tap <b>Start</b> and wait for the beep: <b>Random</b> waits 2 to 5 seconds, <b>3 s</b> always 3, <b>Now</b> beeps right away. Then shoot: the phone's microphone hears each shot and shows its time, with the first shot and every split. With a <b>Par time</b> a second, higher beep marks it, and the result says how far over or under par you were. It stops by itself after the drill's last shot, or tap the red <b>STOP</b>. Then fill in your hits and save; tap <b>×</b> next to anything that wasn't a shot first (an echo, the next bay). In a session, <b>Save to this session</b> adds the run to it. On its own in Tools, pick a <b>Training profile</b> (or None) and <b>Save to Training</b> puts it in today's session for that profile. The screen stays on while it's open.</p>
       <p>Under <b>Microphone and speaker</b>: <b>Sensitivity</b> (Low next to other loud shooters, High for a suppressed or quiet gun; the bar shows what the microphone hears and the mark where a sound counts as a shot), <b>Echo filter</b> for indoor ranges (it ignores a second sound within 0.15 s), and <b>Dry fire</b>: beeps only, no microphone, and each one you save counts as a rep. The timer knows its own beeps by their pitch, so they're never counted as shots, even a shot fired the moment the par beep sounds.</p>
       <p><b>Bluetooth speaker.</b> Phone speakers aren't loud. Pair a Bluetooth speaker in your phone's own settings (no special browser needed) and the beep plays through it. Bluetooth reaches your ears a little late, about 0.1 to 0.3 seconds, which would make every time look slow, so set <b>Speaker</b> to <b>Bluetooth</b>, put the phone next to the speaker with the volume up and tap <b>Measure the delay</b>: it beeps five times, listens for them and takes that delay off every run. You can measure the phone's own speaker too (it's usually tiny). A speaker with a built-in microphone (a speakerphone) can take over the phone's microphone; a plain speaker is better.</p>
       <p>The microphone only works on the <b>https</b> address. Nothing is recorded: Range Book keeps only the times. A busy line with several people shooting at once will confuse any phone timer; keep the phone close to you.</p>
@@ -2899,6 +2917,7 @@ window.RB_TRAJ={
   listChanged(){if(TVIEW==="list")fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
   all(){return state.loads.map(l=>({id:l.id,fav:!!l.fav,favN:l.fav?favRank(l):null,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
+  canSel(id){const l=state.loads.find(x=>x.id===id);return l?canSelOf(l):"";},
   setPart(id,partId){const L=state.loads.find(l=>l.id===id);if(!L)return;L.partId=partId||"";const r=rifleOf(L);if(r){L.rifleName=r.name||"";const rs=num(r.sightHeight),tw=num(r.twist);if(rs>0){L.sh=rs;L._rifleSh=rs;}if(tw>0){L.twist=tw;L._rifleTw=tw;}}save();if(L===cur()&&TVIEW==="detail"){fillInputs();fillRifle();render();}},
   forTools(){return state.loads.concat(SCR&&SCRATCH?[SCRATCH]:[]).map(l=>({id:l.id,label:l.name||"Untitled profile",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),tip:num(l.tip),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
   where(){return TVIEW==="detail"&&!SCR?state.cur:null;},
@@ -2958,7 +2977,7 @@ window.RB_TRAJ={
 };
 /* your own order for a profile's cards (one order for every profile and the Tools calculator). On a phone or tablet the cards
    are one list; on a big screen Inputs and Conditions keep the left column and the rest the right, each in your order. */
-const TCARDS=[["secTInputs","Inputs"],["secTWx","Conditions"],["secTChart","Bullet path"],["secTPbr","Point-blank range"],["secTTable","Range table"],["secTTrue","True up velocity"],["secTDope","Dope card & reticle"],["secTRanges","Saved ranges"]];
+const TCARDS=[["secTInputs","Inputs"],["secTWx","Conditions"],["secTCan","Suppressor"],["secTChart","Bullet path"],["secTPbr","Point-blank range"],["secTTable","Range table"],["secTTrue","True up velocity"],["secTDope","Dope card & reticle"],["secTRanges","Saved ranges"]];
 const tcardIds=()=>{const o=RB_ORDER.get("tcards")||[],all=TCARDS.map(x=>x[0]);return o.filter(k=>all.includes(k)).concat(all.filter(k=>!o.includes(k)));};
 function applyCardOrder(){const ids=tcardIds();ids.forEach((id,i)=>{const el=$(id);if(el)el.style.order=i;});
   const J=$("trajJump");if(J)J.querySelectorAll(".jumplinks a").forEach(a=>{const i=ids.indexOf((a.getAttribute("href")||"").slice(1));a.style.order=i>=0?i:99;});}
@@ -3067,26 +3086,33 @@ function effSumTxt(L,S){if(!(L.eff&&L.eff.on))return "";if(!effOn(L))return "Ent
 // --- suppressor (Conditions card, 2.43.6): the gun's measured shift with a suppressor, added when the profile is set to a
 // suppressor state other than the one it was zeroed in. L.canSel: unset = what's on the gun, "off", or a suppressor id;
 // L.canZero: "off" (default) or the suppressor it was zeroed with. The adjustment is shift(now) − shift(zeroed). ---
-function canAdj(L){const r=L&&rifleOf(L);if(!r||!window.RB_CANINFO)return null;const I=RB_CANINFO(r.id);if(!I||(!I.cans.length&&!I.mounted))return null;
-  const has=id=>id==="off"||I.cans.some(c=>c.id===id),sel=L.canSel&&has(L.canSel)?L.canSel:(I.mounted||"off"),zero=L.canZero&&has(L.canZero)?L.canZero:"off";
+function canAdj(L){const r=L&&rifleOf(L);if(!r||!window.RB_CANINFO)return null;const I=RB_CANINFO(r.id);if(!I)return null;
+  const has=id=>id==="off"||I.cans.some(c=>c.id===id),sel=L.canSel&&has(L.canSel)?L.canSel:(I.def||"off"),zero=L.canZero&&has(L.canZero)?L.canZero:"off";
   const sh=id=>{if(id==="off")return {up:0,right:0,fps:0,ok:true};const c=I.cans.find(x=>x.id===id),s2=c&&c.shift;return s2?{up:s2.up||0,right:s2.right||0,fps:s2.fps||0,ok:true}:{up:0,right:0,fps:0,ok:false};};
   const a=sh(sel),b=sh(zero),nm=id=>id==="off"?"":(I.cans.find(c=>c.id===id)||{}).name||"the suppressor";
-  return {I,sel,zero,up:a.up-b.up,right:a.right-b.right,fps:a.fps-b.fps,missing:!a.ok?nm(sel):!b.ok?nm(zero):null,follow:!L.canSel||!has(L.canSel),name:nm(sel)};}
+  return {I,gun:r,sel,zero,up:a.up-b.up,right:a.right-b.right,fps:a.fps-b.fps,missing:sel===zero?null:!a.ok?nm(sel):!b.ok?nm(zero):null,name:nm(sel)};}
+// the suppressor this profile is shot with ("" for none): what new range trips start with (2.43.8)
+function canSelOf(L){const C=canAdj(L);return C&&C.sel!=="off"?C.sel:"";}
 const canMoves=C=>!!C&&(Math.abs(C.up)>=.05||Math.abs(C.right)>=.05||Math.abs(C.fps)>=.5);
 function canAdjTxt(C){const f=v=>Math.abs(v).toFixed(1),b=[];if(Math.abs(C.up)>=.05)b.push(f(C.up)+" MOA "+(C.up>0?"higher":"lower"));if(Math.abs(C.right)>=.05)b.push(f(C.right)+" MOA "+(C.right>0?"right":"left"));
   if(Math.abs(C.fps)>=.5)b.push(U.n("fps",Math.abs(C.fps),0)+" "+U.u("fps")+" "+(C.fps>0?"faster":"slower"));return b.join(", ");}
-function fillCan(L){const box=$("canBox");if(!box)return;const C=canAdj(L);fillCan.k=C?JSON.stringify([C.sel,C.zero,C.up,C.right,C.fps,C.missing,C.follow,C.I.cans.map(c=>c.id+c.name),C.I.mounted]):"";if(!C){box.hidden=true;box.innerHTML="";return;}box.hidden=false;
-  const opts=[["off","Off"]].concat(C.I.cans.map(c=>[c.id,c.name+(c.id===C.I.mounted?" (on the gun)":"")])),tabs=(attr,v,lab)=>'<div class="segtabs canseg" role="radiogroup" aria-label="'+lab+'">'+opts.map(([k,t])=>'<button type="button" role="radio" '+attr+'="'+escL(k)+'" aria-checked="'+(k===v)+'" aria-selected="'+(k===v)+'">'+escL(t)+'</button>').join("")+'</div>';
-  box.innerHTML='<label>Suppressor</label>'+tabs("data-csel",C.sel,"Suppressor")+'<div class="canzero"><span class="note">Zeroed with</span>'+tabs("data-czero",C.zero,"Zeroed with")+'</div><p class="note" id="canSum"></p>';
+/* the Suppressor card (2.43.8): which of the gun's suppressors it's shot with and which it was zeroed with. Shown when you
+   have suppressors; picks from the ones ticked on the gun's page (Gear & Ranges › Guns). */
+function fillCan(L){const box=$("canBox"),sec=$("secTCan"),jl=$("trajJumpCan");if(!box||!sec)return;const C=canAdj(L),any=window.RB_NCANS?RB_NCANS():0;
+  fillCan.k=C?JSON.stringify([C.sel,C.zero,C.up,C.right,C.fps,C.missing,C.I.cans.map(c=>c.id+c.name)]):"";
+  const show=!!C&&(any>0||C.I.cans.length>0);sec.hidden=!show;if(jl)jl.hidden=!show;if(!show){box.innerHTML="";return;}
+  if(!C.I.cans.length){box.innerHTML='<p class="note" style="margin-top:0">No suppressors on <b>'+escL(C.gun.name||"this gun")+'</b>\'s list yet. Tick the ones you use on it on the gun\'s page, then pick here which one you\'re shooting with and which you zeroed with.</p><div class="row"><button class="btn" type="button" id="canGun">Open '+escL(C.gun.name||"the gun")+'</button></div>';
+    $("canGun").addEventListener("click",()=>{if(window.RB_OPEN_GUN)RB_OPEN_GUN(C.gun.id,L.id);});return;}
+  const opts=[["off","None"]].concat(C.I.cans.map(c=>[c.id,c.name])),tabs=(attr,v,lab)=>'<div class="segtabs canseg" role="radiogroup" aria-label="'+lab+'">'+opts.map(([k,t])=>'<button type="button" role="radio" '+attr+'="'+escL(k)+'" aria-checked="'+(k===v)+'" aria-selected="'+(k===v)+'">'+escL(t)+'</button>').join("")+'</div>';
+  box.innerHTML='<div class="field"><label>Shooting with</label>'+tabs("data-csel",C.sel,"Shooting with")+'</div><div class="field"><label>Zeroed with</label>'+tabs("data-czero",C.zero,"Zeroed with")+'</div>'+
+    '<p class="tline" id="canSum"></p><p class="note">New range trips with this profile start with the suppressor you\'re shooting with, so their rounds count toward it. To measure how much a suppressor moves your point of impact, mark groups <b>On</b> or <b>Off</b> on a range trip (under its targets).</p>';
   box.querySelectorAll("[data-csel]").forEach(b=>b.addEventListener("click",()=>{const c=cur();c.canSel=b.dataset.csel;save();fillCan(c);render();}));
   box.querySelectorAll("[data-czero]").forEach(b=>b.addEventListener("click",()=>{const c=cur();if(b.dataset.czero==="off")delete c.canZero;else c.canZero=b.dataset.czero;save();fillCan(c);render();}));
   canSumFill(L);}
 function canSumFill(L){const n=$("canSum");if(!n)return;const C=canAdj(L);if(!C){n.textContent="";return;}
-  let t=C.missing?"No shift measured yet for "+C.missing+" on this gun. On a range trip with it, mark which groups (and chronograph strings) had it on and which didn't.":
+  n.textContent=C.missing?"No shift measured yet for "+C.missing+" on this gun, so nothing is added. On a range trip with it, mark which groups (and chronograph strings) had it on and which didn't.":
     canMoves(C)?"Compared with your zero, it hits "+canAdjTxt(C)+". The chart, range table, dope card and reticle include it.":
-    C.sel===C.zero?"The same as when you zeroed, so nothing to add.":"The measured difference is too small to matter.";
-  n.innerHTML=escL(t)+(C.follow?' <span class="note">Following what\'s on the gun.</span>':' <button class="linkbtn" type="button" id="canFollow">Use what\'s on the gun</button>');
-  const fb=$("canFollow");if(fb)fb.addEventListener("click",()=>{const c=cur();delete c.canSel;save();fillCan(c);render();});}
+    C.sel===C.zero?(C.sel==="off"?"No suppressor, the same as when you zeroed.":"The same suppressor you zeroed with, so nothing to add."):"The measured difference is too small to matter.";}
 window.RB_CANCHANGED=()=>{try{if(TVIEW==="detail"&&!SCR){fillCan(cur());render();}}catch(e){}};
 // --- Coriolis controls (Conditions card, Long chart only) ---
 function fillCor(L){const box=$("corBox");if(!box)return;const lr=rngOf(L)==="l";box.hidden=!lr;if(!lr){box.innerHTML="";return;}
@@ -3248,7 +3274,7 @@ function render(){
   {const fb=$("trajFit"),f=fitCheck(L0,true);if(fb){fb.hidden=!f;if(f)fb.innerHTML=f.err.concat(f.caution.map(t=>'<b>Check first:</b> '+t)).join("<br>")+(f.err.length?' <span class="note">Change the gun or ammo under <b>Inputs</b>, or the gun\'s cartridge on <a class=goto href=#go data-go=rifles:guns>Gear &amp; Ranges</a>.</span> <button class="linkbtn" type="button" id="trajFitGun">Pick another gun</button>':'');
     const fg=$("trajFitGun");if(fg)fg.onclick=()=>{setInOpen(true);const b=$("f_rifleBtn");b.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>{if($("rifPick").hidden)openRifPick();},350);};}}
   const CA=canAdj(L0),CAM=canMoves(CA)?CA:null; // a suppressor that isn't the way it was zeroed (2.43.6)
-  {const k=CA?JSON.stringify([CA.sel,CA.zero,CA.up,CA.right,CA.fps,CA.missing,CA.follow,CA.I.cans.map(c=>c.id+c.name),CA.I.mounted]):"";if(k!==fillCan.k){fillCan.k=k;fillCan(L0);}}
+  {const k=CA?JSON.stringify([CA.sel,CA.zero,CA.up,CA.right,CA.fps,CA.missing,CA.I.cans.map(c=>c.id+c.name)]):"";if(k!==fillCan.k)fillCan(L0);}
   const L=Object.assign({},L0,{mv:effMV(L0)+(CAM?CAM.fps:0)}); // what the bullet actually does today
   const bad=[];
   if(!(L.mv>0))bad.push("muzzle velocity");
@@ -3661,7 +3687,7 @@ function renderDope(L,S,zs,path){
   box.innerHTML='<div class="dopehead"><div class="dopename">'+esc(L.name||"Load")+'</div><div class="dopemeta">'+
     (L.rifleName?esc(L.rifleName)+" · ":"")+(o.scope?esc(scopeName(o.scope))+(DOT?" ("+esc(dotDesc(o.scope))+")":"")+" · ":"")+(L.w>0?esc(L.w)+" gr · ":"")+U.s("fps",L.mv,0)+" · BC "+esc(L.bc)+(L.bcm==="G7"?" G7":"")+" · zero "+U.s("yd",za,0)+"</div>"+
     '<div class="dopemeta">'+U.s("F",L.temp==null?59:L.temp,0)+" · "+U.s("ft",L.alt==null?0:L.alt,0,true)+" · "+(BR.length?"full-value wind":"wind "+U.s("mph",L.wind||0,0)+(L.wind&&windClock(L)!==3&&windClock(L)!==9?" from "+windClock(L)+" o'clock":"")+(L.wind&&side?" (hold "+side+")":""))+(angleCos(L)<1?" · "+Math.abs(num(L.angle))+"° angle":"")+(corOn(L)?" · Coriolis "+Math.abs(num(L.cor.lat)).toFixed(1)+"°"+(num(L.cor.lat)<0?"S":"N")+(num(L.cor.az)!=null?" firing "+Math.round(num(L.cor.az))+"°":"")+" (in Up)":"")+" · "+esc(ds)+"</div>"+(TX===0?'<div class="dopetrans">Subsonic from the muzzle</div>':TX>0?'<div class="dopetrans"><i aria-hidden="true"></i>Transonic at '+transTxt(TX)+'</div>':'')+
-    (()=>{const C=canAdj(L);return canMoves(C)?'<div class="dopetrans">'+esc((C.sel==="off"?"Suppressor off":"Suppressor on ("+C.name+")")+" (zeroed "+(C.zero==="off"?"without one":"with one")+"): "+canAdjTxt(C)+" included"+(Math.abs(C.right)>=.05?" (the sideways part is in the reticle hold, not the Wind column)":""))+'</div>':'';})()+
+    (()=>{const C=canAdj(L);if(!canMoves(C))return '';const zn=C.zero==="off"?"zeroed without one":"zeroed with "+((C.I.cans.find(c=>c.id===C.zero)||{}).name||"one");return '<div class="dopetrans">'+esc((C.sel==="off"?"No suppressor":C.name)+" ("+zn+"): "+canAdjTxt(C)+" included"+(Math.abs(C.right)>=.05?" (the sideways part is in the reticle hold, not the Wind column)":""))+'</div>';})()+
     (EX===0?'<div class="dopetrans">'+esc(DOPE.eff.why.replace(/^./,c=>c.toUpperCase()))+' from the muzzle</div>':EX>0?'<div class="dopetrans"><i class="ke" aria-hidden="true"></i>Effective range '+transTxt(EX)+'</div>':'')+"</div>"+
     (rows?'<div class="dopescroll" id="dopeScroll"><table class="dope"><thead><tr><th>'+(U.metric?"M":"Yd")+'</th>'+(DOT
       ?'<th>Hold<br>('+U.u("in")+')</th><th>Hold<br>(dots)</th>'+(BR.length?BR.map(v=>'<th>'+brLabel(v)+'<br>('+U.u("in")+')</th>').join(""):'<th>Wind<br>('+U.u("in")+')</th>')+(S.sg!=null?'<th>Spin R<br>('+U.u("in")+')</th>':'')+(corOn(L)?'<th>Cor R<br>('+U.u("in")+')</th>':'')
@@ -4707,11 +4733,12 @@ function partRounds(p){
   const tripB=t=>("upperId" in t||"lowerId" in t)?{upperId:t.upperId||"",lowerId:t.lowerId||""}:gunBuild(tg.get(t.trajId));
   const tripHit=t=>p.kind==="barrel"?t.partId===p.id:tripB(t)[p.kind+"Id"]===p.id;
   const grpHit=(L,g)=>p.kind==="barrel"?groupPart(L,g)===p.id:groupBuild(L,g)[p.kind+"Id"]===p.id;
-  let trip=0,nTrips=0,dev=0,since=0;
+  let trip=0,nTrips=0,dev=0,since=0,train=0,nTrain=0;
   trips.forEach(t=>{if(!tripHit(t))return;const n=num(t.rounds)||0;if(!n)return;trip+=n;nTrips++;if(cl&&(t.date||"")>cl)since+=n;});
   loads.forEach((L,lid)=>{if(!isMine(lid))return;(L.groups||[]).forEach(g=>{if(!grpHit(L,g))return;const n=(g.shots||[]).filter(x=>Number(x)>0).length;dev+=n;if(cl&&(g.date||"")>cl)since+=n;});});
-  const base=num(p.roundsBase)||0,total=base+trip+dev,life=p.kind==="lower"?null:num(p.barrelLife),pct=life>0?total/life*100:null,every=num(p.cleanEvery);
-  return {base,trip,nTrips,dev,total,life,pct,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};}
+  trainUse().forEach(u=>{if(!(p.kind==="barrel"?u.partId===p.id:gunBuild(u.gunId)[p.kind+"Id"]===p.id))return;train+=u.rounds;nTrain++;if(cl&&u.date>cl)since+=u.rounds;});
+  const base=num(p.roundsBase)||0,total=base+trip+dev+train,life=p.kind==="lower"?null:num(p.barrelLife),pct=life>0?total/life*100:null,every=num(p.cleanEvery);
+  return {base,trip,nTrips,dev,train,nTrain,total,life,pct,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};}
 function partsChanged(){syncBuilds();queueRifles();if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));}
 function newPart(kind,gid,linkTo){const g=rifles.find(r=>r.id===gid);const p={id:"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:["lower","upper","barrel"].includes(kind)?kind:"barrel",mfr:"",model:"",notes:""};
   if(p.kind==="barrel")p.gunId=g?g.id:"";if(p.kind==="lower")p.serial="";else Object.assign(p,{cartridge:"",barrel:null,twist:null,sightHeight:null,scopeId:""});
@@ -4773,7 +4800,7 @@ function renderPart(root){
   const drawRc=()=>{const rc=partRounds(p),box=$("ptRc");if(!box)return;
     let t='<div class="rcount"><b>'+rc.total.toLocaleString()+'</b><span>rounds on this '+W+'</span></div>';
     if(rc.life>0){t+='<div class="lifebar'+(rc.pct>=80?' warn':'')+'" role="img" aria-label="'+Math.round(rc.pct)+'% of barrel life used"><span style="width:'+Math.min(100,rc.pct).toFixed(1)+'%"></span></div><p class="note">'+Math.round(rc.pct)+'% of a '+rc.life.toLocaleString()+'-round barrel life · '+(rc.life-rc.total>0?'about '+(rc.life-rc.total).toLocaleString()+' left':'past its expected life')+'</p>';}
-    const bits=[rc.base?rc.base.toLocaleString()+' before Range Book':'',rc.trip?rc.trip.toLocaleString()+' from '+rc.nTrips+' range trip'+(rc.nTrips===1?'':'s'):'',rc.dev?rc.dev.toLocaleString()+' from load development':''].filter(Boolean);
+    const bits=[rc.base?rc.base.toLocaleString()+' before Range Book':'',rc.trip?rc.trip.toLocaleString()+' from '+rc.nTrips+' range trip'+(rc.nTrips===1?'':'s'):'',rc.dev?rc.dev.toLocaleString()+' from load development':'',rc.train?rc.train.toLocaleString()+' from '+rc.nTrain+' training session'+(rc.nTrain===1?'':'s'):''].filter(Boolean);
     if(bits.length)t+='<p class="note">'+bits.join(' · ')+'</p>';
     if(rc.since!=null)t+='<p class="'+(rc.due?'err':'note')+'">'+rc.since.toLocaleString()+' round'+(rc.since===1?'':'s')+' since cleaning on '+esc(fmtDate(p.cleaned))+(rc.due?' — due for cleaning.':'.')+'</p>';
     box.innerHTML=t;};
@@ -4802,12 +4829,13 @@ function renderPart(root){
 function rifleRounds(r){
   const trajs=(window.RB_TRAJ&&RB_TRAJ.all())||[],tids=new Set(trajs.filter(t=>t.rifleId===r.id).map(t=>t.id));
   const from=r.barrelSince||"",cl=r.cleaned||"";
-  let trip=0,nTrips=0,dev=0,since=0;
+  let trip=0,nTrips=0,dev=0,since=0,train=0,nTrain=0;
   trips.forEach(t=>{if(!tids.has(t.trajId))return;const d=t.date||"";if(from&&d&&d<from)return;const n=num(t.rounds)||0;if(!n)return;trip+=n;nTrips++;if(cl&&d>cl)since+=n;});
   loads.forEach((L,lid)=>{if(!isMine(lid)||L.rifleId!==r.id)return;(L.groups||[]).forEach(g=>{const d=g.date||"";if(from&&d&&d<from)return;const n=(g.shots||[]).filter(x=>Number(x)>0).length;dev+=n;if(cl&&d>cl)since+=n;});});
-  const base=num(r.roundsBase)||0,total=base+trip+dev,life=num(r.barrelLife);
+  trainUse().forEach(u=>{if(u.gunId!==r.id)return;const d=u.date;if(from&&d&&d<from)return;train+=u.rounds;nTrain++;if(cl&&d>cl)since+=u.rounds;});
+  const base=num(r.roundsBase)||0,total=base+trip+dev+train,life=num(r.barrelLife);
   const pct=life>0?total/life*100:null,every=num(r.cleanEvery);
-  return {base,trip,nTrips,dev,total,life,pct,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};
+  return {base,trip,nTrips,dev,train,nTrain,total,life,pct,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};
 }
 /* ---------- factory ammo (Gear & Ranges tab): for people who shoot store-bought ammo ---------- */
 let ammo=[],ammoDirty=false,ammoTimer=null,ammoSaving=Promise.resolve(),ammoVer=0,ammoOpen=null,gunArea="guns",ammoCat=false,ammoCatQ="";
@@ -5010,10 +5038,11 @@ function ammoUse(a){
   const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],tids=new Set(T.filter(t=>t.ammoId===a.id).map(t=>t.id));
   let fired=0,velN=0,velSum=0;const loadsUsing=T.filter(t=>t.ammoId===a.id);
   trips.forEach(t=>{if(!tids.has(t.trajId))return;fired+=num(t.rounds)||0;const v=num(t.avgVel);if(v>0){velSum+=v;velN++;}});
+  let trained=0;trainUse().forEach(u=>{if(u.ammoId===a.id)trained+=u.rounds;});fired+=trained;
   const bought=num(a.bought),onHand=bought!=null?bought-fired:null;
   let ppr=num(a.price)>0&&num(a.perBox)>0?num(a.price)/num(a.perBox):null;
   if(isReload(a)){ppr=num(a.cpr)>0?num(a.cpr):null;if(ppr==null&&(a.bulletId||a.powderId||a.primerId)){const rc=roundCost({bulletId:a.bulletId,powderId:a.powderId,primerId:a.primerId},num(a.charge),a.lotId);ppr=rc.total;}}
-  return {fired,onHand,ppr,avgVel:velN?Math.round(velSum/velN):null,velN,loadsUsing,low:onHand!=null&&num(a.lowAt)!=null&&onHand<num(a.lowAt)};
+  return {fired,trained,onHand,ppr,avgVel:velN?Math.round(velSum/velN):null,velN,loadsUsing,low:onHand!=null&&num(a.lowAt)!=null&&onHand<num(a.lowAt)};
 }
 function renderAmmo(root){
   if(ammoOpen&&!ammo.some(a=>a.id===ammoOpen))ammoOpen=null;
@@ -5107,7 +5136,7 @@ function renderAmmo(root){
   const draw=()=>{const u=ammoUse(a),box=$("ammoBox");
     let s='';
     if(u.onHand!=null)s+='<div class="rcount"><b>'+u.onHand.toLocaleString()+'</b><span>rounds on hand</span></div>'+(u.low?'<p class="err">Running low.</p>':'');
-    s+='<p class="note">'+[num(a.bought)!=null?num(a.bought).toLocaleString()+(RL?' loaded':' bought'):(RL?'Fill in <b>Rounds loaded</b> to keep count':'Fill in <b>Rounds bought</b> to keep count'),u.fired?u.fired.toLocaleString()+' fired on range trips':'',u.ppr!=null?'$'+u.ppr.toFixed(2)+' a round':''].filter(Boolean).join(' · ')+'</p>';
+    s+='<p class="note">'+[num(a.bought)!=null?num(a.bought).toLocaleString()+(RL?' loaded':' bought'):(RL?'Fill in <b>Rounds loaded</b> to keep count':'Fill in <b>Rounds bought</b> to keep count'),u.fired?u.fired.toLocaleString()+' fired'+(u.trained?(u.trained<u.fired?' ('+(u.fired-u.trained).toLocaleString()+' on range trips, '+u.trained.toLocaleString()+' in training)':' in training'):' on range trips'):'',u.ppr!=null?'$'+u.ppr.toFixed(2)+' a round':''].filter(Boolean).join(' · ')+'</p>';
     if(u.avgVel){s+='<p class="note">Your range trips with this ammo average <b>'+U.s("fps",u.avgVel,0,true)+'</b> ('+u.velN+' trip'+(u.velN===1?'':'s')+').'+(Math.round(num(a.measVel)||0)!==u.avgVel?' <button class="btn small" id="ammoUseVel" type="button">Use as measured velocity</button>':'')+'</p>';}
     box.innerHTML=s;
     const uv=$("ammoUseVel");if(uv)uv.addEventListener("click",()=>{a.measVel=u.avgVel;$("af_measVel").value=u.avgVel;queueAmmo();draw();});
@@ -5165,7 +5194,7 @@ function freshAdd(x,o){FRESH.set(x.id,Object.assign({snap:JSON.parse(JSON.string
 function freshKeep(id){if(id)FRESH.delete(id);}
 function freshSame(x,snap){return Object.keys(x).every(k=>FRESH_IGN.has(k)||freshEmpty(x[k])||JSON.stringify(x[k])===JSON.stringify(snap[k]));}
 function freshMedia(id){return gunPhotosOf(id).length>0||gunPhotosOf(picKey(id)).length>0||gnFiles(id).length>0||VLT.docs.some(d=>d.item===id);}
-function freshUnlink(id){let ch=false;rifles.forEach(g=>{if(g.scopeId===id){g.scopeId=null;ch=true;}if(g.canId===id){g.canId=null;ch=true;}if(g.build){["lowerId","upperId"].forEach(k=>{if(g.build[k]===id){g.build[k]="";ch=true;}});}});return ch;}
+function freshUnlink(id){let ch=false;rifles.forEach(g=>{if(g.scopeId===id){g.scopeId=null;ch=true;}if(g.canId===id){g.canId=null;ch=true;}if(Array.isArray(g.canIds)&&g.canIds.includes(id)){g.canIds=g.canIds.filter(x=>x!==id);ch=true;}if(g.build){["lowerId","upperId"].forEach(k=>{if(g.build[k]===id){g.build[k]="";ch=true;}});}});return ch;}
 function sweepFresh(){FRESH.forEach((f,id)=>{if(f.open())return;FRESH.delete(id);const A=f.list()||[],x=A.find(y=>y.id===id);if(!x||!freshSame(x,f.snap)||freshMedia(id))return;
   if(f.remove)f.remove(id);else{A.splice(A.indexOf(x),1);if(freshUnlink(id))queueRifles();f.save();}});}
 function renderRifles(){
@@ -5259,8 +5288,11 @@ function renderRifles(){
       field("rf_twist","Twist (1 turn in __ in)",r.twist,"number")+
       field("rf_sightHeight","Sight height over bore (in)",r.sightHeight,"number")+
       '<div class="field"><label for="rf_scope">Optic</label><select id="rf_scope" class="fieldselect"><option value="">None</option>'+[...scopes].sort((a,b)=>scopeLabel(a).localeCompare(scopeLabel(b))).map(x=>'<option value="'+esc(x.id)+'"'+(r.scopeId===x.id?' selected':'')+'>'+esc(scopeLabel(x))+'</option>').join("")+'<option value="__new">+ Add an optic…</option></select>'+(r.scopeId&&scopes.some(x=>x.id===r.scopeId)?'<button class="linkbtn" type="button" id="rfScopeOpen">Open this '+esc(KIND_OPT[(scopes.find(x=>x.id===r.scopeId)||{}).kind]||"scope")+' ›</button>':'')+'</div>'+
-      '<div class="field"><label for="rf_can">Suppressor</label><select id="rf_can" class="fieldselect"><option value="">None (pick one on each range trip)</option>'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(r.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+'<option value="__new">+ Add a suppressor…</option></select>'+(r.canId&&cans.some(c=>c.id===r.canId)?'<button class="linkbtn" type="button" id="rfCanOpen">Open this suppressor ›</button>':'')+'</div>'+
-      (r.canId?'<div class="field wide cartinfo" id="rfCanFit" aria-live="polite">'+canFitHtml(cans.find(c=>c.id===r.canId),gunCart(r))+'</div>':'')+
+      (()=>{const on=gunCans(r),all=[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true}));
+        return '<div class="field wide"><label>Suppressors used on this gun</label><div class="canpick" id="rfCans">'+all.map(c=>'<label class="toggle"><input type="checkbox" data-rfcan="'+esc(c.id)+'"'+(on.includes(c.id)?' checked':'')+'> '+esc(canName(c))+'</label>').join("")+
+          '<button class="btn small" type="button" id="rfCanAdd">+ Add a suppressor</button></div>'+
+          '<p class="note" style="margin:4px 0 0">'+(all.length?'Tick every suppressor you use on this gun. Each Shooting profile for it then picks the one you\'re shooting with, and which one (if any) you zeroed with, on its <b>Suppressor</b> card.':'No suppressors yet. Add one and tick it here.')+'</p></div>'+
+          '<div class="field wide cartinfo" id="rfCanFit" aria-live="polite">'+on.map(id=>canFitHtml(cans.find(c=>c.id===id),gunCart(r))).join("")+'</div>';})()+
       gunCanShiftHtml(r)+
       '<div class="field wide"><label for="rf_notes">Notes</label><textarea id="rf_notes" style="min-height:90px">'+esc(r.notes||"")+'</textarea></div></div>'+
       '<p class="note">Measure sight height as <a class=goto href=#go data-go=help:Measure_sight_height_(height_over_bore)>How to Use</a> explains. Changing it here also updates the Shooting profiles that use this gun.</p></section>'+
@@ -5314,7 +5346,7 @@ function renderRifles(){
   const drawRc=()=>{const rc=rifleRounds(r),box=$("rcBox");if(!box)return;
     let h='<div class="rcount"><b>'+rc.total.toLocaleString()+'</b><span>rounds'+(r.barrelSince?' since the barrel was fitted':' on this gun')+'</span></div>';
     if(rc.life>0){const p=Math.min(100,rc.pct);h+='<div class="lifebar'+(rc.pct>=80?' warn':'')+'" role="img" aria-label="'+Math.round(rc.pct)+'% of barrel life used"><span style="width:'+p.toFixed(1)+'%"></span></div><p class="note">'+Math.round(rc.pct)+'% of a '+rc.life.toLocaleString()+'-round barrel life · '+(rc.life-rc.total>0?'about '+(rc.life-rc.total).toLocaleString()+' left':'past its expected life')+'</p>';}
-    const parts=[rc.base?rc.base.toLocaleString()+' before Range Book':'',rc.trip?rc.trip.toLocaleString()+' from '+rc.nTrips+' range trip'+(rc.nTrips===1?'':'s'):'',rc.dev?rc.dev.toLocaleString()+' from load development':''].filter(Boolean);
+    const parts=[rc.base?rc.base.toLocaleString()+' before Range Book':'',rc.trip?rc.trip.toLocaleString()+' from '+rc.nTrips+' range trip'+(rc.nTrips===1?'':'s'):'',rc.dev?rc.dev.toLocaleString()+' from load development':'',rc.train?rc.train.toLocaleString()+' from '+rc.nTrain+' training session'+(rc.nTrain===1?'':'s'):''].filter(Boolean);
     if(parts.length)h+='<p class="note">'+parts.join(' · ')+'</p>';
     if(rc.since!=null)h+='<p class="'+(rc.due?'err':'note')+'">'+rc.since.toLocaleString()+' round'+(rc.since===1?'':'s')+' since cleaning on '+esc(fmtDate(r.cleaned))+(rc.due?' — due for cleaning.':'.')+'</p>';
     box.innerHTML=h;};
@@ -5342,7 +5374,7 @@ function renderRifles(){
     ce.placeholder="e.g. 308 Winchester, 5.56 NATO, 9mm";
     const typeUI=()=>{root.querySelectorAll("[data-gtype]").forEach(b=>{const on=b.dataset.gtype===r.type;b.setAttribute("aria-selected",on);b.setAttribute("aria-checked",on);});const tn=$("rf_typeNote");if(tn)tn.hidden=!(r.typeGuessed&&r.type);};
     root.querySelectorAll("[data-gtype]").forEach(b=>b.addEventListener("click",()=>{r.type=b.dataset.gtype;delete r.typeGuessed;queueRifles();typeUI();}));
-    ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();{const cf=$("rfCanFit");if(cf)cf.innerHTML=canFitHtml(cans.find(c=>c.id===r.canId),gunCart(r));}if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
+    ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();{const cf=$("rfCanFit");if(cf)cf.innerHTML=gunCans(r).map(id=>canFitHtml(cans.find(c=>c.id===id),gunCart(r))).join("");}if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
     ce.addEventListener("change",()=>{if(ce.value.trim())rememberCartridge(RB_CARTS.canon(ce.value));});
     RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[]});}
   [["nick",false],["mfr",false],["model",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
@@ -5367,10 +5399,8 @@ function renderRifles(){
   root.querySelectorAll("[data-gtraj]").forEach(b=>b.addEventListener("click",()=>RB_TRAJ.open(b.dataset.gtraj)));
   root.querySelectorAll("[data-gtrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.gtrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("gunRangeDay").addEventListener("click",()=>{homePick={gun:r.id};showTab("home");window.scrollTo(0,0);});
-  $("rf_can").addEventListener("change",e=>{const v=e.target.value;
-    if(v==="__new"){canFromGun=r.id;canForGun=r.id;canAdding=true;canAddQ="";gunArea="cans";canOpen=null;rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("cn_mfr");if(el)el.focus();return;}
-    if(v)mountCan(v,r.id);else{r.canId=null;queueRifles();}renderRifles();});
-  {const co=$("rfCanOpen");if(co)co.addEventListener("click",()=>{canFromGun=r.id;gunArea="cans";canOpen=r.canId;rifleOpen=null;renderRifles();window.scrollTo(0,0);});}
+  root.querySelectorAll("[data-rfcan]").forEach(cb=>cb.addEventListener("change",()=>{setGunCan(r,cb.dataset.rfcan,cb.checked);const cf=$("rfCanFit");if(cf)cf.innerHTML=gunCans(r).map(id=>canFitHtml(cans.find(c=>c.id===id),gunCart(r))).join("");if(window.RB_CANCHANGED)RB_CANCHANGED();}));
+  $("rfCanAdd").addEventListener("click",()=>{canFromGun=r.id;canForGun=r.id;canAdding=true;canAddQ="";gunArea="cans";canOpen=null;rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("cn_mfr");if(el)el.focus();});
   $("rf_scope").addEventListener("change",e=>{const v=e.target.value;
     if(v==="__new"){scopeFromGun=r.id;gunArea="scopes";scopeAdding=true;scopeForGun=r.id;rifleOpen=null;renderRifles();window.scrollTo(0,0);return;}
     mountScope(v||null,r.id);renderRifles();});
@@ -5695,18 +5725,24 @@ function vAccountState(t){const st=$("vaOffState");if(st&&t)st.textContent=t;}
    Both live in the rifles doc next to scopes and parts:
      cans:[{id,mfr,model,caliber,serial,approved,roundsBase,cleanEvery,cleaned,notes}]
      inventory:[{id,kind:"consumable"|"equipment",name,cat,qty,warnAt,where,gunId,due,repeat,serial,price,bought,notes}]
-   A gun can carry a suppressor (gun.canId), like a scope. Each range trip records the suppressor it was shot with (trip.canId:
-   copied from the gun when the trip is made, changeable on the trip), and a suppressor's round count comes from those trips.
+   A gun lists the suppressors used on it (gun.canIds, 2.43.8; the older single gun.canId is folded into it). Each Shooting
+   profile picks the one it's shot with (its Suppressor card), each range trip records the one it was shot with (trip.canId:
+   from the profile when the trip is made, changeable on the trip), and a suppressor's round count comes from those trips
+   and from training sessions.
    Photos go in the gun-photo store under the item's id. */
 let cans=[],canOpen=null,canFromGun=null,canAdding=false,canForGun=null,canAddQ="",inv=[],invOpen=null,mags=[],magOpen=null,magFromGun=null,magBulk=null;
 const gearId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const canName=c=>[c.mfr,c.model].map(x=>String(x||"").trim()).filter(Boolean).join(" ")||"Unnamed suppressor";
-const canGuns=c=>rifles.filter(r=>r.canId===c.id);
-function canRounds(c){const cl=c.cleaned||"";let trip=0,nTrips=0,since=0;
+const gunCans=r=>(r&&Array.isArray(r.canIds)?r.canIds:[]).filter(id=>cans.some(c=>c.id===id));
+const canGuns=c=>rifles.filter(r=>gunCans(r).includes(c.id));
+function setGunCan(r,cid,on){const L=Array.isArray(r.canIds)?r.canIds.filter(x=>x!==cid):[];if(on)L.push(cid);r.canIds=L;if(!on&&r.canId===cid)r.canId=null;queueRifles();}
+window.RB_GUNCANS=gid=>{const r=rifles.find(x=>x.id===gid);return r?gunCans(r).map(id=>{const c=cans.find(x=>x.id===id);return {id,name:canName(c)};}):[];};
+function canRounds(c){const cl=c.cleaned||"";let trip=0,nTrips=0,since=0,train=0,nTrain=0;
   trips.forEach(t=>{if(t.canId!==c.id)return;const n=num(t.rounds)||0;if(!n)return;trip+=n;nTrips++;if(cl&&(t.date||"")>cl)since+=n;});
-  const base=num(c.roundsBase)||0,every=num(c.cleanEvery);return {base,trip,nTrips,total:base+trip,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};}
+  trainUse().forEach(u=>{if(u.canId!==c.id)return;train+=u.rounds;nTrain++;if(cl&&u.date>cl)since+=u.rounds;});
+  const base=num(c.roundsBase)||0,every=num(c.cleanEvery);return {base,trip,nTrips,train,nTrain,total:base+trip+train,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};}
 // put a suppressor on a gun (it comes off any other gun), or take it off
-function mountCan(cid,gid){rifles.forEach(g=>{if(g.id===gid)g.canId=cid||null;else if(cid&&g.canId===cid)g.canId=null;});queueRifles();}
+function mountCan(cid,gid){const g=rifles.find(x=>x.id===gid);if(g&&cid)setGunCan(g,cid,true);}
 /* ----- is a suppressor rated for the gun's cartridge? (2.40) -----
    The rating is read from Rated for (caliber): cartridges from the list ("5.56 NATO / 300 Win Mag", the biggest counts), a family
    ("30 caliber", "22 rimfire", "6.5mm") or a size (".30 cal"); a catalog can with text it can't read uses the catalog's max bore.
@@ -5811,7 +5847,7 @@ function renderCans(root){
       return '<button class="loaditem withthumb" type="button" data-canopen="'+esc(x.id)+'"><span class="lthumb">'+(th||CAN_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(canName(x))+'</span>'+
         '<span class="d">'+esc([x.caliber||"",x.serial?"Serial "+x.serial:"",x.approved?"Approved "+fmtDate(x.approved):""].filter(Boolean).join(" · "))+'</span>'+
         '<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>'+
-        '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", "))+(gs.some(g=>canFitHtml(x,gunCart(g)).includes('class="err"'))?' <span class="lowtag">· not rated for that cartridge</span>':''):'Not on a gun: picked on each range trip')+'</span></span></button>';}).join("")+'</div>';
+        '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", "))+(gs.some(g=>canFitHtml(x,gunCart(g)).includes('class="err"'))?' <span class="lowtag">· not rated for that cartridge</span>':''):'Not on any gun\'s list yet')+'</span></span></button>';}).join("")+'</div>';
     h+='</section>';
     root.innerHTML=h;gearHead(null);
     $("canAdd").addEventListener("click",()=>{canAdding=true;canAddQ="";canForGun=null;renderRifles();window.scrollTo(0,0);});
@@ -5825,7 +5861,7 @@ function renderCans(root){
     picFieldHtml(c.id,canName(c),CAN_ICON)+field("cn_mfr","Maker",c.mfr,"text")+field("cn_model","Model",c.model,"text")+
     field("cn_caliber","Rated for (caliber)",c.caliber,"text")+field("cn_serial","Serial number",c.serial,"text")+
     field("cn_approved","Tax stamp approved",c.approved,"date")+
-    '<div class="field"><label for="cn_gun">On gun</label>'+selHtml("cn_gun",[["","None: I pick it on each range trip"]].concat([...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(g=>[g.id,g.name||"Unnamed gun"])),g0?g0.id:"")+'</div>'+
+    '<div class="field wide"><label>Used on</label><div class="canpick">'+([...rifles].sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(g=>'<label class="toggle"><input type="checkbox" data-cngun="'+esc(g.id)+'"'+(gunCans(g).includes(c.id)?' checked':'')+'> '+esc(g.name||"Unnamed gun")+'</label>').join("")||'<span class="note">No guns yet.</span>')+'</div><p class="note" style="margin:4px 0 0">The guns you use it on. Each Shooting profile for those guns picks it on its <b>Suppressor</b> card.</p></div>'+
     '<div class="field wide cartinfo" id="cnFit" aria-live="polite"></div>'+
     '<div class="field wide"><label for="cn_notes">Notes</label><textarea id="cn_notes" style="min-height:70px">'+esc(c.notes||"")+'</textarea></div></div>'+
     (c.cat&&(c.cat.fa!=null||c.cat.minbarrel)?'<p class="note canlim">'+[c.cat.fa===true?"<b>Full auto rated.</b>":c.cat.fa===false?"<b>Not full auto rated.</b>":"",c.cat.minbarrel?"<b>Barrel minimum: "+c.cat.minbarrel+" in.</b>":""].filter(Boolean).join(" ")+' See the notes for the maker\'s other limits.</p>':'')+
@@ -5838,7 +5874,7 @@ function renderCans(root){
     '<div class="row endrow"><button class="btn danger" type="button" id="canDel">Delete suppressor</button></div>';
   root.innerHTML=h;
   gearHead(canName(c),canFromGun&&rifles.some(r=>r.id===canFromGun)?"‹ "+(rifles.find(r=>r.id===canFromGun).name||"Gun"):"‹ Suppressors");
-  const drawRc=()=>{const r2=canRounds(c),parts2=[r2.base?r2.base.toLocaleString()+" before Range Book":"",r2.trip?r2.trip.toLocaleString()+" from "+r2.nTrips+" range trip"+(r2.nTrips===1?"":"s"):""].filter(Boolean);
+  const drawRc=()=>{const r2=canRounds(c),parts2=[r2.base?r2.base.toLocaleString()+" before Range Book":"",r2.trip?r2.trip.toLocaleString()+" from "+r2.nTrips+" range trip"+(r2.nTrips===1?"":"s"):"",r2.train?r2.train.toLocaleString()+" from "+r2.nTrain+" training session"+(r2.nTrain===1?"":"s"):""].filter(Boolean);
     $("cnRc").innerHTML='<div class="rcount"><b>'+r2.total.toLocaleString()+'</b><span>rounds through it</span></div>'+(parts2.length?'<p class="note">'+parts2.join(" · ")+'</p>':'')+
       (r2.since!=null?'<p class="'+(r2.due?'err':'note')+'">'+r2.since.toLocaleString()+' round'+(r2.since===1?'':'s')+' since cleaning on '+esc(fmtDate(c.cleaned))+(r2.due?' — due for cleaning.':'.')+'</p>':'');};
   drawRc();bindPicField(c.id);
@@ -5852,13 +5888,13 @@ function renderCans(root){
   [["mfr",0],["model",0],["caliber",0],["serial",0],["approved",0],["notes",0],["roundsBase",1],["cleanEvery",1],["cleaned",0]].forEach(([k,isNum])=>{const el=$("cn_"+k);if(!el)return;
     el.addEventListener("input",()=>{c[k]=isNum?num(el.value):el.value;queueRifles();if(k==="mfr"||k==="model")$("rifTitle").textContent=canName(c);if(isNum||k==="cleaned")drawRc();});});
   $("cnCleaned").addEventListener("click",()=>{c.cleaned=todayStr();$("cn_cleaned").value=c.cleaned;queueRifles();drawRc();});
-  $("cn_gun").addEventListener("change",e=>{const v=e.target.value;if(v)mountCan(c.id,v);else{rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;});queueRifles();}drawFit();});
+  root.querySelectorAll("[data-cngun]").forEach(cb=>cb.addEventListener("change",()=>{const g=rifles.find(x=>x.id===cb.dataset.cngun);if(g)setGunCan(g,c.id,cb.checked);drawFit();if(window.RB_CANCHANGED)RB_CANCHANGED();}));
   bindGearPhotos(root,c.id);
   root.querySelectorAll("[data-cantrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.cantrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
   $("canDel").addEventListener("click",()=>{const i=cans.indexOf(c),on=canGuns(c).map(g=>g.id),tr2=trips.filter(t=>t.canId===c.id).map(t=>t.id);
-    cans=cans.filter(x=>x!==c);rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;});canOpen=null;queueRifles();renderRifles();window.scrollTo(0,0);
+    cans=cans.filter(x=>x!==c);const onL=rifles.filter(g=>(g.canIds||[]).includes(c.id)).map(g=>g.id);rifles.forEach(g=>{if(g.canId===c.id)g.canId=null;if(Array.isArray(g.canIds))g.canIds=g.canIds.filter(x=>x!==c.id);});canOpen=null;queueRifles();renderRifles();window.scrollTo(0,0);
     const ps=gunPhotos.filter(q=>q.rifle===c.id||q.rifle===picKey(c.id));gunPhotos=gunPhotos.filter(q=>!ps.includes(q));
-    RB_UNDO("Deleted "+canName(c),()=>{cans.splice(Math.min(i,cans.length),0,c);rifles.forEach(g=>{if(on.includes(g.id))g.canId=c.id;});gunPhotos=gunPhotos.concat(ps);queueRifles();renderRifles();},
+    RB_UNDO("Deleted "+canName(c),()=>{cans.splice(Math.min(i,cans.length),0,c);rifles.forEach(g=>{if(on.includes(g.id)&&!(g.canIds||[]).includes(c.id))g.canIds=(g.canIds||[]).concat(c.id);if(onL.includes(g.id)&&!(g.canIds||[]).includes(c.id))g.canIds=(g.canIds||[]).concat(c.id);});gunPhotos=gunPhotos.concat(ps);queueRifles();renderRifles();},
       ()=>{if(window.GUEST)return;[c.id,picKey(c.id)].forEach(k=>{if(ps.some(q=>q.rifle===k))API.del("/api/rifles/"+k+"/photos").catch(()=>{});});});});
 }
 
@@ -9718,13 +9754,15 @@ function canShift(gunId,canId){const P=Object.fromEntries(((window.RB_TRAJ&&RB_T
   if(!wu&&!wv)return null;return {up:wu?su/wu:null,right:wu?sr/wu:null,fps:wv?sv/wv:null,trips:tr,gOn,gOff,last};}
 // the gun page: each suppressor's measured shift on this gun (2.43.6)
 function gunCanShiftHtml(r){const I=window.RB_CANINFO(r.id);if(!I)return "";const withS=I.cans.filter(c=>c.shift);
-  if(!withS.length)return r.canId?'<div class="field wide"><p class="note" style="margin:0">To see how much the suppressor moves your point of impact, shoot groups with it on and off on a range trip and mark them (under the trip\'s targets).</p></div>':"";
+  if(!withS.length)return gunCans(r).length?'<div class="field wide"><p class="note" style="margin:0">To see how much the suppressor moves your point of impact, shoot groups with it on and off on a range trip and mark them (under the trip\'s targets).</p></div>':"";
   return '<div class="field wide canshift"><span class="lbl">With a suppressor on (from your range trips)</span>'+withS.map(c=>{const s2=c.shift;return '<p class="tline" style="margin:4px 0 0"><b>'+esc(c.name)+'</b>: '+esc(canShiftTxt(s2))+' <span class="note">('+s2.trips+' trip'+(s2.trips===1?'':'s')+(s2.up!=null?', '+s2.gOn+' group'+(s2.gOn===1?'':'s')+' on, '+s2.gOff+' off':'')+')</span></p>';}).join("")+
-    '<p class="note" style="margin:4px 0 0">This gun\'s Shooting profiles use it when the suppressor isn\'t the way you zeroed (Conditions › Suppressor).</p></div>';}
+    '<p class="note" style="margin:4px 0 0">This gun\'s Shooting profiles use it when they\'re shot differently from how they were zeroed (the profile\'s <b>Suppressor</b> card).</p></div>';}
 // for the Shooting profile: the gun's mounted suppressor, and every suppressor with a measured shift on this gun
-window.RB_CANINFO=gunId=>{const g=rifles.find(r=>r.id===gunId);if(!g)return null;const ids=new Set(trips.filter(t=>t.canId).map(t=>t.canId));if(g.canId)ids.add(g.canId);
-  const list=[...ids].map(id=>{const c=cans.find(x=>x.id===id);return c?{id,name:canName(c),shift:canShift(gunId,id)}:null;}).filter(x=>x&&(x.shift||x.id===g.canId));
-  return {mounted:g.canId&&cans.some(c=>c.id===g.canId)?g.canId:null,cans:list};};
+// (2.43.8) the gun's own list of suppressors, plus any with a measured shift on it; def = the one an older gun had "on" it
+window.RB_CANINFO=gunId=>{const g=rifles.find(r=>r.id===gunId);if(!g)return null;const mine=gunCans(g),ids=new Set(mine);trips.forEach(t=>{if(t.canId)ids.add(t.canId);});
+  const list=[...ids].map(id=>{const c=cans.find(x=>x.id===id);if(!c)return null;const sh=canShift(gunId,id);return mine.includes(id)||sh?{id,name:canName(c),shift:sh}:null;}).filter(Boolean);
+  return {def:g.canId&&mine.includes(g.canId)?g.canId:null,cans:list};};
+window.RB_NCANS=()=>cans.length;
 // "0.6 MOA higher and 0.3 MOA right, 18 fps faster"
 function canShiftTxt(s2){if(!s2)return "";const b=[];const f=v=>Math.abs(v).toFixed(1);
   if(s2.up!=null)b.push(Math.abs(s2.up)<.05&&Math.abs(s2.right)<.05?"the same point of impact":[Math.abs(s2.up)<.05?"":f(s2.up)+" MOA "+(s2.up>0?"higher":"lower"),Math.abs(s2.right)<.05?"":f(s2.right)+" MOA "+(s2.right>0?"right":"left")].filter(Boolean).join(" and "));
@@ -9825,7 +9863,7 @@ function newTrip(){
   const T=tripTraj;if(!T)return;
   const prev=trips.filter(t=>t.trajId===T.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")))[0];
   const TL=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===T.id)||T,tp=TL.partId;
-  const g0=rifles.find(r=>r.id===TL.rifleId),cn=g0&&g0.canId&&cans.some(c=>c.id===g0.canId)?g0.canId:"";
+  const cs=window.RB_TRAJ&&RB_TRAJ.canSel?RB_TRAJ.canSel(T.id):"",cn=cs&&cans.some(c=>c.id===cs)?cs:""; // the profile's suppressor (2.43.8)
   const t={id:newId(),trajId:T.id,partId:tp&&parts.some(p=>p.id===tp)?tp:"",canId:cn,...gunBuild(TL.rifleId),date:todayISO(),place:prev?prev.place||"":"",distance:prev?prev.distance:null,rounds:null,temp:null,wind:"",avgVel:null,sd:null,notes:"",created:Date.now()};
   trips.push(t);freshAdd(t,{list:()=>trips,open:()=>tripOpen===t.id,save:queueTrips});queueTrips();openTrip(t.id);
   setTimeout(()=>{const f=$("tp_place");if(f&&!f.value)f.focus();},50);
@@ -10218,7 +10256,8 @@ function renderHome(){
   const now=new Date(),ym=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0"),yr=String(now.getFullYear());
   const live=trips.filter(t=>tname[t.trajId]);
   const sumR=f=>live.filter(f).reduce((a,t)=>a+(num(t.rounds)||0),0);
-  const mon=sumR(t=>String(t.date||"").startsWith(ym)),year=sumR(t=>String(t.date||"").startsWith(yr));
+  const TU=trainUse(),sumU=f=>TU.filter(u=>f(u.date)).reduce((a,u)=>a+u.rounds,0);
+  const mon=sumR(t=>String(t.date||"").startsWith(ym))+sumU(d=>d.startsWith(ym)),year=sumR(t=>String(t.date||"").startsWith(yr))+sumU(d=>d.startsWith(yr));
   const tripsYear=live.filter(t=>String(t.date||"").startsWith(yr)).length;
   let loaded=0;loads.forEach((L,id)=>{if(!isMine(id))return;(L.batches||[]).forEach(b=>{if(String(b.date||"").startsWith(yr))loaded+=b.n||0;});});
   $("homeTitle").textContent=ME&&ME.name&&ME.username!=="guest"?"Hi, "+(n=>n.charAt(0).toUpperCase()+n.slice(1))(ME.name.split(" ")[0]):"Range Book";
@@ -10273,7 +10312,7 @@ function renderHome(){
   if(alerts.length)h+='<section class="card homealerts" aria-label="Needs attention" data-hsec="alerts"><h2>Needs attention</h2><div class="cartgroup">'+alerts.map(a=>'<button class="loaditem" type="button" data-hgo="'+esc(a.go)+'"><span class="t">'+a.t+'</span></button>').join("")+'</div></section>';
   h+='<section class="card" aria-label="This year" data-hsec="year"><div class="tiles">'+
     [[mon,"rounds fired this month"],[year,"rounds fired in "+yr],[tripsYear,"range trips in "+yr],[loaded,"rounds loaded in "+yr]].map(([v,l])=>'<div class="tile"><b>'+v.toLocaleString()+'</b><span>'+l+'</span></div>').join("")+
-    '</div><p class="note">Rounds fired come from your range trips; rounds loaded from the batches you log on Reloading.</p></section>';
+    '</div><p class="note">Rounds fired come from your range trips and training sessions; rounds loaded from the batches you log on Reloading.</p></section>';
   // recent range trips
   const recent=[...live].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0)).slice(0,5);
   h+='<section class="card" aria-label="Recent range trips" data-hsec="trips"><div class="h2row"><h2>Recent range trips</h2><button class="linkbtn" type="button" id="hSeeLog">See the whole range log</button></div>';
@@ -10374,7 +10413,8 @@ function applyLoads(list){
 async function refresh(first){
   const rv0=riflesVer;
   try{
-    const [L,B,U,R,CP,TR,AM,NT]=await Promise.all([API.get("/api/loads"),API.get("/api/doc/brass"),API.get("/api/users"),API.get("/api/doc/rifles"),API.get("/api/doc/components").catch(()=>({data:null})),API.get("/api/doc/trips").catch(()=>null),API.get("/api/doc/ammo").catch(()=>null),window.GUEST?Promise.resolve(null):API.get("/api/doc/notes").catch(()=>null)]);
+    const [L,B,U,R,CP,TR,AM,NT,TN]=await Promise.all([API.get("/api/loads"),API.get("/api/doc/brass"),API.get("/api/users"),API.get("/api/doc/rifles"),API.get("/api/doc/components").catch(()=>({data:null})),API.get("/api/doc/trips").catch(()=>null),API.get("/api/doc/ammo").catch(()=>null),window.GUEST?Promise.resolve(null):API.get("/api/doc/notes").catch(()=>null),API.get("/api/doc/training").catch(()=>null)]);
+    if(TN&&window.RB_TRAIN)RB_TRAIN.setData(TN.data); // training sessions count toward round counts (2.43.9)
     if(NT&&!notesDirty&&!notesEditing()){notes=NT.data&&Array.isArray(NT.data.rows)?NT.data.rows:[];renderNotes();}
     applyLoads(L.loads||[]);
     if(TR&&!tripsDirty&&!tripsEditing()){setTrips(TR.data);tripsLoaded=true;renderTrips();if(window.RB_TRAJ)RB_TRAJ.listChanged();canPing();}
@@ -10388,6 +10428,7 @@ async function refresh(first){
     await loadBoxes();
     if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];
       if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];mags=R.data&&Array.isArray(R.data.mags)?R.data.mags:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+    {let ch=false;rifles.forEach(r=>{if(r.canId&&!(r.canIds||[]).includes(r.canId)){r.canIds=(r.canIds||[]).concat(r.canId);ch=true;}});if(ch&&!window.GUEST&&!riflesDirty)queueRifles();} // 2.43.8: a gun lists its suppressors
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
     if(!$("panel-home").hidden)renderHome();
@@ -10418,7 +10459,12 @@ function restore(w){return firstLoad.then(()=>{
   if(w.y>0)setTimeout(()=>window.scrollTo(0,w.y),350);
 });}
 // guns for the shot timer's run log (2.43.7)
-window.RB_GUNS=()=>rifles.map(gunSpec).map(r=>({id:r.id,name:r.name||"Gun"}));
+window.RB_GUNS=()=>rifles.map(gunSpec).map(r=>({id:r.id,name:r.name||"Gun",cart:r.cartridge||""}));
+window.RB_AMMOS=()=>ammo.filter(a=>!a.sharedFrom||true).map(a=>({id:a.id,name:ammoLabel(a),cart:a.cartridge||""}));
+window.RB_GUNBARRELS=gid=>partsOf(gid).map(p=>({id:p.id,name:partName(p)}));
+// training sessions (Training tab, 2.43.9): what each one fired, for the round counts below
+const trainUse=()=>(window.RB_TRAIN&&RB_TRAIN.use?RB_TRAIN.use():[]);
+window.RB_TRAIN_CHANGED=()=>{if(!$("panel-home").hidden)renderHome();if(!$("panel-rifles").hidden&&!riflesEditing()&&!ammoEditing())renderRifles();};
 function toolData(){
   return {bullets:comps.bullets.map(c=>({id:c.id,label:[c.mfr,c.name,num(c.weight)>0?num(c.weight)+" gr":""].filter(Boolean).join(" "),w:num(c.weight),d:num(c.caliber),l:num(c.length)})).filter(b=>b.w>0),
     rifles:rifles.map(gunSpec).map(r=>({id:r.id,label:r.name||"Gun",twist:num(r.twist)})).filter(r=>r.twist>0),
@@ -10758,7 +10804,8 @@ function showTab(t,remember){
   if(t==="targets"&&window.RB_TARGETS)RB_TARGETS();
   if(t==="account"&&window.RB_VAULT_ACCT)RB_VAULT_ACCT();
   if((t==="tools"||t==="targets")&&window.RB_TOOLS)RB_TOOLS.shown(t,REL);
-  if(t!=="tools"&&window.RB_TIMER)RB_TIMER.hide();
+  if(t!=="tools"&&window.RB_TIMER)RB_TIMER.hide("tools");
+  if(t!=="train"&&window.RB_TRAIN)RB_TRAIN.leave();
   if(t==="train"&&window.RB_TRAIN)RB_TRAIN.show();
   if(t==="log"&&REL)REL.onLog();
   if(t==="rifles"&&REL)REL.onRifles();
@@ -10776,10 +10823,20 @@ const INFO={
   liveFocusIos:{t:"Range Focus",noMore:true,b:"Keeps calls and notifications from interrupting the phone on the target. Set it up once:<br><b>1. Make the Focus.</b> Settings › Focus › <b>+</b> › Custom, name it <b>Range</b>. Under People, pick <b>Allow notifications from</b> and add nobody; tap Calls and choose <b>Nobody</b>, and turn off <b>Allow Repeated Calls</b>. Under Apps, allow none.<br><b>2. Make the shortcut.</b> Open the Shortcuts app, tap <b>+</b>, add the action <b>Set Focus</b>, set it to turn <b>Range</b> on <b>until turned off</b>, and name the shortcut exactly <b>Range Book Focus</b>.<br><b>3. Use it.</b> Tap <b>Turn on Range Focus</b> here. The Shortcuts app opens for a moment; tap <b>◀ Range Book</b> at the top left to come back (Live target picks up where it was). Turn the Focus off afterwards from Control Center.<br>Also set <b>Auto-Lock</b> to <b>Never</b> on that phone (Settings › Display &amp; Brightness) and turn off <b>Low Power Mode</b>. Test it once with a call and a text before you walk down range."},
   liveFocusAnd:{t:"Silence calls (Android)",noMore:true,b:"Web apps can't turn on Do Not Disturb by themselves on Android, but it's two taps. Set it up once:<br><b>1.</b> Settings › Notifications (or Sound) › <b>Do Not Disturb</b> (called <b>Modes</b> on some phones). Under <b>People</b>, set Calls and Messages to <b>None</b> and turn off <b>Repeat callers</b>. Under <b>Apps</b>, allow none.<br><b>2.</b> At the range, swipe down twice from the top of the screen and tap <b>Do Not Disturb</b>, then come back here.<br>Also set <b>Screen timeout</b> to the longest time (Settings › Display), turn off <b>Battery Saver</b>, and test it once with a call and a text before you walk down range."},
   secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},
+  secTCan:{t:"Suppressor",b:"Pick which of the gun's suppressors you're shooting with (<b>None</b> for none) and which you zeroed with. The list is the suppressors ticked on the gun's page (Gear &amp; Ranges › Guns). New range trips with this profile start with the one you're shooting with, so its rounds count toward it. When you shoot it differently from how you zeroed, the shift you measured on your range trips (groups marked <b>On</b> or <b>Off</b>) is added to the chart, range table, dope card and reticle."},
   secTWx:{t:"Conditions",b:"Temperature, altitude and wind change where the bullet lands. Wind starts at 0 on a new profile. <b>Use the weather where I am</b> fills in today's temperature and air pressure. Enter the wind's speed and the o'clock it comes from (3 is from the right, 9 from the left), and the shot angle for uphill or downhill shots.",h:"Weather where you are"},
   secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size in the Point-blank range card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. <b>Short</b>, <b>Medium</b> and <b>Long</b> chart it to 200, 400 or 1,000 yd. A path turns dashed where the bullet goes transonic (Mach 1.2). Move the mouse over a path (or tap it) to see the distance and drop. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller.",h:"Zoom the chart"},
   secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), and it becomes the first (purple) zero box under the chart; tap its circle to use it for the range table and dope card. Wind isn't included.",h:"Point-blank range"},
   secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. Tick the boxes under the table to pick its columns (a gun's scope picks MOA or MIL for you), turn on <b>Wind brackets</b> for 5, 10 and 15 mph holds, and drag the bar under the table to change its height. A red line marks where the bullet goes transonic (Mach 1.2).",h:"Reading the results"},
+  "@Training profiles":{t:"Training profiles",b:"A training profile is what you train with: a gun and its ammo (and barrel or suppressor). Open one and start a session each day you practice. Sessions count their rounds toward the gun, barrel, suppressor and ammo, like range trips. <b>Without a profile</b> holds timer runs saved without one.",h:"Training profiles"},
+  "@Training timer":{t:"Shot timer",b:"Run drills from a session so they're saved together and count toward your gear. <b>Open the shot timer</b> opens it on its own (Tools › Shot timer): there you pick a training profile when you save, and the run goes into today's session for it.",h:"Shot timer"},
+  "@Drills":{t:"Drills",b:"Six common drills are built in, and <b>+ New drill</b> adds your own with its shots, distance, par time and how it's shot. Tap one to change your par time. The timer stops by itself after a drill's last shot.",h:"Drills"},
+  "@Training profile":{t:"Profile",b:"The name, and the <b>Gun</b>, <b>Barrel</b>, <b>Suppressor</b> and <b>Ammo</b> you train with (ammo for the gun's cartridge is listed first). New sessions start with this gear; change it on a session if one day was different.",h:"Training profiles"},
+  "@Sessions":{t:"Sessions",b:"One per day you practice. <b>Start a session today</b> (or <b>Continue today's session</b>), then run drills in it. <b>Compare two sessions</b> puts any two side by side, drill by drill.",h:"Training profiles"},
+  "@Progress":{t:"Progress",b:"Each drill's average time in every session, oldest to newest, with the drill's par as a dashed line. Lower is better.",h:"Training profiles"},
+  "@Run a drill":{t:"Run a drill",b:"Tap a drill to open the shot timer for it right here. Each run you save goes into this session. <b>‹</b> at the top comes back to the session.",h:"Shot timer"},
+  "@Runs":{t:"Runs",b:"Every run in this session, drill by drill: the time (and how far over or under par), the first shot, the fastest and slowest split and your hits, with the best, average and hit rate for the drill. Tap <b>×</b> to delete a run.",h:"Training profiles"},
+  "@Session":{t:"Session",b:"The date and place, the gear for this day (it starts as the profile's), <b>Other rounds fired</b> for shots you didn't time, and notes. All its rounds count toward the gun, barrel, suppressor and ammo.",h:"Training profiles"},
   "@True up":{t:"True up velocity",b:"After a long-range shot, enter the distance and the dial that actually hit. It works out the muzzle velocity that matches your real drop; tap <b>Use</b> so the table and dope card match what you saw. Use a distance well past your zero and a good group.",h:"True up the velocity"},
   secTDope:{t:"Dope card & reticle",b:"A small card for your stock or range bag. Pick the first and last distance, the step, and <b>MOA</b> or <b>MIL</b>, then tap <b>Print dope card</b>. Tap any distance on the card to see where the target goes on a plain reticle; on a phone it slides up, with ‹ › to step through the distances. <b>Field mode</b> shows the holds in big numbers for the bench. A red line and the note under the conditions show where it goes transonic. Drag the bar under the card to make it taller, or double-tap it to show it all.",h:"Print a dope card"},
   secTRanges:{t:"Saved ranges",b:"Pick one of your saved ranges to see the dial and wind for each of its targets with this profile and its conditions. Add and change ranges under <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a> (<b>Edit ranges ›</b>).",h:"Saved ranges"},
@@ -10803,7 +10860,7 @@ const INFO={
   "@Optic":{t:"Red dot or holographic sight",b:"Its maker, model, serial number, dot size, the ring around the dot (if it has one), the magnifier behind it and its click value (only for zeroing). Put it on a gun with <b>On gun</b>, and every Shooting profile with that gun gives holds in inches and dot widths instead of clicks.",h:"Red dots and holographic sights"},
   "@Reticle":{t:"Reticle",b:"Pick the plain reticle and tap <b>Change how it looks</b> to make it like yours, or pick <b>A picture of my reticle</b>, upload one and set its scale (tap the center, then a mark a known distance away). The dope card then shows your holds on it.",h:"Your own reticle picture"},
   "@Add an optic":{t:"Add an optic",b:"Search the scope list by maker, model, or MIL or MOA, and tap yours to fill in its specs from the maker's published numbers. Not listed? Tap <b>+ Enter a scope yourself</b>. For a red dot, holographic or prism sight, tap its button.",h:"Optics"},
-  "@Gun":{t:"Gun details",b:"The cartridge it's chambered for (start typing any name for it and pick from the list; ammo and loads that don't fit it get a warning), the gun's serial number, barrel, twist rate, sight height and notes. The sight height and twist fill in on any Shooting profile that uses this gun. <a class=goto href=#go data-go=help:Measure_sight_height_(height_over_bore)>How to Use</a> shows how to measure sight height.",h:"Measure sight height (height over bore)"},
+  "@Gun":{t:"Gun details",b:"The cartridge it's chambered for (start typing any name for it and pick from the list; ammo and loads that don't fit it get a warning), the gun's serial number, barrel, twist rate, sight height, optic, the suppressors you use on it and notes. The sight height and twist fill in on any Shooting profile that uses this gun, and its profiles pick from its suppressors on their <b>Suppressor</b> card. Once you've marked range trip groups with a suppressor on and off, this card shows how much it moves your point of impact and speed. <a class=goto href=#go data-go=help:Measure_sight_height_(height_over_bore)>How to Use</a> shows how to measure sight height.",h:"Measure sight height (height over bore)"},
   secGunPh:{t:"Photos",b:"Pictures of the gun, private to you. The first one shows in your list of guns. With the serial number, they're handy for insurance; <b>Export PDF</b> on the Guns list puts them in one file.",h:"Guns"},
   secRounds:{t:"Round count",b:"Rounds from your range trips and load-development groups with this gun, plus <b>Rounds before Range Book</b>. Fill in <b>Barrel life</b> to see how much is used, and <b>Clean every</b> with <b>Cleaned today</b> to know when it's due.",h:"Round count and barrel life"},
   secGunCold:{t:"Cold-bore log",b:"Where your first shot of each range trip landed, in MOA so different distances compare. Fill it in on a range trip under <b>Cold-bore shot</b>. The orange cross is the average; a steady shift is worth noting as a first-shot hold.",h:"Cold-bore shot"},
@@ -10898,7 +10955,7 @@ const INFO_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="
 const infoKey=sec=>{if(sec.id&&INFO[sec.id])return sec.id;const l="@"+(sec.getAttribute("aria-label")||"");return INFO[l]?l:null;};
 // put an ⓘ after each tile's title (tiles are drawn again and again, so this keeps up with them)
 function infoDecorate(){
-  ["traj","rel","brass","rifles","tools","targets"].forEach(t=>{const P=$("panel-"+t);if(!P||P.hidden)return;
+  ["traj","rel","brass","rifles","tools","targets","train"].forEach(t=>{const P=$("panel-"+t);if(!P||P.hidden)return;
     P.querySelectorAll("section.card").forEach(sec=>{
       if(sec.closest("[hidden]"))return;const k=infoKey(sec);if(!k)return;const E=INFO[k];
       const tgt=E.head?P.querySelector(".phead h1"):sec.querySelector("h2");if(!tgt||tgt.querySelector(".infobtn"))return;
@@ -11370,7 +11427,7 @@ function startTabTour(tab){
       {el:()=>q("#rifleAdd"),t:"Guns",b:"Add each gun with its serial number, barrel, twist, sight height, scope and photos. Tap the star to make it a favorite. Its page counts the rounds fired, tracks barrel life and cleaning, and keeps a cold-bore log. <b>Export Excel</b> and <b>Export PDF</b> make a list for insurance.",go:area("guns")},
       {el:()=>q("#secLU"),t:"Lowers, uppers and barrels",b:"For ARs and other guns built from a lower and an upper: add the parts, build a gun from them, and add more uppers to the same lower as variations you pick when you shoot. Spare barrels for a complete gun go under <b>Barrels</b>.",go:area("guns")},
       {el:()=>q("#scopeAdd"),t:"Optics",b:"Add your scopes from a list of popular ones, or a red dot, holographic or prism sight (every <b>+ Add</b> button in Range Book works this way: search the list, tap yours, or enter it yourself), with a picture, and put each on a gun. A gun's scope sets MOA or MIL on its profiles, and the dope card's reticle can look like yours or be a picture of it.",go:area("scopes")},
-      {el:()=>q("#canAdd"),t:"Suppressors",b:"Serial number, tax stamp date, a picture and its own round count from the range trips shot with it. Put one on a gun, or pick it on each trip. Keep the tax stamp in the document vault, locked with a passphrase only you know.",go:area("cans")},
+      {el:()=>q("#canAdd"),t:"Suppressors",b:"Serial number, tax stamp date, a picture and its own round count from the range trips and training sessions shot with it. Tick the guns you use it on; each Shooting profile then picks it on its Suppressor card. Keep the tax stamp in the document vault, locked with a passphrase only you know.",go:area("cans")},
       {el:()=>q("#magAdd"),t:"Magazines",b:"Each magazine with its <b>Mag #</b> (the number you paint on it), grouped by maker and model. Log a jam or failure to feed on the mag that caused it, and retire the bad ones.",go:area("mags")},
       {el:()=>q("#ammoAddGo"),t:"Ammo",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low. <b>+ Add ammo</b> lists about 155 popular factory loads with their bullet, BC and box velocity: search, and tap one to add it.",go:area("ammo")},
       {el:()=>q("#invAddC"),t:"Inventory",b:"Everything else: supplies with a count and a low warning (batteries, targets, earplugs), and equipment with serial numbers and reminders to check or replace it.",go:area("inv")},
@@ -11381,9 +11438,10 @@ function startTabTour(tab){
   if(tab==="train"){
     const list=()=>{showTab("train",false);if(window.RB_TRAIN)RB_TRAIN.home();};
     STEPS=[
-      {t:"The Training tab",b:"Your drills and the shot timer runs you've saved, with your progress on each drill.",go:list},
-      {el:()=>q("#trTimer"),t:"Shot timer",b:"Opens Tools › Shot timer: a start beep, then every shot's time from the microphone, with a par time.",go:list},
-      {el:()=>q(".trdrill"),t:"Drills",b:"Each drill shows its shots, distance and par, your best and last time and a small chart. Tap one for every run and <b>Start this drill</b>.",go:list},
+      {t:"The Training tab",b:"Practice with the shot timer, kept apart from your range trips: training profiles, sessions with the drills you ran, and your progress.",go:list},
+      {el:()=>q("#trProfAdd"),t:"Training profiles",b:"A profile is a gun and the ammo you train with. Open one and start a session each day you practice; its rounds count toward the gun, barrel, suppressor and ammo.",go:list},
+      {el:()=>q("#trTimer"),t:"Shot timer",b:"In a session, tap a drill and the timer opens right there. This button opens it on its own (Tools › Shot timer).",go:list},
+      {el:()=>q("[data-trd]"),t:"Drills",b:"Six common drills are built in. Tap one to set your par time.",go:list},
       {el:()=>q("#trAdd"),t:"Your own drills",b:"Add a drill with its shots, distance, par time and how it's shot.",go:list},
       END];}
   if(tab==="tools"||tab==="targets"){
@@ -11672,7 +11730,7 @@ window.RB_TOOLS=(function(){
     if(tool==="lib"&&window.RB_LIBPAGE)RB_LIBPAGE.show(libSub);
     if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
     if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();
-    if(window.RB_TIMER){if(tool==="timer")RB_TIMER.show();else RB_TIMER.hide();}
+    if(window.RB_TIMER){if(tool==="timer")RB_TIMER.show();else RB_TIMER.hide("tools");}
     if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
   }
   /* ----- hit chance: the shot lands in a spread made of your group, velocity spread, wind call and range error ----- */
@@ -12028,12 +12086,19 @@ window.RB_CHTOOL=(function(){
 })();
 </script>
 <script>
-/* ---------- Shot timer (Tools › Shot timer) and the Training tab (2.43.7) ----------
+/* ---------- Shot timer and the Training tab (2.43.7; training profiles and sessions 2.43.9) ----------
    The timer beeps after a start delay, then listens with the microphone: shotwork.js (an audio worklet) finds the start of
    each shot to the sample, so the first-shot time and splits are exact. A par time adds a second beep. With a Bluetooth
    speaker the beep reaches you late (0.1–0.3 s), so "Measure the delay" beeps a few times, listens for its own beeps and
-   takes that delay off every time (it works for the phone's own speaker too). Runs are saved to the "training" document:
-   {drills:[your drills], runs:[{id,drill,name,date,at,shots:[s],par,hits,of,gun,dry}], par:{built-in drill id: your par}}.
+   takes that delay off every time. The same timer runs in Tools (on its own) and inside a training session.
+   The "training" document (v2):
+     profiles:[{id,name,gunId,partId,canId,ammoId,notes,created}]                 what you train with
+     sessions:[{id,profileId|null,date,at,place,notes,extra,gunId,partId,canId,ammoId,runs:[run]}]
+       a session is one day's practice; its gear is copied from the profile when it starts (and can be changed on it), so
+       its rounds (every shot in its runs, plus "extra" untimed rounds) count toward that gun, barrel, suppressor and ammo
+     run = {id,drill|null,name,at,shots:[s],par,hits,of,dry}
+     drills:[your own], par:{built-in drill id: your par}
+   Version 1 (2.43.7) kept runs in a flat list; they become sessions without a profile, one per day.
    Settings stay on this device (localStorage rb.timer). Nothing is recorded: only the times are kept. */
 (function(){
   const $=id=>document.getElementById(id),U=window.U;
@@ -12041,7 +12106,9 @@ window.RB_CHTOOL=(function(){
   const num=v=>{if(v==null||v==="")return null;const n=+String(v).replace(",",".");return isFinite(n)?n:null;};
   const f2=v=>(Math.round(v*100)/100).toFixed(2);
   const todayISO=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
-  const newId=()=>"tr"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const fmtD=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(String(d||""));return m?new Date(+m[1],+m[2]-1,+m[3]).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}):"No date";};
+  const newId=p=>(p||"tr")+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
   /* ----- drills: a few well-known ones built in (your par kept in T.par), plus your own ----- */
   const BUILT=[
     {id:"b-bill",name:"Bill drill",shots:6,dist:7,par:2.5,how:"From the holster, six shots as fast as you can keep every one in the A-zone (or an 8-inch circle)."},
@@ -12050,22 +12117,53 @@ window.RB_CHTOOL=(function(){
     {id:"b-5x5",name:"5×5",shots:5,dist:5,par:5,how:"Five shots into a 5-inch circle from 5 yards in 5 seconds."},
     {id:"b-fts",name:"Failure to stop",shots:3,dist:7,par:3,how:"Two to the body, then one to the head (also called the Mozambique)."},
     {id:"b-draw",name:"Draw to first shot",shots:1,dist:7,par:1.5,how:"One shot from the holster: a clean, quick draw."}];
-  let T={drills:[],runs:[],par:{}},loaded=false,loading=null,saveT=null,saving=Promise.resolve();
+  /* ----- the data ----- */
+  const blank=()=>({v:2,drills:[],par:{},profiles:[],sessions:[]});
+  let T=blank(),loaded=false,loading=null,saveT=null,saving=Promise.resolve(),dirty=0;
+  function norm(d){const o=blank();if(!d||typeof d!=="object")return o;
+    o.drills=Array.isArray(d.drills)?d.drills:[];o.par=d.par&&typeof d.par==="object"?d.par:{};
+    o.profiles=Array.isArray(d.profiles)?d.profiles:[];o.sessions=Array.isArray(d.sessions)?d.sessions:[];
+    o.sessions.forEach(s=>{if(!Array.isArray(s.runs))s.runs=[];});
+    // version 1: a flat list of runs → one session per day, without a profile
+    if(Array.isArray(d.runs)&&d.runs.length){const by={};d.runs.forEach(r=>{const day=r.date||(r.at?new Date(r.at).toISOString().slice(0,10):todayISO());(by[day]=by[day]||[]).push(r);});
+      Object.keys(by).sort().forEach(day=>{const rs=by[day];o.sessions.push({id:newId("ts"),profileId:null,date:day,at:rs[0].at||Date.now(),place:"",notes:"",extra:null,
+        runs:rs.map(r=>({id:r.id||newId(),drill:r.drill||null,name:r.name||"Free run",at:r.at||Date.now(),shots:Array.isArray(r.shots)?r.shots:[],par:r.par||null,hits:r.hits!=null?r.hits:null,of:r.of||null,dry:r.dry||undefined}))});});
+      o.migrated=true;}
+    return o;}
+  function setData(d){T=norm(d);loaded=true;if(T.migrated){delete T.migrated;save();}}
   function load(){if(loaded)return Promise.resolve();if(loading)return loading;
-    loading=(window.API?API.get("/api/doc/training"):Promise.reject()).then(r=>{const d=r&&r.data;if(d&&typeof d==="object")T={drills:Array.isArray(d.drills)?d.drills:[],runs:Array.isArray(d.runs)?d.runs:[],par:d.par&&typeof d.par==="object"?d.par:{}};}).catch(()=>{}).then(()=>{loaded=true;loading=null;});
+    loading=(window.API?API.get("/api/doc/training"):Promise.reject()).then(r=>{if(!loaded)setData(r&&r.data);}).catch(()=>{loaded=true;}).then(()=>{loading=null;changed();});
     return loading;}
-  function save(){clearTimeout(saveT);saveT=setTimeout(()=>{saving=saving.then(()=>API.put("/api/doc/training",{data:JSON.parse(JSON.stringify(T))})).catch(()=>{});},400);}
+  // tell the rest of Range Book the round counts may have changed (guns, barrels, suppressors, ammo, Home)
+  function changed(){if(window.RB_TRAIN_CHANGED)try{RB_TRAIN_CHANGED();}catch(e){}}
+  function save(){dirty++;const my=dirty;clearTimeout(saveT);saveT=setTimeout(()=>{saving=saving.then(()=>API.put("/api/doc/training",{data:JSON.parse(JSON.stringify(T))})).then(()=>{if(dirty===my)dirty=0;},e=>{dirty=0;if(window.onWriteError)onWriteError(e);});},400);changed();}
+  const editing=()=>{const a=document.activeElement,r=$("trRoot");return !!(a&&r&&r.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName));};
   const drills=()=>BUILT.map(b=>Object.assign({},b,{par:T.par[b.id]!==undefined?T.par[b.id]:b.par,built:true})).concat(T.drills.map(d=>Object.assign({},d)));
   const drillOf=id=>drills().find(d=>d.id===id)||null;
   function setPar(id,v){const b=BUILT.find(x=>x.id===id);if(b){if(v===b.par)delete T.par[id];else T.par[id]=v;}else{const d=T.drills.find(x=>x.id===id);if(d)d.par=v;}save();}
   const runTime=r=>r.shots&&r.shots.length?r.shots[r.shots.length-1]:null;
-  const gunList=()=>(window.RB_GUNS?RB_GUNS():[]);
-  const gunName=id=>{if(!id)return "";const g=gunList().find(x=>x.id===id);return g?g.name:"";};
+  const sessRounds=s=>s.runs.filter(r=>!r.dry).reduce((a,r)=>a+(r.shots||[]).length,0)+(num(s.extra)||0);
+  const profOf=id=>T.profiles.find(p=>p.id===id)||null;
+  const sessOf=id=>T.sessions.find(s=>s.id===id)||null;
+  const sessionsOf=pid=>T.sessions.filter(s=>(s.profileId||null)===(pid||null)).sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.at||0)-(a.at||0));
+  // gear from Gear & Ranges
+  const guns=()=>(window.RB_GUNS?RB_GUNS():[]);
+  const gunOf=id=>guns().find(g=>g.id===id)||null;
+  const ammos=()=>(window.RB_AMMOS?RB_AMMOS():[]);
+  const ammoOf=id=>ammos().find(a=>a.id===id)||null;
+  const barrels=gid=>(gid&&window.RB_GUNBARRELS?RB_GUNBARRELS(gid):[]);
+  const gunCans=gid=>(gid&&window.RB_GUNCANS?RB_GUNCANS(gid):[]);
+  const canName=(gid,cid)=>{const c=gunCans(gid).find(x=>x.id===cid);return c?c.name:"";};
+  const gearTxt=o=>[gunOf(o.gunId)&&gunOf(o.gunId).name,o.partId&&(barrels(o.gunId).find(b=>b.id===o.partId)||{}).name,ammoOf(o.ammoId)&&ammoOf(o.ammoId).name,o.canId&&canName(o.gunId,o.canId)].filter(Boolean).join(" · ");
+  function newSession(pid){const p=profOf(pid),s={id:newId("ts"),profileId:pid||null,date:todayISO(),at:Date.now(),place:"",notes:"",extra:null,runs:[]};
+    if(p){s.gunId=p.gunId||null;s.partId=p.partId||null;s.canId=p.canId||null;s.ammoId=p.ammoId||null;}T.sessions.push(s);save();return s;}
+  // today's session for a profile (the newest one), or a new one
+  function todaySession(pid){return sessionsOf(pid).find(s=>s.date===todayISO())||newSession(pid);}
 
   /* ----- settings on this device ----- */
   const SENS={low:{th:.5,ratio:8},normal:{th:.28,ratio:6},high:{th:.12,ratio:5}};
   let S=(()=>{let o=null;try{o=JSON.parse(localStorage.getItem("rb.timer")||"null");}catch(e){}o=o&&typeof o==="object"?o:{};
-    return {delay:["now","fixed","random"].includes(o.delay)?o.delay:"random",sens:SENS[o.sens]?o.sens:"normal",echo:!!o.echo,spk:o.spk==="bt"?"bt":"phone",lat:o.lat&&typeof o.lat==="object"?o.lat:{},dry:!!o.dry,drill:o.drill||"",gun:o.gun||""};})();
+    return {delay:["now","fixed","random"].includes(o.delay)?o.delay:"random",sens:SENS[o.sens]?o.sens:"normal",echo:!!o.echo,spk:o.spk==="bt"?"bt":"phone",lat:o.lat&&typeof o.lat==="object"?o.lat:{},dry:!!o.dry,drill:o.drill||"",prof:o.prof||""};})();
   const keep=()=>{try{localStorage.setItem("rb.timer",JSON.stringify(S));}catch(e){}};
   const lat=()=>{const v=num(S.lat[S.spk]);return v!=null?v:(S.spk==="bt"?0.2:0);};
 
@@ -12092,10 +12190,11 @@ window.RB_CHTOOL=(function(){
     o.connect(g).connect(ctx.destination);o.start(at);o.stop(at+dur+.02);}
   function meter(){const m=$("tmMeter");if(m){const w=Math.min(100,Math.round(Math.sqrt(lastPk)*100)),th=Math.round(Math.sqrt(SENS[S.sens].th)*100);m.firstChild.style.width=w+"%";m.lastChild.style.left="calc("+th+"% - 1px)";}}
 
-  /* ----- one run ----- */
+  /* ----- the timer: mounted in Tools (on its own) or in a training session (CTX = {sid, drill}) ----- */
   const BEEP=.25;
-  let R={state:"idle"},raf=0,stopT=null,wake=null;
-  const curDrill=()=>S.drill?drillOf(S.drill):null;
+  let R={state:"idle"},raf=0,stopT=null,wake=null,ROOT=null,CTX=null;
+  const curDrillId=()=>CTX?CTX.drill:S.drill;
+  const curDrill=()=>{const id=curDrillId();return id?drillOf(id):null;};
   const parNow=()=>{const v=num(($("tm_par")||{}).value);return v>0?v:null;};
   async function go(){
     if(R.state==="wait"||R.state==="run"){stop();return;}
@@ -12103,7 +12202,7 @@ window.RB_CHTOOL=(function(){
     try{await audioOn(!S.dry);}catch(e){msg.textContent=e.message;msg.classList.add("err");return;}
     const d=curDrill(),par=parNow(),delay=S.delay==="now"?.6:S.delay==="fixed"?3:2+Math.random()*3,L=lat();
     const t0=ctx.currentTime+delay;beep(t0,BEEP,2400);if(par)beep(t0+par,.15,3200);
-    R={state:"wait",t0,L,par,drill:d,shots:[],dry:S.dry,want:d?d.shots:null,heard:L};
+    R={state:"wait",t0,L,par,drill:d,shots:[],dry:S.dry,want:d?d.shots:null};
     // the mic hears the beeps too: a sound that's mostly the beep's pitch is the beep, not a shot (shotwork.js says how tonal)
     listen=(t,a,tone)=>{if(R.state!=="run"&&R.state!=="wait")return;if(t<t0+L)return;if(tone>.35)return;
       const s=t-t0-L;R.shots.push(s);R.state="run";draw();
@@ -12121,23 +12220,26 @@ window.RB_CHTOOL=(function(){
   function sumTxt(){const a=R.shots,p=R.par;if(R.dry)return p?"Dry fire: the second beep was the par time.":"Dry fire.";
     if(!a.length)return R.state==="done"?"No shots heard. Turn Sensitivity up, or check the microphone level bar while you shoot.":"Listening…";
     const last=a[a.length-1];return a.length+" shot"+(a.length===1?"":"s")+" · first "+f2(a[0])+(a.length>1?" · "+splitTxt(a):"")+(p?" · "+(last<=p?f2(p-last)+" under par":f2(last-p)+" over par"):"");}
-  function draw(){const root=$("tmRoot");if(!root||root.hidden)return;
-    const st=R.state,big=$("tmBig"),sub=$("tmSub"),gob=$("tmGo");
-    root.classList.toggle("tmlive",st==="wait"||st==="run");
+  function draw(){const root=ROOT;if(!root||!root.isConnected||!$("tmBig"))return;
+    const st=R.state,big=$("tmBig"),sub=$("tmSub"),gob=$("tmGo"),live=st==="wait"||st==="run";
+    root.classList.toggle("tmlive",live);
     if(st==="idle"){big.textContent="0.00";sub.textContent=S.dry?"Dry fire: beeps only, no microphone.":"Tap Start, then wait for the beep.";}
     else if(st==="wait"){big.textContent="0.00";sub.textContent="Stand by…";}
     else{const a=R.shots;if(a.length)big.textContent=f2(a[a.length-1]);sub.innerHTML=esc(sumTxt()).replace(/(\d+\.\d\d) (over|under) par/,'<b class="tmpar $2">$1 $2 par</b>');}
-    gob.textContent=st==="wait"||st==="run"?"Stop":st==="done"?"Again":"Start";gob.classList.toggle("danger",st==="wait"||st==="run");
+    gob.innerHTML=live?'<span class="tmsq" aria-hidden="true"></span>STOP':st==="done"?"Again":"Start";gob.classList.toggle("tmstop",live);gob.classList.toggle("primary",!live);
     $("tmShots").innerHTML=R.shots&&R.shots.length?'<table class="tmtbl"><thead><tr><th>Shot</th><th>Time</th><th>Split</th><th></th></tr></thead><tbody>'+R.shots.map((v,i)=>'<tr><td>'+(i+1)+'</td><td>'+f2(v)+'</td><td>'+(i?f2(v-R.shots[i-1]):'first')+'</td><td>'+(st==="done"?'<button class="linkbtn tmx" type="button" data-tmx="'+i+'" aria-label="Not a shot: remove '+(i+1)+'">×</button>':'')+'</td></tr>').join("")+'</tbody></table>':'';
     const done=$("tmDone");done.hidden=st!=="done";
     if(st==="done"){const n=R.want||R.shots.length;$("tm_hits").placeholder=n?"of "+n:"";}
     root.querySelectorAll("[data-tmx]").forEach(b=>b.addEventListener("click",()=>{R.shots.splice(+b.dataset.tmx,1);draw();}));
   }
-  function saveRun(){const d=R.drill,hits=num($("tm_hits").value),gun=$("tm_gun").value||null;
-    if(!R.dry&&!R.shots.length){const m=$("tmMsg");m.textContent="No shots to save.";return;}
-    T.runs.push({id:newId(),drill:d?d.id:null,name:d?d.name:"Free run",date:todayISO(),at:Date.now(),shots:R.shots.map(v=>Math.round(v*1000)/1000),par:R.par||null,hits:hits!=null?hits:null,of:R.want||null,gun,dry:R.dry||undefined});
-    S.gun=gun||"";keep();save();R={state:"idle"};$("tm_hits").value="";draw();
-    const m=$("tmMsg");m.innerHTML='Saved to <a class=goto href=#go data-go=train>Training</a>.';}
+  function saveRun(){const d=R.drill,hits=num($("tm_hits").value),m=$("tmMsg");
+    if(!R.dry&&!R.shots.length){m.textContent="No shots to save.";return;}
+    let s;if(CTX){s=sessOf(CTX.sid);if(!s){m.textContent="That session is gone.";return;}}
+    else{const pf=$("tm_prof").value||"";S.prof=pf;keep();s=todaySession(pf&&profOf(pf)?pf:null);}
+    s.runs.push({id:newId(),drill:d?d.id:null,name:d?d.name:"Free run",at:Date.now(),shots:R.shots.map(v=>Math.round(v*1000)/1000),par:R.par||null,hits:hits!=null?hits:null,of:R.want||null,dry:R.dry||undefined});
+    save();R={state:"idle"};$("tm_hits").value="";draw();
+    const n=s.runs.filter(r=>(r.drill||null)===(d?d.id:null)).length,p=profOf(s.profileId);
+    m.innerHTML=CTX?'Saved: '+esc(d?d.name:"free run")+' #'+n+' in this session.':'Saved to <a class=goto href=#go data-go=train>Training</a>: '+esc(p?p.name:"without a profile")+', '+esc(fmtD(s.date))+'.';}
   /* ----- measuring the speaker's delay: beep five times, listen for each, keep the middle value ----- */
   async function measure(){const out=$("tmLatMsg");out.classList.remove("err");
     try{await audioOn(true);}catch(e){out.textContent=e.message;out.classList.add("err");return;}
@@ -12149,11 +12251,9 @@ window.RB_CHTOOL=(function(){
     if(ds.length<3){out.textContent="Couldn't hear the beeps clearly ("+ds.length+" of 5). Turn the volume up, put the phone right next to the speaker and try again.";out.classList.add("err");return;}
     const v=ds[Math.floor(ds.length/2)];S.lat[S.spk]=Math.round(v*1000)/1000;keep();latTxt();out.textContent="Done: "+Math.round(v*1000)+" ms. Times now start when you actually hear the beep.";}
   function latTxt(){const e=$("tmLatNow");if(!e)return;const v=num(S.lat[S.spk]);e.textContent=v!=null?"Delay "+Math.round(v*1000)+" ms ("+(S.spk==="bt"?"Bluetooth":"phone speaker")+")":S.spk==="bt"?"Not measured yet: times use 0.2 s until you do.":"Not measured (usually tiny on the phone's own speaker).";}
-
-  /* ----- the Tools page ----- */
   const seg=(attr,list,v,lab)=>'<div class="segtabs" role="radiogroup" aria-label="'+esc(lab)+'">'+list.map(([k,t])=>'<button type="button" role="radio" '+attr+'="'+k+'" aria-checked="'+(k===v)+'" aria-selected="'+(k===v)+'">'+esc(t)+'</button>').join("")+'</div>';
-  function drillOpts(){return '<option value="">No drill (free run)</option>'+drills().map(d=>'<option value="'+esc(d.id)+'"'+(d.id===S.drill?' selected':'')+'>'+esc(d.name)+' · '+d.shots+' shot'+(d.shots===1?'':'s')+(d.dist?' · '+esc(U.s("yd",d.dist,0)):'')+'</option>').join("");}
-  function build(){const root=$("tmRoot");if(!root)return;const d=curDrill();
+  function drillOpts(){const v=curDrillId();return '<option value="">No drill (free run)</option>'+drills().map(d=>'<option value="'+esc(d.id)+'"'+(d.id===v?' selected':'')+'>'+esc(d.name)+' · '+d.shots+' shot'+(d.shots===1?'':'s')+(d.dist?' · '+esc(U.s("yd",d.dist,0)):'')+'</option>').join("");}
+  function build(){const root=ROOT;if(!root)return;const d=curDrill();
     root.innerHTML='<div class="row tmdrill"><label for="tm_drill" class="note" style="margin:0">Drill</label><select id="tm_drill" class="fieldselect">'+drillOpts()+'</select></div>'+
       (d&&d.how?'<p class="note tmhow">'+esc(d.how)+'</p>':'')+
       '<div class="tmbig" id="tmBig" aria-live="polite">0.00</div><div class="tmsub" id="tmSub"></div>'+
@@ -12161,8 +12261,8 @@ window.RB_CHTOOL=(function(){
       (S.dry?'':'<div class="tmmeter" id="tmMeter" title="Microphone level; the mark is the sensitivity"><span></span><i></i></div>')+
       '<p class="note" id="tmMsg" aria-live="polite"></p><div id="tmShots"></div>'+
       '<div id="tmDone" hidden><div class="grid tmsave"><div class="field"><label for="tm_hits">Hits</label><input id="tm_hits" type="number" inputmode="numeric" step="1" min="0"></div>'+
-        '<div class="field"><label for="tm_gun">Gun</label><select id="tm_gun" class="fieldselect"><option value="">Not noted</option>'+gunList().map(g=>'<option value="'+esc(g.id)+'"'+(g.id===S.gun?' selected':'')+'>'+esc(g.name)+'</option>').join("")+'</select></div></div>'+
-        '<div class="row"><button class="btn primary" type="button" id="tmSave">Save to Training</button><button class="btn" type="button" id="tmToss">Throw it away</button></div><p class="note">Tap <b>×</b> next to anything that wasn\'t a shot (an echo, the next bay).</p></div>'+
+        (CTX?'':'<div class="field"><label for="tm_prof">Training profile</label><select id="tm_prof" class="fieldselect"><option value="">None</option>'+T.profiles.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===S.prof?' selected':'')+'>'+esc(p.name||"Unnamed profile")+'</option>').join("")+'</select></div>')+'</div>'+
+        '<div class="row"><button class="btn primary" type="button" id="tmSave">'+(CTX?'Save to this session':'Save to Training')+'</button><button class="btn" type="button" id="tmToss">Throw it away</button></div><p class="note">Tap <b>×</b> next to anything that wasn\'t a shot (an echo, the next bay).'+(CTX?'':' It goes into today\'s session for the profile you pick.')+'</p></div>'+
       '<div class="grid tmset"><div class="field"><label for="tm_par">Par time (s)</label><input id="tm_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d&&d.par?d.par:"")+'"></div>'+
         '<div class="field"><label>Start delay</label>'+seg("data-tmdelay",[["now","Now"],["fixed","3 s"],["random","Random"]],S.delay,"Start delay")+'</div></div>'+
       '<p class="note">'+(S.delay==="random"?'Random waits 2 to 5 seconds after Start, then beeps.':S.delay==="fixed"?'Beeps 3 seconds after Start.':'Beeps right away.')+' With a par time, a second, higher beep marks it.</p>'+
@@ -12174,7 +12274,7 @@ window.RB_CHTOOL=(function(){
           '<p class="note">Phone speakers aren\'t loud. Pair a Bluetooth speaker in your phone\'s own settings and the beep plays through it. Bluetooth reaches your ears a little late, so measure its delay once: put the phone next to the speaker, turn the volume up and tap <b>Measure the delay</b>. A speaker with its own microphone (a speakerphone) can take over the phone\'s microphone; a plain one is better.</p>'+
           '<div class="row"><button class="btn" type="button" id="tmLatGo">Measure the delay</button><span class="note" id="tmLatNow"></span></div><p class="note" id="tmLatMsg" aria-live="polite"></p></div>'+
       '</details>';
-    $("tm_drill").addEventListener("change",e=>{if(R.state==="wait"||R.state==="run")stop();S.drill=e.target.value;keep();R={state:"idle"};build();});
+    $("tm_drill").addEventListener("change",e=>{if(R.state==="wait"||R.state==="run")stop();if(CTX){CTX.drill=e.target.value||null;if(window.RB_TRAIN)RB_TRAIN._title();}else{S.drill=e.target.value;keep();}R={state:"idle"};build();});
     $("tmGo").addEventListener("click",()=>{if(R.state==="done"){R={state:"idle"};}go();});
     $("tm_par").addEventListener("change",e=>{const v=num(e.target.value);const dd=curDrill();if(dd)setPar(dd.id,v>0?Math.round(v*100)/100:null);});
     root.querySelectorAll("[data-tmdelay]").forEach(b=>b.addEventListener("click",()=>{S.delay=b.dataset.tmdelay;keep();build();}));
@@ -12188,65 +12288,169 @@ window.RB_CHTOOL=(function(){
     latTxt();draw();meter();
   }
   async function keepAwake(on){try{if(on&&!wake&&navigator.wakeLock&&document.visibilityState==="visible")wake=await navigator.wakeLock.request("screen");if(!on&&wake){await wake.release();wake=null;}}catch(e){}}
-  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&$("tmRoot")&&!$("tmRoot").hidden&&$("tmRoot").offsetParent)keepAwake(true);});
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&ROOT&&ROOT.isConnected&&ROOT.offsetParent)keepAwake(true);});
+  // put the timer in a place (one at a time: the other place is emptied so its ids don't clash)
+  function mount(root,ctx2){if(R.state==="wait"||R.state==="run")stop();if(ROOT&&ROOT!==root)ROOT.innerHTML="";ROOT=root;CTX=ctx2||null;R={state:"idle"};build();keepAwake(true);}
+  function unmount(where){if(!ROOT)return;const inTools=ROOT.id==="tmRoot";if(where&&(where==="tools")!==inTools)return;
+    if(R.state==="wait"||R.state==="run")stop();R={state:"idle"};audioOff();keepAwake(false);ROOT.innerHTML="";ROOT=null;CTX=null;}
   window.RB_TIMER={
-    show(){load().then(()=>{R={state:"idle"};build();keepAwake(true);});},
+    show(){load().then(()=>{const r=$("tmRoot");if(r)mount(r,null);});},
     pick(id){S.drill=id||"";keep();},
-    hide(){if(R.state==="wait"||R.state==="run")stop();R={state:"idle"};audioOff();keepAwake(false);},
+    hide(where){unmount(where);},
     // for tests: pretend the worklet heard something at context time t
     _hear(t,tone){if(listen)listen(t,1,tone||0);},_ctxTime(){return ctx?ctx.currentTime:null;},_state(){return R;}
   };
 
-  /* ----- the Training tab ----- */
-  let open=null; // a drill id, "free" (runs without a drill), or null for the list
+  /* ----- the Training tab: profiles › sessions › runs, plus drills and comparing two sessions ----- */
+  let V={view:"home"}; // home | profile {pid} | session {sid} | timer {sid,drill} | drill {did,from} | compare {pid,a,b}
   function spark(vals,par){if(vals.length<2)return "";const w=300,h=46,lo=Math.min(...vals,par||Infinity),hi=Math.max(...vals,par||-Infinity),sp=hi-lo||1;
     const X=i=>5+i*(w-10)/(vals.length-1),Y=v=>h-6-(v-lo)/sp*(h-12);
     return '<svg class="trspark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" aria-hidden="true">'+(par&&par>=lo&&par<=hi?'<line x1="0" x2="'+w+'" y1="'+Y(par).toFixed(1)+'" y2="'+Y(par).toFixed(1)+'" stroke="var(--muted)" stroke-dasharray="4 3"/>':'')+
       '<path d="M'+vals.map((v,i)=>X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(" L")+'" fill="none" stroke="var(--accent)" stroke-width="2.2"/>'+vals.map((v,i)=>'<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="3" fill="var(--accent)"/>').join("")+'</svg>';}
-  const runsOf=id=>T.runs.filter(r=>!r.dry&&(id==="free"?!r.drill:r.drill===id)).sort((a,b)=>a.at-b.at);
+  // a drill's numbers from a list of runs
+  function stats(rs){const live=rs.filter(r=>!r.dry&&r.shots&&r.shots.length),tt=live.map(runTime),fs=live.map(r=>r.shots[0]),sp=live.flatMap(r=>r.shots.slice(1).map((v,i)=>v-r.shots[i]));
+    const hr=live.filter(r=>r.hits!=null&&(r.of||r.shots.length)),hits=hr.reduce((a,r)=>a+r.hits,0),of=hr.reduce((a,r)=>a+(r.of||r.shots.length),0);
+    return {n:live.length,dry:rs.filter(r=>r.dry).length,best:tt.length?Math.min(...tt):null,avg:avg(tt),first:avg(fs),split:avg(sp),hits:of?hits/of:null};}
+  const runsByDrill=rs=>{const m=new Map();rs.forEach(r=>{const k=r.drill||"";if(!m.has(k))m.set(k,[]);m.get(k).push(r);});return m;};
+  const drillName=(k,rs)=>k?((drillOf(k)||{}).name||(rs&&rs[0]&&rs[0].name)||"Drill"):"Free runs";
+  function setHead(title,back){const b=$("trBack");if(b){b.hidden=!back;b.textContent="‹ "+(back||"Training");}$("trTitle").textContent=title;$("trSub").hidden=!!back;}
+  function backTo(){const v=V;if(v.view==="timer")V={view:"session",sid:v.sid};else if(v.view==="session"){const s=sessOf(v.sid);V=s&&s.profileId&&profOf(s.profileId)?{view:"profile",pid:s.profileId}:{view:s?"profile":"home",pid:null};}
+    else if(v.view==="compare")V={view:"profile",pid:v.pid};else if(v.view==="drill"&&v.from)V=v.from;else V={view:"home"};
+    if(v.view==="timer")unmount("train");render();window.scrollTo(0,0);}
+  function go2(v){if(V.view==="timer"&&v.view!=="timer")unmount("train");V=v;render();window.scrollTo(0,0);}
   function render(){const root=$("trRoot");if(!root)return;
     if(!loaded){root.innerHTML='<p class="note">Loading…</p>';load().then(render);return;}
-    const back=$("trBack");if(back)back.hidden=!open;$("trTitle").textContent=open?(open==="free"?"Free runs":(drillOf(open)||{}).name||"Drill"):"Training";$("trSub").hidden=!!open;
-    if(!open){
-      const ds=drills(),dry=T.runs.filter(r=>r.dry),wk=Date.now()-7*864e5,dw=dry.filter(r=>r.at>=wk);
-      let h='<section class="card"><h2>Shot timer</h2><p class="note" style="margin-top:0">A start beep, then your first shot and every split, with a par time. Save a run here to see your progress on each drill.</p><div class="row"><button class="btn primary" type="button" id="trTimer">Open the shot timer</button></div>'+
-        (dry.length?'<p class="note">Dry fire: '+dw.length+' rep'+(dw.length===1?'':'s')+' in the last 7 days, '+dry.length+' in all.</p>':'')+'</section>'+
-        '<section class="card"><h2>Drills</h2><div class="cartgroup">';
-      const item=(id,name,det,rs,par)=>{const tt=rs.map(runTime).filter(v=>v!=null),best=tt.length?Math.min(...tt):null;
-        return '<button class="loaditem trdrill" type="button" data-trd="'+esc(id)+'"><span class="t">'+esc(name)+'</span><span class="d">'+esc(det)+'</span>'+(tt.length?spark(tt.slice(-12),par)+'<span class="m">Best '+f2(best)+' s · last '+f2(tt[tt.length-1])+' s · '+tt.length+' run'+(tt.length===1?'':'s')+'</span>':'<span class="m">No runs yet</span>')+'</button>';};
-      ds.forEach(d=>{h+=item(d.id,d.name,[d.shots+' shot'+(d.shots===1?'':'s'),d.dist?U.s("yd",d.dist,0):"",d.par?'par '+f2(d.par)+' s':""].filter(Boolean).join(" · "),runsOf(d.id),d.par);});
-      const fr=runsOf("free");if(fr.length)h+=item("free","Free runs","Runs without a drill",fr,null);
-      h+='</div><div class="row"><button class="btn" type="button" id="trAdd">+ New drill</button></div></section>';
-      root.innerHTML=h;
-      $("trTimer").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("timer");});
-      $("trAdd").addEventListener("click",()=>{const d={id:newId(),name:"",shots:5,dist:7,par:null,how:""};T.drills.push(d);save();open=d.id;render();setTimeout(()=>{const n=$("trd_name");if(n)n.focus();},30);});
-      root.querySelectorAll("[data-trd]").forEach(b=>b.addEventListener("click",()=>{open=b.dataset.trd;render();window.scrollTo(0,0);}));
-      return;}
-    const d=open==="free"?null:drillOf(open);if(open!=="free"&&!d){open=null;render();return;}
-    const rs=runsOf(open),mine=d&&!d.built,tt=rs.map(runTime).filter(v=>v!=null);
+    if(V.view==="profile"&&V.pid&&!profOf(V.pid))V={view:"home"};
+    if((V.view==="session"||V.view==="timer")&&!sessOf(V.sid))V={view:"home"};
+    ({home:renderHome,profile:renderProfile,session:renderSession,timer:renderTimer,drill:renderDrill,compare:renderCompare}[V.view]||renderHome)(root);}
+  // home: your training profiles, the drills, the timer
+  function renderHome(root){setHead("Training",null);
+    const wk=Date.now()-7*864e5,dry=T.sessions.flatMap(s=>s.runs.filter(r=>r.dry)),dw=dry.filter(r=>(r.at||0)>=wk).length,loose=sessionsOf(null);
+    const card=p=>{const ss=sessionsOf(p.id),last=ss[0],rounds=ss.reduce((a,s)=>a+sessRounds(s),0);
+      return '<button class="loaditem" type="button" data-trp="'+esc(p.id)+'"><span class="t">'+esc(p.name||"Unnamed profile")+'</span><span class="d">'+esc(gearTxt(p)||"No gun picked yet")+'</span><span class="m">'+(ss.length?ss.length+' session'+(ss.length===1?'':'s')+' · last '+esc(fmtD(last.date))+(rounds?' · '+rounds.toLocaleString()+' rounds':''):'No sessions yet')+'</span></button>';};
+    let h='<section class="card" aria-label="Training profiles"><h2>Training profiles</h2><p class="note" style="margin-top:0">A profile is what you train with: a gun, and the ammo (and barrel or suppressor) you use in it. Each day you practice is a session with the drills you ran, so you can compare one day with another. Rounds from sessions count toward the gun, barrel, suppressor and ammo, like range trips.</p>'+
+      (T.profiles.length?'<div class="cartgroup">'+T.profiles.slice().sort((a,b)=>(a.name||"").localeCompare(b.name||"",undefined,{numeric:true})).map(card).join("")+'</div>':'')+
+      (loose.length?'<div class="cartgroup"><button class="loaditem" type="button" data-trp=""><span class="t">Without a profile</span><span class="m">'+loose.length+' session'+(loose.length===1?'':'s')+' · last '+esc(fmtD(loose[0].date))+'</span></button></div>':'')+
+      '<div class="row"><button class="btn primary" type="button" id="trProfAdd">+ New training profile</button></div></section>';
+    h+='<section class="card" aria-label="Training timer"><h2>Shot timer</h2><p class="note" style="margin-top:0">Run drills from a session in a profile above, so they\'re saved together. The timer on its own is under Tools.</p><div class="row"><button class="btn" type="button" id="trTimer">Open the shot timer</button></div>'+
+      (dry.length?'<p class="note">Dry fire: '+dw+' rep'+(dw===1?'':'s')+' in the last 7 days, '+dry.length+' in all.</p>':'')+'</section>';
+    const allRuns=T.sessions.flatMap(s=>s.runs);
+    h+='<section class="card" aria-label="Drills"><h2>Drills</h2><div class="cartgroup">'+drills().map(d=>{const st=stats(allRuns.filter(r=>r.drill===d.id));
+      return '<button class="loaditem" type="button" data-trd="'+esc(d.id)+'"><span class="t">'+esc(d.name)+'</span><span class="d">'+esc([d.shots+' shot'+(d.shots===1?'':'s'),d.dist?U.s("yd",d.dist,0):"",d.par?'par '+f2(d.par)+' s':""].filter(Boolean).join(" · "))+'</span><span class="m">'+(st.n?'Best '+f2(st.best)+' s · '+st.n+' run'+(st.n===1?'':'s'):'No runs yet')+'</span></button>';}).join("")+'</div>'+
+      '<div class="row"><button class="btn" type="button" id="trAdd">+ New drill</button></div></section>';
+    root.innerHTML=h;
+    root.querySelectorAll("[data-trp]").forEach(b=>b.addEventListener("click",()=>go2({view:"profile",pid:b.dataset.trp||null})));
+    root.querySelectorAll("[data-trd]").forEach(b=>b.addEventListener("click",()=>go2({view:"drill",did:b.dataset.trd,from:{view:"home"}})));
+    $("trProfAdd").addEventListener("click",()=>{const p={id:newId("tp"),name:"",gunId:null,partId:null,canId:null,ammoId:null,notes:"",created:Date.now()};T.profiles.push(p);save();go2({view:"profile",pid:p.id});setTimeout(()=>{const n=$("tp_name");if(n)n.focus();},30);});
+    $("trTimer").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("timer",{from:{tab:"train",label:"Training",y:window.scrollY}});});
+    $("trAdd").addEventListener("click",()=>{const d={id:newId(),name:"",shots:5,dist:7,par:null,how:""};T.drills.push(d);save();go2({view:"drill",did:d.id,from:{view:"home"}});setTimeout(()=>{const n=$("trd_name");if(n)n.focus();},30);});
+  }
+  const sel=(id,opts,v)=>'<select id="'+id+'" class="fieldselect">'+opts.map(([k,t,g])=>g?'<optgroup label="'+esc(g)+'">':'<option value="'+esc(k)+'"'+(k===(v||"")?' selected':'')+'>'+esc(t)+'</option>').join("")+'</select>';
+  // the gun, barrel, suppressor and ammo pickers (a profile, or one session)
+  function gearFields(o,pre){const g=gunOf(o.gunId),bs=barrels(o.gunId),cs=gunCans(o.gunId),A=ammos(),cart=g&&g.cart?String(g.cart).toLowerCase():"";
+    const fit=A.filter(a=>cart&&String(a.cart||"").toLowerCase()===cart),rest=A.filter(a=>!fit.includes(a));
+    const aopts=[["","None"]].concat(fit.length?[[0,0,"For "+g.cart]].concat(fit.map(a=>[a.id,a.name])).concat(rest.length?[[0,0,"Other ammo"]]:[]):[]).concat(rest.map(a=>[a.id,a.name]));
+    return '<div class="field"><label for="'+pre+'_gun">Gun</label>'+sel(pre+"_gun",[["","None"]].concat(guns().map(x=>[x.id,x.name])),o.gunId)+'</div>'+
+      (bs.length?'<div class="field"><label for="'+pre+'_part">Barrel</label>'+sel(pre+"_part",[["","The gun as it is"]].concat(bs.map(b=>[b.id,b.name])),o.partId)+'</div>':'')+
+      (cs.length?'<div class="field"><label for="'+pre+'_can">Suppressor</label>'+sel(pre+"_can",[["","None"]].concat(cs.map(c=>[c.id,c.name])),o.canId)+'</div>':'')+
+      '<div class="field"><label for="'+pre+'_ammo">Ammo</label>'+sel(pre+"_ammo",aopts,o.ammoId)+'</div>';}
+  function bindGear(o,pre,after){const on=(id,k,re)=>{const e=$(pre+"_"+id);if(e)e.addEventListener("change",()=>{o[k]=e.value||null;if(k==="gunId"){o.partId=null;o.canId=null;}save();if(re)after(true);else after(false);});};
+    on("gun","gunId",true);on("part","partId");on("can","canId");on("ammo","ammoId");}
+  function renderProfile(root){const pid=V.pid,p=pid?profOf(pid):null,ss=sessionsOf(pid),today=ss.find(s=>s.date===todayISO());
+    setHead(p?(p.name||"Unnamed profile"):"Without a profile","Training");
+    let h='';
+    if(p)h+='<section class="card" aria-label="Training profile"><h2>Profile</h2><div class="grid"><div class="field wide"><label for="tp_name">Name</label><input id="tp_name" value="'+esc(p.name||"")+'" placeholder="e.g. Glock 19 · 124 gr FMJ"></div>'+gearFields(p,"tp")+
+      '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" placeholder="Holster, sights, what you\'re working on…">'+esc(p.notes||"")+'</textarea></div></div>'+
+      '<p class="note">New sessions start with this gear. Rounds fired in a session count toward its gun, barrel, suppressor and ammo, the same as a range trip.</p></section>';
+    else h+='<section class="card"><p class="note" style="margin-top:0">Sessions saved from the shot timer without a profile (and runs from before profiles). They don\'t count toward any gun or ammo.</p></section>';
+    h+='<section class="card" aria-label="Sessions"><h2>Sessions</h2><div class="row">'+(today?'<button class="btn primary" type="button" id="tsGoToday">Continue today\'s session</button><button class="btn" type="button" id="tsNew">+ New session</button>':'<button class="btn primary" type="button" id="tsNew">Start a session today</button>')+(ss.length>=2?'<button class="btn" type="button" id="tsCmp">Compare two sessions</button>':'')+'</div>'+
+      (ss.length?'<div class="cartgroup">'+ss.map(s=>{const m=runsByDrill(s.runs),r=sessRounds(s);
+        return '<button class="loaditem" type="button" data-tss="'+esc(s.id)+'"><span class="t">'+esc(fmtD(s.date))+(s.place?' · '+esc(s.place):'')+'</span><span class="d">'+(s.runs.length?esc([...m].map(([k,rs])=>drillName(k,rs)+(rs.length>1?' ×'+rs.length:'')).join(", ")):'No runs yet')+'</span><span class="m">'+(r?r.toLocaleString()+' rounds':'')+(s.runs.some(x=>x.dry)?(r?' · ':'')+s.runs.filter(x=>x.dry).length+' dry':'')+'</span></button>';}).join("")+'</div>':'<p class="note">No sessions yet.</p>')+'</section>';
+    // progress: each drill's session averages over time (oldest first)
+    const ds=new Map();ss.slice().reverse().forEach(s=>runsByDrill(s.runs).forEach((rs,k)=>{const st=stats(rs);if(!st.n)return;if(!ds.has(k))ds.set(k,[]);ds.get(k).push({s,st});}));
+    const prog=[...ds].filter(([,a])=>a.length);
+    if(prog.length)h+='<section class="card" aria-label="Progress"><h2>Progress</h2>'+prog.map(([k,a])=>{const d=k?drillOf(k):null,av=a.map(x=>x.st.avg),best=Math.min(...a.map(x=>x.st.best));
+      return '<div class="trprog"><h3 class="trdh">'+esc(drillName(k,a[0].s.runs.filter(r=>(r.drill||"")===k)))+' <span class="note">· '+a.length+' session'+(a.length===1?'':'s')+'</span></h3>'+spark(av,d&&d.par)+
+        '<p class="note">Average '+f2(av[av.length-1])+' s last session'+(av.length>1?' (first: '+f2(av[0])+' s)':'')+' · best run '+f2(best)+' s</p></div>';}).join("")+'</section>';
+    if(p)h+='<div class="row endrow"><button class="btn danger" type="button" id="tpDel">Delete profile</button></div>';
+    root.innerHTML=h;
+    if(p){$("tp_name").addEventListener("input",e=>{p.name=e.target.value;save();$("trTitle").textContent=p.name||"Unnamed profile";});
+      $("tp_notes").addEventListener("input",e=>{p.notes=e.target.value;save();});
+      bindGear(p,"tp",re=>{if(re)render();});
+      $("tpDel").addEventListener("click",()=>{const i=T.profiles.indexOf(p),gone=T.sessions.filter(s=>s.profileId===p.id);T.profiles.splice(i,1);T.sessions=T.sessions.filter(s=>s.profileId!==p.id);save();go2({view:"home"});
+        if(window.RB_UNDO)RB_UNDO("Deleted "+(p.name||"the profile")+(gone.length?" and its "+gone.length+" session"+(gone.length===1?"":"s"):""),()=>{T.profiles.splice(i,0,p);T.sessions=T.sessions.concat(gone);save();render();});});}
+    {const t=$("tsGoToday");if(t)t.addEventListener("click",()=>go2({view:"session",sid:today.id}));}
+    $("tsNew").addEventListener("click",()=>{const s=newSession(pid);go2({view:"session",sid:s.id});});
+    {const c=$("tsCmp");if(c)c.addEventListener("click",()=>go2({view:"compare",pid,a:ss[1].id,b:ss[0].id}));}
+    root.querySelectorAll("[data-tss]").forEach(b=>b.addEventListener("click",()=>go2({view:"session",sid:b.dataset.tss})));
+  }
+  function runRow(r){const a=r.shots||[],sp=a.slice(1).map((v,i)=>v-a[i]),t=a.length?a[a.length-1]:null;
+    return '<tr><td>'+(r.dry?'<span class="note">dry</span>':t!=null?'<b>'+f2(t)+'</b>'+(r.par?' <span class="tmpar '+(t<=r.par?'under':'over')+'">'+(t<=r.par?'−':'+')+f2(Math.abs(t-r.par))+'</span>':''):'–')+'</td><td>'+(a.length?f2(a[0]):"–")+'</td><td>'+(sp.length?f2(Math.min(...sp))+(sp.length>1?'–'+f2(Math.max(...sp)):''):'–')+'</td><td>'+(r.hits!=null?r.hits+(r.of?'/'+r.of:''):'')+'</td><td><button class="linkbtn" type="button" data-trx="'+esc(r.id)+'" aria-label="Delete this run">×</button></td></tr>';}
+  function renderSession(root){const s=sessOf(V.sid),p=profOf(s.profileId);setHead(fmtD(s.date),p?(p.name||"Unnamed profile"):"Without a profile");
+    const r=sessRounds(s),timed=r-(num(s.extra)||0),m=runsByDrill(s.runs);
+    let h='<section class="card" aria-label="Run a drill"><h2>Run a drill</h2><div class="trgrid">'+drills().map(d=>'<button class="btn trrun" type="button" data-trrun="'+esc(d.id)+'"><b>'+esc(d.name)+'</b><span>'+d.shots+' shot'+(d.shots===1?'':'s')+(d.par?' · par '+f2(d.par):'')+'</span></button>').join("")+'<button class="btn trrun" type="button" data-trrun=""><b>Free run</b><span>no drill</span></button></div></section>';
+    h+='<section class="card" aria-label="Runs"><h2>Runs</h2>'+(s.runs.length?[...m].map(([k,rs])=>{const st=stats(rs);
+      return '<div class="trdgrp"><h3 class="trdh">'+esc(drillName(k,rs))+'</h3><p class="note trdsum">'+(st.n?st.n+' run'+(st.n===1?'':'s')+' · best '+f2(st.best)+' · average '+f2(st.avg)+' · first shot '+f2(st.first)+(st.hits!=null?' · '+Math.round(st.hits*100)+'% hits':''):'')+(st.dry?(st.n?' · ':'')+st.dry+' dry':'')+'</p>'+
+        '<div class="tablewrap"><table class="trtbl"><thead><tr><th>Time</th><th>First</th><th>Splits</th><th>Hits</th><th></th></tr></thead><tbody>'+rs.map(runRow).join("")+'</tbody></table></div></div>';}).join(""):'<p class="note">No runs yet. Pick a drill above.</p>')+'</section>';
+    h+='<section class="card" aria-label="Session"><h2>Session</h2><div class="grid"><div class="field"><label for="ts_date">Date</label><input id="ts_date" type="date" value="'+esc(s.date||"")+'"></div><div class="field"><label for="ts_place">Where</label><input id="ts_place" value="'+esc(s.place||"")+'" placeholder="Range or place"></div>'+
+      (p?gearFields(s,"ts"):'')+'<div class="field"><label for="ts_extra">Other rounds fired</label><input id="ts_extra" type="number" inputmode="numeric" step="1" min="0" placeholder="0" value="'+(num(s.extra)!=null?s.extra:"")+'"></div>'+
+      '<div class="field wide"><label for="ts_notes">Notes</label><textarea id="ts_notes" placeholder="How it went, what to work on…">'+esc(s.notes||"")+'</textarea></div></div>'+
+      '<p class="note" id="tsRounds">'+(r?'<b>'+r.toLocaleString()+' rounds</b> this session: '+timed+' in timed runs'+((num(s.extra)||0)?' + '+num(s.extra)+' other':'')+(p?(s.gunId?', counted toward '+esc(gearTxt(s))+'.':'. Pick a gun to count them toward it.'):'.'):'Other rounds fired are shots you didn\'t time (warm-up, zeroing); they count toward the gun and ammo too.')+'</p>'+
+      '<div class="row endrow"><button class="btn danger" type="button" id="tsDel">Delete session</button></div></section>';
+    root.innerHTML=h;
+    root.querySelectorAll("[data-trrun]").forEach(b=>b.addEventListener("click",()=>go2({view:"timer",sid:s.id,drill:b.dataset.trrun||null})));
+    root.querySelectorAll("[data-trx]").forEach(b=>b.addEventListener("click",()=>{const i=s.runs.findIndex(x=>x.id===b.dataset.trx);if(i<0)return;const x=s.runs.splice(i,1)[0];save();render();
+      if(window.RB_UNDO)RB_UNDO("Deleted a run",()=>{s.runs.splice(i,0,x);save();render();});}));
+    $("ts_date").addEventListener("change",e=>{if(e.target.value){s.date=e.target.value;save();$("trTitle").textContent=fmtD(s.date);}});
+    $("ts_place").addEventListener("input",e=>{s.place=e.target.value;save();});
+    $("ts_notes").addEventListener("input",e=>{s.notes=e.target.value;save();});
+    $("ts_extra").addEventListener("input",e=>{const v=num(e.target.value);s.extra=v>0?Math.round(v):null;save();});
+    $("ts_extra").addEventListener("change",()=>render());
+    if(p)bindGear(s,"ts",()=>render());
+    $("tsDel").addEventListener("click",()=>{const i=T.sessions.indexOf(s);T.sessions.splice(i,1);save();go2(s.profileId&&profOf(s.profileId)?{view:"profile",pid:s.profileId}:{view:"profile",pid:null});
+      if(window.RB_UNDO)RB_UNDO("Deleted the session",()=>{T.sessions.splice(i,0,s);save();render();});});
+  }
+  function renderTimer(root){const s=sessOf(V.sid);const d=V.drill?drillOf(V.drill):null;setHead(d?d.name:"Free run",fmtD(s.date));
+    root.innerHTML='<section class="card"><div id="trTimerRoot" class="tmroot"></div></section>';
+    // the timer's drill is this view's drill (picking another on the timer changes both)
+    mount($("trTimerRoot"),{sid:s.id,get drill(){return V.drill||null;},set drill(x){V.drill=x||null;}});}
+  function renderDrill(root){const d=drillOf(V.did);if(!d){backTo();return;}const mine=!d.built;setHead(d.name||"New drill",V.from&&V.from.view==="session"?"Session":"Training");
+    const all=T.sessions.flatMap(s=>s.runs.filter(r=>r.drill===d.id).map(r=>({r,s}))),st=stats(all.map(x=>x.r));
     let h='<section class="card">'+(mine?'<div class="grid"><div class="field wide"><label for="trd_name">Name</label><input id="trd_name" value="'+esc(d.name)+'" placeholder="e.g. Plate rack"></div>'+
         '<div class="field"><label for="trd_shots">Shots</label><input id="trd_shots" type="number" inputmode="numeric" step="1" min="1" value="'+esc(d.shots||"")+'"></div>'+
         '<div class="field"><label for="trd_dist">Distance (<span data-unit="yd">'+U.u("yd")+'</span>)</label><input id="trd_dist" type="number" inputmode="decimal" step="any" value="'+(d.dist?esc(U.n("yd",d.dist,0)):"")+'"></div>'+
         '<div class="field"><label for="trd_par">Par time (s)</label><input id="trd_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d.par?d.par:"")+'"></div>'+
         '<div class="field wide"><label for="trd_how">How it\'s shot</label><textarea id="trd_how" placeholder="Targets, start position, reloads…">'+esc(d.how||"")+'</textarea></div></div>'
-      :d?'<p class="tline">'+esc(d.how)+'</p><p class="note">'+d.shots+' shot'+(d.shots===1?'':'s')+(d.dist?' · '+esc(U.s("yd",d.dist,0)):'')+'</p><div class="grid"><div class="field"><label for="trd_par">Your par time (s)</label><input id="trd_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d.par?d.par:"")+'"></div></div>':'<p class="note" style="margin-top:0">Shot timer runs saved without a drill.</p>')+
-      (d?'<div class="row"><button class="btn primary" type="button" id="trGo">Start this drill</button>'+(mine?'<button class="btn danger" type="button" id="trDel">Delete drill</button>':'')+'</div>':'')+'</section>';
-    h+='<section class="card"><h2>Your runs</h2>'+(tt.length>1?spark(tt.slice(-30),d&&d.par):'')+
-      (rs.length?'<p class="note">Best '+f2(Math.min(...tt))+' s'+(tt.length>=5?' · average of the last five '+f2(tt.slice(-5).reduce((a,b)=>a+b,0)/5)+' s':'')+'</p><div class="tablewrap"><table class="trtbl"><thead><tr><th>Date</th><th>Time</th><th>First</th><th>Splits</th><th>Hits</th><th>Gun</th><th></th></tr></thead><tbody>'+
-        rs.slice().reverse().map(r=>{const a=r.shots||[],sp=a.slice(1).map((v,i)=>v-a[i]);return '<tr><td>'+esc(r.at?new Date(r.at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):(r.date||""))+'</td><td><b>'+(a.length?f2(a[a.length-1]):"–")+'</b>'+(r.par&&a.length?' <span class="tmpar '+(a[a.length-1]<=r.par?'under':'over')+'">'+(a[a.length-1]<=r.par?'−':'+')+f2(Math.abs(a[a.length-1]-r.par))+'</span>':'')+'</td><td>'+(a.length?f2(a[0]):"–")+'</td><td>'+(sp.length?f2(Math.min(...sp))+(sp.length>1?'–'+f2(Math.max(...sp)):''):'–')+'</td><td>'+(r.hits!=null?r.hits+(r.of?'/'+r.of:''):'')+'</td><td>'+esc(gunName(r.gun))+'</td><td><button class="linkbtn" type="button" data-trx="'+esc(r.id)+'" aria-label="Delete this run">×</button></td></tr>';}).join("")+'</tbody></table></div>'
-      :'<p class="note">No runs yet. '+(d?'Tap <b>Start this drill</b>.':'')+'</p>')+'</section>';
+      :'<p class="tline">'+esc(d.how)+'</p><p class="note">'+d.shots+' shot'+(d.shots===1?'':'s')+(d.dist?' · '+esc(U.s("yd",d.dist,0)):'')+'</p><div class="grid"><div class="field"><label for="trd_par">Your par time (s)</label><input id="trd_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d.par?d.par:"")+'"></div></div>')+
+      '<p class="note">'+(st.n?'Your best: <b>'+f2(st.best)+' s</b> over '+st.n+' run'+(st.n===1?'':'s')+'. ':'')+'Run it from a session in one of your training profiles.</p>'+
+      (mine?'<div class="row"><button class="btn danger" type="button" id="trDel">Delete drill</button></div>':'')+'</section>';
     root.innerHTML=h;
-    const bind=(id,k,fn)=>{const e=$(id);if(e)e.addEventListener("input",()=>{const x=T.drills.find(q=>q.id===open);if(!x)return;x[k]=fn(e.value);save();if(k==="name")$("trTitle").textContent=x.name||"Drill";});};
+    const bind=(id,k,fn)=>{const e=$(id);if(e)e.addEventListener("input",()=>{const x=T.drills.find(q=>q.id===d.id);if(!x)return;x[k]=fn(e.value);save();if(k==="name")$("trTitle").textContent=x.name||"New drill";});};
     if(mine){bind("trd_name","name",v=>v.trim());bind("trd_shots","shots",v=>Math.max(1,Math.round(num(v)||1)));bind("trd_dist","dist",v=>{const n=num(v);return n>0?U.from("yd",n):null;});bind("trd_how","how",v=>v);}
-    {const p=$("trd_par");if(p)p.addEventListener("input",()=>{const v=num(p.value);setPar(open,v>0?Math.round(v*100)/100:null);});}
-    {const g=$("trGo");if(g)g.addEventListener("click",()=>{window.RB_TIMER.pick(open);if(window.RB_TOOLS)RB_TOOLS.open("timer");});}
-    {const del=$("trDel");if(del)del.addEventListener("click",()=>{const i=T.drills.findIndex(q=>q.id===open);if(i<0)return;const x=T.drills.splice(i,1)[0];save();open=null;render();
+    {const p=$("trd_par");if(p)p.addEventListener("input",()=>{const v=num(p.value);setPar(d.id,v>0?Math.round(v*100)/100:null);});}
+    {const del=$("trDel");if(del)del.addEventListener("click",()=>{const i=T.drills.findIndex(q=>q.id===d.id);if(i<0)return;const x=T.drills.splice(i,1)[0];save();backTo();
       if(window.RB_UNDO)RB_UNDO("Deleted "+(x.name||"the drill"),()=>{T.drills.splice(i,0,x);save();render();});});}
-    root.querySelectorAll("[data-trx]").forEach(b=>b.addEventListener("click",()=>{const i=T.runs.findIndex(r=>r.id===b.dataset.trx);if(i<0)return;const x=T.runs.splice(i,1)[0];save();render();
-      if(window.RB_UNDO)RB_UNDO("Deleted a run",()=>{T.runs.splice(i,0,x);save();render();});}));
   }
-  window.RB_TRAIN={show(){render();},home(){open=null;render();},_data(){return T;}};
-  document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#trBack")){open=null;render();window.scrollTo(0,0);}});
+  // two sessions side by side, drill by drill (A is the earlier one by default; lower times are better)
+  function renderCompare(root){const ss=sessionsOf(V.pid),p=profOf(V.pid);setHead("Compare sessions",p?(p.name||"Unnamed profile"):"Without a profile");
+    const A=sessOf(V.a)||ss[1],B=sessOf(V.b)||ss[0];if(!A||!B){backTo();return;}
+    const opt=(id,v)=>'<select id="'+id+'" class="fieldselect">'+ss.map(s=>'<option value="'+esc(s.id)+'"'+(s.id===v?' selected':'')+'>'+esc(fmtD(s.date)+(s.place?" · "+s.place:""))+'</option>').join("")+'</select>';
+    const mA=runsByDrill(A.runs),mB=runsByDrill(B.runs),keys=[...new Set([...mA.keys(),...mB.keys()])];
+    const cell=(v,fmt)=>v==null?'–':fmt(v),diff=(a,b,lowGood,fmt)=>{if(a==null||b==null)return '';const d=b-a;if(Math.abs(d)<.005)return '<span class="note">same</span>';const good=lowGood?d<0:d>0;return '<span class="trchg '+(good?'good':'bad')+'">'+(d>0?'+':'−')+fmt(Math.abs(d))+'</span>';};
+    const sec=v=>f2(v),pct=v=>Math.round(v*100)+'%';
+    let h='<section class="card"><div class="grid"><div class="field"><label for="tc_a">Session A</label>'+opt("tc_a",A.id)+'</div><div class="field"><label for="tc_b">Session B</label>'+opt("tc_b",B.id)+'</div></div>'+
+      '<p class="note">Change is B minus A. When B is better (faster, or more hits) it\'s in your accent color; worse is in orange.</p></section>';
+    h+=keys.length?keys.map(k=>{const a=stats(mA.get(k)||[]),b=stats(mB.get(k)||[]),rows=[["Runs",a.n,b.n,null],["Best (s)",a.best,b.best,"t"],["Average (s)",a.avg,b.avg,"t"],["First shot (s)",a.first,b.first,"t"],["Split (s)",a.split,b.split,"t"],["Hits",a.hits,b.hits,"p"]];
+      return '<section class="card"><h2>'+esc(drillName(k,(mA.get(k)||mB.get(k))))+'</h2><div class="tablewrap"><table class="trtbl trcmp"><thead><tr><th></th><th>A</th><th>B</th><th>Change</th></tr></thead><tbody>'+
+        rows.map(([lab,x,y,kind])=>'<tr><td>'+lab+'</td><td>'+(kind?cell(x,kind==="p"?pct:sec):x||'–')+'</td><td>'+(kind?cell(y,kind==="p"?pct:sec):y||'–')+'</td><td>'+(kind==="t"?diff(x,y,true,sec):kind==="p"?diff(x,y,false,pct):'')+'</td></tr>').join("")+'</tbody></table></div></section>';}).join(""):'<section class="card"><p class="note">Neither session has any runs.</p></section>';
+    root.innerHTML=h;
+    $("tc_a").addEventListener("change",e=>{V.a=e.target.value;render();});$("tc_b").addEventListener("change",e=>{V.b=e.target.value;render();});
+  }
+  /* ----- what sessions fired, for the round counts elsewhere (guns, barrels, suppressors, ammo, Home) ----- */
+  function use(){return T.sessions.filter(s=>s.profileId&&(s.gunId||s.ammoId||s.canId)).map(s=>({id:s.id,date:s.date||"",gunId:s.gunId||null,partId:s.partId||null,canId:s.canId||null,ammoId:s.ammoId||null,rounds:sessRounds(s)})).filter(u=>u.rounds>0);}
+  window.RB_TRAIN={show(){render();},home(){if(V.view==="timer")unmount("train");V={view:"home"};render();},setData(d){if(dirty||editing())return;setData(d);changed();const P=$("panel-train");if(P&&!P.hidden&&V.view!=="timer")render();},use,
+    leave(){if(V.view==="timer"){unmount("train");V={view:"session",sid:V.sid};}},_title(){if(V.view==="timer"){const d=V.drill?drillOf(V.drill):null;$("trTitle").textContent=d?d.name:"Free run";}},_data(){return T;},_v(){return V;}};
+  document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#trBack"))backTo();});
 })();
 </script>
 <script>
