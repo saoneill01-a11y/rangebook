@@ -2,10 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.3",
+      "version": "2.43.4",
       "date": "2026-10-24",
-      "title": "Effective range, bullet drop marks, sunrise and sunset",
+      "title": "All your groups, effective range, bullet drop marks",
       "items": [
+        "Range trips: once a trip has two or more measured groups, its Targets section shows All groups together: every group on one target in its own color, with their size all together, the mean radius and where the center is. Line them up around the aim point (where it really hits) or around each group's own center (just how tight it shoots).",
+        "Shooting › a profile: a new All your groups card under the range trips puts every measured group from every trip with that profile on one target, in MOA: mean radius, the typical group with the best and worst, and the average center (a check on your zero). Show all trips, the last 90 days or, on a gun with more than one barrel, just this barrel. Trips from before this version are read once in the background to fill it in.",
         "The effective range line is now on the dope card too (on screen and printed) and in Field mode, the same way as the transonic line: an orange dashed line at that distance, and Effective range … under the card's conditions.",
         "Shooting › a profile: a new Effective range button under the chart. Turn it on and set a minimum speed, a minimum energy, or both. The chart fades everything past the distance where the bullet drops below them, with an orange dashed line labeled Effective range, and the range table gets an orange dashed line there too. When Range Book knows the bullet (Hornady ELD-X, Nosler AccuBond, AccuBond Long Range, Partition and Ballistic Tip, Berger hunting bullets, Federal Terminal Ascent, Lapua Naturalis, Cutting Edge), it shows the maker's published minimum speed with a link to where they say it, and a Use button. It's saved with each profile. The numbers are yours; Range Book doesn't decide what's ethical or legal.",
         "The range table now has a short key above it, like the dope card: the solid red line is where the bullet goes transonic, and the orange dashed line is your effective range.",

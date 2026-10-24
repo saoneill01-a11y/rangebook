@@ -1011,6 +1011,10 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .wxrow .note{flex:1 1 200px}
 .rgloc .row{margin:0 0 4px}.rgpick{display:flex;flex-direction:column;gap:8px;margin:6px 0}.rgopt{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}.rgopt .t{color:var(--fg);overflow-wrap:anywhere}.rgopt .row{margin:0;align-items:center;gap:6px 12px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
 .grid>.sunline{grid-column:1/-1;margin:0}
+.grpall{margin:10px 0 4px}.grpall .segtabs,#secAllGroups .segtabs{max-width:440px}.grpall:empty{display:none}.grpwrap{margin:10px 0 8px}.grpsvg{width:220px;height:220px;display:block}
+.grpkey{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);margin:2px 0 6px}.grpk{display:inline-flex;align-items:center;gap:6px}.grpk i{width:10px;height:10px;border-radius:50%;flex:none}
+#secAllGroups .segtabs{margin:0 0 8px}.segtabs button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:480px){.grpsvg{margin:0 auto}}
 .bdcbox{margin:14px 0 6px}.bdcbox .tablewrap{margin-top:10px}.bdcbox table.bdctbl td .note{font-size:11.5px}.bdcedit{margin-top:6px}.bdcedit .field{margin:8px 0 4px}
 .wxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0 6px}.wxgrid div{background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
 .wxgrid dt{font-size:12.5px;color:var(--muted)}.wxgrid dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
@@ -1571,6 +1575,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>On a phone, when you open a profile the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a profile (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
       <p>Every profile in the calculator has a <b>Range trips</b> log at the bottom (tap <b>Range trips</b> in the row of links at the top to jump there). Tap <b>+ New range trip</b> and fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target for this trip</b> opens a printable target with the trip's profile, date, distance and gun already filled in at the top. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, tap <b>+ Shot</b> to add one, or tap <b>− Shot</b>, tap the shots you want gone (a bad reading, an unused box) and tap <b>Delete</b>. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
+      <h3>All your groups</h3>
+      <p>Once a range trip has two or more measured groups, its <b>Targets</b> section shows <b>All groups together</b>: every group from that day on one target, each in its own color, with how big they are all together, the mean radius (the average distance of the shots from their center) and where the center is. <b>Around the aim point</b> lines them up on the aim point you marked, so you see where the gun really hits, zero shifts included; <b>Around each center</b> moves each group onto its own center, so you see only how tight it shoots. Groups at one distance are in inches (cm); mixed distances are in MOA. A group without an aim point is left out around the aim point, and the card says so.</p>
+      <p>The profile's <b>All your groups</b> card (under the trip list) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 10%.</p>
       <h3>Cold-bore shot</h3>
       <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point (right or left, high or low, in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
       <h3>Transonic</h3>
@@ -9574,11 +9581,93 @@ function queueTrips(){
 function tripsEditing(){const a=document.activeElement,r=$("tripsRoot");return a&&r&&r.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName);}
 const todayISO=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
 function tripBestTxt(b){return b?U.s("in",b.size,2)+(b.moa!=null?' ('+b.moa.toFixed(2)+' MOA)':''):"";}
-function tripSummary(t){
-  const gs=[];tripPhotos.forEach(p=>{const M=normMeasure(p.measure);if(M)M.groups.forEach(g=>{if(g.size!=null)gs.push(g);});});
+/* every measured group of a photo, as shots in MOA from its aim point (or from its own center when no aim point was
+   marked), so groups shot at different distances and on different days can be laid on one target (2.43.4) */
+function grpMoa(p){const M=normMeasure(p.measure);if(!M||!(M.distance>0))return [];const W=p.w||1,H=p.h||1;
+  let conv=null;if(M.H)conv=([x,y])=>applyH(M.H,x,y);else if(M.a&&M.b&&M.scaleIn>0){const ppi=Math.hypot((M.a[0]-M.b[0])*W,(M.a[1]-M.b[1])*H)/M.scaleIn;if(ppi>0)conv=([x,y])=>[x/ppi,y/ppi];}
+  if(!conv)return [];const k=M.distance/100*1.0472,r3=v=>Math.round(v*1000)/1000;
+  return M.groups.map((g,i)=>{const P=(g.shots||[]).map(([x,y])=>conv([x*W,y*H]));if(P.length<2)return null;
+    const C=[P.reduce((a,q)=>a+q[0],0)/P.length,P.reduce((a,q)=>a+q[1],0)/P.length],A=g.aim?conv([g.aim[0]*W,g.aim[1]*H]):C;
+    return {k:p.id+":"+(g.id||i),d:M.distance,a:g.aim?1:0,p:P.map(q=>[r3((q[0]-A[0])/k),r3((A[1]-q[1])/k)]),sz:g.size!=null?r3(g.size/k):null,mr:g.mr!=null?r3(g.mr/k):null};}).filter(Boolean);}
+function tripSumFrom(photos){
+  const gs=[];photos.forEach(p=>{const M=normMeasure(p.measure);if(M)M.groups.forEach(g=>{if(g.size!=null)gs.push(g);});});
   const best=gs.length?gs.reduce((a,b)=>b.size<a.size?b:a):null;
-  const first=tripPhotos.find(p=>!String(p.id).startsWith("tmp-"));
-  const sum={photos:tripPhotos.length,photoId:first?first.id:null,groups:gs.length,best:best?{size:best.size,moa:best.moa!=null?best.moa:null,n:best.n||null}:null};
+  const first=photos.find(p=>!String(p.id).startsWith("tmp-"));
+  return {v:2,photos:photos.length,photoId:first?first.id:null,groups:gs.length,best:best?{size:best.size,moa:best.moa!=null?best.moa:null,n:best.n||null}:null,g:photos.filter(p=>!String(p.id).startsWith("tmp-")).flatMap(grpMoa)};
+}
+/* ---------- groups laid on one target (2.43.4): every group of a trip, or of every trip with a profile ----------
+   "aim": shots from each group's aim point, so it shows where the gun really hits (zero shifts included);
+   "center": each group moved onto its own center, so it shows only how tight it shoots. */
+const GRP_COL=["var(--z1)","var(--z2)","var(--z3)","var(--z4)","var(--moa)","var(--c5)","var(--c6)","var(--accent)"];
+let GRP_MODE=(()=>{try{return localStorage.getItem("rb.grpMode")==="center"?"center":"aim";}catch(e){return "aim";}})();
+let GRP_FILTER=(()=>{try{const v=localStorage.getItem("rb.grpFilter");return v==="90"||v==="barrel"?v:"all";}catch(e){return "all";}})();
+function grpSet(groups,mode){const use=mode==="aim"?groups.filter(g=>g.a):groups,pts=[];
+  use.forEach(g=>{let P=g.p;if(mode==="center"){const cx=P.reduce((a,q)=>a+q[0],0)/P.length,cy=P.reduce((a,q)=>a+q[1],0)/P.length;P=P.map(q=>[q[0]-cx,q[1]-cy]);}P.forEach(q=>pts.push({x:q[0],y:q[1],g}));});
+  const n=pts.length;if(!n)return {use,pts,n,left:groups.length-use.length};
+  const cx=pts.reduce((a,q)=>a+q.x,0)/n,cy=pts.reduce((a,q)=>a+q.y,0)/n,mr=pts.reduce((a,q)=>a+Math.hypot(q.x-cx,q.y-cy),0)/n;
+  let es=0;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);if(d>es)es=d;}
+  return {use,pts,n,cx,cy,mr,es,left:groups.length-use.length};}
+// the plot: rings around the aim point (or the centers), shots colored by col(group), the mean-radius circle dashed
+function grpPlot(R,col,k,unit,label){const W=220,c=W/2;const far=Math.max(R.mr*1.6,...R.pts.map(q=>Math.max(Math.abs(q.x),Math.abs(q.y))))*k||1;
+  const step=[.1,.25,.5,1,2,2.5,5,10,20,50].find(v=>far/v<=3.6)||100,sc=(c-14)/(Math.ceil(far/step)*step);
+  let g='<svg class="grpsvg" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="'+esc(label)+'"><rect width="'+W+'" height="'+W+'" rx="10" fill="var(--sunk)"/>';
+  for(let r=step;r*sc<=c-6;r+=step)g+='<circle cx="'+c+'" cy="'+c+'" r="'+(r*sc).toFixed(1)+'" fill="none" stroke="var(--line)"/><text x="'+(c+r*sc*.71+2).toFixed(1)+'" y="'+(c-r*sc*.71-2).toFixed(1)+'" font-size="9" fill="var(--muted)">'+String(+r.toFixed(2))+'</text>';
+  g+='<path d="M'+(c-9)+' '+c+'H'+(c+9)+'M'+c+' '+(c-9)+'V'+(c+9)+'" stroke="var(--muted)" stroke-width="1.5"/>';
+  R.pts.forEach(q=>{g+='<circle cx="'+(c+q.x*k*sc).toFixed(1)+'" cy="'+(c-q.y*k*sc).toFixed(1)+'" r="4.2" fill="'+col(q.g)+'" fill-opacity=".85" stroke="var(--surface)" stroke-width="1"/>';});
+  const mx=c+R.cx*k*sc,my=c-R.cy*k*sc;g+='<circle cx="'+mx.toFixed(1)+'" cy="'+my.toFixed(1)+'" r="'+Math.max(2,R.mr*k*sc).toFixed(1)+'" fill="none" stroke="var(--fg)" stroke-dasharray="4 3"/><path d="M'+(mx-5).toFixed(1)+' '+my.toFixed(1)+'h10M'+mx.toFixed(1)+' '+(my-5).toFixed(1)+'v10" stroke="var(--fg)" stroke-width="2"/>';
+  return g+'<text x="8" y="'+(W-8)+'" font-size="10" fill="var(--muted)">'+esc(unit)+'</text></svg>';}
+const grpModeTabs=(on)=>'<div class="segtabs grpmode" role="radiogroup" aria-label="Line the groups up">'+[["aim","Around the aim point"],["center","Around each center"]].map(([v,t])=>'<button type="button" role="radio" data-gm="'+v+'" aria-checked="'+(v===GRP_MODE)+'" aria-selected="'+(v===GRP_MODE)+'"'+(v==="aim"&&!on?' disabled':'')+'>'+t+'</button>').join("")+'</div>';
+// the plain-language lines under a plot
+function grpLines(R,k,unit,mode){const f=v=>(v*k).toFixed(2),lr=v=>Math.abs(v*k)<.05?"":Math.abs(v*k).toFixed(1)+" "+unit+" "+(v>0?"right":"left"),ud=v=>Math.abs(v*k)<.05?"":Math.abs(v*k).toFixed(1)+" "+unit+" "+(v>0?"high":"low");
+  const both=k!==1?' ('+(R.es).toFixed(2)+' MOA)':'',bothm=k!==1?' ('+(R.mr).toFixed(2)+' MOA)':'';
+  return '<p class="tline">All together: <b>'+f(R.es)+' '+unit+'</b>'+both+'</p><p class="tline">Mean radius: <b>'+f(R.mr)+' '+unit+'</b>'+bothm+'</p>'+
+    (mode==="aim"?'<p class="tline">Center: '+([ud(R.cy),lr(R.cx)].filter(Boolean).join(", ")||"right on the aim point")+'</p>':'');}
+// A · on a range trip: every measured group from its photos
+function tripAllHtml(t){const G=(t.sum&&t.sum.g)||[];if(G.length<2)return "";
+  const anyAim=G.some(g=>g.a);if(GRP_MODE==="aim"&&!anyAim)GRP_MODE="center";
+  const R=grpSet(G,GRP_MODE);if(!R.n)return "";
+  const ds=[...new Set(R.use.map(g=>g.d))],one=ds.length===1,k=one?ds[0]/100*1.0472:1,unit=one?U.u("in"):"MOA",kk=one&&U.metric?k*2.54:k;
+  const ph=tripPhotos.filter(p=>!String(p.id).startsWith("tmp-")).map(p=>p.id);
+  const lab=g=>{const [pid,gid]=g.k.split(":"),pi=ph.indexOf(pid),same=G.filter(x=>x.k.startsWith(pid+":")),gi=same.indexOf(g);return (pi>=0?"Photo "+(pi+1):"Photo")+(same.length>1?" · group "+(gi+1):"");};
+  const col=g=>GRP_COL[G.indexOf(g)%GRP_COL.length];
+  return '<h3>All groups together</h3>'+grpModeTabs(anyAim)+
+    '<div class="coldwrap grpwrap">'+grpPlot(R,col,kk,unit,"All groups from this trip")+'<div><p class="tline"><b>'+R.n+' shots</b> in '+R.use.length+' groups'+(one?' at '+U.s("yd",ds[0],0):'')+'</p>'+grpLines(R,kk,unit,GRP_MODE)+'</div></div>'+
+    '<div class="grpkey">'+R.use.map(g=>'<span class="grpk" data-gk="'+esc(g.k)+'"><i style="background:'+col(g)+'"></i>'+esc(lab(g))+' · '+g.p.length+' shots'+(g.sz!=null?' · '+(one?U.n("in",g.sz*k,2)+' '+U.u("in"):g.sz.toFixed(2)+' MOA'):'')+'</span>').join("")+'</div>'+
+    (R.left?'<p class="note">'+R.left+' group'+(R.left===1?' has':'s have')+' no aim point marked, so '+(R.left===1?'it\'s':'they\'re')+' left out here. Mark the aim point when you measure to include '+(R.left===1?'it':'them')+'.</p>':'')+
+    '<p class="note">The dashed circle is the mean radius (the average distance of the shots from their center). Around the aim point shows where the gun really hits; around each center shows only how tight it shoots.'+(one?'':' The groups were at different distances, so it\'s in MOA.')+'</p>';}
+function bindGrpMode(root,redraw){root.querySelectorAll("[data-gm]").forEach(b=>b.addEventListener("click",()=>{if(b.disabled)return;GRP_MODE=b.dataset.gm;try{localStorage.setItem("rb.grpMode",GRP_MODE);}catch(e){}redraw();}));}
+function drawTripAll(t){const box=$("tripAll");if(!box)return;const h=tripAllHtml(t);box.innerHTML=h;box.hidden=!h;bindGrpMode(box,()=>drawTripAll(t));}
+// B · on a profile: every measured group from every trip with it
+function profGroupsHtml(T,list){
+  const hasPart=list.some(x=>x.partId)||!!T.partId,f=GRP_FILTER==="barrel"&&!hasPart?"all":GRP_FILTER,cut=Date.now()-90*864e5;
+  const tl=list.filter(x=>f==="90"?(x.date?new Date(x.date+"T12:00").getTime()>=cut:false):f==="barrel"?(x.partId||"")===(T.partId||""):true);
+  const all=list.flatMap(x=>(x.sum&&x.sum.g)||[]);if(all.length<2)return "";
+  const G=[],from=new Map();tl.forEach(x=>((x.sum&&x.sum.g)||[]).forEach(g=>{G.push(g);from.set(g,x);}));
+  const anyAim=G.some(g=>g.a);if(GRP_MODE==="aim"&&!anyAim&&G.length)GRP_MODE="center";
+  const R=grpSet(G,GRP_MODE),tabs='<div class="segtabs grpfilt" role="radiogroup" aria-label="Which trips">'+[["all","All trips"],["90","Last 90 days"]].concat(hasPart?[["barrel","This barrel"]]:[]).map(([v,t])=>'<button type="button" role="radio" data-gf="'+v+'" aria-checked="'+(v===f)+'" aria-selected="'+(v===f)+'">'+t+'</button>').join("")+'</div>';
+  let h='<section class="card" aria-label="All your groups" id="secAllGroups"><h2>All your groups</h2>'+tabs+grpModeTabs(anyAim||!G.length);
+  if(!R.n)return h+'<p class="note">No measured groups'+(f==="90"?' in the last 90 days':f==="barrel"?' with this barrel':'')+'.</p></section>';
+  const newest=tl.find(x=>((x.sum&&x.sum.g)||[]).length),ntr=new Set(R.use.map(g=>from.get(g))).size;
+  const sz=R.use.map(g=>g.sz).filter(v=>v!=null).sort((a,b)=>a-b),med=sz.length?sz[Math.floor(sz.length/2)]*(sz.length%2?1:0)+(sz.length%2?0:(sz[sz.length/2-1]+sz[sz.length/2])/2):null;
+  const ns=R.use.map(g=>g.p.length),sameN=ns.every(v=>v===ns[0]),col=g=>from.get(g)===newest?"var(--accent)":"var(--muted)";
+  h+='<div class="coldwrap grpwrap">'+grpPlot(R,col,1,"MOA","All measured groups from this profile's range trips")+'<div><p class="tline"><b>'+R.n+' shots</b>, '+R.use.length+' group'+(R.use.length===1?'':'s')+', '+ntr+' trip'+(ntr===1?'':'s')+'</p>'+
+    '<p class="tline">Mean radius: <b>'+R.mr.toFixed(2)+' MOA</b></p>'+
+    (med!=null?'<p class="tline">Typical '+(sameN?ns[0]+'-shot ':'')+'group: <b>'+med.toFixed(2)+' MOA</b>'+(sz.length>1?' (best '+sz[0].toFixed(2)+', worst '+sz[sz.length-1].toFixed(2)+')':'')+'</p>':'')+
+    (GRP_MODE==="aim"?'<p class="tline">Average center: '+([Math.abs(R.cy)<.05?"":Math.abs(R.cy).toFixed(1)+" MOA "+(R.cy>0?"high":"low"),Math.abs(R.cx)<.05?"":Math.abs(R.cx).toFixed(1)+" MOA "+(R.cx>0?"right":"left")].filter(Boolean).join(", ")||"right on the aim point")+'</p>':'')+'</div></div>'+
+    (R.left?'<p class="note">'+R.left+' group'+(R.left===1?' has':'s have')+' no aim point marked and '+(R.left===1?'is':'are')+' left out around the aim point.</p>':'')+
+    '<p class="note">Every measured group from this profile\'s range trips, scaled to MOA so different distances compare. The newest trip is in color. With '+R.n+' shots the mean radius is good to about ±'+Math.max(1,Math.round(52/Math.sqrt(R.n)))+'%; one 5-shot group can be off by 25% or more. Around the aim point shows where it really hits; around each center shows only how tight it shoots.</p></section>';
+  return h;}
+const grpTried=new Set();let grpFilling=false;
+// trips saved before 2.43.4 don't have their groups in the summary yet: read their photos once and fill it in
+async function grpBackfill(list,after){if(grpFilling)return;const need=list.filter(x=>!grpTried.has(x.id)&&!(x.sum&&x.sum.v===2)&&!(x.sum&&x.sum.photos===0));if(!need.length)return;
+  grpFilling=true;let any=false;
+  for(const x of need.slice(0,40)){grpTried.add(x.id);try{const r=await API.get("/api/trips/"+x.id+"/photos");x.sum=tripSumFrom(r.photos||[]);any=true;}catch(e){}}
+  grpFilling=false;if(any){queueTrips();after();}}
+function bindProfGroups(T,list){const sec=$("secAllGroups");if(!sec)return;const redraw=()=>{const old=$("secAllGroups");if(!old)return;const h=profGroupsHtml(T,list);if(!h){old.remove();return;}old.outerHTML=h;bindProfGroups(T,list);};
+  bindGrpMode(sec,redraw);sec.querySelectorAll("[data-gf]").forEach(b=>b.addEventListener("click",()=>{GRP_FILTER=b.dataset.gf;try{localStorage.setItem("rb.grpFilter",GRP_FILTER);}catch(e){}redraw();}));
+  if(window.foldCard)window.foldCard(sec,"allgroups");}
+function tripSummary(t){
+  const sum=tripSumFrom(tripPhotos);
   if(JSON.stringify(sum)!==JSON.stringify(t.sum||null)){t.sum=sum;queueTrips();}
 }
 function tripCtx(t){
@@ -9596,6 +9685,7 @@ function renderTripPhotos(){
   const st=$("tripPhotoState");if(st)st.textContent=tripUploading?"Uploading "+tripUploading+" photo"+(tripUploading>1?"s":"")+"…":(tripPhotos.length?"":"No target photos yet.");
   tripSummary(t);
   const b=$("tripBest");if(b){const s=t.sum;b.hidden=!(s&&s.best);if(s&&s.best)b.innerHTML='Best group this trip: <b>'+esc(tripBestTxt(s.best))+'</b>'+(s.groups>1?' · '+s.groups+' groups measured':'');}
+  drawTripAll(t);
 }
 async function uploadTripPhotos(files){
   const id=tripOpen;if(!id)return;
@@ -9759,9 +9849,10 @@ function renderTrips(){
       });
       h+='</div>';
     }
-    h+=velTempHtml(T,list)+'</section>';
+    h+=velTempHtml(T,list)+'</section>'+(tripsLoaded?profGroupsHtml(T,list):'');
     root.innerHTML=h;
-    bindVelTemp(T);
+    bindVelTemp(T);bindProfGroups(T,list);
+    if(tripsLoaded)grpBackfill(list,()=>{if(!tripOpen&&tripTraj&&tripTraj.id===T.id&&!tripsEditing())renderTrips();});
     if(window.RB_FILTER)RB_FILTER($("secTrips"),"trips");
     if(window.foldCard)window.foldCard($("secTrips"),"trips");
     $("tripAdd").addEventListener("click",newTrip);
@@ -9788,6 +9879,7 @@ function renderTrips(){
     '<h3>Targets</h3><p class="tripbest" id="tripBest" hidden></p><div class="photos" id="tripPhotoGrid"></div>'+
     '<div class="row"><label class="btn primary" for="tripPhotoIn" style="cursor:pointer">+ Add target photo</label><input id="tripPhotoIn" type="file" accept="image/*" multiple hidden><button class="btn" id="tripLive" type="button">Live target</button><button class="btn" id="tripLiveAdd" type="button">+ Saved Live target</button><span class="savestate" id="tripPhotoState"></span></div>'+
     '<p class="note">Tap a photo to measure its groups, the same way as in Reloading. Printed Range Book targets are read by themselves.</p>'+
+    '<div class="grpall" id="tripAll" hidden></div>'+
     '<div class="row tripTgt"><select id="tripTgt" class="fieldselect" aria-label="Target to print"><option value="rb5">5 aim points (Letter)</option></select><button class="btn" id="tripTgtGo" type="button">Print a target for this trip</button></div>'+
     '<p class="note">The target comes with this trip\'s load, date, distance and gun already filled in at the top.</p>'+
     '<div class="row endrow">'+(window.GUEST?'':'<button class="btn" id="tripPrint" type="button">Print trip report</button>')+'<button class="btn danger" id="tripDel" type="button">Delete this trip</button></div></section>';
