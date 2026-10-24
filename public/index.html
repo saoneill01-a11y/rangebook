@@ -9527,8 +9527,9 @@ let xlsxLib=null;
 function loadXLSX(){
   if(window.XLSX)return Promise.resolve(window.XLSX);
   if(xlsxLib)return xlsxLib;
-  const add=src=>new Promise((res,rej)=>{const sc=document.createElement("script");sc.src=src;sc.onload=()=>window.XLSX?res(window.XLSX):rej(new Error("load"));sc.onerror=()=>{sc.remove();rej(new Error("load"));};document.head.appendChild(sc);});
-  xlsxLib=add("/vendor/xlsx.full.min.js").catch(()=>add("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js")).catch(e=>{xlsxLib=null;throw e;});
+  // sri: the cdnjs copy is checked against its published hash (2.43.15); the local /vendor copy isn't
+  const add=(src,sri)=>new Promise((res,rej)=>{const sc=document.createElement("script");if(sri){sc.integrity=sri;sc.crossOrigin="anonymous";}sc.src=src;sc.onload=()=>window.XLSX?res(window.XLSX):rej(new Error("load"));sc.onerror=()=>{sc.remove();rej(new Error("load"));};document.head.appendChild(sc);});
+  xlsxLib=add("/vendor/xlsx.full.min.js").catch(()=>add("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js","sha512-r22gChDnGvBylk90+2e/ycr3RVrDi8DIOkIGNhJlKfuyQM4tIRAI062MaV8sfjQKYVGjOBaZBOA87z+IhZE9DA==")).catch(e=>{xlsxLib=null;throw e;});
   return xlsxLib;
 }
 function toISO(v){

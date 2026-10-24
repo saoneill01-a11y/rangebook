@@ -47,7 +47,7 @@ if (typeof process.getuid === "function" && process.getuid() === 0 && !/^(0|fals
   const uid = parseInt(process.env.PUID || "99", 10), gid = parseInt(process.env.PGID || "100", 10);
   const walk = (p) => { try { fs.lchownSync(p, uid, gid); } catch {} try { if (fs.lstatSync(p).isDirectory()) for (const f of fs.readdirSync(p)) walk(path.join(p, f)); } catch {} };
   walk(DATA_DIR);
-  process.setgid(gid); process.setuid(uid);
+  process.setgroups([gid]); process.setgid(gid); process.setuid(uid); // drop root's extra groups too
   console.log(`Running as uid ${uid}, gid ${gid}.`);
 }
 
@@ -322,12 +322,15 @@ function getUser(req, res) {
   return row;
 }
 setInterval(() => { try { q("DELETE FROM sessions WHERE expires<?").run(now()); } catch {} }, 3600000).unref();
+// failed sign-ins older than the 15-minute window are dropped every 10 minutes, so the map can't grow without end
+setInterval(() => { const t = now(); for (const [k, f] of fails) if (t - f.first > 15 * 60000) fails.delete(k); }, 600000).unref();
 
 /* ---------------- login throttling ---------------- */
 const fails = new Map();
 function clientIp(req) {
   if (TRUST_PROXY && req.headers["cf-connecting-ip"]) return String(req.headers["cf-connecting-ip"]).trim(); // Cloudflare tunnel
-  if (TRUST_PROXY && req.headers["x-forwarded-for"]) return String(req.headers["x-forwarded-for"]).split(",")[0].trim();
+  // the last address is the one your own proxy added (Nginx, Caddy and Traefik append; anything before it came from the client)
+  if (TRUST_PROXY && req.headers["x-forwarded-for"]) { const xs = String(req.headers["x-forwarded-for"]).split(","); return xs[xs.length - 1].trim(); }
   return req.socket.remoteAddress || "?";
 }
 function throttled(key) {
@@ -424,6 +427,7 @@ function mergeSave(uid, timesKey, body, theirs, theirsAt) {
   const mine = body.data ?? null, at = now();
   const t0 = Number(body.t) > 0 ? Math.min(Number(body.t), at) : at; // when the change was made (a queued offline change sends its own time)
   const ct = body.times && typeof body.times === "object" ? body.times : null;
+  if (ct && Object.keys(ct).length > 5000) throw new HttpError(400, "That save has too much edit history.");
   const tMine = (p) => Math.min(MERGE.timeAt(ct, p, t0), at);
   const st = getTimes(uid, timesKey);
   let data = mine;
@@ -527,7 +531,7 @@ async function api(req, res, url) {
   /* ---- auth ---- */
   if (p === "/api/login" && method === "POST") {
     const { username, password } = await readJson(req);
-    const uname = String(username || "").trim();
+    const uname = String(username || "").trim().slice(0, 40); // usernames are at most 40; keeps the throttle key small
     const key = clientIp(req) + "|" + uname.toLowerCase();
     if (throttled(key)) throw new HttpError(429, "Too many failed sign-ins. Wait 15 minutes and try again.");
     const u = q("SELECT * FROM users WHERE username=?").get(uname);
@@ -603,7 +607,7 @@ async function api(req, res, url) {
   if (p === "/api/backup.zip" && method === "GET") return sendExport(res, user.id, "zip");
   /* ---- import a backup or an Excel export into your own account (adds; skips what's already here) ---- */
   if (p === "/api/import" && method === "POST") {
-    const buf = await readBody(req, 700 * 1024 * 1024);
+    const buf = await readBody(req, 200 * 1024 * 1024);
     if (!buf.length) throw new HttpError(400, "Pick a file to import.");
     let r;
     try { r = backups().importInto(user.id, buf); } catch (e) { throw new HttpError(400, e && e.message ? e.message : "That file couldn't be imported."); }

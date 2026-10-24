@@ -37,7 +37,7 @@ function unzip(buf) {
       if (buf.readUInt32LE(loc) !== 0x04034b50) throw new Error("bad zip entry");
       const start = loc + 30 + buf.readUInt16LE(loc + 26) + buf.readUInt16LE(loc + 28), raw = buf.subarray(start, start + csize);
       if (method === 0) return Buffer.from(raw);
-      if (method === 8) return zlib.inflateRawSync(raw);
+      if (method === 8) return zlib.inflateRawSync(raw, { maxOutputLength: 256 * 1024 * 1024 }); // no zip bombs: 256 MB per file at most
       throw new Error("unsupported zip compression");
     });
   }
