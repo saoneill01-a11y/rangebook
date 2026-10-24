@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.11",
+      "version": "2.43.12",
       "date": "2026-10-24",
       "title": "Bigger text, and the effective range numbers in a pop-up",
       "items": [
+        "Suppressors on a gun: the gun's page only lists your suppressors rated for its cartridge or bigger (no rimfire-only can on a centerfire gun), and + Add a suppressor from a gun only shows those from the list. A suppressor's Used on list works the same way. One you've already ticked stays, with its warning, and one with no rating filled in is always listed.",
         "Training: a new drill, training profile or session that you leave without changing anything is no longer kept, the same as + Add everywhere else. Name it, or fill in anything, and it stays.",
         "Text size: under More › Account › Text size, pick Normal, Large or Larger. Every word in Range Book gets bigger; charts, pictures and printed pages stay the same size. It follows your account to your other devices.",
         "Effective range: the numbers moved off the page into a pop-up. The button under the chart still turns the line on and off, and the pencil next to it opens the minimum speed and energy (it opens by itself the first time, when there aren't any yet). The chart stays uncluttered.",
