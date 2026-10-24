@@ -12563,8 +12563,11 @@ function bottomGap(){let b=24;const pts=[[innerWidth/2,innerHeight-4],[24,innerH
 const touchOnly=matchMedia("(pointer: coarse)");
 function update(){const bb=touchOnly.matches&&("ontouchstart" in window)?null:current();cur=bb;document.documentElement.classList.toggle("rbbackpad",!!bb);
   if(!bb||document.querySelector('[role="dialog"]:not([hidden])')&&[...document.querySelectorAll('[role="dialog"]')].some(shown)){if(!fb.hidden)fb.hidden=true;return;}
-  const r=bb.getBoundingClientRect();let off=r.bottom<4||r.top>innerHeight;
-  if(!off){const hit=document.elementFromPoint(Math.max(1,r.left+r.width/2),Math.max(1,r.top+r.height/2));off=!(hit&&(hit===bb||bb.contains(hit)));}
+  /* how far down the bar that stays at the top reaches (its full box, so gaps inside it don't count as "visible") */
+  let cover=0;for(let n=document.elementFromPoint(Math.max(1,bb.getBoundingClientRect().left+4),2);n&&n!==document.body&&n!==document.documentElement;n=n.parentElement){const cs=getComputedStyle(n);if(cs.position==="fixed"||cs.position==="sticky"){cover=Math.max(0,n.getBoundingClientRect().bottom);break;}}
+  const r=bb.getBoundingClientRect();
+  /* show once half the link is out of sight; hide only when all of it is back, so it doesn't blink at the edge */
+  const off=fb.hidden?(r.top+r.height/2<cover||r.top>innerHeight):!(r.top>=cover&&r.bottom<=innerHeight);
   if(off){const t=bb.textContent.trim();if(fb.textContent!==t)fb.textContent=t;fb.setAttribute("aria-label",bb.getAttribute("aria-label")||t);fb.style.bottom=bottomGap()+"px";}
   if(fb.hidden!==!off)fb.hidden=!off;}
 let raf=0;const soon=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;update();});};

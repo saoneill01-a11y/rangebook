@@ -2,11 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.42.30",
+      "version": "2.42.31",
       "date": "2026-10-23",
       "title": "Transonic on the chart, table and dope card",
       "items": [
         "On a computer, the back link (‹ Guns, ‹ Profiles, ‹ Loads and so on) now follows you: once you scroll down past it on a gun, optic, suppressor, profile, load or any other page with one, it floats at the bottom left. Click it to go back. Those pages scroll a little further at the bottom so the bubble never covers the last button. Phones and tablets don't show it, since you can swipe in from the left edge to go back.",
+        "Fixed: the floating back button could blink off for a moment as you scrolled just past the top of a page on a computer.",
         "Pictures of guns, optics, suppressors, inventory and magazines show the whole picture in their thumbnails instead of cutting off the sides. In the lists, the rest of the square is see-through; on the item's page and in the photo grids (gun, gear and box photos), it gets plain bars.",
         "Gear & Ranges: the Search box on Guns, Optics, Suppressors and Inventory also finds serial numbers (a built gun by its lower's serial too), even typed without the dashes or spaces. Optics and Suppressors now get the Search box too once the list is long.",
         "Paste or drop a picture: on a computer, copy a picture or take a screenshot and press Ctrl+V (⌘V on a Mac), or drag a picture or file onto the page. It goes to the + Add button on that screen (gun and gear photos, reticle pictures, target and box photos, documents, chronograph and import files), as if you'd picked it with the button. While you drag, the card it will land in gets a dashed outline; if a screen has more than one, drop it on the one you want. Pasting text into a box still pastes text.",
