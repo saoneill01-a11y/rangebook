@@ -1590,7 +1590,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li>Enter each group's size in <b>Group size</b> (center to center of the two widest holes), or measure it from a target photo (below). The <b>Distance</b> is entered once at the top of the ladder. The MOA is worked out for you, so groups shot at different distances can be compared.</li>
       </ol>
       <h3>Reference</h3>
-      <p><a class=goto href=#go data-go=ref>Reloading › Reference</a> has reference lists for reloading. Pick one with the buttons at the top (<b>Library</b> opens <a class=goto href=#go data-go=tools:lib>Tools › Library</a>, with every built-in list):</p>
+      <p><a class=goto href=#go data-go=ref>Reloading › Reference</a> has reference lists for reloading. Pick one with the buttons at the top (<b>Library</b> opens <a class=goto href=#go data-go=tools:lib>Tools › Library</a>, with every built-in list; its <b>‹ Reference</b> button brings you back here):</p>
       <ul>
         <li><b>Cartridges</b>: every cartridge Range Book knows, with its bullet diameter, maximum case length, the usual trim-to length (0.010" under the maximum), maximum overall length and primer size. Tap one for notes (like brass that takes a different primer) or to fix it for your own use. It's the same list as Cartridges in <a class=goto href=#go data-go=tools:lib:cart>Tools › Library</a>.</li>
         <li><b>Bullet diameters</b>: the cartridges grouped by the bullet diameter they actually use, so you can see which share bullets, with the common mix-ups (.308 vs .311, .355 vs .357, .452 vs .458). Tap a cartridge to open it.</li>
@@ -6278,7 +6278,7 @@ function libItems(kind,skip){const D=LIB_DEF[kind],L=D.list();if(!L||!L.length)r
 window.RB_LIBPAGE=(function(){
   let list=null,q="",open=null,lim=150;
   const TITLE=k=>k==="cart"?"Cartridges":LIB_DEF[k].title;
-  function head(){const b=$("toolsBack"),t=$("toolsTitle");if(b)b.textContent=list?"‹ Library":"‹ Tools";if(t)t.textContent=list?TITLE(list):"Library";}
+  function head(){const b=$("toolsBack"),t=$("toolsTitle");if(b)b.textContent=list?"‹ Library":(window.RB_TOOLS&&RB_TOOLS.fromLabel&&RB_TOOLS.fromLabel())||"‹ Tools";if(t)t.textContent=list?TITLE(list):"Library";}
   function landing(){const n=RB_LIB.counts(),f=v=>v==null?"…":v.toLocaleString();
     if(n.bullets==null||n.scopes==null||n.cans==null)RB_LIB.load().then(()=>{if(!list&&visible())draw();});
     const row=(go,name,d,v,ed)=>'<button class="loaditem librow" type="button" data-libgo="'+go+'"><span class="ltext"><span class="t">'+name+(ed?' <span class="chip crchg">'+ed+' edited</span>':'')+'</span><span class="d">'+d+'</span></span>'+(v!==undefined?'<b class="libn">'+f(v)+'</b>':'')+'</button>';
@@ -10488,13 +10488,18 @@ function helpGo(topic){
 const GO_CARD={backup:"Back up and export",import:"Import",units:"Units",theme:"Theme",tabs:"Phone tab bar",feedback:"Feedback",vault:"Document vault",password:"Change password",adduser:"Add a user"};
 function flashEl(el){if(!el)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{el.scrollIntoView({block:"start",behavior:"smooth"});const f=el.querySelector("h2")||el;
   clearTimeout(f._hft);f.classList.remove("hflash");void f.offsetWidth;f.classList.add("hflash");f._hft=setTimeout(()=>f.classList.remove("hflash"),2200);}));}
+const GO_BACKNAME={home:"Home",traj:"Shooting",rel:"Reloading",ref:"Reference",brass:"Components",rnotes:"Notes",rifles:"Gear & Ranges",log:"Range log",account:"Account",admin:"Admin",help:"How to Use",sheetimp:"Import"};
 window.RB_GO=function(spec){
   closeInfo(true);closeMore();document.querySelectorAll(".arrwrap").forEach(e=>e.remove());
   const hi=spec.indexOf("#",1),main=hi>0?spec.slice(0,hi):spec,anchor=hi>0?spec.slice(hi+1):"";
   const ci=main.indexOf(":"),tab=ci>0?main.slice(0,ci):main,sub=ci>0?main.slice(ci+1).replace(/_/g," "):"";
   if(tab==="help"){helpGo(sub||"#hStart");return;}
   if(tab==="tour"){$("more-tour").click();return;}
-  if(tab==="tools"){if(window.RB_TOOLS)RB_TOOLS.open(sub||null);else showTab("tools");if(anchor)flashEl($(anchor));return;}
+  if(tab==="tools"){
+    /* 2.42.34: the Library opened from another page (Reloading › Reference, Home, a note's link) keeps a way back there */
+    let from=null;if(/^(lib|cart)/.test(sub)){const here=tabs.find(k=>{const p=$("panel-"+k);return p&&!p.hidden;});
+      if(here&&here!=="tools"&&GO_BACKNAME[here])from={tab:here,label:GO_BACKNAME[here],y:window.scrollY};}
+    if(window.RB_TOOLS)RB_TOOLS.open(sub||null,from?{from}:undefined);else showTab("tools");if(anchor)flashEl($(anchor));return;}
   showTab(tab);
   if(tab==="rifles"&&sub){const b=document.querySelector('#rifSeg [data-garea="'+sub+'"]');if(b)b.click();}
   if(tab==="brass"&&sub){const b=document.querySelector('#compTabs [data-ck="'+sub+'"]');if(b)b.click();}
@@ -11256,7 +11261,7 @@ window.RB_TOOLS=(function(){
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
   const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono"];
   const TITLES={cmp:"Compare trajectories",chrono:"Chronograph import check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
-  let tool=null, pending=null, rel=null, ready=false;
+  let tool=null, pending=null, rel=null, ready=false, FROM=null;
   const TILE_DEFAULT=[...document.querySelectorAll("#toolTiles [data-tooltile]")].map(b=>b.dataset.tooltile);      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   // a box in the person's units <-> the imperial value behind it
@@ -11272,7 +11277,7 @@ window.RB_TOOLS=(function(){
     $("toolTiles").hidden=!!tool;$("toolsArr").hidden=!!tool;
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
     $("toolsBack").hidden=!tool;$("toolsSub").hidden=!!tool;$("toolsTitle").textContent=tool?TITLES[tool]:"Tools";
-    $("toolsBack").textContent="‹ Tools";
+    $("toolsBack").textContent=tool&&FROM?"‹ "+FROM.label:"‹ Tools";
     if(tool==="lib"&&window.RB_LIBPAGE)RB_LIBPAGE.show(libSub);
     if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
     if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();
@@ -11444,7 +11449,9 @@ window.RB_TOOLS=(function(){
     $("pw_j").addEventListener("change",powderCalc);$("pw_from").addEventListener("change",e=>powderFill(e.target.value));
     document.querySelectorAll("[data-tooltile]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.tooltile;
       if(t==="targets"){if(window.APP_showTab)APP_showTab("targets");return;}view(t);window.scrollTo(0,0);}));
-    $("toolsBack").addEventListener("click",()=>{if(tool==="lib"&&window.RB_LIBPAGE&&RB_LIBPAGE.back())return;view(null);window.scrollTo(0,0);});
+    $("toolsBack").addEventListener("click",()=>{if(tool==="lib"&&window.RB_LIBPAGE&&RB_LIBPAGE.back())return;
+      if(FROM){const f=FROM;FROM=null;if(window.APP_showTab)APP_showTab(f.tab);requestAnimationFrame(()=>window.scrollTo(0,f.y||0));return;}
+      view(null);window.scrollTo(0,0);});
     // your own order for the tiles: press and hold (or drag with a mouse) to move one
     const tileOrder=()=>{RB_ORDER.apply("tools",$("toolTiles"),"[data-tooltile]","data-tooltile");$("toolsReorder").hidden=!RB_ORDER.get("tools");};
     tileOrder();RB_ORDER.on(tileOrder);
@@ -11466,9 +11473,10 @@ window.RB_TOOLS=(function(){
   }
   return {
     // showTab tells us Tools (or its Targets page) is on screen: the Tools tab opens to the tiles
-    shown(t,R){rel=R||rel;setup();if(t==="tools"){view(pending);pending=null;}},
+    shown(t,R){rel=R||rel;setup();if(t==="tools"){if(pending==null)FROM=null;view(pending);pending=null;}},
+    fromLabel(){return FROM?"‹ "+FROM.label:null;},
     // open a tool from elsewhere, e.g. Shooting's twist warning
-    open(t,o){pending=t;if(o&&o.hit)hitPick=o.hit;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
+    open(t,o){pending=t;FROM=(o&&o.from)||null;if(o&&o.hit)hitPick=o.hit;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
   };
 })();
 </script>
