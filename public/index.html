@@ -12557,7 +12557,7 @@ const shown=el=>!!(el&&!el.hidden&&el.offsetParent!==null&&el.getClientRects().l
 function current(){return [...document.querySelectorAll(".panel:not([hidden]) .backbtn")].find(shown)||null;}
 function bottomGap(){let b=24;const pts=[[innerWidth/2,innerHeight-4],[24,innerHeight-4]];
   for(const [x,y] of pts){let n=document.elementFromPoint(x,y);for(;n&&n!==document.body&&n!==document.documentElement;n=n.parentElement){if(n===fb)break;const cs=getComputedStyle(n);
-    if(cs.position==="fixed"||cs.position==="sticky"){const r=n.getBoundingClientRect();if(r.top>innerHeight/2)b=Math.max(b,innerHeight-r.top+14);break;}}}
+    if(cs.position==="fixed"){const r=n.getBoundingClientRect();if(r.top>innerHeight/2&&r.bottom>=innerHeight-2)b=Math.max(b,innerHeight-r.top+14);break;}}} /* only a bar pinned to the bottom of the window, not something in the page that sticks while it scrolls by */
   return b;}
 /* phones and tablets swipe back from the left edge (or use Android's Back), so the bubble is only for a mouse */
 const touchOnly=matchMedia("(pointer: coarse)");
