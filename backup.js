@@ -16,7 +16,7 @@ const path = require("node:path");
 const zlib = require("node:zlib");
 const crypto = require("node:crypto");
 
-const DOC_KEYS = ["calc", "brass", "rifles", "components", "prefs", "trips", "ammo", "notes"];
+const DOC_KEYS = ["calc", "brass", "rifles", "components", "prefs", "trips", "ammo", "notes", "training"];
 const DATA_SHEET = "RangeBook data";
 
 /* ---------- reading a .zip (backups and .xlsx files are both zips) ---------- */

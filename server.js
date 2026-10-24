@@ -447,7 +447,7 @@ function collectUser(uid) {
   }));
   const photos = q("SELECT id, load_id, ladder_id, caption, file, w, h, measure, created_at FROM photos WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, measure: parseMeasure(r.measure) }));
   const tripPhotos = q("SELECT id, trip_id, caption, file, w, h, measure, created_at FROM trip_photos WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, measure: parseMeasure(r.measure) }));
-  return { user, loads, photos, tripPhotos, brass: getDoc(uid, "brass"), calc: getDoc(uid, "calc"), rifles: getDoc(uid, "rifles"), components: getDoc(uid, "components"), trips: getDoc(uid, "trips"), ammo: getDoc(uid, "ammo"), notes: getDoc(uid, "notes"), prefs: getDoc(uid, "prefs") };
+  return { user, loads, photos, tripPhotos, brass: getDoc(uid, "brass"), calc: getDoc(uid, "calc"), rifles: getDoc(uid, "rifles"), components: getDoc(uid, "components"), trips: getDoc(uid, "trips"), ammo: getDoc(uid, "ammo"), notes: getDoc(uid, "notes"), prefs: getDoc(uid, "prefs"), training: getDoc(uid, "training") };
 }
 function sendGunExport(res, uid, kind) {
   const d = collectUser(uid);
@@ -644,7 +644,7 @@ async function api(req, res, url) {
   }
 
   /* ---- per-user documents: calculator state, brass notes ---- */
-  let m = /^\/api\/doc\/(calc|brass|rifles|components|prefs|trips|ammo|notes)$/.exec(p);
+  let m = /^\/api\/doc\/(calc|brass|rifles|components|prefs|trips|ammo|notes|training)$/.exec(p);
   if (m) {
     if (method === "GET") return send(res, 200, { data: getDoc(user.id, m[1]) });
     if (method === "PUT") {

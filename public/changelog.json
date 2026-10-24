@@ -2,10 +2,13 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.6",
+      "version": "2.43.7",
       "date": "2026-10-24",
-      "title": "Suppressor shift, all your groups, effective range",
+      "title": "Shot timer and Training",
       "items": [
+        "New: Tools › Shot timer. Tap Start, wait for the beep (random 2 to 5 seconds, 3 seconds, or right away) and shoot: the phone's microphone hears each shot, and you get the first-shot time and every split, to the hundredth. A par time adds a second beep and tells you how far over or under you were. It knows its own beeps by their pitch, so they never count as shots. Remove anything that wasn't a shot with ×, fill in your hits and save. Sensitivity, an echo filter for indoor ranges, and Dry fire (beeps only, no microphone).",
+        "Bluetooth speaker: pair one in your phone's settings and the beep plays through it (no special browser needed). Set Speaker to Bluetooth and tap Measure the delay once: the timer beeps five times, listens for itself and takes the Bluetooth delay off every run.",
+        "New tab: Training, with your drills and saved runs. Six common drills are built in (Bill drill, El Presidente, FAST, 5×5, Failure to stop, Draw to first shot) and you can add your own. Each shows your best and last time and a chart of your runs; open one for every run and Start this drill. On a phone it's under More (you can put it on the bar).",
         "Suppressor on or off: on a range trip with a suppressor picked, mark the groups (under All groups together) and chronograph strings you shot without it. The trip shows the difference, like \"0.6 MOA higher and 0.3 MOA right, 18 fps faster\", and the gun's page adds up every trip for each suppressor. No second profile needed.",
         "Shooting › a profile: Conditions › Suppressor picks Off or a suppressor (it follows what's on the gun until you pick), and Zeroed with says how you zeroed. When they differ, the measured shift goes into the trajectory, the chart, range table, dope card and reticle hold, and the dope card says so.",
         "Tools › Library: Bullets and Factory ammo now have a Min. expansion speed, the lowest impact speed the maker says the bullet opens up at, for every one whose maker publishes it (Nosler AccuBond, AccuBond Long Range, Partition and Ballistic Tip, Hornady ELD-X, Berger hunting bullets, Lapua Naturalis, Federal Terminal Ascent). They show as \"opens down to …\" in the list, and you can edit them like any other number. A Shooting profile using that ammo offers the number under Effective range (yours, if you've changed it).",

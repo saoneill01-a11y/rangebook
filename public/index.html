@@ -1011,6 +1011,18 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .wxrow .note{flex:1 1 200px}
 .rgloc .row{margin:0 0 4px}.rgpick{display:flex;flex-direction:column;gap:8px;margin:6px 0}.rgopt{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}.rgopt .t{color:var(--fg);overflow-wrap:anywhere}.rgopt .row{margin:0;align-items:center;gap:6px 12px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
 .grid>.sunline{grid-column:1/-1;margin:0}
+/* shot timer and Training (2.43.7) */
+.tmdrill{align-items:center;gap:10px}.tmdrill select{flex:1 1 220px;min-width:0}.tmhow{margin:6px 0 0}
+.tmbig{font:600 72px/1.05 var(--mono);text-align:center;letter-spacing:-1px;margin:14px 0 2px;font-variant-numeric:tabular-nums}
+.tmsub{text-align:center;color:var(--muted);font-size:14px;min-height:1.4em;margin-bottom:12px}.tmpar.over{color:var(--danger,#c92a2a)}.tmpar.under{color:var(--accent)}
+.tmgo{display:flex;gap:10px;margin-bottom:10px}.tmgo .btn{flex:1;height:58px;font-size:20px}
+.tmroot.tmlive .tmbig{color:var(--accent)}
+.tmmeter{position:relative;height:8px;border-radius:4px;background:var(--sunk);border:1px solid var(--line);overflow:visible;margin:4px 0 8px}.tmmeter span{display:block;height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .05s}.tmmeter i{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--fg);left:30%}
+table.tmtbl{width:100%;border-collapse:collapse;font:15px var(--mono);font-variant-numeric:tabular-nums;margin:4px 0 10px}table.tmtbl td,table.tmtbl th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}table.tmtbl th{font:600 12px var(--body);color:var(--muted)}table.tmtbl td:first-child,table.tmtbl th:first-child{text-align:left}.tmx{font-size:18px;padding:0 6px}
+.tmset{margin-top:12px}.tmsave{margin:6px 0 4px}.tmmore{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tmmore summary{cursor:pointer;font-weight:600}.tmmore>*+*{margin-top:10px}
+.trdrill .trspark{display:block;width:100%;height:40px;margin:6px 0 2px}.trspark{display:block;width:100%;height:46px;margin:4px 0}
+table.trtbl{width:100%;border-collapse:collapse;font-size:13.5px}table.trtbl td,table.trtbl th{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}table.trtbl th{font-size:12px;color:var(--muted);font-weight:600}
+
 .grpall{margin:10px 0 4px}.grpall .segtabs,#secAllGroups .segtabs{max-width:440px}.grpall:empty{display:none}.grpwrap{margin:10px 0 8px}.grpsvg{width:220px;height:220px;display:block}
 .grpkey{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);margin:2px 0 6px}.grpk{display:inline-flex;align-items:center;gap:6px}.grpk i{width:10px;height:10px;border-radius:50%;flex:none}
 #secAllGroups .segtabs{margin:0 0 8px}
@@ -1282,6 +1294,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <button class="tab" role="tab" id="tab-rel" aria-controls="panel-rel" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l3-5 3 5v12z"/><path d="M9 15h6"/></svg><span>Reloading</span></button>
     <button class="tab" role="tab" id="tab-rifles" aria-controls="panel-rifles" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg><span>Gear &amp; Ranges</span></button>
     <button class="tab" role="tab" id="tab-tools" aria-controls="panel-tools" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.1L4 16.8V20h3.2l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.6-.6-.6-2.6z"/></svg><span>Tools</span></button>
+    <button class="tab" role="tab" id="tab-train" aria-controls="panel-train" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5M18.3 6.8l1.5-1.5"/></svg><span>Training</span></button>
     <button class="tab wideonly" role="tab" id="tab-admin" aria-controls="panel-admin" aria-selected="false" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M17 11h5M19.5 8.5v5"/></svg><span>Admin</span></button>
     <button class="tab wideonly" role="tab" id="tab-help" aria-controls="panel-help" aria-selected="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg><span>How to Use</span></button>
     <button class="tab narrowonly" id="tab-more" type="button" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg><span>More</span></button>
@@ -1295,6 +1308,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <button class="moreitem" role="menuitem" id="more-rel" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l3-5 3 5v12z"/><path d="M9 15h6"/></svg>Reloading</button>
       <button class="moreitem" role="menuitem" id="more-rifles" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg>Gear &amp; Ranges</button>
       <button class="moreitem" role="menuitem" id="more-tools" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.1L4 16.8V20h3.2l5.2-5.2a4 4 0 0 0 5.1-5.3l-2.4 2.4-2.6-.6-.6-2.6z"/></svg>Tools</button>
+      <button class="moreitem" role="menuitem" id="more-train" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5M18.3 6.8l1.5-1.5"/></svg>Training</button>
       <button class="moreitem" role="menuitem" id="more-help" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>How to Use</button>
       <button class="moreitem" role="menuitem" id="more-tour" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>Take the tour</button>
       <button class="moreitem" role="menuitem" id="more-new" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg>What's new</button>
@@ -1484,7 +1498,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
 
   <div class="panel" id="panel-help" role="tabpanel" aria-labelledby="tab-help" hidden>
-    <nav class="jump helpnav" id="helpNav" aria-label="Help sections"><a href="#hNew">What's new</a><a href="#hStart">Getting started</a><a href="#hShoot">Shooting</a><a href="#hRel">Reloading</a><a href="#hGuns">Gear &amp; Ranges</a><a href="#hTools">Tools</a><a href="#hFine">Fine print</a><a href="#hLimits">Limits</a></nav>
+    <nav class="jump helpnav" id="helpNav" aria-label="Help sections"><a href="#hNew">What's new</a><a href="#hStart">Getting started</a><a href="#hShoot">Shooting</a><a href="#hRel">Reloading</a><a href="#hGuns">Gear &amp; Ranges</a><a href="#hTools">Tools</a><a href="#hTrain">Training</a><a href="#hFine">Fine print</a><a href="#hLimits">Limits</a></nav>
     <header><h1>How to Use</h1><p class="sub">Everything you need to get started, measure your gun and log your loads.</p><div class="row helptour"><button class="btn primary" id="tourBtnTop" type="button">Take the tour</button><span class="note">A one-minute walk through the basics.</span></div></header>
     <section class="card guide" aria-label="What's new" id="hNew"><h2>What's new</h2><div id="relNotes"><p class="note">Loading…</p></div></section>
     <section class="card guide" aria-label="Getting started" id="hStart">
@@ -1494,7 +1508,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The admin makes your account and gives you a temporary password. The first time you sign in you'll choose your own. To change it later, tap <b>More</b> at the bottom right, then <b>Account</b> (on a computer, <b>Account</b> is at the top right). Want a different name shown (on shared loads, box photos and the greeting on Home)? Ask the admin; they can change it with <b>Edit name</b> on the Admin page.</p>
       <h3>Colors</h3>
       <p>To use metric, go to <a class=goto href=#go data-go=account:units>More › Account › Units</a> and tap <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
-      <p>On a phone, the bar along the bottom shows four tabs and <b>More</b>. To choose which four, and their order, go to <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a> and tap <b>Choose the tabs</b>: tick <b>In the bar</b> for up to four (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and How to Use) and drag them into order. The rest are under <b>More</b>. A computer always shows every tab along the top.</p>
+      <p>On a phone, the bar along the bottom shows four tabs and <b>More</b>. To choose which four, and their order, go to <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a> and tap <b>Choose the tabs</b>: tick <b>In the bar</b> for up to four (Home, Shooting, Reloading, Gear &amp; Ranges, Tools, Training and How to Use) and drag them into order. The rest are under <b>More</b>. A computer always shows every tab along the top.</p>
       <p>Pick a color theme under <a class=goto href=#go data-go=account:theme>More › Account › Theme</a>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange, Plum, Lavender or Red Night. Under the themes, pick <b>Woodland camo</b> or <b>Digital camo</b> for a faint camo pattern behind the page in your theme's colors, or <b>Plain</b> for none. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
       <h3>Getting around</h3>
       <p>Range Book opens on <b>Home</b>: buttons to start a range day or a new load, anything that needs attention (components running low, a barrel near the end of its life, a gun due for cleaning), your rounds fired this month and year, your recent range trips, <b>Recent reloading</b> (the loads you've worked on lately), your <b>Most used guns</b> (your favorites first, then the guns with the most rounds, with their photos; up to six, and <b>All guns ›</b> for the rest), and <b>Built in Library</b>: how many bullets, cartridges, powders, factory ammo, scopes and primers are built in. Tap a number to open that list, or <b>Open Library ›</b> for the Library page under Reloading › Reference, which lists everything built in with its count and shows the bullets by maker. On a computer, Recent range trips and Recent reloading sit side by side, Most used guns gets its own column on the right (on a narrower screen like a tablet it goes under them), and Built in Library runs across the bottom; on a phone the cards are one under another. <b>Arrange Home</b> at the bottom puts the cards in your order and turns off the ones you don't need. Tap <b>Range Book</b> at the top to get back to it. On a phone the sections are along the bottom: <b>Home</b>, <b>Shooting</b>, <b>Reloading</b>, <b>Gear &amp; Ranges</b> and <b>More</b> (How to Use, Admin, Account and Sign out). On a computer they're across the top. At the top of <b>Reloading</b>, <b>Loads | Components</b> switches between your recipes and your components; at the top of <b>Shooting</b>, <b>Profiles | Range log</b> does the same, and <b>Tools</b> opens to a tile for each calculator. When you open a load, profile or gun, <b>‹ Loads</b>, <b>‹ Profiles</b> or <b>‹ Guns</b> above its name takes you back to the list. On a phone or tablet you can also swipe in from the left edge of the screen to go back up a level (from a range trip to the profile's trips, from a load or profile to the list, from a gun to your guns), and the phone's own Back button does the same. Each tab (Home, Shooting, Reloading, Gear &amp; Ranges, Tools and Account) has a <b>Tour</b> button at the top right (▶ on a phone) that walks you through what that tab does, card by card; it may open the SAMPLE load to show you around, but it doesn't change anything. Next to it, <b>Help</b> (? on a phone) opens How to Use at the part about what you're looking at; tap <b>‹ Back to…</b> at the bottom to go back where you were. On Shooting, Reloading, Gear &amp; Ranges and Tools, the cards also have a small <b>ⓘ</b> next to their title: tap it for a quick how-to for that card, and <b>More in How to Use ›</b> for the full story.</p>
@@ -1803,8 +1817,17 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Live target</b>: the spotting-scope camera without a profile, load or range trip. Set the bullet diameter, distance and shots per aim point, tap <b>Start Live target</b>, and use it the same way (see Live target under Reloading). <b>Save</b> keeps the target photo and its measured groups in your Range Book, listed under <b>Saved</b> on that page (with no signal, it waits on the phone and uploads later). Tap a saved one to see it, fix its marks with <b>Edit measurement</b>, or bring it into a range trip or a reloading ladder with <b>Move to</b>. A range trip also has <b>+ Saved Live target</b>. After saving, <b>Share picture</b> gives you a picture with every group drawn on it and its size, MOA, mean radius and center underneath, to keep in Photos or send to someone. Saved Live targets are in your backups too.</li>
         <li><b>Cartridges</b>: the cartridge list Range Book uses for bullet diameters and its warnings, with each one's SAAMI maximum case length and overall length, trim-to length and primer size (also under <a class=goto href=#go data-go=ref:cart>Reloading › Reference</a>) and what else is safe in that chamber. It's for reference only. Fix anything you find wrong (changed boxes are colored, with <b>Revert</b>) or add your own; <a class=goto href=#go data-go=help:Cartridges>Cartridges</a> (in the Gear &amp; Ranges help) has more.</li>
         <li><b>Targets</b>: the printable targets (see Shooting above).</li>
+        <li><b>Shot timer</b>: a start beep, then your first shot and every split, with a par time. See <a class=goto href=#go data-go=help:Shot_timer>Training › Shot timer</a>.</li>
       </ul>
       <p>On a Shooting profile with a bullet length and twist filled in, a warning also appears at the top when the bullet isn't fully stable in that twist under today's conditions, with a <b>Check it in Tools</b> button.</p>
+    </section>
+    <section class="card guide" aria-label="Training" id="hTrain"><h2>Training</h2>
+      <p><b>Training</b> (a tab on a computer, or <a class=goto href=#go data-go=train>More › Training</a> on a phone; you can put it on the phone's bar under <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a>) keeps your drills and every shot timer run you save. Each drill shows its shots, distance and par time, your best and last time and a small chart of your runs. Tap one to see every run (date, time, first shot, the fastest and slowest split, hits and gun), change your par time, or tap <b>Start this drill</b>. Six common drills are built in (Bill drill, El Presidente, FAST, 5×5, Failure to stop and Draw to first shot); <b>+ New drill</b> adds your own with its shots, distance, par and how it's shot. Runs without a drill are under <b>Free runs</b>. Delete a run with <b>×</b> (you can undo it).</p>
+      <h3>Shot timer</h3>
+      <p><a class=goto href=#go data-go=tools:timer>Tools › Shot timer</a> works like a shot timer at a match. Pick a drill (or none), tap <b>Start</b> and wait for the beep: <b>Random</b> waits 2 to 5 seconds, <b>3 s</b> always 3, <b>Now</b> beeps right away. Then shoot: the phone's microphone hears each shot and shows its time, with the first shot and every split. With a <b>Par time</b> a second, higher beep marks it, and the result says how far over or under par you were. It stops by itself after the drill's last shot, or tap <b>Stop</b>. Then fill in your hits, pick the gun if you like, and tap <b>Save to Training</b>; tap <b>×</b> next to anything that wasn't a shot first (an echo, the next bay). The screen stays on while it's open.</p>
+      <p>Under <b>Microphone and speaker</b>: <b>Sensitivity</b> (Low next to other loud shooters, High for a suppressed or quiet gun; the bar shows what the microphone hears and the mark where a sound counts as a shot), <b>Echo filter</b> for indoor ranges (it ignores a second sound within 0.15 s), and <b>Dry fire</b>: beeps only, no microphone, and each one you save counts as a rep. The timer knows its own beeps by their pitch, so they're never counted as shots, even a shot fired the moment the par beep sounds.</p>
+      <p><b>Bluetooth speaker.</b> Phone speakers aren't loud. Pair a Bluetooth speaker in your phone's own settings (no special browser needed) and the beep plays through it. Bluetooth reaches your ears a little late, about 0.1 to 0.3 seconds, which would make every time look slow, so set <b>Speaker</b> to <b>Bluetooth</b>, put the phone next to the speaker with the volume up and tap <b>Measure the delay</b>: it beeps five times, listens for them and takes that delay off every run. You can measure the phone's own speaker too (it's usually tiny). A speaker with a built-in microphone (a speakerphone) can take over the phone's microphone; a plain speaker is better.</p>
+      <p>The microphone only works on the <b>https</b> address. Nothing is recorded: Range Book keeps only the times. A busy line with several people shooting at once will confuse any phone timer; keep the phone close to you.</p>
     </section>
     <section class="card guide terms" aria-label="The fine print" id="hFine"><h2>The fine print</h2><div class="termsbody"><h2>Shooting is dangerous.</h2>
 <p>Guns are loud, fast and unforgiving. Gunpowder sitting in your garage is too. You knew that, but the lawyers in my head insisted.</p>
@@ -1854,9 +1877,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     
     <div id="targetsRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
+  <div class="panel" id="panel-train" role="tabpanel" aria-labelledby="tab-train" hidden>
+    <header class="phead"><button class="backbtn" id="trBack" type="button" hidden>‹ Training</button><h1 id="trTitle">Training</h1><p class="sub" id="trSub">Drills and your shot timer runs.</p></header>
+    <div class="col trroot" id="trRoot"></div>
+  </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved unless you ask.</p></header>
-    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="lib"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16 5l3.6-.9 3 15.5-3.6.9z"/></svg></span><span class="t">Library</span><span class="d">Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Look anything up, fix it for your own use, or add it to yours.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph import check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="timer"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5M18.3 6.8l1.5-1.5"/></svg></span><span class="t">Shot timer</span><span class="d">A start beep, then your first shot and every split, with a par time. Works with a Bluetooth speaker.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="lib"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16 5l3.6-.9 3 15.5-3.6.9z"/></svg></span><span class="t">Library</span><span class="d">Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Look anything up, fix it for your own use, or add it to yours.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph import check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter and 11 × 17 targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <p class="note toolsarr" id="toolsArr">Press and hold a tool to move it (on a computer, drag it).<span id="toolsReorder" hidden> <button class="linkbtn" type="button" id="toolsReorderGo">Put them back in the usual order</button></span></p>
     <div class="tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
       <section class="card qcbar"><p class="note toolnote">The full Shooting calculator, without making a profile: pick a gun and ammo or type the numbers, and every card below works (chart, point-blank range, range table, true-up, dope card, saved ranges). Nothing is saved to your profiles; this device remembers the last numbers until you tap <b>Reset</b>.</p>
@@ -1914,6 +1941,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div id="lt_saved"></div>
       <p class="note">It needs Range Book's https address: phones only allow the camera on a secure address. <b>Listen for shots</b> (on the Live target screen) uses the microphone instead of the Shot button; use it only when nobody is shooting near you.</p>
     </section>
+    <section class="card tool" data-toolsec="timer" aria-label="Shot timer" hidden><div id="tmRoot" class="tmroot"></div></section>
     <section class="card tool" data-toolsec="cmp" aria-label="Compare trajectories" hidden>
       <p class="note toolnote">Plot up to six bullets on one chart, all with the same zero, sight height and air. Fill one in from a Shooting profile, your ammo or the factory catalog, or type the numbers. Nothing is saved to your profiles.</p>
       <div id="cmpRows"></div>
@@ -10389,6 +10417,8 @@ function restore(w){return firstLoad.then(()=>{
   else return;
   if(w.y>0)setTimeout(()=>window.scrollTo(0,w.y),350);
 });}
+// guns for the shot timer's run log (2.43.7)
+window.RB_GUNS=()=>rifles.map(gunSpec).map(r=>({id:r.id,name:r.name||"Gun"}));
 function toolData(){
   return {bullets:comps.bullets.map(c=>({id:c.id,label:[c.mfr,c.name,num(c.weight)>0?num(c.weight)+" gr":""].filter(Boolean).join(" "),w:num(c.weight),d:num(c.caliber),l:num(c.length)})).filter(b=>b.w>0),
     rifles:rifles.map(gunSpec).map(r=>({id:r.id,label:r.name||"Gun",twist:num(r.twist)})).filter(r=>r.twist>0),
@@ -10585,7 +10615,7 @@ function makeGuestAPI(){
         if(method==="DELETE"){delete st.loads[m[1]];Object.keys(st.photos).forEach(k=>{if(st.photos[k].loadId===m[1])delete st.photos[k];});return {ok:true};}
       }
       if(/^\/api\/loads\/[^/]+\/shares$/.test(url))return {ok:true,sharedWith:[]};
-      if((m=/^\/api\/doc\/(calc|brass|rifles|components|trips|ammo)$/.exec(url))){
+      if((m=/^\/api\/doc\/(calc|brass|rifles|components|trips|ammo|training)$/.exec(url))){
         if(method==="GET")return {data:clone(st.docs[m[1]]||null)};
         if(method==="PUT"){st.docs[m[1]]=clone(body.data);return {ok:true};}
       }
@@ -10704,10 +10734,10 @@ let confirmSignOut=false;
 
 /* ---------- main app ---------- */
 let started=false, REL=null, ME=null;
-const tabs=["home","traj","rel","help","brass","rnotes","ref","targets","log","rifles","tools","admin","account","sheetimp"];
+const tabs=["home","traj","rel","help","brass","rnotes","ref","targets","log","rifles","tools","train","admin","account","sheetimp"];
 const TAB_PARENT={brass:"rel",rnotes:"rel",ref:"rel",targets:"tools",log:"traj",sheetimp:"account"};
 // the phone's bottom bar: your choice of up to four tabs (the rest go under More)
-const PHONE_TABS=[["home","Home"],["traj","Shooting"],["rel","Reloading"],["rifles","Gear & Ranges"],["tools","Tools"],["help","How to Use"]];
+const PHONE_TABS=[["home","Home"],["traj","Shooting"],["rel","Reloading"],["rifles","Gear & Ranges"],["tools","Tools"],["train","Training"],["help","How to Use"]];
 const phoneTabs=()=>{const v=RB_ORDER.get("phonetabs");const ok=Array.isArray(v)?v.filter(k=>PHONE_TABS.some(x=>x[0]===k)).slice(0,4):[];return ok.length?ok:["home","traj","rel","rifles"];};
 function applyPhoneTabs(){const on=phoneTabs();
   PHONE_TABS.forEach(([k])=>{const b=$("tab-"+k),i=on.indexOf(k);if(b){b.classList.toggle("phoneon",i>=0);b.classList.toggle("phoneoff",i<0);b.style.setProperty("--po",i>=0?i:50);}
@@ -10728,6 +10758,8 @@ function showTab(t,remember){
   if(t==="targets"&&window.RB_TARGETS)RB_TARGETS();
   if(t==="account"&&window.RB_VAULT_ACCT)RB_VAULT_ACCT();
   if((t==="tools"||t==="targets")&&window.RB_TOOLS)RB_TOOLS.shown(t,REL);
+  if(t!=="tools"&&window.RB_TIMER)RB_TIMER.hide();
+  if(t==="train"&&window.RB_TRAIN)RB_TRAIN.show();
   if(t==="log"&&REL)REL.onLog();
   if(t==="rifles"&&REL)REL.onRifles();
   if(t==="brass"&&REL)REL.onComps();
@@ -10787,7 +10819,7 @@ const INFO={
   "@Live target":{head:1,t:"Live target",b:"Put your phone on a spotting scope and it marks each shot on a printed target as it lands. Set the bullet diameter, distance and shots per aim point and tap <b>Start Live target</b>. Saved targets are listed under <b>Saved</b>, where <b>Move to</b> puts one into a range trip or a ladder. <b>Watch</b> shows a phone's Live target on this screen.",h:"Live target (phone on a spotting scope)"},
   "@Printable targets":{t:"Printable targets",b:"Tap <b>Open PDF to print</b> and print at <b>Actual size</b>. Photograph the target with all four corner squares showing and Range Book measures the groups by itself, or point Live target at it. The two-page targets tape together into one big target.",h:"Printable targets"}
 };
-const HELP_TOOL={twist:"tool:Stability",moa:"tool:MOA/MIL",powder:"tool:Powder",conv:"tool:Convert",hit:"tool:Hit chance",live:"Live target (phone on a spotting scope)",cart:"Cartridges",lib:"Library"};
+const HELP_TOOL={timer:"Shot timer",twist:"tool:Stability",moa:"tool:MOA/MIL",powder:"tool:Powder",conv:"tool:Convert",hit:"tool:Hit chance",live:"Live target (phone on a spotting scope)",cart:"Cartridges",lib:"Library"};
 const shownEl=id=>{const e=$(id);return !!(e&&!e.hidden&&e.offsetParent);};
 // the How to Use topic closest to what's on screen
 function helpTopic(tab){
@@ -10805,12 +10837,13 @@ function helpTopic(tab){
     return document.querySelector('#panel-rifles [aria-label="Round count"]')?"Round count and barrel life":"Guns";}
   if(tab==="tools"){const t=document.querySelector("[data-toolsec]:not([hidden])");return t&&HELP_TOOL[t.dataset.toolsec]||"#hTools";}
   if(tab==="targets")return "Printable targets";
+  if(tab==="train")return "#hTrain";
   if(tab==="account")return "Back up, export and import";
   return "#hStart";
 }
 let helpFrom=null;
 const curTab=()=>tabs.find(k=>{const p=$("panel-"+k);return p&&!p.hidden;})||"home";
-const TAB_NAMES={home:"Home",traj:"Shooting",log:"Range log",rel:"Reloading",brass:"Components",rnotes:"Notes",ref:"Reference",rifles:"Gear & Ranges",tools:"Tools",targets:"Printable targets",account:"Account"};
+const TAB_NAMES={home:"Home",traj:"Shooting",log:"Range log",rel:"Reloading",brass:"Components",rnotes:"Notes",ref:"Reference",rifles:"Gear & Ranges",tools:"Tools",train:"Training",targets:"Printable targets",account:"Account"};
 function helpFind(topic){
   const P=$("panel-help");if(!P||!topic)return null;
   if(topic[0]==="#")return P.querySelector(topic);
@@ -10896,7 +10929,7 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&$("infoSheet")&&!$("infoSheet").hidden){e.stopPropagation();closeInfo();}
 },true);
 // a Help button at the top of each tab page
-["home","traj","log","rel","brass","rnotes","ref","rifles","tools","targets","account"].forEach(t=>{
+["home","traj","log","rel","brass","rnotes","ref","rifles","tools","train","targets","account"].forEach(t=>{
   const P=$("panel-"+t),H=P&&P.querySelector(":scope>header");if(!H)return;
   H.classList.add("hashelp");
   const b=document.createElement("button");b.type="button";b.className="helpbtn";b.dataset.help=t;
@@ -11118,7 +11151,7 @@ async function startApp(user,api){
   $("moreBack").addEventListener("click",closeMore);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMore();});
   setupGoUp();setupPullRefresh();
-  ["help","admin","account","tools","home","traj","rel","rifles"].forEach(k=>$("more-"+k).addEventListener("click",()=>showTab(k)));
+  ["help","admin","account","tools","train","home","traj","rel","rifles"].forEach(k=>$("more-"+k).addEventListener("click",()=>showTab(k)));
   applyPhoneTabs();RB_ORDER.on(applyPhoneTabs);
   $("ptGo").addEventListener("click",()=>{const cur=phoneTabs(),all=PHONE_TABS.map(x=>x[0]),ids=cur.concat(all.filter(k=>!cur.includes(k)));
     RB_ARRANGE({title:"Phone tab bar",note:"Pick up to four tabs for the bar along the bottom of your phone, and drag them into order. The rest are under <b>More</b>. On a computer every tab shows at the top.",
@@ -11345,6 +11378,14 @@ function startTabTour(tab){
       {el:()=>q("#gnAdd"),t:"Notes",b:"Notes about your gear, with pictures and files. Tick <b>Lock in the vault</b> on a note to encrypt it and everything on it with your vault passphrase.",go:area("notes")},
       END];
   }
+  if(tab==="train"){
+    const list=()=>{showTab("train",false);if(window.RB_TRAIN)RB_TRAIN.home();};
+    STEPS=[
+      {t:"The Training tab",b:"Your drills and the shot timer runs you've saved, with your progress on each drill.",go:list},
+      {el:()=>q("#trTimer"),t:"Shot timer",b:"Opens Tools › Shot timer: a start beep, then every shot's time from the microphone, with a par time.",go:list},
+      {el:()=>q(".trdrill"),t:"Drills",b:"Each drill shows its shots, distance and par, your best and last time and a small chart. Tap one for every run and <b>Start this drill</b>.",go:list},
+      {el:()=>q("#trAdd"),t:"Your own drills",b:"Add a drill with its shots, distance, par time and how it's shot.",go:list},
+      END];}
   if(tab==="tools"||tab==="targets"){
     const tiles=()=>{showTab("tools",false);click("#toolsBack");};
     STEPS=[
@@ -11355,6 +11396,7 @@ function startTabTour(tab){
       {el:()=>q('[data-tooltile="chrono"]'),t:"Chronograph import check",b:"See how Range Book reads your chronograph's export, string by string, before you import it. Suspicious shots are marked.",go:tiles},
       {el:()=>q('[data-tooltile="lib"]'),t:"Library",b:"Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes and suppressors. Tap anything to see all of it, fix a number for your own use (<b>Revert</b> puts it back), or add it to yours.",go:tiles},
       {el:()=>q('[data-tooltile="hit"]'),t:"Hit chance",b:info("@Hit chance"),go:tiles},
+      {el:()=>q('[data-tooltile="timer"]'),t:"Shot timer",b:"A start beep, then your first shot and every split from the microphone, with a par time. Works with a Bluetooth speaker. Save runs to the Training tab.",go:tiles},
       {el:()=>q('[data-tooltile="live"]'),t:"Live target",b:info("@Live target"),go:tiles},
       {el:()=>q('[data-tooltile="targets"]'),t:"Printable targets",b:info("@Printable targets"),go:tiles},
       END];
@@ -11608,8 +11650,8 @@ API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)l
 window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
-  const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono"];
-  const TITLES={cmp:"Compare trajectories",chrono:"Chronograph import check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
+  const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono","timer"];
+  const TITLES={timer:"Shot timer",cmp:"Compare trajectories",chrono:"Chronograph import check",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
   let tool=null, pending=null, rel=null, ready=false, FROM=null;
   const TILE_DEFAULT=[...document.querySelectorAll("#toolTiles [data-tooltile]")].map(b=>b.dataset.tooltile);      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -11630,6 +11672,7 @@ window.RB_TOOLS=(function(){
     if(tool==="lib"&&window.RB_LIBPAGE)RB_LIBPAGE.show(libSub);
     if(window.RB_TRAJ){if(tool==="traj")RB_TRAJ.scratchOn($("qcSlot"));}
     if(tool==="cmp"&&window.RB_CMP)RB_CMP.show();if(tool==="chrono"&&window.RB_CHTOOL)RB_CHTOOL.show();
+    if(window.RB_TIMER){if(tool==="timer")RB_TIMER.show();else RB_TIMER.hide();}
     if(tool==="twist")twistFrom();if(tool==="powder")powderFrom();if(tool==="live")liveFrom();if(tool==="hit")hitFrom();
   }
   /* ----- hit chance: the shot lands in a spread made of your group, velocity spread, wind call and range error ----- */
@@ -11982,6 +12025,228 @@ window.RB_CHTOOL=(function(){
     $("chIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";if(f.length)read(f);});
     $("chClear").addEventListener("click",()=>{$("chOut").innerHTML="";$("chClear").hidden=true;});}
   return {show(){wire();}};
+})();
+</script>
+<script>
+/* ---------- Shot timer (Tools › Shot timer) and the Training tab (2.43.7) ----------
+   The timer beeps after a start delay, then listens with the microphone: shotwork.js (an audio worklet) finds the start of
+   each shot to the sample, so the first-shot time and splits are exact. A par time adds a second beep. With a Bluetooth
+   speaker the beep reaches you late (0.1–0.3 s), so "Measure the delay" beeps a few times, listens for its own beeps and
+   takes that delay off every time (it works for the phone's own speaker too). Runs are saved to the "training" document:
+   {drills:[your drills], runs:[{id,drill,name,date,at,shots:[s],par,hits,of,gun,dry}], par:{built-in drill id: your par}}.
+   Settings stay on this device (localStorage rb.timer). Nothing is recorded: only the times are kept. */
+(function(){
+  const $=id=>document.getElementById(id),U=window.U;
+  const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const num=v=>{if(v==null||v==="")return null;const n=+String(v).replace(",",".");return isFinite(n)?n:null;};
+  const f2=v=>(Math.round(v*100)/100).toFixed(2);
+  const todayISO=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+  const newId=()=>"tr"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  /* ----- drills: a few well-known ones built in (your par kept in T.par), plus your own ----- */
+  const BUILT=[
+    {id:"b-bill",name:"Bill drill",shots:6,dist:7,par:2.5,how:"From the holster, six shots as fast as you can keep every one in the A-zone (or an 8-inch circle)."},
+    {id:"b-elpres",name:"El Presidente",shots:12,dist:10,par:10,how:"Three targets a yard apart. Start facing away with your hands up; turn, draw, two on each, reload, two more on each."},
+    {id:"b-fast",name:"FAST",shots:6,dist:7,par:10,how:"Fundamentals, Accuracy and Speed Test: two into a 3×5 card, reload, then four into an 8-inch circle."},
+    {id:"b-5x5",name:"5×5",shots:5,dist:5,par:5,how:"Five shots into a 5-inch circle from 5 yards in 5 seconds."},
+    {id:"b-fts",name:"Failure to stop",shots:3,dist:7,par:3,how:"Two to the body, then one to the head (also called the Mozambique)."},
+    {id:"b-draw",name:"Draw to first shot",shots:1,dist:7,par:1.5,how:"One shot from the holster: a clean, quick draw."}];
+  let T={drills:[],runs:[],par:{}},loaded=false,loading=null,saveT=null,saving=Promise.resolve();
+  function load(){if(loaded)return Promise.resolve();if(loading)return loading;
+    loading=(window.API?API.get("/api/doc/training"):Promise.reject()).then(r=>{const d=r&&r.data;if(d&&typeof d==="object")T={drills:Array.isArray(d.drills)?d.drills:[],runs:Array.isArray(d.runs)?d.runs:[],par:d.par&&typeof d.par==="object"?d.par:{}};}).catch(()=>{}).then(()=>{loaded=true;loading=null;});
+    return loading;}
+  function save(){clearTimeout(saveT);saveT=setTimeout(()=>{saving=saving.then(()=>API.put("/api/doc/training",{data:JSON.parse(JSON.stringify(T))})).catch(()=>{});},400);}
+  const drills=()=>BUILT.map(b=>Object.assign({},b,{par:T.par[b.id]!==undefined?T.par[b.id]:b.par,built:true})).concat(T.drills.map(d=>Object.assign({},d)));
+  const drillOf=id=>drills().find(d=>d.id===id)||null;
+  function setPar(id,v){const b=BUILT.find(x=>x.id===id);if(b){if(v===b.par)delete T.par[id];else T.par[id]=v;}else{const d=T.drills.find(x=>x.id===id);if(d)d.par=v;}save();}
+  const runTime=r=>r.shots&&r.shots.length?r.shots[r.shots.length-1]:null;
+  const gunList=()=>(window.RB_GUNS?RB_GUNS():[]);
+  const gunName=id=>{if(!id)return "";const g=gunList().find(x=>x.id===id);return g?g.name:"";};
+
+  /* ----- settings on this device ----- */
+  const SENS={low:{th:.5,ratio:8},normal:{th:.28,ratio:6},high:{th:.12,ratio:5}};
+  let S=(()=>{let o=null;try{o=JSON.parse(localStorage.getItem("rb.timer")||"null");}catch(e){}o=o&&typeof o==="object"?o:{};
+    return {delay:["now","fixed","random"].includes(o.delay)?o.delay:"random",sens:SENS[o.sens]?o.sens:"normal",echo:!!o.echo,spk:o.spk==="bt"?"bt":"phone",lat:o.lat&&typeof o.lat==="object"?o.lat:{},dry:!!o.dry,drill:o.drill||"",gun:o.gun||""};})();
+  const keep=()=>{try{localStorage.setItem("rb.timer",JSON.stringify(S));}catch(e){}};
+  const lat=()=>{const v=num(S.lat[S.spk]);return v!=null?v:(S.spk==="bt"?0.2:0);};
+
+  /* ----- sound: the beeps out, the worklet listening in ----- */
+  let ctx=null,node=null,mic=null,src=null,lastPk=0,listen=null;
+  async function audioOn(needMic){
+    if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)throw new Error("This browser can't make sounds for the timer.");ctx=new AC();}
+    if(ctx.state!=="running")await ctx.resume();
+    if(needMic&&!node){
+      if(!window.isSecureContext||!navigator.mediaDevices)throw new Error("The microphone only works on the https:// address. Open Range Book through it, or use Dry fire (beeps only).");
+      try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});}
+      catch(e){throw new Error(e&&e.name==="NotAllowedError"?"Microphone access is blocked. Allow it for this site in your browser's settings, or use Dry fire (beeps only).":"Couldn't start the microphone.");}
+      const v=(document.querySelector('meta[name="rb-version"]')||{}).content||"";
+      await ctx.audioWorklet.addModule("/shotwork.js"+(v&&v.indexOf("__")<0?"?v="+encodeURIComponent(v):""));
+      src=ctx.createMediaStreamSource(mic);node=new AudioWorkletNode(ctx,"rb-shots",{numberOfInputs:1,numberOfOutputs:1});
+      const mute=ctx.createGain();mute.gain.value=0;src.connect(node);node.connect(mute).connect(ctx.destination); // keeps it running
+      node.port.onmessage=e=>{const d=e.data||{};if(d.pk!=null){lastPk=Math.max(d.pk,lastPk*.85);meter();}if(d.t!=null&&listen)listen(d.t,d.a,d.tone||0);};
+      sens();}
+  }
+  function sens(cal){if(!node)return;const s=cal?{th:.04,ratio:3}:SENS[S.sens];node.port.postMessage({th:s.th,ratio:s.ratio,gap:cal?.3:S.echo?.15:.08});}
+  function audioOff(){listen=null;try{if(src)src.disconnect();if(node)node.disconnect();}catch(e){}if(mic)mic.getTracks().forEach(t=>t.stop());mic=src=node=null;if(ctx){ctx.close().catch(()=>{});ctx=null;}}
+  function beep(at,dur,freq){const o=ctx.createOscillator(),g=ctx.createGain();o.type="square";o.frequency.value=freq||2400;
+    g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(.8,at+.004);g.gain.setValueAtTime(.8,at+dur-.015);g.gain.linearRampToValueAtTime(0,at+dur);
+    o.connect(g).connect(ctx.destination);o.start(at);o.stop(at+dur+.02);}
+  function meter(){const m=$("tmMeter");if(m){const w=Math.min(100,Math.round(Math.sqrt(lastPk)*100)),th=Math.round(Math.sqrt(SENS[S.sens].th)*100);m.firstChild.style.width=w+"%";m.lastChild.style.left="calc("+th+"% - 1px)";}}
+
+  /* ----- one run ----- */
+  const BEEP=.25;
+  let R={state:"idle"},raf=0,stopT=null,wake=null;
+  const curDrill=()=>S.drill?drillOf(S.drill):null;
+  const parNow=()=>{const v=num(($("tm_par")||{}).value);return v>0?v:null;};
+  async function go(){
+    if(R.state==="wait"||R.state==="run"){stop();return;}
+    const msg=$("tmMsg");msg.textContent="";msg.classList.remove("err");
+    try{await audioOn(!S.dry);}catch(e){msg.textContent=e.message;msg.classList.add("err");return;}
+    const d=curDrill(),par=parNow(),delay=S.delay==="now"?.6:S.delay==="fixed"?3:2+Math.random()*3,L=lat();
+    const t0=ctx.currentTime+delay;beep(t0,BEEP,2400);if(par)beep(t0+par,.15,3200);
+    R={state:"wait",t0,L,par,drill:d,shots:[],dry:S.dry,want:d?d.shots:null,heard:L};
+    // the mic hears the beeps too: a sound that's mostly the beep's pitch is the beep, not a shot (shotwork.js says how tonal)
+    listen=(t,a,tone)=>{if(R.state!=="run"&&R.state!=="wait")return;if(t<t0+L)return;if(tone>.35)return;
+      const s=t-t0-L;R.shots.push(s);R.state="run";draw();
+      if(R.want&&R.shots.length>=R.want){clearTimeout(stopT);stopT=setTimeout(stop,1200);}};
+    clearTimeout(stopT);stopT=setTimeout(stop,(delay+(par?par+2:0)+60)*1000);
+    draw();tick();
+  }
+  function tick(){cancelAnimationFrame(raf);if(R.state!=="wait"&&R.state!=="run")return;
+    const now=ctx?ctx.currentTime:0;
+    if(R.state==="wait"&&now>=R.t0){R.state="run";draw();}
+    if(R.state==="run"&&!R.shots.length){const b=$("tmBig");if(b)b.textContent=f2(Math.max(0,now-R.t0));if(R.dry&&R.par&&now>R.t0+R.par+1){stop();return;}}
+    raf=requestAnimationFrame(tick);}
+  function stop(){clearTimeout(stopT);cancelAnimationFrame(raf);if(R.state==="wait"){R={state:"idle"};draw();return;}if(R.state!=="run")return;R.state="done";draw();}
+  const splitTxt=a=>{if(a.length<2)return "";const sp=a.slice(1).map((v,i)=>v-a[i]);return "splits "+f2(Math.min(...sp))+(sp.length>1?"–"+f2(Math.max(...sp)):"");};
+  function sumTxt(){const a=R.shots,p=R.par;if(R.dry)return p?"Dry fire: the second beep was the par time.":"Dry fire.";
+    if(!a.length)return R.state==="done"?"No shots heard. Turn Sensitivity up, or check the microphone level bar while you shoot.":"Listening…";
+    const last=a[a.length-1];return a.length+" shot"+(a.length===1?"":"s")+" · first "+f2(a[0])+(a.length>1?" · "+splitTxt(a):"")+(p?" · "+(last<=p?f2(p-last)+" under par":f2(last-p)+" over par"):"");}
+  function draw(){const root=$("tmRoot");if(!root||root.hidden)return;
+    const st=R.state,big=$("tmBig"),sub=$("tmSub"),gob=$("tmGo");
+    root.classList.toggle("tmlive",st==="wait"||st==="run");
+    if(st==="idle"){big.textContent="0.00";sub.textContent=S.dry?"Dry fire: beeps only, no microphone.":"Tap Start, then wait for the beep.";}
+    else if(st==="wait"){big.textContent="0.00";sub.textContent="Stand by…";}
+    else{const a=R.shots;if(a.length)big.textContent=f2(a[a.length-1]);sub.innerHTML=esc(sumTxt()).replace(/(\d+\.\d\d) (over|under) par/,'<b class="tmpar $2">$1 $2 par</b>');}
+    gob.textContent=st==="wait"||st==="run"?"Stop":st==="done"?"Again":"Start";gob.classList.toggle("danger",st==="wait"||st==="run");
+    $("tmShots").innerHTML=R.shots&&R.shots.length?'<table class="tmtbl"><thead><tr><th>Shot</th><th>Time</th><th>Split</th><th></th></tr></thead><tbody>'+R.shots.map((v,i)=>'<tr><td>'+(i+1)+'</td><td>'+f2(v)+'</td><td>'+(i?f2(v-R.shots[i-1]):'first')+'</td><td>'+(st==="done"?'<button class="linkbtn tmx" type="button" data-tmx="'+i+'" aria-label="Not a shot: remove '+(i+1)+'">×</button>':'')+'</td></tr>').join("")+'</tbody></table>':'';
+    const done=$("tmDone");done.hidden=st!=="done";
+    if(st==="done"){const n=R.want||R.shots.length;$("tm_hits").placeholder=n?"of "+n:"";}
+    root.querySelectorAll("[data-tmx]").forEach(b=>b.addEventListener("click",()=>{R.shots.splice(+b.dataset.tmx,1);draw();}));
+  }
+  function saveRun(){const d=R.drill,hits=num($("tm_hits").value),gun=$("tm_gun").value||null;
+    if(!R.dry&&!R.shots.length){const m=$("tmMsg");m.textContent="No shots to save.";return;}
+    T.runs.push({id:newId(),drill:d?d.id:null,name:d?d.name:"Free run",date:todayISO(),at:Date.now(),shots:R.shots.map(v=>Math.round(v*1000)/1000),par:R.par||null,hits:hits!=null?hits:null,of:R.want||null,gun,dry:R.dry||undefined});
+    S.gun=gun||"";keep();save();R={state:"idle"};$("tm_hits").value="";draw();
+    const m=$("tmMsg");m.innerHTML='Saved to <a class=goto href=#go data-go=train>Training</a>.';}
+  /* ----- measuring the speaker's delay: beep five times, listen for each, keep the middle value ----- */
+  async function measure(){const out=$("tmLatMsg");out.classList.remove("err");
+    try{await audioOn(true);}catch(e){out.textContent=e.message;out.classList.add("err");return;}
+    out.textContent="Listening for 5 beeps…";const btn=$("tmLatGo");btn.disabled=true;sens(true);
+    const heard=[],at=[];for(let k=0;k<5;k++){const t=ctx.currentTime+.5+k*.9;at.push(t);beep(t,.12,2400);}
+    listen=t=>heard.push(t);
+    await new Promise(r=>setTimeout(r,5200));listen=null;sens();btn.disabled=false;
+    const ds=at.map(t=>{const h=heard.find(x=>x>=t-.005&&x<=t+.6);return h!=null?h-t:null;}).filter(v=>v!=null).sort((a,b)=>a-b);
+    if(ds.length<3){out.textContent="Couldn't hear the beeps clearly ("+ds.length+" of 5). Turn the volume up, put the phone right next to the speaker and try again.";out.classList.add("err");return;}
+    const v=ds[Math.floor(ds.length/2)];S.lat[S.spk]=Math.round(v*1000)/1000;keep();latTxt();out.textContent="Done: "+Math.round(v*1000)+" ms. Times now start when you actually hear the beep.";}
+  function latTxt(){const e=$("tmLatNow");if(!e)return;const v=num(S.lat[S.spk]);e.textContent=v!=null?"Delay "+Math.round(v*1000)+" ms ("+(S.spk==="bt"?"Bluetooth":"phone speaker")+")":S.spk==="bt"?"Not measured yet: times use 0.2 s until you do.":"Not measured (usually tiny on the phone's own speaker).";}
+
+  /* ----- the Tools page ----- */
+  const seg=(attr,list,v,lab)=>'<div class="segtabs" role="radiogroup" aria-label="'+esc(lab)+'">'+list.map(([k,t])=>'<button type="button" role="radio" '+attr+'="'+k+'" aria-checked="'+(k===v)+'" aria-selected="'+(k===v)+'">'+esc(t)+'</button>').join("")+'</div>';
+  function drillOpts(){return '<option value="">No drill (free run)</option>'+drills().map(d=>'<option value="'+esc(d.id)+'"'+(d.id===S.drill?' selected':'')+'>'+esc(d.name)+' · '+d.shots+' shot'+(d.shots===1?'':'s')+(d.dist?' · '+esc(U.s("yd",d.dist,0)):'')+'</option>').join("");}
+  function build(){const root=$("tmRoot");if(!root)return;const d=curDrill();
+    root.innerHTML='<div class="row tmdrill"><label for="tm_drill" class="note" style="margin:0">Drill</label><select id="tm_drill" class="fieldselect">'+drillOpts()+'</select></div>'+
+      (d&&d.how?'<p class="note tmhow">'+esc(d.how)+'</p>':'')+
+      '<div class="tmbig" id="tmBig" aria-live="polite">0.00</div><div class="tmsub" id="tmSub"></div>'+
+      '<div class="tmgo"><button class="btn primary" type="button" id="tmGo">Start</button></div>'+
+      (S.dry?'':'<div class="tmmeter" id="tmMeter" title="Microphone level; the mark is the sensitivity"><span></span><i></i></div>')+
+      '<p class="note" id="tmMsg" aria-live="polite"></p><div id="tmShots"></div>'+
+      '<div id="tmDone" hidden><div class="grid tmsave"><div class="field"><label for="tm_hits">Hits</label><input id="tm_hits" type="number" inputmode="numeric" step="1" min="0"></div>'+
+        '<div class="field"><label for="tm_gun">Gun</label><select id="tm_gun" class="fieldselect"><option value="">Not noted</option>'+gunList().map(g=>'<option value="'+esc(g.id)+'"'+(g.id===S.gun?' selected':'')+'>'+esc(g.name)+'</option>').join("")+'</select></div></div>'+
+        '<div class="row"><button class="btn primary" type="button" id="tmSave">Save to Training</button><button class="btn" type="button" id="tmToss">Throw it away</button></div><p class="note">Tap <b>×</b> next to anything that wasn\'t a shot (an echo, the next bay).</p></div>'+
+      '<div class="grid tmset"><div class="field"><label for="tm_par">Par time (s)</label><input id="tm_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d&&d.par?d.par:"")+'"></div>'+
+        '<div class="field"><label>Start delay</label>'+seg("data-tmdelay",[["now","Now"],["fixed","3 s"],["random","Random"]],S.delay,"Start delay")+'</div></div>'+
+      '<p class="note">'+(S.delay==="random"?'Random waits 2 to 5 seconds after Start, then beeps.':S.delay==="fixed"?'Beeps 3 seconds after Start.':'Beeps right away.')+' With a par time, a second, higher beep marks it.</p>'+
+      '<details class="tmmore"><summary>Microphone and speaker</summary>'+
+        '<label class="switch" for="tm_dry"><input id="tm_dry" type="checkbox" role="switch"'+(S.dry?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Dry fire</b><span class="note">Beeps only (start and par), no microphone.</span></span></label>'+
+        '<div class="field"><label>Sensitivity</label>'+seg("data-tmsens",[["low","Low"],["normal","Normal"],["high","High"]],S.sens,"Sensitivity")+'<p class="note">Low for a loud line next to other shooters; High for a suppressed or quiet gun, or a phone farther away. The bar shows what the microphone hears and the mark where a sound counts as a shot.</p></div>'+
+        '<label class="switch" for="tm_echo"><input id="tm_echo" type="checkbox" role="switch"'+(S.echo?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Echo filter</b><span class="note">Indoors or between walls: ignores a second sound within 0.15 s (normally 0.08 s).</span></span></label>'+
+        '<div class="field"><label>Speaker</label>'+seg("data-tmspk",[["phone","Phone"],["bt","Bluetooth"]],S.spk,"Speaker")+
+          '<p class="note">Phone speakers aren\'t loud. Pair a Bluetooth speaker in your phone\'s own settings and the beep plays through it. Bluetooth reaches your ears a little late, so measure its delay once: put the phone next to the speaker, turn the volume up and tap <b>Measure the delay</b>. A speaker with its own microphone (a speakerphone) can take over the phone\'s microphone; a plain one is better.</p>'+
+          '<div class="row"><button class="btn" type="button" id="tmLatGo">Measure the delay</button><span class="note" id="tmLatNow"></span></div><p class="note" id="tmLatMsg" aria-live="polite"></p></div>'+
+      '</details>';
+    $("tm_drill").addEventListener("change",e=>{if(R.state==="wait"||R.state==="run")stop();S.drill=e.target.value;keep();R={state:"idle"};build();});
+    $("tmGo").addEventListener("click",()=>{if(R.state==="done"){R={state:"idle"};}go();});
+    $("tm_par").addEventListener("change",e=>{const v=num(e.target.value);const dd=curDrill();if(dd)setPar(dd.id,v>0?Math.round(v*100)/100:null);});
+    root.querySelectorAll("[data-tmdelay]").forEach(b=>b.addEventListener("click",()=>{S.delay=b.dataset.tmdelay;keep();build();}));
+    root.querySelectorAll("[data-tmsens]").forEach(b=>b.addEventListener("click",()=>{S.sens=b.dataset.tmsens;keep();sens();root.querySelectorAll("[data-tmsens]").forEach(x=>{const on=x===b;x.setAttribute("aria-checked",on);x.setAttribute("aria-selected",on);});meter();}));
+    root.querySelectorAll("[data-tmspk]").forEach(b=>b.addEventListener("click",()=>{S.spk=b.dataset.tmspk;keep();root.querySelectorAll("[data-tmspk]").forEach(x=>{const on=x===b;x.setAttribute("aria-checked",on);x.setAttribute("aria-selected",on);});latTxt();}));
+    $("tm_dry").addEventListener("change",e=>{S.dry=e.target.checked;keep();if(S.dry)audioOff();R={state:"idle"};const o=root.querySelector(".tmmore").open;build();root.querySelector(".tmmore").open=o;});
+    $("tm_echo").addEventListener("change",e=>{S.echo=e.target.checked;keep();sens();});
+    $("tmLatGo").addEventListener("click",measure);
+    $("tmSave").addEventListener("click",saveRun);
+    $("tmToss").addEventListener("click",()=>{R={state:"idle"};$("tmMsg").textContent="";draw();});
+    latTxt();draw();meter();
+  }
+  async function keepAwake(on){try{if(on&&!wake&&navigator.wakeLock&&document.visibilityState==="visible")wake=await navigator.wakeLock.request("screen");if(!on&&wake){await wake.release();wake=null;}}catch(e){}}
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&$("tmRoot")&&!$("tmRoot").hidden&&$("tmRoot").offsetParent)keepAwake(true);});
+  window.RB_TIMER={
+    show(){load().then(()=>{R={state:"idle"};build();keepAwake(true);});},
+    pick(id){S.drill=id||"";keep();},
+    hide(){if(R.state==="wait"||R.state==="run")stop();R={state:"idle"};audioOff();keepAwake(false);},
+    // for tests: pretend the worklet heard something at context time t
+    _hear(t,tone){if(listen)listen(t,1,tone||0);},_ctxTime(){return ctx?ctx.currentTime:null;},_state(){return R;}
+  };
+
+  /* ----- the Training tab ----- */
+  let open=null; // a drill id, "free" (runs without a drill), or null for the list
+  function spark(vals,par){if(vals.length<2)return "";const w=300,h=46,lo=Math.min(...vals,par||Infinity),hi=Math.max(...vals,par||-Infinity),sp=hi-lo||1;
+    const X=i=>5+i*(w-10)/(vals.length-1),Y=v=>h-6-(v-lo)/sp*(h-12);
+    return '<svg class="trspark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" aria-hidden="true">'+(par&&par>=lo&&par<=hi?'<line x1="0" x2="'+w+'" y1="'+Y(par).toFixed(1)+'" y2="'+Y(par).toFixed(1)+'" stroke="var(--muted)" stroke-dasharray="4 3"/>':'')+
+      '<path d="M'+vals.map((v,i)=>X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(" L")+'" fill="none" stroke="var(--accent)" stroke-width="2.2"/>'+vals.map((v,i)=>'<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="3" fill="var(--accent)"/>').join("")+'</svg>';}
+  const runsOf=id=>T.runs.filter(r=>!r.dry&&(id==="free"?!r.drill:r.drill===id)).sort((a,b)=>a.at-b.at);
+  function render(){const root=$("trRoot");if(!root)return;
+    if(!loaded){root.innerHTML='<p class="note">Loading…</p>';load().then(render);return;}
+    const back=$("trBack");if(back)back.hidden=!open;$("trTitle").textContent=open?(open==="free"?"Free runs":(drillOf(open)||{}).name||"Drill"):"Training";$("trSub").hidden=!!open;
+    if(!open){
+      const ds=drills(),dry=T.runs.filter(r=>r.dry),wk=Date.now()-7*864e5,dw=dry.filter(r=>r.at>=wk);
+      let h='<section class="card"><h2>Shot timer</h2><p class="note" style="margin-top:0">A start beep, then your first shot and every split, with a par time. Save a run here to see your progress on each drill.</p><div class="row"><button class="btn primary" type="button" id="trTimer">Open the shot timer</button></div>'+
+        (dry.length?'<p class="note">Dry fire: '+dw.length+' rep'+(dw.length===1?'':'s')+' in the last 7 days, '+dry.length+' in all.</p>':'')+'</section>'+
+        '<section class="card"><h2>Drills</h2><div class="cartgroup">';
+      const item=(id,name,det,rs,par)=>{const tt=rs.map(runTime).filter(v=>v!=null),best=tt.length?Math.min(...tt):null;
+        return '<button class="loaditem trdrill" type="button" data-trd="'+esc(id)+'"><span class="t">'+esc(name)+'</span><span class="d">'+esc(det)+'</span>'+(tt.length?spark(tt.slice(-12),par)+'<span class="m">Best '+f2(best)+' s · last '+f2(tt[tt.length-1])+' s · '+tt.length+' run'+(tt.length===1?'':'s')+'</span>':'<span class="m">No runs yet</span>')+'</button>';};
+      ds.forEach(d=>{h+=item(d.id,d.name,[d.shots+' shot'+(d.shots===1?'':'s'),d.dist?U.s("yd",d.dist,0):"",d.par?'par '+f2(d.par)+' s':""].filter(Boolean).join(" · "),runsOf(d.id),d.par);});
+      const fr=runsOf("free");if(fr.length)h+=item("free","Free runs","Runs without a drill",fr,null);
+      h+='</div><div class="row"><button class="btn" type="button" id="trAdd">+ New drill</button></div></section>';
+      root.innerHTML=h;
+      $("trTimer").addEventListener("click",()=>{if(window.RB_TOOLS)RB_TOOLS.open("timer");});
+      $("trAdd").addEventListener("click",()=>{const d={id:newId(),name:"",shots:5,dist:7,par:null,how:""};T.drills.push(d);save();open=d.id;render();setTimeout(()=>{const n=$("trd_name");if(n)n.focus();},30);});
+      root.querySelectorAll("[data-trd]").forEach(b=>b.addEventListener("click",()=>{open=b.dataset.trd;render();window.scrollTo(0,0);}));
+      return;}
+    const d=open==="free"?null:drillOf(open);if(open!=="free"&&!d){open=null;render();return;}
+    const rs=runsOf(open),mine=d&&!d.built,tt=rs.map(runTime).filter(v=>v!=null);
+    let h='<section class="card">'+(mine?'<div class="grid"><div class="field wide"><label for="trd_name">Name</label><input id="trd_name" value="'+esc(d.name)+'" placeholder="e.g. Plate rack"></div>'+
+        '<div class="field"><label for="trd_shots">Shots</label><input id="trd_shots" type="number" inputmode="numeric" step="1" min="1" value="'+esc(d.shots||"")+'"></div>'+
+        '<div class="field"><label for="trd_dist">Distance (<span data-unit="yd">'+U.u("yd")+'</span>)</label><input id="trd_dist" type="number" inputmode="decimal" step="any" value="'+(d.dist?esc(U.n("yd",d.dist,0)):"")+'"></div>'+
+        '<div class="field"><label for="trd_par">Par time (s)</label><input id="trd_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d.par?d.par:"")+'"></div>'+
+        '<div class="field wide"><label for="trd_how">How it\'s shot</label><textarea id="trd_how" placeholder="Targets, start position, reloads…">'+esc(d.how||"")+'</textarea></div></div>'
+      :d?'<p class="tline">'+esc(d.how)+'</p><p class="note">'+d.shots+' shot'+(d.shots===1?'':'s')+(d.dist?' · '+esc(U.s("yd",d.dist,0)):'')+'</p><div class="grid"><div class="field"><label for="trd_par">Your par time (s)</label><input id="trd_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d.par?d.par:"")+'"></div></div>':'<p class="note" style="margin-top:0">Shot timer runs saved without a drill.</p>')+
+      (d?'<div class="row"><button class="btn primary" type="button" id="trGo">Start this drill</button>'+(mine?'<button class="btn danger" type="button" id="trDel">Delete drill</button>':'')+'</div>':'')+'</section>';
+    h+='<section class="card"><h2>Your runs</h2>'+(tt.length>1?spark(tt.slice(-30),d&&d.par):'')+
+      (rs.length?'<p class="note">Best '+f2(Math.min(...tt))+' s'+(tt.length>=5?' · average of the last five '+f2(tt.slice(-5).reduce((a,b)=>a+b,0)/5)+' s':'')+'</p><div class="tablewrap"><table class="trtbl"><thead><tr><th>Date</th><th>Time</th><th>First</th><th>Splits</th><th>Hits</th><th>Gun</th><th></th></tr></thead><tbody>'+
+        rs.slice().reverse().map(r=>{const a=r.shots||[],sp=a.slice(1).map((v,i)=>v-a[i]);return '<tr><td>'+esc(r.at?new Date(r.at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):(r.date||""))+'</td><td><b>'+(a.length?f2(a[a.length-1]):"–")+'</b>'+(r.par&&a.length?' <span class="tmpar '+(a[a.length-1]<=r.par?'under':'over')+'">'+(a[a.length-1]<=r.par?'−':'+')+f2(Math.abs(a[a.length-1]-r.par))+'</span>':'')+'</td><td>'+(a.length?f2(a[0]):"–")+'</td><td>'+(sp.length?f2(Math.min(...sp))+(sp.length>1?'–'+f2(Math.max(...sp)):''):'–')+'</td><td>'+(r.hits!=null?r.hits+(r.of?'/'+r.of:''):'')+'</td><td>'+esc(gunName(r.gun))+'</td><td><button class="linkbtn" type="button" data-trx="'+esc(r.id)+'" aria-label="Delete this run">×</button></td></tr>';}).join("")+'</tbody></table></div>'
+      :'<p class="note">No runs yet. '+(d?'Tap <b>Start this drill</b>.':'')+'</p>')+'</section>';
+    root.innerHTML=h;
+    const bind=(id,k,fn)=>{const e=$(id);if(e)e.addEventListener("input",()=>{const x=T.drills.find(q=>q.id===open);if(!x)return;x[k]=fn(e.value);save();if(k==="name")$("trTitle").textContent=x.name||"Drill";});};
+    if(mine){bind("trd_name","name",v=>v.trim());bind("trd_shots","shots",v=>Math.max(1,Math.round(num(v)||1)));bind("trd_dist","dist",v=>{const n=num(v);return n>0?U.from("yd",n):null;});bind("trd_how","how",v=>v);}
+    {const p=$("trd_par");if(p)p.addEventListener("input",()=>{const v=num(p.value);setPar(open,v>0?Math.round(v*100)/100:null);});}
+    {const g=$("trGo");if(g)g.addEventListener("click",()=>{window.RB_TIMER.pick(open);if(window.RB_TOOLS)RB_TOOLS.open("timer");});}
+    {const del=$("trDel");if(del)del.addEventListener("click",()=>{const i=T.drills.findIndex(q=>q.id===open);if(i<0)return;const x=T.drills.splice(i,1)[0];save();open=null;render();
+      if(window.RB_UNDO)RB_UNDO("Deleted "+(x.name||"the drill"),()=>{T.drills.splice(i,0,x);save();render();});});}
+    root.querySelectorAll("[data-trx]").forEach(b=>b.addEventListener("click",()=>{const i=T.runs.findIndex(r=>r.id===b.dataset.trx);if(i<0)return;const x=T.runs.splice(i,1)[0];save();render();
+      if(window.RB_UNDO)RB_UNDO("Deleted a run",()=>{T.runs.splice(i,0,x);save();render();});}));
+  }
+  window.RB_TRAIN={show(){render();},home(){open=null;render();},_data(){return T;}};
+  document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#trBack")){open=null;render();window.scrollTo(0,0);}});
 })();
 </script>
 <script>
