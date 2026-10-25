@@ -11121,7 +11121,10 @@ function helpFind(topic){
 window.RB_HELPT={topic:t=>helpTopic(t),find:t=>helpFind(t)};
 function helpGo(topic){
   const from=curTab();
-  if(from!=="help")helpFrom={tab:from,y:window.scrollY};
+  if(from!=="help"){helpFrom={tab:from,y:window.scrollY};
+    // the tool or training timer you were in, so ‹ Back returns to it and not to the Tools tiles or the session (2.43.19)
+    if(from==="tools"&&window.RB_TOOLS&&RB_TOOLS.cur)helpFrom.tool=RB_TOOLS.cur();
+    if(from==="train"&&window.RB_TRAIN&&RB_TRAIN.view){const v=RB_TRAIN.view();if(v.view==="timer")helpFrom.train=v;}}
   showTab("help");
   const el=helpFind(topic);if(!el)return;
   const sec=el.closest("section.card"),sh=sec&&sec.querySelector(":scope>.sechead");
@@ -11161,7 +11164,9 @@ window.RB_GO=function(spec){
 document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("a.goto");if(!a)return;e.preventDefault();e.stopPropagation();RB_GO(a.dataset.go||"home");});
 function helpBack(){
   const f=helpFrom;helpFrom=null;$("helpBackBtn").hidden=true;if(!f)return;
-  showTab(f.tab,false);requestAnimationFrame(()=>window.scrollTo(0,f.y));
+  if(f.tab==="tools"&&f.tool&&window.RB_TOOLS){RB_TOOLS.open(f.tool.tool,{from:f.tool.from});if(f.tool.lib&&window.RB_LIBPAGE)RB_LIBPAGE.show(f.tool.lib);}
+  else{showTab(f.tab,false);if(f.train&&window.RB_TRAIN)RB_TRAIN.reopen(f.train);}
+  requestAnimationFrame(()=>window.scrollTo(0,f.y));
 }
 const INFO_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg>';
 const infoKey=sec=>{if(sec.id&&INFO[sec.id])return sec.id;const l="@"+(sec.getAttribute("aria-label")||"");return INFO[l]?l:null;};
@@ -12172,6 +12177,8 @@ window.RB_TOOLS=(function(){
     // showTab tells us Tools (or its Targets page) is on screen: the Tools tab opens to the tiles
     shown(t,R){rel=R||rel;setup();if(t==="tools"){if(pending==null)FROM=null;view(pending);pending=null;}},
     fromLabel(){return FROM?"‹ "+FROM.label:null;},
+    // the tool on screen and where it was opened from, so Help can come back to it (2.43.19)
+    cur(){const t=document.querySelector("#panel-tools [data-toolsec]:not([hidden])");return t?{tool:t.dataset.toolsec,from:FROM,lib:t.dataset.toolsec==="lib"&&window.RB_LIBPAGE&&RB_LIBPAGE.sub?RB_LIBPAGE.sub():null}:null;},
     // open a tool from elsewhere, e.g. Shooting's twist warning
     open(t,o){pending=t;FROM=(o&&o.from)||null;if(o&&o.hit)hitPick=o.hit;if(window.APP_showTab)APP_showTab("tools");if(o&&o.traj)fromTraj(o.traj);window.scrollTo(0,0);}
   };
@@ -12716,7 +12723,9 @@ window.RB_CHTOOL=(function(){
   /* ----- what sessions fired, for the round counts elsewhere (guns, barrels, suppressors, ammo, Home) ----- */
   function use(){return T.sessions.filter(s=>s.profileId&&(s.gunId||s.ammoId||s.canId)).map(s=>({id:s.id,date:s.date||"",gunId:s.gunId||null,partId:s.partId||null,canId:s.canId||null,ammoId:s.ammoId||null,rounds:sessRounds(s)})).filter(u=>u.rounds>0);}
   window.RB_TRAIN={show(){render();},home(){if(V.view==="timer")unmount("train");V={view:"home"};render();},setData(d){if(dirty||editing())return;setData(d);changed();const P=$("panel-train");if(P&&!P.hidden&&V.view!=="timer")render();},use,
-    leave(){if(V.view==="timer"){unmount("train");V={view:"session",sid:V.sid};}},_title(){if(V.view==="timer"){const d=V.drill?drillOf(V.drill):null;$("trTitle").textContent=d?d.name:"Free run";}},_data(){return T;},_v(){return V;}};
+    leave(){if(V.view==="timer"){unmount("train");V={view:"session",sid:V.sid};}},
+    // the view on screen, and back to it (Help's ‹ Back, 2.43.19)
+    view(){return Object.assign({},V);},reopen(v){if(v&&v.view==="timer"&&sessOf(v.sid)){V=Object.assign({},v);render();}},_title(){if(V.view==="timer"){const d=V.drill?drillOf(V.drill):null;$("trTitle").textContent=d?d.name:"Free run";}},_data(){return T;},_v(){return V;}};
   document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#trBack"))backTo();});
 })();
 </script>

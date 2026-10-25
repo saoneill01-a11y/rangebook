@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.18",
+      "version": "2.43.19",
       "date": "2026-10-24",
       "title": "Bigger text, and the effective range numbers in a pop-up",
       "items": [
+        "Help (?) from a tool now brings you back to that tool: ‹ Back returns to the Shot timer, the Library list or whichever tool you were in, instead of the Tools tiles. From a drill's timer in a Training session, it returns to the timer.",
         "Training: the built-in Failure to stop drill is now called the Mozambique drill (two to the body, then one to the head), so it's easy to find. Your runs and par time for it are kept.",
         "What's new is shorter: the newest version is open, the two before it fold on their own, and older versions fold together in groups (2.30 to 2.39, 2.20 to 2.29 and so on, and all of 1.x). Every note is still there.",
         "Storage per person: under Admin › Storage per person, set how many MB each person can keep on the server (photos, vault documents, files on notes and their data all count). Each person's card on Admin shows what they're using, and Storage limit gives them the server's limit, no limit, or one of their own. When someone's full, new pictures, files and imports are turned away with a note; their other changes still save. Everyone sees their own use under Account › Storage.",
