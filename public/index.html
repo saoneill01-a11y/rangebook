@@ -1295,6 +1295,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 #ammoCatQ,#rnQ,#f_ammoQ,#powQ{font:inherit;color:var(--fg);padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);width:100%}
 #ammoBuyN{font:inherit;color:var(--fg);padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);width:110px}
 .lifebar{height:12px;border-radius:99px;background:var(--sunk);border:1px solid var(--line);overflow:hidden}
+.relsub{margin:14px 0 2px;font-size:calc(14px*var(--fs))}.oldrel>.relsub:first-of-type{margin-top:8px}
 .ustore{margin:6px 0 4px}.ucard .lifebar{margin:0 0 8px;max-width:360px}.uquotaedit{gap:6px;align-items:center;flex-wrap:wrap}.uquotaedit input{max-width:110px}#acctStorage .lifebar{margin:6px 0 4px}
 .lifebar span{display:block;height:100%;background:var(--accent);border-radius:99px}
 .lifebar.warn span{background:var(--warn)}
@@ -11334,8 +11335,14 @@ function renderRelNotes(){
   if(!R.length){box.innerHTML='<p class="note">No release notes.</p>';return;}
   const ser=v=>String(v).split(".").slice(0,2).join(".");   // one entry per x.y series; the newest keeps the exact x.y.z
   const one=(r,first)=>'<div class="relhead">'+(first?'<h3 style="margin:0">Version '+esc(ser(r.version))+'</h3>':'')+'<span class="note">'+esc(fmtRelDate(r.date))+(r.title?' · '+esc(r.title):'')+'</span></div><ul class="relnotes">'+(r.items||[]).map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>';
+  // the two before it fold one each; older ones fold in groups of ten (2.30 to 2.39…, all of 1.x) with every note kept (2.43.17)
+  const grp=v=>{const [a,b]=String(v).split(".").map(Number);return a<2?a+".x":a+"."+Math.floor((b||0)/10)*10;};
+  const sub=r=>'<h4 class="relsub">Version '+esc(ser(r.version))+'</h4>'+one(r,false);
+  const old=R.slice(3),groups=[];old.forEach(r=>{const k=grp(r.version),g=groups[groups.length-1];if(g&&g.k===k)g.rs.push(r);else groups.push({k,rs:[r]});});
+  const glab=g=>{const vs=g.rs.map(r=>ser(r.version));return g.rs.length===1?"Version "+vs[0]:/x$/.test(g.k)?"Versions "+vs[vs.length-1]+" to "+vs[0]:"Versions "+vs[vs.length-1]+" to "+vs[0];};
   box.innerHTML='<p class="note">You\'re running Range Book <b>'+esc(R[0].version)+'</b>.</p>'+one(R[0],true)+
-    R.slice(1).map(r=>'<details class="oldrel"><summary>Version '+esc(ser(r.version))+'</summary>'+one(r,false)+'</details>').join("");
+    R.slice(1,3).map(r=>'<details class="oldrel"><summary>Version '+esc(ser(r.version))+'</summary>'+one(r,false)+'</details>').join("")+
+    groups.map(g=>'<details class="oldrel"><summary>'+esc(glab(g))+'</summary>'+g.rs.map(sub).join("")+'</details>').join("");
 }
 function openHelpCard(id){const s=document.getElementById(id),b=s&&s.querySelector(":scope>.sechead");if(b&&b.getAttribute("aria-expanded")==="false")b.click();}
 function showWhatsNew(){
