@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.22",
+      "version": "2.43.23",
       "date": "2026-10-28",
       "title": "Bigger text, and the effective range numbers in a pop-up",
       "items": [
+        "Training: a session's Runs card has one line graph with every drill's times, and a button for each drill to show or hide it (in the graph and the list). Each drill's runs are in their own box. The drill page's graph is a line too.",
         "Training: tap a run in a session (or its bar in the graph) to see the time and split of each shot, with a strip showing when each one was fired against the par time.",
         "Training: each run saves itself when it ends, so you can tap Again and keep shooting. Fill in Hits afterwards, or tap Delete this run.",
         "Training: after a run, the shots, time, first shot and splits are in a column with Hits right under them, and This session shows the drill's runs so far with a bar graph.",
