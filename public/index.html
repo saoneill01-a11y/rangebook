@@ -1038,7 +1038,7 @@ table.trtbl td,table.trtbl th{padding:6px 5px}table.trtbl td:last-child,table.tr
 .tmroot.tmlive .tmbig{color:var(--accent)}
 .tmmeter{position:relative;height:8px;border-radius:4px;background:var(--sunk);border:1px solid var(--line);overflow:visible;margin:4px 0 8px}.tmmeter span{display:block;height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .05s}.tmmeter i{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--fg);left:30%}
 table.tmtbl{width:100%;border-collapse:collapse;font:calc(15px*var(--fs)) var(--mono);font-variant-numeric:tabular-nums;margin:4px 0 10px}table.tmtbl td,table.tmtbl th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}table.tmtbl th{font:600 calc(12px*var(--fs)) var(--body);color:var(--muted)}table.tmtbl td:first-child,table.tmtbl th:first-child{text-align:left}.tmx{font-size:calc(18px*var(--fs));padding:0 6px}
-.tmset{margin-top:12px}.tmsave{margin:6px 0 4px}.tmmore{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tmmore summary{cursor:pointer;font-weight:600}.tmmore>*+*{margin-top:10px}
+.tmset{margin-top:12px}.tmsave{margin:6px 0 4px}.tmsaved{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 10px}.tmsaved .note{margin:0}.tmstats{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:baseline;font-size:calc(17px*var(--fs));margin:0 0 4px}.tmstats>span:nth-child(odd){color:var(--muted);font-size:calc(14px*var(--fs))}.tmstats b{font-variant-numeric:tabular-nums}.tmhits{max-width:220px;margin-top:10px}.tmeach{margin-top:10px}.tmsess{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}.tmsess .trdh{margin-top:0}.trchart{display:block;width:100%;max-width:460px;height:auto;margin:6px 0 2px}.trchart text{font-family:var(--body);font-variant-numeric:tabular-nums}.trprog .segtabs{margin:4px 0 2px;max-width:360px}.tmmore{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tmmore summary{cursor:pointer;font-weight:600}.tmmore>*+*{margin-top:10px}
 .trdrill .trspark{display:block;width:100%;height:40px;margin:6px 0 2px}.trspark{display:block;width:100%;height:46px;margin:4px 0}
 table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))}table.trtbl td,table.trtbl th{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}table.trtbl th{font-size:calc(12px*var(--fs));color:var(--muted);font-weight:600}
 
@@ -1854,13 +1854,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <section class="card guide" aria-label="Training" id="hTrain"><h2>Training</h2>
       <p><b>Training</b> (a tab on a computer, or <a class=goto href=#go data-go=train>More › Training</a> on a phone; you can put it on the phone's bar under <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a>) is for practice with the shot timer, kept apart from your range trips.</p>
       <h3>Training profiles</h3>
-      <p>A <b>training profile</b> is what you train with: tap <b>+ New training profile</b>, give it a name, and pick the <b>Gun</b>, its <b>Barrel</b> or <b>Suppressor</b> if it has them, and the <b>Ammo</b> (ammo for the gun's cartridge is listed first). Each day you practice is a <b>session</b>: open the profile and tap <b>Start a session today</b> (or <b>Continue today's session</b>). In the session, tap a drill under <b>Run a drill</b>: the shot timer opens right there, with <b>‹</b> back to the session. Run it as many times as you like; each <b>Save to this session</b> adds a run. The session lists every run, drill by drill, with the best and average time, the average first shot and your hits. Fill in <b>Other rounds fired</b> for shots you didn't time (warm-up, zeroing), and change the date, place, suppressor or ammo for that day if they were different.</p>
-      <p>Every round a session fires (each shot in its runs, plus the other rounds) counts toward its gun, barrel, suppressor and ammo, the same as a range trip: the gun's round count and barrel life, a suppressor's cleaning reminder, the ammo you have left, and Home's rounds fired. Sessions don't show up in the Range log. A profile's <b>Progress</b> card charts each drill's average time from session to session, and <b>Compare two sessions</b> puts any two side by side, drill by drill: runs, best and average time, first shot, split and hits, with what changed (better is in your accent color). Runs saved from the timer without a profile, and runs from before profiles, are under <b>Without a profile</b> and don't count toward any gun. A new training profile, session or drill that you leave without changing anything isn't kept, the same as <b>+ Add</b> everywhere else.</p>
+      <p>A <b>training profile</b> is what you train with: tap <b>+ New training profile</b>, give it a name, and pick the <b>Gun</b>, its <b>Barrel</b> or <b>Suppressor</b> if it has them, and the <b>Ammo</b> (ammo for the gun's cartridge is listed first). Each day you practice is a <b>session</b>: open the profile and tap <b>Start a session today</b> (or <b>Continue today's session</b>). In the session, tap a drill under <b>Run a drill</b>: the shot timer opens right there, with <b>‹</b> back to the session. Run it as many times as you like: each run saves to the session by itself when it ends, so just tap <b>Again</b> and keep shooting. Under the timer, <b>This session</b> shows that drill's runs so far (best, average, first shot, hits) with a bar for each run. The session page has the date, place and gear at the top, then every run drill by drill with the same numbers and a bar graph (a bar in orange missed a hit), and <b>Notes</b> at the bottom. Fill in <b>Other rounds fired</b> for shots you didn't time (warm-up, zeroing), and change the date, place, suppressor or ammo for that day if they were different.</p>
+      <p>Every round a session fires (each shot in its runs, plus the other rounds) counts toward its gun, barrel, suppressor and ammo, the same as a range trip: the gun's round count and barrel life, a suppressor's cleaning reminder, the ammo you have left, and Home's rounds fired. Sessions don't show up in the Range log. A profile's <b>Progress</b> card (above its sessions) graphs each drill from session to session: <b>Time</b> (your average, with each session's best run and the par line), <b>Hits</b> or <b>First shot</b>, and <b>Compare two sessions</b> puts any two side by side, drill by drill: runs, best and average time, first shot, split and hits, with what changed (better is in your accent color). Runs saved from the timer without a profile, and runs from before profiles, are under <b>Without a profile</b> and don't count toward any gun. A new training profile, session or drill that you leave without changing anything isn't kept, the same as <b>+ Add</b> everywhere else.</p>
       <h3>Drills</h3>
       <p>Six common drills are built in (Bill drill, El Presidente, FAST, 5×5, the Mozambique drill and Draw to first shot); <b>+ New drill</b> under <b>Drills</b> adds your own with its shots, distance, par time and how it's shot. Tap a drill to change your par time (or edit your own drill). The timer stops by itself after a drill's last shot. Dry-fire reps are counted on the Training page (the last 7 days and in all); they aren't timed, so they don't go in the averages.</p>
       <h3>Shot timer</h3>
-      <p>The shot timer works like one at a match, inside a training session or on its own under <a class=goto href=#go data-go=tools:timer>Tools › Shot timer</a>. Pick a drill (or none), tap <b>Start</b> and wait for the beep: <b>Random</b> waits 2 to 5 seconds, <b>3 s</b> always 3, <b>Now</b> beeps right away. Then shoot: the phone's microphone hears each shot and shows its time, with the first shot and every split. With a <b>Par time</b> a second, higher beep marks it, and the result says how far over or under par you were. It stops by itself after the drill's last shot, or tap the red <b>STOP</b>. Then fill in your hits and save; tap <b>×</b> next to anything that wasn't a shot first (an echo, the next bay). In a session, <b>Save to this session</b> adds the run to it. On its own in Tools, pick a <b>Training profile</b> (or None) and <b>Save to Training</b> puts it in today's session for that profile. The screen stays on while it's open.</p>
-      <p>Under <b>Microphone and speaker</b>: <b>Sensitivity</b> (Low next to other loud shooters, High for a suppressed or quiet gun; the bar shows what the microphone hears and the mark where a sound counts as a shot), <b>Echo filter</b> for indoor ranges (it ignores a second sound within 0.15 s), and <b>Dry fire</b>: beeps only, no microphone, and each one you save counts as a rep. The timer knows its own beeps by their pitch, so they're never counted as shots, even a shot fired the moment the par beep sounds.</p>
+      <p>The shot timer works like one at a match, inside a training session or on its own under <a class=goto href=#go data-go=tools:timer>Tools › Shot timer</a>. Pick a drill (or none), tap <b>Start</b> and wait for the beep: <b>Random</b> waits 2 to 5 seconds, <b>3 s</b> always 3, <b>Now</b> beeps right away. Then shoot: the phone's microphone hears each shot and shows its time, with the first shot and every split. With a <b>Par time</b> a second, higher beep marks it, and the result says how far over or under par you were. It stops by itself after the drill's last shot, or tap the red <b>STOP</b>. The run saves by itself: the shots, time, first shot and splits are listed in a column, with <b>Hits</b> under them to fill in (it updates the saved run). <b>Each shot</b> opens the list of shots; tap <b>×</b> next to anything that wasn't a shot (an echo, the next bay). <b>Delete this run</b> takes it out. In a session, runs go into that session. On its own in Tools, they go into today's session for the <b>Training profile</b> you pick (or None); pick another one after a run and it moves there. The screen stays on while it's open.</p>
+      <p>Under <b>Microphone and speaker</b>: <b>Sensitivity</b> (Low next to other loud shooters, High for a suppressed or quiet gun; the bar shows what the microphone hears and the mark where a sound counts as a shot), <b>Echo filter</b> for indoor ranges (it ignores a second sound within 0.15 s), and <b>Dry fire</b>: beeps only, no microphone, and each one counts as a rep. The timer knows its own beeps by their pitch, so they're never counted as shots, even a shot fired the moment the par beep sounds.</p>
       <p><b>Bluetooth speaker.</b> Phone speakers aren't loud. Pair a Bluetooth speaker in your phone's own settings (no special browser needed) and the beep plays through it. Bluetooth reaches your ears a little late, about 0.1 to 0.3 seconds, which would make every time look slow, so set <b>Speaker</b> to <b>Bluetooth</b>, put the phone next to the speaker with the volume up and tap <b>Measure the delay</b>: it beeps five times, listens for them and takes that delay off every run. You can measure the phone's own speaker too (it's usually tiny). A speaker with a built-in microphone (a speakerphone) can take over the phone's microphone; a plain speaker is better.</p>
       <p>The microphone only works on the <b>https</b> address. Nothing is recorded: Range Book keeps only the times. A busy line with several people shooting at once will confuse any phone timer; keep the phone close to you.</p>
     </section>
@@ -12491,7 +12491,7 @@ window.RB_CHTOOL=(function(){
   /* ----- settings on this device ----- */
   const SENS={low:{th:.5,ratio:8},normal:{th:.28,ratio:6},high:{th:.12,ratio:5}};
   let S=(()=>{let o=null;try{o=JSON.parse(localStorage.getItem("rb.timer")||"null");}catch(e){}o=o&&typeof o==="object"?o:{};
-    return {delay:["now","fixed","random"].includes(o.delay)?o.delay:"random",sens:SENS[o.sens]?o.sens:"normal",echo:!!o.echo,spk:o.spk==="bt"?"bt":"phone",lat:o.lat&&typeof o.lat==="object"?o.lat:{},dry:!!o.dry,drill:o.drill||"",prof:o.prof||""};})();
+    return {delay:["now","fixed","random"].includes(o.delay)?o.delay:"random",sens:SENS[o.sens]?o.sens:"normal",echo:!!o.echo,spk:o.spk==="bt"?"bt":"phone",lat:o.lat&&typeof o.lat==="object"?o.lat:{},dry:!!o.dry,drill:o.drill||"",prof:o.prof||"",each:!!o.each};})();
   const keep=()=>{try{localStorage.setItem("rb.timer",JSON.stringify(S));}catch(e){}};
   const lat=()=>{const v=num(S.lat[S.spk]);return v!=null?v:(S.spk==="bt"?0.2:0);};
 
@@ -12543,7 +12543,31 @@ window.RB_CHTOOL=(function(){
     if(R.state==="wait"&&now>=R.t0){R.state="run";draw();}
     if(R.state==="run"&&!R.shots.length){const b=$("tmBig");if(b)b.textContent=f2(Math.max(0,now-R.t0));if(R.dry&&R.par&&now>R.t0+R.par+1){stop();return;}}
     raf=requestAnimationFrame(tick);}
-  function stop(){clearTimeout(stopT);cancelAnimationFrame(raf);if(R.state==="wait"){R={state:"idle"};draw();return;}if(R.state!=="run")return;R.state="done";draw();}
+  function stop(){clearTimeout(stopT);cancelAnimationFrame(raf);if(R.state==="wait"){R={state:"idle"};draw();return;}if(R.state!=="run")return;R.state="done";autoSave();draw();}
+  /* runs save themselves when they finish (2.43.21): Hits and × change the saved run, Delete this run takes it out */
+  const tmSess=make=>{if(CTX)return sessOf(CTX.sid);const pf=S.prof&&profOf(S.prof)?S.prof:null;return make?todaySession(pf):(sessionsOf(pf).find(s=>s.date===todayISO())||null);};
+  const savedRun=()=>{const v=R.saved,s=v&&sessOf(v.sid);return s?{s,r:s.runs.find(x=>x.id===v.id)}:null;};
+  function autoSave(){if(!R.dry&&!R.shots.length)return;const s=tmSess(true);if(!s)return;const d=R.drill;
+    const r={id:newId(),drill:d?d.id:null,name:d?d.name:"Free run",at:Date.now(),shots:R.shots.map(v=>Math.round(v*1000)/1000),par:R.par||null,hits:null,of:R.want||null,dry:R.dry||undefined};
+    s.runs.push(r);R.saved={sid:s.id,id:r.id};save();}
+  function syncRun(){const x=savedRun();if(!x||!x.r)return;x.r.shots=R.shots.map(v=>Math.round(v*1000)/1000);
+    if(!R.dry&&!R.shots.length){x.s.runs.splice(x.s.runs.indexOf(x.r),1);R.saved=null;}save();}
+  function dropRun(){const x=savedRun();R={state:"idle"};if(x&&x.r){const i=x.s.runs.indexOf(x.r);x.s.runs.splice(i,1);save();
+      if(window.RB_UNDO)RB_UNDO("Deleted the run",()=>{x.s.runs.splice(i,0,x.r);save();draw();});}
+    $("tmMsg").textContent="Run deleted.";draw();}
+  // the saved line, the numbers in a column, each shot, and this session's runs of the drill
+  function savedTxt(){const x=savedRun();if(!x||!x.r)return "";const d=R.drill,n=x.s.runs.filter(r=>(r.drill||null)===(d?d.id:null)).indexOf(x.r)+1,p=profOf(x.s.profileId);
+    return '✓ <b>Saved</b> · '+(CTX?(d?'run '+n+' in this session':'free run '+n+' in this session'):'to <a class=goto href=#go data-go=train>Training</a>: '+esc(p?p.name||"Unnamed profile":"without a profile")+', today');}
+  function statRows(){const a=R.shots,p=R.par;if(R.dry||!a.length)return "";const last=a[a.length-1],sp=a.slice(1).map((v,i)=>v-a[i]);
+    return '<span>Shots</span><b>'+a.length+(R.want&&R.want!==a.length?' <span class="note">of '+R.want+'</span>':'')+'</b>'+
+      '<span>Time</span><span><b>'+f2(last)+'</b>'+(p?' <b class="tmpar '+(last<=p?'under':'over')+'">'+f2(Math.abs(last-p))+' '+(last<=p?'under':'over')+' par</b>':'')+'</span>'+
+      '<span>First shot</span><b>'+f2(a[0])+'</b>'+
+      (sp.length?'<span>Splits</span><span><b>'+f2(avg(sp))+'</b> average'+(sp.length>1&&f2(Math.min(...sp))!==f2(Math.max(...sp))?' <span class="note">('+f2(Math.min(...sp))+'–'+f2(Math.max(...sp))+')</span>':'')+'</span>':'');}
+  function sessBox(){const el=$("tmSessBox");if(!el)return;const s=R.state==="wait"||R.state==="run"?null:tmSess(false),id=curDrillId()||null;
+    const rs=s?s.runs.filter(r=>(r.drill||null)===id):[],st=stats(rs);
+    if(!st.n&&!st.dry){el.hidden=true;el.innerHTML="";return;}
+    const d=id?drillOf(id):null;el.hidden=false;
+    el.innerHTML='<h3 class="trdh">This session · '+esc(d?d.name:"Free runs")+'</h3><p class="note trdsum">'+(st.n?st.n+' run'+(st.n===1?'':'s')+' · best <b>'+f2(st.best)+'</b> · average <b>'+f2(st.avg)+'</b> · first shot '+f2(st.first)+(st.hits!=null?' · '+Math.round(st.hits*100)+'% hits':''):'')+(st.dry?(st.n?' · ':'')+st.dry+' dry':'')+'</p>'+barChart(rs,d&&d.par);}
   const splitTxt=a=>{if(a.length<2)return "";const sp=a.slice(1).map((v,i)=>v-a[i]);return "splits "+f2(Math.min(...sp))+(sp.length>1?"–"+f2(Math.max(...sp)):"");};
   function sumTxt(){const a=R.shots,p=R.par;if(R.dry)return p?"Dry fire: the second beep was the par time.":"Dry fire.";
     if(!a.length)return R.state==="done"?"No shots heard. Turn Sensitivity up, or check the microphone level bar while you shoot.":"Listening…";
@@ -12553,21 +12577,16 @@ window.RB_CHTOOL=(function(){
     root.classList.toggle("tmlive",live);
     if(st==="idle"){big.textContent="0.00";sub.textContent=S.dry?"Dry fire: beeps only, no microphone.":"Tap Start, then wait for the beep.";}
     else if(st==="wait"){big.textContent="0.00";sub.textContent="Stand by…";}
-    else{const a=R.shots;if(a.length)big.textContent=f2(a[a.length-1]);sub.innerHTML=esc(sumTxt()).replace(/(\d+\.\d\d) (over|under) par/,'<b class="tmpar $2">$1 $2 par</b>');}
+    else{const a=R.shots;if(a.length)big.textContent=f2(a[a.length-1]);sub.innerHTML=st==="done"&&a.length&&!R.dry?"":esc(sumTxt()).replace(/(\d+\.\d\d) (over|under) par/,'<b class="tmpar $2">$1 $2 par</b>');}
     gob.innerHTML=live?'<span class="tmsq" aria-hidden="true"></span>STOP':st==="done"?"Again":"Start";gob.classList.toggle("tmstop",live);gob.classList.toggle("primary",!live);
-    $("tmShots").innerHTML=R.shots&&R.shots.length?'<table class="tmtbl"><thead><tr><th>Shot</th><th>Time</th><th>Split</th><th></th></tr></thead><tbody>'+R.shots.map((v,i)=>'<tr><td>'+(i+1)+'</td><td>'+f2(v)+'</td><td>'+(i?f2(v-R.shots[i-1]):'first')+'</td><td>'+(st==="done"?'<button class="linkbtn tmx" type="button" data-tmx="'+i+'" aria-label="Not a shot: remove '+(i+1)+'">×</button>':'')+'</td></tr>').join("")+'</tbody></table>':'';
+    const tbl=R.shots&&R.shots.length?'<table class="tmtbl"><thead><tr><th>Shot</th><th>Time</th><th>Split</th><th></th></tr></thead><tbody>'+R.shots.map((v,i)=>'<tr><td>'+(i+1)+'</td><td>'+f2(v)+'</td><td>'+(i?f2(v-R.shots[i-1]):'first')+'</td><td>'+(st==="done"?'<button class="linkbtn tmx" type="button" data-tmx="'+i+'" aria-label="Not a shot: remove '+(i+1)+'">×</button>':'')+'</td></tr>').join("")+'</tbody></table>':'';
+    $("tmShots").innerHTML=st==="done"?"":tbl;$("tmEachBody").innerHTML=st==="done"?tbl:"";
     const done=$("tmDone");done.hidden=st!=="done";
-    if(st==="done"){const n=R.want||R.shots.length;$("tm_hits").placeholder=n?"of "+n:"";}
-    root.querySelectorAll("[data-tmx]").forEach(b=>b.addEventListener("click",()=>{R.shots.splice(+b.dataset.tmx,1);draw();}));
+    if(st==="done"){const n=R.want||R.shots.length,x=savedRun(),h=$("tm_hits");h.placeholder=n?"of "+n:"";if(x&&x.r&&document.activeElement!==h)h.value=x.r.hits!=null?x.r.hits:"";
+      $("tmSavedTxt").innerHTML=savedTxt();$("tmSaved").hidden=!(x&&x.r);$("tmStats").innerHTML=statRows();$("tmHitsF").hidden=R.dry||!(x&&x.r);$("tmEach").hidden=!R.shots.length;}
+    sessBox();
+    root.querySelectorAll("[data-tmx]").forEach(b=>b.addEventListener("click",()=>{R.shots.splice(+b.dataset.tmx,1);syncRun();draw();}));
   }
-  function saveRun(){const d=R.drill,hits=num($("tm_hits").value),m=$("tmMsg");
-    if(!R.dry&&!R.shots.length){m.textContent="No shots to save.";return;}
-    let s;if(CTX){s=sessOf(CTX.sid);if(!s){m.textContent="That session is gone.";return;}}
-    else{const pf=$("tm_prof").value||"";S.prof=pf;keep();s=todaySession(pf&&profOf(pf)?pf:null);}
-    s.runs.push({id:newId(),drill:d?d.id:null,name:d?d.name:"Free run",at:Date.now(),shots:R.shots.map(v=>Math.round(v*1000)/1000),par:R.par||null,hits:hits!=null?hits:null,of:R.want||null,dry:R.dry||undefined});
-    save();R={state:"idle"};$("tm_hits").value="";draw();
-    const n=s.runs.filter(r=>(r.drill||null)===(d?d.id:null)).length,p=profOf(s.profileId);
-    m.innerHTML=CTX?'Saved: '+esc(d?d.name:"free run")+' #'+n+' in this session.':'Saved to <a class=goto href=#go data-go=train>Training</a>: '+esc(p?p.name:"without a profile")+', '+esc(fmtD(s.date))+'.';}
   /* ----- measuring the speaker's delay: beep five times, listen for each, keep the middle value ----- */
   async function measure(){const out=$("tmLatMsg");out.classList.remove("err");
     try{await audioOn(true);}catch(e){out.textContent=e.message;out.classList.add("err");return;}
@@ -12588,12 +12607,15 @@ window.RB_CHTOOL=(function(){
       '<div class="tmgo"><button class="btn primary" type="button" id="tmGo">Start</button></div>'+
       (S.dry?'':'<div class="tmmeter" id="tmMeter" title="Microphone level; the mark is the sensitivity"><span></span><i></i></div>')+
       '<p class="note" id="tmMsg" aria-live="polite"></p><div id="tmShots"></div>'+
-      '<div id="tmDone" hidden><div class="grid tmsave"><div class="field"><label for="tm_hits">Hits</label><input id="tm_hits" type="number" inputmode="numeric" step="1" min="0"></div>'+
-        (CTX?'':'<div class="field"><label for="tm_prof">Training profile</label><select id="tm_prof" class="fieldselect"><option value="">None</option>'+T.profiles.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===S.prof?' selected':'')+'>'+esc(p.name||"Unnamed profile")+'</option>').join("")+'</select></div>')+'</div>'+
-        '<div class="row"><button class="btn primary" type="button" id="tmSave">'+(CTX?'Save to this session':'Save to Training')+'</button><button class="btn" type="button" id="tmToss">Throw it away</button></div><p class="note">Tap <b>×</b> next to anything that wasn\'t a shot (an echo, the next bay).'+(CTX?'':' It goes into today\'s session for the profile you pick.')+'</p></div>'+
+      '<div id="tmDone" hidden><div class="tmsaved" id="tmSaved"><p class="note" id="tmSavedTxt"></p><button class="btn small" type="button" id="tmToss">Delete this run</button></div>'+
+        '<div class="tmstats" id="tmStats"></div>'+
+        '<div class="field tmhits" id="tmHitsF"><label for="tm_hits">Hits</label><input id="tm_hits" type="number" inputmode="numeric" step="1" min="0"></div>'+
+        '<details class="tmeach" id="tmEach"'+(S.each?' open':'')+'><summary>Each shot</summary><div id="tmEachBody"></div><p class="note">Tap <b>×</b> next to anything that wasn\'t a shot (an echo, the next bay).</p></details></div>'+
+      '<div class="tmsess" id="tmSessBox" hidden></div>'+
       '<div class="grid tmset"><div class="field"><label for="tm_par">Par time (s)</label><input id="tm_par" type="number" inputmode="decimal" step="0.01" min="0" placeholder="none" value="'+(d&&d.par?d.par:"")+'"></div>'+
-        '<div class="field"><label>Start delay</label>'+seg("data-tmdelay",[["now","Now"],["fixed","3 s"],["random","Random"]],S.delay,"Start delay")+'</div></div>'+
-      '<p class="note">'+(S.delay==="random"?'Random waits 2 to 5 seconds after Start, then beeps.':S.delay==="fixed"?'Beeps 3 seconds after Start.':'Beeps right away.')+' With a par time, a second, higher beep marks it.</p>'+
+        '<div class="field"><label>Start delay</label>'+seg("data-tmdelay",[["now","Now"],["fixed","3 s"],["random","Random"]],S.delay,"Start delay")+'</div>'+
+        (CTX?'':'<div class="field"><label for="tm_prof">Training profile</label><select id="tm_prof" class="fieldselect"><option value="">None</option>'+T.profiles.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===S.prof?' selected':'')+'>'+esc(p.name||"Unnamed profile")+'</option>').join("")+'</select></div>')+'</div>'+
+      '<p class="note">'+(S.delay==="random"?'Random waits 2 to 5 seconds after Start, then beeps.':S.delay==="fixed"?'Beeps 3 seconds after Start.':'Beeps right away.')+' With a par time, a second, higher beep marks it.'+(CTX?' Each run saves to this session when it ends.':' Each run saves to today\'s session for the training profile you pick.')+'</p>'+
       '<details class="tmmore"><summary>Microphone and speaker</summary>'+
         '<label class="switch" for="tm_dry"><input id="tm_dry" type="checkbox" role="switch"'+(S.dry?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Dry fire</b><span class="note">Beeps only (start and par), no microphone.</span></span></label>'+
         '<div class="field"><label>Sensitivity</label>'+seg("data-tmsens",[["low","Low"],["normal","Normal"],["high","High"]],S.sens,"Sensitivity")+'<p class="note">Low for a loud line next to other shooters; High for a suppressed or quiet gun, or a phone farther away. The bar shows what the microphone hears and the mark where a sound counts as a shot.</p></div>'+
@@ -12611,8 +12633,11 @@ window.RB_CHTOOL=(function(){
     $("tm_dry").addEventListener("change",e=>{S.dry=e.target.checked;keep();if(S.dry)audioOff();R={state:"idle"};const o=root.querySelector(".tmmore").open;build();root.querySelector(".tmmore").open=o;});
     $("tm_echo").addEventListener("change",e=>{S.echo=e.target.checked;keep();sens();});
     $("tmLatGo").addEventListener("click",measure);
-    $("tmSave").addEventListener("click",saveRun);
-    $("tmToss").addEventListener("click",()=>{R={state:"idle"};$("tmMsg").textContent="";draw();});
+    $("tmToss").addEventListener("click",dropRun);
+    $("tm_hits").addEventListener("input",e=>{const x=savedRun();if(!x||!x.r)return;const v=num(e.target.value);x.r.hits=v!=null&&v>=0?Math.round(v):null;save();sessBox();});
+    $("tmEach").addEventListener("toggle",e=>{S.each=e.target.open;keep();});
+    {const pf=$("tm_prof");if(pf)pf.addEventListener("change",e=>{S.prof=e.target.value||"";keep();const x=savedRun();
+      if(R.state==="done"&&x&&x.r){x.s.runs.splice(x.s.runs.indexOf(x.r),1);const s2=tmSess(true);s2.runs.push(x.r);R.saved={sid:s2.id,id:x.r.id};save();}draw();});}
     latTxt();draw();meter();
   }
   async function keepAwake(on){try{if(on&&!wake&&navigator.wakeLock&&document.visibilityState==="visible")wake=await navigator.wakeLock.request("screen");if(!on&&wake){await wake.release();wake=null;}}catch(e){}}
@@ -12635,6 +12660,34 @@ window.RB_CHTOOL=(function(){
     const X=i=>5+i*(w-10)/(vals.length-1),Y=v=>h-6-(v-lo)/sp*(h-12);
     return '<svg class="trspark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" aria-hidden="true">'+(par&&par>=lo&&par<=hi?'<line x1="0" x2="'+w+'" y1="'+Y(par).toFixed(1)+'" y2="'+Y(par).toFixed(1)+'" stroke="var(--muted)" stroke-dasharray="4 3"/>':'')+
       '<path d="M'+vals.map((v,i)=>X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(" L")+'" fill="none" stroke="var(--accent)" stroke-width="2.2"/>'+vals.map((v,i)=>'<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="3" fill="var(--accent)"/>').join("")+'</svg>';}
+  /* graphs (2.43.21): bars for the runs in one session, a line for a drill over your sessions */
+  const svgTxt=(x,y,t,o)=>'<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" text-anchor="'+((o&&o.a)||"middle")+'" font-size="'+((o&&o.s)||11)+'"'+(o&&o.w?' font-weight="'+o.w+'"':'')+' fill="'+((o&&o.c)||"var(--muted)")+'">'+esc(t)+'</text>';
+  const parLine=(L,W,R,y,par)=>'<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="var(--fg)" stroke-dasharray="5 4"/>'+svgTxt(W-R+4,y+4,"par "+f2(par),{a:"start",w:600,c:"var(--fg)"});
+  function barChart(rs,par){const runs=rs.filter(r=>!r.dry&&r.shots&&r.shots.length);if(!runs.length)return "";
+    const W=340,H=170,L=30,R=par?52:8,T=18,B=28,n=runs.length,top=Math.max(...runs.map(runTime),par||0)*1.12,step=top>12?5:top>5?2:top>2.4?1:.5,hi=Math.ceil(top/step)*step;
+    const Y=v=>T+(H-T-B)*(1-v/hi),cw=(W-L-R)/n,bw=Math.min(34,cw*.62),lab=n<=12,every=Math.ceil(n/12);
+    let g='';for(let v=0;v<=hi+1e-9;v+=step)g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--line)"/>'+svgTxt(L-6,Y(v)+4,step<1?v.toFixed(1):String(v),{a:"end"});
+    runs.forEach((r,i)=>{const t=runTime(r),cx=L+(i+.5)*cw,miss=r.hits!=null&&r.hits<(r.of||r.shots.length);
+      g+='<rect x="'+(cx-bw/2).toFixed(1)+'" y="'+Y(t).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(Y(0)-Y(t)).toFixed(1)+'" rx="3" fill="'+(miss?'var(--warn)':'var(--accent)')+'"><title>Run '+(i+1)+': '+f2(t)+' s'+(r.hits!=null?', '+r.hits+'/'+(r.of||r.shots.length)+' hits':'')+'</title></rect>';
+      if(lab)g+=svgTxt(cx,Y(t)-4,f2(t),{c:"var(--fg)"});
+      if(i%every===0||i===n-1)g+=svgTxt(cx,H-14,String(i+1));
+      if(lab&&r.hits!=null)g+=svgTxt(cx,H-2,r.hits+'/'+(r.of||r.shots.length),{s:10,c:miss?'var(--warn)':'var(--muted)'});});
+    if(par)g+=parLine(L,W,R,Y(par),par);
+    return '<svg class="trchart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Each run\'s time">'+g+'</svg>';}
+  // pts: [{label, v, b (best, optional)}]; kind "t" (seconds, lower is better) or "p" (hits, 0..1)
+  function lineChart(pts,kind,par){const n=pts.length;if(n<2)return "";
+    const W=340,H=190,L=38,R=par&&kind==="t"?52:14,T=14,B=30,vals=pts.flatMap(p=>[p.v,p.b]).filter(v=>v!=null).concat(par&&kind==="t"?[par]:[]);
+    let lo,hi,step;if(kind==="p"){lo=Math.min(.5,Math.floor(Math.min(...vals)*10)/10);hi=1;step=lo<.5?.2:.1;}
+    else{const a=Math.min(...vals),b=Math.max(...vals),sp=Math.max(b-a,.2);step=sp>6?2:sp>2.5?1:sp>1?.5:sp>.4?.2:.1;lo=Math.max(0,Math.floor((a-sp*.15)/step)*step);hi=Math.ceil((b+sp*.15)/step)*step;}
+    const X=i=>L+i*(W-L-R)/(n-1),Y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo||1)),every=Math.ceil(n/5);
+    let g='';for(let v=lo;v<=hi+1e-9;v+=step)g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--line)"/>'+svgTxt(L-6,Y(v)+4,kind==="p"?Math.round(v*100)+'%':(step<1?(step<.2?v.toFixed(1):v.toFixed(1)):String(Math.round(v))),{a:"end"});
+    pts.forEach((p,i)=>{if((i%every===0&&n-1-i>=every*.7)||i===n-1)g+=svgTxt(X(i),H-10,p.label,{a:i===n-1&&n>1?"end":i===0?"start":"middle"});});
+    if(par&&kind==="t")g+=parLine(L,W,R,Y(par),par);
+    const ok=pts.map((p,i)=>[i,p.v]).filter(x=>x[1]!=null);
+    if(ok.length>1)g+='<path d="M'+ok.map(([i,v])=>X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(" L")+'" fill="none" stroke="var(--accent)" stroke-width="2.4"/>';
+    pts.forEach((p,i)=>{if(p.b!=null)g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.b).toFixed(1)+'" r="3.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>';
+      if(p.v!=null)g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="3.5" fill="var(--accent)"><title>'+esc(p.label)+': '+(kind==="p"?Math.round(p.v*100)+'%':f2(p.v)+' s')+'</title></circle>';});
+    return '<svg class="trchart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Progress over your sessions">'+g+'</svg>';}
   // a drill's numbers from a list of runs
   function stats(rs){const live=rs.filter(r=>!r.dry&&r.shots&&r.shots.length),tt=live.map(runTime),fs=live.map(r=>r.shots[0]),sp=live.flatMap(r=>r.shots.slice(1).map((v,i)=>v-r.shots[i]));
     const hr=live.filter(r=>r.hits!=null&&(r.of||r.shots.length)),hits=hr.reduce((a,r)=>a+r.hits,0),of=hr.reduce((a,r)=>a+(r.of||r.shots.length),0);
@@ -12685,6 +12738,7 @@ window.RB_CHTOOL=(function(){
       '<div class="field"><label for="'+pre+'_ammo">Ammo</label>'+sel(pre+"_ammo",aopts,o.ammoId)+'</div>';}
   function bindGear(o,pre,after){const on=(id,k,re)=>{const e=$(pre+"_"+id);if(e)e.addEventListener("change",()=>{o[k]=e.value||null;if(k==="gunId"){o.partId=null;o.canId=null;}save();if(re)after(true);else after(false);});};
     on("gun","gunId",true);on("part","partId");on("can","canId");on("ammo","ammoId");}
+  const PROG=(()=>{try{return JSON.parse(localStorage.getItem("rb.trprog")||"{}")||{};}catch(e){return {};}})();
   function renderProfile(root){const pid=V.pid,p=pid?profOf(pid):null,ss=sessionsOf(pid),today=ss.find(s=>s.date===todayISO());
     setHead(p?(p.name||"Unnamed profile"):"Without a profile","Training");
     let h='';
@@ -12692,15 +12746,24 @@ window.RB_CHTOOL=(function(){
       '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" placeholder="Holster, sights, what you\'re working on…">'+esc(p.notes||"")+'</textarea></div></div>'+
       '<p class="note">New sessions start with this gear. Rounds fired in a session count toward its gun, barrel, suppressor and ammo, the same as a range trip.</p></section>';
     else h+='<section class="card"><p class="note" style="margin-top:0">Sessions saved from the shot timer without a profile (and runs from before profiles). They don\'t count toward any gun or ammo.</p></section>';
+    // progress: each drill over your sessions (oldest first), as a graph of Time, Hits or First shot (2.43.21)
+    const ds=new Map();ss.slice().reverse().forEach(s=>runsByDrill(s.runs).forEach((rs,k)=>{const st=stats(rs);if(!st.n)return;if(!ds.has(k))ds.set(k,[]);ds.get(k).push({s,st});}));
+    const prog=[...ds].filter(([,a])=>a.length),lab=d=>{const t=new Date(d+"T12:00:00");return isNaN(t)?d:t.toLocaleDateString(undefined,{month:"short",day:"numeric"});};
+    if(prog.length)h+='<section class="card" aria-label="Progress"><h2>Progress</h2>'+prog.map(([k,a])=>{const d=k?drillOf(k):null,av=a.map(x=>x.st.avg),best=Math.min(...a.map(x=>x.st.best)),bs=a.find(x=>x.st.best===best);
+      const K=PROG[k]||"t",hasH=a.some(x=>x.st.hits!=null),kk=K==="h"&&!hasH?"t":K;
+      const pts=a.map(x=>({label:lab(x.s.date),v:kk==="h"?x.st.hits:kk==="f"?x.st.first:x.st.avg,b:kk==="t"?x.st.best:null}));
+      const first=pts.find(q=>q.v!=null),last=pts.slice().reverse().find(q=>q.v!=null);
+      const sum=a.length<2?'Average '+f2(av[0])+' s · best run '+f2(best)+' s. The graph starts with your second session.'
+        :kk==="h"?(first&&last?'Hits went from '+Math.round(first.v*100)+'% to '+Math.round(last.v*100)+'% over '+a.length+' sessions.':'')
+        :kk==="f"?'First shot went from '+f2(first.v)+' to '+f2(last.v)+' s ('+(last.v-first.v<=0?'−':'+')+f2(Math.abs(last.v-first.v))+' s) over '+a.length+' sessions.'
+        :'Average went from '+f2(av[0])+' to '+f2(av[av.length-1])+' s ('+(av[av.length-1]-av[0]<=0?'−':'+')+f2(Math.abs(av[av.length-1]-av[0]))+' s) over '+a.length+' sessions. Best run <b>'+f2(best)+'</b> on '+esc(lab(bs.s.date))+'.';
+      return '<div class="trprog"><h3 class="trdh">'+esc(drillName(k,a[0].s.runs.filter(r=>(r.drill||"")===k)))+' <span class="note">· '+a.length+' session'+(a.length===1?'':'s')+'</span></h3>'+
+        (a.length>1?'<div class="segtabs" role="radiogroup" aria-label="Graph">'+[["t","Time"]].concat(hasH?[["h","Hits"]]:[]).concat([["f","First shot"]]).map(([q,t])=>'<button type="button" role="radio" data-trpk="'+esc(k)+'" data-k="'+q+'" aria-checked="'+(q===kk)+'" aria-selected="'+(q===kk)+'">'+t+'</button>').join("")+'</div>'+
+          lineChart(pts,kk==="h"?"p":"t",kk==="t"&&d?d.par:null)+'<p class="note" style="margin:0">'+(kk==="t"?'<span style="color:var(--accent)">●</span> average · <span style="color:var(--accent)">○</span> best run'+(d&&d.par?' · dashed line is par':'')+'. Lower is better.':kk==="h"?'Share of shots that hit, each session. Higher is better.':'Average first shot, each session. Lower is better.')+'</p>':'')+
+        '<p class="note">'+sum+'</p></div>';}).join("")+'</section>';
     h+='<section class="card" aria-label="Sessions"><h2>Sessions</h2><div class="row">'+(today?'<button class="btn primary" type="button" id="tsGoToday">Continue today\'s session</button><button class="btn" type="button" id="tsNew">+ New session</button>':'<button class="btn primary" type="button" id="tsNew">Start a session today</button>')+(ss.length>=2?'<button class="btn" type="button" id="tsCmp">Compare two sessions</button>':'')+'</div>'+
       (ss.length?'<div class="cartgroup">'+ss.map(s=>{const m=runsByDrill(s.runs),r=sessRounds(s);
         return '<button class="loaditem" type="button" data-tss="'+esc(s.id)+'"><span class="t">'+esc(fmtD(s.date))+(s.place?' · '+esc(s.place):'')+'</span><span class="d">'+(s.runs.length?esc([...m].map(([k,rs])=>drillName(k,rs)+(rs.length>1?' ×'+rs.length:'')).join(", ")):'No runs yet')+'</span><span class="m">'+(r?r.toLocaleString()+' rounds':'')+(s.runs.some(x=>x.dry)?(r?' · ':'')+s.runs.filter(x=>x.dry).length+' dry':'')+'</span></button>';}).join("")+'</div>':'<p class="note">No sessions yet.</p>')+'</section>';
-    // progress: each drill's session averages over time (oldest first)
-    const ds=new Map();ss.slice().reverse().forEach(s=>runsByDrill(s.runs).forEach((rs,k)=>{const st=stats(rs);if(!st.n)return;if(!ds.has(k))ds.set(k,[]);ds.get(k).push({s,st});}));
-    const prog=[...ds].filter(([,a])=>a.length);
-    if(prog.length)h+='<section class="card" aria-label="Progress"><h2>Progress</h2>'+prog.map(([k,a])=>{const d=k?drillOf(k):null,av=a.map(x=>x.st.avg),best=Math.min(...a.map(x=>x.st.best));
-      return '<div class="trprog"><h3 class="trdh">'+esc(drillName(k,a[0].s.runs.filter(r=>(r.drill||"")===k)))+' <span class="note">· '+a.length+' session'+(a.length===1?'':'s')+'</span></h3>'+spark(av,d&&d.par)+
-        '<p class="note">Average '+f2(av[av.length-1])+' s last session'+(av.length>1?' (first: '+f2(av[0])+' s)':'')+' · best run '+f2(best)+' s</p></div>';}).join("")+'</section>';
     if(p)h+='<div class="row endrow"><button class="btn danger" type="button" id="tpDel">Delete profile</button></div>';
     root.innerHTML=h;
     if(p){$("tp_name").addEventListener("input",e=>{p.name=e.target.value;save();$("trTitle").textContent=p.name||"Unnamed profile";});
@@ -12712,20 +12775,22 @@ window.RB_CHTOOL=(function(){
     $("tsNew").addEventListener("click",()=>{const s=newSession(pid,true);go2({view:"session",sid:s.id});});
     {const c=$("tsCmp");if(c)c.addEventListener("click",()=>go2({view:"compare",pid,a:ss[1].id,b:ss[0].id}));}
     root.querySelectorAll("[data-tss]").forEach(b=>b.addEventListener("click",()=>go2({view:"session",sid:b.dataset.tss})));
+    root.querySelectorAll("[data-trpk]").forEach(b=>b.addEventListener("click",()=>{PROG[b.dataset.trpk]=b.dataset.k;try{localStorage.setItem("rb.trprog",JSON.stringify(PROG));}catch(e){}const y=window.scrollY;render();window.scrollTo(0,y);}));
   }
   function runRow(r){const a=r.shots||[],sp=a.slice(1).map((v,i)=>v-a[i]),t=a.length?a[a.length-1]:null;
     return '<tr><td>'+(r.dry?'<span class="note">dry</span>':t!=null?'<b>'+f2(t)+'</b>'+(r.par?' <span class="tmpar '+(t<=r.par?'under':'over')+'">'+(t<=r.par?'−':'+')+f2(Math.abs(t-r.par))+'</span>':''):'–')+'</td><td>'+(a.length?f2(a[0]):"–")+'</td><td>'+(sp.length?f2(Math.min(...sp))+(sp.length>1?'–'+f2(Math.max(...sp)):''):'–')+'</td><td>'+(r.hits!=null?r.hits+(r.of?'/'+r.of:''):'')+'</td><td><button class="linkbtn" type="button" data-trx="'+esc(r.id)+'" aria-label="Delete this run">×</button></td></tr>';}
   function renderSession(root){const s=sessOf(V.sid),p=profOf(s.profileId);setHead(fmtD(s.date),p?(p.name||"Unnamed profile"):"Without a profile");
     const r=sessRounds(s),timed=r-(num(s.extra)||0),m=runsByDrill(s.runs);
-    let h='<section class="card" aria-label="Run a drill"><h2>Run a drill</h2><div class="trgrid">'+drills().map(d=>'<button class="btn trrun" type="button" data-trrun="'+esc(d.id)+'"><b>'+esc(d.name)+'</b><span>'+d.shots+' shot'+(d.shots===1?'':'s')+(d.par?' · par '+f2(d.par):'')+'</span></button>').join("")+'<button class="btn trrun" type="button" data-trrun=""><b>Free run</b><span>no drill</span></button></div></section>';
-    h+='<section class="card" aria-label="Runs"><h2>Runs</h2>'+(s.runs.length?[...m].map(([k,rs])=>{const st=stats(rs);
+    let h='<section class="card" aria-label="Session"><h2>Session</h2><div class="grid"><div class="field"><label for="ts_date">Date</label><input id="ts_date" type="date" value="'+esc(s.date||"")+'"></div><div class="field"><label for="ts_place">Where</label><input id="ts_place" value="'+esc(s.place||"")+'" placeholder="Range or place"></div>'+
+      (p?gearFields(s,"ts"):'')+'<div class="field"><label for="ts_extra">Other rounds fired</label><input id="ts_extra" type="number" inputmode="numeric" step="1" min="0" placeholder="0" value="'+(num(s.extra)!=null?s.extra:"")+'"></div></div>'+
+      '<p class="note" id="tsRounds">'+(r?'<b>'+r.toLocaleString()+' rounds</b> this session: '+timed+' in timed runs'+((num(s.extra)||0)?' + '+num(s.extra)+' other':'')+(p?(s.gunId?', counted toward '+esc(gearTxt(s))+'.':'. Pick a gun to count them toward it.'):'.'):'Other rounds fired are shots you didn\'t time (warm-up, zeroing); they count toward the gun and ammo too.')+'</p></section>';
+    h+='<section class="card" aria-label="Run a drill"><h2>Run a drill</h2><div class="trgrid">'+drills().map(d=>'<button class="btn trrun" type="button" data-trrun="'+esc(d.id)+'"><b>'+esc(d.name)+'</b><span>'+d.shots+' shot'+(d.shots===1?'':'s')+(d.par?' · par '+f2(d.par):'')+'</span></button>').join("")+'<button class="btn trrun" type="button" data-trrun=""><b>Free run</b><span>no drill</span></button></div></section>';
+    h+='<section class="card" aria-label="Runs"><h2>Runs</h2>'+(s.runs.length?[...m].map(([k,rs])=>{const st=stats(rs),d=k?drillOf(k):null;
       return '<div class="trdgrp"><h3 class="trdh">'+esc(drillName(k,rs))+'</h3><p class="note trdsum">'+(st.n?st.n+' run'+(st.n===1?'':'s')+' · best '+f2(st.best)+' · average '+f2(st.avg)+' · first shot '+f2(st.first)+(st.hits!=null?' · '+Math.round(st.hits*100)+'% hits':''):'')+(st.dry?(st.n?' · ':'')+st.dry+' dry':'')+'</p>'+
-        '<div class="tablewrap"><table class="trtbl"><thead><tr><th>Time</th><th>First</th><th>Splits</th><th>Hits</th><th></th></tr></thead><tbody>'+rs.map(runRow).join("")+'</tbody></table></div></div>';}).join(""):'<p class="note">No runs yet. Pick a drill above.</p>')+'</section>';
-    h+='<section class="card" aria-label="Session"><h2>Session</h2><div class="grid"><div class="field"><label for="ts_date">Date</label><input id="ts_date" type="date" value="'+esc(s.date||"")+'"></div><div class="field"><label for="ts_place">Where</label><input id="ts_place" value="'+esc(s.place||"")+'" placeholder="Range or place"></div>'+
-      (p?gearFields(s,"ts"):'')+'<div class="field"><label for="ts_extra">Other rounds fired</label><input id="ts_extra" type="number" inputmode="numeric" step="1" min="0" placeholder="0" value="'+(num(s.extra)!=null?s.extra:"")+'"></div>'+
-      '<div class="field wide"><label for="ts_notes">Notes</label><textarea id="ts_notes" placeholder="How it went, what to work on…">'+esc(s.notes||"")+'</textarea></div></div>'+
-      '<p class="note" id="tsRounds">'+(r?'<b>'+r.toLocaleString()+' rounds</b> this session: '+timed+' in timed runs'+((num(s.extra)||0)?' + '+num(s.extra)+' other':'')+(p?(s.gunId?', counted toward '+esc(gearTxt(s))+'.':'. Pick a gun to count them toward it.'):'.'):'Other rounds fired are shots you didn\'t time (warm-up, zeroing); they count toward the gun and ammo too.')+'</p>'+
-      '<div class="row endrow"><button class="btn danger" type="button" id="tsDel">Delete session</button></div></section>';
+        '<div class="tablewrap"><table class="trtbl"><thead><tr><th>Time</th><th>First</th><th>Splits</th><th>Hits</th><th></th></tr></thead><tbody>'+rs.map(runRow).join("")+'</tbody></table></div>'+
+        (st.n>1?barChart(rs,d&&d.par)+'<p class="note" style="margin:0">Each run in order, its time and hits. Lower is better; <span style="color:var(--warn)">■</span> missed a hit.</p>':'')+'</div>';}).join(""):'<p class="note">No runs yet. Pick a drill above.</p>')+'</section>';
+    h+='<section class="card" aria-label="Notes"><h2>Notes</h2><div class="field"><textarea id="ts_notes" aria-label="Notes" placeholder="How it went, what to work on…">'+esc(s.notes||"")+'</textarea></div></section>'+
+      '<div class="row endrow"><button class="btn danger" type="button" id="tsDel">Delete session</button></div>';
     root.innerHTML=h;
     root.querySelectorAll("[data-trrun]").forEach(b=>b.addEventListener("click",()=>go2({view:"timer",sid:s.id,drill:b.dataset.trrun||null})));
     root.querySelectorAll("[data-trx]").forEach(b=>b.addEventListener("click",()=>{const i=s.runs.findIndex(x=>x.id===b.dataset.trx);if(i<0)return;const x=s.runs.splice(i,1)[0];save();render();
