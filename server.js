@@ -488,8 +488,17 @@ function collectUser(uid) {
   const tripPhotos = q("SELECT id, trip_id, caption, file, w, h, measure, created_at FROM trip_photos WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, measure: parseMeasure(r.measure) }));
   return { user, loads, photos, tripPhotos, brass: getDoc(uid, "brass"), calc: getDoc(uid, "calc"), rifles: getDoc(uid, "rifles"), components: getDoc(uid, "components"), trips: getDoc(uid, "trips"), ammo: getDoc(uid, "ammo"), notes: getDoc(uid, "notes"), prefs: getDoc(uid, "prefs"), training: getDoc(uid, "training") };
 }
-function sendGunExport(res, uid, kind) {
+/* serial numbers locked in the vault (2.43.20): the server only has them scrambled. An export asked for with the person's
+   own unlocked serials (POST {serials: {id: serial}}) fills them in for that one file, and nothing is kept; otherwise they
+   read "Locked in the vault". */
+function applySerials(d, map) {
+  const R = d.rifles || {}, m = map && typeof map === "object" ? map : {};
+  for (const k of ["rows", "scopes", "parts", "cans", "inventory"]) for (const x of Array.isArray(R[k]) ? R[k] : [])
+    if (x && x.serialEnc && !x.serial) x.serial = typeof m[x.id] === "string" && m[x.id] ? m[x.id].slice(0, 80) : "Locked in the vault";
+}
+function sendGunExport(res, uid, kind, serials) {
   const d = collectUser(uid);
+  applySerials(d, serials);
   if (!d.user) throw new HttpError(404, "User not found.");
   d.gunPhotos = q("SELECT id, rifle_id, file, created_at FROM gun_photos WHERE owner_id=? ORDER BY created_at").all(uid);
   const safe = (d.user.username || "user").replace(/[^A-Za-z0-9._-]/g, "_");
@@ -504,8 +513,9 @@ function sendGunExport(res, uid, kind) {
 }
 let BK = null; // backups and imports (backup.js), set up once the database helpers exist
 function backups() { return BK || (BK = backupKit({ q, db, PHOTO_DIR, getDoc, putDoc, now, APP_VERSION, zip })); }
-function sendExport(res, uid, kind) {
+function sendExport(res, uid, kind, serials) {
   const d = collectUser(uid);
+  if (kind !== "zip") applySerials(d, serials);
   if (!d.user) throw new HttpError(404, "User not found.");
   if (kind === "zip") {
     const buf = backups().backupZip(uid);
@@ -638,8 +648,10 @@ async function api(req, res, url) {
   /* ---- export your own data ---- */
   const gx = /^\/api\/export\/guns\.(xlsx|pdf)$/.exec(p);
   if (gx && method === "GET") return sendGunExport(res, user.id, gx[1]);
+  if (gx && method === "POST") { const b = await readJson(req, 1024 * 1024); return sendGunExport(res, user.id, gx[1], b && b.serials); }
   let ex = /^\/api\/export\.(xlsx|pdf)$/.exec(p);
   if (ex && method === "GET") return sendExport(res, user.id, ex[1]);
+  if (ex && method === "POST") { const b = await readJson(req, 1024 * 1024); return sendExport(res, user.id, ex[1], b && b.serials); }
   if (p === "/api/backup.zip" && method === "GET") return sendExport(res, user.id, "zip");
   /* ---- import a backup or an Excel export into your own account (adds; skips what's already here) ---- */
   if (p === "/api/import" && method === "POST") {

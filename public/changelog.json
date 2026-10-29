@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.43.19",
-      "date": "2026-10-24",
+      "version": "2.43.20",
+      "date": "2026-10-28",
       "title": "Bigger text, and the effective range numbers in a pop-up",
       "items": [
+        "You can lock your serial numbers in the vault: Account › Document vault › Lock serial numbers in the vault encrypts the serial number of every gun, lower, optic, suppressor and inventory item with your vault passphrase. They show while the vault is unlocked, and Export Excel and Export PDF ask for the passphrase so the file still has them.",
         "Help (?) from a tool now brings you back to that tool: ‹ Back returns to the Shot timer, the Library list or whichever tool you were in, instead of the Tools tiles. From a drill's timer in a Training session, it returns to the timer.",
         "Training: the built-in Failure to stop drill is now called the Mozambique drill (two to the body, then one to the head), so it's easy to find. Your runs and par time for it are kept.",
         "What's new is shorter: the newest version is open, the two before it fold on their own, and older versions fold together in groups (2.30 to 2.39, 2.20 to 2.29 and so on, and all of 1.x). Every note is still there.",

@@ -1832,6 +1832,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Document vault</h3>
       <p>Suppressors, guns and inventory items have a <b>Documents</b> card for papers like a tax stamp, a receipt or a manual (PDFs or pictures, up to 15 MB). The first time, tap <b>Set up the vault</b> and choose a vault passphrase. It isn't your sign-in password: use something long you don't use anywhere else, like four or five random words. Every document is locked (encrypted) on your phone or computer with that passphrase before it's uploaded, so the server only ever holds scrambled data. Nobody can open your documents without the passphrase: not the person who runs this server, not an admin (even one who resets your password), not someone with your backup file, and not Range Book's maker. <b>That also means a forgotten passphrase can't be recovered</b>, and neither can the documents, so keep the originals somewhere too.</p>
       <p>To see or add documents, tap <b>Unlock</b> and type the passphrase. On a computer <b>Open</b> shows the document in a new tab; on a phone it unlocks it, then a second tap opens the share sheet to view, print or save it. The vault locks itself after 15 minutes, when you tap <b>Lock</b>, or when you close Range Book. <a class=goto href=#go data-go=account:vault>Account › Document vault</a> shows how many documents you have and lets you change the passphrase (your documents stay as they are). Your backup file includes the vault, still locked: restoring it brings the documents back, and they open with the same passphrase. One caution: whoever controls the server could, in theory, change Range Book's code to capture a passphrase as it's typed, so only use the vault on a Range Book run by someone you trust.</p>
+      <p><b>Lock serial numbers:</b> in <a class=goto href=#go data-go=account:vault>More › Account › Document vault</a>, tap <b>Lock serial numbers in the vault</b> to encrypt the serial number of every gun, lower, optic, suppressor and inventory item with your vault passphrase. They show only while the vault is unlocked (searching by serial works only then too), and a serial you type while it's locked is locked the next time you unlock it. <b>Export Excel</b> and <b>Export PDF</b> ask for your passphrase and put the serial numbers in the file, so an insurance list still has them. Backups keep them locked. If you forget the passphrase, the serial numbers are lost. <b>Unlock serial numbers</b> turns it off.</p>
       <p><b>With no signal:</b> in <a class=goto href=#go data-go=account:vault>More › Account › Document vault</a>, turn on <b>Keep on this device for offline use</b> on each phone or tablet you want it on. That device then keeps a copy of your vault, still locked with your passphrase, and updates it whenever you open the vault with a signal. With no signal, the Documents cards say they're using that copy: unlock with your passphrase as usual and open your documents. Adding or deleting documents still needs a signal. Turn the switch off to remove the copy; signing out removes it too.</p>
     </section>
     <section class="card guide" aria-label="Tools" id="hTools"><h2>Tools</h2>
@@ -4791,7 +4792,7 @@ function queueRifles(){
   riflesDirty=true;riflesVer++;const my=riflesVer;
   clearTimeout(riflesTimer);
   riflesTimer=setTimeout(()=>{
-    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts)),cans:JSON.parse(JSON.stringify(cans)),inventory:JSON.parse(JSON.stringify(inv)),mags:JSON.parse(JSON.stringify(mags)),gnotes:JSON.parse(JSON.stringify(gnotes))}}))
+    riflesSaving=riflesSaving.then(()=>API.put("/api/doc/rifles",{data:{rows:JSON.parse(JSON.stringify(rifles)),scopes:JSON.parse(JSON.stringify(scopes)),parts:JSON.parse(JSON.stringify(parts)),cans:JSON.parse(JSON.stringify(cans)),inventory:JSON.parse(JSON.stringify(inv)),mags:JSON.parse(JSON.stringify(mags)),gnotes:JSON.parse(JSON.stringify(gnotes)),serialLock:SER.on}}))
       .then(()=>{if(riflesVer===my){riflesDirty=false;const el=$("rifleState");if(el)el.textContent="Saved";}},e=>{riflesDirty=false;onWriteError(e);});
   },600);
   const el=$("rifleState");if(el)el.textContent="Saving…";
@@ -4880,7 +4881,7 @@ function syncBuilds(){
 function gunSpec(g){if(!g||!g.build)return g;const lo=partById(g.build.lowerId),up=partById(g.build.upperId),o=Object.assign({},g);
   if(up)["cartridge","barrel","twist","sightHeight","scopeId"].forEach(k=>{const v=up[k];if(v!=null&&v!=="")o[k]=v;});
   o.threaded=!!(up&&up.threaded); // a built gun's barrel is its upper's (2.43.13)
-  if(lo&&lo.serial)o.serial=lo.serial;o.built=true;return o;}
+  if(lo&&(lo.serial||lo.serialEnc))o.serial=serialTxt(lo);o.built=true;return o;}
 window.RB_GUN_SPEC=gunSpec;
 // a gun with one of its barrels on: the barrel's own boxes win, blank ones use the gun's
 function effGun(g,p){g=gunSpec(g);if(!g||!p)return g;const o=Object.assign({},g);["cartridge","barrel","twist","sightHeight","scopeId"].forEach(k=>{const v=p[k];if(v!=null&&v!=="")o[k]=v;});o.threaded=!!p.threaded;
@@ -4902,14 +4903,14 @@ function partRounds(p){
   return {base,trip,nTrips,dev,train,nTrain,total,life,pct,since:cl?since:null,due:!!(cl&&every>0&&since>=every)};}
 function partsChanged(){syncBuilds();queueRifles();if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));}
 function newPart(kind,gid,linkTo){const g=rifles.find(r=>r.id===gid);const p={id:"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:["lower","upper","barrel"].includes(kind)?kind:"barrel",mfr:"",model:"",notes:""};
-  if(p.kind==="barrel")p.gunId=g?g.id:"";if(p.kind==="lower")p.serial="";else Object.assign(p,{cartridge:"",barrel:null,twist:null,sightHeight:null,scopeId:""});
+  if(p.kind==="barrel")p.gunId=g?g.id:"";if(p.kind==="lower"){p.serial="";delete p.serialEnc;}else Object.assign(p,{cartridge:"",barrel:null,twist:null,sightHeight:null,scopeId:""});
   parts.push(p);freshAdd(p,{list:()=>parts,open:()=>partOpen===p.id,save:partsChanged});if(linkTo&&linkTo.build)linkTo.build[p.kind+"Id"]=p.id;partsChanged();partOpen=p.id;partFromGun=g?g.id:(linkTo?linkTo.id:null);rifleOpen=null;renderRifles();window.scrollTo(0,0);const el=$("pt_mfr");if(el)el.focus();}
 // a new gun built from this lower or upper
 function makeGun(p){const r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:"",mfr:"",model:"",barrel:null,twist:null,sightHeight:null,notes:"",typeChecked:true,build:{lowerId:"",upperId:""}};
   r.build[p.kind+"Id"]=p.id;rifles.push(r);queueRifles();partOpen=null;partFromGun=null;rifleOpen=r.id;renderRifles();window.scrollTo(0,0);}
 window.RB_PARTS=()=>parts;
 function partItemHtml(p){const rc=partRounds(p),g=rifles.find(r=>r.id===p.gunId),us=gunsUsing(p);
-  const d=p.kind==="lower"?(p.serial?"Serial "+p.serial:""):[p.cartridge||"",num(p.barrel)?BBL(num(p.barrel))+" barrel":"",num(p.twist)?"1:"+(U.metric?U.s("dim",num(p.twist),0):num(p.twist))+" twist":""].filter(Boolean).join(" · ");
+  const d=p.kind==="lower"?(p.serial||p.serialEnc?"Serial "+serialTxt(p):""):[p.cartridge||"",num(p.barrel)?BBL(num(p.barrel))+" barrel":"",num(p.twist)?"1:"+(U.metric?U.s("dim",num(p.twist),0):num(p.twist))+" twist":""].filter(Boolean).join(" · ");
   const where=p.kind==="barrel"?(g?'On '+esc(g.name||"Unnamed gun"):'Not on a gun'):(us.length?(p.kind==="lower"?'In '+esc(buildName(us[0]))+(us.length>1?' with '+us.length+' uppers':''):'In '+[...new Set(us.map(r=>r.name||"Unnamed gun"))].map(esc).join(", ")):'Not in a gun yet');
   const used=!rifleOpen&&(p.kind==="barrel"?!!g:us.length>0);
   return '<button class="loaditem'+(used?' used':'')+'" type="button" data-ptopen="'+esc(p.id)+'"><span class="t">'+esc(partName(p))+' <span class="chip">'+partKind(p)+'</span></span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+
@@ -4971,7 +4972,8 @@ function renderPart(root){
   root.querySelectorAll("[data-ptkind]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.ptkind;if(k===p.kind)return;
     // turning it into something else unlinks it from guns that used it as the old kind
     rifles.forEach(r=>{if(r.build&&r.build[p.kind+"Id"]===p.id)r.build[p.kind+"Id"]="";});if(k!=="barrel")delete p.gunId;else p.gunId=p.gunId||"";p.kind=k;partsChanged();renderRifles();}));
-  [["mfr",false],["model",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{const el=$("pt_"+k);if(!el)return;
+  serBind("pt_serial",p,partsChanged);
+  [["mfr",false],["model",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{const el=$("pt_"+k);if(!el)return;
     el.addEventListener("input",()=>{p[k]=isNum?readU(el,k,GUN_U,p[k]):el.value;partsChanged();if(k==="mfr"||k==="model")$("rifTitle").textContent=partName(p);});});
   [["barrelLife",true],["roundsBase",true],["cleanEvery",true],["cleaned",false]].forEach(([k,isNum])=>{const el=$("pt_"+k);if(!el)return;
     el.addEventListener("input",()=>{p[k]=isNum?num(el.value):(el.value||null);queueRifles();drawRc();});});
@@ -5403,8 +5405,8 @@ function renderRifles(){
       list.sort((x,y)=>(gk==="__fav"?gunFavN(x.sibs)-gunFavN(y.sibs):0)||x.n.localeCompare(y.n,undefined,{numeric:true})).forEach(({r,sibs,n:gname})=>{
         if(r.build&&r.build.lowerId){const lo=partById(r.build.lowerId),lr=lo?partRounds(lo):null,nl=sibs.reduce((a,x)=>a+usedBy(x.id).length,0),gp=sibs.map(x=>gunPhotosOf(x.id)[0]).find(Boolean);
           const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-          h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([lo&&lo.serial,...sibs.map(x=>x.serial)].filter(Boolean).map(s=>"serial "+s).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
-            '<span class="d">'+esc([r.nick&&gunMakeModel(r)?gunMakeModel(r):"",sibs.length+(sibs.length===1?' upper':' uppers'),lo&&lo.serial?'Serial '+lo.serial:''].filter(Boolean).join(' · '))+'</span>'+
+          h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([lo&&serialFind(lo),...sibs.map(serialFind)].filter(Boolean).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
+            '<span class="d">'+esc([r.nick&&gunMakeModel(r)?gunMakeModel(r):"",sibs.length+(sibs.length===1?' upper':' uppers'),lo&&(lo.serial||lo.serialEnc)?'Serial '+serialTxt(lo):''].filter(Boolean).join(' · '))+'</span>'+
             '<span class="varchips">'+sibs.map(x=>'<span class="varchip" data-rvar="'+esc(x.id)+'">'+esc(x.varLabel||"No upper yet")+'</span>').join("")+'</span>'+
             (lr&&lr.total?'<span class="best"><b>'+lr.total.toLocaleString()+'</b> rounds on the lower'+(lr.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'')+
             '<span class="m">'+(nl?'Used by '+nl+' load'+(nl===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,gname)+'</div>';
@@ -5413,7 +5415,7 @@ function renderRifles(){
         const rt=rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
         const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
-        h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([r.serial?"serial "+r.serial:"",lo0&&lo0.serial?"serial "+lo0.serial:""].filter(Boolean).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
+        h+='<div class="gtile" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([serialFind(r),lo0&&serialFind(lo0)].filter(Boolean).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
           '<span class="m">'+(n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,r.name||"this gun")+'</div>';
       });
       h+='</div>';});
@@ -5545,7 +5547,8 @@ function renderRifles(){
     ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();{const cf=$("rfCanFit");if(cf)cf.innerHTML=gunCans(r).map(id=>canFitHtml(cans.find(c=>c.id===id),gunCart(r))).join("");}if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
     ce.addEventListener("change",()=>{if(ce.value.trim())rememberCartridge(RB_CARTS.canon(ce.value));});
     RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[]});}
-  [["nick",false],["mfr",false],["model",false],["serial",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
+  serBind("rf_serial",r,queueRifles);
+  [["nick",false],["mfr",false],["model",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
     const el=$("rf_"+k);if(!el)return;
     el.addEventListener("input",()=>{r[k]=isNum?readU(el,k,GUN_U,r[k]):el.value;if(k==="nick"&&!String(r.nick).trim())delete r.nick;const nm=k==="mfr"||k==="model"||k==="nick";if(nm){if(k!=="nick")delete r.nameAuto;if(r.build&&r.build.lowerId){buildSibs(r).forEach(x=>{if(k==="nick"){if(r.nick)x.nick=r.nick;else delete x.nick;return;}x.mfr=r.mfr;x.model=r.model;delete x.nameAuto;});syncBuilds();$("rifTitle").textContent=buildName(r);}else{r.name=gunName(r);$("rifTitle").textContent=r.name||"Unnamed gun";}}queueRifles();if(nm||k==="sightHeight")syncRifleIntoLoads(r);});
   });
@@ -5774,7 +5777,7 @@ function vLoad(force){
 async function vNames(){if(!VLT.key)return;for(const d of VLT.docs){if(VLT.names.has(d.id))continue;try{VLT.names.set(d.id,JSON.parse(new TextDecoder().decode(await vDec(vb64d(d.meta.iv),vb64d(d.meta.ct)))));}catch(e){VLT.names.set(d.id,{name:"(couldn't read this document's name)",type:"application/octet-stream"});}}}
 function vTouch(){clearTimeout(VLT.timer);if(VLT.key)VLT.timer=setTimeout(()=>vLock(),VLT_IDLE);}
 function vLock(){VLT.key=null;VLT.names.clear();VLT.ready.clear();clearTimeout(VLT.timer);if(typeof GN_DEC!=="undefined")GN_DEC.clear();vRedraw();if(gunArea==="notes"&&!$("panel-rifles").hidden&&!gnBusy)renderRifles();}
-const vRedraw=()=>{document.querySelectorAll("[data-vault]").forEach(el=>vDraw(el));vAccountDraw();};
+const vRedraw=()=>{document.querySelectorAll("[data-vault]").forEach(el=>vDraw(el));vAccountDraw();serAfterVault();};
 // a short message on the Documents cards (and Account), since this tab has no banner of its own
 function vSay(t,bad){document.querySelectorAll("[data-vault] .vmsg,#vaultAcct .vmsg").forEach(m=>{m.textContent=t;m.className="vmsg "+(bad?"err":"note");m.hidden=!t;});}
 // the passphrase sheet: "setup", "unlock" or "change"; resolves with the passphrase(s), or null if closed
@@ -5868,6 +5871,54 @@ function vDraw(el){
 }
 // Account → Document vault
 window.RB_VAULT_ACCT=()=>vAccountDraw();
+/* Serial numbers locked in the vault (2.43.20). Turned on from Account › Document vault: each serial is kept as
+   serialEnc:{iv,ct} (scrambled with the vault key) and serial:"". SER.dec holds the ones read on this device while the
+   vault is open; locking the vault clears it. Exports ask for the passphrase and send the serials for that one file. */
+const SER={on:false,dec:new Map()},SER_SEQ=new WeakMap();
+const serAll=()=>[rifles,scopes,parts,cans,inv].flatMap(L=>Array.isArray(L)?L.filter(Boolean):[]);
+const serialOf=x=>!x?"":x.serialEnc?(SER.dec.has(x.serialEnc.ct)?SER.dec.get(x.serialEnc.ct):null):(x.serial||"");
+const serialTxt=x=>{const v=serialOf(x);return v===null?"Locked in the vault":v;};
+const serialFind=x=>{const v=serialOf(x);return v?"serial "+v:"";};
+async function serDecryptAll(){if(!VLT.key)return 0;let n=0;for(const x of serAll()){const e=x.serialEnc;if(!e||SER.dec.has(e.ct))continue;
+  try{SER.dec.set(e.ct,new TextDecoder().decode(await vDec(vb64d(e.iv),vb64d(e.ct))));}catch(er){SER.dec.set(e.ct,"(couldn't be read with this vault)");}n++;}return n;}
+async function serEncOne(x,v){const r=await vEnc(new TextEncoder().encode(v)),e={iv:vb64e(r.iv),ct:vb64e(r.ct)};SER.dec.set(e.ct,v);return e;}
+async function serSweep(){if(!SER.on||!VLT.key)return 0;let n=0; // typed while the vault was locked, or imported
+  for(const x of serAll())if(x.serial&&!x.serialEnc){const v=String(x.serial);x.serialEnc=await serEncOne(x,v);x.serial="";n++;}
+  if(n)queueRifles();return n;}
+function serRefresh(){if(!$("panel-rifles").hidden&&!riflesEditing())renderRifles();if(window.TRAJ_RIFLES)TRAJ_RIFLES(rifles.map(gunSpec));}
+let serBusy=null;
+function serAfterVault(){if(serBusy)return serBusy;
+  if(!VLT.key){if(SER.dec.size){SER.dec.clear();serRefresh();}return Promise.resolve();}
+  return serBusy=(async()=>{try{const a=await serDecryptAll(),b=await serSweep();if(a||b)serRefresh();}finally{serBusy=null;}})();}
+async function serSet(x,v,save){const n=(SER_SEQ.get(x)||0)+1;SER_SEQ.set(x,n);
+  if(!v){x.serial="";delete x.serialEnc;return save();}
+  if(SER.on&&VLT.key){const e=await serEncOne(x,v);if(SER_SEQ.get(x)!==n)return;x.serialEnc=e;x.serial="";return save();}
+  if(x.serialEnc&&!VLT.key)return;delete x.serialEnc;x.serial=v;save();}
+function serBind(id,x,save){const el=$(id);if(!el)return;const v=serialOf(x);
+  if(v===null){el.value="";el.disabled=true;el.placeholder="Locked in the vault";
+    const n=document.createElement("p");n.className="note";n.innerHTML='<button class="btn small" type="button">Unlock the vault to see it</button>';
+    n.querySelector("button").addEventListener("click",()=>vUnlock());(el.closest(".field")||el).appendChild(n);return;}
+  el.value=v;el.addEventListener("input",()=>serSet(x,el.value,save));}
+async function serLockAll(){if(!VLT.key)await vUnlock();if(!VLT.key)return;await serDecryptAll();
+  for(const x of serAll())if(x.serial&&!x.serialEnc){x.serialEnc=await serEncOne(x,String(x.serial));x.serial="";}
+  SER.on=true;queueRifles();serRefresh();vAccountDraw();}
+async function serUnlockAll(){if(!VLT.key)await vUnlock();if(!VLT.key)return;await serDecryptAll();
+  for(const x of serAll())if(x.serialEnc){const v=SER.dec.get(x.serialEnc.ct);x.serial=v&&v.charAt(0)!=="("?v:(x.serial||"");delete x.serialEnc;}
+  SER.on=false;SER.dec.clear();queueRifles();serRefresh();vAccountDraw();}
+function serAcctBox(){const box=document.createElement("div");box.className="voff";const n=serAll().filter(x=>x.serialEnc).length;
+  box.innerHTML=SER.on?'<p class="note"><b>Serial numbers are locked in the vault</b>'+(n?' ('+n+')':'')+'. They show only while the vault is unlocked, and searching by serial works only then. Exports ask for your passphrase so the file has them.</p><div class="row"><button class="btn" type="button" id="serOff">Unlock serial numbers</button></div>'
+    :'<p class="note">Lock every serial number on your guns, lowers, optics, suppressors and inventory with the vault passphrase. Someone who gets into your account, or the server, then can\'t read them. If you forget the passphrase, they\'re lost.</p><div class="row"><button class="btn" type="button" id="serOn">Lock serial numbers in the vault</button></div>';
+  const b=box.querySelector("button");b.addEventListener("click",async()=>{b.disabled=true;try{await(SER.on?serUnlockAll():serLockAll());}finally{b.disabled=false;}});return box;}
+/* an export of your own data fills in locked serial numbers once the vault is open */
+document.addEventListener("click",async e=>{const a=e.target.closest&&e.target.closest('a[href^="/api/export"]');if(!a||!serAll().some(x=>x.serialEnc))return;
+  e.preventDefault();if(!VLT.key)await vUnlock();if(!VLT.key)return;await serDecryptAll();
+  const serials={};serAll().forEach(x=>{if(x.serialEnc&&SER.dec.has(x.serialEnc.ct))serials[x.id]=SER.dec.get(x.serialEnc.ct);});
+  const old=a.textContent;a.textContent="Preparing…";
+  try{const r=await fetch(a.getAttribute("href"),{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:JSON.stringify({serials})});
+    if(!r.ok)throw new Error();const m=/filename="?([^";]+)/.exec(r.headers.get("Content-Disposition")||"");
+    const u=URL.createObjectURL(await r.blob()),d=document.createElement("a");d.href=u;d.download=m?m[1]:a.getAttribute("href").split("/").pop();document.body.appendChild(d);d.click();d.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);
+    a.textContent=old;}
+  catch(x){a.textContent="Didn't work. Try again";setTimeout(()=>{a.textContent=old;},4000);}});
 function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
   if(window.GUEST){el.innerHTML='<p class="note">The document vault needs an account.</p>';return;}
   if(vNoCrypto()){el.innerHTML=VNOSEC;return;}
@@ -5887,7 +5938,8 @@ function vAccountDraw(){const el=$("vaultAcct");if(!el)return;
     showState();
     $("vaOff").addEventListener("change",async e=>{
       if(e.target.checked){VOFF.set(true);vAccountState("Saving documents on this device…");try{await vLoad(true);await VOFF.sync();}catch(x){vAccountState("Couldn't save the copy: you need a signal to make it.");}}
-      else{VOFF.set(false);await VOFF.clear();vAccountDraw();}});}}
+      else{VOFF.set(false);await VOFF.clear();vAccountDraw();}});}
+  el.appendChild(serAcctBox());}
 function vAccountState(t){const st=$("vaOffState");if(st&&t)st.textContent=t;}
 
 /* ---------- Suppressors and Inventory (Gear & Ranges, 2.20) ----------
@@ -6034,7 +6086,7 @@ function renderCans(root){
     if(!cans.length)h+='<p class="note">No suppressors yet. Add each one with its serial number and approval date. Put one on a gun if it lives there; leave it off if it moves between guns, and pick it on each range trip. Its round count comes from the range trips shot with it.</p>';
     else h+='<div class="cartgroup">'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(x=>{const gs=canGuns(x),rc=canRounds(x),th=gearThumb(x.id);
       return '<button class="loaditem withthumb" type="button" data-canopen="'+esc(x.id)+'"><span class="lthumb">'+(th||CAN_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(canName(x))+'</span>'+
-        '<span class="d">'+esc([x.caliber||"",x.serial?"Serial "+x.serial:"",x.approved?"Approved "+fmtDate(x.approved):""].filter(Boolean).join(" · "))+'</span>'+
+        '<span class="d">'+esc([x.caliber||"",x.serial||x.serialEnc?"Serial "+serialTxt(x):"",x.approved?"Approved "+fmtDate(x.approved):""].filter(Boolean).join(" · "))+'</span>'+
         '<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>'+
         '<span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", "))+(gs.some(g=>canFitHtml(x,gunCart(g)).includes('class="err"'))?' <span class="lowtag">· not rated for that cartridge</span>':''):'Not on any gun\'s list yet')+'</span></span></button>';}).join("")+'</div>';
     h+='</section>';
@@ -6074,7 +6126,8 @@ function renderCans(root){
     if(window.RB_CARTS)RB_CARTS.picker(ce,{more:canFamMore,extra:()=>comps.cartridges||[],onPick:()=>{c.caliber=ce.value.trim();queueRifles();drawFit();}});
     ce.addEventListener("input",()=>setTimeout(drawFit));ce.addEventListener("blur",()=>setTimeout(drawFit,200));}
   drawFit();if(c.cat&&c.cat.maxcal==null&&!window.RB_CANS)loadCanCat().then(drawFit);
-  [["mfr",0],["model",0],["caliber",0],["serial",0],["approved",0],["notes",0],["roundsBase",1],["cleanEvery",1],["cleaned",0]].forEach(([k,isNum])=>{const el=$("cn_"+k);if(!el)return;
+  serBind("cn_serial",c,queueRifles);
+  [["mfr",0],["model",0],["caliber",0],["approved",0],["notes",0],["roundsBase",1],["cleanEvery",1],["cleaned",0]].forEach(([k,isNum])=>{const el=$("cn_"+k);if(!el)return;
     el.addEventListener("input",()=>{c[k]=isNum?num(el.value):el.value;queueRifles();if(k==="mfr"||k==="model")$("rifTitle").textContent=canName(c);if(isNum||k==="cleaned")drawRc();});});
   $("cnCleaned").addEventListener("click",()=>{c.cleaned=todayStr();$("cn_cleaned").value=c.cleaned;queueRifles();drawRc();});
   root.querySelectorAll("[data-cngun]").forEach(cb=>cb.addEventListener("change",()=>{const g=rifles.find(x=>x.id===cb.dataset.cngun);if(g)setGunCan(g,c.id,cb.checked);drawFit();if(window.RB_CANCHANGED)RB_CANCHANGED();}));
@@ -6224,7 +6277,7 @@ function renderInv(root){
       const chips=(invLow(it)?' <span class="chip warnchip">Low</span>':'')+(invDue(it)?' <span class="chip warnchip">'+esc(invDays(it)<0?"Overdue":"Due "+shortDate(it.due))+'</span>':'');
       const d=[it.cat||"",it.where||"",g?"With "+(g.name||"a gun"):""].filter(Boolean).join(" · ");
       const m=cons?[num(it.qty)!=null?qtyTxt(it.qty)+" on hand":"",num(it.warnAt)!=null?"warn at "+qtyTxt(it.warnAt):"",it.due&&!invDue(it)?"Next "+fmtDate(it.due):""].filter(Boolean).join(" · ")
-        :[it.serial?"Serial "+it.serial:"",it.bought?"Bought "+fmtDate(it.bought):"",it.price||"",it.due&&!invDue(it)?"Next "+fmtDate(it.due):""].filter(Boolean).join(" · ");
+        :[it.serial||it.serialEnc?"Serial "+serialTxt(it):"",it.bought?"Bought "+fmtDate(it.bought):"",it.price||"",it.due&&!invDue(it)?"Next "+fmtDate(it.due):""].filter(Boolean).join(" · ");
       return '<button class="loaditem withthumb" type="button" data-invo="'+esc(it.id)+'"><span class="lthumb">'+(th||INV_ICON[cons?"consumable":"equipment"])+'</span><span class="ltext grow"><span class="t">'+esc(invName(it))+chips+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+esc(m)+'</span>':'')+'</span></button>';};
     const by=(a,b)=>String(a.cat||"").localeCompare(String(b.cat||""),undefined,{numeric:true})||invName(a).localeCompare(invName(b),undefined,{numeric:true});
     const att=inv.filter(it=>invLow(it)||invDue(it)).sort((a,b)=>(invDays(a)==null?1e9:invDays(a))-(invDays(b)==null?1e9:invDays(b))||by(a,b));
@@ -6259,7 +6312,8 @@ function renderInv(root){
     gearPhotosHtml(x.id,invName(x))+vaultCardHtml(x.id)+
     '<div class="row endrow"><button class="btn danger" type="button" id="invDel">Delete item</button></div>';
   root.innerHTML=h;gearHead(invName(x),"‹ Inventory");
-  [["name",0],["cat",0],["qty",1],["warnAt",1],["where",0],["due",0],["serial",0],["price",0],["bought",0],["notes",0]].forEach(([k,isNum])=>{const el=$("iv_"+k);if(!el)return;
+  serBind("iv_serial",x,queueRifles);
+  [["name",0],["cat",0],["qty",1],["warnAt",1],["where",0],["due",0],["price",0],["bought",0],["notes",0]].forEach(([k,isNum])=>{const el=$("iv_"+k);if(!el)return;
     el.addEventListener("input",()=>{x[k]=isNum?num(el.value):el.value;queueRifles();if(k==="name")$("rifTitle").textContent=invName(x);if(k==="due"){$("ivDone").hidden=!x.due;}});});
   ["kind","gun","repeat"].forEach(k=>$("iv_"+k).addEventListener("change",e=>{const v=e.target.value;if(k==="kind")x.kind=v;else if(k==="gun")x.gunId=v||null;else x.repeat=v;queueRifles();if(k!=="gun")renderRifles();}));
   const bump=d=>{x.qty=Math.max(0,(num(x.qty)||0)+d);$("iv_qty").value=qtyTxt(x.qty).replace(/,/g,"");queueRifles();$("ivMsg").textContent=invLow(x)?"Running low.":"";};
@@ -6404,7 +6458,7 @@ function renderScopes(root){
     if(!scopes.length)h+='<p class="note">No optics yet. Add the scope or sight on each gun. A scope\'s units and click value then set the dope card for every profile that uses that gun, and the reticle on the card can look like yours. A red dot or holographic sight gives holds in inches and dot widths instead.</p>';
     else{const item=x=>{const gs=onGun(x);
       const sp=picOf(x.id);
-      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'" data-find="'+esc(x.serial?"serial "+x.serial:"")+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
+      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'" data-find="'+esc(serialFind(x))+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':isDotSight(x)?DOT_ICON:SCOPE_ICON)+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
       const grp=x=>isDotSight(x)?"dot":x.kind==="prism"?"prism":"scope",by=(a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true});
       [["scope","Scopes"],["dot","Red dots and holographic sights"],["prism","Prism sights"]].forEach(([gk,gl])=>{const L=scopes.filter(x=>grp(x)===gk).sort(by);if(!L.length)return;
         h+='<div class="cartgroup"><div class="cartname">'+gl+' <span class="note">'+L.length+'</span></div>'+L.map(item).join("")+'</div>';});}
@@ -6485,7 +6539,8 @@ function renderScopes(root){
     if(isDotSight(sc)){sc.unit="moa";sc.turret=null;if(!(num(sc.dot)>0))sc.dot=k==="holo"?1:2;if(k==="holo"&&!(num(sc.ring)>0))sc.ring=68;if(!(num(sc.click)>0)||num(sc.click)<0.25)sc.click=k==="holo"?0.5:1;}
     scopesChanged();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}));
   ["dot","ring","magnifier"].forEach(k=>{const el=$("sc_"+k);if(el)el.addEventListener("change",()=>{sc[k]=el.value===""?null:+el.value;scopesChanged();if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);prev();});});
-  [["mfr",false],["model",false],["nick",false],["serial",false],["magMin",true],["magMax",true],["obj",true],["sfpTrue",true],["reticle",false],["notes",false]].forEach(([k,isNum])=>{const el=$("sc_"+k);if(!el)return;
+  serBind("sc_serial",sc,scopesChanged);
+  [["mfr",false],["model",false],["nick",false],["magMin",true],["magMax",true],["obj",true],["sfpTrue",true],["reticle",false],["notes",false]].forEach(([k,isNum])=>{const el=$("sc_"+k);if(!el)return;
     el.addEventListener("input",()=>{sc[k]=isNum?num(el.value):el.value;scopesChanged();if(k==="mfr"||k==="model"||k==="nick")$("rifTitle").textContent=scopeLabel(sc);});});
   if($("sc_fp"))$("sc_fp").addEventListener("change",e=>{sc.fp=e.target.value;scopesChanged();renderRifles();});
   if($("sc_unit"))$("sc_unit").addEventListener("change",e=>{sc.unit=e.target.value;if(!sc.turret)sc.click=sc.unit==="mil"?0.1:0.25;else if(sc.turret===sc.unit)sc.turret=null;sc.look=null;if(sc.pic)sc.pic=null;scopesChanged();renderRifles();});
@@ -10620,7 +10675,7 @@ async function refresh(first){
       if(window.RB_CARTS&&!window.GUEST){let ch=false;ammo.forEach(a=>{if(!a.cartridge)return;const c=RB_CARTS.canon(a.cartridge);if(c!==a.cartridge){a.cartridge=c;ch=true;}});if(ch)queueAmmo();}if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
     if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];
-      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];mags=R.data&&Array.isArray(R.data.mags)?R.data.mags:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];mags=R.data&&Array.isArray(R.data.mags)?R.data.mags:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];SER.on=!!(R.data&&R.data.serialLock);if(VLT.key)serAfterVault();if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     {let ch=false;rifles.forEach(r=>{if(r.canId&&!(r.canIds||[]).includes(r.canId)){r.canIds=(r.canIds||[]).concat(r.canId);ch=true;}
       // 2.43.13: a gun that already lists suppressors has a threaded barrel (its upper's, on a built gun)
       if((r.canIds||[]).length){const up=r.build&&parts.find(p=>p.id===r.build.upperId);if(r.build){if(up&&up.threaded===undefined){up.threaded=true;ch=true;}}else if(r.threaded===undefined){r.threaded=true;ch=true;}}});
