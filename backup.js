@@ -16,7 +16,7 @@ const path = require("node:path");
 const zlib = require("node:zlib");
 const crypto = require("node:crypto");
 
-const DOC_KEYS = ["calc", "brass", "rifles", "components", "prefs", "trips", "ammo", "notes"];
+const DOC_KEYS = ["calc", "brass", "rifles", "components", "prefs", "trips", "ammo", "notes", "training"];
 const DATA_SHEET = "RangeBook data";
 
 /* ---------- reading a .zip (backups and .xlsx files are both zips) ---------- */
@@ -37,7 +37,7 @@ function unzip(buf) {
       if (buf.readUInt32LE(loc) !== 0x04034b50) throw new Error("bad zip entry");
       const start = loc + 30 + buf.readUInt16LE(loc + 26) + buf.readUInt16LE(loc + 28), raw = buf.subarray(start, start + csize);
       if (method === 0) return Buffer.from(raw);
-      if (method === 8) return zlib.inflateRawSync(raw);
+      if (method === 8) return zlib.inflateRawSync(raw, { maxOutputLength: 256 * 1024 * 1024 }); // no zip bombs: 256 MB per file at most
       throw new Error("unsupported zip compression");
     });
   }
