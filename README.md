@@ -175,7 +175,9 @@ These backups sit on the same disk as your data, so they protect against mistake
 
 **Encrypted site backups (optional, super admin only):** under **Encrypt site backups** on the Admin page, set a passphrase (12+ characters) and every site backup you download, by hand or with the nightly copy, is encrypted (`.tar.gz.enc`). **Restore the whole site** asks for the passphrase; a wrong one can be retried without uploading the file again. Range Book keeps only a key derived from the passphrase and can't recover a lost one, so store it in a password manager. Backups in the server's own `backups/` folder aren't encrypted (they're on the server already). The format is standard, so a file can be opened without Range Book too: `RBENC` + byte `0x01`, a 16-byte salt, a 12-byte IV, then AES-256-GCM of the `.tar.gz` with the 16-byte tag at the end; the key is scrypt(passphrase, salt, N=32768, r=8, p=1, 32 bytes).
 
-**To restore** a nightly backup by hand:
+**To bring back one person's missing things** (without rolling back anyone else), that person signs in and uses **Account › Import** with the night's `rangebook.db` (from `backups/<date>/`), or a `.zip` of that whole folder to bring photos too. Only their own account is read from it, and it only adds what's missing: nothing they changed since is touched.
+
+**To restore** the whole site from a nightly backup by hand:
 
 ```sh
 docker stop rangebook

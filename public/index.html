@@ -123,6 +123,7 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .fieldmode .fmtbl td.up{font-weight:700;color:#7ee0e8!important}
 .fieldmode.bright .fmtbl td.up{color:#003c80!important}
 .fmnote{font-size:calc(13px*var(--fs));opacity:.75;margin-top:14px}
+body.rbwait,body.rbwait *{cursor:progress!important}
 body.noscroll{overflow:hidden}
 .undotoast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;align-items:center;gap:14px;background:var(--fg);color:var(--surface);border-radius:10px;padding:10px 10px 10px 16px;box-shadow:0 4px 18px rgba(0,0,0,.3);font-size:calc(14px*var(--fs));max-width:calc(100vw - 32px)}
 .undotoast span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1759,6 +1760,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Open the load and tick people under <b>Sharing</b>. They can see the load, its velocities and photos but can't change anything. Untick to stop sharing. Loads shared with you appear under <b>Shared with me</b>; use <b>Duplicate recipe</b> to make your own editable copy.</p>
       <h3>Back up, export and import</h3>
       <p>Tap <a class=goto href=#go data-go=account>More › Account</a> (or <b>Account</b> at the top on a computer). <b>Download backup</b> saves everything in your account in one .zip file, photos included. <b>Download Excel</b> and <b>Download PDF</b> are for reading and printing (the PDF includes your target photos).</p>
+      <p><b>Bringing things back from a nightly backup.</b> If something went missing, <b>Account › Import</b> also takes one of the server's nightly backups: the <b>rangebook.db</b> file from a dated folder in the backups folder (or a .zip of the whole folder, which brings photos too). Only your own account is read from it, and like any import it only <b>adds</b> what's missing, so anything you've changed since stays as it is.</p>
+      <p><b>Always the latest copy.</b> When you open something you can change (a gun, a recipe, a Shooting profile, a range trip, a training session…), Range Book first checks the server for the newest copy, so you're never editing an old one. With no signal it opens the copy on this device, and the <b>Offline</b> badge at the top says so. Range Book also won't save anything before it has finished loading, and the server won't let one save empty a whole list (all your guns, say): it keeps its copy and the app reloads.</p>
       <p>To bring data back in, or move it to another Range Book, use <b>Import</b> on the same page and pick a backup or an Excel export (Excel files don't carry photos). Importing <b>adds</b> to your account: anything already there is left alone and nothing is deleted, so importing the same file twice doesn't double anything.</p>
       <p><b>Super admin:</b> the first admin on a Range Book is its <b>super admin</b> (marked on the Admin page). Other admins can't delete, turn off, remove as admin, rename, reset the password of, or download the data of that account, so someone you make an admin can't lock you out. Only the super admin can download or restore the whole site, and only they can hand the role to another admin: on that person's card tap <b>Make super admin</b> twice. You stay an admin afterwards. The super admin can't remove their own admin without handing the role on first.</p>
       <p><b>The whole site (super admin):</b> on the <b>Admin</b> page, <b>Download site backup</b> saves every account and everything in it (data, photos, videos and files; document vaults stay locked) in one .tar.gz file on the device you're using. Keep it somewhere other than the server. To bring a whole site back, set up a fresh Range Book (an empty data folder), sign in with the account it asks you to make, and on the Admin page tap <b>Choose backup file</b>, pick the file and tap <b>Restore</b> twice. Every account comes back with its own password, so then sign in with your old account. It also takes a .zip of one of the nightly backup folders. It only works on a fresh install, so it can never wipe out a Range Book that's in use.</p>
@@ -2080,8 +2083,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="row"><a class="btn" href="/api/export.xlsx" download>Download Excel</a><a class="btn" href="/api/export.pdf" download>Download PDF</a></div>
     </section>
     <section class="card" aria-label="Import" id="importCard"><h2>Import</h2>
-      <p class="note">Bring in a Range Book backup (.zip) or an Excel export from Range Book. Everything in the file is <b>added</b> to your account; anything already here (the same load, gun, trip or photo) is left as it is, so importing the same file twice doesn't double anything. Nothing is deleted.</p>
-      <div class="row"><input id="impFile" type="file" accept=".zip,.xlsx,application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn primary" type="button" id="impPick">Choose a file to import</button><span class="savestate" id="impState" aria-live="polite"></span></div>
+      <p class="note">Bring in a Range Book backup (.zip), an Excel export from Range Book, or one of the server's nightly backups (the <b>rangebook.db</b> file in a dated backup folder, or a .zip of that folder; only your own account is taken from it). Everything in the file is <b>added</b> to your account; anything already here (the same load, gun, trip or photo) is left as it is, so importing the same file twice doesn't double anything. Nothing is deleted.</p>
+      <div class="row"><input id="impFile" type="file" accept=".zip,.xlsx,.db,.tar,.gz,application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn primary" type="button" id="impPick">Choose a file to import</button><span class="savestate" id="impState" aria-live="polite"></span></div>
       <div id="impRes"></div>
       <h3 class="sxsub">From a spreadsheet</h3>
       <p class="note">Add guns, optics, lowers, uppers, barrels, magazines, factory ammo, bullets, powders, primers and brass from your own spreadsheet, or from a template you fill in. You see everything before it's saved.</p>
@@ -3054,6 +3057,10 @@ window.RB_TRAJ={
   setMV(v,temp){const L=cur();L.mv=v;delete L.mvSrc;if(temp!=null&&isFinite(temp))L.mvtemp=Math.round(temp);fillInputs();render();save();if(!IN_OPEN)$("inSum").textContent=inSummary(L);},
   setTempSens(perTen,mvtemp){const L=cur();L.tsens=Math.round(perTen*10)/10;if(mvtemp!=null&&num(L.mvtemp)==null)L.mvtemp=Math.round(mvtemp);fillInputs();render();save();},
   listChanged(){if(TVIEW==="list")fillSelect();},
+  // the server's copy of your Shooting profiles (2.43.26): used before opening one, while the list is showing
+  setState(d){if(!d||!Array.isArray(d.loads)||!d.loads.length||SCR||TVIEW!=="list"||window.RB_CALC_PENDING)return;
+    const a=document.activeElement;if(a&&$("panel-traj")&&$("panel-traj").contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;
+    if(JSON.stringify(d.loads)===JSON.stringify(state.loads))return;const c=state.cur;state=d;if(c&&state.loads.some(l=>l.id===c))state.cur=c;fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
   all(){return state.loads.map(l=>({id:l.id,fav:!!l.fav,favN:l.fav?favRank(l):null,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
   canSel(id){const l=state.loads.find(x=>x.id===id);return l?canSelOf(l):"";},
@@ -4790,7 +4797,9 @@ function drawCompare(box){
   box.querySelectorAll("[data-cmpopen]").forEach(b=>b.addEventListener("click",()=>openLoad(b.dataset.cmpopen)));
 }
 /* ---------- rifles (own tab) ---------- */
+let riflesLoaded=false; // 2.43.26: nothing in Gear & Ranges is saved until its lists have loaded
 function queueRifles(){
+  if(!riflesLoaded&&!window.GUEST){if(window.console)console.warn("Not saving Gear & Ranges: it hasn't loaded yet.");return;}
   riflesDirty=true;riflesVer++;const my=riflesVer;
   clearTimeout(riflesTimer);
   riflesTimer=setTimeout(()=>{
@@ -10677,7 +10686,7 @@ async function refresh(first){
       if(window.RB_CARTS&&!window.GUEST){let ch=false;ammo.forEach(a=>{if(!a.cartridge)return;const c=RB_CARTS.canon(a.cartridge);if(c!==a.cartridge){a.cartridge=c;ch=true;}});if(ch)queueAmmo();}if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}
     await loadBoxes();
     if(!riflesDirty&&!riflesEditing()&&riflesVer===rv0&&!retUp&&!document.querySelector(".calwin")){rifles=R.data&&Array.isArray(R.data.rows)?R.data.rows:[];
-      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];mags=R.data&&Array.isArray(R.data.mags)?R.data.mags:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];SER.on=!!(R.data&&R.data.serialLock);if(VLT.key)serAfterVault();if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
+      if(!window.GUEST){let ch=false;rifles.forEach(r=>{if(r.mfr==null&&r.model==null){const sp=splitGunName(r.name);r.mfr=sp.mfr;r.model=sp.model;ch=true;}if(!r.type&&!r.typeChecked){const g=gunTypeGuess(r.cartridge);if(g){r.type=g;r.typeGuessed=true;}r.typeChecked=true;ch=true;}});if(ch)queueRifles();}scopes=R.data&&Array.isArray(R.data.scopes)?R.data.scopes:[];parts=R.data&&Array.isArray(R.data.parts)?R.data.parts:[];cans=R.data&&Array.isArray(R.data.cans)?R.data.cans:[];inv=R.data&&Array.isArray(R.data.inventory)?R.data.inventory:[];mags=R.data&&Array.isArray(R.data.mags)?R.data.mags:[];gnotes=R.data&&Array.isArray(R.data.gnotes)?R.data.gnotes:[];SER.on=!!(R.data&&R.data.serialLock);riflesLoaded=true;if(VLT.key)serAfterVault();if(window.TRAJ_PARTS)TRAJ_PARTS(parts);if(window.TRAJ_SCOPES)TRAJ_SCOPES(scopes);renderRifles();}
     {let ch=false;rifles.forEach(r=>{if(r.canId&&!(r.canIds||[]).includes(r.canId)){r.canIds=(r.canIds||[]).concat(r.canId);ch=true;}
       // 2.43.13: a gun that already lists suppressors has a threaded barrel (its upper's, on a built gun)
       if((r.canIds||[]).length){const up=r.build&&parts.find(p=>p.id===r.build.upperId);if(r.build){if(up&&up.threaded===undefined){up.threaded=true;ch=true;}}else if(r.threaded===undefined){r.threaded=true;ch=true;}}});
@@ -10696,6 +10705,26 @@ async function refresh(first){
   }
 }
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")refresh();});
+/* Open something you can edit (2.43.26): first ask the server for the latest copy, so you only see an old copy when there's
+   no signal (the Offline badge says so). The tap waits for the answer, at most 3 seconds, then opens it. Shooting profiles
+   come from their own document. */
+window.RB_FRESH=(()=>{let last=0,busy=null;
+  async function calc(){if(window.GUEST||!window.RB_TRAJ||!RB_TRAJ.setState)return;try{const c=await API.get("/api/doc/calc");if(c&&c.data)RB_TRAJ.setState(c.data);}catch(e){}}
+  function all(force){if(busy)return busy;if(!force&&Date.now()-last<4000)return Promise.resolve();
+    busy=Promise.all([refresh(),calc()]).catch(()=>{}).finally(()=>{last=Date.now();busy=null;});return busy;}
+  const OPEN='[data-open],[data-aopen],[data-copen],[data-nopen],[data-topen],[data-ropen],[data-sopen],[data-canopen],[data-invopen],[data-ptopen],[data-gpartopen],[data-ptgunopen],[data-rgopen],[data-gno],[data-mago],[data-gmag],[data-trip],[data-log],[data-trp],[data-tss],[data-trd]';
+  const pass=new WeakSet();
+  document.addEventListener("click",e=>{if(window.GUEST||!e.isTrusted)return;const el=e.target.closest&&e.target.closest(OPEN);if(!el||pass.has(el))return;
+    if(e.target.closest("[data-trx],[data-trshow] button"))return;
+    if(Date.now()-last<4000||!navigator.onLine)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const attr=[...el.attributes].find(a=>el.matches("["+a.name+"]")&&OPEN.includes("["+a.name+"]"));
+    document.body.classList.add("rbwait");
+    Promise.race([all(true),new Promise(r=>setTimeout(r,3000))]).then(()=>{document.body.classList.remove("rbwait");
+      // the list may have been drawn again: tap the same entry in it
+      let t=el;if(!el.isConnected&&attr){const sel="["+attr.name+'="'+(window.CSS&&CSS.escape?CSS.escape(attr.value):attr.value)+'"]';t=document.querySelector(sel)||el;}
+      pass.add(t);t.click();setTimeout(()=>pass.delete(t),0);});},true);
+  return {all,last:()=>last};})();
 window.addEventListener("rb-photo-id",e=>{const {tmp,id}=e.detail;photos.forEach(p=>{if(p.id===tmp)p.id=id;});if(tripPhotos.some(p=>p.id===tmp)){tripPhotos.forEach(p=>{if(p.id===tmp){p.id=id;p.url='/api/photos/'+id;}});const t=trips.find(x=>x.id===tripOpen);if(t)tripSummary(t);}meta.forEach(m=>{if(m.photoId===tmp)m.photoId=id;});if(viewerId===tmp)viewerId=id;});
 window.addEventListener("rb-synced",()=>{refresh();});
 const firstLoad=refresh(true);
@@ -10761,6 +10790,8 @@ const NOQUEUE=/^\/api\/(login|logout|me|admin|public|export|vault)/;
    change, and the newest edit where both changed the same thing. Changes queued offline carry the time each
    piece was changed, so an older offline edit doesn't beat a newer one made elsewhere. */
 const MERGE_RE=/^\/api\/(doc\/[a-z]+|loads\/[A-Za-z0-9_-]+)$/,RB_SEP="\u001f";
+const DOC_GOT=new Set(),RB_NET={ok:true}; // documents this page has loaded; whether the last request reached the server
+window.RB_DOC_GOT=DOC_GOT;
 const rbPlain=x=>x!==null&&typeof x==="object"&&!Array.isArray(x);
 function rbEq(a,b){if(a===b)return true;if(typeof a!==typeof b||a===null||b===null||typeof a!=="object")return false;if(Array.isArray(a)!==Array.isArray(b))return false;
   if(Array.isArray(a)){if(a.length!==b.length)return false;for(let i=0;i<a.length;i++)if(!rbEq(a[i],b[i]))return false;return true;}
@@ -10783,7 +10814,7 @@ async function setVer(url,k,data){const v=await verOf(url);v[k]=data===undefined
 async function wireBody(url,body,extra){
   if(!MERGE_RE.test(url)||!body||!("data" in body))return body;
   const v=await verOf(url),base=v.sent!==undefined?v.sent:v.seen;if(base===undefined)return body;
-  const w={data:body.data,base};if(v.sent!==undefined&&v.seen!==undefined&&!rbEq(v.sent,v.seen))w.seen=v.seen;
+  const w={data:body.data,base};if(Array.isArray(body.clear)&&body.clear.length)w.clear=body.clear;if(v.sent!==undefined&&v.seen!==undefined&&!rbEq(v.sent,v.seen))w.seen=v.seen;
   if(extra){if(extra.t)w.t=extra.t;if(extra.times)w.times=extra.times;}
   return w;}
 async function noteSeen(url,j){if(!j)return;
@@ -10863,6 +10894,8 @@ let RB_INFLIGHT=0;window.RB_BUSY=()=>RB_INFLIGHT>0||!!flushing;
 const API={
   async req(method,url,body){RB_INFLIGHT++;try{return await this.req0(method,url,body);}finally{RB_INFLIGHT--;}},
   async req0(method,url,body){
+    // a whole document is only saved once this page has loaded it (from the server, or this device's offline copy) (2.43.26)
+    if(method==="PUT"&&!window.GUEST&&/^\/api\/doc\/[a-z]+$/.test(url)&&!DOC_GOT.has(url)){if(window.console)console.warn("Not saving "+url+": it hasn't loaded yet.");const e=new Error("That hasn't finished loading, so it wasn't saved. Reload Range Book and try again.");e.notLoaded=true;throw e;}
     const queueable=!window.GUEST&&method!=="GET"&&!NOQUEUE.test(url);
     if(queueable&&(await OFF.queue()).length){await flushQueue();if((await OFF.queue()).length)return fakeReply(await enqueue(method,url,body));}
     if(method==="GET"&&!window.GUEST&&(await OFF.queue()).length)await flushQueue();
@@ -10871,12 +10904,17 @@ const API={
       r=await fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:wire===undefined?undefined:JSON.stringify(wire)});
     }catch(e){
       if(queueable)return fakeReply(await enqueue(method,url,body));
-      if(method==="GET"&&!window.GUEST){const c=await OFF.get(url);if(c!==undefined){syncBadge((await OFF.queue()).length,"offline");return overlay(url,c);}}
+      if(method==="GET"&&!window.GUEST){const c=await OFF.get(url);if(c!==undefined){DOC_GOT.add(url);RB_NET.ok=false;syncBadge((await OFF.queue()).length,"offline");return overlay(url,c);}}
+      RB_NET.ok=false;
       const err=new Error("The server couldn't be reached. Check your connection and try again.");err.network=true;throw err;
     }
     let j=null;try{j=await r.json();}catch(e){}
     if(!r.ok){const err=new Error((j&&j.error)||("The server answered with error "+r.status+"."));err.status=r.status;throw err;}
+    RB_NET.ok=true;
     if(method==="PUT"&&!window.GUEST&&MERGE_RE.test(url)&&body&&("data" in body))await setVer(url,"sent",body.data);
+    // the server refused to let this save empty a list (it kept its own copy): load what it has
+    if(method==="PUT"&&j&&Array.isArray(j.kept)&&j.kept.length){if(window.console)console.warn("The server kept "+j.kept.join(", ")+" in "+url+"; reloading.");setTimeout(()=>{if(window.RB_FRESH)RB_FRESH.all(true);},0);}
+    if(method==="GET"&&/^\/api\/doc\/[a-z]+$/.test(url))DOC_GOT.add(url);
     if(method==="GET"&&!window.GUEST&&!/^\/api\/export/.test(url)){OFF.put(url,j);await noteSeen(url,j);const n=(await OFF.queue()).length;syncBadge(n,null);}
     return j;
   },
@@ -11534,7 +11572,7 @@ async function startApp(user,api){
     location.reload();}));
   if(GUEST)calc={guestFresh:true};
   let saveT=null;
-  window.startTraj(calc,state=>{clearTimeout(saveT);saveT=setTimeout(()=>A.put("/api/doc/calc",{data:state}).catch(()=>{}),800);});
+  window.startTraj(calc,state=>{clearTimeout(saveT);window.RB_CALC_PENDING=true;saveT=setTimeout(()=>{A.put("/api/doc/calc",{data:state}).catch(()=>{}).finally(()=>{window.RB_CALC_PENDING=false;});},800);});
   REL=window.startReloading(A,user,showTab);
   // How to Use: every section folds (remembered on this device); the jump links and What's new open a folded one
   if(window.foldAll)foldAll($("panel-help"),"help");
@@ -12466,7 +12504,8 @@ window.RB_CHTOOL=(function(){
   const saveData=()=>{const d=JSON.parse(JSON.stringify(T));if(FRESH.size){d.sessions=d.sessions.filter(x=>!freshSame(x));
       d.profiles=d.profiles.filter(x=>!freshSame(x)||d.sessions.some(q=>q.profileId===x.id));d.drills=d.drills.filter(x=>!freshSame(x)||d.sessions.some(q=>q.runs.some(r=>r.drill===x.id)));}
     return d;};
-  function save(){dirty++;const my=dirty;clearTimeout(saveT);saveT=setTimeout(()=>{saving=saving.then(()=>API.put("/api/doc/training",{data:saveData()})).then(()=>{if(dirty===my)dirty=0;},e=>{dirty=0;if(window.onWriteError)onWriteError(e);});},400);changed();}
+  let clearNext=[]; // lists this save empties on purpose (the server keeps a list a save would empty otherwise)
+  function save(){dirty++;const my=dirty;clearTimeout(saveT);saveT=setTimeout(()=>{const clear=clearNext;clearNext=[];saving=saving.then(()=>API.put("/api/doc/training",clear.length?{data:saveData(),clear}:{data:saveData()})).then(()=>{if(dirty===my)dirty=0;},e=>{dirty=0;if(window.onWriteError)onWriteError(e);});},400);changed();}
   const editing=()=>{const a=document.activeElement,r=$("trRoot");return !!(a&&r&&r.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName));};
   const drills=()=>BUILT.map(b=>Object.assign({},b,{par:T.par[b.id]!==undefined?T.par[b.id]:b.par,built:true})).concat(T.drills.map(d=>Object.assign({},d)));
   const drillOf=id=>drills().find(d=>d.id===id)||null;
@@ -12816,7 +12855,7 @@ window.RB_CHTOOL=(function(){
     if(p){$("tp_name").addEventListener("input",e=>{p.name=e.target.value;save();$("trTitle").textContent=p.name||"Unnamed profile";});
       $("tpNotesEd").addEventListener("click",()=>notesPop(p));
       bindGear(p,"tp",re=>{if(re)render();});
-      $("tpDel").addEventListener("click",()=>{const i=T.profiles.indexOf(p),gone=T.sessions.filter(s=>s.profileId===p.id);T.profiles.splice(i,1);T.sessions=T.sessions.filter(s=>s.profileId!==p.id);save();go2({view:"home"});
+      $("tpDel").addEventListener("click",()=>{const i=T.profiles.indexOf(p),gone=T.sessions.filter(s=>s.profileId===p.id);T.profiles.splice(i,1);T.sessions=T.sessions.filter(s=>s.profileId!==p.id);if(!T.sessions.length)clearNext.push("sessions");if(!T.profiles.length)clearNext.push("profiles");save();go2({view:"home"});
         if(window.RB_UNDO)RB_UNDO("Deleted "+(p.name||"the profile")+(gone.length?" and its "+gone.length+" session"+(gone.length===1?"":"s"):""),()=>{T.profiles.splice(i,0,p);T.sessions=T.sessions.concat(gone);save();render();});});}
     {const t=$("tsGoToday");if(t)t.addEventListener("click",()=>go2({view:"session",sid:today.id}));}
     $("tsNew").addEventListener("click",()=>{const s=newSession(pid,true);go2({view:"session",sid:s.id});});
