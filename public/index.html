@@ -1885,7 +1885,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <ul>
         <li><b>Range trip:</b> <b>Connect chronograph</b> starts a new string (named BLIPR and the time) and each shot fills its next box. <b>New chronograph string</b> starts another; <b>Send shots here</b> on any string sends them there instead; <b>Stop chronograph</b> stops. The trip's average and SD update as you go, even with the trip closed. If the chronograph has the sensor kit and the trip's temperature or weather is empty, they fill in from it, and each string notes the ammo temperature.</li>
         <li><b>Ladder test:</b> <b>Connect chronograph</b> on a group fills that group's empty boxes, then moves on to the next group in the same ladder (the one with the outline). The ladder's temperature fills in from the sensors if it's empty.</li>
-        <li><b>Tools › BLIPR Chronograph:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b> and <b>Save to a range trip</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
+        <li><b>Tools › BLIPR Chronograph:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b>, <b>Save to a range trip</b> and <b>Save to testing</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
+        <li><b>Testing:</b> <b>Save to testing</b> keeps a string without a range trip, in a testing session: pick one you already have (today's is picked for you) or start a new one with what you're testing, the gun, the ammo or load and notes. The <b>Testing</b> card under Tools › BLIPR Chronograph lists your testing sessions, newest first; tap one to see each string's shots, average, SD, ES, low and high (and all its strings together), change its details, copy the velocities, remove a string or delete the session.</li>
       </ul>
       <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot to check the connection: it shows on the pill and in Tools › BLIPR Chronograph, but never goes into a trip or ladder or counts in a string's numbers); the <b>velocity window</b> (it only counts readings in this range: <b>Automatic</b> uses 75% to 125% of the profile's muzzle velocity, or the ladder's velocities so far); <b>where the radar sits</b> beside and behind the muzzle, for each gun; <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
       <p><b>Sensor kit</b> (optional): with temperature, humidity and pressure sensors, an ammo probe and a compass fitted, <b>Conditions</b> in Tools › BLIPR Chronograph shows the air, density altitude, ammo temperature, which way it's pointing and whether it's level. <b>Use this air in the profile</b> sets a Shooting profile's temperature and altitude from it (the same way <b>Use the weather where I am</b> does). <b>Use … for Coriolis</b> sets the profile's direction of fire. Calibrate the compass once in Settings (turn it slowly through a full circle), then <b>Match my phone</b> to line it up with your phone's compass. If lifting the front doesn't read <i>nose up</i>, change <b>Sensor board turned</b> until it does. For Coriolis a heading within 10 or 15 degrees is plenty.</p>
@@ -2039,7 +2040,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="row"><label class="btn primary" for="chIn" style="cursor:pointer">Pick a chronograph file</label><input id="chIn" type="file" multiple accept=".xlsx,.xls,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" hidden><button class="btn" id="chClear" type="button" hidden>Clear</button></div>
       <div id="chOut" aria-live="polite"></div>
     </section>
-    <div class="tool col" data-toolsec="btchrono" aria-label="Chronograph" hidden><div id="btRoot" class="col"></div></div>
+    <div class="tool col" data-toolsec="btchrono" aria-label="Chronograph" hidden><div id="btRoot" class="col"></div><div id="btTestRoot" class="col"></div></div>
     <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden>
       <p class="note toolnote">Type in either box.</p>
       <div id="cv_rows"></div>
@@ -2851,10 +2852,10 @@ window.RB_BTCHRONO=(function(){
       (cur.shots.length?'<div class="shots" data-shotset="bt_'+esc(cur.id)+'">'+cur.shots.map((x,k)=>'<div class="shot"><label for="bts_'+k+'">'+(k+1)+'</label><input id="bts_'+k+'" type="number" readonly value="'+esc(u.n("fps",x.v,0))+'"'+(x.test?' title="Test shot"':'')+'></div>').join("")+'</div>':'<p class="note">No shots in this string yet.</p>')+
       (ss?'<div class="stats"><span>Avg <b>'+fps(ss.avg)+'</b></span>'+(ss.sd!=null?'<span>SD <b>'+esc(u.n("fps",ss.sd,1))+'</b></span><span>ES <b>'+fps(ss.es)+'</b></span>':'')+'<span>Low <b>'+fps(ss.lo)+'</b></span><span>High <b>'+fps(ss.hi)+'</b></span><span><b>'+ss.n+'</b> shots</span></div>':'')+
       (cur.shots.length&&cur.shots.some(x=>x.ammo!=null)?'<p class="note">Ammo temperature '+esc(u.s("F",cur.shots.filter(x=>x.ammo!=null).slice(-1)[0].ammo,0))+'.</p>':'')+
-      '<div class="row"><button class="btn" type="button" id="btNew"'+(cur.shots.length?'':' disabled')+'>New string</button><button class="btn" type="button" id="btUndo"'+(cur.shots.length?'':' disabled')+'>− Last shot</button><button class="btn" type="button" id="btSave"'+(ss?'':' disabled')+'>Save to a range trip</button><button class="btn" type="button" id="btCopy"'+(ss?'':' disabled')+'>Copy</button></div><div id="btSaveBox"></div>';
+      '<div class="row"><button class="btn" type="button" id="btNew"'+(cur.shots.length?'':' disabled')+'>New string</button><button class="btn" type="button" id="btUndo"'+(cur.shots.length?'':' disabled')+'>− Last shot</button><button class="btn" type="button" id="btSave"'+(ss?'':' disabled')+'>Save to a range trip</button><button class="btn" type="button" id="btTest2"'+(ss?'':' disabled')+'>Save to testing</button><button class="btn" type="button" id="btCopy"'+(ss?'':' disabled')+'>Copy</button></div><div id="btSaveBox"></div>';
     const prev=S.strings.slice(0,-1).filter(x=>x.shots.length).reverse();
-    if(prev.length)h+='<h3>Earlier strings</h3><ul class="chprev">'+prev.map(x=>{const q=strStats(x.shots);return '<li><b>'+esc(x.name)+'</b> '+(q?q.n+' shots · avg '+fps(q.avg)+(q.sd!=null?' · SD '+esc(u.n("fps",q.sd,1))+' · ES '+fps(q.es):''):'')+' <button class="linkbtn" type="button" data-btsave="'+esc(x.id)+'">Save to a range trip</button></li>';}).join("")+'</ul>';
-    h+='<p class="note">These stay until you close Range Book. Save a string to a range trip to keep it.</p></section>\u0001';
+    if(prev.length)h+='<h3>Earlier strings</h3><ul class="chprev">'+prev.map(x=>{const q=strStats(x.shots);return '<li><b>'+esc(x.name)+'</b> '+(q?q.n+' shots · avg '+fps(q.avg)+(q.sd!=null?' · SD '+esc(u.n("fps",q.sd,1))+' · ES '+fps(q.es):''):'')+' <button class="linkbtn" type="button" data-btsave="'+esc(x.id)+'">Save to a range trip</button> <button class="linkbtn" type="button" data-bttest="'+esc(x.id)+'">Save to testing</button></li>';}).join("")+'</ul>';
+    h+='<p class="note">These stay until you close Range Book. Save a string to a range trip or to testing to keep it.</p></section>\u0001';
     // 3. conditions from the add-on sensors
     h+='<section class="card" aria-label="Conditions"><h2>Conditions</h2>';
     if(!on)h+='<p class="note">With the sensor kit fitted, the air temperature, humidity, pressure, ammo temperature and which way you\'re shooting show here.</p>';
@@ -2897,6 +2898,26 @@ window.RB_BTCHRONO=(function(){
         const ok=RB_TRIPS.addString(tid,{name:"BLIPR · "+x.name,shots:sh.map(o=>Math.round(o.v)),ammoF:am.length?Math.round(am.reduce((a,o)=>a+o.ammo,0)/am.length):null},air());
         b.innerHTML='<p class="note">'+(ok?'Saved to the range trip.':'That range trip is gone.')+'</p>';});};
     on_("btSave",()=>saveBox(cur.id));
+    // Save to testing (2.44.1): a testing session keeps the string without a range trip; the Testing card below lists them
+    const testBox=id=>{const x=S.strings.find(o=>o.id===id),b=$("btSaveBox");if(!x||!b)return;
+      if(!window.RB_TESTING){b.innerHTML='<p class="note">Testing isn\'t ready yet. Try again in a moment.</p>';return;}
+      const sh=x.shots.filter(o=>o.ok&&!o.test);
+      if(!sh.length){b.innerHTML='<p class="note">'+esc(x.name)+' has no real shots to save (test shots aren\'t kept).</p>';return;}
+      b.innerHTML='<p class="note">Loading your testing sessions…</p>';
+      RB_TESTING.ready().then(()=>{if(!b.isConnected)return;const L=RB_TESTING.list(),pick=L.find(o=>o.today);
+        b.innerHTML='<div class="grid chgrid"><div class="field wide"><label for="btTs">Testing session for '+esc(x.name)+'</label><select id="btTs" class="fieldselect"><option value="">New testing session</option>'+
+          L.map(o=>'<option value="'+esc(o.id)+'"'+(pick&&o.id===pick.id?' selected':'')+'>'+esc(o.label)+'</option>').join("")+'</select></div></div>'+
+          '<div id="btTsNew"'+(pick?' hidden':'')+'>'+RB_TESTING.newFields("btTs_")+'</div>'+
+          '<div class="row"><button class="btn primary" type="button" id="btTsGo">Save</button><button class="btn" type="button" id="btTsNo">Cancel</button></div>';
+        $("btTs").addEventListener("change",e=>{$("btTsNew").hidden=!!e.target.value;});
+        $("btTsNo").addEventListener("click",()=>{b.innerHTML="";});
+        $("btTsGo").addEventListener("click",()=>{const am=sh.filter(o=>o.ammo!=null),v=$("btTs").value;
+          const to=v||{name:$("btTs_name").value,gunId:$("btTs_gun").value,ammo:$("btTs_ammo").value,notes:$("btTs_notes").value};
+          const r=RB_TESTING.add(to,{name:x.name,at:x.at,shots:sh.map(o=>o.v),ammoF:am.length?Math.round(am.reduce((a,o)=>a+o.ammo,0)/am.length):null,air:air()});
+          b.innerHTML='<p class="note" role="status">Saved to testing: <b>'+esc(r.name)+'</b>. <button class="linkbtn" type="button" id="btTsOpen">Open it</button></p>';
+          $("btTsOpen").addEventListener("click",()=>RB_TESTING.open(r.id));});});};
+    on_("btTest2",()=>testBox(cur.id));
+    root.querySelectorAll("[data-bttest]").forEach(b=>{if(once(b))b.addEventListener("click",()=>testBox(b.dataset.bttest));});
     root.querySelectorAll("[data-btsave]").forEach(b=>{if(once(b))b.addEventListener("click",()=>saveBox(b.dataset.btsave));});
     const pf=once($("btProf"));if(pf)pf.addEventListener("change",()=>{tool=tool||{};tool.prof=pf.value;});
     on_("btAir",()=>{const A2=air(),id=$("btProf").value;if(!A2||A2.alt==null)return;const ok=RB_TRAJ.applyWx&&RB_TRAJ.applyWx(id,{temp:A2.tempF,alt:A2.alt});
@@ -2911,7 +2932,7 @@ window.RB_BTCHRONO=(function(){
     state:()=>state,on:()=>state==="on",status:()=>st,config:()=>cfg,air,last:()=>last,
     connect,disconnect,send,settings,attach,detach,sinkKey:()=>sink?sink.key:null,sink:()=>sink,paint,
     sub(f){subs.add(f);return ()=>subs.delete(f);},
-    showTool(){toolDraw();},
+    showTool(){toolDraw();if(window.RB_TESTING)RB_TESTING.show();},
     prefs(){return Object.keys(P.pos).length||P.win?JSON.parse(JSON.stringify(P)):undefined;},
     loadPrefs(o){if(o&&typeof o==="object")P={pos:o.pos&&typeof o.pos==="object"?o.pos:{},win:o.win&&o.win.lo>0?o.win:null};},
     // for tests: what the module has seen
@@ -10961,6 +10982,126 @@ window.RB_TRIPS={
   count(id){return trips.filter(t=>t.trajId===id).length;},
   dropTraj(id){const gone=trips.filter(t=>t.trajId===id);if(!gone.length)return;gone.forEach(t=>API.del("/api/trips/"+t.id+"/photos").catch(()=>{}));trips=trips.filter(t=>t.trajId!==id);queueTrips();}
 };
+/* ---------- Testing (chronograph branch, 2.44.1): chronograph strings kept without a range trip ----------
+   Tools › BLIPR Chronograph › Save to testing puts a string into a testing session (a new one, or one already there).
+   The Testing card under the tool lists the sessions, newest first; one opens with its details (name, date, gun, ammo,
+   where, notes) and each string's shots and stats. The "testing" document (v1):
+   {v:1, sessions:[{id, date, name, gunId, ammo, place, notes, created, updated,
+                    strings:[{id, name, at, shots:[fps], ammoF, air:{tempF, rh, hpa, dAlt}}]}]} */
+window.RB_TESTING=(function(){
+  let D={v:1,sessions:[]},loaded=false,loading=null,dirty=0,saveT=null,saving=Promise.resolve(),open=null,msg="";
+  const norm=d=>{const o={v:1,sessions:d&&Array.isArray(d.sessions)?d.sessions:[]};
+    o.sessions=o.sessions.filter(s=>s&&s.id);o.sessions.forEach(s=>{if(!Array.isArray(s.strings))s.strings=[];});return o;};
+  // what's on the server, plus any session made here before it loaded (so a save never drops the ones already there)
+  function load(){if(loading)return loading;
+    loading=API.get("/api/doc/testing").then(r=>{if(dirty&&loaded)return;const S2=norm(r&&r.data);
+      if(!loaded)D.sessions.forEach(s=>{if(!S2.sessions.some(x=>x.id===s.id))S2.sessions.push(s);});
+      D=S2;loaded=true;}).catch(()=>{}).then(()=>{loading=null;});
+    return loading;}
+  const ready=()=>loaded?Promise.resolve():load();
+  function save(){dirty++;const my=dirty;clearTimeout(saveT);state("Saving…");
+    // not saved until the list has come from the server, so this device's copy can't replace one it hasn't seen
+    if(!loaded){load().then(()=>{if(loaded)save();else state("Not saved yet: no connection. Keep Range Book open and it saves when it can.");});return;}
+    saveT=setTimeout(()=>{saving=saving.then(()=>API.put("/api/doc/testing",{data:JSON.parse(JSON.stringify(D))}))
+      .then(()=>{if(dirty===my){dirty=0;state("Saved");}},e=>{dirty=0;state("");if(window.onWriteError)onWriteError(e);});},500);}
+  function state(t){msg=t;const e=$("tsState");if(e)e.textContent=t;}
+  const sorted=()=>D.sessions.slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0));
+  const gunName=id=>{const r=rifles.find(x=>x.id===id);return r?(r.name||"Unnamed gun"):"";};
+  const label=s=>[s.date?fmtDate(s.date):"No date",s.name||""].filter(Boolean).join(" · ");
+  const fpsS=v=>U.s("fps",v,0,true);
+  const allShots=s=>s.strings.flatMap(x=>x.shots||[]);
+  const statTxt=sh=>{const q=stats({shots:sh},null);if(!q)return "";return q.n+" shot"+(q.n===1?"":"s")+" · avg "+fpsS(q.avg)+(q.n>1?" · SD "+sdS(q.sd)+" · ES "+fpsS(q.es):"");};
+  // things to pick from in the Ammo / load box: factory ammo, your profiles, and what you typed before
+  function ammoOpts(){const out=new Set();
+    (ammo||[]).forEach(a=>{const t=[a.mfr,a.name].filter(Boolean).join(" ").trim();if(t)out.add(t);});
+    ((window.RB_TRAJ&&RB_TRAJ.all())||[]).forEach(p=>{if(p.name)out.add(p.name);});
+    D.sessions.forEach(s=>{if(s.ammo)out.add(s.ammo);});
+    return [...out].slice(0,200);}
+  const gunSel=(id,sel)=>'<select id="'+id+'" class="fieldselect"><option value="">(none)</option>'+rifles.map(r=>'<option value="'+esc(r.id)+'"'+(r.id===sel?' selected':'')+'>'+esc(r.name||"Unnamed gun")+'</option>').join("")+'</select>';
+  const ammoList=id=>'<datalist id="'+id+'">'+ammoOpts().map(t=>'<option value="'+esc(t)+'">').join("")+'</datalist>';
+  const airTxt=a=>{if(!a)return "";return [a.tempF!=null?"air "+U.s("F",a.tempF,0):"",a.rh!=null?Math.round(a.rh)+"% humidity":"",
+    a.hpa!=null?(U.metric?Math.round(a.hpa)+" hPa":(a.hpa*0.02953).toFixed(2)+" inHg"):"",a.dAlt!=null?"density altitude "+U.s("ft",Math.round(a.dAlt/10)*10,0,true):""].filter(Boolean).join(" · ");};
+
+  /* ----- adding a string (from the BLIPR tool) ----- */
+  // to: a session id, or {name, gunId, ammo, notes} for a new one. x: {name, at, shots:[fps], ammoF, air}
+  function add(to,x){
+    let s=typeof to==="string"?D.sessions.find(o=>o.id===to):null;
+    if(!s){const o=to&&typeof to==="object"?to:{};
+      s={id:newId(),date:todayISO(),name:String(o.name||"").trim()||"Velocity test",gunId:o.gunId||"",ammo:String(o.ammo||"").trim(),place:"",notes:String(o.notes||""),created:Date.now(),strings:[]};
+      D.sessions.push(s);}
+    const A=x.air||null,air=A?{tempF:A.tempF!=null?Math.round(A.tempF*10)/10:undefined,rh:A.rh!=null?Math.round(A.rh):undefined,hpa:A.hpa!=null?Math.round(A.hpa*10)/10:undefined,dAlt:A.dAlt!=null?Math.round(A.dAlt):undefined}:null;
+    s.strings.push({id:newId(),name:x.name||"String "+(s.strings.length+1),at:x.at||Date.now(),shots:(x.shots||[]).map(v=>Math.round(v)).filter(v=>v>0),
+      ammoF:x.ammoF!=null?x.ammoF:undefined,air:air&&Object.values(air).some(v=>v!=null)?air:undefined});
+    s.updated=Date.now();save();draw();
+    return {id:s.id,name:s.name||"Testing session"};}
+  // for the Save to testing box: the sessions, newest first, and which is today's
+  function list(){const t=todayISO();return sorted().slice(0,40).map(s=>({id:s.id,label:label(s)+(s.strings.length?" ("+s.strings.length+" string"+(s.strings.length===1?"":"s")+")":""),today:s.date===t}));}
+  function newFields(p){
+    const last=sorted()[0]||{};
+    return '<div class="grid chgrid">'+
+      '<div class="field wide"><label for="'+p+'name">What you\'re testing</label><input id="'+p+'name" placeholder="e.g. 140 ELD-M velocity"></div>'+
+      '<div class="field wide"><label for="'+p+'gun">Gun</label>'+gunSel(p+"gun",last.gunId||"")+'</div>'+
+      '<div class="field wide"><label for="'+p+'ammo">Ammo / load</label><input id="'+p+'ammo" list="'+p+'ammoL" autocomplete="off" placeholder="e.g. Hornady 140 ELD Match">'+ammoList(p+"ammoL")+'</div>'+
+      '<div class="field wide"><label for="'+p+'notes">Notes</label><textarea id="'+p+'notes" style="min-height:60px" placeholder="Barrel, conditions, what you\'re checking…"></textarea></div></div>';}
+
+  /* ----- the Testing card, under Tools › BLIPR Chronograph ----- */
+  const editing=()=>{const a=document.activeElement,r=$("btTestRoot");return !!(a&&r&&r.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName));};
+  function draw(){
+    const root=$("btTestRoot");if(!root||root.closest("[hidden]"))return;
+    if(editing())return;
+    const s=open&&D.sessions.find(o=>o.id===open);
+    if(!s){open=null;
+      const L=sorted();
+      let h='<section class="card" aria-label="Testing"><h2>Testing</h2><p class="note">Chronograph strings you keep without a range trip: tap <b>Save to testing</b> on a string above. Tap a session to see its strings and stats.</p>';
+      if(!loaded&&!L.length)h+='<p class="note">Loading…</p>';
+      else if(!L.length)h+='<p class="note">No testing sessions yet.</p>';
+      else{h+='<p class="note">'+L.length+' testing session'+(L.length===1?'':'s')+'</p><div class="cartgroup">';
+        L.forEach(x=>{const d=[gunName(x.gunId),x.ammo||""].filter(Boolean).join(" · "),
+          m=[x.strings.length+" string"+(x.strings.length===1?"":"s"),statTxt(allShots(x))].filter(Boolean).join(" · ");
+          h+='<button class="loaditem" type="button" data-ts="'+esc(x.id)+'"><span class="ltext"><span class="t">'+esc(label(x))+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+'<span class="m">'+esc(m)+'</span></span></button>';});
+        h+='</div>';}
+      h+='<p class="note savestate" id="tsState">'+esc(msg)+'</p></section>';
+      root.innerHTML=h;
+      root.querySelectorAll("[data-ts]").forEach(b=>b.addEventListener("click",()=>{open=b.dataset.ts;msg="";draw();root.scrollIntoView({block:"start",behavior:"smooth"});}));
+      return;}
+    const all=allShots(s),qa=stats({shots:all},null);
+    let h='<section class="card" aria-label="Testing session"><button class="linkbtn" type="button" id="tsBack">‹ All testing sessions</button><h2>'+esc(s.name||"Testing session")+'</h2>'+
+      '<div class="grid chgrid">'+
+      '<div class="field wide"><label for="ts_name">What you\'re testing</label><input id="ts_name" data-tsf="name" value="'+esc(s.name||"")+'" placeholder="e.g. 140 ELD-M velocity"></div>'+
+      '<div class="field"><label for="ts_date">Date</label><input id="ts_date" data-tsf="date" type="date" value="'+esc(s.date||"")+'"></div>'+
+      '<div class="field"><label for="ts_place">Where</label><input id="ts_place" data-tsf="place" value="'+esc(s.place||"")+'"></div>'+
+      '<div class="field wide"><label for="ts_gun">Gun</label>'+gunSel("ts_gun",s.gunId||"")+'</div>'+
+      '<div class="field wide"><label for="ts_ammo">Ammo / load</label><input id="ts_ammo" data-tsf="ammo" list="ts_ammoL" autocomplete="off" value="'+esc(s.ammo||"")+'">'+ammoList("ts_ammoL")+'</div>'+
+      '<div class="field wide"><label for="ts_notes">Notes</label><textarea id="ts_notes" data-tsf="notes" style="min-height:70px" placeholder="How it went, what to try next…">'+esc(s.notes||"")+'</textarea></div></div>';
+    if(s.strings.length>1&&qa)h+='<h3>All strings together</h3><div class="stats"><span>Avg <b>'+esc(fpsS(qa.avg))+'</b></span><span>SD <b>'+esc(sdS(qa.sd))+'</b></span><span>ES <b>'+esc(fpsS(qa.es))+'</b></span><span><b>'+qa.n+'</b> shots</span></div>';
+    if(!s.strings.length)h+='<p class="note">No strings in this session.</p>';
+    s.strings.forEach((x,i)=>{const q=stats({shots:x.shots||[]},null),sh=x.shots||[];
+      const when=x.at?new Date(x.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"";
+      const info=[when,x.ammoF!=null?"ammo "+U.s("F",x.ammoF,0):"",airTxt(x.air)].filter(Boolean).join(" · ");
+      h+='<h3>'+esc(x.name||"String "+(i+1))+'</h3>'+(info?'<p class="note">'+esc(info)+'</p>':'')+
+        (sh.length?'<div class="shots">'+sh.map((v,k)=>'<div class="shot"><label for="tss_'+i+'_'+k+'">'+(k+1)+'</label><input id="tss_'+i+'_'+k+'" type="number" readonly value="'+esc(U.n("fps",v,0))+'"></div>').join("")+'</div>':'<p class="note">No shots.</p>')+
+        (q?'<div class="stats"><span>Avg <b>'+esc(fpsS(q.avg))+'</b></span>'+(q.n>1?'<span>SD <b>'+esc(sdS(q.sd))+'</b></span><span>ES <b>'+esc(fpsS(q.es))+'</b></span>':'')+'<span>Low <b>'+esc(fpsS(Math.min(...sh)))+'</b></span><span>High <b>'+esc(fpsS(Math.max(...sh)))+'</b></span><span><b>'+q.n+'</b> shots</span></div>':'')+
+        '<div class="row"><button class="linkbtn" type="button" data-tsdel="'+i+'">Remove this string</button></div>';});
+    h+='<div class="row"><button class="btn" type="button" id="tsCopy"'+(all.length?'':' disabled')+'>Copy velocities</button><button class="btn" type="button" id="tsDel">Delete testing session</button></div>'+
+      '<p class="note savestate" id="tsState">'+esc(msg)+'</p></section>';
+    root.innerHTML=h;
+    $("tsBack").addEventListener("click",()=>{open=null;msg="";draw();});
+    root.querySelectorAll("[data-tsf]").forEach(inp=>inp.addEventListener("input",()=>{s[inp.dataset.tsf]=inp.value;s.updated=Date.now();save();
+      if(inp.dataset.tsf==="name"){const h2=root.querySelector("h2");if(h2)h2.textContent=inp.value||"Testing session";}}));
+    $("ts_gun").addEventListener("change",e=>{s.gunId=e.target.value;s.updated=Date.now();save();});
+    root.querySelectorAll("[data-tsdel]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.tsdel,x=s.strings[i];if(!x)return;
+      s.strings.splice(i,1);s.updated=Date.now();save();draw();
+      if(window.RB_UNDO)RB_UNDO("Removed "+(x.name||"string"),()=>{s.strings.splice(Math.min(i,s.strings.length),0,x);s.updated=Date.now();save();draw();});}));
+    $("tsCopy").addEventListener("click",()=>{const t=s.strings.map(x=>(x.name||"String")+"\n"+(x.shots||[]).map(v=>U.n("fps",v,0)).join("\n")).join("\n\n");
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>state("Copied "+all.length+" velocities."),()=>state("Couldn't copy here."));});
+    $("tsDel").addEventListener("click",()=>{const i=D.sessions.indexOf(s);if(i<0)return;D.sessions.splice(i,1);open=null;save();draw();
+      if(window.RB_UNDO)RB_UNDO("Deleted testing session",()=>{D.sessions.splice(Math.min(i,D.sessions.length),0,s);save();open=s.id;draw();});});
+  }
+  // opening the tool: fetch the latest (another device may have added some), then draw
+  function show(id){if(id)open=id;draw();if(!dirty)load().then(draw);}
+  return {show,ready,add,list,newFields,open(id){open=id;msg="";draw();const r=$("btTestRoot");if(r)r.scrollIntoView({block:"start",behavior:"smooth"});},
+    _data:()=>D};
+})();
 /* ---------- Home: recent trips and loads, rounds fired, and anything that needs attention ---------- */
 /* ---------- range log: range trips + load-development days from Reloading, newest first ---------- */
 let logKind="all",logGun="";
@@ -11467,7 +11608,7 @@ function makeGuestAPI(){
         if(method==="DELETE"){delete st.loads[m[1]];Object.keys(st.photos).forEach(k=>{if(st.photos[k].loadId===m[1])delete st.photos[k];});return {ok:true};}
       }
       if(/^\/api\/loads\/[^/]+\/shares$/.test(url))return {ok:true,sharedWith:[]};
-      if((m=/^\/api\/doc\/(calc|brass|rifles|components|trips|ammo|training)$/.exec(url))){
+      if((m=/^\/api\/doc\/(calc|brass|rifles|components|trips|ammo|training|testing)$/.exec(url))){
         if(method==="GET")return {data:clone(st.docs[m[1]]||null)};
         if(method==="PUT"){st.docs[m[1]]=clone(body.data);return {ok:true};}
       }
