@@ -2732,7 +2732,7 @@ window.RB_BTCHRONO=(function(){
       '<div class="note">'+[num(s.bat)>=0?"Battery "+Math.round(s.bat)+"% ("+num(s.bv).toFixed(2)+" V)":"Battery gauge not wired",s.sd?"SD card OK":"No SD card",s.t===0?"Radar board not answering":"",num(s.ovr)>0?num(s.ovr)+" missed samples":"","Firmware "+esc(s.fw||"?")+" / "+esc(s.efw||"?")].filter(Boolean).join(" · ")+'</div>'+
       (sink?'<div class="note">Shots go to <b>'+esc(sink.label||"")+'</b> <button class="linkbtn" type="button" id="chsDetach">Stop</button></div>':'')+'</div>';
     if(note)h+='<p class="note" role="status">'+esc(note)+'</p>';
-    h+='<div class="row"><button class="btn'+(s.arm===0?' primary':'')+'" type="button" id="chsArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="chsTest">Test shot</button><button class="btn" type="button" id="chsTool">Open the Chronograph tool</button></div>';
+    h+='<div class="row"><button class="btn'+(s.arm===0?' primary':'')+'" type="button" id="chsArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="chsTest">Test shot</button><button class="btn" type="button" id="chsOff2">Disconnect</button><button class="btn" type="button" id="chsTool">Open the Chronograph tool</button></div>';
     // velocity window
     h+='<h3>Velocity window</h3><p class="note">It only counts readings in this range, which stops echoes and other guns from counting. These are BLIPR\'s own settings: Range Book shows them and only changes them when you do, here.</p>'+
       '<div class="grid chgrid"><div class="field"><label for="chsLo">Slowest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsLo",cw[0])+'</div><div class="field"><label for="chsHi">Fastest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsHi",cw[1])+'</div></div>'+
@@ -2830,7 +2830,7 @@ window.RB_BTCHRONO=(function(){
   }
   function bindCommon(box){
     const g=box.querySelector("#chsGo");if(g)g.addEventListener("click",()=>connect().catch(e=>{note=e.message;emit();}));
-    const o=box.querySelector("#chsOff");if(o)o.addEventListener("click",()=>disconnect(false));
+    box.querySelectorAll("#chsOff,#chsOff2").forEach(o=>o.addEventListener("click",()=>disconnect(false)));
     const t=box.querySelector("#chsTool");if(t)t.addEventListener("click",()=>{closeSheet();if(window.RB_TOOLS)RB_TOOLS.open("btchrono");});
   }
 
@@ -2850,7 +2850,7 @@ window.RB_BTCHRONO=(function(){
       '<div class="row"><button class="btn primary" type="button" id="btGo"'+(state==="connecting"||state==="picking"?' disabled':'')+'>Connect chronograph</button>'+(state!=="off"?'<button class="btn" type="button" id="btStop">Stop trying</button>':'')+'</div>';
     else h+='<div class="chdev"><div><b>'+esc(dev&&dev.name||"RB BLIPR")+'</b> <span class="chip'+(s.arm===0?' off':'')+'">'+(s.arm===0?"Paused":"Listening")+'</span></div><div class="note">'+[num(s.bat)>=0?"Battery "+Math.round(s.bat)+"%":"",s.sd?"SD card OK":"No SD card",s.t===0?"Radar board not answering":""].filter(Boolean).join(" · ")+'</div>'+
       (sink?'<div class="note">Shots also go to <b>'+esc(sink.label)+'</b> <button class="linkbtn" type="button" id="btDetach">Stop</button></div>':'')+'</div>'+
-      '<div class="row"><button class="btn" type="button" id="btSet">Settings</button><button class="btn" type="button" id="btArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="btTest">Test shot</button></div>';
+      '<div class="row"><button class="btn" type="button" id="btSet">Settings</button><button class="btn" type="button" id="btArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="btTest">Test shot</button><button class="btn" type="button" id="btOff">Disconnect</button></div>';
     if(!w){loadFw();const fv=FW&&FW.esp&&FW.esp.version;
       if(!on&&fv)h+='<p class="note">Firmware: this Range Book carries BLIPR Bluetooth-board firmware '+esc(fv)+'. Connect BLIPR, then <b>Settings › Firmware</b> to install it.</p>';
       else if(on&&fv&&C.ota&&verCmp(fv,s.efw)>0)h+='<p class="note"><b>Firmware '+esc(fv)+' is available</b> for BLIPR\'s Bluetooth board: <b>Settings › Firmware</b>.</p>';}
@@ -2890,7 +2890,7 @@ window.RB_BTCHRONO=(function(){
     h.split("\u0001").forEach((x,i)=>{const el=root.children[i];if(el._h!==x){el._h=x;el.innerHTML=x;}});
     const once=e=>{if(!e||e._b)return null;e._b=1;return e;};
     const on_=(id,f)=>{const e=once($(id));if(e)e.addEventListener("click",f);};
-    on_("btGo",()=>connect().catch(e=>{note=e.message;emit();}));on_("btStop",()=>disconnect(false));
+    on_("btGo",()=>connect().catch(e=>{note=e.message;emit();}));on_("btStop",()=>disconnect(false));on_("btOff",()=>disconnect(false));
     on_("btSet",settings);on_("btDetach",()=>{if(sink)detach(sink.key);});
     on_("btArm",()=>send(st&&st.arm===0?"ARM":"DISARM").then(()=>send("STATUS")));on_("btTest",()=>send("TEST"));
     on_("btNew",newString);
