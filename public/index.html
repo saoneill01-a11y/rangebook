@@ -1888,7 +1888,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Tools › BLIPR Chronograph:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b>, <b>Save to a range trip</b> and <b>Save to testing</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
         <li><b>Testing:</b> <b>Save to testing</b> keeps a string without a range trip, in a testing session: pick one you already have (today's is picked for you) or start a new one with what you're testing, the gun, the ammo or load and notes. The <b>Testing</b> card under Tools › BLIPR Chronograph lists your testing sessions, newest first; tap one to see each string's shots, average, SD, ES, low and high (and all its strings together), change its details, copy the velocities, remove a string or delete the session.</li>
       </ul>
-      <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot to check the connection: it shows on the pill and in Tools › BLIPR Chronograph, but never goes into a trip or ladder or counts in a string's numbers); the <b>velocity window</b> (it only counts readings in this range: <b>Automatic</b> uses 75% to 125% of the profile's muzzle velocity, or the ladder's velocities so far); <b>where the radar sits</b> beside and behind the muzzle, for each gun; <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
+      <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot to check the connection: it shows on the pill and in Tools › BLIPR Chronograph, but never goes into a trip or ladder or counts in a string's numbers); the <b>velocity window</b> (it only counts readings in this range; when shots go to a trip or ladder, a button offers 75% to 125% of its load's muzzle velocity); <b>where the radar sits</b> beside and behind the muzzle, for each gun (Range Book remembers it per gun; <b>Send these to BLIPR</b> uses a gun's numbers); <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
       <p><b>Sensor kit</b> (optional): with temperature, humidity and pressure sensors, an ammo probe and a compass fitted, <b>Conditions</b> in Tools › BLIPR Chronograph shows the air, density altitude, ammo temperature, which way it's pointing and whether it's level. <b>Use this air in the profile</b> sets a Shooting profile's temperature and altitude from it (the same way <b>Use the weather where I am</b> does). <b>Use … for Coriolis</b> sets the profile's direction of fire. Calibrate the compass once in Settings (turn it slowly through a full circle), then <b>Match my phone</b> to line it up with your phone's compass. If lifting the front doesn't read <i>nose up</i>, change <b>Sensor board turned</b> until it does. For Coriolis a heading within 10 or 15 degrees is plenty.</p>
     </section>
     <section class="card guide" aria-label="Training" id="hTrain"><h2>Training</h2>
@@ -2490,7 +2490,10 @@ window.RB_WX=(()=>{
 /* ---------- Range Book BLIPR: the bench radar chronograph, over Bluetooth (Web Bluetooth: Chrome on Android and computers, Bluefy on iPhone/iPad) ----------
    One chronograph at a time. Shots arrive as JSON on the Shot characteristic; each one goes to the session's live string (Tools → Chronograph)
    and to whatever screen asked for them (a range trip's string or a ladder's group: the "sink"). Velocities are always fps from the device.
-   The radar position per gun and a manual velocity window are kept in the account's preferences; everything else lives on the chronograph. */
+   The radar position per gun is kept in the account's preferences; everything else lives on the chronograph.
+   BLIPR's own settings win (2.44.2): connecting, or sending shots to a trip or ladder, never changes its velocity window,
+   radar position or listening state. Range Book reads them and only sends a change when you make one in Settings
+   (a load's window or a gun's saved position is offered as a button there). */
 window.RB_BTCHRONO=(function(){
   const SVC="239d0001-5192-4fb5-95ad-180af63137b3",uuid=n=>"239d000"+n+"-5192-4fb5-95ad-180af63137b3";
   const KEYS=[["shot",2],["status",3],["cmd",4],["cfg",5],["env",6],["ota",7]];
@@ -2615,7 +2618,7 @@ window.RB_BTCHRONO=(function(){
     send("UNITS "+(U()&&U().metric?"mps":"fps"));
     // the same power-up as before the dropout: ask for anything it measured while we weren't listening
     if(resume)send("SYNC "+lastN);
-    applySink(true);
+    applySink();
   }
   async function connect(){
     const w=support();if(w)throw new Error(supportMsg(w));
@@ -2646,19 +2649,21 @@ window.RB_BTCHRONO=(function(){
 
   /* ----- where shots go ----- */
   const clampW=(a,b)=>[Math.max(300,Math.round(a)),Math.min(4500,Math.round(b))];
-  function winFor(s){if(P.win&&P.win.lo>0&&P.win.hi>P.win.lo)return clampW(P.win.lo,P.win.hi);const e=s&&num(s.expect);return e>0?clampW(e*0.75,e*1.25):[300,4500];}
   function posFor(g){const p=(g&&P.pos[g])||P.pos._||{};return {lat:num(p.lat)!=null?num(p.lat):0.10,behind:num(p.behind)!=null?num(p.behind):0.10};}
-  function applySink(force){
-    if(state!=="on")return;const w=winFor(sink),p=posFor(sink&&sink.gunId);
-    if(force||!cfg||Math.abs((num(cfg.vmin)||0)-w[0])>1||Math.abs((num(cfg.vmax)||0)-w[1])>1)send("SET vmin="+w[0]+" vmax="+w[1]);
-    if(force||!cfg||Math.abs((num(cfg.lat)||0)-p.lat)>0.002||Math.abs((num(cfg.behind)||0)-p.behind)>0.002)send("SET lat="+p.lat.toFixed(3)+" behind="+p.behind.toFixed(3));
+  // connecting or picking where shots go: start the device's string count, read its settings, change none of them (2.44.2)
+  function applySink(){
+    if(state!=="on")return;
     if(sink&&!sink.strung){sink.strung=true;send("STRING");}
     send("GET");}
+  // the window a trip's or ladder's load suggests (75% to 125% of its muzzle velocity), offered in Settings
+  function winFor(s){const e=s&&num(s.expect);return e>0?clampW(e*0.75,e*1.25):null;}
+  const sendWin=(lo,hi)=>send("SET vmin="+lo+" vmax="+hi).then(()=>send("GET"));
+  const sendPos=p=>send("SET lat="+p.lat.toFixed(3)+" behind="+p.behind.toFixed(3)).then(()=>send("GET"));
   // a new place for shots starts a new string in the session too, named after it
   function attach(s){sink=s;s.strung=false;note="";const cur=S.strings[S.strings.length-1];
     if(cur.shots.length){S.n++;S.strings.push({id:"s"+S.n,name:s.label||"String "+S.n,at:Date.now(),shots:[]});}else if(s.label)cur.name=s.label;
-    applySink(false);emit();}
-  function detach(prefix){if(sink&&(sink.key===prefix||sink.key.startsWith(prefix+":"))){sink=null;applySink(false);emit();}}
+    applySink();emit();}
+  function detach(prefix){if(sink&&(sink.key===prefix||sink.key.startsWith(prefix+":"))){sink=null;applySink();emit();}}
 
   /* ----- the air from the add-on sensors, in Range Book's units (°F, ft, hPa) ----- */
   function air(){
@@ -2719,7 +2724,9 @@ window.RB_BTCHRONO=(function(){
         '<div class="row">'+(!w&&state!=="connecting"?'<button class="btn primary" type="button" id="chsGo">Connect</button>':'')+(state!=="off"?'<button class="btn" type="button" id="chsOff">Stop trying</button>':'')+'<button class="btn" type="button" id="chsTool">Open the Chronograph tool</button></div>';
       if(box._h!==h0){box._h=h0;box.innerHTML=h0;bindCommon(box);}return;}
     const s=st||{},c=cfg||{},sens=String(s.sens||""),A=air();
-    const g=shGun||(sink&&sink.gunId)||"",pos=posFor(g),win=P.win;
+    const g=shGun||(sink&&sink.gunId)||"",sw=winFor(sink),cw=[num(c.vmin),num(c.vmax)],cp=[num(c.lat),num(c.behind)];
+    // the boxes show this gun's saved position, or BLIPR's own when none is saved
+    const pos=((g&&P.pos[g])||P.pos._)||cp[0]==null||cp[1]==null?posFor(g):{lat:cp[0],behind:cp[1]};
     const inU=v=>u.n("in",v/0.0254,1);
     let h='<div class="chdev"><div><b>'+esc(dev&&dev.name||"RB BLIPR")+'</b> <span class="note">'+(s.arm===0?"paused":"listening")+'</span></div>'+
       '<div class="note">'+[num(s.bat)>=0?"Battery "+Math.round(s.bat)+"% ("+num(s.bv).toFixed(2)+" V)":"Battery gauge not wired",s.sd?"SD card OK":"No SD card",s.t===0?"Radar board not answering":"",num(s.ovr)>0?num(s.ovr)+" missed samples":"","Firmware "+esc(s.fw||"?")+" / "+esc(s.efw||"?")].filter(Boolean).join(" · ")+'</div>'+
@@ -2727,16 +2734,17 @@ window.RB_BTCHRONO=(function(){
     if(note)h+='<p class="note" role="status">'+esc(note)+'</p>';
     h+='<div class="row"><button class="btn'+(s.arm===0?' primary':'')+'" type="button" id="chsArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="chsTest">Test shot</button><button class="btn" type="button" id="chsTool">Open the Chronograph tool</button></div>';
     // velocity window
-    h+='<h3>Velocity window</h3><p class="note">It only counts readings in this range, which stops echoes and other guns from counting. <b>Automatic</b> uses 75% to 125% of the load\'s muzzle velocity when shots go to a range trip or ladder; with no load it accepts '+esc(u.s("fps",300,0,true))+' to '+esc(u.s("fps",4500,0,true))+'.</p>'+
-      '<div class="segtabs" role="radiogroup" aria-label="Velocity window"><button type="button" role="radio" data-chwin="auto" aria-selected="'+(!win)+'">Automatic</button><button type="button" role="radio" data-chwin="man" aria-selected="'+(!!win)+'">Set it myself</button></div>'+
-      (win?'<div class="grid chgrid"><div class="field"><label for="chsLo">Slowest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsLo",win.lo)+'</div><div class="field"><label for="chsHi">Fastest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsHi",win.hi)+'</div></div>':'')+
-      '<p class="note">Now: '+esc(u.s("fps",num(c.vmin)||300,0,true))+' to '+esc(u.s("fps",num(c.vmax)||4500,0,true))+'.</p>';
+    h+='<h3>Velocity window</h3><p class="note">It only counts readings in this range, which stops echoes and other guns from counting. These are BLIPR\'s own settings: Range Book shows them and only changes them when you do, here.</p>'+
+      '<div class="grid chgrid"><div class="field"><label for="chsLo">Slowest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsLo",cw[0])+'</div><div class="field"><label for="chsHi">Fastest ('+esc(u.u("fps"))+')</label>'+fpsIn("chsHi",cw[1])+'</div></div>'+
+      (sw&&(Math.abs((cw[0]||0)-sw[0])>1||Math.abs((cw[1]||0)-sw[1])>1)?'<div class="row"><button class="btn" type="button" id="chsWinLoad">Use '+esc(u.s("fps",sw[0],0,true))+' to '+esc(u.s("fps",sw[1],0,true))+' (75% to 125% of '+esc(sink.label||"this load")+'\'s velocity)</button></div>':'');
     // radar position
     const GL=guns();
     h+='<h3>Where the radar sits</h3><p class="note">Measured from the bore line at the muzzle: how far to the side, and how far back from the muzzle. It corrects the reading for the angle; a guess within an inch or two is fine.</p>'+
       '<div class="grid chgrid">'+(GL.length?'<div class="field wide"><label for="chsGun">For</label><select id="chsGun" class="fieldselect"><option value="">Any gun (default)</option>'+(window.RB_GUNOPTS?RB_GUNOPTS(GL,g,esc):GL.map(r=>'<option value="'+esc(r.id)+'"'+(r.id===g?' selected':'')+'>'+esc(r.name)+'</option>').join(""))+'</select></div>':'')+
       '<div class="field"><label for="chsLat">To the side ('+esc(u.u("in"))+')</label><input id="chsLat" type="number" inputmode="decimal" step="any" value="'+esc(inU(pos.lat))+'"></div>'+
-      '<div class="field"><label for="chsBeh">Behind the muzzle ('+esc(u.u("in"))+')</label><input id="chsBeh" type="number" inputmode="decimal" step="any" value="'+esc(inU(pos.behind))+'"></div></div>';
+      '<div class="field"><label for="chsBeh">Behind the muzzle ('+esc(u.u("in"))+')</label><input id="chsBeh" type="number" inputmode="decimal" step="any" value="'+esc(inU(pos.behind))+'"></div></div>'+
+      (cp[0]!=null&&cp[1]!=null?'<p class="note">BLIPR now: '+esc(u.s("in",cp[0]/0.0254,1))+' to the side, '+esc(u.s("in",cp[1]/0.0254,1))+' behind. Changing a number here sends it.</p>':'')+
+      (cp[0]!=null&&cp[1]!=null&&(Math.abs(cp[0]-pos.lat)>0.002||Math.abs(cp[1]-pos.behind)>0.002)?'<div class="row"><button class="btn" type="button" id="chsPosGo">Send these to BLIPR</button></div>':'');
     // calibration
     const cs=S.strings[S.strings.length-1].shots.filter(x=>x.ok&&!x.test&&x.at>calAt),avg=cs.length?cs.reduce((a,x)=>a+x.v,0)/cs.length:null;
     h+='<h3>Calibration</h3><p class="note">Each radar is a little off from its labelled frequency, up to about 0.5% (about 14 fps at 2,700). Shoot a string over another chronograph you trust at the same time, then put both averages here. Now: '+(num(c.cal)?(num(c.cal)>0?"+":"")+Math.round(num(c.cal))+" ppm":"not calibrated")+'.</p>'+
@@ -2776,14 +2784,16 @@ window.RB_BTCHRONO=(function(){
     on_("chsDetach","click",()=>{if(sink)detach(sink.key);});
     on_("chsArm","click",()=>send(st&&st.arm===0?"ARM":"DISARM").then(()=>send("STATUS")));
     on_("chsTest","click",()=>send("TEST"));
-    box.querySelectorAll("[data-chwin]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.chwin==="auto")P.win=null;else{const w=winFor(sink);P.win={lo:w[0],hi:w[1]};}savePrefs();applySink(false);drawSet();}));
-    const winIn=()=>{const lo=num(box.querySelector("#chsLo").value),hi=num(box.querySelector("#chsHi").value);if(lo>0&&hi>lo){P.win={lo:Math.round(U().from("fps",lo)),hi:Math.round(U().from("fps",hi))};savePrefs();applySink(false);}};
+    const winIn=()=>{const lo=num(box.querySelector("#chsLo").value),hi=num(box.querySelector("#chsHi").value);if(!(lo>0&&hi>lo))return;
+      const w=clampW(U().from("fps",lo),U().from("fps",hi));clearIns.add("chsLo");clearIns.add("chsHi");note="Velocity window set to "+U().s("fps",w[0],0,true)+" to "+U().s("fps",w[1],0,true)+".";sendWin(w[0],w[1]);};
     on_("chsLo","change",winIn);on_("chsHi","change",winIn);
+    on_("chsWinLoad","click",()=>{const w=winFor(sink);if(!w)return;clearIns.add("chsLo");clearIns.add("chsHi");note="Velocity window set to "+U().s("fps",w[0],0,true)+" to "+U().s("fps",w[1],0,true)+".";sendWin(w[0],w[1]);});
     on_("chsGun","change",e=>{shGun=e.target.value;drawSet();});
     const posIn=()=>{const la=num(box.querySelector("#chsLat").value),be=num(box.querySelector("#chsBeh").value);if(la==null||be==null)return;
       const m=v=>Math.round(U().from("in",v)*0.0254*1000)/1000,k=box.querySelector("#chsGun")?box.querySelector("#chsGun").value||"_":"_";
-      P.pos[k]={lat:Math.min(1,Math.abs(m(la))),behind:Math.max(-1,Math.min(1,m(be)))};savePrefs();applySink(false);};
+      P.pos[k]={lat:Math.min(1,Math.abs(m(la))),behind:Math.max(-1,Math.min(1,m(be)))};savePrefs();sendPos(P.pos[k]);};
     on_("chsLat","change",posIn);on_("chsBeh","change",posIn);
+    on_("chsPosGo","click",()=>sendPos(pos));
     on_("chsCal","click",()=>{const r=num(box.querySelector("#chsRef").value),o=num(box.querySelector("#chsOur").value),n=box.querySelector("#chsCalNote");
       if(!(r>0&&o>0)){n.textContent="Put in both averages.";return;}const ratio=r/o;
       if(Math.abs(ratio-1)>0.02){n.textContent="Those are more than 2% apart, more than a radar is ever off. Check they're the same shots.";return;}
@@ -2933,7 +2943,7 @@ window.RB_BTCHRONO=(function(){
     connect,disconnect,send,settings,attach,detach,sinkKey:()=>sink?sink.key:null,sink:()=>sink,paint,
     sub(f){subs.add(f);return ()=>subs.delete(f);},
     showTool(){toolDraw();if(window.RB_TESTING)RB_TESTING.show();},
-    prefs(){return Object.keys(P.pos).length||P.win?JSON.parse(JSON.stringify(P)):undefined;},
+    prefs(){return Object.keys(P.pos).length||P.win?JSON.parse(JSON.stringify(P)):undefined;},   // P.win: from before 2.44.2, kept but not used
     loadPrefs(o){if(o&&typeof o==="object")P={pos:o.pos&&typeof o.pos==="object"?o.pos:{},win:o.win&&o.win.lo>0?o.win:null};},
     // for tests: what the module has seen
     _session:()=>S
