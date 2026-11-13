@@ -853,6 +853,7 @@ header.hashelp>h1{padding-right:180px}
 .chlooks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px}.chlook{display:flex;flex-direction:column;align-items:stretch;gap:5px;padding:6px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;text-align:center}.chlook img{width:100%;height:auto;image-rendering:pixelated;border-radius:4px;background:#000}.chlook[aria-checked="true"]{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
 .chenv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 10px}.chenv dt{color:var(--muted)}.chenv dd{margin:0;font-weight:600}
 .chprev{margin:0 0 8px;padding-left:18px}.chprev li{margin:4px 0}
+.chraw{list-style:none;margin:8px 0 0;padding:0;font-size:13px}.chraw li{padding:6px 0;border-top:1px solid rgba(127,127,127,.25)}.chraw code{display:block;margin-top:2px;font-size:12px;word-break:break-all;opacity:.85}
 .chgrid{margin:8px 0}
 .chsheet h3{margin:18px 0 6px;font-size:15px}
 .chsheet .switch.inl{display:inline-flex;align-items:center}
@@ -2605,10 +2606,84 @@ window.RB_BTCHRONO=(function(){
   }
   const whyTxt=w=>({weak:"the echo was too weak (aim the radar along the bore and closer to the muzzle)",short:"it lost the bullet too soon",noisy:"the reading was too scattered","out of range":"outside the velocity window","no signal":"nothing on the radar"})[w]||w;
   function bind(k){const c=C[k];if(!c)return;if(!H[k])H[k]=ev=>got(k,ev);c.removeEventListener("characteristicvaluechanged",H[k]);c.addEventListener("characteristicvaluechanged",H[k]);return c.startNotifications();}
+
+  /* ----- Athlon Rangecraft (2.44.4). A serial pipe: Range Book writes commands to ff02; the unit answers, and sends
+     its own events, on ff03. Each message is [type][length][code][data…], length = code + data bytes. Types: 80 = a
+     command, or an event the unit sends by itself; 90 = a reply; 91/92/93 = a long reply in pieces (92 and 93 start
+     with a piece number). Dates and times are BCD. Worked out from the Athlon app's Bluetooth log (rangebook-blipr,
+     tools/rangecraft). The shot message isn't known yet, so everything goes in a message log (Tools › Chronograph)
+     with the numbers that could be a velocity, to match against the Athlon's own screen. ----- */
+  const ATH="6e40ff01-b5a3-f393-e0a9-4174686c6f6e",athU=n=>"6e40ff0"+n+"-b5a3-f393-e0a9-4174686c6f6e";
+  let kind="blipr",athBuf=null;const RAW=[];
+  const isAth=()=>kind==="athlon",chName=()=>isAth()?"Athlon":"BLIPR";
+  const hex=b=>Array.from(b,x=>x.toString(16).padStart(2,"0")).join(" "),hx=c=>"0x"+c.toString(16).padStart(2,"0");
+  const bcd=x=>(x>>4)*10+(x&15),toBcd=n=>((Math.floor(n/10)%10)<<4)|(n%10);
+  const bcdTime=(d,i)=>d.length>=i+6?"20"+[0,1,2].map(k=>String(bcd(d[i+k])).padStart(2,"0")).join("-")+" "+[3,4,5].map(k=>String(bcd(d[i+k])).padStart(2,"0")).join(":"):"";
+  function rawLog(dir,b,what){RAW.push({at:Date.now(),dir,hex:b?hex(b):"",what:what||""});if(RAW.length>300)RAW.shift();console.log("athlon",dir,what||"",b?hex(b):"");}
+  // numbers in a message that could be a velocity (fps, or m/s), to match against the Athlon's screen
+  function guesses(d){
+    const out=[],dv=new DataView(d.buffer,d.byteOffset,d.byteLength),ok=v=>v>=250&&v<=4500,add=t=>{if(out.length<10&&!out.includes(t))out.push(t);};
+    for(let i=0;i+1<d.length;i++){
+      const le=dv.getUint16(i,true),be=dv.getUint16(i,false);
+      if(ok(le/10))add("byte "+i+": "+(le/10).toFixed(1));if(ok(le))add("byte "+i+": "+le);
+      if(ok(le/10/0.3048))add("byte "+i+": "+(le/10).toFixed(1)+" m/s = "+Math.round(le/10/0.3048)+" fps");
+      if(ok(be/10))add("byte "+i+": "+(be/10).toFixed(1)+" (big-endian)");
+      if((d[i]>>4)<10&&(d[i]&15)<10&&(d[i+1]>>4)<10&&(d[i+1]&15)<10){const b2=bcd(d[i])*100+bcd(d[i+1]);if(ok(b2))add("byte "+i+": "+b2+" (BCD)");}
+      if(i+3<d.length){const f=dv.getFloat32(i,true);if(ok(f))add("byte "+i+": "+f.toFixed(1)+" (float)");else if(ok(f/0.3048))add("byte "+i+": "+f.toFixed(1)+" m/s = "+Math.round(f/0.3048)+" fps (float)");}
+    }
+    return out;}
+  function athSend(code,data){
+    const b=new Uint8Array([0x80,1+(data||[]).length,code].concat(data||[]));
+    return gatt(async()=>{if(!C.arx||state!=="on")return;rawLog("out",b,"command "+hx(code));
+      try{if(C.arx.writeValueWithoutResponse)await C.arx.writeValueWithoutResponse(b);else await C.arx.writeValue(b);}catch(e){console.warn("athlon send",e);}
+      await sleep(30);});}
+  function athRx(ev){
+    lastRx=Date.now();const v=ev.target.value,b=new Uint8Array(v.buffer.slice(v.byteOffset,v.byteOffset+v.byteLength));
+    if(b.length<3){rawLog("in",b,"too short");emit();return;}
+    const t=b[0];
+    if(t===0x91){athBuf={code:b[2],data:Array.from(b.slice(3))};rawLog("in",b,"long reply "+hx(b[2])+", piece 1");return;}
+    if(t===0x92||t===0x93){rawLog("in",b,"piece "+(b[2]+1));if(!athBuf)return;athBuf.data.push(...b.slice(3));
+      if(t===0x93){const m=athBuf;athBuf=null;athMsg(0x90,m.code,new Uint8Array(m.data),null);}return;}
+    if(t===0x80||t===0x90){athMsg(t,b[2],b.slice(3),b);return;}
+    rawLog("in",b,"unknown type "+hx(t));note="The Athlon sent a message Range Book can't read yet. It's in the message log in the Chronograph tool.";emit();}
+  function athMsg(t,code,d,b){
+    let what="";const s=st||(st={});
+    if(t===0x90&&code===0x66)what="clock set";
+    else if(t===0x90&&code===0x65){s.fw=td.decode(d);what="firmware "+s.fw;}
+    else if(t===0x90&&code===0x81)what="reply 0x81 ("+hex(d)+")";
+    else if(t===0x90&&code===0x77){let n=0;for(let i=5;i+11<=d.length&&d[i];i+=11)n++;s.sessions=n;what="session list: "+n+" stored on the unit";}
+    else if(t===0x80&&code===0x21){
+      what="session started "+bcdTime(d,1);note="The Athlon started a session: a new string starts here.";
+      const cur=S.strings[S.strings.length-1];if(cur.shots.length){S.n++;S.strings.push({id:"s"+S.n,name:"String "+S.n,at:Date.now(),shots:[]});}}
+    else if(t===0x80&&code===0x24){what="session ended";note="The Athlon ended its session.";}
+    else{const g=guesses(d);what=(t===0x80?"event ":"reply ")+hx(code)+(g.length?" · could be "+g.join(", "):"");
+      if(t===0x80)note="The Athlon sent a message Range Book can't read yet (code "+hx(code)+"). It's in the message log: note what the Athlon's screen shows.";}
+    rawLog("in",b||new Uint8Array([t,1+d.length,code].concat(Array.from(d.slice(0,40)))),what);
+    emit();}
+  async function athLink(srv,svc){
+    kind="athlon";st={arm:1};cfg=null;env=null;athBuf=null;
+    C={atx:await svc.getCharacteristic(athU(3)),arx:await svc.getCharacteristic(athU(2))};
+    try{const bs=await srv.getPrimaryService("battery_service");C.abat=await bs.getCharacteristic("battery_level");}catch(e){}
+    H.atx=H.atx||athRx;C.atx.removeEventListener("characteristicvaluechanged",H.atx);C.atx.addEventListener("characteristicvaluechanged",H.atx);
+    await C.atx.startNotifications();
+    if(C.abat){H.abat=H.abat||(ev=>{lastRx=Date.now();if(st)st.bat=ev.target.value.getUint8(0);emit();});
+      C.abat.removeEventListener("characteristicvaluechanged",H.abat);C.abat.addEventListener("characteristicvaluechanged",H.abat);
+      try{await C.abat.startNotifications();}catch(e){}
+      try{st.bat=(await C.abat.readValue()).getUint8(0);}catch(e){}}
+    lastRx=Date.now();retry=0;setState("on");
+    // what the Athlon app does on connect: set the clock, ask for the firmware, 0x81 (meaning unknown), the session list
+    const n=new Date();athSend(0x66,[n.getFullYear()%100,n.getMonth()+1,n.getDate(),n.getHours(),n.getMinutes(),n.getSeconds()].map(toBcd));
+    athSend(0x65);athSend(0x81);athSend(0x77);
+    applySink();
+  }
+
   async function link(){
     setState("connecting");
     const prevBoot=boot;
-    const srv=await dev.gatt.connect(),svc=await srv.getPrimaryService(SVC);C={};
+    const srv=await dev.gatt.connect();
+    let svc=null;try{svc=await srv.getPrimaryService(SVC);}catch(e){}
+    if(!svc){await athLink(srv,await srv.getPrimaryService(ATH));return;}
+    kind="blipr";C={};
     for(const [k,n] of KEYS){try{C[k]=await svc.getCharacteristic(uuid(n));}catch(e){if(k!=="env"&&k!=="ota")throw e;}}
     for(const k of ["shot","status","cfg","env"])if(C[k])await bind(k);
     await readOne("status");await readOne("cfg");await readOne("env");
@@ -2629,7 +2704,7 @@ window.RB_BTCHRONO=(function(){
       for(let i=0;i<60&&state!=="on";i++)await sleep(250);
       if(state==="on")return;throw new Error("Still trying to reach the chronograph. Check it's switched on and within about 30 ft; it keeps trying by itself.");}
     if(!dev){setState("picking");
-      try{dev=await navigator.bluetooth.requestDevice({filters:[{services:[SVC]},{namePrefix:"RB BLIPR"},{namePrefix:"RB Blip"},{namePrefix:"RB Chrono"}],optionalServices:[SVC]});}
+      try{dev=await navigator.bluetooth.requestDevice({filters:[{services:[SVC]},{namePrefix:"RB BLIPR"},{namePrefix:"RB Blip"},{namePrefix:"RB Chrono"},{namePrefix:"AthlonVPR"},{services:[ATH]}],optionalServices:[SVC,ATH,"battery_service"]});}
       catch(e){wantOn=false;setState("off");if(e&&e.name==="NotFoundError")throw new Error("");throw new Error("Couldn't open Bluetooth: "+(e&&e.message||e));}
       dev.addEventListener("gattserverdisconnected",lost);}
     try{await link();}catch(e){if(dev&&dev.gatt.connected)dev.gatt.disconnect();setState(wantOn?"lost":"off");
@@ -2723,6 +2798,17 @@ window.RB_BTCHRONO=(function(){
         (note?'<p class="note">'+esc(note)+'</p>':'')+
         '<div class="row">'+(!w&&state!=="connecting"?'<button class="btn primary" type="button" id="chsGo">Connect</button>':'')+(state!=="off"?'<button class="btn" type="button" id="chsOff">Stop trying</button>':'')+'<button class="btn" type="button" id="chsTool">Open the Chronograph tool</button></div>';
       if(box._h!==h0){box._h=h0;box.innerHTML=h0;bindCommon(box);}return;}
+    if(isAth()){const s=st||{};
+      const ha='<div class="chdev"><div><b>'+esc(dev&&dev.name||"Athlon")+'</b> <span class="note">Athlon Rangecraft</span></div>'+
+        '<div class="note">'+[num(s.bat)>=0?"Battery "+Math.round(s.bat)+"%":"",s.fw?"Firmware "+esc(s.fw):"",s.sessions!=null?s.sessions+" sessions stored on it":""].filter(Boolean).join(" · ")+'</div>'+
+        (sink?'<div class="note">Shots go to <b>'+esc(sink.label||"")+'</b> <button class="linkbtn" type="button" id="chsDetach">Stop</button></div>':'')+'</div>'+
+        (note?'<p class="note" role="status">'+esc(note)+'</p>':'')+
+        '<p class="note">Range Book listens to the Athlon and sets its clock; its other settings stay on the Athlon. Range Book can\'t read the Athlon\'s shots yet: until it can, what it sends shows in the message log in the Chronograph tool.</p>'+
+        '<div class="row"><button class="btn" type="button" id="chsOff2">Disconnect</button><button class="btn" type="button" id="chsTool">Open the Chronograph tool</button><button class="btn danger" type="button" id="chsForget">Use a different chronograph</button></div>';
+      if(box._h!==ha){box._h=ha;box.innerHTML=ha;bindCommon(box);
+        const e=box.querySelector("#chsDetach");if(e)e.addEventListener("click",()=>{if(sink)detach(sink.key);});
+        box.querySelector("#chsForget").addEventListener("click",()=>{disconnect(true);note="";});}
+      return;}
     const s=st||{},c=cfg||{},sens=String(s.sens||""),A=air();
     const g=shGun||(sink&&sink.gunId)||"",sw=winFor(sink),cw=[num(c.vmin),num(c.vmax)],cp=[num(c.lat),num(c.behind)];
     // the boxes show this gun's saved position, or BLIPR's own when none is saved
@@ -2848,6 +2934,9 @@ window.RB_BTCHRONO=(function(){
     if(w)h+='<p class="note">'+esc(supportMsg(w))+'</p>';
     else if(!on)h+='<p class="note">'+(state==="lost"?'<b>Out of reach.</b> Range Book keeps trying to reconnect by itself.':state==="connecting"||state==="picking"?'Connecting…':'Switch the chronograph on, then connect. Your phone remembers it after the first time.')+'</p>'+
       '<div class="row"><button class="btn primary" type="button" id="btGo"'+(state==="connecting"||state==="picking"?' disabled':'')+'>Connect chronograph</button>'+(state!=="off"?'<button class="btn" type="button" id="btStop">Stop trying</button>':'')+'</div>';
+    else if(isAth())h+='<div class="chdev"><div><b>'+esc(dev&&dev.name||"Athlon")+'</b> <span class="chip">Listening</span></div><div class="note">'+["Athlon Rangecraft",num(s.bat)>=0?"Battery "+Math.round(s.bat)+"%":"",s.fw?"Firmware "+esc(s.fw):""].filter(Boolean).join(" · ")+'</div>'+
+      (sink?'<div class="note">Shots also go to <b>'+esc(sink.label)+'</b> <button class="linkbtn" type="button" id="btDetach">Stop</button></div>':'')+'</div>'+
+      '<div class="row"><button class="btn" type="button" id="btSet">Settings</button><button class="btn" type="button" id="btOff">Disconnect</button></div>';
     else h+='<div class="chdev"><div><b>'+esc(dev&&dev.name||"RB BLIPR")+'</b> <span class="chip'+(s.arm===0?' off':'')+'">'+(s.arm===0?"Paused":"Listening")+'</span></div><div class="note">'+[num(s.bat)>=0?"Battery "+Math.round(s.bat)+"%":"",s.sd?"SD card OK":"No SD card",s.t===0?"Radar board not answering":""].filter(Boolean).join(" · ")+'</div>'+
       (sink?'<div class="note">Shots also go to <b>'+esc(sink.label)+'</b> <button class="linkbtn" type="button" id="btDetach">Stop</button></div>':'')+'</div>'+
       '<div class="row"><button class="btn" type="button" id="btSet">Settings</button><button class="btn" type="button" id="btArm">'+(s.arm===0?"Start listening":"Pause")+'</button><button class="btn" type="button" id="btTest">Test shot</button><button class="btn" type="button" id="btOff">Disconnect</button></div>';
@@ -2869,6 +2958,7 @@ window.RB_BTCHRONO=(function(){
     // 3. conditions from the add-on sensors
     h+='<section class="card" aria-label="Conditions"><h2>Conditions</h2>';
     if(!on)h+='<p class="note">With the sensor kit fitted, the air temperature, humidity, pressure, ammo temperature and which way you\'re shooting show here.</p>';
+    else if(isAth())h+='<p class="note">The Athlon doesn\'t measure the air. BLIPR\'s sensor kit does.</p>';
     else if(!A||(A.tempF==null&&A.hd==null&&A.ammoF==null&&A.pi==null))h+='<p class="note">No add-on sensors found. The build guide\'s <b>Sensors</b> tab shows how to add temperature, humidity, pressure, an ammo probe and a compass.</p>';
     else{
       const rows=[];
@@ -2885,15 +2975,23 @@ window.RB_BTCHRONO=(function(){
           '<div class="row">'+(A.alt!=null?'<button class="btn" type="button" id="btAir">Use this air in the profile</button>':'')+(A.hd!=null?'<button class="btn" type="button" id="btCor">Use '+Math.round(A.hd)+'° for Coriolis</button>':'')+'</div><p class="note" id="btAirNote"></p>';}
     }
     h+='</section>';
-    // three parts, each replaced only when it changed, so a button isn't swapped out from under a finger
-    if(root.children.length!==3)root.innerHTML="<div></div><div></div><div></div>";
-    h.split("\u0001").forEach((x,i)=>{const el=root.children[i];if(el._h!==x){el._h=x;el.innerHTML=x;}});
+    // 4. Athlon: the message log, until Range Book can read its shots (2.44.4)
+    if(isAth()&&RAW.length)h+='\u0001<section class="card" aria-label="Athlon messages"><h2>Athlon messages</h2><p class="note">What Range Book and the Athlon say to each other, newest first. Range Book is still learning the Athlon\'s shot message: fire a shot, then note the time and what the Athlon\'s screen shows. "Could be" lists the numbers in a message that might be that velocity.</p>'+
+      '<div class="row"><button class="btn" type="button" id="btRawCopy">Copy the log</button><button class="btn" type="button" id="btRawClr">Clear</button></div>'+
+      '<ol class="chraw">'+RAW.slice(-80).reverse().map(r=>'<li><span class="note">'+esc(new Date(r.at).toLocaleTimeString())+' '+(r.dir==="out"?"to the Athlon":"from the Athlon")+'</span> '+esc(r.what)+(r.hex?'<code>'+esc(r.hex.length>160?r.hex.slice(0,160)+" …":r.hex)+'</code>':'')+'</li>').join("")+'</ol></section>';
+    // parts, each replaced only when it changed, so a button isn't swapped out from under a finger
+    const parts=h.split("\u0001");
+    if(root.children.length!==parts.length)root.innerHTML=parts.map(()=>"<div></div>").join("");
+    parts.forEach((x,i)=>{const el=root.children[i];if(el._h!==x){el._h=x;el.innerHTML=x;}});
     const once=e=>{if(!e||e._b)return null;e._b=1;return e;};
     const on_=(id,f)=>{const e=once($(id));if(e)e.addEventListener("click",f);};
     on_("btGo",()=>connect().catch(e=>{note=e.message;emit();}));on_("btStop",()=>disconnect(false));on_("btOff",()=>disconnect(false));
     on_("btSet",settings);on_("btDetach",()=>{if(sink)detach(sink.key);});
     on_("btArm",()=>send(st&&st.arm===0?"ARM":"DISARM").then(()=>send("STATUS")));on_("btTest",()=>send("TEST"));
     on_("btNew",newString);
+    on_("btRawClr",()=>{RAW.length=0;emit();});
+    on_("btRawCopy",()=>{const t=RAW.map(r=>new Date(r.at).toISOString()+" "+(r.dir==="out"?">":"<")+" "+r.what+(r.hex?" | "+r.hex:"")).join("\n");
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{note="Copied the Athlon message log ("+RAW.length+" lines).";emit();},()=>{note="Couldn't copy here.";emit();});});
     on_("btUndo",()=>{const x=cur.shots.pop();if(!x)return;last=cur.shots[cur.shots.length-1]||null;emit();
       if(window.RB_UNDO)RB_UNDO("Removed shot "+(cur.shots.length+1),()=>{cur.shots.push(x);last=x;emit();});});
     on_("btCopy",()=>{const t=cur.shots.filter(x=>x.ok).map(x=>u.n("fps",x.v,0)).join("\n");
@@ -2905,7 +3003,7 @@ window.RB_BTCHRONO=(function(){
       $("btTripNo").addEventListener("click",()=>{b.innerHTML="";});
       $("btTripGo").addEventListener("click",()=>{const tid=$("btTrip").value,sh=x.shots.filter(o=>o.ok);
         const am=sh.filter(o=>o.ammo!=null);
-        const ok=RB_TRIPS.addString(tid,{name:"BLIPR · "+x.name,shots:sh.map(o=>Math.round(o.v)),ammoF:am.length?Math.round(am.reduce((a,o)=>a+o.ammo,0)/am.length):null},air());
+        const ok=RB_TRIPS.addString(tid,{name:chName()+" · "+x.name,shots:sh.map(o=>Math.round(o.v)),ammoF:am.length?Math.round(am.reduce((a,o)=>a+o.ammo,0)/am.length):null},air());
         b.innerHTML='<p class="note">'+(ok?'Saved to the range trip.':'That range trip is gone.')+'</p>';});};
     on_("btSave",()=>saveBox(cur.id));
     // Save to testing (2.44.1): a testing session keeps the string without a range trip; the Testing card below lists them
@@ -2939,7 +3037,7 @@ window.RB_BTCHRONO=(function(){
 
   return {
     supported:()=>!support(),supportMsg:()=>supportMsg(support()),
-    state:()=>state,on:()=>state==="on",status:()=>st,config:()=>cfg,air,last:()=>last,
+    state:()=>state,on:()=>state==="on",status:()=>st,config:()=>cfg,air,last:()=>last,kind:()=>kind,log:()=>RAW.slice(),
     connect,disconnect,send,settings,attach,detach,sinkKey:()=>sink?sink.key:null,sink:()=>sink,paint,
     sub(f){subs.add(f);return ()=>subs.delete(f);},
     showTool(){toolDraw();if(window.RB_TESTING)RB_TESTING.show();},

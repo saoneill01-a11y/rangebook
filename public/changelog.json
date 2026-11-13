@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.44.3",
+      "version": "2.44.4",
       "date": "2026-11-12",
       "title": "Bluetooth chronograph",
       "items": [
+        "Connect chronograph now also finds an Athlon Rangecraft. Range Book sets its clock and shows its battery, firmware and sessions starting and ending. It can't read the Athlon's shots yet: Tools › BLIPR Chronograph shows a message log of what the Athlon sends, with the numbers that could be the velocity, so its shot message can be worked out.",
         "Range Book can now take velocities straight from the Range Book BLIPR, the do-it-yourself bench radar chronograph, over Bluetooth as you shoot. It works in Chrome or Edge on Android and computers, and in the Bluefy app on iPhone and iPad.",
         "Range trips: Connect chronograph starts a string and fills it shot by shot, with the average and SD updating as you go. New chronograph string starts another, Send shots here picks a different string, Stop chronograph stops.",
         "Ladder tests: Connect chronograph on a group fills its empty boxes, then moves on to the next group in the ladder.",
