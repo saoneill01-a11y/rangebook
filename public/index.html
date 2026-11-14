@@ -1819,7 +1819,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Bigger picture on a phone:</b> drag the bar under the camera picture down to make it bigger; the buttons and numbers below it then scroll. Drag it up to make it smaller, or double-tap the bar to fit everything on the screen again. It's remembered on that phone.</p>
       <p><b>Or start it on your iPad, with the phone as its camera:</b> on the phone, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Be the camera for your iPad</b>, aim it at the target and leave it (the screen goes dark after 30 seconds to save battery; tap it to see the camera). On the iPad, start Live target the usual way (from a ladder, a range trip or Tools › Live target) and pick <b>Use the iPhone on the scope</b>. The phone starts by itself with that setup: the ladder's charges, the distance and shots, and the trip's Shooting profile for the reticle. The iPad has the <b>Shot</b>, <b>Undo</b>, <b>Aim</b> and <b>Save</b> buttons, <b>Listen for shots</b> with the iPad's own microphone, and <b>Show my reticle</b> with its profile and zero. <b>Save</b> puts the target where you started it on the iPad. To change guns, loads or profiles, tap <b>← Back</b> on the iPad (it offers to save the shots first), then start Live target again from the new place: the phone goes back to waiting in between and keeps its camera open, so you never have to touch it.</p>
       <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
-      <p><b>Chronograph finds each shot</b> shows when a Bluetooth chronograph (BLIPR or an Athlon Rangecraft) is connected to the device running the session: the phone, or the iPad when the phone is its camera. Each time the chronograph measures a shot, Range Book looks for the new hole by itself and puts that velocity on it, so you don't tap <b>Shot</b>. With it off (or with <b>Listen for shots</b> doing the finding), the velocity still goes on the hole that was just found. If no hole turns up, tap the hole on the picture and the velocity goes on it. A saved target shows each hole's velocity under <b>Shot by shot</b>, with whether the faster shots hit higher or lower. On a range trip, connect the chronograph first (<b>Connect Athlon</b>), so the velocities also fill a string on the trip.</p>
+      <p><b>Chronograph finds each shot</b> shows when a Bluetooth chronograph (BLIPR or an Athlon Rangecraft) is connected to the device running the session: the phone, or the iPad when the phone is its camera. Each time the chronograph measures a shot, Range Book looks for the new hole by itself and puts that velocity on it, so you don't tap <b>Shot</b>. At long range it first waits for the bullet's time of flight (worked out from the trip's Shooting profile, or from the velocity and distance), so the hole is there when it looks. With it off (or with <b>Listen for shots</b> doing the finding), the velocity still goes on the hole that was just found. If no hole turns up, tap the hole on the picture and the velocity goes on it. A saved target shows each hole's velocity under <b>Shot by shot</b>, with whether the faster shots hit higher or lower. On a range trip, connect the chronograph first (<b>Connect Athlon</b>), so the velocities also fill a string on the trip.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
       <h3>Shot by shot: which shots were fast or slow</h3>
@@ -3754,6 +3754,8 @@ function scratchShow(){fillInputs();try{scopeCols(cur());}catch(e){}fillRifle();
    use the trip's temperature, air pressure and wind in place of the profile's. Nothing is saved to the profile. */
 let TRIP_AIR=null;
 window.RB_TRAJ={
+  // seconds for a bullet to fly yd yards at velocity v, with this profile's BC and air (Live target's wait, 2.46.5)
+  tof(id,v,yd){const L=state.loads.find(l=>l.id===id);if(!L||!(num(L.bc)>0)||!(v>0)||!(yd>0))return null;try{const S=simulate(Object.assign({},L,{mv:v,lr:yd>1000}));return yd<=S.last?S.at(S.t,yd):null;}catch(e){return null;}},
   tripAir(a){const k=JSON.stringify(a);if(k===JSON.stringify(TRIP_AIR))return;TRIP_AIR=a;if(TVIEW==="detail")render();},
   scratchOn(slot){const d=$("trajDetail");if(!slot||!d)return;
     if(!SCR){SCR_PREV=TVIEW;let o=null;try{o=JSON.parse(localStorage.getItem(QC_KEY)||"null");}catch(e){}SCRATCH=o&&typeof o==="object"?Object.assign(freshScratch(),o,{id:"quickcalc"}):freshScratch();
@@ -9085,7 +9087,10 @@ function openLive(o){
     busy=true;$("lvShot").disabled=true;
     const n=(holes[aim]||[]).length+1;
     setStat((from==="mic"?"Shot "+n+" heard. ":from==="chrono"&&pendVel?"Shot "+n+": "+U.s("fps",pendVel.v,0)+". ":"")+"Looking for shot "+n+"…","busy");
-    await wait(from==="mic"||from==="chrono"?650:250);
+    // the chronograph or the microphone heard it at the bench: wait for the bullet to get there (time of flight)
+    {const ms=from==="chrono"?flightWait(pendVel&&pendVel.v,pendVel&&pendVel.at):from==="mic"?flightWait(null,0):250;
+      if(ms>1200)setStat("Shot "+n+(from==="chrono"&&pendVel?": "+U.s("fps",pendVel.v,0):"")+". Waiting "+(ms/1000).toFixed(1)+" s for it to reach the target…","busy");
+      await wait(ms);}
     const f=await steady(3000);if(closed)return;
     busy=false;$("lvShot").disabled=false;
     if(!f){setStat("Couldn't get a clear picture. Tap Shot again.","bad");return;}
@@ -9107,12 +9112,20 @@ function openLive(o){
      Each velocity waits (pendVel) for the next hole found or tapped in. If the hole was already found (the microphone
      or the Shot button was quicker), a velocity that comes within 6 s goes on it instead. With "Chronograph finds each
      shot" on, the velocity itself starts the search, like the microphone does. ----- */
+  /* time of flight (2.46.5): at long range the bullet can take a second or two to reach the target, so the search waits
+     for it. With a Shooting profile (a range trip's, or the camera phone's setup) the flight time comes from its BC and air;
+     without one, from the velocity alone, on the long side. Then half a second more for the paper to settle. */
+  const SP=o.profile&&window.RB_TRAJ&&RB_TRAJ.spec?RB_TRAJ.spec(o.profile):null;let lastV=null;
+  function tof(v){v=num(v)>0?num(v):(lastV||(SP&&SP.mv>0?SP.mv:2700));const yd=num(dist)>0?num(dist):100;
+    if(o.profile&&RB_TRAJ.tof){const t=RB_TRAJ.tof(o.profile,v,yd);if(t>0)return t;}
+    return yd*3/(v*.7);}   // no BC: as if it averaged 70% of its muzzle velocity, on the long side
+  const flightWait=(v,since)=>Math.max(650,Math.round(tof(v)*1000)+500-(since?Date.now()-since:0));
   function tagVel(q){if(!q||!pendVel||Date.now()-pendVel.at>15000){pendVel=null;return null;}q[2]=Math.round(pendVel.v*10)/10;pendVel=null;dirty=true;return q[2];}
   function chronoVel(v,trig){
     if(closed||!(v>0))return;const now=Date.now();
     if(!busy&&lastFind&&now-lastFind.at<6000&&(!trig||now-lastFind.at<2500)){const q=(holes[lastFind.aim]||[])[lastFind.k];
       if(q&&q[2]==null){q[2]=Math.round(v*10)/10;dirty=true;setStat("Shot "+(lastFind.k+1)+": "+U.s("fps",v,0)+".","");lastFind=null;renderStats();return;}}
-    lastFind=null;pendVel={v,at:now};
+    lastFind=null;pendVel={v,at:now};lastV=v;
     if(trig&&lock&&ref&&!busy)shot("chrono");
     else if(!busy)setStat(U.s("fps",v,0)+(ref?". It goes on the next hole found or tapped in.":". The target isn't ready yet, so Range Book didn't look for the hole."),"");}
   const chOn=()=>{try{return localStorage.getItem("rb.liveChrono")!=="0";}catch(e){return true;}};
