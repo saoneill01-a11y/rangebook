@@ -663,7 +663,7 @@ table.dope tbody tr:nth-child(even){background:rgba(127,127,127,.08)}
 body,input,textarea,select{font-feature-settings:"calt" 0}
 .mbadge{position:absolute;top:4px;right:4px;padding:1px 6px;border-radius:10px;font-size:calc(11px*var(--fs));font-weight:700;background:#00e5ff;color:#002a30}
 .viewer svg{max-width:100%;max-height:100%;width:auto;height:100%;display:block}
-.viewer .vres{color:#eee;font-size:calc(14px*var(--fs));text-align:center}
+.viewer .vsbs{color:#eee;max-width:560px;width:100%;margin:0 auto;padding:0 12px;box-sizing:border-box}.viewer .vres{color:#eee;font-size:calc(14px*var(--fs));text-align:center}
 .measure{gap:8px;background:#000;z-index:60}
 .measure .mtitle{color:#eee}
 .measure .mtools{gap:6px}
@@ -853,7 +853,7 @@ header.hashelp>h1{padding-right:180px}
 .chlooks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px}.chlook{display:flex;flex-direction:column;align-items:stretch;gap:5px;padding:6px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;text-align:center}.chlook img{width:100%;height:auto;image-rendering:pixelated;border-radius:4px;background:#000}.chlook[aria-checked="true"]{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
 .chenv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 10px}.chenv dt{color:var(--muted)}.chenv dd{margin:0;font-weight:600}
 .chprev{margin:0 0 8px;padding-left:18px}.chprev li{margin:4px 0}
-.chraw{list-style:none;margin:8px 0 0;padding:0;font-size:13px}.chraw li{padding:6px 0;border-top:1px solid rgba(127,127,127,.25)}.chraw code{display:block;margin-top:2px;font-size:12px;word-break:break-all;opacity:.85}
+.chrawd>summary{cursor:pointer;list-style:revert}.chrawd>summary h2{display:inline;margin:0}.chraw{list-style:none;margin:8px 0 0;padding:0;font-size:13px}.chraw li{padding:6px 0;border-top:1px solid rgba(127,127,127,.25)}.chraw code{display:block;margin-top:2px;font-size:12px;word-break:break-all;opacity:.85}
 .chgrid{margin:8px 0}
 .chsheet h3{margin:18px 0 6px;font-size:15px}
 .chsheet .switch.inl{display:inline-flex;align-items:center}
@@ -1734,7 +1734,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Each group in a ladder has <b>Pressure signs</b>: tap any you saw on that charge's cases or bolt (flat or cratered primers, ejector marks, a heavy bolt lift, sticky extraction, loose primer pockets), and enter case head expansion if you measure it. A charge with any of them gets a <b>!</b> triangle on the <b>Velocity by charge</b> chart and a <b>pressure signs</b> tag in the Summary, and they're listed in the Excel and PDF exports. This is a notebook, not a pressure gauge: pressure can be dangerous with no visible signs at all, so always stay within your load manual.</p>
       <h3>Import from your chronograph</h3>
       <p>Set up a group for each charge weight in the ladder first. Then tap <b>Import chronograph file</b> on the ladder's first group and pick the export from your RangeCraft (.xlsx), Garmin Xero (ShotView .csv or .xlsx) MagnetoSpeed (LOG.CSV from the V3's memory card, or the .csv from the XFR app) or LabRadar (the SR0001 Report.csv files from its SD card; pick several at once and each series fills its own group, SR0001 first). Each string fills the next empty group in that ladder in the order you shot them (Range Book puts the strings in time order, since some chronographs, like Garmin's, list the newest first). If you named each string with its charge weight on the chronograph (like "25.9gr N140"), it goes straight to the group with that charge instead, wherever it is in the ladder. If the ladder has no tested date yet, it takes the date from the file when the file has one (MagnetoSpeed's memory-card file doesn't, so set that date yourself). Check that each string landed on the right charge weight. If the chronograph caught a bad reading (a miss or an echo), tap <b>− Shot</b>, tap that shot and tap <b>Delete</b>.</p>
-      <p>Range Book checks every string as the velocities come in, from a file or typed in, here and on range trips. A shot that's way off from the rest of its string (a chronograph misread, an echo or a typo, like 1,312 in a string of 2,800s) turns red, with a note saying it might not be correct. Check it against your chronograph, fix the number, or delete it with <b>− Shot</b>. It only flags shots far outside the string's normal spread (needs at least 3 shots), so an ordinary flyer isn't marked. <a class=goto href=#go data-go=tools:chrono>Tools › BLIPR Chronograph import check</a> marks them too.</p>
+      <p>Range Book checks every string as the velocities come in, from a file or typed in, here and on range trips. A shot that's way off from the rest of its string (a chronograph misread, an echo or a typo, like 1,312 in a string of 2,800s) turns red, with a note saying it might not be correct. Check it against your chronograph, fix the number, or delete it with <b>− Shot</b>. It only flags shots far outside the string's normal spread (needs at least 3 shots), so an ordinary flyer isn't marked. <a class=goto href=#go data-go=tools:chrono>Tools › Chronograph import check</a> marks them too.</p>
       <h3>Target photos</h3>
       <p>Each target photo belongs to the ladder you shot it with. Tap <b>+ Photo</b> in that ladder (or next to the ladder's name on the <b>Targets</b> card) to take a picture or choose one. The Targets card shows the photos under each ladder, and each ladder shows its own photos too. Tap a photo to see it full size, add a caption, delete it, or move it to another ladder with <b>Shot with</b>. When you measure groups on a photo, you pick from that ladder's charges. Photos added before ladders existed are linked for you when the app can tell which ladder they go with; open any that say <b>Pick a ladder</b> and choose one.</p>
       <p>To keep a copy of a target photo, open it and tap <b>Download photo</b> (the picture as taken) or <b>Download with marks</b> (with the measured shots and groups drawn on it). On a phone it opens the share sheet, so you can <b>Save Image</b> to your photos, save it to Files or send it; on a computer it downloads.</p>
@@ -1769,6 +1769,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Bigger picture on a phone:</b> drag the bar under the camera picture down to make it bigger; the buttons and numbers below it then scroll. Drag it up to make it smaller, or double-tap the bar to fit everything on the screen again. It's remembered on that phone.</p>
       <p><b>Or start it on your iPad, with the phone as its camera:</b> on the phone, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Be the camera for your iPad</b>, aim it at the target and leave it (the screen goes dark after 30 seconds to save battery; tap it to see the camera). On the iPad, start Live target the usual way (from a ladder, a range trip or Tools › Live target) and pick <b>Use the iPhone on the scope</b>. The phone starts by itself with that setup: the ladder's charges, the distance and shots, and the trip's Shooting profile for the reticle. The iPad has the <b>Shot</b>, <b>Undo</b>, <b>Aim</b> and <b>Save</b> buttons, <b>Listen for shots</b> with the iPad's own microphone, and <b>Show my reticle</b> with its profile and zero. <b>Save</b> puts the target where you started it on the iPad. To change guns, loads or profiles, tap <b>← Back</b> on the iPad (it offers to save the shots first), then start Live target again from the new place: the phone goes back to waiting in between and keeps its camera open, so you never have to touch it.</p>
       <p><b>Control it from your iPad</b> (or any phone, tablet or computer signed in to your account), so you don't touch the phone on the scope: on the phone's Live target screen, tap <b>Remote</b>. On the iPad, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a> and tap <b>Watch</b>. The iPad shows the phone's screen, updated about twice a second, with the group numbers, and its <b>Shot</b>, <b>Undo</b>, <b>Next aim</b>, <b>Whole target</b> and <b>Save</b> buttons work the phone. Tapping a hole on the iPad's picture adds or removes a mark on the phone. Both need a signal to reach your Range Book (an iPad on the iPhone's hotspot counts). Keep the phone's screen on. Tap <b>Remote</b> again on the phone to stop sharing; nothing from it is kept.</p>
+      <p><b>Chronograph finds each shot</b> shows when a Bluetooth chronograph (BLIPR or an Athlon Rangecraft) is connected to the device running the session: the phone, or the iPad when the phone is its camera. Each time the chronograph measures a shot, Range Book looks for the new hole by itself and puts that velocity on it, so you don't tap <b>Shot</b>. With it off (or with <b>Listen for shots</b> doing the finding), the velocity still goes on the hole that was just found. If no hole turns up, tap the hole on the picture and the velocity goes on it. A saved target shows each hole's velocity under <b>Shot by shot</b>, with whether the faster shots hit higher or lower. On a range trip, connect the chronograph first (<b>Connect chronograph</b> or <b>Connect Athlon</b>), so the velocities also fill a string on the trip.</p>
       <p><b>Listen for shots</b> uses the microphone: each loud bang counts as a shot, so you don't have to tap <b>Shot</b>. Turn it on only when nobody is shooting near you, because their shots count too. The bar next to it shows how loud the last sound was, and the white mark is how loud a shot has to be. Pick a <b>Sensitivity</b>: <b>Normal</b> for an unsuppressed rifle, <b>Suppressed</b> for a rifle with a suppressor (still loud, but less of a crack), or <b>Quiet .22</b> for a suppressed .22 or subsonic loads. If your shots don't reach the mark, pick the next one. The more sensitive it is, the more other noises count, so use the least sensitive one that hears every shot. It remembers your choice.</p>
       <p>It works best in good, even light. At long distances a phone may not see small holes clearly; add them by tapping. Keep the phone and scope still: if the page moves a lot, wait a moment for it to find the corners again.</p>
       <h3>Shot by shot: which shots were fast or slow</h3>
@@ -1882,15 +1883,15 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3 id="hChrono">Bluetooth chronograph</h3>
       <p>Range Book can take velocities straight from the <b>Range Book BLIPR</b>, a do-it-yourself radar chronograph that sits on the bench beside the gun, as you shoot. Nothing is typed in and nothing goes downrange.</p>
       <p><b>What you need:</b> Bluetooth works from a web page in Chrome or Edge (Android phones, Windows, Mac and Chromebooks) and in the free <b>Bluefy</b> app on an iPhone or iPad (Safari and Chrome on iPhone can't). Range Book also has to be open through its <b>https://</b> address, the one you use away from home. In Bluefy, open that address and sign in once; Bluefy keeps its own sign-in.</p>
-      <p><b>Connecting:</b> switch the chronograph on and tap <b>Connect chronograph</b>: in <a class=goto href=#go data-go=tools:btchrono>Tools › BLIPR Chronograph</a>, under <b>Chronograph</b> on a range trip, or on a group in a ladder test. Pick <b>RB BLIPR</b> in the list the first time. In Tools › BLIPR Chronograph, <b>Connect Athlon Rangecraft</b> connects an Athlon Rangecraft instead (it shows as <b>AthlonVPR…</b>); Range Book can't read its shots yet, and shows what it sends in a message log. Range Book isn't made by, affiliated with, or endorsed or supported by Athlon Optics; Athlon and Rangecraft are their trademarks, used only to say which chronograph this works with. Athlon hasn't approved this connection and could change how the Athlon works at any time, so use it at your own risk. While it's connected a small pill at the bottom right shows the last velocity and the battery; tap it for the settings. If it drops out (out of range, or the phone locked), Range Book reconnects by itself and asks for any shots it missed.</p>
+      <p><b>Connecting:</b> switch the chronograph on and tap <b>Connect chronograph</b>: in <a class=goto href=#go data-go=tools:btchrono>Tools › Chronographs</a>, under <b>Chronograph</b> on a range trip, or on a group in a ladder test. Pick <b>RB BLIPR</b> in the list the first time. In Tools › Chronographs, <b>Connect Athlon Rangecraft</b> connects an Athlon Rangecraft instead (it shows as <b>AthlonVPR…</b>); Range Book can't read its shots yet, and shows what it sends in a message log. Range Book isn't made by, affiliated with, or endorsed or supported by Athlon Optics; Athlon and Rangecraft are their trademarks, used only to say which chronograph this works with. Athlon hasn't approved this connection and could change how the Athlon works at any time, so use it at your own risk. While it's connected a small pill at the bottom right shows the last velocity and the battery; tap it for the settings. If it drops out (out of range, or the phone locked), Range Book reconnects by itself and asks for any shots it missed.</p>
       <ul>
         <li><b>Range trip:</b> <b>Connect chronograph</b> starts a new string (named BLIPR and the time) and each shot fills its next box. <b>New chronograph string</b> starts another; <b>Send shots here</b> on any string sends them there instead; <b>Stop chronograph</b> stops. The trip's average and SD update as you go, even with the trip closed. If the chronograph has the sensor kit and the trip's temperature or weather is empty, they fill in from it, and each string notes the ammo temperature.</li>
         <li><b>Ladder test:</b> <b>Connect chronograph</b> on a group fills that group's empty boxes, then moves on to the next group in the same ladder (the one with the outline). The ladder's temperature fills in from the sensors if it's empty.</li>
-        <li><b>Tools › BLIPR Chronograph:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b>, <b>Save to a range trip</b> and <b>Save to testing</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
-        <li><b>Testing:</b> <b>Save to testing</b> keeps a string without a range trip, in a testing session: pick one you already have (today's is picked for you) or start a new one with what you're testing, the gun, the ammo or load and notes. The <b>Testing</b> card under Tools › BLIPR Chronograph lists your testing sessions, newest first; tap one to see each string's shots, average, SD, ES, low and high (and all its strings together), change its details, copy the velocities, remove a string or delete the session.</li>
+        <li><b>Tools › Chronographs:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b>, <b>Save to a range trip</b> and <b>Save to testing</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
+        <li><b>Testing:</b> <b>Save to testing</b> keeps a string without a range trip, in a testing session: pick one you already have (today's is picked for you) or start a new one with what you're testing, the gun, the ammo or load and notes. The <b>Testing</b> card under Tools › Chronographs lists your testing sessions, newest first; tap one to see each string's shots, average, SD, ES, low and high (and all its strings together), change its details, copy the velocities, remove a string or delete the session.</li>
       </ul>
-      <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot to check the connection: it shows on the pill and in Tools › BLIPR Chronograph, but never goes into a trip or ladder or counts in a string's numbers); the <b>velocity window</b> (it only counts readings in this range; when shots go to a trip or ladder, a button offers 75% to 125% of its load's muzzle velocity); <b>where the radar sits</b> beside and behind the muzzle, for each gun (Range Book remembers it per gun; <b>Send these to BLIPR</b> uses a gun's numbers); <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
-      <p><b>Sensor kit</b> (optional): with temperature, humidity and pressure sensors, an ammo probe and a compass fitted, <b>Conditions</b> in Tools › BLIPR Chronograph shows the air, density altitude, ammo temperature, which way it's pointing and whether it's level. <b>Use this air in the profile</b> sets a Shooting profile's temperature and altitude from it (the same way <b>Use the weather where I am</b> does). <b>Use … for Coriolis</b> sets the profile's direction of fire. Calibrate the compass once in Settings (turn it slowly through a full circle), then <b>Match my phone</b> to line it up with your phone's compass. If lifting the front doesn't read <i>nose up</i>, change <b>Sensor board turned</b> until it does. For Coriolis a heading within 10 or 15 degrees is plenty.</p>
+      <p><b>Settings</b> (the pill or the <b>Settings</b> button): battery, SD card and firmware; <b>Pause</b> and <b>Start listening</b>; <b>Test shot</b> (a made-up 2,700 fps shot to check the connection: it shows on the pill and in Tools › Chronographs, but never goes into a trip or ladder or counts in a string's numbers); the <b>velocity window</b> (it only counts readings in this range; when shots go to a trip or ladder, a button offers 75% to 125% of its load's muzzle velocity); <b>where the radar sits</b> beside and behind the muzzle, for each gun (Range Book remembers it per gun; <b>Send these to BLIPR</b> uses a gun's numbers); <b>calibration</b> (shoot one string over another chronograph you trust, put in both averages, tap <b>Calibrate</b>); screen brightness; saving raw recordings to the SD card; the battery gauge (type in a multimeter reading); and the clock, which is also set every time it connects.</p>
+      <p><b>Sensor kit</b> (optional): with temperature, humidity and pressure sensors, an ammo probe and a compass fitted, <b>Conditions</b> in Tools › Chronographs shows the air, density altitude, ammo temperature, which way it's pointing and whether it's level. <b>Use this air in the profile</b> sets a Shooting profile's temperature and altitude from it (the same way <b>Use the weather where I am</b> does). <b>Use … for Coriolis</b> sets the profile's direction of fire. Calibrate the compass once in Settings (turn it slowly through a full circle), then <b>Match my phone</b> to line it up with your phone's compass. If lifting the front doesn't read <i>nose up</i>, change <b>Sensor board turned</b> until it does. For Coriolis a heading within 10 or 15 degrees is plenty.</p>
     </section>
     <section class="card guide" aria-label="Training" id="hTrain"><h2>Training</h2>
       <p><b>Training</b> (a tab on a computer, or <a class=goto href=#go data-go=train>More › Training</a> on a phone; you can put it on the phone's bar under <a class=goto href=#go data-go=account:tabs>More › Account › Phone tab bar</a>) is for practice with the shot timer, kept apart from your range trips.</p>
@@ -1959,7 +1960,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
     <header class="phead"><button class="backbtn" id="toolsBack" type="button" hidden aria-label="Back to Tools">‹ Tools</button><h1 id="toolsTitle">Tools</h1><p class="sub" id="toolsSub">Quick calculators and the spotting-scope camera. Nothing here is saved unless you ask.</p></header>
-    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="timer"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5M18.3 6.8l1.5-1.5"/></svg></span><span class="t">Shot timer</span><span class="d">A start beep, then your first shot and every split, with a par time. Works with a Bluetooth speaker.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="lib"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16 5l3.6-.9 3 15.5-3.6.9z"/></svg></span><span class="t">Library</span><span class="d">Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes, red dots and suppressors. Look anything up, fix it for your own use, or add it to yours.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph import check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="btchrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18.5a9 9 0 0 1 0-13"/><path d="M9.5 15a4.5 4.5 0 0 1 0-6"/><circle cx="13" cy="12" r="1.4"/><path d="M16 12h5"/></svg></span><span class="t">BLIPR Chronograph</span><span class="d">Connect your Range Book BLIPR radar chronograph, or an Athlon Rangecraft, over Bluetooth: each velocity as you shoot, the string's average, SD and spread, and the air and direction from its sensors.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter, 11 × 17 and two-page taped targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
+    <div class="tooltiles" id="toolTiles"><button class="loaditem tooltile" type="button" data-tooltile="traj"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c4-9 9-12 18-9"/><path d="M3 21h18"/><circle cx="17" cy="9.5" r="1.3"/></svg></span><span class="t">Trajectory calculator</span><span class="d">Quick drops, dial and wind holds for any bullet, without making a Shooting profile. Nothing is saved unless you ask.</span></button><button class="loaditem tooltile" type="button" data-tooltile="twist"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/><path d="M9 12h6"/></svg></span><span class="t">Twist &amp; stability</span><span class="d">Will a bullet be stable in your barrel? Checks its weight, length and velocity against your twist, and tells you the slowest twist that works.</span></button><button class="loaditem tooltile" type="button" data-tooltile="moa"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span class="t">MOA · MIL · inches</span><span class="d">Turn a group size or a hold into MOA and MIL at any distance, or an angle back into a size.</span></button><button class="loaditem tooltile" type="button" data-tooltile="powder"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg></span><span class="t">Powder per container</span><span class="d">How many rounds a jug of powder makes at your charge, the powder cost per round, and how much a batch needs.</span></button><button class="loaditem tooltile" type="button" data-tooltile="conv"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></span><span class="t">Convert</span><span class="d">Grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules.</span></button><button class="loaditem tooltile" type="button" data-tooltile="hit"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1"/><circle cx="11" cy="13" r="1.3"/><circle cx="14" cy="10" r="1.3"/><circle cx="9.5" cy="9" r="1.3"/></svg></span><span class="t">Hit chance</span><span class="d">Your odds of hitting a target at a distance, from your group size, velocity spread and how sure you are of the wind, and what costs you the most hits.</span></button><button class="loaditem tooltile" type="button" data-tooltile="timer"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M9.5 3h5M18.3 6.8l1.5-1.5"/></svg></span><span class="t">Shot timer</span><span class="d">A start beep, then your first shot and every split, with a par time. Works with a Bluetooth speaker.</span></button><button class="loaditem tooltile" type="button" data-tooltile="live"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 12v3M10.5 13.5h3"/></svg></span><span class="t">Live target</span><span class="d">Put your phone on a spotting scope and it marks each shot on a printed target as it lands, with the group size as you go. No load needed.</span></button><button class="loaditem tooltile" type="button" data-tooltile="lib"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16 5l3.6-.9 3 15.5-3.6.9z"/></svg></span><span class="t">Library</span><span class="d">Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes, red dots and suppressors. Look anything up, fix it for your own use, or add it to yours.</span></button><button class="loaditem tooltile" type="button" data-tooltile="cmp"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c5-7 10-9 18-7"/><path d="M3 15c5-5 10-6 18-2" stroke-dasharray="3 2"/><path d="M3 21h18"/></svg></span><span class="t">Compare trajectories</span><span class="d">Plot several bullets on one chart: different velocities, weights, BCs or cartridges, all zeroed the same.</span></button><button class="loaditem tooltile" type="button" data-tooltile="chrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5M17 7V5M7 12h2M11 12h2M15 12h2"/></svg></span><span class="t">Chronograph import check</span><span class="d">See how Range Book reads your chronograph's export, string by string, before you import it into a ladder or range trip.</span></button><button class="loaditem tooltile" type="button" data-tooltile="btchrono"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18.5a9 9 0 0 1 0-13"/><path d="M9.5 15a4.5 4.5 0 0 1 0-6"/><circle cx="13" cy="12" r="1.4"/><path d="M16 12h5"/></svg></span><span class="t">Chronographs</span><span class="d">Connect your Range Book BLIPR radar chronograph, or an Athlon Rangecraft, over Bluetooth: each velocity as you shoot, the string's average, SD and spread, and the air and direction from its sensors.</span></button><button class="loaditem tooltile" type="button" data-tooltile="targets"><span class="ti"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="t">Printable targets</span><span class="d">Letter, 11 × 17 and two-page taped targets with corner squares, so Range Book can measure your groups from a photo.</span></button></div>
     <p class="note toolsarr" id="toolsArr">Press and hold a tool to move it (on a computer, drag it).<span id="toolsReorder" hidden> <button class="linkbtn" type="button" id="toolsReorderGo">Put them back in the usual order</button></span></p>
     <div class="tool" data-toolsec="traj" aria-label="Trajectory calculator" hidden>
       <section class="card qcbar"><p class="note toolnote">The full Shooting calculator, without making a profile: pick a gun and ammo or type the numbers, and every card below works (chart, point-blank range, range table, true-up, dope card, saved ranges). Nothing is saved to your profiles; this device remembers the last numbers until you tap <b>Reset</b>.</p>
@@ -2507,6 +2508,7 @@ window.RB_BTCHRONO=(function(){
   let st=null,cfg=null,env=null,boot=null,lastN=0,last=null,note="";   // last: the last good reading
   const seen=new Set(),subs=new Set();
   let sink=null,wq=Promise.resolve();
+  const shotL=new Set();   // Live target listens here for each shot (2.44.7), whatever the sink is
   // the session: strings of shots, newest last. Kept in memory only (a range trip or ladder is where they're saved).
   const S={strings:[{id:"s1",name:"String 1",at:Date.now(),shots:[]}],n:1};
   let P={pos:{},win:null};   // saved in prefs: radar position per gun (metres), manual window (fps)
@@ -2602,6 +2604,7 @@ window.RB_BTCHRONO=(function(){
     // a test shot only shows here and on the pill; it never goes into a trip or ladder
     if(s.test)note="Test shot: it isn't saved anywhere and doesn't count in the string's numbers.";
     else if(sink&&sink.shot){try{s.to=sink.label||"";sink.shot(s);}catch(e){console.error("chrono sink",e);}}
+    if(!s.test)shotL.forEach(f=>{try{f(s);}catch(e){console.error("chrono listener",e);}});
     flash();
   }
   const whyTxt=w=>({weak:"the echo was too weak (aim the radar along the bore and closer to the muzzle)",short:"it lost the bullet too soon",noisy:"the reading was too scattered","out of range":"outside the velocity window","no signal":"nothing on the radar"})[w]||w;
@@ -2618,7 +2621,7 @@ window.RB_BTCHRONO=(function(){
      [2 bytes][velocity]. A shot fired while the link was down is only in reply 81, so it's asked for on every
      (re)connect. ----- */
   const ATH="6e40ff01-b5a3-f393-e0a9-4174686c6f6e",athU=n=>"6e40ff0"+n+"-b5a3-f393-e0a9-4174686c6f6e";
-  let kind="blipr",athBuf=null,athSess=null;const RAW=[];
+  let kind="blipr",athBuf=null,athSess=null,rawOpen=false;const RAW=[];
   const isAth=()=>kind==="athlon",chName=()=>isAth()?"Athlon":"BLIPR";
   const hex=b=>Array.from(b,x=>x.toString(16).padStart(2,"0")).join(" "),hx=c=>"0x"+c.toString(16).padStart(2,"0");
   const bcd=x=>(x>>4)*10+(x&15),toBcd=n=>((Math.floor(n/10)%10)<<4)|(n%10);
@@ -2650,10 +2653,10 @@ window.RB_BTCHRONO=(function(){
       if(t===0x93){const m=athBuf;athBuf=null;athMsg(0x90,m.code,new Uint8Array(m.data),null);}return;}
     if(t===0x80||t===0x90){athMsg(t,b[2],b.slice(3),b);return;}
     rawLog("in",b,"unknown type "+hx(t));note="The Athlon sent a message Range Book can't read yet. It's in the message log in the Chronograph tool.";emit();}
-  // one Athlon shot. The key is its session and shot number, so one heard live and again in reply 81 counts once.
+  // one Athlon shot. The key is its own time stamp (the same bytes live and in reply 81), so it only ever counts once.
   // old: shots already on the unit the first time Range Book hears of the session aren't wanted (as with BLIPR)
   function athShot(no,d,i,old){
-    if(d.length<i+10)return null;const v=(d[i+8]|(d[i+9]<<8))/10/0.3048,j={b:"A"+(athSess||"?"),n:no,ok:v>0,v:Math.round(v*10)/10};
+    if(d.length<i+10)return null;const v=(d[i+8]|(d[i+9]<<8))/10/0.3048,j={b:"A"+hex(d.slice(i,i+8)).replace(/ /g,""),n:no,ok:v>0,v:Math.round(v*10)/10};
     if(old){seen.add(j.b+":"+j.n);return j;}
     const b0=boot,n0=lastN;shot(j);boot=b0;lastN=n0;return j;}   // boot/lastN belong to BLIPR's catch-up
   const sessKey=(d,i)=>hex(d.slice(i,i+8)).replace(/ /g,"");
@@ -2662,7 +2665,7 @@ window.RB_BTCHRONO=(function(){
     if(t===0x90&&code===0x66)what="clock set";
     else if(t===0x90&&code===0x65){s.fw=td.decode(d);what="firmware "+s.fw;}
     else if(t===0x90&&code===0x81){
-      if(!d[0]||d.length<14){what="no session going on the Athlon";}
+      if(!d[0]||d.length<14){what="no session going on the Athlon";athSess=null;}
       else{const k=sessKey(d,2),fresh=athSess!==k;athSess=k;const n=d[13];let got=0;
         for(let q=0;q<n;q++){const before=seen.size;athShot(q+1,d,14+q*10,fresh);if(!fresh&&seen.size>before)got++;}
         what="session going since "+bcdTime(d,2)+", "+n+" shot"+(n===1?"":"s")+(fresh?"":got?", "+got+" missed while the link was down":"");
@@ -2713,7 +2716,7 @@ window.RB_BTCHRONO=(function(){
     if(resume)send("SYNC "+lastN);
     applySink();
   }
-  // which: "blipr" or "athlon" shows only that kind in the picker (Tools › BLIPR Chronograph); left out, either (2.44.5)
+  // which: "blipr" or "athlon" shows only that kind in the picker (Tools › Chronographs); left out, either (2.44.5)
   async function connect(which){
     const w=support();if(w)throw new Error(supportMsg(w));
     if(which&&dev&&state==="off"&&/^AthlonVPR/.test(dev.name||"")!==(which==="athlon"))dev=null;
@@ -2776,6 +2779,9 @@ window.RB_BTCHRONO=(function(){
       const lv=state==="off"||state==="picking"?0:here?2:1,t=el.dataset["bt"+lv]||"";
       if(el.textContent!==t)el.textContent=t;el.hidden=!t;el.classList.toggle("bton",here&&lv===2);el.setAttribute("aria-pressed",String(here&&lv===2));});
     document.querySelectorAll("[data-btlive]").forEach(el=>el.classList.toggle("btlive",!!sink&&state!=="off"&&sink.key===el.dataset.btlive));
+    // Connect Athlon / Disconnect Athlon (2.44.7): hidden while a BLIPR is connected
+    document.querySelectorAll("[data-athbtn]").forEach(el=>{const t=state==="off"||state==="picking"?"Connect Athlon":isAth()?(state==="on"?"Disconnect Athlon":"Athlon: reconnecting… (tap to stop)"):"";
+      if(el.textContent!==t)el.textContent=t;el.hidden=!t;el.classList.toggle("bton",isAth()&&state==="on");});
   }
 
   /* ----- the little pill that stays on screen while connected ----- */
@@ -2998,9 +3004,9 @@ window.RB_BTCHRONO=(function(){
     }
     h+='</section>';
     // 4. Athlon: the message log (2.44.4), for anything new it sends
-    if(isAth()&&RAW.length)h+='\u0001<section class="card" aria-label="Athlon messages"><h2>Athlon messages</h2><p class="note">What Range Book and the Athlon say to each other, newest first. If a message says Range Book can\'t read it yet, copy the log and note what the Athlon\'s screen showed then. "Could be" lists the numbers in a message that might be a velocity.</p><p class="note">Range Book isn\'t made by, affiliated with, or endorsed or supported by Athlon Optics. Athlon and Rangecraft are their trademarks, used here only to say which chronograph this works with. It talks to the Athlon the way Athlon\'s own app does, but Athlon hasn\'t approved it and could change how the Athlon works at any time; use it at your own risk.</p>'+
+    if(isAth()&&RAW.length)h+='\u0001<section class="card" aria-label="Athlon messages"><details class="chrawd" id="btRawD"'+(rawOpen?' open':'')+'><summary><h2>Athlon messages</h2> <span class="note">'+RAW.length+'</span></summary><p class="note">What Range Book and the Athlon say to each other, newest first. If a message says Range Book can\'t read it yet, copy the log and note what the Athlon\'s screen showed then. "Could be" lists the numbers in a message that might be a velocity.</p><p class="note">Range Book isn\'t made by, affiliated with, or endorsed or supported by Athlon Optics. Athlon and Rangecraft are their trademarks, used here only to say which chronograph this works with. It talks to the Athlon the way Athlon\'s own app does, but Athlon hasn\'t approved it and could change how the Athlon works at any time; use it at your own risk.</p>'+
       '<div class="row"><button class="btn" type="button" id="btRawCopy">Copy the log</button><button class="btn" type="button" id="btRawClr">Clear</button></div>'+
-      '<ol class="chraw">'+RAW.slice(-80).reverse().map(r=>'<li><span class="note">'+esc(new Date(r.at).toLocaleTimeString())+' '+(r.dir==="out"?"to the Athlon":"from the Athlon")+'</span> '+esc(r.what)+(r.hex?'<code>'+esc(r.hex.length>160?r.hex.slice(0,160)+" …":r.hex)+'</code>':'')+'</li>').join("")+'</ol></section>';
+      '<ol class="chraw">'+RAW.slice(-80).reverse().map(r=>'<li><span class="note">'+esc(new Date(r.at).toLocaleTimeString())+' '+(r.dir==="out"?"to the Athlon":"from the Athlon")+'</span> '+esc(r.what)+(r.hex?'<code>'+esc(r.hex.length>160?r.hex.slice(0,160)+" …":r.hex)+'</code>':'')+'</li>').join("")+'</ol></details></section>';
     // parts, each replaced only when it changed, so a button isn't swapped out from under a finger
     const parts=h.split("\u0001");
     if(root.children.length!==parts.length)root.innerHTML=parts.map(()=>"<div></div>").join("");
@@ -3012,6 +3018,7 @@ window.RB_BTCHRONO=(function(){
     on_("btArm",()=>send(st&&st.arm===0?"ARM":"DISARM").then(()=>send("STATUS")));on_("btTest",()=>send("TEST"));
     on_("btNew",newString);
     on_("btRawClr",()=>{RAW.length=0;emit();});
+    {const d=once($("btRawD"));if(d)d.addEventListener("toggle",()=>{rawOpen=d.open;});}
     on_("btRawCopy",()=>{const t=RAW.map(r=>new Date(r.at).toISOString()+" "+(r.dir==="out"?">":"<")+" "+r.what+(r.hex?" | "+r.hex:"")).join("\n");
       (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{note="Copied the Athlon message log ("+RAW.length+" lines).";emit();},()=>{note="Couldn't copy here.";emit();});});
     on_("btUndo",()=>{const x=cur.shots.pop();if(!x)return;last=cur.shots[cur.shots.length-1]||null;emit();
@@ -3059,7 +3066,8 @@ window.RB_BTCHRONO=(function(){
 
   return {
     supported:()=>!support(),supportMsg:()=>supportMsg(support()),
-    state:()=>state,on:()=>state==="on",status:()=>st,config:()=>cfg,air,last:()=>last,kind:()=>kind,log:()=>RAW.slice(),
+    state:()=>state,on:()=>state==="on",status:()=>st,config:()=>cfg,air,last:()=>last,kind:()=>kind,name:chName,log:()=>RAW.slice(),
+    onShot(f){shotL.add(f);return ()=>shotL.delete(f);},
     connect,disconnect,send,settings,attach,detach,sinkKey:()=>sink?sink.key:null,sink:()=>sink,paint,
     sub(f){subs.add(f);return ()=>subs.delete(f);},
     showTool(){toolDraw();if(window.RB_TESTING)RB_TESTING.show();},
@@ -8131,6 +8139,8 @@ function openViewer(pid,C){
       ?overlaySvg(p).replace('aria-hidden="true">','role="img" aria-label="Target photo with measured shots"><image href="'+esc(p.url)+'" x="0" y="0" width="'+p.w+'" height="'+p.h+'"/>')
       :'<img alt="Target photo" src="'+esc(p.url)+'">')+'</div>'+
     (()=>{const M=normMeasure(p.measure);if(!M)return "";const L=C.L;const rows=M.groups.map((t,k)=>t.size!=null?'<div><span class="dot" style="background:'+TG_COLORS[k%TG_COLORS.length]+'"></span>'+esc(tgLine(t,M,tgLabel(t,k,L)))+'</div>':'').join("");return rows?'<div class="vres">'+rows+'</div>':"";})()+
+    // Live target with a chronograph (2.44.7): each hole's velocity, and whether speed moved the shots up or down
+    (()=>{const M=normMeasure(p.measure);if(!M)return "";return M.groups.filter(t=>Array.isArray(t.vel)&&Array.isArray(t.hin)&&t.vel.some(x=>x>0)).map((t,k)=>'<div class="vsbs">'+(M.groups.length>1?'<b>'+esc(tgLabel(t,M.groups.indexOf(t),C.L))+'</b>':'')+shotByShotHtml({holes:t.hin,shots:t.vel})+'</div>').join("");})()+
     (C.kind==="load"&&C.L&&(C.L.ladders||[]).length&&!ro?'<div class="vbar"><label for="vLad" style="font-size:13px">Shot with</label><select id="vLad" class="fieldselect" style="width:auto;max-width:70%">'+
       C.L.ladders.map(l=>'<option value="'+esc(l.id)+'">'+esc(ladderName(C.L,l)+(l.tested?" · "+fmtDate(l.tested):""))+'</option>').join("")+(photoLadder(p,C.L)?'':'<option value="" disabled>Pick a ladder</option>')+'</select></div>':'')+
     (C.kind==="live"?(()=>{const d=liveDest();return d.any?'<div class="vbar"><label for="vMove" style="font-size:13px">Move to</label><select id="vMove" class="fieldselect" style="width:auto;max-width:75%">'+d.html+'</select></div><p class="vres" id="vMoveMsg"></p>':'<p class="vres">Make a range trip (Shooting) or a ladder (Reloading) to add this to one.</p>';})():'')+
@@ -8725,6 +8735,7 @@ function openLive(o){
       '<label class="lvmic lvretl"><input type="checkbox" id="lvRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale for the distance, with the hold for your zero on the aim point.</small></span></label>'+
       '<div class="lvgrid lvretopts" id="lvRetOpts" hidden><label>Shooting profile<select id="lvRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="lvRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
       '<p class="note lvretnote" id="lvRetNote" hidden></p>'+
+      '<label class="lvmic" id="lvChL" hidden><input type="checkbox" id="lvCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot<small>When the connected chronograph measures a shot, Range Book looks for its hole and notes its velocity on it.</small></span></label>'+
       '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i><b></b></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
       '<div class="lvsens" id="lvSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-sens="normal">Normal</button><button type="button" data-sens="supp">Suppressed</button><button type="button" data-sens="quiet">Quiet .22</button></div>'+
       '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it.</p>'+
@@ -8736,6 +8747,8 @@ function openLive(o){
   const work=document.createElement("canvas"),wctx=work.getContext("2d",{willReadFrequently:true});
   let stream=null,closed=false,T=null,lock=null,lockMiss=0,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
   let aim=0,holes=[],newest=null,status={t:"Starting the camera…",k:"busy"},pageW=8.5,pageH=11,undo=[],sheetFor=null;
+  // a hole is [x, y] in target inches, or [x, y, fps] once the chronograph's velocity is on it (2.44.7)
+  let pendVel=null,lastFind=null;
   const ac=getComputedStyle(v).getPropertyValue("--accent").trim()||"#2bb",night=document.documentElement.getAttribute("data-palette")==="night";
   const HL=night?"#ffb3ab":"#ffd23f",CTR=night?"#ff8a80":"#ff5bd1";
   let dist=num(o.dist)>0?num(o.dist):100,dia=num(o.dia)>0?num(o.dia):.308,lastRefresh=0,wake=null;
@@ -8951,23 +8964,42 @@ function openLive(o){
     if(!lock||!ref||busy||closed)return;
     busy=true;$("lvShot").disabled=true;
     const n=(holes[aim]||[]).length+1;
-    setStat((from==="mic"?"Shot "+n+" heard. ":"")+"Looking for shot "+n+"…","busy");
-    await wait(from==="mic"?650:250);
+    setStat((from==="mic"?"Shot "+n+" heard. ":from==="chrono"&&pendVel?"Shot "+n+": "+U.s("fps",pendVel.v,0)+". ":"")+"Looking for shot "+n+"…","busy");
+    await wait(from==="mic"||from==="chrono"?650:250);
     const f=await steady(3000);if(closed)return;
     busy=false;$("lvShot").disabled=false;
     if(!f){setStat("Couldn't get a clear picture. Tap Shot again.","bad");return;}
     let found=findNew(ref,f);
     if(found.length>4)found=found.slice(0,4);
-    if(!found.length){setStat("No new hole found. Tap the hole on the picture to add it, or tap Shot again.","bad");return;}
+    if(!found.length){setStat((pendVel?U.s("fps",pendVel.v,0)+", but no":"No")+" new hole found. Tap the hole on the picture to add it"+(pendVel?" with that velocity":"")+", or tap Shot again.","bad");return;}
     snap();
     if(!holes[aim])holes[aim]=[];
     found.forEach(q=>holes[aim].push([q.x,q.y]));
     ref=f;lastRefresh=Date.now();newest=holes[aim].length-1;
+    // one new hole: it gets the chronograph's velocity (now, or when it comes in a moment later)
+    let fv=null;if(found.length===1){fv=tagVel(holes[aim][newest]);lastFind=fv==null?{aim,k:newest,at:Date.now()}:null;}else pendVel=null;
     const out=found.some(q=>!inZoom(q.x,q.y));
     const a=aims()[aim],off=a?Math.hypot(found[0].x-a.x,found[0].y-a.y):null;
-    setStat((found.length>1?found.length+" new holes found":"Shot "+holes[aim].length+" found")+(off!=null&&found.length===1?", "+U.s("in",off,2)+" from aim":"")+(out&&view==="aim"?" (outside the zoom, so the view widened)":""),"");
+    setStat((found.length>1?found.length+" new holes found":"Shot "+holes[aim].length+" found")+(fv!=null?", "+U.s("fps",fv,0):"")+(off!=null&&found.length===1?", "+U.s("in",off,2)+" from aim":"")+(out&&view==="aim"?" (outside the zoom, so the view widened)":""),"");
     after();
   }
+  /* ----- the chronograph (2.44.7): BLIPR or an Athlon connected to this device, or to the iPad running the session.
+     Each velocity waits (pendVel) for the next hole found or tapped in. If the hole was already found (the microphone
+     or the Shot button was quicker), a velocity that comes within 6 s goes on it instead. With "Chronograph finds each
+     shot" on, the velocity itself starts the search, like the microphone does. ----- */
+  function tagVel(q){if(!q||!pendVel||Date.now()-pendVel.at>15000){pendVel=null;return null;}q[2]=Math.round(pendVel.v*10)/10;pendVel=null;dirty=true;return q[2];}
+  function chronoVel(v,trig){
+    if(closed||!(v>0))return;const now=Date.now();
+    if(!busy&&lastFind&&now-lastFind.at<6000&&(!trig||now-lastFind.at<2500)){const q=(holes[lastFind.aim]||[])[lastFind.k];
+      if(q&&q[2]==null){q[2]=Math.round(v*10)/10;dirty=true;setStat("Shot "+(lastFind.k+1)+": "+U.s("fps",v,0)+".","");lastFind=null;renderStats();return;}}
+    lastFind=null;pendVel={v,at:now};
+    if(trig&&lock&&ref&&!busy)shot("chrono");
+    else if(!busy)setStat(U.s("fps",v,0)+(ref?". It goes on the next hole found or tapped in.":". The target isn't ready yet, so Range Book didn't look for the hole."),"");}
+  const chOn=()=>{try{return localStorage.getItem("rb.liveChrono")!=="0";}catch(e){return true;}};
+  const unCh=window.RB_BTCHRONO?RB_BTCHRONO.onShot(s=>chronoVel(s.v,chOn())):null;
+  const chUI=()=>{const l=$("lvChL");if(!l||!window.RB_BTCHRONO)return;l.hidden=RB_BTCHRONO.state()==="off";$("lvCh").checked=chOn();};
+  const unChUI=window.RB_BTCHRONO?RB_BTCHRONO.sub(chUI):null;
+  $("lvCh").addEventListener("change",e=>{try{localStorage.setItem("rb.liveChrono",e.target.checked?"1":"0");}catch(x){}});chUI();
   /* ----- zoom: the aim point, widened to fit every hole of this aim ----- */
   function zoomBox(){
     const a=aims()[aim];if(!a)return null;
@@ -9094,7 +9126,7 @@ function openLive(o){
     const hs=holes[aim]||[],j=hs.findIndex(([x,y])=>Math.hypot(x-px,y-py)<tol);
     snap();if(!holes[aim])holes[aim]=[];
     if(j>=0){holes[aim].splice(j,1);newest=null;setStat("Removed that mark.","");}
-    else{holes[aim].push([px,py]);newest=holes[aim].length-1;setStat("Added shot "+holes[aim].length+".","");}
+    else{holes[aim].push([px,py]);newest=holes[aim].length-1;const fv=tagVel(holes[aim][newest]);setStat("Added shot "+holes[aim].length+(fv!=null?", "+U.s("fps",fv,0):"")+".","");}
     after();
   }
   /* ----- any target: tap its four corners, give its size, then tap each aim point ----- */
@@ -9175,6 +9207,7 @@ function openLive(o){
     else if(c.cmd==="tap"&&isFinite(c.u)&&isFinite(c.w))tapAt(Math.min(1,Math.max(0,c.u)),Math.min(1,Math.max(0,c.w)));
     else if(c.cmd==="set"){const el=c.k==="group"?$("lvGroup"):c.k==="want"?$("lvWant"):c.k==="dist"?$("lvDist"):null;if(el){el.value=c.v==null?"":c.v;el.dispatchEvent(new Event(el.tagName==="SELECT"?"change":"input"));}}
     else if(c.cmd==="sens"&&SENS[c.v])setSens(c.v);
+    else if(c.cmd==="chrono"&&num(c.v)>0)chronoVel(num(c.v),!!c.trig);
     // from the device that started it (2.37): end without saving, the save went through, the reticle settings
     else if(c.cmd==="end"&&o.hosted)close(true);
     else if(c.cmd==="saved"&&o.hosted&&resWait)resWait(c);
@@ -9320,7 +9353,7 @@ function openLive(o){
     aims().forEach((a,i)=>{const hs=holes[i]||[];if(!hs.length)return;const r=stats(i);
       const pts=[[a.cell[0],a.cell[1]],[a.cell[2],a.cell[1]],[a.cell[2],a.cell[3]],[a.cell[0],a.cell[3]]].map(([x,y])=>nrm([x,y]));
       const box=[Math.max(0,Math.min(...pts.map(p=>p[0]))),Math.max(0,Math.min(...pts.map(p=>p[1]))),Math.min(1,Math.max(...pts.map(p=>p[0]))),Math.min(1,Math.max(...pts.map(p=>p[1])))];
-      M.groups.push({id:"t"+Date.now().toString(36)+i,ai:i,groupId:a.groupId||null,aim:nrm([a.x,a.y]),box,want:want||null,shots:hs.map(nrm),hin:hs.map(([x,y])=>[+(x-a.x).toFixed(3),+(a.y-y).toFixed(3)]),n:hs.length,size:f3(r.size),moa:f3(moaOf(r.size)),mr:f3(r.mr),dx:f3(r.dx),dy:f3(r.dy)});});
+      M.groups.push({id:"t"+Date.now().toString(36)+i,ai:i,groupId:a.groupId||null,aim:nrm([a.x,a.y]),box,want:want||null,shots:hs.map(nrm),hin:hs.map(([x,y])=>[+(x-a.x).toFixed(3),+(a.y-y).toFixed(3)]),...(hs.some(q=>q[2]>0)?{vel:hs.map(q=>q[2]>0?q[2]:null)}:{}),n:hs.length,size:f3(r.size),moa:f3(moaOf(r.size)),mr:f3(r.mr),dx:f3(r.dx),dy:f3(r.dy)});});
     return {data,W,H,M};
   }
   $("lvDone").addEventListener("click",save);
@@ -9377,7 +9410,7 @@ function openLive(o){
   function close(force){
     const total=holes.reduce((s,h)=>s+(h?h.length:0),0);
     if(!force&&total&&dirty){arm($("lvClose"),"live","Discard "+total+" shot"+(total===1?"":"s")+"?",()=>close(true));return;}
-    closed=true;clearInterval(camT);clearTimeout(dimT);if(o.hosted){clearTimeout(rmTimer);rmId=null;}else remoteStop();micOff();if(stream&&!o.hosted)stream.getTracks().forEach(t=>t.stop());keep(false);
+    closed=true;if(unCh)unCh();if(unChUI)unChUI();clearInterval(camT);clearTimeout(dimT);if(o.hosted){clearTimeout(rmTimer);rmId=null;}else remoteStop();micOff();if(stream&&!o.hosted)stream.getTracks().forEach(t=>t.stop());keep(false);
     document.removeEventListener("keydown",onKey);document.removeEventListener("visibilitychange",onVis);v.remove();
     if(o.hosted&&o.hosted.onEnd)o.hosted.onEnd(stream);
   }
@@ -9491,6 +9524,7 @@ function openWatch(id,dev,host){
       '<div class="lvrow"><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
       '<div class="lvstats" id="wStats"></div>'+
       '<div class="lvgrid"><label id="wGroupL" hidden>Charge for this aim<select id="wGroup"></select></label><label>Shots<input id="wWant" type="number" inputmode="numeric" min="1" step="1"></label><label><span>Distance (<span id="wYd">yd</span>)</span><input id="wDist" type="number" inputmode="numeric" step="any"></label></div>'+
+      '<label class="lvmic" id="wChL" hidden><input type="checkbox" id="wCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot <span class="note" id="wChV"></span><small>The chronograph connected to this '+esc(LIVE_DEV())+' sends each velocity to the '+esc(dev||"phone")+', which looks for that hole and notes the velocity on it.</small></span></label>'+
       (HO?'<label class="lvmic"><input type="checkbox" id="whMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="whMeter" hidden><i></i><b></b></span><small>Uses this '+esc(LIVE_DEV())+'\'s microphone. Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
         '<div class="lvsens" id="whSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-whsens="normal">Normal</button><button type="button" data-whsens="supp">Suppressed</button><button type="button" data-whsens="quiet">Quiet .22</button></div>'+
         '<label class="lvmic lvretl"><input type="checkbox" id="whRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale, with the hold for your zero on the aim point.</small></span></label>'+
@@ -9549,7 +9583,13 @@ function openWatch(id,dev,host){
       }catch(e){if(closed)return;setStat("Can't reach your Range Book. Trying again…","bad");await new Promise(res=>setTimeout(res,2000));}
     }
   }
-  const close=()=>{closed=true;if(HO)hostStop();document.removeEventListener("keydown",onKey);v.remove();watchList();};
+  // the chronograph on this device (2.44.7): each velocity goes to the phone, which puts it on the hole
+  const chOn=()=>{try{return localStorage.getItem("rb.liveChrono")!=="0";}catch(e){return true;}};
+  const unCh=window.RB_BTCHRONO?RB_BTCHRONO.onShot(s=>{if(closed)return;cmd({cmd:"chrono",v:s.v,trig:chOn()});$("wChV").textContent="Last: "+U.s("fps",s.v,0);}):null;
+  const chUI=()=>{const l=$("wChL");if(!l||!window.RB_BTCHRONO)return;l.hidden=RB_BTCHRONO.state()==="off";$("wCh").checked=chOn();};
+  const unChUI=window.RB_BTCHRONO?RB_BTCHRONO.sub(chUI):null;
+  $("wCh").addEventListener("change",e=>{try{localStorage.setItem("rb.liveChrono",e.target.checked?"1":"0");}catch(x){}});chUI();
+  const close=()=>{closed=true;if(unCh)unCh();if(unChUI)unChUI();if(HO)hostStop();document.removeEventListener("keydown",onKey);v.remove();watchList();};
   const onKey=e=>{if(e.key==="Escape")(HO?hostBack():close());};document.addEventListener("keydown",onKey);
   $("wClose").addEventListener("click",()=>HO?hostBack():close());
   /* ----- running the session from here (2.37) ----- */
@@ -9566,7 +9606,7 @@ function openWatch(id,dev,host){
   function retSend(){if(RT.prof)cmd({cmd:"ret",k:"prof",v:RT.prof});cmd({cmd:"ret",k:"zero",v:num(RT.zero)>0?U.n("yd",RT.zero,0):null});cmd({cmd:"ret",k:"on",v:!!RT.on});}
   function hostRender(S){
     if(S.hosted&&!live){live=true;clearTimeout(startT);if(!retSent){retSent=true;retSend();}}
-    if(S.standby&&live){live=false;if(ending||doneTok){hostStop();closed=true;document.removeEventListener("keydown",onKey);v.remove();watchList();return;}
+    if(S.standby&&live){live=false;if(ending||doneTok){hostStop();closed=true;if(unCh)unCh();if(unChUI)unChUI();document.removeEventListener("keydown",onKey);v.remove();watchList();return;}
       setStat("The "+(dev||"phone")+" left the session. Starting it again…","busy");hostStart();}
     else if(S.standby&&!live&&Date.now()-started>5000)hostStart();
     const n=$("whRetNote");if(n&&S.ret){n.hidden=!RT.on;n.textContent=S.ret.note||"";}
@@ -10768,7 +10808,7 @@ function tripChronoSink(tid,sid){
   const TL=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===T0.trajId),sp=T0.trajId&&window.RB_TRAJ&&RB_TRAJ.spec?RB_TRAJ.spec(T0.trajId):null;
   const S={key:"trip:"+tid+":"+sid,label:(T0.place||"Range trip")+(T0.date?" · "+fmtDate(T0.date):""),gunId:TL&&TL.rifleId||null,expect:sp&&num(sp.mv)||null,
     shot(s){const t=trips.find(o=>o.id===tid);if(!t)return;t.strings=t.strings||[];let x=t.strings.find(o=>o.id===sid);
-      if(!x){x={id:sid,name:"BLIPR",date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);}
+      if(!x){x={id:sid,name:(window.RB_BTCHRONO?RB_BTCHRONO.name():"BLIPR"),date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);}
       x.shots=x.shots||[];const k=x.shots.indexOf(null),v=Math.round(s.v);if(k>=0)x.shots[k]=v;else x.shots.push(v);
       if(s.ammo!=null){x.ammoN=(x.ammoN||0)+1;x.ammoF=Math.round(((num(x.ammoF)||0)*(x.ammoN-1)+s.ammo)/x.ammoN*10)/10;}
       const aired=tripAir(t);t.updated=Date.now();
@@ -10955,7 +10995,7 @@ function renderTrips(){
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>'+
     coldHtml(t)+
     '<h3>Chronograph</h3><div id="tripChrono"></div>'+
-    '<div class="row"><label class="btn" for="tripChronoIn" style="cursor:pointer">Import chronograph file</label><input id="tripChronoIn" type="file" multiple accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn" id="tripShotAdd" type="button">+ Type in shots</button><button class="btn" id="tripBt" type="button" data-btkey="trip:'+esc(t.id)+'" data-bt0="Connect chronograph" data-bt1="Send chronograph shots here" data-bt2="Stop chronograph">Connect chronograph</button><button class="btn" id="tripBtNew" type="button" data-btkey="trip:'+esc(t.id)+'" data-bt0="" data-bt1="" data-bt2="New chronograph string" hidden>New chronograph string</button><span class="note" id="tripChronoMsg"></span></div>'+
+    '<div class="row"><label class="btn" for="tripChronoIn" style="cursor:pointer">Import chronograph file</label><input id="tripChronoIn" type="file" multiple accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn" id="tripShotAdd" type="button">+ Type in shots</button><button class="btn" id="tripBt" type="button" data-btkey="trip:'+esc(t.id)+'" data-bt0="Connect chronograph" data-bt1="Send chronograph shots here" data-bt2="Stop chronograph">Connect chronograph</button><button class="btn" id="tripAth" type="button" data-athbtn>Connect Athlon</button><button class="btn" id="tripBtNew" type="button" data-btkey="trip:'+esc(t.id)+'" data-bt0="" data-bt1="" data-bt2="New chronograph string" hidden>New chronograph string</button><span class="note" id="tripChronoMsg"></span></div>'+
     '<div class="row" id="tripMvRow"></div>'+
     '<h3>Targets</h3><p class="tripbest" id="tripBest" hidden></p><div class="photos" id="tripPhotoGrid"></div>'+
     '<div class="row"><label class="btn primary" for="tripPhotoIn" style="cursor:pointer">+ Add target photo</label><input id="tripPhotoIn" type="file" accept="image/*" multiple hidden><button class="btn" id="tripLive" type="button">Live target</button><button class="btn" id="tripLiveAdd" type="button">+ Saved Live target</button><span class="savestate" id="tripPhotoState"></span></div>'+
@@ -10980,7 +11020,7 @@ function renderTrips(){
   const allStats=()=>{const S=t.strings||[];if(S.length<2)return "";const st=stats({shots:S.flatMap(x=>x.shots||[])},null);return st?'All strings together: '+st.n+' shots · avg '+U.s("fps",st.avg,0,true)+' · SD '+sdS(st.sd)+' · ES '+esS(st.es):"";};
   const renderChrono=focusId=>{
     const box=$("tripChrono");if(!box)return;const S=t.strings||[];
-    if(!S.length){box.innerHTML='<p class="note">Import the file from your RangeCraft, Garmin Xero, MagnetoSpeed or LabRadar, or tap <b>+ Type in shots</b> to enter the velocities yourself. The average and SD fill in from the shots.</p>';return;}
+    if(!S.length){box.innerHTML='<p class="note">Import the file from your RangeCraft, Garmin Xero, MagnetoSpeed or LabRadar, or tap <b>+ Type in shots</b> to enter the velocities yourself. The average and SD fill in from the shots.</p>';if(window.RB_BTCHRONO)RB_BTCHRONO.paint();return;}
     let h='<div class="tstrings">';
     S.forEach((x,i)=>{x.id=x.id||newId();
       h+='<div class="tstr" data-btlive="trip:'+esc(t.id)+':'+esc(x.id)+'"><div class="tstrhead"><b>'+esc(x.name||("String "+(i+1)))+'</b>'+(x.date?'<span class="note">'+esc(fmtDate(x.date))+'</span>':'')+(num(x.ammoF)!=null?'<span class="note">ammo '+esc(U.s("F",num(x.ammoF),0))+'</span>':'')+
@@ -11013,18 +11053,22 @@ function renderTrips(){
   renderChrono();
   // BLIPR: shots from the Bluetooth chronograph fill a string as they're measured (Tools → Chronograph has the device's settings)
   TRIP_HOOK={id:t.id,totals:chronoTotals,render:renderChrono,fields(){U.fill($("tp_temp"),"F",t.temp,0,1);const n=$("tripWxNote");if(n)n.textContent=tripWxTxt(t);}};
-  const chronoGo=async sid=>{
+  const chronoGo=async(sid,which)=>{
     if(!window.RB_BTCHRONO)return;const msg=$("tripChronoMsg");msg.classList.remove("err");
-    try{await RB_BTCHRONO.connect();}catch(e){if(e.message){msg.classList.add("err");msg.textContent=e.message;}return;}
+    try{await RB_BTCHRONO.connect(which);}catch(e){if(e.message){msg.classList.add("err");msg.textContent=e.message;}return;}
     t.strings=t.strings||[];
     if(!sid){const L0=t.strings[t.strings.length-1];
       if(L0&&L0.chrono&&!(L0.shots||[]).some(v=>v!=null))sid=L0.id;
-      else{const x={id:newId(),name:"BLIPR "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);sid=x.id;t.updated=Date.now();queueTrips();}}
+      else{const x={id:newId(),name:RB_BTCHRONO.name()+" "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);sid=x.id;t.updated=Date.now();queueTrips();}}
     const sk=tripChronoSink(t.id,sid);if(!sk)return;RB_BTCHRONO.attach(sk);
     if(tripAir(t)){t.updated=Date.now();queueTrips();TRIP_HOOK.fields();}
     renderChrono();const x=t.strings.find(o=>o.id===sid);msg.textContent="Shots from the chronograph go into "+(x&&x.name||"this string")+".";};
   $("tripBt").addEventListener("click",()=>{if(window.RB_BTCHRONO&&String(RB_BTCHRONO.sinkKey()||"").startsWith("trip:"+t.id+":")){RB_BTCHRONO.detach("trip:"+t.id);$("tripChronoMsg").textContent="";return;}chronoGo(null);});
   $("tripBtNew").addEventListener("click",()=>chronoGo(null));
+  // Connect Athlon / Disconnect Athlon (2.44.7): its shots fill a new string here, the same as Connect chronograph
+  $("tripAth").addEventListener("click",()=>{const C=window.RB_BTCHRONO;if(!C)return;
+    if(C.kind()==="athlon"&&C.state()!=="off"){C.disconnect(false);$("tripChronoMsg").textContent="Disconnected the Athlon.";return;}
+    chronoGo(null,"athlon");});
   // typing velocities in yourself: a new "Typed in" string with 5 empty boxes, like a new group
   $("tripShotAdd").addEventListener("click",()=>{t.strings=t.strings||[];const x={id:newId(),name:"Typed in",date:t.date||null,manual:true,shots:[null,null,null,null,null]};
     t.strings.push(x);t.updated=Date.now();queueTrips();renderChrono("ts_"+x.id+"_0");});
@@ -11113,7 +11157,7 @@ window.RB_TRIPS={
   dropTraj(id){const gone=trips.filter(t=>t.trajId===id);if(!gone.length)return;gone.forEach(t=>API.del("/api/trips/"+t.id+"/photos").catch(()=>{}));trips=trips.filter(t=>t.trajId!==id);queueTrips();}
 };
 /* ---------- Testing (chronograph branch, 2.44.1): chronograph strings kept without a range trip ----------
-   Tools › BLIPR Chronograph › Save to testing puts a string into a testing session (a new one, or one already there).
+   Tools › Chronographs › Save to testing puts a string into a testing session (a new one, or one already there).
    The Testing card under the tool lists the sessions, newest first; one opens with its details (name, date, gun, ammo,
    where, notes) and each string's shots and stats. The "testing" document (v1):
    {v:1, sessions:[{id, date, name, gunId, ammo, place, notes, created, updated,
@@ -11174,7 +11218,7 @@ window.RB_TESTING=(function(){
       '<div class="field wide"><label for="'+p+'ammo">Ammo / load</label><input id="'+p+'ammo" list="'+p+'ammoL" autocomplete="off" placeholder="e.g. Hornady 140 ELD Match">'+ammoList(p+"ammoL")+'</div>'+
       '<div class="field wide"><label for="'+p+'notes">Notes</label><textarea id="'+p+'notes" style="min-height:60px" placeholder="Barrel, conditions, what you\'re checking…"></textarea></div></div>';}
 
-  /* ----- the Testing card, under Tools › BLIPR Chronograph ----- */
+  /* ----- the Testing card, under Tools › Chronographs ----- */
   const editing=()=>{const a=document.activeElement,r=$("btTestRoot");return !!(a&&r&&r.contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName));};
   function draw(){
     const root=$("btTestRoot");if(!root||root.closest("[hidden]"))return;
@@ -12564,7 +12608,7 @@ function startTabTour(tab){
       {el:()=>q('[data-tooltile="traj"]'),t:"Trajectory calculator",b:"The whole Shooting calculator without making a profile: pick a gun and ammo or type the numbers. <b>Save as a Shooting profile</b> keeps it; <b>Reset</b> starts over.",go:tiles},
       {el:()=>q('[data-tooltile="cmp"]'),t:"Compare trajectories",b:"Up to six bullets on one chart with the same zero and air: path, dial, wind drift, speed or energy.",go:tiles},
       {el:()=>q('[data-tooltile="chrono"]'),t:"Chronograph import check",b:"See how Range Book reads your chronograph's export, string by string, before you import it. Suspicious shots are marked.",go:tiles},
-      {el:()=>q('[data-tooltile="btchrono"]'),t:"BLIPR Chronograph",b:"Connect the Range Book BLIPR bench radar chronograph, or an Athlon Rangecraft, over Bluetooth. Velocities show as you shoot, and a range trip or ladder can take them straight into its boxes.",go:tiles},
+      {el:()=>q('[data-tooltile="btchrono"]'),t:"Chronographs",b:"Connect the Range Book BLIPR bench radar chronograph, or an Athlon Rangecraft, over Bluetooth. Velocities show as you shoot, and a range trip or ladder can take them straight into its boxes.",go:tiles},
       {el:()=>q('[data-tooltile="lib"]'),t:"Library",b:"Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes, red dots and suppressors. Tap anything to see all of it, fix a number for your own use (<b>Revert</b> puts it back), or add it to yours.",go:tiles},
       {el:()=>q('[data-tooltile="hit"]'),t:"Hit chance",b:info("@Hit chance"),go:tiles},
       {el:()=>q('[data-tooltile="timer"]'),t:"Shot timer",b:"A start beep, then your first shot and every split from the microphone, with a par time. Works with a Bluetooth speaker. Save runs to the Training tab.",go:tiles},
@@ -12843,7 +12887,7 @@ window.RB_TOOLS=(function(){
   const $=id=>document.getElementById(id), U=window.U;
   const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
   const TOOLS=["traj","twist","moa","powder","conv","live","hit","lib","cmp","chrono","timer","btchrono"];
-  const TITLES={timer:"Shot timer",cmp:"Compare trajectories",chrono:"Chronograph import check",btchrono:"BLIPR Chronograph",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
+  const TITLES={timer:"Shot timer",cmp:"Compare trajectories",chrono:"Chronograph import check",btchrono:"Chronographs",traj:"Trajectory calculator",twist:"Twist & stability",moa:"MOA · MIL · inches",powder:"Powder per container",conv:"Convert",live:"Live target",hit:"Hit chance",lib:"Library"};
   let tool=null, pending=null, rel=null, ready=false, FROM=null;
   const TILE_DEFAULT=[...document.querySelectorAll("#toolTiles [data-tooltile]")].map(b=>b.dataset.tooltile);      // tool: the one open, or null for the tiles
   const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));

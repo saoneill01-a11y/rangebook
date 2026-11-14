@@ -2,10 +2,13 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.44.6",
+      "version": "2.44.7",
       "date": "2026-11-13",
       "title": "Bluetooth chronograph",
       "items": [
+        "Live target with a chronograph: Chronograph finds each shot (when BLIPR or an Athlon is connected to the phone, or to the iPad running the session) finds each new hole as the chronograph measures the shot and puts its velocity on the hole. A saved target shows each hole's velocity under Shot by shot.",
+        "Range trips: Connect Athlon and Disconnect Athlon, next to Connect chronograph. The Athlon's shots fill a string named for it.",
+        "Tools: the BLIPR Chronograph tile is now called Chronographs, and its Athlon messages card folds up.",
         "Connect chronograph now also finds an Athlon Rangecraft and takes each shot's velocity from it as you fire, into a range trip, a ladder or Tools › BLIPR Chronograph, like BLIPR. A shot fired while the Bluetooth link was down comes over when it reconnects. Range Book also sets the Athlon's clock, shows its battery and firmware, and starts a new string when the Athlon starts a session. Tools › BLIPR Chronograph keeps a log of what the Athlon sends.",
         "Tools › BLIPR Chronograph: Connect BLIPR and Connect Athlon Rangecraft buttons, each showing only that kind of chronograph in the list.",
         "Range Book isn't made by, affiliated with, or endorsed by Athlon Optics. Athlon and Rangecraft are their trademarks, used only to say which chronograph this works with.",
