@@ -250,6 +250,7 @@ img{max-width:100%}
 /* the calculator in Tools (2.46.2): no trip buttons or profile menu, and before the numbers are in, one wide column */
 #trajDetail.scratch #tripsBar,#trajDetail.scratch .profmore,#trajDetail.scratch #tripsRoot{display:none!important}
 #trajDetail.scratch.qcempty .tcols{grid-template-columns:minmax(0,1fr);max-width:760px}
+#trajDetail.scratch{margin-top:14px} /* the same gap under the calculator's bar as between cards (2.47.2) */
 textarea{font:inherit;color:var(--fg);width:100%;min-height:110px;padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);resize:vertical;line-height:1.45}
 textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .field input.text{font-family:var(--body);font-weight:500;color:var(--fg);background:var(--sunk)}
@@ -971,7 +972,7 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 #trajDetail.tripspage>:not(#tripsRoot){display:none!important}
 #trajDetail:not(.tripspage)>#tripsRoot{display:none}
 body.tripspage #trajJump{display:none!important}
-.tripsbar{margin:0 0 12px}
+.tripsbar{margin:0}
 .tripcrumbs{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:calc(14px*var(--fs));color:var(--muted);margin:0 0 10px}
 .tripcrumbs .linkbtn{font-size:inherit}
 .tripcols{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start}

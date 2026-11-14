@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.1",
+      "version": "2.47.2",
       "date": "2026-11-14",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Tools › Trajectory calculator, and the Range trips buttons on a profile: the same space under them as between the other cards.",
         "Reloading: Delete ladder is a red button at the bottom of each ladder, away from the arrow that folds it.",
         "Athlon Rangecraft radar chronograph over Bluetooth: tap Connect Athlon on a range trip, at the top of a reloading ladder, or in Tools › Chronographs, and each velocity drops into its box as you shoot. On a ladder the shots fill the first group still waiting for shots, then the next. A shot fired while the Bluetooth link was down comes over when it reconnects. Works in Chrome or Edge on Android and computers, and in the Bluefy app on iPhone and iPad, over https. Range Book isn't made by, affiliated with, or endorsed by Athlon Optics; Athlon and Rangecraft are their trademarks.",
         "Live target with the chronograph: with Chronograph finds each shot on, each shot the Athlon measures starts the search for its hole (on the phone, or on the iPad running the session with a phone on the scope), and its velocity goes on that hole. At long range it waits for the bullet's time of flight first. A saved target shows each hole's velocity under Shot by shot, and whether faster shots hit higher or lower.",
