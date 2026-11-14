@@ -11009,8 +11009,11 @@ function bindVelTemp(T){const b=$("vtUse");if(!b||!VT_FIT)return;
    trip replace the profile's cards (tripspage). A trip has two columns: the session bar and folding tiles on the left,
    and the profile's Dope card & reticle moved over on the right (and put back when the trip closes). ----- */
 let TRIPS_PAGE=false,DOPE_MARK=null;
-function dopeHome(){const d=$("secTDope");if(!d||!DOPE_MARK||!DOPE_MARK.parentNode)return;if(DOPE_MARK.nextSibling!==d)DOPE_MARK.parentNode.insertBefore(d,DOPE_MARK.nextSibling);}
-function dopeTo(slot){const d=$("secTDope");if(!d||!slot)return;if(!DOPE_MARK){DOPE_MARK=document.createComment("dope card's place");d.parentNode.insertBefore(DOPE_MARK,d);}slot.appendChild(d);setTimeout(()=>window.dispatchEvent(new Event("resize")),0);}
+function dopeHome(){{const n=$("tripAirNote");if(n)n.remove();}const d=$("secTDope");if(!d||!DOPE_MARK||!DOPE_MARK.parentNode)return;if(DOPE_MARK.nextSibling!==d)DOPE_MARK.parentNode.insertBefore(d,DOPE_MARK.nextSibling);}
+function dopeTo(slot){const d=$("secTDope");if(!d||!slot)return;if(!DOPE_MARK){DOPE_MARK=document.createComment("dope card's place");d.parentNode.insertBefore(DOPE_MARK,d);}slot.appendChild(d);
+  // the note on the trip's weather goes inside the card, under its title, so the card lines up with the left column (2.45.5)
+  const n=document.createElement("p");n.className="note";n.id="tripAirNote";n.setAttribute("aria-live","polite");const body=d.querySelector(":scope>.secbody")||d;body.insertBefore(n,body.firstChild);
+  setTimeout(()=>window.dispatchEvent(new Event("resize")),0);}
 // the trip's weather for the dope card: temperature, air pressure (from Use the weather…), wind speed, and the wind's
 // o'clock when the Wind box says one ("5 mph from 3 o'clock"); anything the trip doesn't have stays the profile's
 function tripAirOf(t){if(!t)return null;const o={},has=[];
@@ -11117,7 +11120,7 @@ function renderTrips(){
       ttile("targets",t,"Targets",tripTgtSum(t),tgtBody)+
       ttile("cold",t,"Cold-bore shot",tripColdSum(t),'<div id="coldPick"></div><details class="tmore"><summary>Type it in yourself</summary>'+coldHtml(t).replace(/^<h3>Cold-bore shot<\/h3><p class="note"[^>]*>.*?<\/p>/,"")+'</details>')+
       '<div class="row endrow"><span class="savestate" id="tripState"></span>'+(window.GUEST?'':'<button class="btn" id="tripPrint" type="button">Print trip report</button>')+'<button class="btn danger" id="tripDel" type="button">Delete this trip</button></div>'+
-    '</div><div class="tcol" id="tripDopeSlot"><p class="note" id="tripAirNote" aria-live="polite"></p></div></div>';
+    '</div><div class="tcol" id="tripDopeSlot"></div></div>';
   root.innerHTML=h;
   bindCrumbs();bindTtiles(root,t);dopeTo($("tripDopeSlot"));tripAirUse(t);
   let airT=null;
