@@ -576,7 +576,8 @@ table.dope.rgtbl{table-layout:auto}.rgtbl td,.rgtbl th{white-space:nowrap}
 .dopecombo .dopecard{margin-top:0}
 #secTTable .tablewrap{max-height:var(--tblh,min(360px,45vh))}#tblGrip{margin-top:2px}
 .dopecombo{display:grid;gap:16px;align-items:start}
-.dopecombo .retpane{display:none}
+/* phones (2.45.6): the reticle shows under the dope card instead of only in a sheet after tapping a distance */
+@media(max-width:760px){.dopecombo .retpane{display:block;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--sunk);min-width:0}.retpane .retwrap{grid-template-columns:1fr}.retpane .retsvg{max-width:300px;margin:0 auto}}
 @media(min-width:761px){.dopecombo{grid-template-columns:auto minmax(0,1fr)}.dopecombo .retpane{display:block;position:sticky;top:var(--stick,110px);border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--sunk);min-width:280px}
   .retpane .retwrap{grid-template-columns:1fr}.retpane .retsvg{max-width:300px;margin:0 auto}}
 #dopeCard table.dope tbody tr[data-dx]{cursor:pointer}
@@ -4541,7 +4542,7 @@ $("d_unitBtn").addEventListener("click",()=>{const d=$("d_unit");d.value=dopeOpt
 // tap a distance on the card: the reticle shows it (beside the card on a wide screen, in a sheet on a phone)
 const retNarrow=()=>window.matchMedia("(max-width:760px)").matches;
 function retPick(i){if(!DOPE||!DOPE.rows[i])return;const L=cur();L.ret=Object.assign({},L.ret||{},{dist:U.from("yd",DOPE.rows[i].x)});save();render();}
-$("dopeCard").addEventListener("click",e=>{const tr=e.target.closest("tbody tr[data-dx]");if(!tr||!DOPE)return;const i=DOPE.rows.findIndex(r=>String(r.x)===tr.dataset.dx);if(i<0)return;retPick(i);if(retNarrow())retSheet(true);});
+$("dopeCard").addEventListener("click",e=>{const tr=e.target.closest("tbody tr[data-dx]");if(!tr||!DOPE)return;const i=DOPE.rows.findIndex(r=>String(r.x)===tr.dataset.dx);if(i<0)return;retPick(i);if(retNarrow()){const p=$("retPane");if(p)p.scrollIntoView({block:"nearest",behavior:"smooth"});}});
 $("dopeCard").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const tr=e.target.closest("tbody tr[data-dx]");if(!tr)return;e.preventDefault();tr.click();});
 let retLast=null;
 function retSheet(on){
