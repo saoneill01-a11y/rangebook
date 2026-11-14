@@ -497,7 +497,7 @@ function collectUser(uid) {
   }));
   const photos = q("SELECT id, load_id, ladder_id, caption, file, w, h, measure, created_at FROM photos WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, measure: parseMeasure(r.measure) }));
   const tripPhotos = q("SELECT id, trip_id, caption, file, w, h, measure, created_at FROM trip_photos WHERE owner_id=? ORDER BY created_at").all(uid).map((r) => ({ ...r, measure: parseMeasure(r.measure) }));
-  return { user, loads, photos, tripPhotos, brass: getDoc(uid, "brass"), calc: getDoc(uid, "calc"), rifles: getDoc(uid, "rifles"), components: getDoc(uid, "components"), trips: getDoc(uid, "trips"), ammo: getDoc(uid, "ammo"), notes: getDoc(uid, "notes"), prefs: getDoc(uid, "prefs"), training: getDoc(uid, "training") };
+  return { user, loads, photos, tripPhotos, brass: getDoc(uid, "brass"), calc: getDoc(uid, "calc"), rifles: getDoc(uid, "rifles"), components: getDoc(uid, "components"), trips: getDoc(uid, "trips"), ammo: getDoc(uid, "ammo"), notes: getDoc(uid, "notes"), prefs: getDoc(uid, "prefs"), training: getDoc(uid, "training"), testing: getDoc(uid, "testing") };
 }
 /* serial numbers locked in the vault (2.43.20): the server only has them scrambled. An export asked for with the person's
    own unlocked serials (POST {serials: {id: serial}}) fills them in for that one file, and nothing is kept; otherwise they
@@ -612,11 +612,11 @@ async function api(req, res, url) {
       if (!who && !getSetting("guestEnabled", false)) throw new HttpError(401, "Please sign in.");
       const T = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, "targets.json"), "utf8"));
       const qp = (k, n) => String(url.searchParams.get(k) || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n);
-      const fill = { load: qp("load", 60), date: qp("date", 24), dist: qp("dist", 8), gun: qp("gun", 40) };
+      const fill = { name: qp("name", 40), load: qp("load", 60), date: qp("date", 24), dist: qp("dist", 8), gun: qp("gun", 40) };
       // yards or metres: the page says which (a guest has no saved settings), otherwise your setting
       const pr = who ? getDoc(who.id, "prefs") : null, uq = qp("u", 2);
       const units = uq === "m" ? "m" : uq === "yd" ? "yd" : pr && pr.units === "metric" ? "m" : "yd";
-      const buf = targetPdf(T, mt[1], fill.load || fill.date || fill.dist || fill.gun ? fill : null, units);
+      const buf = targetPdf(T, mt[1], fill.name || fill.load || fill.date || fill.dist || fill.gun ? fill : null, units);
       if (!buf) throw new HttpError(404, "No such target.");
       res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${mt[1]}.pdf"`, "Content-Length": buf.length, ...SECURITY_HEADERS });
       return res.end(buf);
@@ -708,7 +708,7 @@ async function api(req, res, url) {
   }
 
   /* ---- per-user documents: calculator state, brass notes ---- */
-  let m = /^\/api\/doc\/(calc|brass|rifles|components|prefs|trips|ammo|notes|training)$/.exec(p);
+  let m = /^\/api\/doc\/(calc|brass|rifles|components|prefs|trips|ammo|notes|training|testing)$/.exec(p);
   if (m) {
     if (method === "GET") return send(res, 200, { data: getDoc(user.id, m[1]) });
     if (method === "PUT") {

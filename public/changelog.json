@@ -2,6 +2,26 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
+      "version": "2.47.0",
+      "date": "2026-11-14",
+      "title": "Athlon chronograph, range trips on their own page, less clutter",
+      "items": [
+        "Athlon Rangecraft radar chronograph over Bluetooth: tap Connect Athlon on a range trip, at the top of a reloading ladder, or in Tools › Chronographs, and each velocity drops into its box as you shoot. On a ladder the shots fill the first group still waiting for shots, then the next. A shot fired while the Bluetooth link was down comes over when it reconnects. Works in Chrome or Edge on Android and computers, and in the Bluefy app on iPhone and iPad, over https. Range Book isn't made by, affiliated with, or endorsed by Athlon Optics; Athlon and Rangecraft are their trademarks.",
+        "Live target with the chronograph: with Chronograph finds each shot on, each shot the Athlon measures starts the search for its hole (on the phone, or on the iPad running the session with a phone on the scope), and its velocity goes on that hole. At long range it waits for the bullet's time of flight first. A saved target shows each hole's velocity under Shot by shot, and whether faster shots hit higher or lower.",
+        "Range trips have their own page: a Range trips button at the top of a profile, and a trip opens from there or straight from the Range log. A trip has a bar of big buttons for the bench (Connect Athlon, Live target, + Photo), then cards that fold up with a one-line summary: Trip details, Chronograph, Targets and Cold-bore shot. The profile's Dope card & reticle sits beside it, worked out for the trip's weather.",
+        "Cold-bore shot: tap the shot from the trip's Live targets that was your cold-bore shot, and its place (and velocity) fill in.",
+        "Print a target from a range trip puts the trip's load, date, distance and gun on it; from Tools you can fill in Name, Load, Date, Distance and Gun yourself.",
+        "Saved ranges moved from each profile to the Range log.",
+        "Less clutter: Home has Start a range day and + New load. Account is grouped into Look, Units, Your data and Account, with Layout (arrange Home and profile cards) and an Open Admin button; Admin left the tab bar. The beta warning shows once.",
+        "Profiles: the fields you fill in once are under More details, the chart's extra buttons under More chart options, and Change how the reticle looks and Hit chance under More on the dope card. Point-blank range and True up velocity start folded. On a phone the reticle shows under the dope card.",
+        "Range trips: empty a shot's box to delete it, with Undo. Ladder groups: the less-used buttons are under More, and the pressure signs fold into one line that lists any you noted.",
+        "Gear & Ranges has five tabs: Guns (with Optics and Suppressors), Ammo, Inventory (with Magazines), Ranges and Notes. Reloading's Reference moved into Tools › Library.",
+        "Tools: MOA · MIL · inches is part of Convert (its own card). Compare trajectories has a cartridge picker and a search that only lists ammo for it. Library lists have + Add. Hit chance opens from the dope card, and Shot timer from Training.",
+        "How to Use: each section starts with a short list of the basics, with the rest under Learn more.",
+        "Switching between a long page and a short one no longer shifts the page sideways."
+      ]
+    },
+    {
       "version": "2.43.26",
       "date": "2026-10-28",
       "title": "Bigger text, and the effective range numbers in a pop-up",
