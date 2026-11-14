@@ -630,12 +630,12 @@ function targetPdf(T, layoutId, fill, du) {
   if (fill) {
     // filled in from a range trip: the values in bold after each label
     const FS = PW > 9 ? 9.5 : 8.5;
-    const room = X(PW - 2 * hx), parts = [["Load", fill.load], ["Date", fill.date], ["Distance", fill.dist ? fill.dist + " " + du : ""], ["Gun", fill.gun]].filter((q) => q[1]);
+    const room = X(PW - 2 * hx), parts = [["Name", fill.name], ["Load", fill.load], ["Date", fill.date], ["Distance", fill.dist ? fill.dist + " " + du : ""], ["Gun", fill.gun]].filter((q) => q[1]);
     let x = X(hx);
     for (const [k, v0] of parts) {
       let v = String(v0);
       const lw = textWidth(k + " ", FS, false);
-      const cap = k === "Load" ? room * 0.36 : k === "Gun" ? room * 0.24 : room;
+      const cap = k === "Load" ? room * 0.36 : k === "Gun" || k === "Name" ? room * 0.24 : room;
       while (v.length > 3 && (textWidth(v, FS, true) > cap || x + lw + textWidth(v, FS, true) > X(hx) + room)) v = v.slice(0, -4) + "...";
       if (x + lw + textWidth(v, FS, true) > X(hx) + room) break;
       pdf.text(x, X(0.98), k, { size: FS, color: "#444444" });

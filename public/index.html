@@ -246,6 +246,9 @@ img{max-width:100%}
 #trajDetail.scratch #trajSample,#trajDetail.scratch #hitTool,#trajDetail.scratch .field:has(#trajFav),#trajDetail.scratch .field:has(#f_name){display:none}
 /* the calculator with nothing filled in yet: only Inputs and Conditions, so no old numbers are left showing */
 #trajDetail.scratch.qcempty section.card:not(#secTInputs):not(#secTWx){display:none}
+/* the calculator in Tools (2.46.2): no trip buttons or profile menu, and before the numbers are in, one wide column */
+#trajDetail.scratch #tripsBar,#trajDetail.scratch .profmore,#trajDetail.scratch #tripsRoot{display:none!important}
+#trajDetail.scratch.qcempty .tcols{grid-template-columns:minmax(0,1fr);max-width:760px}
 textarea{font:inherit;color:var(--fg);width:100%;min-height:110px;padding:9px 10px;border-radius:7px;border:1px solid var(--line);background:var(--sunk);resize:vertical;line-height:1.45}
 textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .field input.text{font-family:var(--body);font-weight:500;color:var(--fg);background:var(--sunk)}
@@ -958,6 +961,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 #rifSub2{margin:-4px 0 10px;align-self:flex-start}#rifSeg[hidden]~#rifSub2{display:none}#rifSub2 button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
 .toolsub{margin:6px 0 0;font-size:calc(15px*var(--fs))}
 .hquick ul{margin:4px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}.hmore{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}.hmore>summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.cmpsrc{position:relative}.cmpres{position:absolute;left:0;right:0;top:100%;z-index:20;max-height:280px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:4px;display:flex;flex-direction:column}
+.cmpopt{text-align:left;border:0;background:none;color:var(--fg);font:inherit;padding:7px 8px;border-radius:6px;cursor:pointer}.cmpopt:hover,.cmpopt:focus{background:var(--accent-soft)}.cmpopt .k{font-size:calc(11px*var(--fs));color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .acgrp{margin:10px 2px -4px;font-size:calc(12px*var(--fs));font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .tripsroot{margin-top:14px;display:flex;flex-direction:column;gap:14px;min-width:0}.tripsroot>.tripcrumbs{margin:0}
 /* range trips as their own page (2.45): the profile's cards hide while the trip list or a trip is open */
@@ -2024,14 +2029,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="col toolsroot">
     <section class="card tool" data-toolsec="twist" aria-label="Twist and stability" hidden>
       <p class="note toolnote">Will this bullet be stable in your barrel? This uses the Miller formula, corrected for velocity, temperature and altitude, the same one Shooting uses for spin drift.</p>
-      <div class="grid twfrom"><div class="field"><label for="tw_bul">Bullet</label><select id="tw_bul" class="fieldselect"></select></div><div class="field"><label for="tw_gun">Gun</label><select id="tw_gun" class="fieldselect"></select></div></div>
+      <div class="grid twfrom"><div class="field"><label for="tw_bul">Bullet from inventory</label><select id="tw_bul" class="fieldselect"></select></div><div class="field"><label for="tw_gun">Gun</label><select id="tw_gun" class="fieldselect"></select></div></div>
       <div class="grid toolgrid t4"><div class="field"><label for="tw_w">Bullet weight (gr)</label><input id="tw_w" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_d">Diameter (<span data-unit="dim">in</span>)</label><input id="tw_d" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_l">Bullet length (<span data-unit="dim">in</span>)</label><input id="tw_l" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_p">Plastic tip (<span data-unit="dim">in</span>)</label><input id="tw_p" type="number" inputmode="decimal" step="any" placeholder="blank if none"></div><div class="field"><label for="tw_t">Barrel twist, 1 in (<span data-unit="dim">in</span>)</label><input id="tw_t" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="tw_v">Muzzle velocity (<span data-unit="fps">fps</span>)</label><input id="tw_v" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_tf">Temperature (<span data-unit="F">°F</span>)</label><input id="tw_tf" type="number" inputmode="numeric" step="any"></div><div class="field"><label for="tw_a">Altitude (<span data-unit="ft">ft</span>)</label><input id="tw_a" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="tw_res" aria-live="polite"></div>
     </section>
     <section class="card tool" data-toolsec="moa" aria-label="MOA, MIL and inches" hidden></section>
     <section class="card tool" data-toolsec="powder" aria-label="Powder per container" hidden>
       <p class="note toolnote">How many rounds a jug of powder makes at your charge, and what the powder costs per round.</p>
-      <div class="toolfill"><label for="pw_from">Fill in from</label><select id="pw_from" class="fieldselect"></select></div>
+      <div class="toolfill"><label for="pw_from">Pick from reloading recipe</label><select id="pw_from" class="fieldselect"></select></div>
       <div class="grid toolgrid t4"><div class="field"><label for="pw_c">Charge (gr)</label><input id="pw_c" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_j">Container</label><select id="pw_j" class="fieldselect"><option value="7000">1 lb</option><option value="56000">8 lb</option><option value="3500">½ lb</option><option value="28000">4 lb</option><option value="15432.36">1 kg</option><option value="7716.18">500 g</option></select></div><div class="field"><label for="pw_p">Price of the container ($)</label><input id="pw_p" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="pw_n">Rounds you want to load</label><input id="pw_n" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="pw_res" aria-live="polite"></div>
     </section>
@@ -2093,12 +2098,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div id="chOut" aria-live="polite"></div>
     </section>
     <div class="tool col" data-toolsec="btchrono" aria-label="Chronograph" hidden><div id="btRoot" class="col"></div><div id="btTestRoot" class="col"></div></div>
-    <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden>
-      <h3 class="toolsub">MOA · MIL · inches</h3>
+    <section class="card tool" data-toolsec="conv" aria-label="MOA, MIL and inches" hidden>
+      <h2>MOA · MIL · inches</h2>
       <p class="note toolnote">Turn a group size or a hold into angles, or an angle back into a size, at any distance.</p>
       <div class="grid toolgrid"><div class="field"><label for="mm_s">Size or angle</label><input id="mm_s" type="number" inputmode="decimal" step="any"></div><div class="field"><label for="mm_u">In</label><select id="mm_u" class="fieldselect"><option value="in" id="mm_uin">inches</option><option value="moa">MOA</option><option value="mil">MIL</option></select></div><div class="field"><label for="mm_r">Distance (<span data-unit="yd">yd</span>)</label><input id="mm_r" type="number" inputmode="numeric" step="any"></div></div>
       <div class="toolres" id="mm_res" aria-live="polite"></div>
-      <h3 class="toolsub">Units</h3>
+    </section>
+    <section class="card tool" data-toolsec="conv" aria-label="Convert" hidden>
+      <h2>Units</h2>
       <p class="note toolnote">Type in either box.</p>
       <div id="cv_rows"></div>
     </section>
@@ -3782,7 +3789,7 @@ window.RB_TRAJ={
       temp:num(L.temp),alt:num(L.alt),wind:num(L.wind),wclock:windClock(L),cal:num(L.cal),twist:num(L.twist),blen:num(L.blen),tip:num(L.tip),cart:L.cart||"",rifleId:L.rifleId||null};},
   ranges(){return (Array.isArray(state.ranges)?state.ranges:[]).map(r=>r.name).filter(Boolean);},
   // your ammo with what a trajectory needs (Tools → Compare trajectories)
-  ammoList(){return (AMMO||[]).map(a=>({id:a.id,label:ammoName(a),w:num(a.weight),mv:num(a.measVel)||num(a.boxVel),bc:num(a.bc),bcm:a.bcm==="G7"?"G7":"G1"})).filter(a=>a.w>0&&a.bc>0);},
+  ammoList(){return (AMMO||[]).map(a=>({id:a.id,label:ammoName(a),cart:a.cartridge||"",w:num(a.weight),mv:num(a.measVel)||num(a.boxVel),bc:num(a.bc),bcm:a.bcm==="G7"?"G7":"G1"})).filter(a=>a.w>0&&a.bc>0);},
   // saved ranges, for Gear & Ranges → Ranges
   rg:{list:()=>rgList(),
     add(){const r={id:rgId(),name:"",targets:[{id:rgId(),name:"",dist:U.metric?100/0.9144:100,angle:null,size:null}],temp:null,alt:null,notes:""};rgList().push(r);state.rangeCur=r.id;save();return r;},
@@ -7564,6 +7571,9 @@ window.RB_LIBPAGE=(function(){
     h+='<div class="row"><button type="button" class="btn primary" data-ladd>+ Add to my '+esc(D.mine.split(" › ").pop().toLowerCase())+'</button>'+(chg.length?'<button type="button" class="btn" data-lrevall>Revert all changes</button>':'')+'</div>'+
       '<p class="note">'+(chg.length?'Changed boxes are colored. ':'')+'Your changes are used when you add this from here or from <b>'+esc(D.mine)+'</b>; <b>Revert</b> puts the maker\'s number back. Ones you\'ve already added keep their own numbers.</p></div>';
     return h;}
+  // + Add on a Library list (2.46.2): one that isn't in the list, added where you keep them (Components or Gear & Ranges)
+  const LIB_ADD={bullets:["brass:bullets","compAdd"],powders:["brass:powders","compAdd"],primers:["brass:primers","compAdd"],ammo:["rifles:ammo","ammoAddGo"],scopes:["rifles:scopes","scopeAdd"],dots:["rifles:scopes","scopeAdd"],cans:["rifles:cans","canAdd"]};
+  function libAdd(kind){const a=LIB_ADD[kind];if(!a)return;RB_GO(a[0]);let n=0;const t=setInterval(()=>{const b=document.getElementById(a[1]);if(b&&b.offsetParent){clearInterval(t);b.click();}else if(++n>20)clearInterval(t);},100);}
   function listView(kind){const D=LIB_DEF[kind];
     if(!LIBED.ready(kind)){(D.load?D.load():Promise.resolve()).then(()=>{LIBED.apply(kind);if(list===kind&&visible())draw();});return '<section class="card"><p class="note">Loading the list…</p></section>';}
     LIBED.apply(kind);
@@ -7576,7 +7586,7 @@ window.RB_LIBPAGE=(function(){
     const keys=[...by.keys()].sort((a,b)=>(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(a).localeCompare(String(b),undefined,{numeric:true}));
     const ne=LIBED.editedCount(kind);
     let h='<section class="card" aria-label="'+esc(D.title)+'" id="libKind"><p class="note">From the makers\' published data. Tap one to see all of it, fix something for your own use, or add it to your '+esc(D.mine.split(" › ").pop().toLowerCase())+'.'+(ne?' You\'ve edited '+ne+'; search <b>edited</b> to see them.':'')+'</p>'+
-      '<div class="row crtools"><input id="libQ" type="search" placeholder="Search '+esc(D.title.toLowerCase())+'" aria-label="Search '+esc(D.title.toLowerCase())+'" value="'+esc(q)+'"></div>'+
+      '<div class="row crtools"><input id="libQ" type="search" placeholder="Search '+esc(D.title.toLowerCase())+'" aria-label="Search '+esc(D.title.toLowerCase())+'" value="'+esc(q)+'">'+(LIB_ADD[kind]&&!window.GUEST?'<button class="btn" type="button" id="libAdd">+ Add '+esc(D.one)+'</button>':'')+'</div>'+
       '<p class="note libcount">'+(words.length?hit.length.toLocaleString()+' of '+L.length.toLocaleString():L.length.toLocaleString()+' '+esc(D.title.toLowerCase()))+'</p>';
     h+=hit.length?keys.map(g=>'<h3 class="crgh">'+esc(g)+'</h3><div class="crlist">'+by.get(g).map(it=>{const isO=open===it.i;
       return '<div class="crow'+(isO?' open':'')+'" data-lrow="'+it.i+'"><button type="button" class="crhead" data-lr="'+it.i+'" aria-expanded="'+isO+'">'+rowHead(kind,it.x,it.i)+'</button>'+(isO?editor(kind,it.i):'')+'</div>';}).join("")+'</div>').join(""):'<p class="note">Nothing matches.</p>';
@@ -7601,6 +7611,7 @@ window.RB_LIBPAGE=(function(){
     if(!list)return;const kind=list,D=LIB_DEF[kind];
     const qi=$("libQ");if(qi)qi.addEventListener("input",()=>{q=qi.value;lim=150;draw();});
     const al=$("libAll");if(al)al.addEventListener("click",()=>{lim=1e9;draw();});
+    {const ad=$("libAdd");if(ad)ad.addEventListener("click",()=>libAdd(list));}
     root.querySelectorAll("[data-lr]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.lr;open=open===i?null:i;draw();if(open!=null){const r=document.querySelector('[data-lrow="'+i+'"]');if(r&&r.getBoundingClientRect().top<60)r.scrollIntoView({block:"start"});}}));
     if(open==null)return;const i=open;
     D.fields.forEach(f=>{const el=$("lb_"+f[0]);if(!el)return;el.addEventListener(f[2]==="sel"?"change":"input",()=>setVal(kind,i,f,el));});
@@ -7713,13 +7724,16 @@ function renderTargets(root){
   root.innerHTML='<section class="card"><p class="note">Loading targets…</p></section>';
   loadTargets().then(T=>{
     // from a range trip (2.45.3): the trip's load, date, distance and gun go at the top of every target printed here
-    const TT=window.RB_TGT_TRIP;
-    const tq=()=>{const q=new URLSearchParams();if(TT&&!TT.blank){if(TT.load)q.set("load",TT.load);if(TT.date)q.set("date",TT.date);if(TT.dist)q.set("dist",TT.dist);if(TT.gun)q.set("gun",TT.gun);}q.set("u",U.metric?"m":"yd");return q.toString();};
-    let h=TT?'<section class="card tgttrip" aria-label="Printing for a range trip"><div class="row"><button class="btn" type="button" id="tgtTripBack">‹ Back to the trip</button></div>'+
-      '<h2>Printing for '+esc(TT.title)+'</h2><p class="note">These go at the top of every target you print from this page. Change any of them first if you like.</p>'+
-      '<div class="grid"><div class="field"><label for="tgt_load">Load</label><input id="tgt_load" data-tgk="load" value="'+esc(TT.load)+'"></div><div class="field"><label for="tgt_date">Date</label><input id="tgt_date" data-tgk="date" value="'+esc(TT.date)+'"></div>'+
+    // opened from Tools (2.46.2): the same boxes, empty to start and remembered on this device; fill in any you want on the target
+    let TT=window.RB_TGT_TRIP;const FREE=!TT;
+    if(FREE){let o={};try{o=JSON.parse(localStorage.getItem("rb.tgtHead")||"{}")||{};}catch(e){}TT={name:o.name||"",load:o.load||"",date:o.date||"",dist:o.dist||"",gun:o.gun||"",blank:false};}
+    const keepFree=()=>{if(FREE)try{localStorage.setItem("rb.tgtHead",JSON.stringify({name:TT.name,load:TT.load,date:TT.date,dist:TT.dist,gun:TT.gun}));}catch(e){}};
+    const tq=()=>{const q=new URLSearchParams();if(TT&&!TT.blank){if(TT.name)q.set("name",TT.name);if(TT.load)q.set("load",TT.load);if(TT.date)q.set("date",TT.date);if(TT.dist)q.set("dist",TT.dist);if(TT.gun)q.set("gun",TT.gun);}q.set("u",U.metric?"m":"yd");return q.toString();};
+    let h=TT?'<section class="card tgttrip" aria-label="'+(FREE?'At the top of the target':'Printing for a range trip')+'">'+(FREE?'':'<div class="row"><button class="btn" type="button" id="tgtTripBack">‹ Back to the trip</button></div>')+
+      (FREE?'<h2>At the top of the target</h2><p class="note">Optional. Anything you fill in here is printed at the top of every target from this page; leave a box empty and it\'s blank to write on.</p>':'<h2>Printing for '+esc(TT.title)+'</h2><p class="note">These go at the top of every target you print from this page. Change any of them first if you like.</p>')+
+      '<div class="grid"><div class="field"><label for="tgt_name">Name</label><input id="tgt_name" data-tgk="name" autocomplete="name" value="'+esc(TT.name||"")+'"></div><div class="field"><label for="tgt_load">Load</label><input id="tgt_load" data-tgk="load" value="'+esc(TT.load)+'"></div><div class="field"><label for="tgt_date">Date</label><input id="tgt_date" data-tgk="date" value="'+esc(TT.date)+'"></div>'+
       '<div class="field"><label for="tgt_dist">Distance ('+U.u("yd")+')</label><input id="tgt_dist" data-tgk="dist" inputmode="numeric" value="'+esc(TT.dist)+'"></div><div class="field"><label for="tgt_gun">Gun</label><input id="tgt_gun" data-tgk="gun" value="'+esc(TT.gun)+'"></div></div>'+
-      '<label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="tgtBlank"'+(TT.blank?' checked':'')+'> Print blank (leave the trip\'s details off)</label></section>':'';
+      (FREE?'<div class="row"><button class="btn" type="button" id="tgtClear">Clear</button></div>':'<label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="tgtBlank"'+(TT.blank?' checked':'')+'> Print blank (leave the trip\'s details off)</label>')+'</section>':'';
     h+='<section class="card" aria-label="Printable targets"><h2>Printable targets</h2><p class="note">Targets made for Range Book. When you measure a photo of one, it finds the page by its four black corner squares, sets the scale, places every aim point, and marks the holes around each one by itself. It also corrects for a photo taken at an angle.</p>';
     const fmts=T.formats?Object.keys(T.formats):["letter"];
     let opened=false;
@@ -7735,10 +7749,11 @@ function renderTargets(root){
       '<li>Writing on the page is fine, but keep it out of the aim point areas.</li></ul></section>';
     root.innerHTML=h;
     if(TT){const links=()=>root.querySelectorAll("[data-tgpdf]").forEach(a=>{a.href="/api/targets/"+a.dataset.tgpdf+".pdf?"+tq();});
-      root.querySelectorAll("[data-tgk]").forEach(i=>i.addEventListener("input",()=>{TT[i.dataset.tgk]=i.value.trim();links();}));
-      $("tgtBlank").addEventListener("change",e=>{TT.blank=e.target.checked;root.querySelectorAll("[data-tgk]").forEach(i=>i.disabled=TT.blank);links();});
-      root.querySelectorAll("[data-tgk]").forEach(i=>i.disabled=TT.blank);
-      $("tgtTripBack").addEventListener("click",()=>{const t=trips.find(x=>x.id===TT.id);if(!t){showTab("traj");return;}showTab("traj");RB_TRAJ.open(t.trajId);openTrip(t.id);});}
+      root.querySelectorAll("[data-tgk]").forEach(i=>i.addEventListener("input",()=>{TT[i.dataset.tgk]=i.value.trim();links();keepFree();}));
+      if(FREE){$("tgtClear").addEventListener("click",()=>{["name","load","date","dist","gun"].forEach(k=>TT[k]="");root.querySelectorAll("[data-tgk]").forEach(i=>i.value="");links();keepFree();});}
+      else{$("tgtBlank").addEventListener("change",e=>{TT.blank=e.target.checked;root.querySelectorAll("[data-tgk]").forEach(i=>i.disabled=TT.blank);links();});
+      root.querySelectorAll("[data-tgk]").forEach(i=>i.disabled=TT.blank);}
+      if(!FREE)$("tgtTripBack").addEventListener("click",()=>{const t=trips.find(x=>x.id===TT.id);if(!t){showTab("traj");return;}showTab("traj");RB_TRAJ.open(t.trajId);openTrip(t.id);});}
   }).catch(()=>{root.innerHTML='<section class="card"><p class="err">Couldn\'t load the targets. Check your connection.</p></section>';});
 }
 function compRetHtml(){
@@ -13355,17 +13370,29 @@ window.RB_CMP=(function(){
     Object.keys(by).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})).forEach(k=>{h+='<optgroup label="Factory: '+esc(k)+'">'+by[k].map(c=>'<option value="c:'+esc(c.item)+'">'+esc(c.mfr+" "+c.line+" "+c.bullet)+'</option>').join("")+'</optgroup>';});
     return h;
   }
+  const ck=t=>String(t||"").toLowerCase().replace(/^\./,"").replace(/[^a-z0-9]/g,"");
+  function srcList(){
+    const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],A=(window.RB_TRAJ&&RB_TRAJ.ammoList&&RB_TRAJ.ammoList())||[],C=(window.RB_AMMO_CATALOG||[]).filter(c=>(c.bc||c.g7)&&c.v>0);
+    const out=[];
+    T.forEach(t=>{const sp=RB_TRAJ.spec(t.id);out.push({v:"p:"+t.id,kind:"Profile",label:t.name||"Untitled profile",cart:sp&&sp.cart||""});});
+    A.forEach(a=>out.push({v:"a:"+a.id,kind:"Your ammo",label:a.label,cart:a.cart||""}));
+    C.forEach(c=>out.push({v:"c:"+c.item,kind:"Factory",label:c.mfr+" "+c.line+" "+c.bullet+(c.w?" "+c.w+" gr":""),cart:c.cart||""}));
+    return out;}
+  function cartOpts(sel){const L=srcList(),seen=new Map();L.forEach(x=>{const k=ck(x.cart);if(k&&!seen.has(k))seen.set(k,x.cart);});
+    const list=[...seen.values()].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));if(sel&&!seen.has(ck(sel)))list.unshift(sel);
+    return '<option value="">Any cartridge</option>'+list.map(c=>'<option value="'+esc(c)+'"'+(ck(c)===ck(sel)?' selected':'')+'>'+esc(c)+'</option>').join("");}
   function fill(r,v){
-    if(v.startsWith("p:")){const sp=RB_TRAJ.spec(v.slice(2)),t=RB_TRAJ.all().find(x=>x.id===v.slice(2));if(!sp)return;Object.assign(r,{label:t?t.name:r.label,w:sp.w,mv:sp.mv>0?Math.round(sp.mv):null,bc:sp.bc,bcm:sp.bcm});}
-    else if(v.startsWith("a:")){const a=RB_TRAJ.ammoList().find(x=>x.id===v.slice(2));if(a)Object.assign(r,{label:a.label,w:a.w,mv:a.mv,bc:a.bc,bcm:a.bcm});}
-    else if(v.startsWith("c:")){const c=RB_AMMO_CATALOG.find(x=>x.item===v.slice(2));if(c){const n=fromCat(c);delete n.id;Object.assign(r,n);}}
+    if(v.startsWith("p:")){const sp=RB_TRAJ.spec(v.slice(2)),t=RB_TRAJ.all().find(x=>x.id===v.slice(2));if(!sp)return;Object.assign(r,{label:t?t.name:r.label,w:sp.w,mv:sp.mv>0?Math.round(sp.mv):null,bc:sp.bc,bcm:sp.bcm});if(sp.cart)r.cart=sp.cart;}
+    else if(v.startsWith("a:")){const a=RB_TRAJ.ammoList().find(x=>x.id===v.slice(2));if(a){Object.assign(r,{label:a.label,w:a.w,mv:a.mv,bc:a.bc,bcm:a.bcm});if(a.cart)r.cart=a.cart;}}
+    else if(v.startsWith("c:")){const c=RB_AMMO_CATALOG.find(x=>x.item===v.slice(2));if(c){const n=fromCat(c);delete n.id;Object.assign(r,n);if(c.cart)r.cart=c.cart;}}
   }
   const swatch=i=>'<span class="cmpsw" aria-hidden="true"><svg width="28" height="6" viewBox="0 0 28 6"><line x1="1" y1="3" x2="27" y2="3" stroke="'+COL[i%6]+'" stroke-width="3" stroke-linecap="round"'+(DASH[i%6]?' stroke-dasharray="'+DASH[i%6]+'"':'')+'/></svg></span>';
   function drawRows(){
-    const box=$("cmpRows"),opts=srcOpts();
+    const box=$("cmpRows");
     box.innerHTML=S.rows.map((r,i)=>'<div class="cmpbul" data-ci="'+i+'"><div class="cmphead">'+swatch(i)+'<input data-k="label" aria-label="Name for this bullet" value="'+esc(r.label||"")+'" placeholder="Bullet '+(i+1)+'">'+
       (S.rows.length>1?'<button class="btn danger small" type="button" data-cdel="'+i+'" aria-label="Remove this bullet">✕</button>':'')+'</div>'+
-      '<div class="grid"><div class="field wide"><select class="fieldselect" data-k="src" aria-label="Fill in from">'+opts+'</select></div>'+
+      '<div class="grid"><div class="field"><label>Cartridge<select class="fieldselect" data-k="cart">'+cartOpts(r.cart)+'</select></label></div>'+
+      '<div class="field cmpsrc"><label>Fill in from<input data-k="q" type="search" autocomplete="off" placeholder="Search profiles, your ammo, factory ammo"></label><div class="cmpres" role="listbox" hidden></div></div>'+
       '<div class="field"><label>Weight (gr)<input data-k="w" type="number" inputmode="decimal" step="any"></label></div>'+
       '<div class="field"><label>Velocity ('+U.u("fps")+')<input data-k="mv" type="number" inputmode="decimal" step="any"></label></div>'+
       '<div class="field"><label>BC<input data-k="bc" type="number" inputmode="decimal" step="any"></label></div>'+
@@ -13377,7 +13404,13 @@ window.RB_CMP=(function(){
       q("mv").addEventListener("input",e=>{const n=num(e.target.value);r.mv=n==null?null:U.from("fps",n);save();drawOut();});
       q("bc").addEventListener("input",e=>{r.bc=num(e.target.value);save();drawOut();});
       q("bcm").addEventListener("change",e=>{r.bcm=e.target.value;save();drawOut();});
-      q("src").addEventListener("change",e=>{if(e.target.value)fill(r,e.target.value);save();drawRows();drawOut();});});
+      q("cart").addEventListener("change",e=>{r.cart=e.target.value;save();const qi=q("q");if(document.activeElement!==qi)qi.focus();showRes();});
+      // the search lists only what fits the cartridge picked above
+      const res=el.querySelector(".cmpres"),showRes=()=>{const t=q("q").value.trim().toLowerCase().split(/\s+/).filter(Boolean),c=ck(r.cart);
+        const L=srcList().filter(x=>(!c||ck(x.cart)===c)&&t.every(w=>(x.label+" "+x.cart).toLowerCase().includes(w))).slice(0,40);
+        res.innerHTML=L.length?L.map(x=>'<button type="button" class="cmpopt" data-v="'+esc(x.v)+'"><span class="k">'+x.kind+'</span> '+esc(x.label)+'</button>').join(""):'<p class="note">Nothing matches'+(c?' for '+esc(r.cart):'')+'.</p>';res.hidden=false;
+        res.querySelectorAll("[data-v]").forEach(b=>{const go=ev=>{ev.preventDefault();fill(r,b.dataset.v);save();drawRows();drawOut();};b.addEventListener("mousedown",go);b.addEventListener("click",go);});};
+      q("q").addEventListener("focus",showRes);q("q").addEventListener("input",showRes);q("q").addEventListener("blur",()=>setTimeout(()=>{res.hidden=true;},150));});
     box.querySelectorAll("[data-cdel]").forEach(b=>b.addEventListener("click",()=>{S.rows.splice(+b.dataset.cdel,1);save();drawRows();drawOut();}));
     $("cmpAdd").disabled=S.rows.length>=6;
   }

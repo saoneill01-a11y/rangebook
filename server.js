@@ -601,11 +601,11 @@ async function api(req, res, url) {
       if (!who && !getSetting("guestEnabled", false)) throw new HttpError(401, "Please sign in.");
       const T = JSON.parse(fs.readFileSync(path.join(PUBLIC_DIR, "targets.json"), "utf8"));
       const qp = (k, n) => String(url.searchParams.get(k) || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n);
-      const fill = { load: qp("load", 60), date: qp("date", 24), dist: qp("dist", 8), gun: qp("gun", 40) };
+      const fill = { name: qp("name", 40), load: qp("load", 60), date: qp("date", 24), dist: qp("dist", 8), gun: qp("gun", 40) };
       // yards or metres: the page says which (a guest has no saved settings), otherwise your setting
       const pr = who ? getDoc(who.id, "prefs") : null, uq = qp("u", 2);
       const units = uq === "m" ? "m" : uq === "yd" ? "yd" : pr && pr.units === "metric" ? "m" : "yd";
-      const buf = targetPdf(T, mt[1], fill.load || fill.date || fill.dist || fill.gun ? fill : null, units);
+      const buf = targetPdf(T, mt[1], fill.name || fill.load || fill.date || fill.dist || fill.gun ? fill : null, units);
       if (!buf) throw new HttpError(404, "No such target.");
       res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${mt[1]}.pdf"`, "Content-Length": buf.length, ...SECURITY_HEADERS });
       return res.end(buf);
