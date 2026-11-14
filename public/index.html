@@ -1084,7 +1084,7 @@ body.tripspage #trajJump{display:none!important}
 .wxrow{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .wxrow .note{flex:1 1 200px}
 .rgloc .row{margin:0 0 4px}.rgpick{display:flex;flex-direction:column;gap:8px;margin:6px 0}.rgopt{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}.rgopt .t{color:var(--fg);overflow-wrap:anywhere}.rgopt .row{margin:0;align-items:center;gap:6px 12px}.rgloc .note{display:block}.rgloc a{color:var(--accent);font-weight:600}
-.grid>.sunline{grid-column:1/-1;margin:0}
+.grid>.sunline{grid-column:1/-1;margin:0}.trip3{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,.85fr) minmax(0,1.3fr);gap:10px 10px;align-items:end}.trip3 .fieldselect{padding-left:8px;padding-right:4px}.grid>.wxrep{grid-column:1/-1;margin:-4px 0 0;display:flex;flex-direction:column;gap:2px}.wxrep:empty{display:none}
 /* training profiles and sessions, the STOP button, suppressor lists (2.43.8–2.43.9) */
 .trgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px}
 .trrun{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;height:auto;min-height:52px;padding:9px 12px;white-space:normal}.trrun span{font-size:calc(12.5px*var(--fs));color:var(--muted);font-weight:400}
@@ -11054,14 +11054,20 @@ function coldLogHtml(rt){
 // saved ranges (from the Shooting profiles) and the one a trip's Where names, if it has a spot on the map
 const tripRanges=()=>(window.RB_TRAJ&&RB_TRAJ.rg&&RB_TRAJ.rg.list())||[];
 const tripRange=t=>{const n=String(t.place||"").trim().toLowerCase();return n?tripRanges().find(r=>RB_WX.ok(r)&&String(r.name||"").trim().toLowerCase()===n)||null:null;};
-const tripWxLabel=t=>{const r=tripRange(t);return r?"Use the weather at "+(r.name||"this range"):"Use the weather where I am";};
-const tripWxTxt=t=>{const w=t.wx;if(!w||!w.at)return "";const P=U.metric?Math.round(w.hpa)+" hPa":(w.hpa*0.02953).toFixed(2)+" inHg";
-  return (w.src==="chrono"?"Chronograph sensors":"Weather"+(w.range?" at "+w.range:""))+" at "+new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+": "+[w.rh!=null?w.rh+"% humidity":"",P,"density altitude "+U.s("ft",w.dAlt,0,true),w.elev!=null?"elevation "+U.s("ft",w.elev,0,true):""].filter(Boolean).join(" · ")+".";};
+const tripWxLabel=()=>"Get weather";
+// the trip's weather report under Get weather (2.47.4): where and when, temperature and wind, the air, and sunrise/sunset, in one place
+function tripWxRep(t){const w=t.wx&&t.wx.at?t.wx:null,L=[];
+  if(w)L.push('<b>'+esc((w.src==="chrono"?"Chronograph sensors":"Weather"+(w.range?" at "+w.range:""))+" · "+new Date(w.at).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}))+'</b>');
+  const wind=w&&num(w.wind)!=null?"wind "+U.s("mph",num(w.wind),0)+(w.dir!=null?" from the "+RB_WX.dir(w.dir):"")+(num(w.gust)!=null&&w.gust>w.wind+3?", gusts "+U.s("mph",num(w.gust),0):""):t.windNote?"wind "+t.windNote:"";
+  const tw=[w&&num(w.tempF)!=null?U.s("F",num(w.tempF),0):"",wind].filter(Boolean).join(" · ");if(tw)L.push(esc(tw.charAt(0).toUpperCase()+tw.slice(1)));
+  if(w&&num(w.hpa)>300)L.push(esc([w.rh!=null?w.rh+"% humidity":"",U.metric?Math.round(w.hpa)+" hPa":(w.hpa*0.02953).toFixed(2)+" inHg",w.dAlt!=null?"density altitude "+U.s("ft",w.dAlt,0,true):"",w.elev!=null?"elevation "+U.s("ft",w.elev,0,true):""].filter(Boolean).join(" · ")));
+  const sun=tripSunTxt(t);if(sun)L.push(esc(sun));
+  return L.map(x=>'<span>'+x+'</span>').join("");}
 // sunrise and sunset on the trip's day (2.43.1): at its saved range (worked out on the phone), or where the weather was taken
 const tripSunTxt=t=>{const d=String(t.date||"");if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return "";const r=tripRange(t),ws=t.wx&&t.wx.sun;
-  if(r){const s=RB_WX.sun(+r.lat,+r.lon,d);return s?RB_WX.sunTxt(Object.assign({tz:r.tz||(ws&&ws.tz)||null},s))+" at "+(r.name||"this range")+".":"";}
-  if(ws&&ws.d===d)return RB_WX.sunTxt(ws)+(t.wx.range?" at "+t.wx.range:" where the weather was taken")+".";return "";};
-const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["windMph","Wind speed (mph)","number"],["wclock","Wind from (o'clock)","clock"],["avgVel","Average velocity (fps)","number","optional"],["sd","SD (fps)","number","optional"]];
+  if(r){const s=RB_WX.sun(+r.lat,+r.lon,d);return s?RB_WX.sunTxt(Object.assign({tz:r.tz||(ws&&ws.tz)||null},s))+(t.wx&&t.wx.at&&t.wx.range===r.name?"":" at "+(r.name||"this range")):"";}
+  if(ws&&ws.d===d)return RB_WX.sunTxt(ws);return "";};
+const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["windMph","Wind speed (mph)","number"],["wclock","Wind direction","clock"]];
 /* velocity vs temperature: each trip's average velocity against its temperature, with a best-fit line.
    Its slope is the powder's temperature sensitivity for this load, which the calculator can use. */
 function velTempFit(list){
@@ -11159,7 +11165,7 @@ function bindTtiles(root,t){root.querySelectorAll(".ttile>.sechead").forEach(b=>
   if(o)window.dispatchEvent(new Event("resize"));}));}
 const ttSet=(k,h)=>{const e=$("tts_"+k);if(e)e.innerHTML=h;};
 const tripDetSum=t=>esc([t.date?fmtDate(t.date):"No date",String(t.place||"").trim(),num(t.distance)?U.s("yd",num(t.distance),0):""].filter(Boolean).join(" · "));
-const tripChronoSum=t=>{const all=(t.strings||[]).flatMap(x=>x.shots||[]),st=all.some(v=>num(v)>0)?stats({shots:all},null):null;return st?st.n+' shot'+(st.n===1?'':'s')+' · avg '+vS(st.avg)+' '+U.u("fps")+(st.n>1?' · SD '+sdS(st.sd)+' · ES '+esS(st.es):''):'No shots yet';};
+const tripChronoSum=t=>{const all=(t.strings||[]).flatMap(x=>x.shots||[]),st=all.some(v=>num(v)>0)?stats({shots:all},null):null;return st?st.n+' shot'+(st.n===1?'':'s')+' · avg '+vS(st.avg)+' '+U.u("fps")+(st.n>1?' · SD '+sdS(st.sd)+' · ES '+esS(st.es):''):num(t.avgVel)>0?'avg '+vS(num(t.avgVel))+' '+U.u("fps")+(num(t.sd)!=null?' · SD '+sdS(num(t.sd)):'')+' (typed in)':'No shots yet';};
 const tripTgtSum=t=>{const s=t.sum||{},n=tripPhotos.length;return (n?n+' target'+(n===1?'':'s'):'No targets yet')+(s.best?' · best '+esc(tripBestTxt(s.best)):'');};
 const tripColdSum=t=>{const c=t.cold;if(!c||(!c.x&&!c.y))return 'Not filled in';const f=(v,a,b)=>Math.abs(v)<.005?"":U.s("in",Math.abs(v),2)+" "+(v>0?a:b);return [f(c.y,"high","low"),f(c.x,"right","left")].filter(Boolean).join(", ")||'On the aim point';};
 function renderTrips(){
@@ -11213,8 +11219,9 @@ function renderTrips(){
   let h='<div class="grid">';
   tripWindFix(t);
   TRIP_FIELDS.forEach(([k,label,type,ph])=>{
+    if(k==="temp")h+='<div class="trip3">';
     if(type==="clock"){h+='<div class="field"><label for="tp_wclock">'+label+'</label><select id="tp_wclock" class="fieldselect"><option value="">Not set</option>'+
-      ["12 · straight at you","1","2","3 · from the right","4","5","6 · from behind","7","8","9 · from the left","10","11"].map((x,i)=>{const v=i||12;return '<option value="'+v+'"'+(+t.wclock===v?' selected':'')+'>'+x+'</option>';}).join("")+'</select><span class="note" id="tripWindNote"'+(t.windNote?'':' hidden')+'>'+esc(t.windNote?"Weather: "+t.windNote+". Set the o'clock for the way you're facing.":"")+'</span></div>';return;}
+      [12,1,2,3,4,5,6,7,8,9,10,11].map(v=>'<option value="'+v+'"'+(+t.wclock===v?' selected':'')+'>'+v+' o\'clock</option>').join("")+'</select></div></div>';return;}
     h+='<div class="field'+(k==="place"?' wide':'')+'"><label for="tp_'+k+'">'+label+'</label><input id="tp_'+k+'" data-tf="'+k+'" type="'+type+'"'+(type==="number"?' inputmode="decimal" step="any"':' autocomplete="off"')+(k==="place"?' list="dl_place"':'')+(ph?' placeholder="'+esc(ph)+'"':'')+' value="'+esc(t[k]==null?"":t[k])+'"></div>';
   });
   {const tl=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId),ps=tl?partsOf(tl.rifleId):[];
@@ -11224,7 +11231,7 @@ function renderTrips(){
   const tcx=tripCart(t),tbp=t.partId&&parts.find(p=>p.id===t.partId),tthr=!tcx.gun||(tbp?!!tbp.threaded:gunMainThreaded(tcx.gun)),tcans=cans.filter(c=>c.id===t.canId||!canTooSmall(c,tcx.cart));
   if(t.canId||(tthr&&tcans.length))h+='<div class="field wide"><label for="tp_can">Suppressor</label><select id="tp_can" class="fieldselect"><option value="">None</option>'+[...tcans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(c=>'<option value="'+esc(c.id)+'"'+(t.canId===c.id?' selected':'')+'>'+esc(canName(c))+'</option>').join("")+
       (t.canId&&!cans.some(c=>c.id===t.canId)?'<option value="'+esc(t.canId)+'" selected>A suppressor no longer here</option>':'')+'</select><span class="note">This trip\'s rounds count toward it.</span></div>'+'<div class="field wide cartinfo" id="tpCanFit" aria-live="polite"></div>';
-  h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">'+esc(tripWxLabel(t))+'</button><span class="note" id="tripWxNote">'+esc(tripWxTxt(t))+'</span></div>'+'<p class="note sunline" id="tripSun"'+(tripSunTxt(t)?'':' hidden')+'>'+esc(tripSunTxt(t))+'</p>'+
+  h+='<div class="field wide wxrow"><button class="btn" id="tripWx" type="button">'+esc(tripWxLabel(t))+'</button></div>'+'<div class="wxrep note" id="tripWxRep" aria-live="polite">'+tripWxRep(t)+'</div>'+
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>';
   const sess='<div class="tripsess" role="group" aria-label="At the bench">'+
       '<button class="sbtn" id="tripAth" type="button" data-athbtn><b>Connect Athlon</b><span>tap to connect</span></button>'+
@@ -11259,9 +11266,7 @@ function renderTrips(){
   mvRow();
   // chronograph strings: each keeps its shots; the trip's average velocity and SD come from all of them together
   const chronoTotals=()=>{const all=(t.strings||[]).flatMap(x=>x.shots||[]);const st=all.length?stats({shots:all},null):null;
-    t.avgVel=st?Math.round(st.avg):null;t.sd=st&&st.n>1?st.sd:null;U.fill($("tp_avgVel"),"fps",t.avgVel,0,0);U.fill($("tp_sd"),"fps",t.sd,1,1);mvRow();ttSet("chrono",tripChronoSum(t));avgSdVis();};
-  const avgSdVis=()=>{const has=(t.strings||[]).some(x=>(x.shots||[]).some(v=>num(v)>0));["tp_avgVel","tp_sd"].forEach(id=>{const e=$(id),f=e&&e.closest(".field");if(f)f.hidden=has;});};
-  avgSdVis();
+    t.avgVel=st?Math.round(st.avg):null;t.sd=st&&st.n>1?st.sd:null;mvRow();ttSet("chrono",tripChronoSum(t));};
   // each string shows its shots as boxes, like a load-development group: type over one to fix it, + Shot / − Shot to add or delete
   const strStats=x=>{const st=stats({shots:x.shots},null);return st?st.n+' shot'+(st.n===1?'':'s')+' · avg <b>'+vS(st.avg)+'</b> '+U.u("fps")+(st.n>1?' · SD <b>'+sdS(st.sd)+'</b> · ES <b>'+esS(st.es)+'</b>':''):'No velocities yet.';};
   const allStats=()=>{const S=t.strings||[];if(S.length<2)return "";const st=stats({shots:S.flatMap(x=>x.shots||[])},null);return st?'All strings together: '+st.n+' shots · avg '+U.s("fps",st.avg,0,true)+' · SD '+sdS(st.sd)+' · ES '+esS(st.es):"";};
@@ -11304,7 +11309,7 @@ function renderTrips(){
   };
   renderChrono();
   // BLIPR: shots from the Bluetooth chronograph fill a string as they're measured (Tools → Chronograph has the device's settings)
-  TRIP_HOOK={id:t.id,totals:chronoTotals,render:renderChrono,fields(){U.fill($("tp_temp"),"F",t.temp,0,1);const n=$("tripWxNote");if(n)n.textContent=tripWxTxt(t);tripAirUse(t);}};
+  TRIP_HOOK={id:t.id,totals:chronoTotals,render:renderChrono,fields(){U.fill($("tp_temp"),"F",t.temp,0,1);const n=$("tripWxRep");if(n)n.innerHTML=tripWxRep(t);tripAirUse(t);}};
   const chronoGo=async(sid,which)=>{
     if(!window.RB_BTCHRONO)return;const msg=$("tripChronoMsg");msg.classList.remove("err");
     try{await RB_BTCHRONO.connect(which);}catch(e){if(e.message){msg.classList.add("err");msg.textContent=e.message;}return;}
@@ -11341,7 +11346,7 @@ function renderTrips(){
   });
   root.querySelectorAll("[data-tf]").forEach(inp=>inp.addEventListener("input",()=>{
     const k=inp.dataset.tf,isNum=inp.type==="number";t[k]=isNum?readU(inp,k,FIELD_U,t[k]):inp.value;if(k==="windMph")t.wind=tripWindTxt(t);t.updated=Date.now();queueTrips();
-    if(k==="avgVel")mvRow();}));
+}));
   {const wc=$("tp_wclock");if(wc)wc.addEventListener("change",()=>{t.wclock=+wc.value||null;t.wind=tripWindTxt(t);t.updated=Date.now();queueTrips();tripAirUse(t);});}
   bindCold(t);renderColdPick(t);
   {const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>{t.partId=tpp.value;t.updated=Date.now();queueTrips();});}
@@ -11373,7 +11378,7 @@ function renderTrips(){
     const i=trips.indexOf(t);if(window.RB_BTCHRONO)RB_BTCHRONO.detach("trip:"+t.id);trips=trips.filter(x=>x.id!==t.id);tripOpen=null;tripPhotos=[];queueTrips();renderTrips();
     RB_UNDO("Deleted range trip"+(t.date?" from "+fmtDate(t.date):""),()=>{trips.splice(Math.min(i,trips.length),0,t);queueTrips();renderTrips();},()=>API.del("/api/trips/"+t.id+"/photos").catch(onWriteError));});
   $("tripWx").addEventListener("click",async()=>{
-    const note=$("tripWxNote"),btn=$("tripWx");btn.disabled=true;
+    const note=$("tripWxRep"),btn=$("tripWx");btn.disabled=true;
     // at a saved range with a spot on the map: its weather, no location needed
     let p=tripRange(t),at=p;
     if(!p){note.textContent="Finding you…";try{p=await RB_WX.here();}catch(e){note.textContent=e.message;btn.disabled=false;return;}
@@ -11383,15 +11388,15 @@ function renderTrips(){
       t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",w.temp)))*100)/100:Math.round(w.temp);
       // the speed goes in the box; the compass direction and gusts stay as a note, since the o'clock depends on which way you face
       if(w.wind!=null){t.windMph=Math.round(w.wind*10)/10;t.windNote=[w.dir!=null?"from the "+RB_WX.dir(w.dir):"",w.gust!=null&&w.gust>w.wind+3?"gusts "+U.s("mph",w.gust,0):""].filter(Boolean).join(", ");if(!("wclock" in t))t.wclock=null;t.wind=tripWindTxt(t);}
-      t.wx={rh:w.rh!=null?Math.round(w.rh):null,hpa:Math.round(w.hpa*10)/10,dAlt:Math.round(w.dAlt/10)*10,elev:w.elev!=null?Math.round(w.elev):null,at:w.at,range:at?at.name||"":""};
+      t.wx={tempF:Math.round(w.temp),wind:w.wind!=null?Math.round(w.wind*10)/10:null,dir:w.dir!=null?Math.round(w.dir):null,gust:w.gust!=null?Math.round(w.gust*10)/10:null,rh:w.rh!=null?Math.round(w.rh):null,hpa:Math.round(w.hpa*10)/10,dAlt:Math.round(w.dAlt/10)*10,elev:w.elev!=null?Math.round(w.elev):null,at:w.at,range:at?at.name||"":""};
       {const sn=RB_WX.sun(p.lat,p.lon,t.date);if(sn&&/^\d{4}-/.test(String(t.date||"")))t.wx.sun=Object.assign({d:t.date,tz:w.tz||null},sn);}
-      U.fill($("tp_temp"),"F",t.temp,0,1);U.fill($("tp_windMph"),"mph",t.windMph,0,1);{const wn=$("tripWindNote");if(wn){wn.textContent=t.windNote?"Weather: "+t.windNote+". Set the o'clock for the way you're facing.":"";wn.hidden=!t.windNote;}}queueTrips();
-      note.textContent=tripWxTxt(t);btn.textContent=tripWxLabel(t);sunUp();tripAirUse(t);
+      U.fill($("tp_temp"),"F",t.temp,0,1);U.fill($("tp_windMph"),"mph",t.windMph,0,1);queueTrips();
+      sunUp();tripAirUse(t);
     }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter it yourself.";}
     btn.disabled=false;
   });
-  const sunUp=()=>{const e=$("tripSun");if(!e)return;const x=tripSunTxt(t);e.textContent=x;e.hidden=!x;};
-  $("tp_place").addEventListener("input",()=>{$("tripWx").textContent=tripWxLabel(t);sunUp();});$("tp_date").addEventListener("input",sunUp);$("tp_date").addEventListener("change",sunUp);
+  const sunUp=()=>{const e=$("tripWxRep");if(e)e.innerHTML=tripWxRep(t);};
+  $("tp_place").addEventListener("input",sunUp);$("tp_date").addEventListener("input",sunUp);$("tp_date").addEventListener("change",sunUp);
   renderTripPhotos();
 }
 window.RB_TARGETS=()=>renderTargets($("targetsRoot"));
