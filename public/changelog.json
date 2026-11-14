@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.45.3",
+      "version": "2.45.4",
       "date": "2026-11-13",
       "title": "Range trips on their own page",
       "items": [
+        "Range trips page: the same space between its cards as the other pages.",
         "Print a target from a range trip: the printable targets page puts the trip's load, date, distance and gun at the top of every target (change them first, or tick Print blank), with Back to the trip. Opened from Tools, targets print blank as before.",
         "Cold-bore shot: tap the shot from the trip's Live targets that was your cold-bore shot, and its place (and velocity) fill in. Typing it in is still there, under Type it in yourself.",
         "Targets card: Print a target opens the printable targets in Tools. + Saved Live target and the More button are gone from it.",
