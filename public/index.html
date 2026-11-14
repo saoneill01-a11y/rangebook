@@ -5227,12 +5227,12 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const num=v=>{if(v===""||v==null)return null;const n=parseFloat(v);return isFinite(n)?n:null;};
 // form fields that carry units (forms built from field lists): key → [kind, decimals shown in metric, decimals in imperial]
-const FIELD_U={boxVel:["fps",0,0],measVel:["fps",0,0],testBarrel:["dim",0,2],blen:["dim",1,3],coal:["dim",2,3],length:["dim",1,3],caseLength:["dim",2,3],dia:["dim",2,4],distance:["yd",0,0],temp:["F",0,1],avgVel:["fps",0,0],sd:["fps",1,1]};
+const FIELD_U={boxVel:["fps",0,0],measVel:["fps",0,0],testBarrel:["dim",0,2],blen:["dim",1,3],coal:["dim",2,3],length:["dim",1,3],caseLength:["dim",2,3],dia:["dim",2,4],distance:["yd",0,0],temp:["F",0,1],windMph:["mph",0,1],avgVel:["fps",0,0],sd:["fps",1,1]};
 const POWDER_U={onHand:["lb",3,3],lowAt:["lb",3,3],priceQty:["lb",3,3]};
 const GUN_U={barrel:["dim",0,2],twist:["dim",1,2],sightHeight:["in",2,3]};
 // velocities, SD/ES (also velocities) and energy, shown in the account's units
 const vS=v=>U.n("fps",v,0).toLocaleString(),sdS=v=>(+U.to("fps",v)).toFixed(1),esS=v=>String(Math.round(U.to("fps",v))),eS=v=>U.n("ftlb",v,0).toLocaleString();
-const unitLabel=(lab,kind)=>lab.replace(/\((in|fps|yd|°F|lb)\)/,"("+U.u(kind)+")").replace(/\bmany lb\b/,"many "+U.u(kind)).replace(/__ in\)/,"__ "+U.u(kind)+")");
+const unitLabel=(lab,kind)=>lab.replace(/\((in|fps|yd|°F|lb|mph)\)/,"("+U.u(kind)+")").replace(/\bmany lb\b/,"many "+U.u(kind)).replace(/__ in\)/,"__ "+U.u(kind)+")");
 // after a form is drawn: put each unit field's value in the account's units and fix its label
 function unitize(prefix,obj,map){Object.keys(map).forEach(k=>{const el=document.getElementById(prefix+k);if(!el||el.tagName!=="INPUT")return;const [kind,dm,di]=map[k];U.fill(el,kind,obj[k],dm,di);
   const lb=document.querySelector('label[for="'+prefix+k+'"]');if(lb)lb.textContent=unitLabel(lb.textContent,kind);});}
@@ -11061,7 +11061,7 @@ const tripWxTxt=t=>{const w=t.wx;if(!w||!w.at)return "";const P=U.metric?Math.ro
 const tripSunTxt=t=>{const d=String(t.date||"");if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return "";const r=tripRange(t),ws=t.wx&&t.wx.sun;
   if(r){const s=RB_WX.sun(+r.lat,+r.lon,d);return s?RB_WX.sunTxt(Object.assign({tz:r.tz||(ws&&ws.tz)||null},s))+" at "+(r.name||"this range")+".":"";}
   if(ws&&ws.d===d)return RB_WX.sunTxt(ws)+(t.wx.range?" at "+t.wx.range:" where the weather was taken")+".";return "";};
-const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["wind","Wind","text","e.g. 5 mph from 3 o'clock"],["avgVel","Average velocity (fps)","number","optional"],["sd","SD (fps)","number","optional"]];
+const TRIP_FIELDS=[["date","Date","date"],["place","Where","text","Range or place"],["distance","Distance (yd)","number"],["rounds","Rounds fired","number"],["temp","Temperature (°F)","number"],["windMph","Wind speed (mph)","number"],["wclock","Wind from (o'clock)","clock"],["avgVel","Average velocity (fps)","number","optional"],["sd","SD (fps)","number","optional"]];
 /* velocity vs temperature: each trip's average velocity against its temperature, with a best-fit line.
    Its slope is the powder's temperature sensitivity for this load, which the calculator can use. */
 function velTempFit(list){
@@ -11125,17 +11125,29 @@ function dopeTo(slot){const d=$("secTDope");if(!d||!slot)return;if(!DOPE_MARK){D
   setTimeout(()=>window.dispatchEvent(new Event("resize")),0);}
 // the trip's weather for the dope card: temperature, air pressure (from Use the weather…), wind speed, and the wind's
 // o'clock when the Wind box says one ("5 mph from 3 o'clock"); anything the trip doesn't have stays the profile's
+// a trip's wind (2.47.3) is a speed (mph, like a profile's) and the o'clock it comes from. Trips from before kept it as
+// text in one box ("5 mph from 3 o'clock", "4 mph from the NW, gusts 9"): read the speed and o'clock out of it, and keep
+// what's left (a compass direction, gusts) as a note
+function windParse(txt){const r={mph:null,clock:null,note:""};let w=String(txt||"").trim();if(!w)return r;
+  const c=w.match(/(?:from\s+)?(?:the\s+)?(\d{1,2})\s*o.?clock/i);if(c&&+c[1]>=1&&+c[1]<=12){r.clock=+c[1];w=w.replace(c[0]," ");}
+  const m=w.match(/(\d+(?:\.\d+)?)\s*(km\/h|kph|kmh|m\/s|mph)?/i);
+  if(m){let v=+m[1];const u=(m[2]||(U.metric?"km/h":"mph")).toLowerCase();if(/^k/.test(u))v/=1.609344;else if(u==="m/s")v*=2.236936;r.mph=Math.round(v*10)/10;w=w.replace(m[0]," ");}
+  r.note=w.replace(/\s+/g," ").replace(/^[\s,;·–-]+|[\s,;·–-]+$/g,"");if(/^wind$/i.test(r.note))r.note="";return r;}
+function tripWindFix(t){if(!t||"windMph" in t)return;const r=windParse(t.wind);t.windMph=r.mph;t.wclock=r.clock;t.windNote=r.note;}
+// the wind as one line of text, kept in t.wind for the trip list, exports, the trip report and older copies of Range Book
+const tripWindTxt=t=>{if(!("windMph" in t))return String(t.wind||"");const a=[num(t.windMph)!=null?U.s("mph",num(t.windMph),0):"",t.wclock?"from "+t.wclock+" o'clock":""].filter(Boolean).join(" ");
+  return t.windNote?(a?a+" ("+t.windNote+")":t.windNote):a;};
 function tripAirOf(t){if(!t)return null;const o={},has=[];
   if(num(t.temp)!=null){o.temp=num(t.temp);has.push("temp");}
-  const w=String(t.wind||""),m=w.match(/(\d+(?:\.\d+)?)\s*(km\/h|kph|kmh|m\/s|mph)?/i);
-  if(m){let v=+m[1];const u=(m[2]||(U.metric?"km/h":"mph")).toLowerCase();if(/^k/.test(u))v/=1.609344;else if(u==="m/s")v*=2.236936;o.wind=Math.round(v*10)/10;has.push("wind");
-    const c=w.match(/(\d{1,2})\s*o.?clock/i);if(c&&+c[1]>=1&&+c[1]<=12){o.wclock=+c[1];has.push("clock");}}
+  const W="windMph" in t?{mph:num(t.windMph),clock:num(t.wclock)}:windParse(t.wind);
+  if(W.mph!=null){o.wind=W.mph;has.push("wind");}
+  if(W.clock>=1&&W.clock<=12){o.wclock=W.clock;has.push("clock");}
   const hpa=t.wx&&num(t.wx.hpa)>300?num(t.wx.hpa):null;if(hpa)has.push("air");
   return has.length?{id:t.trajId,o,hpa,rh:t.wx&&num(t.wx.rh)!=null?num(t.wx.rh):null,has}:null;}
 function tripAirNote(t,a){const e=$("tripAirNote");if(!e)return;
   if(!a){e.textContent="The dope card uses the profile's conditions: fill in this trip's temperature and wind, or tap Use the weather…, to use the trip's.";return;}
-  const bits=[a.has.includes("temp")?U.s("F",a.o.temp,0):"",a.has.includes("air")?"air pressure "+(U.metric?Math.round(a.hpa)+" hPa":(a.hpa*0.02953).toFixed(2)+" inHg"):"",a.has.includes("wind")?U.s("mph",a.o.wind,0)+" wind"+(a.has.includes("clock")?" from "+a.o.wclock+" o'clock":""):""].filter(Boolean);
-  e.textContent="Dope card for this trip's weather: "+bits.join(", ")+"."+(a.has.length<4?" The rest is the profile's"+(a.has.includes("wind")&&!a.has.includes("clock")?" (and the wind's direction: put \"from 3 o'clock\" in Wind to set it)":"")+".":"");}
+  const bits=[a.has.includes("temp")?U.s("F",a.o.temp,0):"",a.has.includes("air")?"air pressure "+(U.metric?Math.round(a.hpa)+" hPa":(a.hpa*0.02953).toFixed(2)+" inHg"):"",a.has.includes("wind")?U.s("mph",a.o.wind,0)+" wind"+(a.has.includes("clock")?" from "+a.o.wclock+" o'clock":""):a.has.includes("clock")?"wind from "+a.o.wclock+" o'clock":""].filter(Boolean);
+  e.textContent="Dope card for this trip's weather: "+bits.join(", ")+"."+(a.has.length<4?" The rest is the profile's"+(a.has.includes("wind")&&!a.has.includes("clock")?" (and the wind's direction: set Wind from to change it)":"")+".":"");}
 function tripAirUse(t){const a=t?tripAirOf(t):null;if(window.RB_TRAJ&&RB_TRAJ.tripAir)RB_TRAJ.tripAir(a);if(t)tripAirNote(t,a);}
 function setTripsPage(on){const d=$("trajDetail");if(d)d.classList.toggle("tripspage",on);document.body.classList.toggle("tripspage",on);}
 // the folding tiles on a trip: remembered on this device, except Trip details, which folds by itself once the date and place are in
@@ -11180,7 +11192,7 @@ function renderTrips(){
       list.forEach(x=>{
         const s=x.sum||{};
         const thumb=s.photoId?'<img alt="" loading="lazy" src="'+esc("/api/photos/"+s.photoId)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>';
-        const d=[num(x.distance)?U.s("yd",num(x.distance),0):"",num(x.rounds)?num(x.rounds)+" rounds":"",x.temp!=null&&x.temp!==""?U.s("F",num(x.temp),0):"",x.wind||""].filter(Boolean).join(" · ");
+        const d=[num(x.distance)?U.s("yd",num(x.distance),0):"",num(x.rounds)?num(x.rounds)+" rounds":"",x.temp!=null&&x.temp!==""?U.s("F",num(x.temp),0):"",tripWindTxt(x)].filter(Boolean).join(" · ");
         const m=[s.photos?s.photos+" photo"+(s.photos===1?"":"s"):"",num(x.avgVel)?U.s("fps",num(x.avgVel),0,true)+(num(x.sd)!=null?" · SD "+sdS(num(x.sd)):""):"",x.notes?x.notes.replace(/\s+/g," ").slice(0,80)+(x.notes.length>80?"…":""):""].filter(Boolean).join(" · ");
         h+='<button class="loaditem withthumb" type="button" data-trip="'+esc(x.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(x.date?fmtDate(x.date):"No date")+(x.place?' · '+esc(x.place):'')+'</span>'+
           (d?'<span class="d">'+esc(d)+'</span>':'')+(s.best?'<span class="best">Best: <b>'+esc(tripBestTxt(s.best))+'</b></span>':'')+(m?'<span class="m">'+esc(m)+'</span>':'')+'</span></button>';
@@ -11199,7 +11211,10 @@ function renderTrips(){
   }
   const places=[...new Set([...trips.map(x=>String(x.place||"").trim()),...((window.RB_TRAJ&&RB_TRAJ.ranges())||[])].filter(Boolean))].sort();
   let h='<div class="grid">';
+  tripWindFix(t);
   TRIP_FIELDS.forEach(([k,label,type,ph])=>{
+    if(type==="clock"){h+='<div class="field"><label for="tp_wclock">'+label+'</label><select id="tp_wclock" class="fieldselect"><option value="">Not set</option>'+
+      ["12 · straight at you","1","2","3 · from the right","4","5","6 · from behind","7","8","9 · from the left","10","11"].map((x,i)=>{const v=i||12;return '<option value="'+v+'"'+(+t.wclock===v?' selected':'')+'>'+x+'</option>';}).join("")+'</select><span class="note" id="tripWindNote"'+(t.windNote?'':' hidden')+'>'+esc(t.windNote?"Weather: "+t.windNote+". Set the o'clock for the way you're facing.":"")+'</span></div>';return;}
     h+='<div class="field'+(k==="place"?' wide':'')+'"><label for="tp_'+k+'">'+label+'</label><input id="tp_'+k+'" data-tf="'+k+'" type="'+type+'"'+(type==="number"?' inputmode="decimal" step="any"':' autocomplete="off"')+(k==="place"?' list="dl_place"':'')+(ph?' placeholder="'+esc(ph)+'"':'')+' value="'+esc(t[k]==null?"":t[k])+'"></div>';
   });
   {const tl=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId),ps=tl?partsOf(tl.rifleId):[];
@@ -11233,11 +11248,10 @@ function renderTrips(){
   root.innerHTML=h;
   bindCrumbs();bindTtiles(root,t);dopeTo($("tripDopeSlot"));tripAirUse(t);
   let airT=null;
-  root.oninput=e=>{const id=e.target&&e.target.id;if(id==="tp_temp"||id==="tp_wind"){clearTimeout(airT);airT=setTimeout(()=>{if(tripOpen===t.id)tripAirUse(t);},400);}
+  root.oninput=e=>{const id=e.target&&e.target.id;if(id==="tp_temp"||id==="tp_windMph"){clearTimeout(airT);airT=setTimeout(()=>{if(tripOpen===t.id)tripAirUse(t);},400);}
     if(id==="tp_date"||id==="tp_place"||id==="tp_distance")ttSet("details",tripDetSum(t));else if(/^cb_/.test(id))setTimeout(()=>ttSet("cold",tripColdSum(t)));};
   root.onchange=e=>{if(/^cb_/.test(e.target&&e.target.id||""))setTimeout(()=>ttSet("cold",tripColdSum(t)));};
   unitize("tp_",t,FIELD_U);
-  if(U.metric){const w=$("tp_wind");if(w)w.placeholder="e.g. 8 km/h from 3 o'clock";}
   const mvRow=()=>{const v=num(t.avgVel),T2=RB_TRAJ.cur(),r=$("tripMvRow");if(!r)return;
     if(v>0&&T2&&Math.round(num(T2.mv)||0)!==Math.round(v)){r.innerHTML='<button class="btn" id="tripMv" type="button">Use '+U.s("fps",v,0,true)+' as this profile\'s muzzle velocity</button><span class="note">Now '+(num(T2.mv)?U.s("fps",num(T2.mv),0,true):'not set')+'</span>';
       $("tripMv").addEventListener("click",()=>{RB_TRAJ.setMV(Math.round(v),num(t.temp));mvRow();});}
@@ -11326,8 +11340,9 @@ function renderTrips(){
     }catch(err){console.error("chrono",err);msg.classList.add("err");msg.textContent="That file couldn't be read.";}
   });
   root.querySelectorAll("[data-tf]").forEach(inp=>inp.addEventListener("input",()=>{
-    const k=inp.dataset.tf,isNum=inp.type==="number";t[k]=isNum?readU(inp,k,FIELD_U,t[k]):inp.value;t.updated=Date.now();queueTrips();
+    const k=inp.dataset.tf,isNum=inp.type==="number";t[k]=isNum?readU(inp,k,FIELD_U,t[k]):inp.value;if(k==="windMph")t.wind=tripWindTxt(t);t.updated=Date.now();queueTrips();
     if(k==="avgVel")mvRow();}));
+  {const wc=$("tp_wclock");if(wc)wc.addEventListener("change",()=>{t.wclock=+wc.value||null;t.wind=tripWindTxt(t);t.updated=Date.now();queueTrips();tripAirUse(t);});}
   bindCold(t);renderColdPick(t);
   {const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>{t.partId=tpp.value;t.updated=Date.now();queueTrips();});}
   {const tc=$("tp_can"),fit=()=>{const b=$("tpCanFit");if(!b)return;const tc2=tripCart(t);b.innerHTML=t.canId?canFitHtml(cans.find(c=>c.id===t.canId),tc2.cart,tc2.gun&&tc2.gun.name):"";};
@@ -11366,10 +11381,11 @@ function renderTrips(){
     try{note.textContent="Getting the weather…";
       const w=await RB_WX.get(p.lat,p.lon);
       t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",w.temp)))*100)/100:Math.round(w.temp);
-      if(w.wind!=null)t.wind=U.s("mph",w.wind,0)+" from the "+(w.dir!=null?RB_WX.dir(w.dir):"?")+(w.gust!=null&&w.gust>w.wind+3?", gusts "+U.n("mph",w.gust,0):"");
+      // the speed goes in the box; the compass direction and gusts stay as a note, since the o'clock depends on which way you face
+      if(w.wind!=null){t.windMph=Math.round(w.wind*10)/10;t.windNote=[w.dir!=null?"from the "+RB_WX.dir(w.dir):"",w.gust!=null&&w.gust>w.wind+3?"gusts "+U.s("mph",w.gust,0):""].filter(Boolean).join(", ");if(!("wclock" in t))t.wclock=null;t.wind=tripWindTxt(t);}
       t.wx={rh:w.rh!=null?Math.round(w.rh):null,hpa:Math.round(w.hpa*10)/10,dAlt:Math.round(w.dAlt/10)*10,elev:w.elev!=null?Math.round(w.elev):null,at:w.at,range:at?at.name||"":""};
       {const sn=RB_WX.sun(p.lat,p.lon,t.date);if(sn&&/^\d{4}-/.test(String(t.date||"")))t.wx.sun=Object.assign({d:t.date,tz:w.tz||null},sn);}
-      U.fill($("tp_temp"),"F",t.temp,0,1);$("tp_wind").value=t.wind||"";queueTrips();
+      U.fill($("tp_temp"),"F",t.temp,0,1);U.fill($("tp_windMph"),"mph",t.windMph,0,1);{const wn=$("tripWindNote");if(wn){wn.textContent=t.windNote?"Weather: "+t.windNote+". Set the o'clock for the way you're facing.":"";wn.hidden=!t.windNote;}}queueTrips();
       note.textContent=tripWxTxt(t);btn.textContent=tripWxLabel(t);sunUp();tripAirUse(t);
     }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter it yourself.";}
     btn.disabled=false;
