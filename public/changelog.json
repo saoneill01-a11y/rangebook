@@ -2,6 +2,22 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
+      "version": "2.46.0",
+      "date": "2026-11-14",
+      "title": "Less clutter",
+      "items": [
+        "Home: Start a range day and + New load. The This year and Built in Library cards are gone (the Range log has the year; Tools › Library has the lists).",
+        "Account is grouped into Look, Units, Your data and Account. Arrange Home and Arrange profile cards are under Account › Layout, and Admin is under Account (and More on a phone) instead of in the tab bar.",
+        "The beta warning shows once; after that, only the small note says a new version arrived.",
+        "Profiles: the fields you fill in once (velocity temperature, temperature sensitivity, BC type, bullet diameter, twist, bullet length, tip length) are under More details on Inputs; Wind brackets and Coriolis under More details on Conditions. The chart's zoom, True scale, Declutter and Effective range are under More chart options. Change how the reticle looks and Hit chance are under More on the dope card. Point-blank range and True up velocity start folded. The jump links row is gone, and Reset and Delete profile are under More at the bottom.",
+        "Range trips: Average velocity and SD aren't boxes once a chronograph string has shots (they come from it). Empty a shot's box to delete it, with Undo; + Shot is only on typed-in strings.",
+        "Ladder groups: + Shot and the numbers stay; − Shot, Import chronograph file, Connect chronograph and Delete group are under More. The pressure signs fold into one line that lists any you noted. Velocity by shot starts folded, and Sharing only shows once there's someone to share with.",
+        "Reloading's Reference tab moved into Tools › Library, which already listed it.",
+        "Gear & Ranges has five tabs: Guns (with Optics and Suppressors), Ammo, Inventory (with Magazines), Ranges and Notes. Lowers & uppers and Barrels start folded on the Guns list; Photos, Magazines, Reloading loads and Barrels start folded on a gun.",
+        "Tools: MOA · MIL · inches is part of Convert. Hit chance (from the dope card) and Shot timer (on Training) aren't tiles any more. Components lists don't have their own Import from a spreadsheet button (it's in Account › Import)."
+      ]
+    },
+    {
       "version": "2.45.6",
       "date": "2026-11-13",
       "title": "Range trips on their own page",
