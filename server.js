@@ -468,10 +468,21 @@ function mergeSave(uid, timesKey, body, theirs, theirsAt) {
   let data = mine;
   if (body.base !== undefined && theirs != null && mine != null)
     data = MERGE.merge3({ base: body.base, seen: body.seen, hasSeen: "seen" in body, mine, theirs, tMine, tTheirs: (p) => MERGE.timeAt(st, p, theirsAt || 0) });
+  /* never let one save empty a list that had several things in it (2.43.26): a device whose lists didn't load (or a stale
+     copy) would otherwise delete everything the server compares against. The app sends clear: [key] when you really do
+     empty one (deleting a training profile with all its sessions); otherwise the server keeps its own copy of that list,
+     says so (kept), and the app reloads. */
+  const kept = [], clear = new Set(Array.isArray(body.clear) ? body.clear.map(String) : []);
+  if (timesKey.startsWith("doc:") && plainObj(data) && plainObj(theirs)) for (const k of Object.keys(theirs)) {
+    const tv = theirs[k], dv = data[k];
+    if (Array.isArray(tv) && tv.length >= 3 && MERGE.idList(tv) && Array.isArray(dv) && dv.length === 0 && !clear.has(k)) { data = { ...data, [k]: tv }; kept.push(k); }
+  }
+  if (kept.length) console.warn(` Kept ${kept.join(", ")} in ${timesKey} for user ${uid}: a save would have emptied ${kept.length === 1 ? "it" : "them"}.`);
   const changed = MERGE.diffPaths(theirs, data);
   if (changed.length) { for (const p of changed) st[p] = tMine(p); putTimes(uid, timesKey, st); }
-  return { data, merged: !MERGE.eq(data, mine) };
+  return { data, merged: !MERGE.eq(data, mine), kept };
 }
+const plainObj = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 function putDoc(uid, key, data) {
   q("INSERT INTO user_docs(user_id,key,data,updated_at) VALUES(?,?,?,?) ON CONFLICT(user_id,key) DO UPDATE SET data=excluded.data, updated_at=excluded.updated_at")
     .run(uid, key, JSON.stringify(data), now());
@@ -512,7 +523,7 @@ function sendGunExport(res, uid, kind, serials) {
   res.end(buf);
 }
 let BK = null; // backups and imports (backup.js), set up once the database helpers exist
-function backups() { return BK || (BK = backupKit({ q, db, PHOTO_DIR, getDoc, putDoc, now, APP_VERSION, zip })); }
+function backups() { return BK || (BK = backupKit({ q, db, PHOTO_DIR, getDoc, putDoc, now, APP_VERSION, zip, tarEntries })); }
 function sendExport(res, uid, kind, serials) {
   const d = collectUser(uid);
   if (kind !== "zip") applySerials(d, serials);
@@ -704,7 +715,7 @@ async function api(req, res, url) {
       const body = await readJson(req, 8 * 1024 * 1024), row = getDocRow(user.id, m[1]);
       const r = mergeSave(user.id, "doc:" + m[1], body, row ? row.data : null, row ? row.at : 0);
       putDoc(user.id, m[1], r.data);
-      return send(res, 200, { ok: true, merged: r.merged });
+      return send(res, 200, r.kept.length ? { ok: true, merged: r.merged, kept: r.kept } : { ok: true, merged: r.merged });
     }
   }
 
