@@ -2561,6 +2561,9 @@ window.RB_WX=(()=>{
 })();
 </script>
 <script>
+/* RB_BLIPR (2.47): the BLIPR chronograph is only on the chrono branch until it's finished. Released Range Book has it off:
+   only the Athlon Rangecraft connects, and nothing mentions BLIPR. */
+window.RB_BLIPR=true;
 /* ---------- Range Book BLIPR: the bench radar chronograph, over Bluetooth (Web Bluetooth: Chrome on Android and computers, Bluefy on iPhone/iPad) ----------
    One chronograph at a time. Shots arrive as JSON on the Shot characteristic; each one goes to the session's live string (Tools → Chronograph)
    and to whatever screen asked for them (a range trip's string or a ladder's group: the "sink"). Velocities are always fps from the device.
@@ -2608,7 +2611,7 @@ window.RB_BTCHRONO=(function(){
      which); it goes over in numbered pieces, BLIPR checks each one's place and the whole file's MD5, and only switches
      on the next restart. A piece that goes missing is sent again; nothing is lost if the link drops. ----- */
   let FW=null,ota={busy:false,pct:0,msg:""};
-  function loadFw(){if(FW!==null)return;FW=undefined;fetch("blipr/firmware.json",{cache:"no-cache"}).then(r=>r.ok?r.json():false).then(j=>{FW=j||false;emit();}).catch(()=>{FW=false;emit();});}
+  function loadFw(){if(!window.RB_BLIPR){FW=false;return;}if(FW!==null)return;FW=undefined;fetch("blipr/firmware.json",{cache:"no-cache"}).then(r=>r.ok?r.json():false).then(j=>{FW=j||false;emit();}).catch(()=>{FW=false;emit();});}
   const verCmp=(a,b)=>{const x=String(a||"0").split(".").map(Number),y=String(b||"0").split(".").map(Number);for(let i=0;i<3;i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1;}return 0;};
   async function otaSend(buf,md5){
     const ch=C.ota,len=buf.byteLength,u8=new Uint8Array(buf);
@@ -2790,6 +2793,7 @@ window.RB_BTCHRONO=(function(){
   }
   // which: "blipr" or "athlon" shows only that kind in the picker (Tools › Chronographs); left out, either (2.44.5)
   async function connect(which){
+    if(!window.RB_BLIPR)which="athlon";
     const w=support();if(w)throw new Error(supportMsg(w));
     if(which&&dev&&state==="off"&&/^AthlonVPR/.test(dev.name||"")!==(which==="athlon"))dev=null;
     wantOn=true;if(state==="on")return;
@@ -3038,7 +3042,7 @@ window.RB_BTCHRONO=(function(){
     let h='<section class="card" aria-label="The chronograph"><h2>Device</h2>';
     if(w)h+='<p class="note">'+esc(supportMsg(w))+'</p>';
     else if(!on)h+='<p class="note">'+(state==="lost"?'<b>Out of reach.</b> Range Book keeps trying to reconnect by itself.':state==="connecting"||state==="picking"?'Connecting…':'Switch the chronograph on, then connect. Your phone remembers it after the first time.')+'</p>'+
-      '<div class="row"><button class="btn primary" type="button" id="btGo"'+(state==="connecting"||state==="picking"?' disabled':'')+'>Connect BLIPR</button><button class="btn" type="button" id="btGoAth"'+(state==="connecting"||state==="picking"?' disabled':'')+'>Connect Athlon Rangecraft</button>'+(state!=="off"?'<button class="btn" type="button" id="btStop">Stop trying</button>':'')+'</div>';
+      '<div class="row">'+(window.RB_BLIPR?'<button class="btn primary" type="button" id="btGo"'+(state==="connecting"||state==="picking"?' disabled':'')+'>Connect BLIPR</button>':'')+'<button class="btn'+(window.RB_BLIPR?'':' primary')+'" type="button" id="btGoAth"'+(state==="connecting"||state==="picking"?' disabled':'')+'>Connect Athlon Rangecraft</button>'+(state!=="off"?'<button class="btn" type="button" id="btStop">Stop trying</button>':'')+'</div>';
     else if(isAth())h+='<div class="chdev"><div><b>'+esc(dev&&dev.name||"Athlon")+'</b> <span class="chip">Listening</span></div><div class="note">'+["Athlon Rangecraft",num(s.bat)>=0?"Battery "+Math.round(s.bat)+"%":"",s.fw?"Firmware "+esc(s.fw):""].filter(Boolean).join(" · ")+'</div>'+
       (sink?'<div class="note">Shots also go to <b>'+esc(sink.label)+'</b> <button class="linkbtn" type="button" id="btDetach">Stop</button></div>':'')+'</div>'+
       '<div class="row"><button class="btn" type="button" id="btSet">Settings</button><button class="btn" type="button" id="btOff">Disconnect</button></div>';
@@ -3063,7 +3067,7 @@ window.RB_BTCHRONO=(function(){
     // 3. conditions from the add-on sensors
     h+='<section class="card" aria-label="Conditions"><h2>Conditions</h2>';
     if(!on)h+='<p class="note">With the sensor kit fitted, the air temperature, humidity, pressure, ammo temperature and which way you\'re shooting show here.</p>';
-    else if(isAth())h+='<p class="note">The Athlon doesn\'t measure the air. BLIPR\'s sensor kit does.</p>';
+    else if(isAth())h+='<p class="note">The Athlon doesn\'t measure the air.'+(window.RB_BLIPR?' BLIPR\'s sensor kit does.':'')+'</p>';
     else if(!A||(A.tempF==null&&A.hd==null&&A.ammoF==null&&A.pi==null))h+='<p class="note">No add-on sensors found. The build guide\'s <b>Sensors</b> tab shows how to add temperature, humidity, pressure, an ammo probe and a compass.</p>';
     else{
       const rows=[];
