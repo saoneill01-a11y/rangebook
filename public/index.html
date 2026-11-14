@@ -201,7 +201,7 @@ summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:calc
 .guide .ex{font-family:var(--mono);font-size:calc(13px*var(--fs));background:var(--sunk);padding:8px 10px;border-radius:6px}
 .note{font-size:calc(12px*var(--fs));color:var(--muted)}
 @media (prefers-reduced-motion:no-preference){.btn{transition:background .15s}}
-html{color-scheme:light}
+html{color-scheme:light;scrollbar-gutter:stable} /* room for the scrollbar always, so switching between a long and a short page doesn't shift it sideways (2.46.4) */
 body{margin:0;padding-top:0;padding-bottom:max(40px,env(safe-area-inset-bottom,0px))}
 img{max-width:100%}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:22;background:var(--bg);padding:max(12px,env(safe-area-inset-top,0px)) 0 6px;box-shadow:0 8px 0 var(--bg)}
