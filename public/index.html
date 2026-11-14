@@ -963,6 +963,7 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .hquick ul{margin:4px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}.hmore{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}.hmore>summary{cursor:pointer;font-weight:600;color:var(--accent)}
 .cmpsrc{position:relative}.cmpres{position:absolute;left:0;right:0;top:100%;z-index:20;max-height:280px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:4px;display:flex;flex-direction:column}
 .cmpopt{text-align:left;border:0;background:none;color:var(--fg);font:inherit;padding:7px 8px;border-radius:6px;cursor:pointer}.cmpopt:hover,.cmpopt:focus{background:var(--accent-soft)}.cmpopt .k{font-size:calc(11px*var(--fs));color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.ladath{margin:6px 0 10px}
 .acgrp{margin:10px 2px -4px;font-size:calc(12px*var(--fs));font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .tripsroot{margin-top:14px;display:flex;flex-direction:column;gap:14px;min-width:0}.tripsroot>.tripcrumbs{margin:0}
 /* range trips as their own page (2.45): the profile's cards hide while the trip list or a trip is open */
@@ -1940,7 +1941,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p><b>Connecting:</b> switch the chronograph on and tap <b>Connect chronograph</b>: in <a class=goto href=#go data-go=tools:btchrono>Tools › Chronographs</a>, or under <b>More</b> on a group in a ladder test. On a range trip, tap <b>Connect Athlon</b> under <b>Chronograph</b>. Pick <b>RB BLIPR</b> in the list the first time. In Tools › Chronographs, <b>Connect Athlon Rangecraft</b> connects an Athlon Rangecraft instead (it shows as <b>AthlonVPR…</b>); its shots come in the same way, and what it sends is kept in a message log. Range Book isn't made by, affiliated with, or endorsed or supported by Athlon Optics; Athlon and Rangecraft are their trademarks, used only to say which chronograph this works with. Athlon hasn't approved this connection and could change how the Athlon works at any time, so use it at your own risk. While it's connected a small pill at the bottom right shows the last velocity and the battery; tap it for the settings. If it drops out (out of range, or the phone locked), Range Book reconnects by itself and asks for any shots it missed.</p>
       <ul>
         <li><b>Range trip:</b> <b>Connect Athlon</b> starts a new string (named Athlon and the time) and each shot fills its next box. <b>Send shots here</b> on any string sends them there instead; <b>Disconnect Athlon</b> stops. The trip's average and SD update as you go, even with the trip closed. If the chronograph has the sensor kit and the trip's temperature or weather is empty, they fill in from it, and each string notes the ammo temperature.</li>
-        <li><b>Ladder test:</b> <b>More</b> › <b>Connect chronograph</b> on a group fills that group's empty boxes, then moves on to the next group in the same ladder (the one with the outline). The ladder's temperature fills in from the sensors if it's empty.</li>
+        <li><b>Ladder test:</b> <b>Connect Athlon</b> at the top of a ladder fills the first group still waiting for shots, then the next. Or <b>More</b> › <b>Connect chronograph</b> on a group fills that group's empty boxes, then moves on to the next group in the same ladder (the one with the outline). The ladder's temperature fills in from the sensors if it's empty.</li>
         <li><b>Tools › Chronographs:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b>, <b>Save to a range trip</b> and <b>Save to testing</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
         <li><b>Testing:</b> <b>Save to testing</b> keeps a string without a range trip, in a testing session: pick one you already have (today's is picked for you) or start a new one with what you're testing, the gun, the ammo or load and notes. The <b>Testing</b> card under Tools › Chronographs lists your testing sessions, newest first; tap one to see each string's shots, average, SD, ES, low and high (and all its strings together), change its details, copy the velocities, remove a string or delete the session.</li>
       </ul>
@@ -10087,6 +10088,8 @@ function renderDetail(){
       (()=>{const ps=partsOf(L.rifleId),cur=("partId" in lad)?lad.partId:(L.partId||"");if(!ps.length&&!cur)return '';
         return '<div class="field wide"><label for="lt_'+lad.id+'_part">Barrel</label><select id="lt_'+lad.id+'_part" class="fieldselect" data-ladpart="'+lad.id+'"><option value="">The gun as it is</option>'+ps.map(p=>'<option value="'+esc(p.id)+'"'+(cur===p.id?' selected':'')+'>'+esc(partName(p))+'</option>').join("")+
           (cur&&!ps.some(p=>p.id===cur)?'<option value="'+esc(cur)+'" selected>'+esc((parts.find(p=>p.id===cur)&&partName(parts.find(p=>p.id===cur)))||"Another barrel")+'</option>':'')+'</select></div>';})()+'</div>';
+    // the Athlon on a ladder (2.46.3): its shots fill the first group still waiting for shots, then the next, in ladder order
+    if(lg.length)h+='<div class="row ladath edit-only"><button class="btn primary" type="button" data-athlad="'+lad.id+'" data-athbtn>Connect Athlon</button><span class="note" id="lam_'+lad.id+'"></span></div>';
     h+='<div id="llog_'+lad.id+'">'+ladderLogHtml(L,lad)+'</div>';
     if(!lg.length)h+='<p class="ladempty">No groups in this ladder yet.</p>';
     lg.forEach(g=>{
@@ -10251,6 +10254,13 @@ function renderDetail(){
     if(RB_BTCHRONO.sinkKey()==="lad:"+lid+":"+gid){RB_BTCHRONO.detach("lad:"+lid);return;}
     try{await RB_BTCHRONO.connect();}catch(e){if(e.message)alertNote(b,e.message);return;}
     const sk=ladChronoSink(lid,gid);if(sk)RB_BTCHRONO.attach(sk);}));
+  $("relRoot").querySelectorAll("[data-athlad]").forEach(b=>b.addEventListener("click",async()=>{
+    const C=window.RB_BTCHRONO;if(!C)return;const lid=openId,lad=(L.ladders||[]).find(x=>x.id===b.dataset.athlad),msg=$("lam_"+b.dataset.athlad);if(!lad)return;
+    if(C.kind()==="athlon"&&C.state()!=="off"){C.disconnect(false);if(msg)msg.textContent="Disconnected the Athlon.";return;}
+    try{await C.connect("athlon");}catch(e){if(e.message&&msg)msg.textContent=e.message;return;}
+    const gs=ladderGroups(L,lad),g=gs.find(x=>(x.shots||[]).indexOf(null)>=0||!(x.shots||[]).length)||gs[0];if(!g)return;
+    const sk=ladChronoSink(lid,g.id);if(sk)C.attach(sk);
+    const m2=$("lam_"+lad.id);if(m2)m2.textContent="Shots go into "+gName(g,L.groups.indexOf(g))+", then the next group.";}));
   if(window.RB_BTCHRONO)RB_BTCHRONO.paint();
   // importTarget: a group's id (fill it, then the next empty groups in its ladder) or {lad} (new groups in that ladder)
   let importTarget=null;
