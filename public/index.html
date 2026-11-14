@@ -53,7 +53,7 @@ button,select,input{font:inherit;color:inherit}
 select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);font-weight:600}
 .btn{padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);cursor:pointer;font-weight:500;font-size:calc(14px*var(--fs))}
 .btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.btn.danger{color:var(--warn)}
+.btn.danger{color:var(--warn)}.btn.danger.dangerfill{background:var(--warn);border-color:var(--warn);color:#fff}.ladend{justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
 .btn:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 12px}
 .field{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -10107,7 +10107,7 @@ function renderDetail(){
     const lg=ladderGroups(L,lad);
     const lf=!!LADFOLD[lad.id];
     h+='<div class="ladcard'+(lf?' folded':'')+'" id="lad_'+lad.id+'"><div class="ladhead"><button class="ladtog" type="button" data-ladtog="'+lad.id+'" aria-expanded="'+(lf?'false':'true')+'" aria-controls="lb_'+lad.id+'"><h3>'+esc(ladderName(L,lad))+'</h3><span class="ls" id="ls_'+lad.id+'">'+esc(ladderSum(L,lad))+'</span><span class="chev" aria-hidden="true"></span></button>'+
-      '<button class="btn danger small edit-only" type="button" data-ladel="'+lad.id+'">Delete ladder</button></div><div class="ladbody" id="lb_'+lad.id+'"'+(lf?' hidden':'')+'>';
+      '</div><div class="ladbody" id="lb_'+lad.id+'"'+(lf?' hidden':'')+'>';
     h+='<div class="grid ladtop">'+field("lt_"+lad.id+"_loaded","Loaded date",lad.loaded,"date")+field("lt_"+lad.id+"_tested","Tested date",lad.tested,"date")+field("lt_"+lad.id+"_temp","Temperature ("+U.u("F")+")",lad.temp,"number")+field("lt_"+lad.id+"_dist","Distance ("+U.u("yd")+")",lad.dist,"number")+
       (()=>{const ps=partsOf(L.rifleId),cur=("partId" in lad)?lad.partId:(L.partId||"");if(!ps.length&&!cur)return '';
         return '<div class="field wide"><label for="lt_'+lad.id+'_part">Barrel</label><select id="lt_'+lad.id+'_part" class="fieldselect" data-ladpart="'+lad.id+'"><option value="">The gun as it is</option>'+ps.map(p=>'<option value="'+esc(p.id)+'"'+(cur===p.id?' selected':'')+'>'+esc(partName(p))+'</option>').join("")+
@@ -10133,7 +10133,9 @@ function renderDetail(){
         '<details class="moredet edit-only gmore"><summary>More</summary><div class="row"><button class="btn" type="button" data-pickshot="'+g.id+'"'+((g.shots||[]).length?'':' hidden')+'>− Shot</button><button class="btn" type="button" data-import="'+g.id+'">Import chronograph file</button><button class="btn" type="button" data-btg="'+g.id+'" data-btkey="lad:'+esc(openId)+':'+g.id+'" data-bt0="Connect chronograph" data-bt1="Send chronograph shots here" data-bt2="Stop chronograph">Connect chronograph</button><button class="btn danger" type="button" data-gdel="'+g.id+'">Delete group</button></div></details></div>';
     });
     h+='<div class="ladphotos" id="lp_'+lad.id+'"></div>';
-    h+='<div class="row edit-only"><button class="btn primary" type="button" data-ladd="'+lad.id+'">+ Add group</button><button class="btn" type="button" data-limport="'+lad.id+'">Import chronograph file as new group</button><button class="btn" type="button" data-llbl="'+lad.id+'"'+(lg.some(g=>num(g.charge)>0)?'':' hidden')+'>Ladder label</button></div><div class="lblrow" id="llr_'+lad.id+'" hidden></div></div></div>';
+    h+='<div class="row edit-only"><button class="btn primary" type="button" data-ladd="'+lad.id+'">+ Add group</button><button class="btn" type="button" data-limport="'+lad.id+'">Import chronograph file as new group</button><button class="btn" type="button" data-llbl="'+lad.id+'"'+(lg.some(g=>num(g.charge)>0)?'':' hidden')+'>Ladder label</button></div><div class="lblrow" id="llr_'+lad.id+'" hidden></div>'+
+      // at the bottom, away from the fold arrow (2.47.1)
+      '<div class="row ladend edit-only"><button class="btn danger dangerfill" type="button" data-ladel="'+lad.id+'">Delete ladder</button></div></div></div>';
   });
   h+='<div class="row edit-only"><button class="btn primary" id="ladderBtn" type="button">Plan a new ladder</button><button class="btn" id="ladBlank" type="button">+ Empty ladder</button><input id="chronoIn" type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden multiple></div>'+
     '<p class="note edit-only'+(importMsg&&importMsg.bad?' err':'')+'" id="importState">'+(importMsg?esc(importMsg.text):'Each ladder keeps its own dates, groups and target photos. Import reads the velocities from a RangeCraft .xlsx, Garmin ShotView .csv/.xlsx, MagnetoSpeed .csv or LabRadar Report.csv export (pick several LabRadar files at once for a ladder). A file with several strings fills the group you tapped, then the next empty groups in that ladder, adding new groups if it runs out.')+'</p></section>';
