@@ -2,10 +2,13 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.45.1",
+      "version": "2.45.2",
       "date": "2026-11-13",
       "title": "Range trips on their own page",
       "items": [
+        "Cold-bore shot: tap the shot from the trip's Live targets that was your cold-bore shot, and its place (and velocity) fill in. Typing it in is still there, under Type it in yourself.",
+        "Targets card: Print a target opens the printable targets in Tools. + Saved Live target and the More button are gone from it.",
+        "Live target in Tools: after Save, pick a range trip and tap Save to this range trip to put it there.",
         "A trip's Dope card & reticle uses the trip's weather: its temperature, the air pressure from Use the weather…, and its wind (with \"from 3 o'clock\" in Wind for the direction). Anything the trip doesn't have comes from the profile, and the profile itself doesn't change. A note above the card says which.",
         "Range trips have their own page. A profile has a Range trips button at the top (the trips aren't at the bottom of the profile any more); a trip opens from there or straight from the Range log.",
         "A trip has a bar of big buttons for the bench (Connect Athlon, Live target, + Photo), then cards that fold up: Trip details (folded, it shows the date and place, and folds by itself once both are in), Chronograph, Targets and Cold-bore shot. A folded card shows a one-line summary, like the shots, average, SD and ES.",

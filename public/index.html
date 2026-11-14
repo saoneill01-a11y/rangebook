@@ -973,6 +973,7 @@ body.tripspage #trajJump{display:none!important}
 .sbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #tripDopeSlot .dopecombo{grid-template-columns:minmax(0,1fr)}#tripDopeSlot .dopecombo .retpane{min-width:0;position:static}
 #tripChronoMsg{margin:-6px 0 0}#tripChronoMsg:empty{display:none}
+.coldpick{display:flex;flex-wrap:wrap;gap:6px}.coldshot{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left}.coldshot span{font-size:calc(12px*var(--fs));color:var(--muted)}.coldshot.on span{color:inherit}
 .tmore{margin-top:4px}.tmore>summary{cursor:pointer;color:var(--muted);font-size:calc(13px*var(--fs));list-style:revert}.tmore>.row{margin-top:8px}
 .ttile .secbody{display:flex;flex-direction:column;gap:6px}
 .logranges .rgpicks{display:flex;flex-wrap:wrap;gap:8px}.logranges .rgpicks select{flex:1 1 200px;min-width:0}
@@ -1673,7 +1674,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>The inputs fold up on a phone</h3>
       <p>On a phone, when you open a profile the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a profile (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
-      <p>Every profile has a <b>Range trips</b> button at the top: it opens the profile's trip list, with <b>+ New range trip</b>. Tapping a trip there (or in the Range log) opens it on its own page. On the left, a bar of big buttons for the bench (<b>Connect Athlon</b>, <b>Live target</b> and <b>+ Photo</b>), then cards that fold up when you tap their title: <b>Trip details</b>, <b>Chronograph</b>, <b>Targets</b> and <b>Cold-bore shot</b>. A folded card shows a one-line summary (Trip details shows the date and place, and folds by itself once both are filled in). On the right, the profile's <b>Dope card &amp; reticle</b>, worked out for the trip's weather: its temperature, the air pressure from <b>Use the weather…</b>, and the wind (put "from 3 o'clock" in <b>Wind</b> for its direction). Anything the trip doesn't have comes from the profile, and nothing on the profile changes. On a phone it comes after the other cards. Less-used buttons, like <b>Import chronograph file</b>, <b>+ Type in shots</b>, <b>+ Saved Live target</b> and <b>Print a target</b>, are under <b>More</b> on their card. The path at the top (profile › Range trips › date) takes you back. In <b>Trip details</b>, fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target for this trip</b> opens a printable target with the trip's profile, date, distance and gun already filled in at the top. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, tap <b>+ Shot</b> to add one, or tap <b>− Shot</b>, tap the shots you want gone (a bad reading, an unused box) and tap <b>Delete</b>. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
+      <p>Every profile has a <b>Range trips</b> button at the top: it opens the profile's trip list, with <b>+ New range trip</b>. Tapping a trip there (or in the Range log) opens it on its own page. On the left, a bar of big buttons for the bench (<b>Connect Athlon</b>, <b>Live target</b> and <b>+ Photo</b>), then cards that fold up when you tap their title: <b>Trip details</b>, <b>Chronograph</b>, <b>Targets</b> and <b>Cold-bore shot</b>. A folded card shows a one-line summary (Trip details shows the date and place, and folds by itself once both are filled in). On the right, the profile's <b>Dope card &amp; reticle</b>, worked out for the trip's weather: its temperature, the air pressure from <b>Use the weather…</b>, and the wind (put "from 3 o'clock" in <b>Wind</b> for its direction). Anything the trip doesn't have comes from the profile, and nothing on the profile changes. On a phone it comes after the other cards. <b>Import chronograph file</b> and <b>+ Type in shots</b> are under <b>More</b> on the Chronograph card. The path at the top (profile › Range trips › date) takes you back. In <b>Trip details</b>, fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target</b> at the bottom of the Targets card opens the printable targets in Tools. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, tap <b>+ Shot</b> to add one, or tap <b>− Shot</b>, tap the shots you want gone (a bad reading, an unused box) and tap <b>Delete</b>. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
       <h3>All your groups</h3>
       <p>Once a range trip has two or more measured groups, its <b>Targets</b> section shows <b>All groups together</b>: every group from that day on one target, each in its own color, with how big they are all together, the mean radius (the average distance of the shots from their center) and where the center is. <b>Around the aim point</b> lines them up on the aim point you marked, so you see where the gun really hits, zero shifts included; <b>Around each center</b> moves each group onto its own center, so you see only how tight it shoots. Groups at one distance are in inches (cm); mixed distances are in MOA. A group without an aim point is left out around the aim point, and the card says so.</p>
       <p>The <b>All your groups</b> card (under a profile's trip list) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 8%.</p>
@@ -1681,7 +1682,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>A suppressor often moves the point of impact a little and changes the speed. Range Book can measure it from your own range trips, without a second profile. On a range trip, pick the suppressor under <b>Suppressor</b>, shoot some groups with it on and some with it off, and measure them with the aim point marked. Under <b>All groups together</b>, <b>Suppressor on or off</b> lists every group: they start as <b>On</b>, so tap <b>Off</b> on the ones you shot without it. Each chronograph string has the same <b>On</b>/<b>Off</b> for the speed. The trip then shows the difference (for example "0.6 MOA higher and 0.3 MOA right, 18 fps faster").</p>
       <p>The gun's page adds up every trip like that for each suppressor. On the gun's Shooting profiles, the <b>Suppressor</b> card picks what you're <b>Shooting with</b> (<b>None</b> or one of the suppressors ticked on the gun's page) and what it was <b>Zeroed with</b>. New range trips with the profile start with the suppressor you're shooting with. When they differ, the measured shift is added: the speed to the trajectory, the up and down part to the chart, range table, dope card and reticle, and the sideways part to the reticle hold. The dope card says so under its conditions. Zeroed with it and shooting with it, nothing changes.</p>
       <h3>Cold-bore shot</h3>
-      <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point (right or left, high or low, in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
+      <p>On a range trip, <b>Cold-bore shot</b> records where your first shot of the day landed from the aim point. The shots from the trip's Live targets are listed there (the first shot at each aim point, or <b>Show every shot</b>): tap the one that was your cold-bore shot and it's filled in for you, with its velocity when the chronograph was on. Without a Live target, <b>Type it in yourself</b>: right or left, high or low (in inches or cm), whether the barrel was clean or fouled, and the distance if it wasn't the trip's. Each gun's page has a <b>Cold-bore log</b> that plots every cold-bore shot in MOA and shows the average, so you can see whether your first shot tends to go somewhere other than your zero.</p>
       <h3>Transonic</h3>
       <p>Each path is drawn solid while the bullet is well above the speed of sound and turns <b>dashed</b> where it slows to about Mach 1.2 (transonic). Past that point drag changes quickly, the BC numbers are less reliable, and some bullets start to wobble, so treat holds out there as a starting point and confirm them on paper. A subsonic load is dashed all the way. The speed of sound depends on the temperature on the Conditions card (it's listed under the chart), so on a cold day the dashes start closer. The range table, the dope card and Field mode draw a <b>red line</b> between the last two distances on either side of it, and the dope card says <b>Transonic at …</b> under its conditions (or <b>Subsonic from the muzzle</b>). In <a class=goto href=#go data-go=tools:cmp>Tools › Compare trajectories</a>, a dot on each line marks where that bullet goes transonic.</p>
       <p>Above the range table, a short key says what its lines mean: the solid red line is <b>Transonic at …</b>, and the orange dashed one is your effective range (below).</p>
@@ -1898,7 +1899,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <li><b>Powder</b>: how many rounds a container of powder makes at your charge, what the powder costs per round, and how much you need for a number of rounds. <b>Fill in from</b> uses a Reloading load's charge and, if its powder has a price in Components, the price.</li>
         <li><b>Convert</b>: grains and grams, fps and m/s, inches and millimetres, yards and metres, foot-pounds and joules. Type in either box.</li>
         <li><b>Hit chance</b>: your odds of a first-round hit on a target at a distance. Pick a Shooting profile (it uses its trajectory and conditions), the target size, and what throws the shot off: your 5-shot group size, your velocity SD, and how far off your wind call and range could be. It shows the chance, a picture of the likely spread on the target, what would help most (a perfect wind call, a tighter group…), and the same target at other distances. On a Shooting profile, <b>Hit chance at a distance</b> under the dope card opens it for that profile.</li>
-        <li><b>Live target</b>: the spotting-scope camera without a profile, load or range trip. Set the bullet diameter, distance and shots per aim point, tap <b>Start Live target</b>, and use it the same way (see Live target under Reloading). <b>Save</b> keeps the target photo and its measured groups in your Range Book, listed under <b>Saved</b> on that page (with no signal, it waits on the phone and uploads later). Tap a saved one to see it, fix its marks with <b>Edit measurement</b>, or bring it into a range trip or a reloading ladder with <b>Move to</b>. A range trip also has <b>+ Saved Live target</b>. After saving, <b>Share picture</b> gives you a picture with every group drawn on it and its size, MOA, mean radius and center underneath, to keep in Photos or send to someone. Saved Live targets are in your backups too.</li>
+        <li><b>Live target</b>: the spotting-scope camera without a profile, load or range trip. Set the bullet diameter, distance and shots per aim point, tap <b>Start Live target</b>, and use it the same way (see Live target under Reloading). <b>Save</b> keeps the target photo and its measured groups in your Range Book, listed under <b>Saved</b> on that page (with no signal, it waits on the phone and uploads later). Tap a saved one to see it, fix its marks with <b>Edit measurement</b>, or bring it into a range trip or a reloading ladder with <b>Move to</b>. Right after you tap <b>Save</b>, you can also pick a range trip and tap <b>Save to this range trip</b>. After saving, <b>Share picture</b> gives you a picture with every group drawn on it and its size, MOA, mean radius and center underneath, to keep in Photos or send to someone. Saved Live targets are in your backups too.</li>
         <li><b>Printable targets</b>: Letter, 11 × 17 and two-page taped targets with corner squares (see <a class=goto href=#go data-go=help:Printable_targets>Printable targets</a> under Shooting).</li>
         <li><b>Shot timer</b>: a start beep, then your first shot and every split, with a par time. See <a class=goto href=#go data-go=help:Shot_timer>Training › Shot timer</a>.</li>
         <li><b>Chronograph</b>: connects the Range Book BLIPR bench radar chronograph over Bluetooth (see <b>Bluetooth chronograph</b> below).</li>
@@ -9368,11 +9369,18 @@ function openLive(o){
   // after saving from Tools: share a marked picture, keep shooting, or finish
   function savedSheet(){
     const sh=$("lvSheet");
+    // straight onto a range trip (2.45.2): today's trips first
+    const TS=[...trips].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0)).slice(0,40);
+    const canTrip=TS.length&&stored&&!stored.pending;
     sh.innerHTML='<h3>Saved</h3><p class="note" style="margin:0">'+(stored&&stored.pending?'It\'s on this phone for now and uploads to your Range Book when you have a signal. ':'')+'Find it under <b>Tools → Live target → Saved</b>, where you can add it to a range trip or a ladder. Saving again replaces it.</p>'+
+      (canTrip?'<div class="lvrow" style="flex-wrap:wrap"><select id="lvsTrip" class="fieldselect" aria-label="Range trip" style="flex:1 1 200px;min-width:0">'+TS.map(t=>'<option value="'+esc(t.id)+'">'+esc((t.date?fmtDate(t.date):"Undated")+(t.place?" · "+t.place:""))+'</option>').join("")+'</select><button class="btn primary lvbtn" id="lvsTripGo" type="button">Save to this range trip</button></div>':'')+
       '<div class="lvrow"><button class="btn primary lvbtn" id="lvsShare" type="button">Share picture</button><button class="btn lvbtn" id="lvsDone" type="button">Done</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="lvsMore" type="button">Keep shooting</button></div>';
     sh.hidden=false;
     $("lvsShare").addEventListener("click",()=>savePicture());
+    {const g=$("lvsTripGo");if(g)g.addEventListener("click",async()=>{const tid=$("lvsTrip").value;g.disabled=true;g.textContent="Saving…";
+      try{const msg=await liveMove(stored.id,"t:"+tid);stored=null;setStat(msg,"");close(true);}
+      catch(e){g.disabled=false;g.textContent="Save to this range trip";setStat("Couldn't add it to the trip. Check your connection and try again.","bad");}});}
     $("lvsDone").addEventListener("click",()=>close(true));
     $("lvsMore").addEventListener("click",()=>{sh.hidden=true;});
   }
@@ -9520,17 +9528,6 @@ function renderLiveSaved(){
   h+=liveSaved.length?'<div class="photos">'+liveSaved.map(p=>photoThumb(Object.assign({},p,{caption:liveWhen(p)}))).join("")+'</div><p class="note">Tap one to see it, edit its marks, or add it to a range trip or a ladder.</p>':('<p class="note">Nothing saved yet. Tap <b>Save</b> on the Live target screen and it shows up here.</p>');
   box.innerHTML=h;
   box.querySelectorAll("[data-photo]").forEach(b=>b.addEventListener("click",()=>openViewer(b.dataset.photo,liveCtx())));
-}
-// a range trip: pick one of the saved Live targets to bring in
-function livePick(tid){
-  liveEnsure().then(list=>{
-    const v=document.createElement("div");v.className="viewer";v.id="livePick";v.setAttribute("role","dialog");v.setAttribute("aria-label","Saved Live targets");
-    v.innerHTML='<div class="vbar"><button class="btn" id="lpClose" type="button">← Back</button><b style="color:#eee">Add a saved Live target</b></div>'+
-      '<div class="imgwrap" style="align-items:flex-start;justify-content:flex-start">'+(list.length?'<div class="photos">'+list.map(p=>photoThumb(Object.assign({},p,{caption:liveWhen(p)}))).join("")+'</div>':'<p style="color:#ccc">No saved Live targets. Use <b>Tools → Live target</b> and tap <b>Save</b>.</p>')+'</div><p class="vres" id="lpMsg"></p>';
-    document.body.appendChild(v);
-    const close=()=>v.remove();$("lpClose").addEventListener("click",close);
-    v.querySelectorAll("[data-photo]").forEach(b=>b.addEventListener("click",()=>{b.disabled=true;$("lpMsg").textContent="Adding…";liveMove(b.dataset.photo,"t:"+tid).then(()=>close(),e=>{b.disabled=false;$("lpMsg").textContent="Couldn't add it. Check your connection.";});}));
-  },()=>banner("Couldn't load your saved Live targets. Check your connection.",true));
 }
 window.RB_LIVE_OPEN=o=>startLive(Object.assign({store:liveStore},o));
 window.RB_LIVE_LIST=()=>{renderLiveSaved();watchList();};
@@ -10814,7 +10811,7 @@ function renderTripPhotos(){
   if(g){g.innerHTML=tripPhotos.map(photoThumb).join("");g.querySelectorAll("[data-photo]").forEach(b=>b.addEventListener("click",()=>openViewer(b.dataset.photo,tripCtx(t))));}
   const st=$("tripPhotoState");if(st)st.textContent=tripUploading?"Uploading "+tripUploading+" photo"+(tripUploading>1?"s":"")+"…":(tripPhotos.length?"":"No target photos yet.");
   tripSummary(t);
-  ttSet("targets",tripTgtSum(t));
+  ttSet("targets",tripTgtSum(t));renderColdPick(t);
   const b=$("tripBest");if(b){const s=t.sum;b.hidden=!(s&&s.best);if(s&&s.best)b.innerHTML='Best group this trip: <b>'+esc(tripBestTxt(s.best))+'</b>'+(s.groups>1?' · '+s.groups+' groups measured':'');}
   drawTripAll(t);
 }
@@ -10879,11 +10876,32 @@ function coldHtml(t){
     '<div class="field"><label for="cb_b">Barrel</label><select id="cb_b" class="fieldselect"><option value="">Not noted</option><option value="clean">Clean</option><option value="fouled">Fouled</option></select></div>'+
     '<div class="field"><label for="cb_d">At (<span data-unit="yd">'+U.u("yd")+'</span>)</label><input id="cb_d" type="number" inputmode="numeric" step="any" placeholder="trip distance"></div></div>';
 }
-function bindCold(t){
+function coldFill(t){
   const X=$("cb_x");if(!X)return;const c=t.cold||{};
-  if(c.x!=null){U.fill(X,"in",Math.abs(c.x),2,2);$("cb_xs").value=c.x<0?"-1":"1";}
-  if(c.y!=null){U.fill($("cb_y"),"in",Math.abs(c.y),2,2);$("cb_ys").value=c.y<0?"-1":"1";}
-  $("cb_b").value=c.bore||"";if(num(c.dist)>0)U.fill($("cb_d"),"yd",num(c.dist),0,0);
+  if(c.x!=null){U.fill(X,"in",Math.abs(c.x),2,2);$("cb_xs").value=c.x<0?"-1":"1";}else X.value="";
+  if(c.y!=null){U.fill($("cb_y"),"in",Math.abs(c.y),2,2);$("cb_ys").value=c.y<0?"-1":"1";}else $("cb_y").value="";
+  $("cb_b").value=c.bore||"";if(num(c.dist)>0)U.fill($("cb_d"),"yd",num(c.dist),0,0);else $("cb_d").value="";}
+/* the cold-bore shot from the trip's own shots (2.45.2): every hole on a Live target is kept in inches from its aim point,
+   in the order fired, so picking one gives where it landed (and its velocity, when the chronograph was on) */
+function coldShots(){const out=[];tripPhotos.forEach((p,pi)=>{const M=normMeasure(p.measure);if(!M)return;
+  M.groups.forEach((g,gi)=>{if(!Array.isArray(g.hin))return;g.hin.forEach((q,k)=>out.push({key:p.id+"|"+gi+"|"+k,pid:p.id,pi,gi,k,x:+q[0],y:+q[1],
+    v:Array.isArray(g.vel)&&num(g.vel[k])>0?num(g.vel[k]):null,dist:num(M.distance)>0?num(M.distance):null,aim:M.groups.length>1?(g.ai!=null?g.ai:gi)+1:null}));});});return out;}
+function renderColdPick(t){
+  const box=$("coldPick");if(!box)return;const all=coldShots(),c=t.cold||{},sel=c.src?c.src.p+"|"+c.src.g+"|"+c.src.k:"";
+  if(!all.length){box.innerHTML='<p class="note">Your shots from a Live target on this trip show up here: tap the first one of the day to mark it as the cold-bore shot. Over many trips the gun\'s page shows whether the cold-bore shot wanders from your zero.</p>';return;}
+  const every=box.dataset.all==="1",list=every?all:all.filter(x=>x.k===0||x.key===sel);
+  const f=(v,a,b)=>Math.abs(v)<.005?"":U.s("in",Math.abs(v),2)+" "+(v>0?a:b);
+  box.innerHTML='<p class="note">Tap your cold-bore shot (the first of the day). '+(every?'Every shot on this trip\'s Live targets.':'The first shot at each aim point.')+'</p><div class="coldpick">'+
+    list.map(x=>{const on=x.key===sel;return '<button type="button" class="btn coldshot'+(on?' on':'')+'" aria-pressed="'+on+'" data-cold="'+esc(x.key)+'"><b>Target '+(x.pi+1)+(x.aim?', aim '+x.aim:'')+', shot '+(x.k+1)+'</b><span>'+([f(x.y,"high","low"),f(x.x,"right","left")].filter(Boolean).join(", ")||"on the aim point")+(x.v?' · '+vS(x.v)+' '+U.u("fps"):'')+'</span></button>';}).join("")+'</div>'+
+    '<div class="row">'+(all.length>list.length||every?'<button class="linkbtn" type="button" id="coldAll">'+(every?'Show first shots only':'Show every shot')+'</button>':'')+(sel?'<button class="linkbtn" type="button" id="coldClr">Clear</button>':'')+'</div>';
+  box.querySelectorAll("[data-cold]").forEach(b=>b.addEventListener("click",()=>{const x=all.find(o=>o.key===b.dataset.cold);if(!x)return;
+    t.cold={x:+x.x.toFixed(3),y:+x.y.toFixed(3),bore:(t.cold&&t.cold.bore)||null,dist:x.dist,v:x.v,src:{p:x.pid,g:x.gi,k:x.k}};t.updated=Date.now();queueTrips();
+    coldFill(t);renderColdPick(t);ttSet("cold",tripColdSum(t));}));
+  {const a=$("coldAll");if(a)a.addEventListener("click",()=>{box.dataset.all=every?"":"1";renderColdPick(t);});}
+  {const z=$("coldClr");if(z)z.addEventListener("click",()=>{delete t.cold;t.updated=Date.now();queueTrips();coldFill(t);renderColdPick(t);ttSet("cold",tripColdSum(t));});}
+}
+function bindCold(t){
+  const X=$("cb_x");if(!X)return;coldFill(t);
   const upd=()=>{const ax=num($("cb_x").value),ay=num($("cb_y").value);
     const x=ax==null?null:U.from("in",Math.abs(ax))*(+$("cb_xs").value),y=ay==null?null:U.from("in",Math.abs(ay))*(+$("cb_ys").value),d=num(U.read($("cb_d"),"yd",null));
     if(x==null&&y==null)delete t.cold;else t.cold={x:x==null?0:+x.toFixed(3),y:y==null?0:+y.toFixed(3),bore:$("cb_b").value||null,dist:d>0?d:null};
@@ -11078,15 +11096,13 @@ function renderTrips(){
   const tgtBody='<p class="tripbest" id="tripBest" hidden></p><div class="photos" id="tripPhotoGrid"></div><span class="savestate" id="tripPhotoState"></span>'+
     '<div class="grpall" id="tripAll" hidden></div>'+
     '<p class="note">Tap a target to measure its groups, the same way as in Reloading. Printed Range Book targets are read by themselves.</p>'+
-    '<details class="tmore"><summary>More</summary><div class="row"><button class="btn" id="tripLiveAdd" type="button">+ Saved Live target</button></div>'+
-      '<div class="row tripTgt"><select id="tripTgt" class="fieldselect" aria-label="Target to print"><option value="rb5">5 aim points (Letter)</option></select><button class="btn" id="tripTgtGo" type="button">Print a target for this trip</button></div>'+
-      '<p class="note">The target comes with this trip\'s load, date, distance and gun already filled in at the top.</p></details>';
+    '<div class="row"><button class="btn" id="tripTgtGo" type="button">Print a target</button></div>';
   h=crumbs(t.date?fmtDate(t.date):"Range trip")+'<datalist id="dl_place">'+places.map(p=>'<option value="'+esc(p)+'">').join("")+'</datalist>'+
     '<div class="tripcols" id="secTrips" aria-label="Range trip"><div class="tcol">'+sess+
       ttile("details",t,"Trip details",tripDetSum(t),h)+
       ttile("chrono",t,"Chronograph",tripChronoSum(t),chronoBody)+
       ttile("targets",t,"Targets",tripTgtSum(t),tgtBody)+
-      ttile("cold",t,"Cold-bore shot",tripColdSum(t),coldHtml(t).replace(/^<h3>Cold-bore shot<\/h3>/,""))+
+      ttile("cold",t,"Cold-bore shot",tripColdSum(t),'<div id="coldPick"></div><details class="tmore"><summary>Type it in yourself</summary>'+coldHtml(t).replace(/^<h3>Cold-bore shot<\/h3><p class="note"[^>]*>.*?<\/p>/,"")+'</details>')+
       '<div class="row endrow"><span class="savestate" id="tripState"></span>'+(window.GUEST?'':'<button class="btn" id="tripPrint" type="button">Print trip report</button>')+'<button class="btn danger" id="tripDel" type="button">Delete this trip</button></div>'+
     '</div><div class="tcol" id="tripDopeSlot"><p class="note" id="tripAirNote" aria-live="polite"></p></div></div>';
   root.innerHTML=h;
@@ -11180,25 +11196,20 @@ function renderTrips(){
   root.querySelectorAll("[data-tf]").forEach(inp=>inp.addEventListener("input",()=>{
     const k=inp.dataset.tf,isNum=inp.type==="number";t[k]=isNum?readU(inp,k,FIELD_U,t[k]):inp.value;t.updated=Date.now();queueTrips();
     if(k==="avgVel")mvRow();}));
-  bindCold(t);
+  bindCold(t);renderColdPick(t);
   {const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>{t.partId=tpp.value;t.updated=Date.now();queueTrips();});}
   {const tc=$("tp_can"),fit=()=>{const b=$("tpCanFit");if(!b)return;const tc2=tripCart(t);b.innerHTML=t.canId?canFitHtml(cans.find(c=>c.id===t.canId),tc2.cart,tc2.gun&&tc2.gun.name):"";};
     fit();if(tc)tc.addEventListener("change",()=>{t.canId=tc.value;t.updated=Date.now();queueTrips();fit();renderChrono();drawTripAll(t);canPing();});
     const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>setTimeout(fit));}
   $("tripBack").addEventListener("click",()=>{tripOpen=null;tripPhotos=[];renderTrips();window.scrollTo(0,0);});
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
-  $("tripLiveAdd").addEventListener("click",()=>livePick(t.id));
   $("tripLive").addEventListener("click",()=>{const id=t.id,C=tripCtx(t);
     startLive({title:(t.place||"Range trip")+(t.date?" · "+fmtDate(t.date):""),groups:[],dist:num(t.distance)||100,dia:C.dia,profile:t.trajId,
       async save(data,w,h,M){const r=await API.post("/api/trips/"+id+"/photos",{data,w,h,caption:""});const ph=r&&r.photo;if(!ph)throw new Error("save");
         const txt=measureText(M,null);await API.patch("/api/photos/"+ph.id,{measure:M,caption:txt});Object.assign(ph,{measure:M,caption:txt,w,h});
         if(tripOpen===id){freshKeep(id);tripPhotos.push(ph);renderTripPhotos();openViewer(ph.id,tripCtx(t));}}});});
-  {const sel=$("tripTgt");let last="rb5";try{last=localStorage.getItem("rb.tripTgt")||"rb5";}catch(e){}
-    fetch(targetsUrl(),{cache:"no-cache"}).then(r=>r.json()).then(T=>{if(!$("tripTgt"))return;const FO=Object.keys(T.formats||{letter:1});sel.innerHTML=T.layouts.filter(L=>!L.legacy).sort((x,y)=>(FO.indexOf(x.fmt||"letter")-FO.indexOf(y.fmt||"letter"))||(x.aims.length-y.aims.length)).map(L=>'<option value="'+esc(L.id)+'"'+(L.id===last?' selected':'')+'>'+esc(L.name)+' ('+esc(((T.formats||{})[L.fmt||"letter"]||{}).label||((L.fmt||"letter")==="tabloid"?"11 × 17":"Letter"))+')</option>').join("");}).catch(()=>{});
-    $("tripTgtGo").addEventListener("click",()=>{const id=sel.value||"rb5";try{localStorage.setItem("rb.tripTgt",id);}catch(e){}
-      const T0=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===t.trajId)||{},g=rifles.find(r=>r.id===T0.rifleId);
-      const q=new URLSearchParams();if(T0.name)q.set("load",T0.name);if(t.date)q.set("date",fmtDate(t.date));if(num(t.distance))q.set("dist",String(U.n("yd",num(t.distance),0)));if(g&&g.name)q.set("gun",g.name);q.set("u",U.metric?"m":"yd");
-      RB_PDF("/api/targets/"+id+".pdf?"+q.toString(),"RangeBook-target-"+id+".pdf");});}
+  // Print a target: the printable targets page in Tools (2.45.2)
+  $("tripTgtGo").addEventListener("click",()=>{if(window.RB_GO)RB_GO("targets");});
   const pr=$("tripPrint");
   if(pr)pr.addEventListener("click",()=>{
     // make sure the latest changes are on the server first, then open the PDF
