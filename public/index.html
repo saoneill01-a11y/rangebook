@@ -2176,6 +2176,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-account" role="tabpanel" hidden>
     <header><h1>Account</h1><p class="sub" id="acctWho"></p></header>
+    <div class="row" id="acctAdmin" hidden><button class="btn primary" type="button" id="acAdmin">Open Admin</button></div>
     <p class="acgrp">Look</p>
     <section class="card" aria-label="Theme"><h2>Theme</h2>
       <div class="themegrid" id="themeGrid"></div>
@@ -2223,10 +2224,6 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p class="note">Found something wrong, or have an idea? This goes to the person who makes Range Book, not to whoever runs this server. Nothing is sent from Range Book itself: it opens your own email app (or GitHub) with the Range Book version filled in, and you write the rest.</p>
       <div class="row"><a class="btn primary" id="fbMail" hidden>Email feedback</a><a class="btn" id="fbGh" target="_blank" rel="noopener">Post it on GitHub</a></div>
       <p class="note" id="fbNote">GitHub needs a free account, and what you post there is public.</p></section>
-    <section class="card" aria-label="Admin" id="acctAdmin" hidden><h2>Admin</h2>
-      <p class="note">Add people, reset forgotten passwords, turn accounts on or off, backups and sharing for this Range Book.</p>
-      <div class="row"><button class="btn" type="button" id="acAdmin">Open Admin</button></div>
-    </section>
   </div>
   <div class="panel" id="panel-sheetimp" role="tabpanel" hidden>
     <header class="phead"><button class="backbtn" id="sheetBack" type="button">‹ Account</button><h1>Import from a spreadsheet</h1><p class="sub">Add your guns, optics, lowers, uppers, barrels, magazines, factory ammo and components from Excel, Numbers or Google Sheets.</p></header>
