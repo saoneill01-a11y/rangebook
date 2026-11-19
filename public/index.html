@@ -8853,7 +8853,7 @@ function openLive(o){
   v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
       '<div class="lvstat"><span class="lvpill warn" id="lvAng" hidden><i></i><span></span></span><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
-      '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
+      '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvmanual" id="lvFind" type="button" hidden>Find target again</button><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
     '<div class="chgrip lvgrip" id="lvGrip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Camera picture height. Drag up or down, or use the arrow keys." title="Drag to make the camera picture bigger or smaller. Double-tap to reset."><span></span></div>'+
     '<div class="lvside">'+
       '<div class="lvinfo"><span class="lvchip">'+esc(o.title||"Target")+'</span></div>'+
@@ -8879,7 +8879,7 @@ function openLive(o){
   const can=$("lvCan"),ctx=can.getContext("2d"),thumb=$("lvThumb"),tctx=thumb.getContext("2d"),camBox=$("lvCam");
   const video=document.createElement("video");video.setAttribute("playsinline","");video.muted=true;video.autoplay=true;
   const work=document.createElement("canvas"),wctx=work.getContext("2d",{willReadFrequently:true});
-  let stream=null,closed=false,T=null,lock=null,lockMiss=0,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
+  let stream=null,closed=false,T=null,lock=null,lockMiss=0,refind=false,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
   let aim=0,holes=[],newest=null,status={t:"Starting the camera…",k:"busy"},pageW=8.5,pageH=11,undo=[],sheetFor=null;
   // a hole is [x, y] in target inches, or [x, y, fps] once the chronograph's velocity is on it (2.44.7)
   let pendVel=null,lastFind=null;
@@ -9020,8 +9020,8 @@ function openLive(o){
     if(r&&lock&&r.layout.id!==lock.layout.id)r=null; // a different page: ignore it
     if(r){
       // keep the old mapping unless the page really moved, so tiny wobbles don't shift the flattened picture
-      if(lock){const d=Math.max(...r.corners.map((c,i)=>Math.hypot(c[0]-lock.corners[i][0],c[1]-lock.corners[i][1])));if(d<1.5){lockMiss=0;return true;}}
-      const first=!lock;if(!first)r.layout=lock.layout;lock=r;lockMiss=0;angleCheck();
+      if(lock&&!refind){const d=Math.max(...r.corners.map((c,i)=>Math.hypot(c[0]-lock.corners[i][0],c[1]-lock.corners[i][1])));if(d<1.5){lockMiss=0;return true;}}
+      const first=!lock;if(!first)r.layout=lock.layout;lock=r;lockMiss=0;refind=false;angleCheck();
       if(first){
         const fm=T.formats&&T.formats[r.fmt];if(fm&&fm.page){pageW=fm.page[0];pageH=fm.page[1];}else if(T.page){pageW=T.page[0];pageH=T.page[1];}
         r.layout=JSON.parse(JSON.stringify(r.layout));
@@ -9030,7 +9030,7 @@ function openLive(o){
       }
       return true;
     }
-    lockMiss++;return !!(keepOld&&lock);
+    lockMiss++;return !!(keepOld&&lock&&!refind);
   }
   async function lockLoop(){
     try{T=await loadTargets();}catch(e){T=null;}
@@ -9038,12 +9038,13 @@ function openLive(o){
     while(!closed){
       const fr=grab();
       if(fr&&!busy){
-        const had=!!lock,ok=relock(fr,false);
+        const again=refind,had=!!lock&&!again,ok=relock(fr,false);
         if(ok&&!had){
-          const f=await steady(1500);if(closed)return;ref=f;
-          setStat("Target locked: "+lock.layout.name+". Fire at "+aimLabel(aim)+", then tap Shot.","");$("lvShot").disabled=false;$("lvView").hidden=false;$("lvManual").hidden=true;
+          const f=await steady(1500);if(closed)return;if(refind||!lock)continue;ref=f;
+          setStat((again?"Target found again":"Target locked: "+lock.layout.name)+". Fire at "+aimLabel(aim)+", then tap Shot.","");$("lvShot").disabled=false;$("lvView").hidden=false;$("lvManual").hidden=true;$("lvFind").hidden=false;
           lastRefresh=Date.now();
-        }else if(!ok&&lock&&lockMiss===8)setStat("Can't see all four corner squares. Keep the whole page in view.","busy");
+        }else if(!ok&&again&&lockMiss===12)setStat("Still looking for the target. Keep the whole page in view, with all four corner squares.","busy");
+        else if(!ok&&lock&&!again&&lockMiss===8)setStat("Can't see all four corner squares. Keep the whole page in view.","busy");
         else if(ok&&had&&lockMiss===0&&/corner squares|Camera back/.test(status.t)&&status.k==="busy")setStat("Target found again. Fire at "+aimLabel(aim)+", then tap Shot.","");
         // every so often, follow slow changes in the light, unless there's an unclaimed hole
         if(ok&&lock&&ref&&!busy&&Date.now()-lastRefresh>20000){lastRefresh=Date.now();const f=flatten(fr,lock);if(!findNew(ref,f).length)ref=f;}
@@ -9051,6 +9052,17 @@ function openLive(o){
       await wait(lock?700:350);
     }
   }
+  /* ----- Find target again (2.47.5): the camera moved, so forget where the page was and look for it from scratch.
+     The shots, the aim point and the groups stay; once it's found, a new picture to compare against is taken,
+     so the holes already there don't count as new shots. A target you tapped goes back to tapping its corners. ----- */
+  function findAgain(){
+    if(busy||man||!lock)return;
+    ref=null;newest=null;$("lvShot").disabled=true;
+    if(lock.manual){$("lvFind").hidden=true;manStart();return;}
+    refind=true;lockMiss=0;
+    setStat("Looking for the target… Keep the whole page in view.","busy");
+  }
+  $("lvFind").addEventListener("click",findAgain);
   /* ----- comparing before and after ----- */
   function findNew(A,B){
     const P=LIVE_PPI,w=A.w,h=A.h,N=w*h,fid=(lock&&lock.fid)||T.fid,fs=lock&&lock.manual?.3:((lock&&lock.fs)||(T&&T.fidSize)||1)/2+.18,edge=.22;
@@ -9180,7 +9192,7 @@ function openLive(o){
     ctx.drawImage(video,0,0);
     ctx.setTransform(dpr,0,0,dpr,0,0);
     const S=(x,y)=>{const p=applyH(lock.Hinv,x,y);return [(p[0]-sx)*k/dpr,(p[1]-sy)*k/dpr];};
-    if(lock){
+    if(lock&&!refind){
       const ppi=Math.hypot(...[0,1].map(i=>S(1,0)[i]-S(0,0)[i])),hr=Math.max(4,dia/2*ppi);
       // your reticle, to scale, with its hold mark on the current aim point (2.33)
       if(RT.on&&RTR&&!RTR.err){const a=aims()[aim];if(a){const A=S(a.x,a.y),ppm=ppi*RTR.per;
@@ -9264,7 +9276,7 @@ function openLive(o){
   // a tap at a spot on the picture (0–1 across and down), from this screen or from a device watching it
   function tapAt(u,w){
     if(man&&crop){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);manTap(crop[0]+u*rc.width/k,crop[1]+w*rc.height/k);return;}
-    if(!lock||!crop)return;const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);
+    if(!lock||!crop||refind)return;const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);
     const cx=crop[0]+u*rc.width/k,cy=crop[1]+w*rc.height/k,[px,py]=applyH(lock.H,cx,cy);
     if(px<0||py<0||px>pageW||py>pageH)return;
     const ppi=k*Math.hypot(...[0,1].map(i=>applyH(lock.Hinv,1,0)[i]-applyH(lock.Hinv,0,0)[i])),tol=Math.max(dia*.75,16/ppi);
@@ -9279,7 +9291,7 @@ function openLive(o){
   const CORN=["top-left","top-right","bottom-right","bottom-left"];
   function manStart(){
     man={step:"corners",pts:[],aims:[]};view="full";busy=false;
-    $("lvManual").hidden=true;$("lvMDone").hidden=true;
+    $("lvManual").hidden=true;$("lvMDone").hidden=true;$("lvFind").hidden=true;
     setStat("Tap the paper's "+CORN[0]+" corner.","busy");
   }
   function manTap(cx,cy){
@@ -9312,7 +9324,7 @@ function openLive(o){
     const keepAims=lock&&lock.manual&&lock.layout.aims.length===aimsL.length?lock.layout.aims:null;
     if(keepAims)aimsL.forEach((a,i)=>a.groupId=keepAims[i].groupId);
     lock={manual:true,H:man.H,Hinv:man.Hinv,corners:man.pts,fid:[[0,0],[w,0],[w,h],[0,h]],fmt:null,layout:{id:"custom",name:"your target",aims:aimsL}};
-    pageW=w;pageH=h;man=null;angleCheck();$("lvMDone").hidden=true;$("lvManual").hidden=false;$("lvManual").textContent="Tap corners again";
+    pageW=w;pageH=h;man=null;angleCheck();$("lvMDone").hidden=true;$("lvManual").hidden=true;$("lvFind").hidden=false;
     if(!keepAims){aim=0;fillAim();}
     busy=true;setStat("Taking a picture of the target to compare against…","busy");
     const f=await steady(1500);busy=false;if(closed)return;ref=f;view="aim";lastRefresh=Date.now();
@@ -9341,12 +9353,12 @@ function openLive(o){
     return {status:status.t,kind:status.k,ang:ang.t?{t:ang.t,k:ang.k,deg:Math.round(ang.deg)}:null,locked:!!lock,ready:!!ref,chip:$("lvAimChip").textContent,
       stats:{n:r.n,want:want||null,size:r.size!=null?U.n("in",r.size,2):"–",moa:m!=null?m.toFixed(2):"–",mr:r.mr!=null?U.n("in",r.mr,2):"–",off:offTxt(r)},
       en:{shot:!$("lvShot").disabled,undo:!$("lvUndo").disabled,prev:!$("lvPrev").disabled,next:!$("lvNext").disabled,done:!$("lvDone").disabled},
-      viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,doneLabel:$("lvDone").textContent,
+      viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,findShown:!$("lvFind").hidden,doneLabel:$("lvDone").textContent,
       groups:gs?[...gs.options].map(o=>[o.value,o.textContent]):null,group:gs?gs.value:null,want:$("lvWant").value,dist:$("lvDist").value,unitIn:U.u("in"),unitYd:U.u("yd"),
       mic:!!micT,sens,sheet,title:o.title||"",hosted:!!o.hosted,total:holes.reduce((s2,h)=>s2+(h?h.length:0),0),result:resTok,
       ret:{on:!!RT.on,prof:RT.prof||null,zero:num(RT.zero)>0?num(RT.zero):null,note:(($("lvRetNote")||{}).textContent)||""}};
   }
-  const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvMDone","lvmOk","lvmRedo"];
+  const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvMDone","lvmOk","lvmRedo","lvFind"];
   function rmRun(c){
     if(c.cmd==="click"&&RM_CLICK.includes(c.id)){const b=$(c.id);if(b&&!b.disabled)b.click();}
     else if(c.cmd==="tap"&&isFinite(c.u)&&isFinite(c.w))tapAt(Math.min(1,Math.max(0,c.u)),Math.min(1,Math.max(0,c.w)));
@@ -9659,7 +9671,7 @@ function openWatch(id,dev,host){
   const v=document.createElement("div");v.className="viewer live watch";v.id="liveWatch";v.setAttribute("role","dialog");v.setAttribute("aria-label","Watching Live target");
   v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill warn" id="wAng" hidden><i></i><span></span></span><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
-      '<button class="btn lvview" id="wView" type="button" hidden>Whole target</button></div>'+
+      '<button class="btn lvview" id="wView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="wFind" type="button" hidden>Find target again</button></div>'+
     '<div class="lvside"><div class="lvinfo"><span class="lvchip" id="wTitle"></span></div>'+
       '<div class="lvrow"><button class="lvshot" id="wShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="wUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
@@ -9681,7 +9693,7 @@ function openWatch(id,dev,host){
   const cmd=b=>rfetch("POST","/api/remote/"+id+"/cmd",b).catch(()=>setStat("Couldn't reach the phone. Check the signal.","bad"));
   const setStat=(t,k)=>{const s=$("wStat");s.className="lvpill"+(k?" "+k:"");s.lastChild.textContent=t;};
   const click=bid=>cmd({cmd:"click",id:bid});
-  [["wShot","lvShot"],["wUndo","lvUndo"],["wPrev","lvPrev"],["wNext","lvNext"],["wDone","lvDone"],["wView","lvView"]].forEach(([a,b])=>$(a).addEventListener("click",()=>{click(b);if(a==="wShot"){$(a).disabled=true;setStat("Looking for the shot…","busy");}}));
+  [["wShot","lvShot"],["wUndo","lvUndo"],["wPrev","lvPrev"],["wNext","lvNext"],["wDone","lvDone"],["wView","lvView"],["wFind","lvFind"]].forEach(([a,b])=>$(a).addEventListener("click",()=>{click(b);if(a==="wShot"){$(a).disabled=true;setStat("Looking for the shot…","busy");}if(a==="wFind"){$("wShot").disabled=true;setStat("Looking for the target…","busy");}}));
   v.querySelectorAll("[data-wsens]").forEach(b=>b.addEventListener("click",()=>{cmd({cmd:"sens",v:b.dataset.wsens});v.querySelectorAll("[data-wsens]").forEach(x=>x.classList.toggle("on",x===b));}));
   $("wGroup").addEventListener("change",e=>cmd({cmd:"set",k:"group",v:e.target.value}));
   let wt=null;const later=(k,el)=>{clearTimeout(wt);wt=setTimeout(()=>cmd({cmd:"set",k,v:el.value}),500);};
@@ -9695,7 +9707,7 @@ function openWatch(id,dev,host){
     const T=S.stats||{};
     $("wStats").innerHTML='<div><b>'+esc(T.n)+(T.want?'<small>/'+esc(T.want)+'</small>':'')+'</b><span>Shots</span></div><div><b>'+esc(T.size)+'</b><span>Group '+esc(S.unitIn||"in")+'</span></div><div><b>'+esc(T.moa)+'</b><span>MOA</span></div><div><b>'+esc(T.mr)+'</b><span>Mean rad.</span></div><div class="wide">Center from aim: <b>'+esc(T.off)+'</b></div>';
     const E=S.en||{};$("wShot").disabled=!E.shot;$("wUndo").disabled=!E.undo;$("wPrev").disabled=!E.prev;$("wNext").disabled=!E.next;$("wDone").disabled=!E.done;$("wDone").textContent=S.doneLabel||"Save";
-    $("wView").hidden=!S.viewShown;$("wView").textContent=S.viewLabel||"Whole target";
+    $("wView").hidden=!S.viewShown;$("wView").textContent=S.viewLabel||"Whole target";$("wFind").hidden=!S.findShown;
     const gl=$("wGroupL"),gsel=$("wGroup");gl.hidden=!S.groups;gl.parentNode.style.gridTemplateColumns=S.groups?"":"1fr 1fr";
     if(S.groups){const key=JSON.stringify(S.groups);if(key!==lastGroups){lastGroups=key;gsel.innerHTML=S.groups.map(([a,b])=>'<option value="'+esc(a)+'">'+esc(b)+'</option>').join("");}if(document.activeElement!==gsel)gsel.value=S.group||"";}
     if(document.activeElement!==$("wWant"))$("wWant").value=S.want||"";if(document.activeElement!==$("wDist"))$("wDist").value=S.dist||"";
