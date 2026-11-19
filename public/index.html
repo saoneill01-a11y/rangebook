@@ -8907,10 +8907,11 @@ function openLive(o){
      to a spotting-scope eyepiece it keeps jumping to the macro/ultra-wide lens. So after the first start we list the back
      lenses, use the main one (iOS calls it "Back Camera") unless you picked another, and remember the pick on this device. (2.18.3) */
   const LENS_KEY="rb.liveLens";
-  const lensName=l=>{const t=String(l||"");if(/longshot|hawk/i.test(t))return "Longshot Hawk (Wi-Fi camera)";if(/ultra\s*wide/i.test(t))return "Ultra wide (0.5×)";if(/tele/i.test(t))return "Telephoto (zoom)";if(/triple/i.test(t))return "Automatic (all lenses)";if(/dual\s*wide/i.test(t))return "Automatic (main + ultra wide)";if(/dual/i.test(t))return "Automatic (main + telephoto)";if(/^back camera$/i.test(t.trim()))return "Main (1×)";return t||"Camera";};
+  const lensName=l=>{const t=String(l||"");if(/ultra\s*wide/i.test(t))return "Ultra wide (0.5×)";if(/tele/i.test(t))return "Telephoto (zoom)";if(/triple/i.test(t))return "Automatic (all lenses)";if(/dual\s*wide/i.test(t))return "Automatic (main + ultra wide)";if(/dual/i.test(t))return "Automatic (main + telephoto)";if(/^back camera$/i.test(t.trim()))return "Main (1×)";return t||"Camera";};
   const isBack=d=>/back|rear|environment|camera2 0|facing back/i.test(d.label||"");
   const isAuto=d=>/(dual|triple)/i.test(d.label||"");
-  // a Longshot Hawk on the iPad's Wi-Fi: the Range Book iPad/iPhone app lists it as a camera ("rb-hawk"); browsers never do
+  // a Longshot camera on its own Wi-Fi: the Range Book iPad/iPhone app lists it as a camera ("rb-hawk"); browsers never do.
+  // It's picked in Which camera? when Live target starts, never in the lens picker (that's this device's own lenses). (2.47.5)
   const isHawk=d=>d.deviceId==="rb-hawk";
   let lenses=[],lensId=null;
   async function openStream(devId){
@@ -8919,7 +8920,7 @@ function openLive(o){
   }
   function fillLenses(){
     const sel=$("lvLens"),lab=$("lvLensL");if(!sel)return;
-    lab.hidden=lenses.length<2;
+    lab.hidden=o.cam==="hawk"||lenses.length<2;   // with the Longshot camera there's no lens to pick
     sel.innerHTML=lenses.map(d=>'<option value="'+esc(d.deviceId)+'"'+(d.deviceId===lensId?' selected':'')+'>'+esc(lensName(d.label))+'</option>').join("");
   }
   async function useStream(st){
@@ -8956,17 +8957,17 @@ function openLive(o){
     if(!liveSupported()){setStat(location.protocol==="https:"||location.hostname==="localhost"?"This browser can't use the camera.":"The camera needs Range Book's https address. Open it that way and try again.","bad");return;}
     try{
       let saved=null;try{saved=localStorage.getItem(LENS_KEY);}catch(e){}
-      if(saved==="rb-hawk")saved=null;   // the Hawk is its own choice when Live target starts (2.47.5)
+      if(saved==="rb-hawk")saved=null;   // the Longshot is its own choice when Live target starts (2.47.5)
       if(o.cam==="hawk")saved="rb-hawk";
       let st=null;
-      if(saved){try{st=await openStream(saved);}catch(e){st=null;if(o.cam==="hawk"){setStat("Couldn't get the Hawk's picture. Check its Wi-Fi, or tap ← Back and pick another camera.","bad");return;}}}
+      if(saved){try{st=await openStream(saved);}catch(e){st=null;if(o.cam==="hawk"){setStat("Couldn't get the Longshot camera's picture. Check its Wi-Fi, or tap ← Back and pick another camera.","bad");return;}}}
       if(!st)st=await openStream(null);
       if(closed){st.getTracks().forEach(t=>t.stop());return;}
-      await useStream(st);
+      await useStream(st);if(o.cam==="hawk")lensId="rb-hawk";   // so a restart after an interruption opens the Longshot again
       // the lens list (labels only show once the camera is allowed)
       try{const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput");
-        lenses=all.filter(d=>isBack(d)||isHawk(d));if(!lenses.some(isBack))lenses=all;
-        const rank=d=>{const t=d.label||"";return isHawk(d)?5:/^back camera$/i.test(t.trim())?0:/ultra\s*wide/i.test(t)?1:/tele/i.test(t)?2:isAuto(d)?4:3;};lenses.sort((a,b)=>rank(a)-rank(b));
+        const own=all.filter(d=>!isHawk(d));lenses=own.filter(isBack);if(!lenses.length)lenses=own;
+        const rank=d=>{const t=d.label||"";return /^back camera$/i.test(t.trim())?0:/ultra\s*wide/i.test(t)?1:/tele/i.test(t)?2:isAuto(d)?4:3;};lenses.sort((a,b)=>rank(a)-rank(b));
         // no pick yet and we got the self-switching camera: use the main lens instead
         const curD=lenses.find(d=>d.deviceId===lensId),main=lenses.find(d=>/^back camera$/i.test((d.label||"").trim()));
         if(!saved&&main&&main.deviceId!==lensId&&(!curD||isAuto(curD))){try{const s2=await openStream(main.deviceId);if(closed){s2.getTracks().forEach(t=>t.stop());return;}await useStream(s2);}catch(e){}}
@@ -8979,9 +8980,8 @@ function openLive(o){
   }
   async function switchLens(id){
     if(!id||id===lensId)return;
-    try{if(id==="rb-hawk"&&window.RB_HAWK&&RB_HAWK.join){setStat("Connecting to the Hawk's Wi-Fi…","busy");if(await RB_HAWK.join()!==true)throw {name:"no Hawk in range"};}
-      setStat("Switching lens…","busy");const st=await openStream(id);if(closed){st.getTracks().forEach(t=>t.stop());return;}
-      await useStream(st);if(id!=="rb-hawk")try{localStorage.setItem(LENS_KEY,id);}catch(e){}lock=null;fillLenses();
+    try{setStat("Switching lens…","busy");const st=await openStream(id);if(closed){st.getTracks().forEach(t=>t.stop());return;}
+      await useStream(st);try{localStorage.setItem(LENS_KEY,id);}catch(e){}lock=null;fillLenses();
       setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");}
     catch(e){setStat("That lens couldn't start"+(e&&e.name?" ("+e.name+")":"")+". Pick another.","bad");fillLenses();}
   }
@@ -9872,7 +9872,7 @@ const LIVE_DEV=()=>/iPhone/.test(navigator.userAgent)?"iPhone":/iPad|Macintosh.*
 const LIVE_SENS={normal:{pk:.35,x:8},supp:{pk:.15,x:6},quiet:{pk:.06,x:5}};
 /* which camera (2.47.5): asked every time Live target starts, with the last pick on this device already highlighted, so it's
    one tap. This device's own camera; a phone on the scope waiting as a camera (Tools › Live target › Be the camera); or, in the
-   Range Book iPad/iPhone app only (window.RB_HAWK), a Longshot Hawk over its own Wi-Fi. */
+   Range Book iPad/iPhone app only (window.RB_HAWK), a Longshot camera over its own Wi-Fi. */
 const LIVE_CAM_KEY="rb.liveCam";
 async function startLive(o){
   let cams=[],last=null;try{last=localStorage.getItem(LIVE_CAM_KEY);}catch(e){}
@@ -9890,7 +9890,7 @@ async function startLive(o){
     $("lwBtns").innerHTML=B("self","data-lwself","This "+LIVE_DEV()+"'s camera","Pick the lens on the next screen.")+
       (cams.length?cams.map(c=>B("phone",'data-lwcam="'+esc(c.id)+'" data-lwdev="'+esc(c.device)+'"',"The "+c.device+" on your scope","It's waiting as a camera. This "+LIVE_DEV()+" runs the buttons, the microphone and the save.")).join("")
         :B("phone","data-lwphone","A phone on your scope","Another phone or iPad as the camera, with this "+LIVE_DEV()+" running the session."))+
-      (hawk?B("hawk","data-lwhawk","Longshot Hawk","The Hawk's camera, over its own Wi-Fi."):"");
+      (hawk?B("hawk","data-lwhawk","Longshot","The Longshot camera, over its own Wi-Fi."):"");
     const f=w.querySelector(".lwbig.primary");if(f)f.focus({preventScroll:true});
   }
   draw();
@@ -9907,11 +9907,11 @@ async function startLive(o){
     const b=e.target.closest("[data-lwcam]");if(b){remember("phone");shut();return openWatch(b.dataset.lwcam,b.dataset.lwdev,{o});}
     if(e.target.closest("[data-lwphone]")){remember("phone");msg("On the phone, open Tools › Live target and tap Be the camera for your iPad, then aim it at the target. It shows up here when it's ready.","");clearTimeout(poll);watchPhones();return;}
     if(e.target.closest("[data-lwhawk]")){
-      remember("hawk");joining=true;w.querySelectorAll(".lwbig").forEach(x=>x.disabled=true);msg("Connecting to the Hawk's Wi-Fi…","busy");
+      remember("hawk");joining=true;w.querySelectorAll(".lwbig").forEach(x=>x.disabled=true);msg("Connecting to the Longshot camera's Wi-Fi…","busy");
       let ok=false,why="";try{ok=await RB_HAWK.join();}catch(err){ok=false;why=String(err&&err.message||err||"");}
       joining=false;if(gone)return;w.querySelectorAll(".lwbig").forEach(x=>x.disabled=false);
       if(ok===true){shut();return openLive(Object.assign({},o,{cam:"hawk"}));}
-      msg((why||"Couldn't reach the Hawk. Check that it's turned on and close by.")+" Try again, or pick another camera.","bad");}
+      msg((why||"Couldn't reach the Longshot camera. Check that it's turned on and close by.")+" Try again, or pick another camera.","bad");}
   });
 }
 // the phone: wait to be the camera
