@@ -8410,15 +8410,19 @@ function detectRBTarget1(img,T,P){
   }else for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x;if(g[i]<Math.min(P[0],mean(x,y)*P[1]))dark[i]=1;}
   // the squares are the big, solid, square dark blobs
   const lab=new Int32Array(N).fill(-1),st=new Int32Array(N),comps=[];
-  for(let i=0;i<N;i++){if(!dark[i]||lab[i]>=0)continue;let sp=0;st[sp++]=i;lab[i]=comps.length;let a=0,sx=0,sy=0,x0=W,y0=H,x1=0,y1=0;
-    while(sp){const j=st[--sp],x=j%W,y=(j/W)|0;a++;sx+=x;sy+=y;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;
+  for(let i=0;i<N;i++){if(!dark[i]||lab[i]>=0)continue;let sp=0;st[sp++]=i;lab[i]=comps.length;let a=0,sx=0,sy=0,x0=W,y0=H,x1=0,y1=0,p0=1e9,p1=-1e9,m0=1e9,m1=-1e9;
+    while(sp){const j=st[--sp],x=j%W,y=(j/W)|0;a++;sx+=x;sy+=y;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;if(x+y<p0)p0=x+y;if(x+y>p1)p1=x+y;if(x-y<m0)m0=x-y;if(x-y>m1)m1=x-y;
       if(x>0&&dark[j-1]&&lab[j-1]<0){lab[j-1]=comps.length;st[sp++]=j-1;}if(x<W-1&&dark[j+1]&&lab[j+1]<0){lab[j+1]=comps.length;st[sp++]=j+1;}
       if(y>0&&dark[j-W]&&lab[j-W]<0){lab[j-W]=comps.length;st[sp++]=j-W;}if(y<H-1&&dark[j+W]&&lab[j+W]<0){lab[j+W]=comps.length;st[sp++]=j+W;}}
-    const bw=x1-x0+1,bh=y1-y0+1;comps.push({a,cx:sx/a,cy:sy/a,bw,bh,fill:a/(bw*bh),asp:Math.max(bw,bh)/Math.min(bw,bh)});}
+    // how square and solid: in an upright box, and in a box turned 45°, whichever fits better, so a square tilted in the
+    // picture (a camera mounted at an angle) still counts (2.47.5)
+    const bw=x1-x0+1,bh=y1-y0+1,dp=p1-p0+1,dm=m1-m0+1,f1=a/(bw*bh),f2=a/(dp*dm/2);
+    comps.push(Object.assign({a,cx:sx/a,cy:sy/a,bw,bh},f2>f1?{fill:Math.min(1,f2),asp:Math.max(dp,dm)/Math.min(dp,dm)}:{fill:f1,asp:Math.max(bw,bh)/Math.min(bw,bh)}));}
   // (through a scope the page is often small in the picture, so smaller squares count then)
   const amin=P[0]==="w"?N*0.0001:N*0.0003;
   // (a square seen from the side looks narrower: 1.7 to 1 is about 55° off, 2.9 to 1 about 70°; 2.41.2)
-  const cand=comps.filter(q=>q.a>amin&&q.a<N*0.03&&q.asp<2.9&&q.fill>0.55).sort((p,q)=>q.a-p.a).slice(0,P[0]==="w"?14:10);
+  // (solid enough: .45, so the hollow square, tilted about 22° in the picture, still counts; 2.47.5)
+  const cand=comps.filter(q=>q.a>amin&&q.a<N*0.03&&q.asp<2.9&&q.fill>0.45).sort((p,q)=>q.a-p.a).slice(0,P[0]==="w"?14:10);
   if(cand.length<4)return null;
   let best=null,bestScore=0;
   const quadArea=P=>{const c0=[P.reduce((s,p)=>s+p.cx,0)/4,P.reduce((s,p)=>s+p.cy,0)/4];const o=[...P].sort((p,q)=>Math.atan2(p.cy-c0[1],p.cx-c0[0])-Math.atan2(q.cy-c0[1],q.cx-c0[0]));
@@ -8879,7 +8883,21 @@ function openLive(o){
   const can=$("lvCan"),ctx=can.getContext("2d"),thumb=$("lvThumb"),tctx=thumb.getContext("2d"),camBox=$("lvCam");
   const video=document.createElement("video");video.setAttribute("playsinline","");video.muted=true;video.autoplay=true;
   const work=document.createElement("canvas"),wctx=work.getContext("2d",{willReadFrequently:true});
-  let stream=null,closed=false,T=null,lock=null,lockMiss=0,refind=false,ucrop=null,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
+  /* ----- the target upright on screen (2.47.5): a camera on its side (a Longshot often is, or a phone with rotation lock)
+     gives a sideways picture. Once locked, the picture is turned by quarter turns (rot: 0-3) so the hollow corner square
+     is at the top left. The crop, zoom and taps work in this turned picture ("screen pixels"); the finding stays in camera
+     pixels. rot only changes when a lock's top edge is within 30° of another quarter turn, so it doesn't flip near 45°. ----- */
+  const camWH=()=>[video.videoWidth||work.width,video.videoHeight||work.height];
+  const vdims=()=>{const [W,H]=camWH();return rot%2?[H,W]:[W,H];};
+  const toDisp=([x,y])=>{const [W,H]=camWH();return rot===1?[y,W-x]:rot===2?[W-x,H-y]:rot===3?[H-y,x]:[x,y];};
+  const fromDisp=([u,v])=>{const [W,H]=camWH();return rot===1?[W-v,u]:rot===2?[W-u,H-v]:rot===3?[v,H-u]:[u,v];};
+  const rotM=()=>{const [W,H]=camWH();return rot===1?[0,-1,1,0,0,W]:rot===2?[-1,0,0,-1,W,H]:rot===3?[0,1,-1,0,H,0]:[1,0,0,1,0,0];};
+  function rotCheck(){if(!lock)return;const [a,b]=lock.corners,th=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI,n=Math.round(th/90),q=((n%4)+4)%4;
+    if(q!==rot&&Math.abs(th-n*90)<30){rot=q;crop=null;ucrop=null;}}
+  // the camera frame (the work canvas), turned the same way, for saving
+  function rotWork(){if(!rot)return work;const c=document.createElement("canvas"),[w,h]=rot%2?[work.height,work.width]:[work.width,work.height];c.width=w;c.height=h;
+    const x=c.getContext("2d");x.setTransform(...rotM());x.drawImage(work,0,0);return c;}
+  let stream=null,closed=false,T=null,lock=null,lockMiss=0,refind=false,ucrop=null,rot=0,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
   let aim=0,holes=[],newest=null,status={t:"Starting the camera…",k:"busy"},pageW=8.5,pageH=11,undo=[],sheetFor=null;
   // a hole is [x, y] in target inches, or [x, y, fps] once the chronograph's velocity is on it (2.44.7)
   let pendVel=null,lastFind=null;
@@ -8891,7 +8909,7 @@ function openLive(o){
   const aimLabel=i=>{const g=grpFor(i);return g?gName(g,groups.indexOf(g)):"Aim "+(i+1);};
   // the camera angle (2.41.2): a note from 45°, a warning from 60°, with a little slack so it doesn't flicker at the line
   let ang={deg:null,lvl:0,t:"",k:""};
-  function angleCheck(){const d=lock?tiltDeg(lock.corners,lock.fid):null;if(d==null){ang={deg:null,lvl:0,t:"",k:""};}
+  function angleCheck(){rotCheck();const d=lock?tiltDeg(lock.corners,lock.fid):null;if(d==null){ang={deg:null,lvl:0,t:"",k:""};}
     else{const L=ang.lvl,up=[45,60],dn=[42,57];let lvl=d>=up[1]?2:d>=up[0]?1:0;if(L===2&&d>=dn[1])lvl=2;else if(L>=1&&lvl<1&&d>=dn[0])lvl=1;
       const r=Math.round(d/5)*5;
       ang={deg:d,lvl,k:lvl===2?"bad":"warn",t:lvl===2?"Camera about "+r+"° off straight-on: too steep. Holes may be missed or misplaced. Move it more in front of the target.":lvl===1?"Camera about "+r+"° off straight-on. Still measured right; zoom in if the holes look thin.":""};}
@@ -9185,10 +9203,10 @@ function openLive(o){
   // the part of the camera picture to show, in camera pixels
   function wantCrop(){
     if(ucrop)return ucrop;
-    const W=video.videoWidth,H=video.videoHeight,cw=can.clientWidth||1,ch=can.clientHeight||1,asp=cw/ch;
+    const [W,H]=vdims(),cw=can.clientWidth||1,ch=can.clientHeight||1,asp=cw/ch;
     let x0=0,y0=0,x1=W,y1=H;
     const zoom=view==="aim"&&lock&&ref;
-    if(zoom){const b=zoomBox();if(b){const P=[[b[0],b[1]],[b[2],b[1]],[b[2],b[3]],[b[0],b[3]]].map(([x,y])=>applyH(lock.Hinv,x,y));
+    if(zoom){const b=zoomBox();if(b){const P=[[b[0],b[1]],[b[2],b[1]],[b[2],b[3]],[b[0],b[3]]].map(([x,y])=>toDisp(applyH(lock.Hinv,x,y)));
       x0=Math.min(...P.map(p=>p[0]));x1=Math.max(...P.map(p=>p[0]));y0=Math.min(...P.map(p=>p[1]));y1=Math.max(...P.map(p=>p[1]));}}
     // match the screen's shape: fit the whole frame, or fill around the aim point
     let w=x1-x0,h=y1-y0,cx=(x0+x1)/2,cy=(y0+y1)/2;
@@ -9206,10 +9224,10 @@ function openLive(o){
     const tgt=wantCrop();
     if(!crop||crop[2]<=0)crop=tgt;else crop=crop.map((c,i)=>c+(tgt[i]-c)*.25);
     const [sx,sy,sw,sh]=crop,k=can.width/sw;
-    ctx.setTransform(k,0,0,k,-sx*k,-sy*k);
+    ctx.setTransform(k,0,0,k,-sx*k,-sy*k);ctx.transform(...rotM());
     ctx.drawImage(video,0,0);
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    const S=(x,y)=>{const p=applyH(lock.Hinv,x,y);return [(p[0]-sx)*k/dpr,(p[1]-sy)*k/dpr];};
+    const S=(x,y)=>{const p=toDisp(applyH(lock.Hinv,x,y));return [(p[0]-sx)*k/dpr,(p[1]-sy)*k/dpr];};
     if(lock&&!refind){
       const ppi=Math.hypot(...[0,1].map(i=>S(1,0)[i]-S(0,0)[i])),hr=Math.max(4,dia/2*ppi);
       // your reticle, to scale, with its hold mark on the current aim point (2.33)
@@ -9230,17 +9248,17 @@ function openLive(o){
       const r=stats(aim);if(r.c){const p=S(r.c[0],r.c[1]);ctx.strokeStyle=CTR;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p[0]-7,p[1]);ctx.lineTo(p[0]+7,p[1]);ctx.moveTo(p[0],p[1]-7);ctx.lineTo(p[0],p[1]+7);ctx.stroke();}
     }
     // setting up a target by tapping: the corners and aim points so far
-    if(man){const C=([x,y])=>[(x-sx)*k/dpr,(y-sy)*k/dpr];ctx.strokeStyle=HL;ctx.fillStyle=HL;ctx.lineWidth=2.5;
+    if(man){const C=p0=>{const [x,y]=toDisp(p0);return [(x-sx)*k/dpr,(y-sy)*k/dpr];};ctx.strokeStyle=HL;ctx.fillStyle=HL;ctx.lineWidth=2.5;
       const pts=man.pts.map(C);if(pts.length>1){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));if(pts.length===4)ctx.closePath();ctx.stroke();}
       pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(p[0],p[1],7,0,7);ctx.fill();ctx.font="800 12px system-ui,sans-serif";ctx.fillText(String(i+1),p[0]+9,p[1]-8);});
       if(man.Hinv)man.aims.forEach((a,i)=>{const p=C(applyH(man.Hinv,a[0],a[1]));ctx.beginPath();ctx.arc(p[0],p[1],12,0,7);ctx.moveTo(p[0]-18,p[1]);ctx.lineTo(p[0]+18,p[1]);ctx.moveTo(p[0],p[1]-18);ctx.lineTo(p[0],p[1]+18);ctx.stroke();ctx.fillText("Aim "+(i+1),p[0]+14,p[1]-14);});}
     // the whole target, small, while zoomed in
     const showT=view==="aim"&&!!lock&&!!ref;thumb.hidden=!showT;
-    if(showT){const ar=video.videoHeight/video.videoWidth,tw=Math.round(Math.min(cw*.27,130,ch*.42/ar)),th=Math.round(tw*ar);
+    if(showT){const [VW,VH]=vdims(),ar=VH/VW,tw=Math.round(Math.min(cw*.27,130,ch*.42/ar)),th=Math.round(tw*ar);
       if(thumb.width!==tw*dpr||thumb.height!==th*dpr){thumb.width=tw*dpr;thumb.height=th*dpr;thumb.style.width=tw+"px";thumb.style.height=th+"px";}
-      const q=thumb.width/video.videoWidth;tctx.setTransform(q,0,0,q,0,0);tctx.drawImage(video,0,0);
+      const q=thumb.width/VW;tctx.setTransform(q,0,0,q,0,0);tctx.transform(...rotM());tctx.drawImage(video,0,0);tctx.setTransform(q,0,0,q,0,0);
       tctx.strokeStyle=HL;tctx.lineWidth=3/q*dpr;tctx.strokeRect(sx,sy,sw,sh);
-      tctx.fillStyle=ac;lock.corners.forEach(c=>{tctx.beginPath();tctx.arc(c[0],c[1],5/q*dpr,0,7);tctx.fill();});}
+      tctx.fillStyle=ac;lock.corners.map(toDisp).forEach(c=>{tctx.beginPath();tctx.arc(c[0],c[1],5/q*dpr,0,7);tctx.fill();});}
   }
   /* ----- numbers ----- */
   function stats(i){
@@ -9295,10 +9313,10 @@ function openLive(o){
      A tap still adds or removes a mark. ----- */
   let gst=null,gMoved=false,noClick=0;const gPts=new Map();
   // the biggest view: the whole camera picture, fitted to the screen's shape
-  const fullCrop=()=>{const W=video.videoWidth,H=video.videoHeight,asp=(can.clientWidth||1)/(can.clientHeight||1);return W/H<asp?[H*asp,H]:[W,W/asp];};
+  const fullCrop=()=>{const [W,H]=vdims(),asp=(can.clientWidth||1)/(can.clientHeight||1);return W/H<asp?[H*asp,H]:[W,W/asp];};
   // zoom by s around the camera point under the screen point (ax,ay), which ends up under (bx,by)
   function zoomView(base,s,ax,ay,bx,by){
-    const W=video.videoWidth,H=video.videoHeight;if(!W||!base)return;
+    const [W,H]=vdims();if(!W||!base)return;
     const rc=can.getBoundingClientRect(),[fw,fh]=fullCrop();
     let w=Math.max(fw/12,Math.min(fw,base[2]*s)),h=w*fh/fw;
     const px=base[0]+(ax-rc.left)*base[2]/rc.width,py=base[1]+(ay-rc.top)*base[3]/rc.height;
@@ -9323,9 +9341,9 @@ function openLive(o){
   can.addEventListener("click",e=>{if(Date.now()-noClick<400)return;const rc=can.getBoundingClientRect();tapAt((e.clientX-rc.left)/rc.width,(e.clientY-rc.top)/rc.height);});
   // a tap at a spot on the picture (0–1 across and down), from this screen or from a device watching it
   function tapAt(u,w){
-    if(man&&crop){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);manTap(crop[0]+u*rc.width/k,crop[1]+w*rc.height/k);return;}
+    if(man&&crop){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);manTap(...fromDisp([crop[0]+u*rc.width/k,crop[1]+w*rc.height/k]));return;}
     if(!lock||!crop||refind)return;const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);
-    const cx=crop[0]+u*rc.width/k,cy=crop[1]+w*rc.height/k,[px,py]=applyH(lock.H,cx,cy);
+    const [cx,cy]=fromDisp([crop[0]+u*rc.width/k,crop[1]+w*rc.height/k]),[px,py]=applyH(lock.H,cx,cy);
     if(px<0||py<0||px>pageW||py>pageH)return;
     const ppi=k*Math.hypot(...[0,1].map(i=>applyH(lock.Hinv,1,0)[i]-applyH(lock.Hinv,0,0)[i])),tol=Math.max(dia*.75,16/ppi);
     const hs=holes[aim]||[],j=hs.findIndex(([x,y])=>Math.hypot(x-px,y-py)<tol);
@@ -9555,11 +9573,11 @@ function openLive(o){
     $("lvsMore").addEventListener("click",()=>{sh.hidden=true;});
   }
   function photoNow(){
-    grab();
-    const W0=work.width,H0=work.height,k=Math.min(1,2400/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);
-    const c=document.createElement("canvas");c.width=W;c.height=H;c.getContext("2d").drawImage(work,0,0,W,H);
+    grab();const rw=rotWork();   // upright, the same as on screen
+    const W0=rw.width,H0=rw.height,k=Math.min(1,2400/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);
+    const c=document.createElement("canvas");c.width=W;c.height=H;c.getContext("2d").drawImage(rw,0,0,W,H);
     let data=null;for(const q of [.86,.8,.72,.65]){data=c.toDataURL("image/jpeg",q);if(data.length<=3500000)break;}
-    const corners=lock.corners.map(([x,y])=>[x*k,y*k]),Hp=homography(corners,lock.fid),Hpi=homography(lock.fid,corners);
+    const corners=lock.corners.map(toDisp).map(([x,y])=>[x*k,y*k]),Hp=homography(corners,lock.fid),Hpi=homography(lock.fid,corners);
     const nrm=([x,y])=>{const p=applyH(Hpi,x,y);return [+(p[0]/W).toFixed(5),+(p[1]/H).toFixed(5)];},f3=x=>x!=null?+x.toFixed(3):null;
     const M={v:2,a:[corners[0][0]/W,corners[0][1]/H],b:[corners[1][0]/W,corners[1][1]/H],scaleIn:+Math.hypot(lock.fid[1][0]-lock.fid[0][0],lock.fid[1][1]-lock.fid[0][1]).toFixed(4),
       H:Hp,layout:lock.layout.id,dia,distance:dist,live:true,groups:[]};
@@ -9574,8 +9592,8 @@ function openLive(o){
   async function savePicture(){
     if(!lock)return;
     const used=aims().map((a,i)=>[a,i]).filter(([a,i])=>(holes[i]||[]).length);if(!used.length)return;
-    grab();
-    const W0=work.width,H0=work.height,k=Math.min(1,2000/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);
+    grab();const rw=rotWork();
+    const W0=rw.width,H0=rw.height,k=Math.min(1,2000/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);
     const fs=Math.max(15,Math.round(W/42)),lh=Math.round(fs*1.45),pad=Math.round(fs*.9);
     // a close-up of each group under the whole page, then the numbers, wrapped to the picture's width
     const per=Math.min(used.length,3),gap=pad,tile=Math.floor((W-gap*(per+1))/per),rows=Math.ceil(used.length/per);
@@ -9587,10 +9605,10 @@ function openLive(o){
       wrap(t,W-pad*2-fs*1.1).forEach((l,j)=>lines.push([j?null:TG_COLORS[i%TG_COLORS.length],l]));});
     const tilesH=rows*(tile+gap+lh),textTop=H+gap+tilesH;
     const c=document.createElement("canvas");c.width=W;c.height=textTop+pad+lh*(lines.length+1);const x=c.getContext("2d");
-    x.fillStyle="#111";x.fillRect(0,0,c.width,c.height);x.drawImage(work,0,0,W,H);
+    x.fillStyle="#111";x.fillRect(0,0,c.width,c.height);x.drawImage(rw,0,0,W,H);
     const lw=Math.max(1.5,W/700);
     // marks, drawn through a mapping from camera pixels to this picture
-    const marks=(map,scale,only)=>used.forEach(([a,i])=>{if(only!=null&&i!==only)return;const col=TG_COLORS[i%TG_COLORS.length],P=(px,py)=>map(applyH(lock.Hinv,px,py));
+    const marks=(map,scale,only)=>used.forEach(([a,i])=>{if(only!=null&&i!==only)return;const col=TG_COLORS[i%TG_COLORS.length],P=(px,py)=>map(toDisp(applyH(lock.Hinv,px,py)));
       const A=P(a.x,a.y),B=P(a.x+1,a.y),ppi=Math.hypot(B[0]-A[0],B[1]-A[1]),hr=Math.max(3,dia/2*ppi),l2=lw*scale;
       x.strokeStyle=col;x.lineWidth=l2;x.beginPath();x.arc(A[0],A[1],hr*1.6,0,7);x.moveTo(A[0]-hr*2.6,A[1]);x.lineTo(A[0]+hr*2.6,A[1]);x.moveTo(A[0],A[1]-hr*2.6);x.lineTo(A[0],A[1]+hr*2.6);x.stroke();
       (holes[i]||[]).forEach(([px,py],j)=>{const p=P(px,py);x.lineWidth=l2*2.2;x.strokeStyle="rgba(0,0,0,.7)";x.beginPath();x.arc(p[0],p[1],hr+l2,0,7);x.stroke();x.lineWidth=l2*1.3;x.strokeStyle=col;x.stroke();
@@ -9598,11 +9616,11 @@ function openLive(o){
     marks(([cx,cy])=>[cx*k,cy*k],1,null);
     used.forEach(([a,i],n)=>{
       let bx0=a.x-1.5,bx1=a.x+1.5,by0=a.y-1.5,by1=a.y+1.5;(holes[i]||[]).forEach(([hx,hy])=>{bx0=Math.min(bx0,hx-.5);bx1=Math.max(bx1,hx+.5);by0=Math.min(by0,hy-.5);by1=Math.max(by1,hy+.5);});
-      const Q=[[bx0,by0],[bx1,by0],[bx1,by1],[bx0,by1]].map(([px,py])=>applyH(lock.Hinv,px,py));
+      const Q=[[bx0,by0],[bx1,by0],[bx1,by1],[bx0,by1]].map(([px,py])=>toDisp(applyH(lock.Hinv,px,py)));
       let sx0=Math.min(...Q.map(q=>q[0])),sx1=Math.max(...Q.map(q=>q[0])),sy0=Math.min(...Q.map(q=>q[1])),sy1=Math.max(...Q.map(q=>q[1]));
       const sz=Math.max(sx1-sx0,sy1-sy0),cx=(sx0+sx1)/2,cy=(sy0+sy1)/2;sx0=cx-sz/2;sy0=cy-sz/2;
       const tx=gap+(n%per)*(tile+gap),ty=H+gap+Math.floor(n/per)*(tile+gap+lh)+lh,f=tile/sz;
-      x.save();x.beginPath();x.rect(tx,ty,tile,tile);x.clip();x.fillStyle="#000";x.fillRect(tx,ty,tile,tile);x.drawImage(work,sx0,sy0,sz,sz,tx,ty,tile,tile);
+      x.save();x.beginPath();x.rect(tx,ty,tile,tile);x.clip();x.fillStyle="#000";x.fillRect(tx,ty,tile,tile);x.drawImage(rw,sx0,sy0,sz,sz,tx,ty,tile,tile);
       marks(([qx,qy])=>[tx+(qx-sx0)*f,ty+(qy-sy0)*f],Math.min(3,f/k*.6),i);x.restore();
       x.strokeStyle=TG_COLORS[i%TG_COLORS.length];x.lineWidth=lw*1.5;x.strokeRect(tx,ty,tile,tile);
       x.textBaseline="middle";x.font="700 "+fs+"px system-ui,sans-serif";x.fillStyle=TG_COLORS[i%TG_COLORS.length];x.fillText("Aim "+(i+1),tx,ty-lh/2);});
@@ -9631,9 +9649,9 @@ function openLive(o){
   const onVis=()=>{if(document.visibilityState==="visible"&&!closed){keep(true);lastVTat=Date.now();setTimeout(()=>camCheck(false),1500);}};
   document.addEventListener("keydown",onKey);document.addEventListener("visibilitychange",onVis);
   $("lvClose").addEventListener("click",()=>close());
-  window.RB_LIVE={state:()=>({angle:ang.deg,angleLvl:ang.lvl,locked:!!lock,layout:lock&&lock.layout.id,aim,holes:JSON.parse(JSON.stringify(holes)),view,crop,status:status.t,busy,ref:!!ref}),shot:()=>shot("button"),mic:()=>!!micT,
-    at(px,py){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1),p=applyH(lock.Hinv,px,py);return [rc.left+(p[0]-crop[0])*k,rc.top+(p[1]-crop[1])*k];},
-    camAt(cx,cy){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);return [rc.left+(cx-crop[0])*k,rc.top+(cy-crop[1])*k];}};
+  window.RB_LIVE={state:()=>({angle:ang.deg,angleLvl:ang.lvl,locked:!!lock,layout:lock&&lock.layout.id,aim,holes:JSON.parse(JSON.stringify(holes)),view,crop,rot,status:status.t,busy,ref:!!ref}),shot:()=>shot("button"),mic:()=>!!micT,
+    at(px,py){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1),p=toDisp(applyH(lock.Hinv,px,py));return [rc.left+(p[0]-crop[0])*k,rc.top+(p[1]-crop[1])*k];},
+    camAt(cx0,cy0){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1),[cx,cy]=toDisp([cx0,cy0]);return [rc.left+(cx-crop[0])*k,rc.top+(cy-crop[1])*k];}};
   /* ----- the camera for another device (2.37): it started this session and saves the result; this phone sends the
      finished picture and marks to it, and dims its screen to save battery ----- */
   let resTok="",resWait=null,dimT=null;
