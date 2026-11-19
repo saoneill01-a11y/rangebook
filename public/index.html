@@ -8907,9 +8907,11 @@ function openLive(o){
      to a spotting-scope eyepiece it keeps jumping to the macro/ultra-wide lens. So after the first start we list the back
      lenses, use the main one (iOS calls it "Back Camera") unless you picked another, and remember the pick on this device. (2.18.3) */
   const LENS_KEY="rb.liveLens";
-  const lensName=l=>{const t=String(l||"");if(/ultra\s*wide/i.test(t))return "Ultra wide (0.5×)";if(/tele/i.test(t))return "Telephoto (zoom)";if(/triple/i.test(t))return "Automatic (all lenses)";if(/dual\s*wide/i.test(t))return "Automatic (main + ultra wide)";if(/dual/i.test(t))return "Automatic (main + telephoto)";if(/^back camera$/i.test(t.trim()))return "Main (1×)";return t||"Camera";};
+  const lensName=l=>{const t=String(l||"");if(/longshot|hawk/i.test(t))return "Longshot Hawk (Wi-Fi camera)";if(/ultra\s*wide/i.test(t))return "Ultra wide (0.5×)";if(/tele/i.test(t))return "Telephoto (zoom)";if(/triple/i.test(t))return "Automatic (all lenses)";if(/dual\s*wide/i.test(t))return "Automatic (main + ultra wide)";if(/dual/i.test(t))return "Automatic (main + telephoto)";if(/^back camera$/i.test(t.trim()))return "Main (1×)";return t||"Camera";};
   const isBack=d=>/back|rear|environment|camera2 0|facing back/i.test(d.label||"");
   const isAuto=d=>/(dual|triple)/i.test(d.label||"");
+  // a Longshot Hawk on the iPad's Wi-Fi: the Range Book iPad/iPhone app lists it as a camera ("rb-hawk"); browsers never do
+  const isHawk=d=>d.deviceId==="rb-hawk";
   let lenses=[],lensId=null;
   async function openStream(devId){
     const v0={width:{ideal:1920},height:{ideal:1920}};
@@ -8961,8 +8963,8 @@ function openLive(o){
       await useStream(st);
       // the lens list (labels only show once the camera is allowed)
       try{const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput");
-        lenses=all.filter(isBack);if(!lenses.length)lenses=all;
-        const rank=d=>{const t=d.label||"";return /^back camera$/i.test(t.trim())?0:/ultra\s*wide/i.test(t)?1:/tele/i.test(t)?2:isAuto(d)?4:3;};lenses.sort((a,b)=>rank(a)-rank(b));
+        lenses=all.filter(d=>isBack(d)||isHawk(d));if(!lenses.some(isBack))lenses=all;
+        const rank=d=>{const t=d.label||"";return isHawk(d)?5:/^back camera$/i.test(t.trim())?0:/ultra\s*wide/i.test(t)?1:/tele/i.test(t)?2:isAuto(d)?4:3;};lenses.sort((a,b)=>rank(a)-rank(b));
         // no pick yet and we got the self-switching camera: use the main lens instead
         const curD=lenses.find(d=>d.deviceId===lensId),main=lenses.find(d=>/^back camera$/i.test((d.label||"").trim()));
         if(!saved&&main&&main.deviceId!==lensId&&(!curD||isAuto(curD))){try{const s2=await openStream(main.deviceId);if(closed){s2.getTracks().forEach(t=>t.stop());return;}await useStream(s2);}catch(e){}}
