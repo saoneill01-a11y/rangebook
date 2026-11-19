@@ -710,7 +710,7 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvgrip{margin:-4px 0 -4px;flex:none}.lvgrip span{background:#555}
 @media(max-width:899px){.lvmain{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.lvcam{min-height:min(48vh,420px)}}
 @media(min-width:900px){.lvgrip{display:none}.lvcam.sized{flex:1 1 auto;height:auto}}
-.lvcam canvas{display:block;touch-action:manipulation;cursor:crosshair}
+.lvcam canvas{display:block;touch-action:none;cursor:crosshair}
 :root[data-palette="night"] .lvcam canvas,:root[data-palette="night"] .watch .lvcam img{filter:grayscale(1) brightness(.55)}
 :root[data-palette="night"] .lvcam::after{content:"";position:absolute;inset:0;background:#ff2a1a;mix-blend-mode:multiply;pointer-events:none;z-index:1}
 .lvstat,.lvview,.lvthumb{z-index:2}
@@ -8872,14 +8872,14 @@ function openLive(o){
       '<label class="lvmic" id="lvChL" hidden><input type="checkbox" id="lvCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot<small>When the connected chronograph measures a shot, Range Book looks for its hole and notes its velocity on it.</small></span></label>'+
       '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i><b></b></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
       '<div class="lvsens" id="lvSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-sens="normal">Normal</button><button type="button" data-sens="supp">Suppressed</button><button type="button" data-sens="quiet">Quiet .22</button></div>'+
-      '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it.</p>'+
+      '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it. Pinch the picture to zoom in or out and drag it to look around; <b>Zoom to aim</b> goes back.</p>'+
     '</div></div><div class="lvsheet" id="lvSheet" hidden></div>'+
     (o.hosted?'<button class="lvdim" id="lvDim" type="button" hidden><b>Camera for your '+esc(o.hosted.host||"iPad")+'</b><span id="lvDimStat"></span><small>Tap to see the camera</small></button>':'');
   document.body.appendChild(v);
   const can=$("lvCan"),ctx=can.getContext("2d"),thumb=$("lvThumb"),tctx=thumb.getContext("2d"),camBox=$("lvCam");
   const video=document.createElement("video");video.setAttribute("playsinline","");video.muted=true;video.autoplay=true;
   const work=document.createElement("canvas"),wctx=work.getContext("2d",{willReadFrequently:true});
-  let stream=null,closed=false,T=null,lock=null,lockMiss=0,refind=false,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
+  let stream=null,closed=false,T=null,lock=null,lockMiss=0,refind=false,ucrop=null,ref=null,busy=false,view="aim",crop=null,want=num(o.want)>0?Math.round(num(o.want)):null;
   let aim=0,holes=[],newest=null,status={t:"Starting the camera…",k:"busy"},pageW=8.5,pageH=11,undo=[],sheetFor=null;
   // a hole is [x, y] in target inches, or [x, y, fps] once the chronograph's velocity is on it (2.44.7)
   let pendVel=null,lastFind=null;
@@ -9048,7 +9048,7 @@ function openLive(o){
       const fr=grab();
       if(fr&&!busy){
         // the camera picture changed shape (the phone or iPad turned): where the page was is no longer right
-        const dm=fr.width+"x"+fr.height;if(dims&&dm!==dims&&lock&&!refind&&!man)findAgain("turned");dims=dm;
+        const dm=fr.width+"x"+fr.height;if(dims&&dm!==dims){resetView();if(lock&&!refind&&!man)findAgain("turned");}dims=dm;
         const again=refind,had=!!lock&&!again,ok=relock(fr,false);
         // the corner squares are out of sight: if the page where it was doesn't look like it did, the camera moved, so look for it again
         if(ok)unlike=0;
@@ -9072,7 +9072,7 @@ function openLive(o){
   // why: the button (none), "turned" (the camera picture changed shape) or "moved" (the page isn't where it was)
   function findAgain(why){
     if(busy||man||!lock)return;
-    ref=null;newest=null;$("lvShot").disabled=true;
+    ref=null;newest=null;$("lvShot").disabled=true;resetView();
     const pre=why==="turned"?"The camera turned. ":why==="moved"?"The target moved in the picture. ":"";
     if(lock.manual){$("lvFind").hidden=true;manStart();if(pre)setStat(pre+"Tap the paper's "+CORN[0]+" corner.","busy");return;}
     refind=true;lockMiss=0;
@@ -9124,6 +9124,7 @@ function openLive(o){
   }
   async function shot(from){
     if(!lock||!ref||busy||closed)return;
+    resetView();
     busy=true;$("lvShot").disabled=true;
     const n=(holes[aim]||[]).length+1;
     setStat((from==="mic"?"Shot "+n+" heard. ":from==="chrono"&&pendVel?"Shot "+n+": "+U.s("fps",pendVel.v,0)+". ":"")+"Looking for shot "+n+"…","busy");
@@ -9183,6 +9184,7 @@ function openLive(o){
   function inZoom(x,y){const a=aims()[aim];return a?Math.abs(x-a.x)<=1.4&&Math.abs(y-a.y)<=1.4:true;}
   // the part of the camera picture to show, in camera pixels
   function wantCrop(){
+    if(ucrop)return ucrop;
     const W=video.videoWidth,H=video.videoHeight,cw=can.clientWidth||1,ch=can.clientHeight||1,asp=cw/ch;
     let x0=0,y0=0,x1=W,y1=H;
     const zoom=view==="aim"&&lock&&ref;
@@ -9260,7 +9262,7 @@ function openLive(o){
     $("lvDone").disabled=!total;
     const n=aims().length;$("lvPrev").disabled=!lock||aim<=0;$("lvNext").disabled=!lock||aim>=n-1;
     $("lvAimChip").innerHTML=lock?'Aim <b>'+(aim+1)+'</b> of '+n+(grpFor(aim)?' · <b>'+esc(aimLabel(aim))+'</b>':''):'';
-    $("lvView").textContent=view==="aim"?"Whole target":"Zoom to aim";
+    $("lvView").textContent=ucrop?(view==="aim"?"Zoom to aim":"Whole target"):view==="aim"?"Whole target":"Zoom to aim";
   }
   function fillAim(){
     const g=grpFor(aim);want=shotCount(g)||want||null;
@@ -9286,9 +9288,39 @@ function openLive(o){
     $("lvsSave").addEventListener("click",()=>{sh.hidden=true;save();});
     $("lvsMore").addEventListener("click",()=>{sh.hidden=true;});
   }
-  function goAim(i){if(!lock)return;aim=Math.max(0,Math.min(aims().length-1,i));newest=null;view="aim";fillAim();setStat("Fire at "+aimLabel(aim)+", then tap Shot.","");}
+  function goAim(i){if(!lock)return;ucrop=null;aim=Math.max(0,Math.min(aims().length-1,i));newest=null;view="aim";fillAim();setStat("Fire at "+aimLabel(aim)+", then tap Shot.","");}
   /* ----- taps on the picture: add a missed hole, or remove a wrong mark ----- */
-  can.addEventListener("click",e=>{const rc=can.getBoundingClientRect();tapAt((e.clientX-rc.left)/rc.width,(e.clientY-rc.top)/rc.height);});
+  /* ----- your own zoom (2.47.5): pinch the picture to zoom in or out, drag it to look around (to find a hole it missed), or use
+     a trackpad or mouse wheel. It stays until Zoom to aim / Whole target, the next shot, another aim point or Find target again.
+     A tap still adds or removes a mark. ----- */
+  let gst=null,gMoved=false,noClick=0;const gPts=new Map();
+  // the biggest view: the whole camera picture, fitted to the screen's shape
+  const fullCrop=()=>{const W=video.videoWidth,H=video.videoHeight,asp=(can.clientWidth||1)/(can.clientHeight||1);return W/H<asp?[H*asp,H]:[W,W/asp];};
+  // zoom by s around the camera point under the screen point (ax,ay), which ends up under (bx,by)
+  function zoomView(base,s,ax,ay,bx,by){
+    const W=video.videoWidth,H=video.videoHeight;if(!W||!base)return;
+    const rc=can.getBoundingClientRect(),[fw,fh]=fullCrop();
+    let w=Math.max(fw/12,Math.min(fw,base[2]*s)),h=w*fh/fw;
+    const px=base[0]+(ax-rc.left)*base[2]/rc.width,py=base[1]+(ay-rc.top)*base[3]/rc.height;
+    let x0=px-(bx-rc.left)*w/rc.width,y0=py-(by-rc.top)*h/rc.height;
+    x0=w>=W?(W-w)/2:Math.max(0,Math.min(W-w,x0));y0=h>=H?(H-h)/2:Math.max(0,Math.min(H-h,y0));
+    ucrop=[x0,y0,w,h];crop=ucrop.slice();
+  }
+  const resetView=()=>{if(ucrop){ucrop=null;renderStats();}};
+  const gMid=()=>{const P=[...gPts.values()],n=P.length,mx=P.reduce((t,p)=>t+p[0],0)/n,my=P.reduce((t,p)=>t+p[1],0)/n;return {n,mx,my,d:n>1?Math.hypot(P[0][0]-P[1][0],P[0][1]-P[1][1]):0};};
+  const gStart=()=>{gst=Object.assign(gMid(),{crop:(ucrop||crop||[]).slice()});};
+  can.addEventListener("pointerdown",e=>{if(!crop||!video.videoWidth)return;try{can.setPointerCapture(e.pointerId);}catch(_){}gPts.set(e.pointerId,[e.clientX,e.clientY]);gStart();});
+  can.addEventListener("pointermove",e=>{if(!gPts.has(e.pointerId)||!gst)return;gPts.set(e.pointerId,[e.clientX,e.clientY]);
+    const m=gMid();if(m.n!==gst.n){gStart();return;}
+    if(!gMoved&&Math.hypot(m.mx-gst.mx,m.my-gst.my)<8&&!(gst.d&&Math.abs(m.d-gst.d)>8))return;
+    if(!gMoved){gMoved=true;renderStats();}
+    zoomView(gst.crop,gst.n>1&&gst.d>0&&m.d>0?gst.d/m.d:1,gst.mx,gst.my,m.mx,m.my);});
+  const gEnd=e=>{if(!gPts.delete(e.pointerId))return;if(gMoved)noClick=Date.now();if(gPts.size)gStart();else{gst=null;if(gMoved){gMoved=false;renderStats();}}};
+  can.addEventListener("pointerup",gEnd);can.addEventListener("pointercancel",gEnd);
+  can.addEventListener("wheel",e=>{if(!crop||!video.videoWidth)return;e.preventDefault();zoomView(ucrop||crop,Math.exp(e.deltaY*(e.ctrlKey?.01:.002)),e.clientX,e.clientY,e.clientX,e.clientY);renderStats();},{passive:false});
+  // Safari's own page zoom
+  ["gesturestart","gesturechange"].forEach(t=>can.addEventListener(t,e=>e.preventDefault()));
+  can.addEventListener("click",e=>{if(Date.now()-noClick<400)return;const rc=can.getBoundingClientRect();tapAt((e.clientX-rc.left)/rc.width,(e.clientY-rc.top)/rc.height);});
   // a tap at a spot on the picture (0–1 across and down), from this screen or from a device watching it
   function tapAt(u,w){
     if(man&&crop){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);manTap(crop[0]+u*rc.width/k,crop[1]+w*rc.height/k);return;}
@@ -9306,6 +9338,7 @@ function openLive(o){
   let man=null;
   const CORN=["top-left","top-right","bottom-right","bottom-left"];
   function manStart(){
+    resetView();
     man={step:"corners",pts:[],aims:[]};view="full";busy=false;
     $("lvManual").hidden=true;$("lvMDone").hidden=true;$("lvFind").hidden=true;
     setStat("Tap the paper's "+CORN[0]+" corner.","busy");
@@ -9403,7 +9436,7 @@ function openLive(o){
   }
   $("lvRemote").addEventListener("click",()=>{if(rmId)remoteStop();else remoteStart();});
   thumb.addEventListener("click",()=>{view="full";renderStats();});
-  $("lvView").addEventListener("click",()=>{view=view==="aim"?"full":"aim";renderStats();});
+  $("lvView").addEventListener("click",()=>{if(ucrop){ucrop=null;renderStats();return;}view=view==="aim"?"full":"aim";renderStats();});
   $("lvShot").addEventListener("click",()=>shot("button"));
   $("lvUndo").addEventListener("click",()=>{const s=undo.pop();if(!s)return;const o2=JSON.parse(s);holes=o2.holes;if(o2.aim!==aim){aim=o2.aim;fillAim();}newest=null;$("lvUndo").disabled=!undo.length;setStat("Undone.","");renderStats();});
   $("lvPrev").addEventListener("click",()=>goAim(aim-1));
