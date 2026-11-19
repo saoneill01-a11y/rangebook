@@ -723,6 +723,8 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvpill.busy i{background:#e3b341;animation:lvp 1s infinite}.lvpill.bad i{background:#ff6b5b}
 @keyframes lvp{50%{opacity:.25}}
 .lvmanual{position:absolute;left:8px;top:52px;z-index:2;background:rgba(20,20,20,.85)!important;font-size:calc(13px*var(--fs));padding:6px 10px;min-height:0}
+.lvbtns{position:absolute;left:8px;top:8px;z-index:2;display:flex;flex-direction:column;align-items:flex-start;gap:8px;pointer-events:none}.lvbtns>.btn{position:static!important;pointer-events:auto}.lvbtns>.btn[hidden]{display:none}
+.lvauto{position:absolute;left:8px;top:96px;z-index:2;background:rgba(20,20,20,.85)!important;font-size:calc(13px*var(--fs));padding:6px 10px;min-height:0}.lvauto[hidden]{display:none}
 .lvmdone{position:absolute;right:8px;top:8px;z-index:2;font-size:calc(15px*var(--fs));padding:8px 14px;background:var(--accent)!important;color:var(--accent-fg,#fff)!important;border-color:var(--accent)!important}
 .lvview{position:absolute;left:8px;top:8px;background:rgba(20,20,20,.8)!important;font-size:calc(13px*var(--fs));padding:6px 10px;min-height:0}
 .lvside{display:flex;flex-direction:column;gap:8px;flex:none}
@@ -959,6 +961,8 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .lthumb img{width:100%;height:100%;object-fit:contain;display:block}
 .lthumb:has(>img){background:transparent} /* 2.42.28: the whole picture shows; the rest of the square is see-through */
 #rtLook{display:none}.pressd{margin-top:6px}.pressd>summary{cursor:pointer;font-size:calc(13px*var(--fs));color:var(--muted)}.pressd>summary b{color:var(--warn)}.pressd .press{margin-top:6px}.gmore{margin-top:6px}
+.chartempty{display:flex;align-items:center;justify-content:center;text-align:center;padding:0 16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:calc(13px*var(--fs))}
+.pbfold>summary~*{margin-top:8px}
 .moredet{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}.moredet>summary{cursor:pointer;font-weight:600;color:var(--accent);font-size:calc(14px*var(--fs))}.moredet>.grid,.moredet>.note{margin-top:8px}
 #rifSub2{margin:-4px 0 10px;align-self:flex-start}#rifSeg[hidden]~#rifSub2{display:none}#rifSub2 button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
 .toolsub{margin:6px 0 0;font-size:calc(15px*var(--fs))}
@@ -1109,6 +1113,30 @@ table.trtbl.trhist td,table.trtbl.trhist th{padding:6px 4px}table.trhist thead t
 .trdrill .trspark{display:block;width:100%;height:40px;margin:6px 0 2px}.trspark{display:block;width:100%;height:46px;margin:4px 0}
 table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))}table.trtbl td,table.trtbl th{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}table.trtbl th{font-size:calc(12px*var(--fs));color:var(--muted);font-weight:600}
 
+.sgwrap{margin:12px 0 6px;display:flex;flex-direction:column;gap:12px}.sgwrap h3{margin:0}
+.sgstrip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px}
+.sgcell{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 8px 6px;display:flex;flex-direction:column;gap:2px;align-items:center;cursor:pointer;font:inherit;color:inherit;font-size:calc(12.5px*var(--fs))}
+.sgcell b{font-size:calc(13px*var(--fs))}.sgcell .num{font-variant-numeric:tabular-nums;color:var(--muted)}
+.sgcell[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1.5px var(--accent) inset}
+.sgopen{display:flex;flex-direction:column;gap:10px}
+.sghead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sghead b{font-size:calc(17px*var(--fs))}.sgtog{margin-left:auto}
+.sgbody{display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,230px);gap:12px;align-items:start}
+.sgright{display:flex;flex-direction:column;gap:10px;min-width:0}.sgright .sgstats{align-self:stretch}.sgright .sglegend{gap:8px}.sgright .sggrad{width:70px}
+.sgplot svg{width:100%;height:auto;max-width:440px;display:block;margin:0 auto}
+.sgsvg .sgv,.sgsvg text.sgv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.sgside{display:flex;flex-direction:column;gap:10px;min-width:0}
+.sglegend{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;white-space:nowrap;font-size:calc(12.5px*var(--fs));color:var(--muted)}
+.sggrad{width:110px;height:8px;border-radius:4px;background:linear-gradient(90deg,rgb(47,109,181),rgb(154,161,156),rgb(200,64,47))}
+.sgstats{margin:0;display:flex;flex-direction:column;background:var(--sunk);border-radius:12px;padding:4px 14px;min-width:0;align-self:start}
+.sgstats>div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--line)}.sgstats>div:first-child{border-top:0}
+.sgstats dt{color:var(--muted);font-size:calc(14px*var(--fs))}.sgstats dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums;font-size:calc(17px*var(--fs));text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+.sgstats dd small{font-weight:500;color:var(--muted);font-size:calc(12.5px*var(--fs))}
+.sgdial{border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;gap:2px}
+.sgdial span{font-size:calc(12.5px*var(--fs));color:var(--muted)}.sgdial b{font-size:calc(18px*var(--fs))}
+.sgtbl{border-collapse:collapse;width:100%;font-size:calc(14px*var(--fs))}.sgtbl th{font-weight:600;color:var(--muted);text-align:left;font-size:calc(12px*var(--fs));padding:3px 6px}
+.sgtbl td{padding:4px 6px;border-top:1px solid var(--line)}.sgtbl tr[data-sgrow]{cursor:pointer}.sgtbl tr[data-sgrow]:hover td,.sgtbl tr.on td{background:var(--sunk)}.sgtbl tr.on td{font-weight:700}.sgtbl tr[data-sgrow]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}.sgtbl td:first-child{text-align:left}.sgtbl .r{text-align:right}.sgtbl .num{font-variant-numeric:tabular-nums}
+.sgv i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px}
+@media(max-width:560px){.sgbody{grid-template-columns:minmax(0,1fr)}}
 .grpall{margin:10px 0 4px}.grpall .segtabs,#secAllGroups .segtabs{max-width:440px}.grpall:empty{display:none}.grpwrap{margin:10px 0 8px}.grpsvg{width:220px;height:220px;display:block}
 .grpkey{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:calc(12.5px*var(--fs));color:var(--muted);margin:2px 0 6px}.grpk{display:inline-flex;align-items:center;gap:6px}.grpk i{width:10px;height:10px;border-radius:50%;flex:none}
 #secAllGroups .segtabs{margin:0 0 8px}
@@ -1509,16 +1537,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="cx" id="cx1"><div class="cxh"><input type="radio" name="zsel" value="2" id="zsel1" aria-label="Use zero 2 for the range table"><label class="zin" for="f_z1"><span class="zdot" style="background:var(--z2)"></span><span class="sr">Zero 2</span><input id="f_z1" type="number" inputmode="numeric" step="1" min="1" max="9999"></label><span class="t" data-unit="yd">yd</span></div><div class="v" id="cxv1"></div></div>
       <div class="cx" id="cx2"><div class="cxh"><input type="radio" name="zsel" value="3" id="zsel2" aria-label="Use zero 3 for the range table"><label class="zin" for="f_z2"><span class="zdot" style="background:var(--z3)"></span><span class="sr">Zero 3</span><input id="f_z2" type="number" inputmode="numeric" step="1" min="1" max="9999"></label><span class="t" data-unit="yd">yd</span></div><div class="v" id="cxv2"></div></div>
     </div>
-    <p class="note">The first box is the point-blank zero, worked out from the target size in the <b>Point-blank range</b> card below. Type up to three more to compare. Pick the circle (◉) for the zero your scope is set to. Leave a box blank to hide that zero.</p>
-  </section>
-
-  <section class="card" aria-label="Point-blank range" id="secTPbr">
-    <h2>Point-blank range</h2>
+    <p class="note">The first box is the point-blank zero, worked out from the target size under <b>Point-blank range</b> below. Type up to three more to compare. Pick the circle (◉) for the zero your scope is set to. Leave a box blank to hide that zero.</p>
+    <details class="moredet pbfold" id="secTPbr" aria-label="Point-blank range"><summary>Point-blank range</summary>
     <div class="grid">
-      <div class="field"><label for="pb_size">Target size (<span data-unit="in">in</span>)</label><input id="pb_size" type="number" inputmode="decimal" step="any" placeholder="6"></div>
-      <div class="field"><label>Common sizes</label><div class="chips" id="pbChips"><button class="btn small" type="button" data-pbs="4">4" varmint</button><button class="btn small" type="button" data-pbs="6">6" deer</button><button class="btn small" type="button" data-pbs="8">8" elk</button></div></div>
-    </div>
-    <div class="pbres" id="pbRes"></div>
+        <div class="field"><label for="pb_size">Target size (<span data-unit="in">in</span>)</label><input id="pb_size" type="number" inputmode="decimal" step="any" placeholder="6"></div>
+        <div class="field"><label>Common sizes</label><div class="chips" id="pbChips"><button class="btn small" type="button" data-pbs="4">4" varmint</button><button class="btn small" type="button" data-pbs="6">6" deer</button><button class="btn small" type="button" data-pbs="8">8" elk</button></div></div>
+      </div>
+      <div class="pbres" id="pbRes"></div>
+    </details>
   </section>
 
   <section class="card" aria-label="Data table" id="secTTable">
@@ -2504,11 +2530,25 @@ window.RB_WX=(()=>{
       const rho=(P-pv)*100/(287.05*tk)+pv*100/(461.495*tk),pa=p=>(1-Math.pow(p/1013.25,0.190284))*145366.45;
       return {pAlt:pa(P),alt:pa(rho*287.05*tk/100),dAlt:(1-Math.pow(rho/1.225,0.234969))*145442.16};},
     // where the phone is (only on https:// sites)
-    here(){return new Promise((ok,no)=>{
-      if(!window.isSecureContext||!navigator.geolocation)return no(new Error("Your phone only shares its location with https:// sites. Open Range Book through its https:// address to use this."));
+    here(){return W.own().catch(async e=>{const p=await W.fromPhone();if(p)return p;throw e;});},
+    own(){return new Promise((ok,no)=>{
+      const dev=W.dev(),pad=dev==="iPad";
+      if(!window.isSecureContext||!navigator.geolocation)return no(new Error("Your "+dev+" only shares its location with https:// sites. Open Range Book through its https:// address to use this."));
       navigator.geolocation.getCurrentPosition(p=>ok({lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy}),
-        e=>no(new Error(e.code===1?"Location is turned off for this site. Allow it in your browser's settings (on an iPhone: Settings → Privacy & Security → Location Services → Safari Websites) and try again.":"Couldn't find your location. Try again outside, or enter it yourself.")),
+        e=>no(new Error(e.code===1?"Location is turned off for this site. Allow it in your "+dev+"'s settings (Settings → Privacy & Security → Location Services → Safari Websites, set to While Using) and try again.":
+          pad?"This iPad couldn't find where it is. A Wi-Fi-only iPad has no GPS: it works out its place from Wi-Fi networks around it, which usually fails at a range or on a phone's hotspot. Start Live target with your iPhone as the camera and Range Book uses the iPhone's location instead, or pick a saved range or type the weather in.":
+          "Couldn't find your location. Try again outside, or enter it yourself.")),
         {enableHighAccuracy:true,timeout:15000,maximumAge:300000});});},
+    dev(){const u=navigator.userAgent;return /iPhone/.test(u)?"iPhone":/iPad/.test(u)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform||""))?"iPad":"device";},
+    /* a phone signed in to this account that's the Live target camera (or showing Live target with Remote on) shares where it
+       is (2.47.7), so an iPad without GPS can use it. Only a fix from the last 30 minutes. */
+    async fromPhone(){try{const r=await fetch("/api/remote",{credentials:"same-origin",cache:"no-store"});if(!r.ok)return null;const j=await r.json();
+      const g=(j.sessions||[]).map(x=>Object.assign({dev:x.device},x.geo||{})).filter(x=>isFinite(x.lat)&&isFinite(x.lon)&&Date.now()-(x.at||0)<1800000).sort((a,b)=>b.at-a.at)[0];
+      return g?{lat:g.lat,lon:g.lon,acc:g.acc,from:g.dev||"phone"}:null;}catch(e){return null;}},
+    // this phone's own location, kept fresh while it's a Live target camera, for the device running the session
+    share(){if(W._sh||!window.isSecureContext||!navigator.geolocation)return;W._sh=true;
+      const go=()=>navigator.geolocation.getCurrentPosition(p=>{window.RB_MYGEO={lat:+p.coords.latitude.toFixed(5),lon:+p.coords.longitude.toFixed(5),acc:Math.round(p.coords.accuracy),at:Date.now()};},()=>{},{enableHighAccuracy:true,timeout:20000,maximumAge:600000});
+      go();setInterval(go,600000);},
     // today's weather at a spot: °F, mph, ft, hPa
     async get(lat,lon){
       const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+f4(lat)+"&longitude="+f4(lon)+"&current=temperature_2m,relative_humidity_2m,dew_point_2m,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto");
@@ -3741,7 +3781,7 @@ window.foldCard=foldCard;
 // fold every titled card on a page (Reloading loads, guns, factory ammo); each page type remembers its own
 window.foldAll=(root,prefix)=>{if(!root)return;root.querySelectorAll("section.card:not(.collapsible)").forEach(sec=>{if(sec.id==="shareSec")return;const h=sec.querySelector(":scope>h2");if(!h)return;
   foldCard(sec,prefix+"_"+String(sec.id||sec.getAttribute("aria-label")||h.textContent).replace(/[^A-Za-z0-9]+/g,"_"));});};
-[["#secTWx","wx"],["#secTPbr","pbr"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
+[["#secTWx","wx"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
 function openTraj(id){sweepNewProf(id);state.cur=id;save();showTrajView("detail");fillInputs();trajHead();try{scopeCols(cur());}catch(e){}render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
 /* a profile left without a name is named after its gun and ammo ("gun - ammo"), and keeps up as they change */
 function profAuto(L){let g="",a="";
@@ -3761,7 +3801,7 @@ function scratchShow(){fillInputs();try{scopeCols(cur());}catch(e){}fillRifle();
 let TRIP_AIR=null;
 window.RB_TRAJ={
   // seconds for a bullet to fly yd yards at velocity v, with this profile's BC and air (Live target's wait, 2.46.5)
-  tof(id,v,yd){const L=state.loads.find(l=>l.id===id);if(!L||!(num(L.bc)>0)||!(v>0)||!(yd>0))return null;try{const S=simulate(Object.assign({},L,{mv:v,lr:yd>1000}));return yd<=S.last?S.at(S.t,yd):null;}catch(e){return null;}},
+  tof(id,v,yd){const L=state.loads.find(l=>l.id===id);if(!L||!(v>0)||!(yd>0))return null;try{const S=simulate(Object.assign({},L,{mv:v,lr:yd>1000}));return yd<=S.last?S.at(S.t,yd):null;}catch(e){return null;}},
   tripAir(a){const k=JSON.stringify(a);if(k===JSON.stringify(TRIP_AIR))return;TRIP_AIR=a;if(TVIEW==="detail")render();},
   scratchOn(slot){const d=$("trajDetail");if(!slot||!d)return;
     if(!SCR){SCR_PREV=TVIEW;let o=null;try{o=JSON.parse(localStorage.getItem(QC_KEY)||"null");}catch(e){}SCRATCH=o&&typeof o==="object"?Object.assign(freshScratch(),o,{id:"quickcalc"}):freshScratch();
@@ -3798,7 +3838,7 @@ window.RB_TRAJ={
   where(){return TVIEW==="detail"&&!SCR?state.cur:null;},
   // a Shooting profile's calculator inputs, to fill in Tools → Trajectory calculator
   spec(id){const L=state.loads.find(l=>l.id===id);if(!L)return null;if(!L.zpb)migZ(L);const ai=Math.round(L.adj||0)-1;
-    return {w:num(L.w),mv:effMV(L),bc:num(L.bc),bcm:L.bcm==="G7"?"G7":"G1",sh:num(L.sh),zero:(ai>=0&&ai<4?num(L.z[ai]):null)||(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null,
+    return {w:num(L.w),mv:effMV(L),bc:bcUse(L).bc,bcm:bcUse(L).bcm,sh:num(L.sh),zero:(ai>=0&&ai<4?num(L.z[ai]):null)||(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null,
       temp:num(L.temp),alt:num(L.alt),wind:num(L.wind),wclock:windClock(L),cal:num(L.cal),twist:num(L.twist),blen:num(L.blen),tip:num(L.tip),cart:L.cart||"",rifleId:L.rifleId||null};},
   ranges(){return (Array.isArray(state.ranges)?state.ranges:[]).map(r=>r.name).filter(Boolean);},
   // your ammo with what a trajectory needs (Tools → Compare trajectories)
@@ -3837,7 +3877,7 @@ window.RB_TRAJ={
   solveObj(L0,o){
     if(!L0.zpb)migZ(L0);
     o=o||{};const CAM=(()=>{const C=canAdj(L0);return canMoves(C)?C:null;})(),L=Object.assign({},L0,o,{mv:effMV(L0)+(CAM?CAM.fps:0)});
-    if(!(L.mv>0&&L.bc>0&&L.w>0)||L.sh==null)return {err:"Fill in the Shooting profile's velocity, BC, bullet weight and sight height first."};
+    if(!(L.mv>0&&L.w>0)||L.sh==null)return {err:"Fill in the Shooting profile's velocity, bullet weight and sight height first."};
     const ai=Math.round(L.adj||0)-1;let z=(ai>=0&&ai<4)?num(L.z[ai]):null;
     if(ai===3&&!(z>0)&&L.sh!=null){const S0=simulate(L),A0=angleCos(L0);const P=pbrCalc(L,S0,(x,zz)=>S0.at(S0.G,x)*A0+x*(L.sh-S0.at(S0.G,zz))/zz-L.sh);if(P){z=P.z;L0.z[3]=P.z;}}
     if(!(z>0))z=(L.z||[]).slice(0,3).map(num).find(v=>v>0)||null;
@@ -3852,7 +3892,7 @@ window.RB_TRAJ={
 };
 /* your own order for a profile's cards (one order for every profile and the Tools calculator). On a phone or tablet the cards
    are one list; on a big screen Inputs and Conditions keep the left column and the rest the right, each in your order. */
-const TCARDS=[["secTInputs","Inputs"],["secTWx","Conditions"],["secTCan","Suppressor"],["secTChart","Bullet path"],["secTPbr","Point-blank range"],["secTTable","Range table"],["secTTrue","True up velocity"],["secTDope","Dope card & reticle"]];
+const TCARDS=[["secTInputs","Inputs"],["secTWx","Conditions"],["secTCan","Suppressor"],["secTChart","Bullet path"],["secTTable","Range table"],["secTTrue","True up velocity"],["secTDope","Dope card & reticle"]];
 const tcardIds=()=>{const o=RB_ORDER.get("tcards")||[],all=TCARDS.map(x=>x[0]);return o.filter(k=>all.includes(k)).concat(all.filter(k=>!o.includes(k)));};
 function applyCardOrder(){const ids=tcardIds();ids.forEach((id,i)=>{const el=$(id);if(el)el.style.order=i;});
   const J=$("trajJump");if(J)J.querySelectorAll(".jumplinks a").forEach(a=>{const i=ids.indexOf((a.getAttribute("href")||"").slice(1));a.style.order=i>=0?i:99;});}
@@ -3865,7 +3905,9 @@ $("trajBack").addEventListener("click",()=>{showTrajView("list");window.scrollTo
 // common target sizes: 4, 6 and 8 in, or 10, 15 and 20 cm in metric
 if(U.metric)document.querySelectorAll("#pbChips [data-pbs]").forEach((b,i)=>{const cm=[10,15,20][i];b.dataset.pbs=cm;b.textContent=cm+" cm "+b.textContent.replace(/^[\d.]+"\s*/,"");});
 document.querySelectorAll("#pbChips [data-pbs]").forEach(b=>b.addEventListener("click",()=>{$("pb_size").value=b.dataset.pbs;readInputs();render();}));
-$("trajJump").querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();if(a.getAttribute("href")==="#secTInputs"&&!IN_OPEN)setInOpen(true);const el=$(a.getAttribute("href").slice(1));const fb=el&&el.querySelector(":scope>.sechead[aria-expanded='false']");if(fb&&fb.id!=="inToggle")fb.click();if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}));
+// point-blank range folds at the bottom of the Bullet path card (2.47.5); shut until you open it, remembered on this device
+{const pd=$("secTPbr");pd.open=FOLD.pbr===0;pd.addEventListener("toggle",()=>{if(pd.open)FOLD.pbr=0;else delete FOLD.pbr;try{localStorage.setItem("rb.fold",JSON.stringify(FOLD));}catch(e){}});}
+$("trajJump").querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();if(a.getAttribute("href")==="#secTInputs"&&!IN_OPEN)setInOpen(true);const el=$(a.getAttribute("href").slice(1));const fb=el&&el.querySelector(":scope>.sechead[aria-expanded='false']");if(fb&&fb.id!=="inToggle")fb.click();if(el&&el.tagName==="DETAILS"){el.open=true;const cb=$("secTChart").querySelector(":scope>.sechead[aria-expanded='false']");if(cb)cb.click();}if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}));
 const F=["w","mv","bc","sh","adj","temp","alt","wind","step","twist","blen","tip","mvtemp","tsens","angle"];
 // the calculator boxes that have units: [kind, decimals shown in metric]; the rest (grains, BC, angle…) are the same in both
 const FU={mv:["fps",1,1],sh:["in",2,3],temp:["F",1,1],alt:["ft",0,0],wind:["mph",1,1],twist:["dim",1,2],blen:["dim",2,3],tip:["dim",2,3],mvtemp:["F",1,1],tsens:["tsens",2,2]};
@@ -4071,7 +4113,13 @@ function mvAdj(L){const ts=num(L.tsens),t0=num(L.mvtemp),T=num(L.temp)==null?59:
 function effMV(L){return (num(L.mv)||0)+mvAdj(L);}
 // shooting up or down hill: gravity acts across the line of sight only by cos(angle)
 function angleCos(L){const a=Math.abs(num(L.angle)||0);return a>0&&a<90?Math.cos(a*Math.PI/180):1;}
+/* no BC typed in (2.47.5): guess a G1 BC from the bullet's weight and diameter (a form factor of 0.6, a typical hunting
+   bullet), or 0.3 when the diameter isn't known. Close in it barely matters; far out the box BC is better. */
+function bcDia(L){const d=num(L.cal);if(d>0)return d;try{return window.RB_CARTS&&L.cart?num(RB_CARTS.dia(L.cart))||null:null;}catch(e){return null;}}
+function estBC(L){const d=bcDia(L),w=num(L.w);if(!(d>0&&w>0))return .3;return Math.round(Math.max(.1,Math.min(.7,w/7000/(d*d)/.6))*100)/100;}
+const bcUse=L=>num(L.bc)>0?{bc:num(L.bc),bcm:L.bcm==="G7"?"G7":"G1",est:false}:{bc:estBC(L),bcm:"G1",est:true};
 function simulate(L){
+  const BCU=bcUse(L);
   const MR=L.lr?2000:1000;
   const T=L.temp==null?59:L.temp, alt=L.alt==null?0:L.alt;
   const rho=Math.pow(1-6.8756e-6*alt,5.2559)*518.67/(T+459.67);
@@ -4085,7 +4133,7 @@ function simulate(L){
     const p=y-1;
     // stop when it's too slow, or falling more steeply than 45°: a per-yard table means nothing past that
     if(!(vx>30)||H[p]>vx){last=p;break;}
-    const k=rho*2.08551e-4*(L.bcm==="G7"?cdTab(G7,v[p]/sos):cdG1(v[p]/sos))*v[p]/L.bc, dt=3/vx;
+    const k=rho*2.08551e-4*(BCU.bcm==="G7"?cdTab(G7,v[p]/sos):cdG1(v[p]/sos))*v[p]/BCU.bc, dt=3/vx;
     vx-=k*vx*dt;t[y]=t[p]+dt;H[y]=H[p]+(32.174-k*H[p])*dt;G[y]=G[p]-(H[p]+H[y])/2*dt*12;v[y]=Math.hypot(vx,H[y]);
     I[y]=I[p]+(t[p]+t[y])/2*3; // ∫ t dx (ft·s), for Coriolis
   }
@@ -4169,12 +4217,11 @@ function render(){
   const L=Object.assign({},LA,{mv:effMV(LA)+(CAM?CAM.fps:0)}); // what the bullet actually does today (on a trip, in the trip's air)
   const bad=[];
   if(!(L.mv>0))bad.push("muzzle velocity");
-  if(!(L.bc>0))bad.push("ballistic coefficient");
   if(!(L.w>0))bad.push("bullet weight");
   if(L.sh==null||L.sh<0)bad.push("sight height");
   const badAngle=num(L.angle)!=null&&Math.abs(num(L.angle))>=90; // 90° or more isn't an uphill or downhill shot (it used to be taken as level, quietly)
   {const td=$("trajDetail");if(td)td.classList.toggle("qcempty",bad.length>0||badAngle);}
-  if(bad.length||badAngle){err.hidden=false;err.textContent=bad.length?"Enter a positive number for "+bad.join(", ")+".":"The shot angle must be less than 90° up or down (0 is level).";for(let i=0;i<4;i++)$("cxv"+i).innerHTML="";$("chart").innerHTML="";$("tbl").innerHTML="";$("legend").innerHTML="";$("derived").innerHTML="";return;}
+  if(bad.length||badAngle){err.hidden=false;err.textContent=bad.length?"Enter a positive number for "+bad.join(", ")+".":"The shot angle must be less than 90° up or down (0 is level).";for(let i=0;i<4;i++)$("cxv"+i).innerHTML="";$("chart").innerHTML='<div class="chartempty" style="height:'+(()=>{try{return chartDims(!!L.lr).H;}catch(e){return 220;}})()+'px">Enter the bullet\'s weight and speed to see its path.</div>';CH=null;$("tbl").innerHTML="";$("legend").innerHTML="";$("derived").innerHTML="";return;}
   const S=simulate(L), MR=S.MR, sh=L.sh;
   const AC=angleCos(L);
   const path0=(x,z)=>S.at(S.G,x)*AC+x*(sh-S.at(S.G,z))/z-sh; // zeroed level; at an angle only cos(angle) of the drop counts
@@ -4186,11 +4233,13 @@ function render(){
   const zs=L.z.map(z=>(z!=null&&z>=1&&z<=Math.min(MR,S.last))?z:null);
   const badZ=L.z.some((z,i)=>i<3&&z!=null&&zs[i]==null);
   err.hidden=!badZ;if(badZ)err.textContent="Zeros must be between 1 and "+U.s("yd",MR,0,true)+(S.last<MR?" (this profile's path gets too steep to follow past "+U.s("yd",S.last,0,true)+")":"")+".";
+  {const B=bcUse(L),fb=$("f_bc");if(fb)fb.placeholder=B.est?"Blank: about "+B.bc+" (G1)":"";
+    if(B.est&&!badZ){err.hidden=false;err.textContent="No BC entered, so Range Book is using about "+B.bc+" (G1), "+(bcDia(L)>0?"a guess from the bullet's weight and diameter":"a typical value (pick the cartridge or enter the bullet diameter for a better guess)")+". Close in that's near enough; for longer shots, enter the BC from the box.";}}
 
   // derived
   const me=L.w*L.mv*L.mv/450436;
   let d="<span>Muzzle energy <b>"+U.s("ftlb",me,0,true)+"</b></span>";
-  if(L.cal>0){const sd=L.w/7000/(L.cal*L.cal), ff=sd/L.bc;
+  if(L.cal>0&&L.bc>0){const sd=L.w/7000/(L.cal*L.cal), ff=sd/L.bc;
     // a form factor far outside what real bullets have usually means a typo. G1 form factors run about 0.38 (very sleek match bullets) to 1.3; G7 about 0.85 to 1.25.
     const ffBad=L.bcm==="G7"?(ff<.75||ff>1.35):(ff<.36||ff>1.35);
     d+="<span>Sectional density <b>"+sd.toFixed(3)+"</b></span><span>Form factor <b>"+ff.toFixed(2)+"</b>"+(ffBad?' <span class="err">check weight, diameter and BC</span>':"")+"</span>";}
@@ -4711,7 +4760,8 @@ const CHART_HMIN=150,CHART_HMAX=1100;
 let CHART_H=(()=>{try{const v=+localStorage.getItem("rb.chartH");return v>=CHART_HMIN&&v<=CHART_HMAX?v:null;}catch(e){return null;}})();
 function setChartH(v){const oldPh=CH?CH.ph:null;CHART_H=v==null?null:Math.max(CHART_HMIN,Math.min(CHART_HMAX,Math.round(v)));
   if(VIEW&&oldPh&&LAST&&!TRUESCALE){const nh=(CHART_H||autoChartH(!!LAST.L.lr,chartW()))-50;VIEW.y0=VIEW.y1-(VIEW.y1-VIEW.y0)*nh/oldPh;}try{if(CHART_H==null)localStorage.removeItem("rb.chartH");else localStorage.setItem("rb.chartH",CHART_H);}catch(e){}if(LAST){if(TRUESCALE&&VIEW){setView(Object.assign({},VIEW));}else scheduleRedraw();}}
-function autoChartH(lr,W){return Math.round(Math.min(600,Math.max(lr?390:440,W*0.78))/2);}
+// one height for Short, Medium and Long (2.47.5), each with its own scale (Short shows 12 in of drop)
+function autoChartH(lr,W){return Math.round(Math.min(600,Math.max(440,W*0.78))/2);}
 function chartW(){const b=$("chart");return Math.max(300,Math.round((b&&b.clientWidth)||600));}
 // the normal view; when the chart has been made taller or shorter, show more or fewer inches
 // (same inches per pixel) instead of stretching the picture. The line of sight stays put.
@@ -4979,7 +5029,7 @@ function zoomAbout(fx,fy,px,py){ // fx,fy <1 zooms in; px,py plot-pixel anchor
 
 // + New profile: a blank one (pick the gun and ammo, or type the numbers)
 function newLoad(){
-  sweepNewProf();const L=freshScratch();L.id="u"+Date.now().toString(36);L.builtin=false;L.nameAuto=true;L.name="New profile";L.temp=59;L.alt=0;
+  sweepNewProf();const L=freshScratch();L.id="u"+Date.now().toString(36);L.builtin=false;L.nameAuto=true;L.name="New profile";L.temp=59;L.alt=0;L.z=[50,100,200,null];L.adj=2;
   state.loads.push(L);NEWPROF=L.id;state.cur=L.id;save();showTrajView("detail");fillInputs();trajHead();render();setInOpen(true);window.scrollTo(0,0);
   try{$("f_rifleBtn").focus({preventScroll:true});}catch(e){}
 }
@@ -8905,7 +8955,7 @@ function openLive(o){
   v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
       '<div class="lvstat"><span class="lvpill warn" id="lvAng" hidden><i></i><span></span></span><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
-      '<button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvmanual" id="lvFind" type="button" hidden>Find target again</button><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
+      '<div class="lvbtns"><button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvFind" type="button" hidden>Find target again</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvauto" id="lvAuto" type="button" hidden>Find corners automatically</button></div><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
     '<div class="chgrip lvgrip" id="lvGrip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Camera picture height. Drag up or down, or use the arrow keys." title="Drag to make the camera picture bigger or smaller. Double-tap to reset."><span></span></div>'+
     '<div class="lvside">'+
       '<div class="lvinfo"><span class="lvchip">'+esc(o.title||"Target")+'</span></div>'+
@@ -9094,7 +9144,7 @@ function openLive(o){
         else if(had&&ref&&!lock.manual){unlike=alike(ref,flatten(fr,lock))<.5?unlike+1:0;if(unlike>=2){unlike=0;findAgain("moved");continue;}}
         if(ok&&!had){
           const f=await steady(1500);if(closed)return;if(refind||!lock)continue;ref=f;
-          setStat((again?"Target found again":"Target locked: "+lock.layout.name)+". Fire at "+aimLabel(aim)+", then tap Shot.","");$("lvShot").disabled=false;$("lvView").hidden=false;$("lvManual").hidden=true;$("lvFind").hidden=false;
+          setStat((again?"Target found again":"Target locked: "+lock.layout.name)+". Fire at "+aimLabel(aim)+", then tap Shot.","");$("lvShot").disabled=false;$("lvView").hidden=false;$("lvFind").hidden=false;$("lvManual").hidden=false;$("lvManual").textContent="Wrong outline? Tap the corners";
           lastRefresh=Date.now();
         }else if(!ok&&again&&lockMiss===12)setStat("Still looking for the target. Keep the whole page in view, with all four corner squares.","busy");
         else if(!ok&&lock&&!again&&lockMiss===8)setStat("Can't see all four corner squares. Keep the whole page in view.","busy");
@@ -9120,7 +9170,7 @@ function openLive(o){
   $("lvFind").addEventListener("click",()=>findAgain());
   /* ----- comparing before and after ----- */
   function findNew(A,B){
-    const P=LIVE_PPI,w=A.w,h=A.h,N=w*h,fid=(lock&&lock.fid)||T.fid,fs=lock&&lock.manual?.3:((lock&&lock.fs)||(T&&T.fidSize)||1)/2+.18,edge=.22;
+    const P=LIVE_PPI,w=A.w,h=A.h,N=w*h,fid=(lock&&lock.fid)||T.fid,fs=lock&&lock.manual&&!lock.rb?.3:((lock&&lock.fs)||(T&&T.fidSize)||1)/2+.18,edge=.22;
     const skip=new Uint8Array(N);
     for(let y=0;y<h;y++)for(let x=0;x<w;x++){const px=(x+.5)/P,py=(y+.5)/P,i=y*w+x;
       if(px<edge||py<edge||px>pageW-edge||py>pageH-edge||A.g[i]<0||B.g[i]<0||fid.some(f=>Math.abs(px-f[0])<fs&&Math.abs(py-f[1])<fs))skip[i]=1;}
@@ -9135,7 +9185,9 @@ function openLive(o){
       d[i]=m<1e9?m:0;}
     // how noisy is the difference? (median of a sample)
     const smp=[];for(let i=0;i<N;i+=11)if(!skip[i])smp.push(d[i]);smp.sort((a,b)=>a-b);const med=smp.length?smp[smp.length>>1]:0;
-    const thr=Math.max(16,med*1.4826*5.5);
+    // the floors were lowered in 2.47.6: through a spotting scope a hole can be only half as dark as up close. In a noisy,
+    // shimmering picture the noise sets the bar instead, as before.
+    const thr=Math.max(8,med*1.4826*5);
     const r=dia/2*P,A0=Math.PI*r*r,m=new Uint8Array(N);
     for(let i=0;i<N;i++)if(d[i]>thr)m[i]=1;
     // close small gaps so a torn hole counts once
@@ -9153,7 +9205,7 @@ function openLive(o){
         let s=0,c=0;for(let yy=-R;yy<=R;yy++)for(let xx=-R;xx<=R;xx++)if(xx*xx+yy*yy<=R2){c++;const q=d[(cy+yy)*w+cx+xx];if(q>thr*.5)s+=q;}
         if(s>bv){bv=s;bx=cx;by=cy;bn=c;}}
       // a real hole changes a lot: paper (or the black center) becomes whatever is behind the target
-      if(bv/bn<22)continue;
+      if(bv/bn<Math.max(10,thr*.75))continue;
       out.push({x:(bx+.5)/P,y:(by+.5)/P,v:bv,core,bw,bh,c:Math.round(bv/bn)});
     }
     // already-known holes don't count again
@@ -9173,10 +9225,10 @@ function openLive(o){
       await wait(ms);}
     const f=await steady(3000);if(closed)return;
     busy=false;$("lvShot").disabled=false;
-    if(!f){setStat("Couldn't get a clear picture. Tap Shot again.","bad");return;}
+    if(!f){setStat("Couldn't get a clear picture. Tap Shot again.","bad");setTimeout(chNext,50);return;}
     let found=findNew(ref,f);
     if(found.length>4)found=found.slice(0,4);
-    if(!found.length){setStat((pendVel?U.s("fps",pendVel.v,0)+", but no":"No")+" new hole found. Tap the hole on the picture to add it"+(pendVel?" with that velocity":"")+", or tap Shot again.","bad");return;}
+    if(!found.length){setStat((pendVel?U.s("fps",pendVel.v,0)+", but no":"No")+" new hole found. Tap the hole on the picture to add it"+(pendVel?" with that velocity":"")+", or tap Shot again.","bad");setTimeout(chNext,50);return;}
     snap();
     if(!holes[aim])holes[aim]=[];
     found.forEach(q=>holes[aim].push([q.x,q.y]));
@@ -9186,7 +9238,7 @@ function openLive(o){
     const out=found.some(q=>!inZoom(q.x,q.y));
     const a=aims()[aim],off=a?Math.hypot(found[0].x-a.x,found[0].y-a.y):null;
     setStat((found.length>1?found.length+" new holes found":"Shot "+holes[aim].length+" found")+(fv!=null?", "+U.s("fps",fv,0):"")+(off!=null&&found.length===1?", "+U.s("in",off,2)+" from aim":"")+(out&&view==="aim"?" (outside the zoom, so the view widened)":""),"");
-    after();
+    after();setTimeout(chNext,50);
   }
   /* ----- the chronograph (2.44.7): BLIPR or an Athlon connected to this device, or to the iPad running the session.
      Each velocity waits (pendVel) for the next hole found or tapped in. If the hole was already found (the microphone
@@ -9205,9 +9257,14 @@ function openLive(o){
     if(closed||!(v>0))return;const now=Date.now();
     if(!busy&&lastFind&&now-lastFind.at<6000&&(!trig||now-lastFind.at<2500)){const q=(holes[lastFind.aim]||[])[lastFind.k];
       if(q&&q[2]==null){q[2]=Math.round(v*10)/10;dirty=true;setStat("Shot "+(lastFind.k+1)+": "+U.s("fps",v,0)+".","");lastFind=null;renderStats();return;}}
+    // still looking for the last shot: this one waits its turn (its velocity mustn't land on the last shot's hole) (2.47.6)
+    if(trig&&lock&&ref&&busy){chQ={v,at:now};lastV=v;return;}
     lastFind=null;pendVel={v,at:now};lastV=v;
     if(trig&&lock&&ref&&!busy)shot("chrono");
-    else if(!busy)setStat(U.s("fps",v,0)+(ref?". It goes on the next hole found or tapped in.":". The target isn't ready yet, so Range Book didn't look for the hole."),"");}
+    else if(!busy)setStat(U.s("fps",v,0)+(!trig?". It goes on the next hole found or tapped in.":man?". Finish tapping the corners first, then tap the hole on the picture to add it with that velocity.":!lock||!ref?". The target isn't locked, so Range Book couldn't look for the hole. Tap it on the picture to add it with that velocity.":". It goes on the next hole found or tapped in."),trig&&(!lock||!ref)?"bad":"");}
+  let chQ=null;
+  // after a search: a chronograph shot that came in during it gets its own search now
+  function chNext(){const q=chQ;chQ=null;if(!q||closed||!lock||!ref||busy||Date.now()-q.at>15000)return;pendVel={v:q.v,at:q.at};lastV=q.v;shot("chrono");}
   const chOn=()=>{try{return localStorage.getItem("rb.liveChrono")!=="0";}catch(e){return true;}};
   const unCh=window.RB_BTCHRONO?RB_BTCHRONO.onShot(s=>chronoVel(s.v,chOn())):null;
   const chUI=()=>{const l=$("lvChL");if(!l||!window.RB_BTCHRONO)return;l.hidden=RB_BTCHRONO.state()==="off";$("lvCh").checked=chOn();};
@@ -9243,7 +9300,8 @@ function openLive(o){
     ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle="#000";ctx.fillRect(0,0,can.width,can.height);
     if(!video.videoWidth)return;
     const tgt=wantCrop();
-    if(!crop||crop[2]<=0)crop=tgt;else crop=crop.map((c,i)=>c+(tgt[i]-c)*.25);
+    if(!tgt.every(isFinite))return;
+    if(!crop||!(crop[2]>0)||!crop.every(isFinite))crop=tgt;else crop=crop.map((c,i)=>c+(tgt[i]-c)*.25);
     const [sx,sy,sw,sh]=crop,k=can.width/sw;
     ctx.setTransform(k,0,0,k,-sx*k,-sy*k);ctx.transform(...rotM());
     ctx.drawImage(video,0,0);
@@ -9360,6 +9418,10 @@ function openLive(o){
   // Safari's own page zoom
   ["gesturestart","gesturechange"].forEach(t=>can.addEventListener(t,e=>e.preventDefault()));
   can.addEventListener("click",e=>{if(Date.now()-noClick<400)return;const rc=can.getBoundingClientRect();tapAt((e.clientX-rc.left)/rc.width,(e.clientY-rc.top)/rc.height);});
+  // the remote's zoom (2.47.6): how much wider (>1) or closer (<1) than the usual view. One zoom with the pinch above.
+  const uzNow=()=>{if(!ucrop)return 1;const u=ucrop;ucrop=null;let b=null;try{b=wantCrop();}catch(e){}ucrop=u;return b&&b[2]>0?+(u[2]/b[2]).toFixed(3):1;};
+  function setUz(z){ucrop=null;let b=null;try{b=wantCrop();}catch(e){}if(!(b&&b[2]>0)||Math.abs(z-1)<.02){renderStats();return;}
+    const rc=can.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;zoomView(b,Math.min(6,Math.max(.3,z)),cx,cy,cx,cy);renderStats();}
   // a tap at a spot on the picture (0–1 across and down), from this screen or from a device watching it
   function tapAt(u,w){
     if(man&&crop){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);manTap(...fromDisp([crop[0]+u*rc.width/k,crop[1]+w*rc.height/k]));return;}
@@ -9376,15 +9438,33 @@ function openLive(o){
   /* ----- any target: tap its four corners, give its size, then tap each aim point ----- */
   let man=null;
   const CORN=["top-left","top-right","bottom-right","bottom-left"];
+  /* a Range Book target the camera found but got the outline wrong (it took something else for a corner square, so the
+     scale is off): tap the four corner squares yourself. The page and its aim points are kept, and the outline stays where
+     you put it, so a bad find can't move it again. Find corners automatically goes back. (2.47.6) */
+  let rbKeep=null;
   function manStart(){
     resetView();
-    man={step:"corners",pts:[],aims:[]};view="full";busy=false;
-    $("lvManual").hidden=true;$("lvMDone").hidden=true;$("lvFind").hidden=true;
-    setStat("Tap the paper's "+CORN[0]+" corner.","busy");
+    const L0=lock&&(lock.rb||!lock.manual)?lock:rbKeep;if(L0)lock=null;
+    man=L0?{step:"rbcorners",pts:[],aims:[],rb:{fid:L0.fid,fs:L0.fs,fmt:L0.fmt,layout:L0.layout,pw:pageW,ph:pageH}}:{step:"corners",pts:[],aims:[]};
+    view="full";busy=false;
+    $("lvManual").hidden=true;$("lvAuto").hidden=true;$("lvMDone").hidden=true;$("lvFind").hidden=true;
+    setStat(man.rb?"Tap the middle of the "+CORN[0]+" corner square.":"Tap the paper's "+CORN[0]+" corner.","busy");
+  }
+  async function manRB(){
+    const R=man.rb,H=homography(man.pts,R.fid),Hi=homography(R.fid,man.pts);
+    if(!H||!Hi){setStat("Those corners don't make a box. Tap them again.","bad");manStart();return;}
+    lock={manual:true,rb:true,H,Hinv:Hi,corners:man.pts,fid:R.fid,fs:R.fs,fmt:R.fmt,layout:R.layout};rbKeep=lock;pageW=R.pw;pageH=R.ph;man=null;angleCheck();
+    // Find target again taps the corner squares again; Find corners automatically goes back to finding them
+    $("lvManual").hidden=true;$("lvFind").hidden=false;$("lvAuto").hidden=false;
+    busy=true;ref=null;$("lvShot").disabled=true;setStat("Taking a picture of the target to compare against…","busy");
+    const f=await steady(1500);busy=false;if(closed)return;ref=f;view="aim";lastRefresh=Date.now();
+    setStat("Corners set. Keep the phone still. Fire at "+aimLabel(aim)+", then tap Shot.","");
+    $("lvShot").disabled=false;$("lvView").hidden=false;renderStats();
   }
   function manTap(cx,cy){
     if(!man)return;
     if(man.step==="corners"){man.pts.push([cx,cy]);if(man.pts.length<4)setStat("Tap the paper's "+CORN[man.pts.length]+" corner.","busy");else manSize();return;}
+    if(man.step==="rbcorners"){man.pts.push([cx,cy]);if(man.pts.length<4)setStat("Tap the middle of the "+CORN[man.pts.length]+" corner square.","busy");else manRB();return;}
     if(man.step==="aims"){const p=applyH(man.H,cx,cy);if(p[0]<0||p[1]<0||p[0]>man.w||p[1]>man.h)return;man.aims.push(p);
       setStat(man.aims.length+" aim point"+(man.aims.length===1?"":"s")+". Tap the next one, or Done.","busy");$("lvMDone").hidden=false;}
   }
@@ -9419,14 +9499,16 @@ function openLive(o){
     setStat("Ready: "+aimsL.length+" aim point"+(aimsL.length===1?"":"s")+". Keep the phone still. Fire at "+aimLabel(aim)+", then tap Shot.","");
     $("lvShot").disabled=false;$("lvView").hidden=false;renderStats();
   }
-  $("lvManual").addEventListener("click",()=>{if(lock&&lock.manual){ref=null;$("lvShot").disabled=true;}manStart();});
+  $("lvManual").addEventListener("click",()=>{if(lock){ref=null;$("lvShot").disabled=true;}manStart();});
+  $("lvAuto").addEventListener("click",()=>{if(man)return;lock=null;ref=null;rbKeep=null;refind=false;ucrop=null;$("lvShot").disabled=true;$("lvAuto").hidden=true;$("lvFind").hidden=true;$("lvManual").hidden=false;$("lvManual").textContent="Not a Range Book target?";view="aim";
+    setStat("Finding the corner squares…","busy");renderStats();});
   $("lvMDone").addEventListener("click",manDone);
   /* ----- remote: another device signed in to this account watches this screen and sends taps back ----- */
   let rmId=null,rmBusy=false,rmTimer=null,rmWatch=false,rmFail=0;
   const rfetch=(method,url,body)=>fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"rangebook"},body:body===undefined?undefined:JSON.stringify(body)}).then(r=>r.ok?r.json():r.json().catch(()=>({})).then(j=>{const e=new Error(j.error||"error "+r.status);e.status=r.status;throw e;}));
   const devName=()=>/iPhone/.test(navigator.userAgent)?"iPhone":/iPad|Macintosh.*Mobile/.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform))?"iPad":/Android/.test(navigator.userAgent)?"Android phone":"computer";
   function rmLabel(){const b=$("lvRemote");if(!b)return;b.setAttribute("aria-pressed",rmId?"true":"false");b.classList.toggle("on",!!rmId);b.textContent=rmId?(rmWatch?"Remote · watching":"Remote · waiting"):"Remote";}
-  async function remoteStart(){
+  async function remoteStart(){if(window.RB_WX&&RB_WX.share)RB_WX.share();
     try{const r=await rfetch("POST","/api/remote",{device:devName()});rmId=r.id;rmFail=0;rmLabel();
       setStat("Remote is on. On your iPad (signed in to this account), open Tools → Live target → Watch.","");remotePush();}
     catch(e){setStat("Couldn't start the remote: it needs a signal to reach your Range Book.","bad");}
@@ -9441,17 +9523,20 @@ function openLive(o){
     return {status:status.t,kind:status.k,ang:ang.t?{t:ang.t,k:ang.k,deg:Math.round(ang.deg)}:null,locked:!!lock,ready:!!ref,chip:$("lvAimChip").textContent,
       stats:{n:r.n,want:want||null,size:r.size!=null?U.n("in",r.size,2):"–",moa:m!=null?m.toFixed(2):"–",mr:r.mr!=null?U.n("in",r.mr,2):"–",off:offTxt(r)},
       en:{shot:!$("lvShot").disabled,undo:!$("lvUndo").disabled,prev:!$("lvPrev").disabled,next:!$("lvNext").disabled,done:!$("lvDone").disabled},
-      viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,findShown:!$("lvFind").hidden,doneLabel:$("lvDone").textContent,
+      viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,findShown:!$("lvFind").hidden,view,uz:uzNow(),
+      manL:$("lvManual").hidden?null:$("lvManual").textContent,autoShown:!$("lvAuto").hidden,mdone:!$("lvMDone").hidden,doneLabel:$("lvDone").textContent,
       groups:gs?[...gs.options].map(o=>[o.value,o.textContent]):null,group:gs?gs.value:null,want:$("lvWant").value,dist:$("lvDist").value,unitIn:U.u("in"),unitYd:U.u("yd"),
       mic:!!micT,sens,sheet,title:o.title||"",hosted:!!o.hosted,total:holes.reduce((s2,h)=>s2+(h?h.length:0),0),result:resTok,
-      ret:{on:!!RT.on,prof:RT.prof||null,zero:num(RT.zero)>0?num(RT.zero):null,note:(($("lvRetNote")||{}).textContent)||""}};
+      geo:window.RB_MYGEO||null,ret:{on:!!RT.on,prof:RT.prof||null,zero:num(RT.zero)>0?num(RT.zero):null,note:(($("lvRetNote")||{}).textContent)||""}};
   }
-  const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvMDone","lvmOk","lvmRedo","lvFind"];
+  const RM_CLICK=["lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvAuto","lvMDone","lvmOk","lvmRedo","lvFind"];
   function rmRun(c){
     if(c.cmd==="click"&&RM_CLICK.includes(c.id)){const b=$(c.id);if(b&&!b.disabled)b.click();}
     else if(c.cmd==="tap"&&isFinite(c.u)&&isFinite(c.w))tapAt(Math.min(1,Math.max(0,c.u)),Math.min(1,Math.max(0,c.w)));
     else if(c.cmd==="set"){const el=c.k==="group"?$("lvGroup"):c.k==="want"?$("lvWant"):c.k==="dist"?$("lvDist"):null;if(el){el.value=c.v==null?"":c.v;el.dispatchEvent(new Event(el.tagName==="SELECT"?"change":"input"));}}
     else if(c.cmd==="sens"&&SENS[c.v])setSens(c.v);
+    else if(c.cmd==="view"&&(c.v==="aim"||c.v==="full")){if(c.v!==view||ucrop){view=c.v;ucrop=null;renderStats();}}
+    else if(c.cmd==="zoom"&&num(c.v)>0)setUz(num(c.v));
     else if(c.cmd==="chrono"&&num(c.v)>0)chronoVel(num(c.v),!!c.trig);
     // from the device that started it (2.37): end without saving, the save went through, the reticle settings
     else if(c.cmd==="end"&&o.hosted)close(true);
@@ -9474,7 +9559,7 @@ function openLive(o){
     if(rmId&&!closed)rmTimer=setTimeout(remotePush,Math.max(150,650-(Date.now()-t0)));
   }
   $("lvRemote").addEventListener("click",()=>{if(rmId)remoteStop();else remoteStart();});
-  thumb.addEventListener("click",()=>{view="full";renderStats();});
+  thumb.addEventListener("click",()=>{view="full";ucrop=null;renderStats();});
   $("lvView").addEventListener("click",()=>{if(ucrop){ucrop=null;renderStats();return;}view=view==="aim"?"full":"aim";renderStats();});
   $("lvShot").addEventListener("click",()=>shot("button"));
   $("lvUndo").addEventListener("click",()=>{const s=undo.pop();if(!s)return;const o2=JSON.parse(s);holes=o2.holes;if(o2.aim!==aim){aim=o2.aim;fillAim();}newest=null;$("lvUndo").disabled=!undo.length;setStat("Undone.","");renderStats();});
@@ -9758,7 +9843,7 @@ function openWatch(id,dev,host){
   const v=document.createElement("div");v.className="viewer live watch";v.id="liveWatch";v.setAttribute("role","dialog");v.setAttribute("aria-label","Watching Live target");
   v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span></div>'+
     '<div class="lvmain"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill warn" id="wAng" hidden><i></i><span></span></span><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
-      '<button class="btn lvview" id="wView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="wFind" type="button" hidden>Find target again</button></div>'+
+      '<div class="lvbtns"><button class="btn lvview" id="wView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="wFind" type="button" hidden>Find target again</button><button class="btn lvmanual" id="wManual" type="button" hidden></button><button class="btn lvauto" id="wAuto" type="button" hidden>Find corners automatically</button></div><button class="btn lvmdone" id="wMDone" type="button" hidden>Done</button></div>'+
     '<div class="lvside"><div class="lvinfo"><span class="lvchip" id="wTitle"></span></div>'+
       '<div class="lvrow"><button class="lvshot" id="wShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="wUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow"><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
@@ -9780,13 +9865,22 @@ function openWatch(id,dev,host){
   const cmd=b=>rfetch("POST","/api/remote/"+id+"/cmd",b).catch(()=>setStat("Couldn't reach the phone. Check the signal.","bad"));
   const setStat=(t,k)=>{const s=$("wStat");s.className="lvpill"+(k?" "+k:"");s.lastChild.textContent=t;};
   const click=bid=>cmd({cmd:"click",id:bid});
-  [["wShot","lvShot"],["wUndo","lvUndo"],["wPrev","lvPrev"],["wNext","lvNext"],["wDone","lvDone"],["wView","lvView"],["wFind","lvFind"]].forEach(([a,b])=>$(a).addEventListener("click",()=>{click(b);if(a==="wShot"){$(a).disabled=true;setStat("Looking for the shot…","busy");}if(a==="wFind"){$("wShot").disabled=true;setStat("Looking for the target…","busy");}}));
+  [["wShot","lvShot"],["wUndo","lvUndo"],["wPrev","lvPrev"],["wNext","lvNext"],["wDone","lvDone"],["wFind","lvFind"],["wManual","lvManual"],["wAuto","lvAuto"],["wMDone","lvMDone"]].forEach(([a,b])=>$(a).addEventListener("click",()=>{click(b);if(a==="wShot"){$(a).disabled=true;setStat("Looking for the shot…","busy");}if(a==="wFind"){$("wShot").disabled=true;setStat("Looking for the target…","busy");}}));
   v.querySelectorAll("[data-wsens]").forEach(b=>b.addEventListener("click",()=>{cmd({cmd:"sens",v:b.dataset.wsens});v.querySelectorAll("[data-wsens]").forEach(x=>x.classList.toggle("on",x===b));}));
   $("wGroup").addEventListener("change",e=>cmd({cmd:"set",k:"group",v:e.target.value}));
   let wt=null;const later=(k,el)=>{clearTimeout(wt);wt=setTimeout(()=>cmd({cmd:"set",k,v:el.value}),500);};
   $("wWant").addEventListener("input",e=>later("want",e.target));$("wDist").addEventListener("input",e=>later("dist",e.target));
   // a tap on the picture goes to the same spot on the phone's picture
-  img.addEventListener("click",e=>{if(!img.naturalWidth)return;const rc=img.getBoundingClientRect(),s=Math.min(rc.width/img.naturalWidth,rc.height/img.naturalHeight),dw=img.naturalWidth*s,dh=img.naturalHeight*s,ox=rc.left+(rc.width-dw)/2,oy=rc.top+(rc.height-dh)/2;
+  let wvT=0;
+  $("wView").addEventListener("click",()=>{const to=$("wView").textContent==="Whole target"?"full":"aim";cmd({cmd:"view",v:to});$("wView").textContent=to==="full"?"Zoom to aim":"Whole target";wvT=Date.now();});
+  let wpin=null,wpinT=0,wz=1,wzT=null;
+  const wtd=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+  const wzSend=()=>{if(wzT)return;wzT=setTimeout(()=>{wzT=null;cmd({cmd:"zoom",v:wz});},150);};
+  img.addEventListener("touchstart",e=>{if(e.touches.length===2){wpin={d:wtd(e.touches),z:st&&num(st.uz)>0?num(st.uz):1};wpinT=Date.now();e.preventDefault();}},{passive:false});
+  img.addEventListener("touchmove",e=>{if(wpin&&e.touches.length===2){e.preventDefault();const d=wtd(e.touches);if(d>10){wz=Math.min(6,Math.max(.3,wpin.z*wpin.d/d));wzSend();}wpinT=Date.now();}},{passive:false});
+  img.addEventListener("touchend",e=>{if(wpin&&e.touches.length<2){wpin=null;wpinT=Date.now();}});
+  img.addEventListener("wheel",e=>{e.preventDefault();wz=Math.min(6,Math.max(.3,(st&&num(st.uz)>0?num(st.uz):wz)*Math.exp(e.deltaY*(e.ctrlKey?.01:.002))));wzSend();},{passive:false});
+  img.addEventListener("click",e=>{if(Date.now()-wpinT<500)return;if(!img.naturalWidth)return;const rc=img.getBoundingClientRect(),s=Math.min(rc.width/img.naturalWidth,rc.height/img.naturalHeight),dw=img.naturalWidth*s,dh=img.naturalHeight*s,ox=rc.left+(rc.width-dw)/2,oy=rc.top+(rc.height-dh)/2;
     const u=(e.clientX-ox)/dw,w=(e.clientY-oy)/dh;if(u<0||w<0||u>1||w>1)return;cmd({cmd:"tap",u,w});});
   function render(S){
     st=S;if(!S)return;
@@ -9794,7 +9888,8 @@ function openWatch(id,dev,host){
     const T=S.stats||{};
     $("wStats").innerHTML='<div><b>'+esc(T.n)+(T.want?'<small>/'+esc(T.want)+'</small>':'')+'</b><span>Shots</span></div><div><b>'+esc(T.size)+'</b><span>Group '+esc(S.unitIn||"in")+'</span></div><div><b>'+esc(T.moa)+'</b><span>MOA</span></div><div><b>'+esc(T.mr)+'</b><span>Mean rad.</span></div><div class="wide">Center from aim: <b>'+esc(T.off)+'</b></div>';
     const E=S.en||{};$("wShot").disabled=!E.shot;$("wUndo").disabled=!E.undo;$("wPrev").disabled=!E.prev;$("wNext").disabled=!E.next;$("wDone").disabled=!E.done;$("wDone").textContent=S.doneLabel||"Save";
-    $("wView").hidden=!S.viewShown;$("wView").textContent=S.viewLabel||"Whole target";$("wFind").hidden=!S.findShown;
+    $("wView").hidden=!S.viewShown;if(Date.now()-wvT>2500)$("wView").textContent=S.viewLabel||"Whole target";$("wFind").hidden=!S.findShown;
+    $("wManual").hidden=!S.manL;$("wManual").textContent=S.manL||"";$("wAuto").hidden=!S.autoShown;$("wMDone").hidden=!S.mdone;
     const gl=$("wGroupL"),gsel=$("wGroup");gl.hidden=!S.groups;gl.parentNode.style.gridTemplateColumns=S.groups?"":"1fr 1fr";
     if(S.groups){const key=JSON.stringify(S.groups);if(key!==lastGroups){lastGroups=key;gsel.innerHTML=S.groups.map(([a,b])=>'<option value="'+esc(a)+'">'+esc(b)+'</option>').join("");}if(document.activeElement!==gsel)gsel.value=S.group||"";}
     if(document.activeElement!==$("wWant"))$("wWant").value=S.want||"";if(document.activeElement!==$("wDist"))$("wDist").value=S.dist||"";
@@ -9970,7 +10065,7 @@ async function startLive(o){
 }
 // the phone: wait to be the camera
 function cameraStandby(){
-  if($("camWait"))return;
+  if($("camWait"))return;if(window.RB_WX&&RB_WX.share)RB_WX.share();
   const v=document.createElement("div");v.className="viewer live camwait";v.id="camWait";v.setAttribute("role","dialog");v.setAttribute("aria-label","Camera for your iPad");
   v.innerHTML='<div class="lvtop"><button class="btn" id="cwClose" type="button">← Stop</button><b class="mtitle">Camera for your iPad</b></div>'+
     '<div class="lvmain"><div class="lvcam" id="cwCam"><video id="cwVid" playsinline muted autoplay></video><div class="lvstat"><span class="lvpill busy" id="cwStat"><i></i><span>Starting the camera…</span></span></div></div>'+
@@ -10006,7 +10101,7 @@ function cameraStandby(){
     try{
       if(!H.sid){const r=await rfetch("POST","/api/remote",{device:LIVE_DEV(),role:"camera"});H.sid=r.id;}
       const now=Date.now(),fr=now-lastFrame>2500?snap():null;if(fr)lastFrame=now;
-      const r=await rfetch("POST","/api/remote/"+H.sid+"/push",{frame:fr,state:{standby:true,status:"Waiting for your iPad",kind:"busy",title:"Camera ready",locked:false,ready:false,en:{}}});
+      const r=await rfetch("POST","/api/remote/"+H.sid+"/push",{frame:fr,state:{standby:true,status:"Waiting for your iPad",kind:"busy",title:"Camera ready",locked:false,ready:false,en:{},geo:window.RB_MYGEO||null}});
       fails=0;if(!hosted)setStat("Ready. Start Live target on your iPad and pick this phone.","");
       const s=(r.cmds||[]).filter(c=>c.cmd==="start").pop();if(s&&!closed)return host(s);
     }catch(e){if(e&&e.status===404)H.sid=null;if(++fails>=3)setStat("Can't reach your Range Book. Check the signal. Trying again…","bad");}
@@ -11013,6 +11108,121 @@ function canShiftTxt(s2){if(!s2)return "";const b=[];const f=v=>Math.abs(v).toFi
   if(s2.up!=null)b.push(Math.abs(s2.up)<.05&&Math.abs(s2.right)<.05?"the same point of impact":[Math.abs(s2.up)<.05?"":f(s2.up)+" MOA "+(s2.up>0?"higher":"lower"),Math.abs(s2.right)<.05?"":f(s2.right)+" MOA "+(s2.right>0?"right":"left")].filter(Boolean).join(" and "));
   if(s2.fps!=null)b.push(Math.abs(s2.fps)<.5?"the same speed":U.n("fps",Math.abs(s2.fps),0)+" "+U.u("fps")+" "+(s2.fps>0?"faster":"slower"));return b.join(", ");}
 window.RB_CANSHIFTTXT=canShiftTxt;
+/* ---------- a trip's shot groups (2.47.7): each group from its target photos, every hole colored slow to fast against that
+   group's average with its velocity next to it, the group size as a dashed circle and its center as a +, and how to dial the
+   scope to center it. Live target groups carry each hole's velocity from the chronograph. ---------- */
+let SG_CLEAN=(()=>{try{return localStorage.getItem("rb.sgClean")==="1";}catch(e){return false;}})();
+const SG_PICK={};
+function tripShotGroups(){
+  const out=[],ph=tripPhotos;
+  ph.forEach((p,pi)=>{const M=normMeasure(p.measure);if(!M||!(M.distance>0))return;const k=M.distance/100*1.0472;
+    const conv=grpMoa(p);
+    M.groups.forEach((g,gi)=>{const n=(g.shots||[]).length;if(!n)return;let P=null;
+      if(Array.isArray(g.hin)&&g.hin.length===n)P=g.hin.map(q=>[num(q[0]),num(q[1])]);
+      else{const c=conv.find(x=>x.k===p.id+":"+(g.id||gi));if(c&&c.a)P=c.p.map(q=>[q[0]*k,q[1]*k]);}
+      if(!P)return;
+      const V=Array.isArray(g.vel)?g.vel.map(v=>num(v)>0?num(v):null):P.map(()=>null);
+      const name=(ph.length>1?"Target "+(pi+1)+" · ":"")+(g.ai!=null?"Aim "+(g.ai+1):M.groups.length>1?"Group "+(gi+1):"Group");
+      const dia=num(M.dia)>0?num(M.dia):(tripTraj&&num(tripTraj.cal)>0?num(tripTraj.cal):.308);
+      out.push({key:p.id+":"+(g.id||gi),name,d:M.distance,dia,pts:P.map((q,i)=>[q[0],q[1],V[i]])});});});
+  return out;}
+function sgStats(G){const P=G.pts,n=P.length,c=[P.reduce((a,q)=>a+q[0],0)/n,P.reduce((a,q)=>a+q[1],0)/n];let es=0,pa=P[0],pb=P[0];
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const d=Math.hypot(P[i][0]-P[j][0],P[i][1]-P[j][1]);if(d>es){es=d;pa=P[i];pb=P[j];}}
+  const v=P.map(q=>q[2]).filter(x=>x>0),va=v.length?v.reduce((a,x)=>a+x,0)/v.length:null;
+  const vsd=v.length>1?Math.sqrt(v.reduce((a,x)=>a+(x-va)**2,0)/(v.length-1)):null;
+  return {n,c,size:n>1?es:null,mid:[(pa[0]+pb[0])/2,(pa[1]+pb[1])/2],va,vsd,ves:v.length>1?Math.max(...v)-Math.min(...v):null,lo:v.length?Math.min(...v):null,hi:v.length?Math.max(...v):null};}
+// slow (blue) to fast (red) against the group's own average
+function sgHeat(v,st){if(!(v>0)||st.va==null)return "var(--accent)";const t=Math.max(-1,Math.min(1,(v-st.va)/Math.max(1,(st.hi-st.lo)/2))),a=[154,161,156],b=t<0?[47,109,181]:[200,64,47],u=Math.abs(t);
+  return "rgb("+a.map((x,i)=>Math.round(x+(b[i]-x)*u)).join(",")+")";}
+/* velocity labels: try spots around each hole, nearest first, and take the first that covers no other label, hole, ring number
+   or the center +; when none is free nearby, go further out with a thin line back to the hole */
+function sgPlace(pts,S,fs,extra,dr){const W=t=>t.length*fs*.62+4,H=fs+3,boxes=(extra||[]).slice(),out=[];
+  const holes=pts.map(p=>({x:p.x-dr-1,y:p.y-dr-1,w:2*dr+2,h:2*dr+2})),hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;
+  const dirs=[[1,-1],[1,1],[-1,-1],[-1,1],[1,0],[-1,0],[0,-1],[0,1]];
+  pts.forEach((p,i)=>{if(!p.t){out.push(null);return;}const w=W(p.t);let best=null;
+    for(const r0 of [3,9,17,27,40]){const rad=dr+r0;for(const [dx,dy] of dirs){const cx=p.x+dx*rad*.75,cy=p.y+dy*rad*.75;const x=dx>0?cx:dx<0?cx-w:cx-w/2,y=dy>0?cy:dy<0?cy-H:cy-H/2;
+      const b={x,y,w,h:H};if(x<2||y<2||x+w>S-2||y+H>S-2)continue;if(boxes.some(o=>hit(b,o))||holes.some((o,j)=>j!==i&&hit(b,o)))continue;best={b,rad};break;}if(best)break;}
+    if(!best)best={b:{x:Math.min(S-w-2,p.x+dr),y:Math.max(2,p.y-dr-H),w,h:H},rad:dr+3};
+    boxes.push(best.b);out.push(Object.assign({},best.b,{line:best.rad>dr+12,t:p.t}));});
+  return out;}
+function sgPlot(G,st,o){const S=o.size,P=G.pts,R=Math.max(1.2,...P.map(q=>Math.max(Math.abs(q[0]),Math.abs(q[1]))+.3+G.dia/2)),k=S/(2*R),X=x=>S/2+x*k,Y=y=>S/2-y*k,small=!!o.small,dr=Math.max(small?2:3,G.dia/2*k);
+  const rings=[];for(let r=1;r<=R*1.02;r+=.5)rings.push(r);
+  const lab=small?[]:rings.filter(r=>rings.length<7||r%1===0);
+  let s='<svg class="sgsvg'+(small?' small':'')+'" viewBox="0 0 '+S+' '+S+'"'+(small?' width="'+S+'" height="'+S+'"':'')+' role="img" aria-label="'+esc(G.name)+': '+P.length+' shots'+(st.size!=null?', '+esc(U.s("in",st.size,2))+' group':'')+'">';
+  s+='<rect width="'+S+'" height="'+S+'" rx="10" fill="var(--sunk)"/>';
+  rings.forEach(r=>s+='<circle cx="'+X(0)+'" cy="'+Y(0)+'" r="'+(r*k)+'" fill="none" stroke="var(--line)" stroke-width="1"/>');
+  lab.forEach(r=>s+='<text x="'+(X(r*.71)+3)+'" y="'+(Y(r*.71)-3)+'" font-size="12" fill="var(--muted)">'+esc(String(+U.n("in",2*r,U.metric?1:2)))+'</text>');
+  if(!small)s+='<text x="8" y="'+(S-8)+'" font-size="12" fill="var(--muted)">'+esc(U.u("in"))+'</text>';
+  // the aim point: a 1" circle, lightly red, with a dot in the middle
+  s+='<circle cx="'+X(0)+'" cy="'+Y(0)+'" r="'+(.5*k)+'" fill="rgba(200,64,47,.16)" stroke="rgba(200,64,47,.55)" stroke-width="1.2"/><circle cx="'+X(0)+'" cy="'+Y(0)+'" r="'+(small?1.2:1.8)+'" fill="rgba(200,64,47,.8)"/>';
+  if(!small&&!SG_CLEAN&&st.size!=null)s+='<circle cx="'+X(st.mid[0])+'" cy="'+Y(st.mid[1])+'" r="'+(st.size/2*k)+'" fill="none" stroke="var(--fg)" stroke-dasharray="4 3" stroke-width="1.2"/>';
+  const cross=!SG_CLEAN&&P.length>1?'<path d="M'+(X(st.c[0])-6)+' '+Y(st.c[1])+'h12M'+X(st.c[0])+' '+(Y(st.c[1])-6)+'v12" stroke="var(--sunk)" stroke-width="4.5"/><path d="M'+(X(st.c[0])-6)+' '+Y(st.c[1])+'h12M'+X(st.c[0])+' '+(Y(st.c[1])-6)+'v12" stroke="var(--fg)" stroke-width="2"/>':'';
+  const pts=P.map(q=>({x:X(q[0]),y:Y(q[1]),t:q[2]>0?String(Math.round(U.n("fps",q[2],0))):"",c:sgHeat(q[2],st)}));
+  const FS=Math.round(S/440*17);
+  if(!small){const ex=lab.map(r=>({x:X(r*.71)+1,y:Y(r*.71)-15,w:30,h:15}));if(!SG_CLEAN)ex.push({x:X(st.c[0])-7,y:Y(st.c[1])-7,w:14,h:14});
+    const L=sgPlace(pts,S,FS,ex,dr);
+    L.forEach((l,i)=>{if(!l||!l.line)return;const p=pts[i],lx=Math.max(l.x,Math.min(p.x,l.x+l.w)),ly=Math.max(l.y,Math.min(p.y,l.y+l.h));s+='<line x1="'+p.x+'" y1="'+p.y+'" x2="'+lx+'" y2="'+ly+'" stroke="var(--muted)" stroke-width="1"/>';});
+    pts.forEach((p,i)=>s+='<circle data-sgk="'+i+'" cx="'+p.x+'" cy="'+p.y+'" r="'+dr+'" fill="'+p.c+'" fill-opacity=".9" stroke="var(--surface)" stroke-width="1.5"/>');s+=cross;
+    s+='<circle class="sghl" cx="0" cy="0" r="'+(dr+5)+'" fill="none" stroke="var(--fg)" stroke-width="2.5" visibility="hidden"/>';
+    L.forEach((l,i)=>{if(l)s+='<text x="'+(l.x+2)+'" y="'+(l.y+l.h-3)+'" font-size="'+FS+'" font-weight="700" class="sgv" fill="'+pts[i].c+'" stroke="var(--sunk)" stroke-width="3" paint-order="stroke">'+esc(l.t)+'</text>';});}
+  else{pts.forEach(p=>s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+dr+'" fill="'+p.c+'" stroke="var(--surface)" stroke-width="1"/>');s+=cross;}
+  return s+'</svg>';}
+// the scope on the trip's gun (its barrel or upper's, if it has one), for clicks
+function tripScope(){const T=tripTraj;if(!T||!T.rifleId)return null;const g=rifles.find(r=>r.id===T.rifleId);if(!g)return null;
+  const sp=gunSpec(g)||g,bp=T.partId&&partById(T.partId),id=(bp&&bp.scopeId)||sp.scopeId;return id?scopes.find(x=>x.id===id)||null:null;}
+// how to dial the scope so the group's center lands on the aim point
+function sgDial(st,d){const up=-st.c[1],rt=-st.c[0],moaIn=1.0472*d/100,milIn=3.6*d/100,sc=tripScope(),tu=sc?turretU(sc):null,ck=sc?num(sc.click):0;
+  const ud=v=>v>=0?"up":"down",lr=v=>v>=0?"right":"left",cap=x=>x.charAt(0).toUpperCase()+x.slice(1);
+  if(sc&&ck>0&&(tu==="moa"||tu==="mil")){const per=tu==="moa"?moaIn:milIn,cu=Math.round(up/per/ck),cr=Math.round(rt/per/ck);
+    const parts=[cu?ud(cu)+" "+Math.abs(cu)+" click"+(Math.abs(cu)===1?"":"s"):"",cr?lr(cr)+" "+Math.abs(cr)+" click"+(Math.abs(cr)===1?"":"s"):""].filter(Boolean);
+    return {big:parts.length?cap(parts.join(", ")):"No change",small:(tu==="moa"?ck+" MOA":ck+" mil")+" clicks on "+scopeLabel(sc)+" · "+ud(up)+" "+Math.abs(up/per).toFixed(2)+" "+(tu==="moa"?"MOA":"mil")+", "+lr(rt)+" "+Math.abs(rt/per).toFixed(2)};}
+  return {big:cap(ud(up))+" "+Math.abs(up/moaIn).toFixed(2)+" MOA, "+lr(rt)+" "+Math.abs(rt/moaIn).toFixed(2),
+    small:"or "+ud(up)+" "+Math.abs(up/milIn).toFixed(2)+" mil, "+lr(rt)+" "+Math.abs(rt/milIn).toFixed(2)+(sc?" · set the scope's click value on Gear & Ranges to get clicks":" · pick the gun's scope on Gear & Ranges to get clicks")};}
+// chronograph velocities this trip that aren't on any hole (a miss, or a shot before Live target was on)
+function sgLoose(t,GS){const left=new Map();GS.forEach(G=>G.pts.forEach(q=>{if(q[2]>0){const v=Math.round(q[2]);left.set(v,(left.get(v)||0)+1);}}));
+  const out=[];(t.strings||[]).forEach(x=>{if(!x.chrono)return;(x.shots||[]).forEach(v=>{if(!(num(v)>0))return;const r=Math.round(num(v));
+    const hit=[r,r-1,r+1].find(q=>left.get(q)>0);if(hit!=null)left.set(hit,left.get(hit)-1);else out.push(r);});});
+  return GS.some(G=>G.pts.some(q=>q[2]>0))?out:[];}
+// "Athlon Rangecraft 10:42 AM" → "Athlon Rangecraft"
+const sgBase=n=>String(n||"").replace(/\s+\d{1,2}[:.]\d{2}(\s*[AaPp]\.?[Mm]\.?)?\s*$/,"").trim();
+/* strings from the same chronograph on one trip were split by a reconnect before 2.47.7: join them, in order, into the first.
+   Not one the chronograph is filling right now, and only when the suppressor setting matches. */
+function sgJoin(t){const S=t.strings||[];let ch=false;const live=window.RB_BTCHRONO?String(RB_BTCHRONO.sinkKey()||""):"";
+  for(let i=S.length-1;i>0;i--){const b=S[i];if(!b.chrono||live==="trip:"+t.id+":"+b.id)continue;
+    const a=[...S.slice(0,i)].reverse().find(x=>x.chrono&&sgBase(x.name)===sgBase(b.name));if(!a||(a.can===false)!==(b.can===false))continue;
+    a.shots=(a.shots||[]).filter(v=>v!=null).concat((b.shots||[]).filter(v=>v!=null));a.name=sgBase(a.name)||a.name;
+    if(b.ammoN){const n=(a.ammoN||0)+b.ammoN;a.ammoF=Math.round(((num(a.ammoF)||0)*(a.ammoN||0)+num(b.ammoF)*b.ammoN)/n*10)/10;a.ammoN=n;}
+    S.splice(i,1);ch=true;}
+  return ch;}
+function drawShotGroups(t){const box=$("tripSG");if(!box)return;const GS=tripShotGroups();
+  if(!GS.length){box.innerHTML="";box.hidden=true;return;}box.hidden=false;
+  let cur=SG_PICK[t.id];if(!GS.some(G=>G.key===cur))cur=GS[0].key;SG_PICK[t.id]=cur;
+  const G=GS.find(x=>x.key===cur),st=sgStats(G),dial=sgDial(st,G.d),hasV=st.va!=null,loose=sgLoose(t,GS);
+  const f=v=>U.s("fps",v,0);
+  let h='<h3>Shot groups</h3><div class="sgstrip" role="group" aria-label="Groups">'+GS.map(x=>{const s2=sgStats(x);return '<button type="button" class="sgcell" data-sg="'+esc(x.key)+'" aria-pressed="'+(x.key===cur)+'">'+sgPlot(x,s2,{size:84,small:true})+'<b>'+esc(x.name)+'</b><span class="num">'+(s2.size!=null?esc(U.s("in",s2.size,2)):x.pts.length+' shot'+(x.pts.length===1?'':'s'))+(s2.va!=null?' · '+esc(U.n("fps",s2.va,0)):'')+'</span></button>';}).join("")+'</div>';
+  h+='<div class="sgopen"><div class="sghead"><b>'+esc(G.name)+'</b><span class="note">'+G.pts.length+' shot'+(G.pts.length===1?'':'s')+' at '+esc(U.s("yd",G.d,0))+'</span><button type="button" class="btn small sgtog" id="sgClean" aria-pressed="'+(!SG_CLEAN)+'">'+(SG_CLEAN?'Show':'Hide')+' circle and center</button></div>'+
+    '<div class="sgbody"><div class="sgplot">'+sgPlot(G,st,{size:440})+'</div><div class="sgright">'+
+    '<dl class="sgstats"><div><dt>Group</dt><dd>'+(st.size!=null?esc(U.s("in",st.size,2)):'–')+'</dd></div><div><dt>Average</dt><dd>'+(hasV?esc(U.s("fps",st.va,0)):'–')+'</dd></div><div><dt>SD</dt><dd>'+(st.vsd!=null?esc(U.s("fps",st.vsd,1)):'–')+'</dd></div><div><dt>ES</dt><dd>'+(st.ves!=null?esc(U.s("fps",st.ves,0)):'–')+'</dd></div></dl>'+
+    (hasV?'<div class="sglegend"><span>Slower</span><span class="sggrad"></span><span>Faster</span></div>':'')+
+    (hasV?'<table class="sgtbl"><thead><tr><th>Shot</th><th class="r">'+esc(U.u("fps"))+'</th><th class="r">vs. avg</th></tr></thead><tbody>'+G.pts.map((q,j)=>{const dv=q[2]>0?Math.round(U.n("fps",q[2]-st.va,0)):null;return '<tr data-sgrow="'+j+'" tabindex="0"><td class="num">'+(j+1)+'</td><td class="r"><span class="sgv"><i style="background:'+sgHeat(q[2],st)+'"></i>'+(q[2]>0?esc(U.n("fps",q[2],0)):'–')+'</span></td><td class="r num">'+(dv==null?'':(dv>0?'+':'')+dv)+'</td></tr>';}).join("")+'</tbody></table>':'')+
+    '</div></div>'+
+    '<div class="sgside">'+(hasV?'':'<p class="note">No velocities on this group. With the Athlon connected, Live target puts each shot\'s velocity on its hole.</p>')+
+    (G.pts.length?'<div class="sgdial"><span>To center this group on the aim point</span><b>'+esc(dial.big)+'</b><span>'+esc(dial.small)+'</span></div>':'')+
+    '</div></div>';
+  if(loose.length)h+='<p class="note sgloose">Not on a target: '+loose.map(v=>esc(f(v))).join(", ")+'.</p>';
+  // keep the row of small pictures scrolled where it was (2.47.7)
+  const sx=(box.querySelector(".sgstrip")||{}).scrollLeft||0;
+  box.innerHTML=h;{const sp=box.querySelector(".sgstrip");if(sp)sp.scrollLeft=sx;}
+  box.querySelectorAll("[data-sg]").forEach(b=>b.addEventListener("click",()=>{SG_PICK[t.id]=b.dataset.sg;drawShotGroups(t);}));
+  // a velocity in the list rings its shot on the picture: on hover with a mouse, and stays after a click or tap
+  {const svg=box.querySelector(".sgplot svg"),hl=svg&&svg.querySelector(".sghl");let pin=null;
+    const show=k=>{if(!hl)return;const c=k==null?null:svg.querySelector('[data-sgk="'+k+'"]');
+      box.querySelectorAll("[data-sgrow]").forEach(r=>r.classList.toggle("on",k!=null&&+r.dataset.sgrow===k));
+      if(!c){hl.setAttribute("visibility","hidden");return;}hl.setAttribute("cx",c.getAttribute("cx"));hl.setAttribute("cy",c.getAttribute("cy"));hl.setAttribute("visibility","visible");svg.appendChild(hl);};
+    box.querySelectorAll("[data-sgrow]").forEach(r=>{const k=+r.dataset.sgrow;
+      r.addEventListener("mouseenter",()=>show(k));r.addEventListener("mouseleave",()=>show(pin));
+      const tog=()=>{pin=pin===k?null:k;show(pin);};r.addEventListener("click",tog);r.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tog();}});});}
+  $("sgClean").addEventListener("click",()=>{SG_CLEAN=!SG_CLEAN;try{localStorage.setItem("rb.sgClean",SG_CLEAN?"1":"0");}catch(e){}drawShotGroups(t);});}
 // A · on a range trip: every measured group from its photos
 function tripAllHtml(t){const G=(t.sum&&t.sum.g)||[];if(G.length<2)return "";
   const anyAim=G.some(g=>g.a);if(GRP_MODE==="aim"&&!anyAim)GRP_MODE="center";
@@ -11084,7 +11294,7 @@ function renderTripPhotos(){
   tripSummary(t);
   ttSet("targets",tripTgtSum(t));renderColdPick(t);
   const b=$("tripBest");if(b){const s=t.sum;b.hidden=!(s&&s.best);if(s&&s.best)b.innerHTML='Best group this trip: <b>'+esc(tripBestTxt(s.best))+'</b>'+(s.groups>1?' · '+s.groups+' groups measured':'');}
-  drawTripAll(t);
+  drawShotGroups(t);drawTripAll(t);
 }
 async function uploadTripPhotos(files){
   const id=tripOpen;if(!id)return;
@@ -11390,7 +11600,7 @@ function renderTrips(){
   const chronoBody='<div id="tripChrono"></div><div class="row" id="tripMvRow"></div>'+
     '<details class="tmore"><summary>More</summary><div class="row"><label class="btn" for="tripChronoIn" style="cursor:pointer">Import chronograph file</label><input id="tripChronoIn" type="file" multiple accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn" id="tripShotAdd" type="button">+ Type in shots</button></div></details>';
   const tgtBody='<p class="tripbest" id="tripBest" hidden></p><div class="photos" id="tripPhotoGrid"></div><span class="savestate" id="tripPhotoState"></span>'+
-    '<div class="grpall" id="tripAll" hidden></div>'+
+    '<div class="sgwrap" id="tripSG" hidden></div><div class="grpall" id="tripAll" hidden></div>'+
     '<p class="note">Tap a target to measure its groups, the same way as in Reloading. Printed Range Book targets are read by themselves.</p>'+
     '<div class="row"><button class="btn" id="tripTgtGo" type="button">Print a target</button></div>';
   h=crumbs(t.date?fmtDate(t.date):"Range trip")+'<datalist id="dl_place">'+places.map(p=>'<option value="'+esc(p)+'">').join("")+'</datalist>'+
@@ -11420,7 +11630,7 @@ function renderTrips(){
   const strStats=x=>{const st=stats({shots:x.shots},null);return st?st.n+' shot'+(st.n===1?'':'s')+' · avg <b>'+vS(st.avg)+'</b> '+U.u("fps")+(st.n>1?' · SD <b>'+sdS(st.sd)+'</b> · ES <b>'+esS(st.es)+'</b>':''):'No velocities yet.';};
   const allStats=()=>{const S=t.strings||[];if(S.length<2)return "";const st=stats({shots:S.flatMap(x=>x.shots||[])},null);return st?'All strings together: '+st.n+' shots · avg '+U.s("fps",st.avg,0,true)+' · SD '+sdS(st.sd)+' · ES '+esS(st.es):"";};
   const renderChrono=focusId=>{
-    const box=$("tripChrono");if(!box)return;const S=t.strings||[];
+    const box=$("tripChrono");if(!box)return;if(sgJoin(t)){t.updated=Date.now();chronoTotals();queueTrips();}const S=t.strings||[];
     if(!S.length){box.innerHTML='<p class="note">Import the file from your RangeCraft, Garmin Xero, MagnetoSpeed or LabRadar, or tap <b>+ Type in shots</b> to enter the velocities yourself. The average and SD fill in from the shots.</p>';if(window.RB_BTCHRONO)RB_BTCHRONO.paint();return;}
     let h='<div class="tstrings">';
     S.forEach((x,i)=>{x.id=x.id||newId();
@@ -11463,8 +11673,11 @@ function renderTrips(){
     if(!window.RB_BTCHRONO)return;const msg=$("tripChronoMsg");msg.classList.remove("err");
     try{await RB_BTCHRONO.connect(which);}catch(e){if(e.message){msg.classList.add("err");msg.textContent=e.message;}return;}
     t.strings=t.strings||[];
-    if(!sid){const L0=t.strings[t.strings.length-1];
-      if(L0&&L0.chrono&&!(L0.shots||[]).some(v=>v!=null))sid=L0.id;
+    // the same chronograph again on this trip (a reconnect, or Live target restarted): its shots keep going into the same
+    // string, in the order fired, instead of starting a new one (2.47.7)
+    if(!sid){const L0=t.strings[t.strings.length-1],nm=RB_BTCHRONO.name(),same=[...t.strings].reverse().find(x=>x.chrono&&sgBase(x.name)===sgBase(nm));
+      if(same)sid=same.id;
+      else if(L0&&L0.chrono&&!(L0.shots||[]).some(v=>v!=null))sid=L0.id;
       else{const x={id:newId(),name:RB_BTCHRONO.name()+" "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);sid=x.id;t.updated=Date.now();queueTrips();}}
     const sk=tripChronoSink(t.id,sid);if(!sk)return;RB_BTCHRONO.attach(sk);
     if(tripAir(t)){t.updated=Date.now();queueTrips();TRIP_HOOK.fields();}
@@ -11532,6 +11745,7 @@ function renderTrips(){
     let p=tripRange(t),at=p;
     if(!p){note.textContent="Finding you…";try{p=await RB_WX.here();}catch(e){note.textContent=e.message;btn.disabled=false;return;}
       at=RB_WX.near(p,tripRanges());if(at&&!String(t.place||"").trim()){t.place=at.name||"";$("tp_place").value=t.place;}}
+    const fromNote=p&&p.from?"Used your "+p.from+"'s location (this "+RB_WX.dev()+" couldn't find its own). ":"";
     try{note.textContent="Getting the weather…";
       const w=await RB_WX.get(p.lat,p.lon);
       t.temp=U.metric?Math.round(U.from("F",Math.round(U.to("F",w.temp)))*100)/100:Math.round(w.temp);
@@ -11541,6 +11755,7 @@ function renderTrips(){
       {const sn=RB_WX.sun(p.lat,p.lon,t.date);if(sn&&/^\d{4}-/.test(String(t.date||"")))t.wx.sun=Object.assign({d:t.date,tz:w.tz||null},sn);}
       U.fill($("tp_temp"),"F",t.temp,0,1);U.fill($("tp_windMph"),"mph",t.windMph,0,1);queueTrips();
       sunUp();tripAirUse(t);
+      if(fromNote){const e=$("tripWxRep");if(e)e.insertAdjacentHTML("afterbegin",'<p class="note" style="margin:0 0 4px">'+esc(fromNote)+'</p>');}
     }catch(e){note.textContent="Couldn't get the weather. You need a signal for this; enter it yourself.";}
     btn.disabled=false;
   });
@@ -12407,7 +12622,7 @@ const INFO={
   secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},
   secTCan:{t:"Suppressor",b:"Pick which of the gun's suppressors you're shooting with (<b>None</b> for none) and which you zeroed with. The list is the suppressors ticked on the gun's page (Gear &amp; Ranges › Guns). New range trips with this profile start with the one you're shooting with, so its rounds count toward it. When you shoot it differently from how you zeroed, the shift you measured on your range trips (groups marked <b>On</b> or <b>Off</b>) is added to the chart, range table, dope card and reticle."},
   secTWx:{t:"Conditions",b:"Temperature, altitude and wind change where the bullet lands. Wind starts at 0 on a new profile. <b>Use the weather where I am</b> fills in today's temperature and sets the altitude from the air pressure and humidity where you are. Enter the wind's speed and the o'clock it comes from (3 is from the right, 9 from the left), and the shot angle for uphill or downhill shots. <b>Wind brackets</b> adds 5, 10 and 15 mph holds to the range table and dope card. With the <b>Long</b> chart there's a <b>Coriolis</b> switch too.",h:"Weather where you are"},
-  secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size in the Point-blank range card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. <b>Short</b>, <b>Medium</b> and <b>Long</b> chart it to 200, 400 or 1,000 yd. A path turns dashed where the bullet goes transonic (Mach 1.2). Move the mouse over a path (or tap it) to see the distance and drop. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller. <b>Effective range</b> marks where the bullet gets slower, or has less energy, than a minimum you set (tap the pencil next to it to change the numbers; the maker's lowest expansion speed is offered when Range Book knows the ammo); past that the chart fades behind an orange dashed line, and the range table, dope card and Field mode mark it too. <b>True scale</b> shows the path at its real shape, and <b>Declutter</b> hides the yardage labels.",h:"Zoom the chart"},
+  secTChart:{t:"Bullet path",b:"The bullet's path for your point-blank zero (the first box, purple, set by the target size under Point-blank range at the bottom of this card) and up to three zeros you type, each in its own color. Tap the circle in the one your scope is set to. <b>Short</b>, <b>Medium</b> and <b>Long</b> chart it to 200, 400 or 1,000 yd. A path turns dashed where the bullet goes transonic (Mach 1.2). Move the mouse over a path (or tap it) to see the distance and drop. Pinch to zoom, drag to move, double-tap to reset, and drag the bar under the chart to make it taller. <b>Effective range</b> marks where the bullet gets slower, or has less energy, than a minimum you set (tap the pencil next to it to change the numbers; the maker's lowest expansion speed is offered when Range Book knows the ammo); past that the chart fades behind an orange dashed line, and the range table, dope card and Field mode mark it too. <b>True scale</b> shows the path at its real shape, and <b>Declutter</b> hides the yardage labels.",h:"Zoom the chart"},
   secTPbr:{t:"Point-blank range",b:"Finds the zero that keeps the bullet inside your target for as far as possible, so you can hold dead on. Enter the target size (or tap <b>4\" varmint</b>, <b>6\" deer</b> or <b>8\" elk</b>), and it becomes the first (purple) zero box under the chart; tap its circle to use it for the range table and dope card. Wind isn't included.",h:"Point-blank range"},
   secTTable:{t:"Range table",b:"Drop, how far to dial (MOA or MIL) and wind drift at each distance, from the zero your scope is set to. A negative path means hold or dial up. The short key above the table says what its lines mean: the solid red line is where the bullet goes transonic (Mach 1.2), and the orange dashed line is your effective range when it's on. Shaded <b>zero</b> rows are where the bullet crosses your line of sight. Tick the boxes under the table to pick its columns (a gun's scope picks MOA or MIL for you), and drag the bar under it to change its height. For 5, 10 and 15 mph holds, turn on <b>Wind brackets</b> on the Conditions card.",h:"Reading the results"},
   "@Training profiles":{t:"Training profiles",b:"A training profile is what you train with: a gun and its ammo (and barrel or suppressor). Open one and start a session each day you practice. Sessions count their rounds toward the gun, barrel, suppressor and ammo, like range trips. <b>Without a profile</b> holds timer runs saved without one.",h:"Training profiles"},
@@ -13017,7 +13232,7 @@ function startTabTour(tab){
       {t:"The Shooting tab",b:"Your ballistics calculator: where the bullet goes, how far to dial or hold, printable dope cards, and the range trips you log with each profile.",go:list},
       {el:()=>q("#newBtn"),t:"Your profiles",b:"Each profile is a gun and the ammo you shoot in it, with its zero and conditions. <b>+ New profile</b> starts a blank one; pick <b>Short</b>, <b>Medium</b> or <b>Long</b> on its chart for 200, 400 or 1,000 yd. Tap a profile in the list to open it.",go:list},
       {el:()=>q('#trajSeg [data-area="log"]'),t:"Range log",b:"Every day you've shot, in one place: range trips from every profile and the days you shot groups for a Reloading load, with your rounds and best groups.",go:list},
-      ...(has?[card("#secTInputs","secTInputs",null,open),card("#secTWx","secTWx",null,open),card("#secTChart","secTChart",null,open),card("#secTPbr","secTPbr",null,open),card("#secTTable","secTTable",null,open),
+      ...(has?[card("#secTInputs","secTInputs",null,open),card("#secTWx","secTWx",null,open),card("#secTChart","secTChart",null,open),card("#secTTable","secTTable",null,open),
         {el:()=>q("#effBtn"),t:"Effective range",b:"Turn it on and set a minimum speed or energy (the maker's lowest expansion speed is offered when Range Book knows the ammo); the pencil next to it changes them later. The chart, range table, dope card and Field mode mark where the bullet drops below it.",go:open},
         card("#secTCan","secTCan",null,open),card("#secTDope","secTDope",null,open),
         {el:()=>q("#tripsGo"),t:"Range trips",b:"Each day at the range with this profile: where, the conditions, the chronograph and the targets. <b>+ New range trip</b> starts one.",go:open}]:[]),

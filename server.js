@@ -1027,9 +1027,12 @@ async function api(req, res, url) {
   }
   /* ---- Live target remote: the phone on the scope sends its screen and state here, another device signed in to the
      same account watches and sends taps back. Kept in memory only; nothing is saved. ---- */
+  // a camera phone's location, so an iPad without GPS can get the weather (2.47.7): only numbers pass through
+  const geoOf = (st) => { const g = st && st.geo; if (!g || !isFinite(g.lat) || !isFinite(g.lon) || Math.abs(g.lat) > 90 || Math.abs(g.lon) > 180) return null;
+    return { lat: +(+g.lat).toFixed(5), lon: +(+g.lon).toFixed(5), acc: isFinite(g.acc) ? Math.round(g.acc) : null, at: isFinite(g.at) ? +g.at : 0 }; };
   if (p === "/api/remote" && method === "GET") {
     const t = now();
-    return send(res, 200, { sessions: [...REMOTE.values()].filter((r) => r.uid === user.id && t - r.last < 20000).map((r) => ({ id: r.id, device: r.device, role: r.role, started: r.created, watching: t - r.watchSeen < 15000, alive: t - r.last < 6000, standby: !!(r.state && r.state.standby) })) });
+    return send(res, 200, { sessions: [...REMOTE.values()].filter((r) => r.uid === user.id && t - r.last < 20000).map((r) => ({ id: r.id, device: r.device, role: r.role, started: r.created, watching: t - r.watchSeen < 15000, alive: t - r.last < 6000, standby: !!(r.state && r.state.standby), geo: geoOf(r.state) })) });
   }
   if (p === "/api/remote" && method === "POST") {
     const b = await readJson(req);
