@@ -1808,7 +1808,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>The camera doesn't have to be straight on. Live target uses the corner squares to work out how the paper is tilted and measures every shot on the flattened target, so the group size and MOA are right from off to the side too. Up to about 30° makes no real difference, and 30° to 45° works well (zoom in a little). From 45° to 60° the holes look like thin ovals, so touching holes are harder to tell apart. Past about 60° it often can't find the corner squares at all. You don't have to guess: once it finds the target, Live target works out the angle and shows a note on the camera picture from about 45° and a red warning from about 60° (an iPad watching it shows them too). It counts tilting up or down the same as side to side. Keep the paper flat: staple or tape all four corners. The ⓘ next to <b>Camera off to the side?</b> in Tools › Live target says the same.</p>
       <ol>
         <li>In a ladder, tap <b>Live target</b> (next to <b>+ Photo</b>). From a range trip, use <b>Live target</b> next to <b>+ Add target photo</b>. To use it without a load, open <a class=goto href=#go data-go=tools:live>Tools › Live target</a>.</li>
-        <li>Allow the camera. On a phone with more than one back lens, it uses the main lens so it doesn't keep jumping between lenses up close to the eyepiece; pick another under <b>Camera lens</b> if you like (it's remembered on that phone). Through a spotting scope the page often looks gray and washed out; Range Book allows for that, but zoom the scope so the page fills more of the view if it can't find the corner squares. When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
+        <li>Allow the camera. On a phone with more than one back lens, pick the lens when you start: tap <b>This iPhone's camera</b> and then the lens (<b>Main (1×)</b> is best up close to the eyepiece). Live target stays on that lens and never switches by itself; the pick is remembered on that phone. Through a spotting scope the page often looks gray and washed out; Range Book allows for that, but zoom the scope so the page fills more of the view if it can't find the corner squares. When it finds the four corner squares it says <b>Target locked</b> and zooms in on aim point 1. It still watches the whole page, and widens the view by itself if a shot lands outside the zoom. Tap <b>Whole target</b> (or the small picture in the corner) to see the whole page, and <b>Zoom to aim</b> to go back.</li>
         <li>Check <b>Charge for this aim</b>, <b>Shots</b> and <b>Distance</b>.</li>
         <li>Fire, then tap <b>Shot</b>. It compares the page with how it looked before the shot and marks the new hole, numbered, with the group size, MOA, mean radius and where the group's center is from the aim point. A hole in the black center counts too.</li>
         <li>If it misses a hole, tap the hole on the picture to add it. Tap a wrong mark to remove it. <b>Undo</b> takes back the last change.</li>
@@ -8850,7 +8850,9 @@ function liveSupported(){return !!(navigator.mediaDevices&&navigator.mediaDevice
 // which phone: an iPhone can run a Shortcut that turns on a Focus; Android has no way in from a web page, so it shows the steps
 const FOCUS_OS=/iPhone|iPod/.test(navigator.userAgent)||(/iPad|Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1)?"ios":/Android/.test(navigator.userAgent)?"android":null;
 /* this device's camera lenses (2.47.5), shared by Live target and Be the camera for your iPad, so both list the same
-   lenses with the same names and remember one pick on this device (rb.liveLens). Back lenses only, the main one first;
+   lenses with the same names and remember one pick on this device (rb.liveLens). The lens is picked before the camera starts
+   (Which camera? › this device's camera, or Be the camera's picker) and then stays: nothing switches it by itself, and
+   Live target has no lens picker of its own. Back lenses only, the main one first;
    never a Longshot camera ("rb-hawk", which the Range Book app lists as a camera): that's picked in Which camera?. */
 const LIVE_LENS={
   name:l=>{const t=String(l||"");if(/ultra\s*wide/i.test(t))return "Ultra wide (0.5×)";if(/tele/i.test(t))return "Telephoto (zoom)";if(/triple/i.test(t))return "Automatic (all lenses)";if(/dual\s*wide/i.test(t))return "Automatic (main + ultra wide)";if(/dual/i.test(t))return "Automatic (main + telephoto)";if(/^back camera$/i.test(t.trim()))return "Main (1×)";return t||"Camera";},
@@ -8858,6 +8860,7 @@ const LIVE_LENS={
   isAuto:d=>/(dual|triple)/i.test(d.label||""),
   isHawk:d=>d.deviceId==="rb-hawk",
   isMain:d=>/^back camera$/i.test((d.label||"").trim()),
+  hint:d=>{const t=d.label||"";return LIVE_LENS.isMain(d)?"The usual lens. Best on a spotting scope.":/ultra\s*wide/i.test(t)?"Sees more, from close up.":/tele/i.test(t)?"Sees closer, from farther away.":LIVE_LENS.isAuto(d)?"Switches lenses by itself, so it can jump around on a scope.":"";},
   async list(){
     const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput"),own=all.filter(d=>!LIVE_LENS.isHawk(d));
     let L=own.filter(LIVE_LENS.isBack);if(!L.length)L=own;
@@ -8884,8 +8887,7 @@ function openLive(o){
       '<div class="lvgrid">'+
         (groups.length?'<label>Charge for this aim<select id="lvGroup"></select></label>':'')+
         '<label>Shots<input id="lvWant" type="number" inputmode="numeric" min="1" step="1"></label>'+
-        '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label>'+
-        '<label id="lvLensL" class="lvlens" hidden>Camera lens<select id="lvLens"></select></label></div>'+
+        '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label></div>'+
       '<label class="lvmic lvretl"><input type="checkbox" id="lvRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale for the distance, with the hold for your zero on the aim point.</small></span></label>'+
       '<div class="lvgrid lvretopts" id="lvRetOpts" hidden><label>Shooting profile<select id="lvRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="lvRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
       '<p class="note lvretnote" id="lvRetNote" hidden></p>'+
@@ -8939,18 +8941,15 @@ function openLive(o){
   /* ----- camera -----
      iPhones with two or three back lenses give the browser a combined camera that switches lenses by itself, and up close
      to a spotting-scope eyepiece it keeps jumping to the macro/ultra-wide lens. So after the first start we list the back
-     lenses, use the main one (iOS calls it "Back Camera") unless you picked another, and remember the pick on this device. (2.18.3) */
+     lenses, use the main one (iOS calls it "Back Camera") unless you picked another, and remember the pick on this device. (2.18.3)
+     Since 2.47.5 the lens is picked before Live target opens (Which camera?) and Live target opens exactly that one, with no
+     lens picker of its own and no switching by itself, also after an interruption. */
   const LENS_KEY="rb.liveLens";
   const lensName=LIVE_LENS.name,isBack=LIVE_LENS.isBack,isAuto=LIVE_LENS.isAuto,isHawk=LIVE_LENS.isHawk;
-  let lenses=[],lensId=null;
+  let lensId=null;
   async function openStream(devId){
     const v0={width:{ideal:1920},height:{ideal:1920}};
     return navigator.mediaDevices.getUserMedia({audio:false,video:devId?Object.assign({deviceId:{exact:devId}},v0):Object.assign({facingMode:{ideal:"environment"}},v0)});
-  }
-  function fillLenses(){
-    const sel=$("lvLens"),lab=$("lvLensL");if(!sel)return;
-    lab.hidden=o.cam==="hawk"||lenses.length<2;   // with the Longshot camera there's no lens to pick
-    sel.innerHTML=lenses.map(d=>'<option value="'+esc(d.deviceId)+'"'+(d.deviceId===lensId?' selected':'')+'>'+esc(lensName(d.label))+'</option>').join("");
   }
   async function useStream(st){
     if(stream)stream.getTracks().forEach(t=>t.stop());
@@ -8971,7 +8970,7 @@ function openLive(o){
     if(closed||camFix||document.visibilityState!=="visible"||!stream)return;
     if(!now&&(busy||!camDead()))return;
     camFix=true;camTries++;setStat("The camera was interrupted. Starting it again…","busy");
-    try{let st=null;if(lensId){try{st=await openStream(lensId);}catch(e){st=null;}}if(!st)st=await openStream(null);
+    try{const st=await openStream(lensId||null);   // the same lens (or the Longshot) again, never another one
       if(closed){st.getTracks().forEach(t=>t.stop());return;}
       await useStream(st);lastVT=-1;lastVTat=Date.now();camTries=0;keep(true);if(o.hosted&&o.hosted.onStream)o.hosted.onStream(st);
       setStat(lock?"Camera back. Finding the corner squares again…":"Camera back. Point it at the target with all four corner squares in view.","busy");}
@@ -8982,38 +8981,28 @@ function openLive(o){
   async function startCam(){
     // the camera for an iPad (2.37): the waiting screen already has the camera open, so use it (no new permission prompt)
     if(o.hosted&&o.hosted.stream&&o.hosted.stream.getVideoTracks().some(t=>t.readyState==="live")){
-      try{await useStream(o.hosted.stream);setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");keep(true);
-        try{lenses=await LIVE_LENS.list();fillLenses();}catch(e){}return;}catch(e){}}
+      try{await useStream(o.hosted.stream);setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");keep(true);return;}catch(e){}}
     if(!liveSupported()){setStat(location.protocol==="https:"||location.hostname==="localhost"?"This browser can't use the camera.":"The camera needs Range Book's https address. Open it that way and try again.","bad");return;}
     try{
       let saved=null;try{saved=localStorage.getItem(LENS_KEY);}catch(e){}
       if(saved==="rb-hawk")saved=null;   // the Longshot is its own choice when Live target starts (2.47.5)
       if(o.cam==="hawk")saved="rb-hawk";
       let st=null;
-      if(saved){try{st=await openStream(saved);}catch(e){st=null;if(o.cam==="hawk"){setStat("Couldn't get the Longshot camera's picture. Check its Wi-Fi, or tap ← Back and pick another camera.","bad");return;}}}
+      // exactly the lens picked for this device; if it won't open, say so instead of quietly using another one
+      if(saved){try{st=await openStream(saved);}catch(e){st=null;
+        setStat(o.cam==="hawk"?"Couldn't get the Longshot camera's picture. Check its Wi-Fi, or tap ← Back and pick another camera.":"The camera lens picked for this "+LIVE_DEV()+" won't start"+(e&&e.name?" ("+e.name+")":"")+". Tap ← Back and start Live target again to pick another lens.","bad");return;}}
       if(!st)st=await openStream(null);
       if(closed){st.getTracks().forEach(t=>t.stop());return;}
       await useStream(st);if(o.cam==="hawk")lensId="rb-hawk";   // so a restart after an interruption opens the Longshot again
-      // the lens list (labels only show once the camera is allowed)
-      try{lenses=await LIVE_LENS.list();
-        // no pick yet and we got the self-switching camera: use the main lens instead
-        const curD=lenses.find(d=>d.deviceId===lensId),main=lenses.find(d=>/^back camera$/i.test((d.label||"").trim()));
-        if(!saved&&main&&main.deviceId!==lensId&&(!curD||isAuto(curD))){try{const s2=await openStream(main.deviceId);if(closed){s2.getTracks().forEach(t=>t.stop());return;}await useStream(s2);}catch(e){}}
-        fillLenses();}catch(e){}
+      // no lens ever picked on this device: the main lens, not iOS's self-switching camera, and keep it from now on
+      if(!saved){try{const L=await LIVE_LENS.list(),main=L.find(LIVE_LENS.isMain),curD=L.find(d=>d.deviceId===lensId);
+        if(main&&main.deviceId!==lensId&&(!curD||isAuto(curD))){const s2=await openStream(main.deviceId);if(closed){s2.getTracks().forEach(t=>t.stop());return;}await useStream(s2);}
+        const now=L.find(d=>d.deviceId===lensId);if(now&&!isAuto(now))try{localStorage.setItem(LENS_KEY,lensId);}catch(e){}}catch(e){}}
       setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");
       keep(true);
     }catch(e){
       setStat(e&&e.name==="NotAllowedError"?"Camera access was blocked. Allow the camera for this site in your phone's or browser's settings, then try again.":"Couldn't start the camera"+(e&&e.name?" ("+e.name+")":"")+".","bad");
     }
-  }
-  async function switchLens(id){
-    if(!id||id===lensId)return;
-    try{setStat("Switching lens…","busy");const st=await openStream(id);if(closed){st.getTracks().forEach(t=>t.stop());return;}
-      await useStream(st);try{localStorage.setItem(LENS_KEY,id);}catch(e){}if(o.hosted&&o.hosted.onStream)o.hosted.onStream(st);
-      fillLenses();
-      // another lens sees the page bigger or smaller: find it again, keeping the shots (2.47.5)
-      if(lock&&!busy&&!man)findAgain();else{lock=null;setStat("Point the camera at a printed Range Book target. All four corner squares must be in view.","busy");}}
-    catch(e){setStat("That lens couldn't start"+(e&&e.name?" ("+e.name+")":"")+". Pick another.","bad");fillLenses();}
   }
   // the newest camera frame, full size, into the work canvas
   function grab(){
@@ -9473,7 +9462,6 @@ function openLive(o){
   $("lvNext").addEventListener("click",()=>goAim(aim+1));
   $("lvWant").addEventListener("input",e=>{want=num(e.target.value)>0?Math.round(num(e.target.value)):null;renderStats();});
   U.fill($("lvDist"),"yd",dist,0,1);
-  $("lvLens").addEventListener("change",e=>switchLens(e.target.value));
   $("lvDist").addEventListener("input",e=>{const d=U.read(e.target,"yd",dist);if(d>0)dist=d;renderStats();retCalc();});
   /* ----- the camera picture's height on a phone: drag the bar under it (remembered on this device); the rest scrolls below.
      Double-tap the bar to go back to fitting everything on the screen. (2.33.1) ----- */
@@ -9917,7 +9905,7 @@ async function startLive(o){
   document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("on"));
   const B=(kind,attrs,title,sub)=>'<button class="btn lwbig'+(kind===pick?' primary':'')+'" type="button" '+attrs+'><b>'+esc(title)+'</b><small>'+esc(sub)+'</small></button>';
   function draw(){
-    $("lwBtns").innerHTML=B("self","data-lwself","This "+LIVE_DEV()+"'s camera","Pick the lens on the next screen.")+
+    $("lwBtns").innerHTML=B("self","data-lwself","This "+LIVE_DEV()+"'s camera","Then pick the lens. It stays on it.")+
       (cams.length?cams.map(c=>B("phone",'data-lwcam="'+esc(c.id)+'" data-lwdev="'+esc(c.device)+'"',"The "+c.device+" on your scope","It's waiting as a camera. This "+LIVE_DEV()+" runs the buttons, the microphone and the save.")).join("")
         :B("phone","data-lwphone","A phone on your scope","Another phone or iPad as the camera, with this "+LIVE_DEV()+" running the session."))+
       (hawk?B("hawk","data-lwhawk","Longshot","The Longshot camera, over its own Wi-Fi."):"");
@@ -9928,12 +9916,28 @@ async function startLive(o){
   let poll=null,joining=false,gone=false;
   const shut=()=>{gone=true;clearTimeout(poll);w.classList.remove("on");setTimeout(()=>w.remove(),180);};
   const remember=k=>{try{localStorage.setItem(LIVE_CAM_KEY,k);}catch(e){}};
+  // this device's camera: pick the lens now (it stays on it in Live target); skipped with only one back lens
+  async function pickLens(){
+    let L=[];joining=true;msg("Checking this "+LIVE_DEV()+"'s lenses…","busy");
+    try{L=await LIVE_LENS.list();
+      // the lens names only show once the camera is allowed
+      if(L.some(d=>!d.label)){const st=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:"environment"}}});st.getTracks().forEach(t=>t.stop());L=await LIVE_LENS.list();}}catch(e){}
+    joining=false;if(gone)return;msg("");
+    if(L.length<2){shut();return openLive(o);}
+    let cur=null;try{cur=localStorage.getItem("rb.liveLens");}catch(e){}if(!L.some(d=>d.deviceId===cur))cur=(L.find(LIVE_LENS.isMain)||L[0]).deviceId;
+    $("lwT").textContent="Which lens?";
+    $("lwBtns").innerHTML=L.map(d=>'<button class="btn lwbig'+(d.deviceId===cur?' primary':'')+'" type="button" data-lwlens="'+esc(d.deviceId)+'"><b>'+esc(LIVE_LENS.name(d.label))+'</b><small>'+esc(LIVE_LENS.hint(d))+'</small></button>').join("")+
+      '<button class="btn" type="button" data-lwback>‹ Other cameras</button>';
+    const f=w.querySelector(".lwbig.primary");if(f)f.focus({preventScroll:true});
+  }
   // no phone waiting yet: say how, and keep looking while this is open
   const watchPhones=async()=>{if(gone)return;const c=await getCams();if(gone)return;if(c.length){cams=c;draw();msg("Your "+c[0].device+" is ready. Tap it above.","");return;}poll=setTimeout(watchPhones,2000);};
   w.addEventListener("click",async e=>{
     if(joining)return;
     if(e.target.closest("[data-lwx]"))return shut();
-    if(e.target.closest("[data-lwself]")){remember("self");shut();return openLive(o);}
+    if(e.target.closest("[data-lwself]")){remember("self");return pickLens();}
+    const lb=e.target.closest("[data-lwlens]");if(lb){try{localStorage.setItem("rb.liveLens",lb.dataset.lwlens);}catch(x){}shut();return openLive(o);}
+    if(e.target.closest("[data-lwback]")){$("lwT").textContent="Which camera?";msg("");draw();return;}
     const b=e.target.closest("[data-lwcam]");if(b){remember("phone");shut();return openWatch(b.dataset.lwcam,b.dataset.lwdev,{o});}
     if(e.target.closest("[data-lwphone]")){remember("phone");msg("On the phone, open Tools › Live target and tap Be the camera for your iPad, then aim it at the target. It shows up here when it's ready.","");clearTimeout(poll);watchPhones();return;}
     if(e.target.closest("[data-lwhawk]")){
@@ -9959,20 +9963,22 @@ function cameraStandby(){
   const keep=async()=>{try{if(navigator.wakeLock&&document.visibilityState==="visible")wake=await navigator.wakeLock.request("screen");}catch(e){}};
   const awake=()=>{dim.hidden=true;clearTimeout(dimT);dimT=setTimeout(()=>{if(!closed&&!hosted)dim.hidden=false;},30000);};
   dim.addEventListener("click",awake);v.addEventListener("pointerdown",()=>{if(dim.hidden)awake();},true);
-  // id: a lens picked here; otherwise the one picked last on this device (here or in Live target), or else the main lens
+  // id: a lens picked here; otherwise exactly the one picked last on this device (here or for Live target). If that lens
+  // won't open, it says so and the picker shows, instead of quietly using another lens. Only when no lens was ever picked:
+  // the main lens rather than iOS's self-switching camera, kept from then on.
   async function camera(id){
     const v0={width:{ideal:1920},height:{ideal:1920}};let saved=null;try{saved=localStorage.getItem("rb.liveLens");}catch(e){}
     if(saved==="rb-hawk")saved=null;if(id)saved=id;
-    let st=null;if(saved){try{st=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({deviceId:{exact:saved}},v0)});}catch(e){st=null;if(id)throw e;}}
-    if(!st)st=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({facingMode:{ideal:"environment"}},v0)});
-    // the main lens, not iOS's self-switching camera (the same as Live target)
-    if(!saved){try{const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==="videoinput"),main=all.find(d=>/^back camera$/i.test((d.label||"").trim())),cur=st.getVideoTracks()[0].getSettings().deviceId;
-      if(main&&main.deviceId!==cur){const s2=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({deviceId:{exact:main.deviceId}},v0)});st.getTracks().forEach(t=>t.stop());st=s2;}}catch(e){}}
+    if(saved)return await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({deviceId:{exact:saved}},v0)});
+    let st=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({facingMode:{ideal:"environment"}},v0)});
+    try{const L=await LIVE_LENS.list(),main=L.find(LIVE_LENS.isMain),cur=st.getVideoTracks()[0].getSettings().deviceId,curD=L.find(d=>d.deviceId===cur);
+      if(main&&main.deviceId!==cur&&(!curD||LIVE_LENS.isAuto(curD))){const s2=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign({deviceId:{exact:main.deviceId}},v0)});st.getTracks().forEach(t=>t.stop());st=s2;}
+      const now=st.getVideoTracks()[0].getSettings().deviceId,nd=L.find(d=>d.deviceId===now);if(nd&&!LIVE_LENS.isAuto(nd))localStorage.setItem("rb.liveLens",now);}catch(e){}
     return st;
   }
   // the lens picker (2.47.5): the same lenses and names as Live target's, remembered for both
-  async function lensFill(){const sel=$("cwLens"),lab=$("cwLensL");if(!sel||!stream)return;let L=[];try{L=await LIVE_LENS.list();}catch(e){}
-    const tr=stream.getVideoTracks()[0],cur=tr&&tr.getSettings?tr.getSettings().deviceId:null;lab.hidden=L.length<2;
+  async function lensFill(){const sel=$("cwLens"),lab=$("cwLensL");if(!sel)return;let L=[];try{L=await LIVE_LENS.list();}catch(e){}
+    const tr=stream&&stream.getVideoTracks()[0];let cur=tr&&tr.getSettings?tr.getSettings().deviceId:null;if(!cur)try{cur=localStorage.getItem("rb.liveLens");}catch(e){}lab.hidden=L.length<2;
     sel.innerHTML=L.map(d=>'<option value="'+esc(d.deviceId)+'"'+(d.deviceId===cur?' selected':'')+'>'+esc(LIVE_LENS.name(d.label))+'</option>').join("");}
   $("cwLens").addEventListener("change",async e=>{const id=e.target.value;if(!id)return;setStat("Switching lens…","busy");
     try{const st=await camera(id);if(closed){st.getTracks().forEach(t=>t.stop());return;}if(stream)stream.getTracks().forEach(t=>t.stop());stream=st;vid.srcObject=st;await vid.play().catch(()=>{});
@@ -10008,8 +10014,9 @@ function cameraStandby(){
   $("cwClose").addEventListener("click",stop);
   (async()=>{
     if(!liveSupported()){setStat("The camera needs Range Book's https address.","bad");return;}
+    let picked=null;try{picked=localStorage.getItem("rb.liveLens");}catch(e){}
     try{stream=await camera();vid.srcObject=stream;await vid.play().catch(()=>{});lensFill();}
-    catch(e){setStat(e&&e.name==="NotAllowedError"?"Camera access was blocked. Allow the camera for this site in your settings, then try again.":"Couldn't start the camera.","bad");return;}
+    catch(e){if(picked&&picked!=="rb-hawk"&&!(e&&e.name==="NotAllowedError")){setStat("The camera lens picked for this phone won't start. Pick another lens below.","bad");lensFill();return;}setStat(e&&e.name==="NotAllowedError"?"Camera access was blocked. Allow the camera for this site in your settings, then try again.":"Couldn't start the camera.","bad");return;}
     keep();awake();setStat("Connecting…","busy");loop();
   })();
 }
