@@ -69,7 +69,13 @@ select{flex:1 1 220px;min-width:0;padding:10px 12px;border-radius:8px;border:1px
 .rtvital{fill:none;stroke:#ffd24a;stroke-dasharray:2 1.4}.rthold{stroke:var(--accent)}
 .rtlines{stroke:#151515}.rtlines circle{fill:#151515}.rtlines text{fill:#2c2c2c}
 :root[data-palette="night"] .rtsky{fill:#2a1210}:root[data-palette="night"] .rtground{fill:#3a1a14}:root[data-palette="night"] .rtbody{fill:#7a2a20}:root[data-palette="night"] .rtblack{fill:#4a1812}:root[data-palette="night"] .rtwhite{fill:#a8483a}:root[data-palette="night"] .rtgray .rtbody,:root[data-palette="night"] .rtgray .rtwhite,:root[data-palette="night"] .rtgray .rtblack{fill:#5c1f18}:root[data-palette="night"] .rtplate{fill:#c45a48;stroke:#7a2a20}:root[data-palette="night"] .rtpost{fill:#5c1f18}:root[data-palette="night"] .rtvital{stroke:#ff6a4a}:root[data-palette="night"] .rtlines{stroke:#ff8a70}:root[data-palette="night"] .rtlines circle{fill:#ff8a70}:root[data-palette="night"] .rtlines text{fill:#ff8a70}
-.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.voff{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.voffnote{margin:0 0 8px}.favhint{font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}#gFavs .gtile,#tFavs .gtile{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.lwbtns{display:flex;flex-direction:column;gap:10px;margin-top:10px}.lwbig{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;text-align:left;font-size:calc(17px*var(--fs))}.lwbig small{font-weight:400;font-size:calc(13px*var(--fs));opacity:.8;white-space:normal}.lwmsg{margin:12px 0 0}.lwmsg.busy{color:var(--muted,#888)}.lwmsg.bad{color:var(--bad,#c33)}.camwait video{width:100%;height:100%;object-fit:contain;background:#000;display:block}.cwnote{color:#bbb}.cwlens{display:flex;flex-direction:column;flex:0 0 auto;gap:6px;margin:12px 0 0;color:#ddd;font-weight:600;font-size:calc(15px*var(--fs))}.cwlens[hidden]{display:none}.cwlens select{flex:0 0 auto;font-size:calc(18px*var(--fs));height:54px;min-height:54px;padding:8px 12px;width:100%}.lvdim{position:fixed;inset:0;z-index:60;background:#000;border:0;color:#9a9a9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;font:inherit}.lvdim[hidden]{display:none}.lvdim b{color:#cfcfcf;font-size:calc(18px*var(--fs))}.lvdim span{font-size:calc(14px*var(--fs));max-width:320px}.lvdim small{font-size:calc(12px*var(--fs));color:#666}.bkh{font-size:calc(15px*var(--fs));margin:16px 0 4px}#rs_out .row{margin-top:8px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
+.rttgt{margin:8px 0 4px;max-width:360px}.lvretnote{margin:2px 0 6px}.voff{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.voffnote{margin:0 0 8px}.favhint{font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}#gFavs .gtile,#tFavs .gtile{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.lwbtns{display:flex;flex-direction:column;gap:10px;margin-top:10px}.lwbig{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:64px;padding:12px 16px;text-align:left;font-size:calc(17px*var(--fs))}.lwbig small{font-weight:400;font-size:calc(13px*var(--fs));opacity:.8;white-space:normal}.lwmsg{margin:12px 0 0}.lwmsg.busy{color:var(--muted,#888)}.lwmsg.bad{color:var(--bad,#c33)}.camwait video{width:100%;height:100%;object-fit:contain;background:#000;display:block}.cwnote{color:#bbb}.cwlens{display:flex;flex-direction:column;flex:0 0 auto;gap:6px;margin:12px 0 0;color:#ddd;font-weight:600;font-size:calc(15px*var(--fs))}.cwlens[hidden]{display:none}.cwlens select{flex:0 0 auto;font-size:calc(18px*var(--fs));height:54px;min-height:54px;padding:8px 12px;width:100%}.lvpicoff{display:none}
+.live.lvpic .lvpicoff{display:block;position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:61;background:rgba(20,20,20,.85)!important;font-size:calc(13px*var(--fs));padding:7px 12px;min-height:0}
+.live.lvpic .lvtop,.live.lvpic .lvside,.live.lvpic .lvgrip,.live.lvpic .lvstrip,.live.lvpic .lvbtns,.live.lvpic .lvthumb{display:none!important}
+.live.lvpic .lvmain{overflow:hidden}
+.live.lvpic .lvleft,.live.lvpic .lvcam{flex:1 1 auto!important;height:auto!important;min-height:0}
+.lvdim .lvpicon{margin-top:14px;background:#1b1b1b;color:#ddd;border-color:#444;font-size:calc(14px*var(--fs))}
+.lvdim{position:fixed;inset:0;z-index:60;background:#000;border:0;color:#9a9a9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;font:inherit}.lvdim[hidden]{display:none}.lvdim b{color:#cfcfcf;font-size:calc(18px*var(--fs))}.lvdim span{font-size:calc(14px*var(--fs));max-width:320px}.lvdim small{font-size:calc(12px*var(--fs));color:#666}.bkh{font-size:calc(15px*var(--fs));margin:16px 0 4px}#rs_out .row{margin-top:8px}.lvfocus{display:flex;align-items:center;gap:6px}.lvfocus .lvbtn{flex:1 1 auto}.lvfocus .infobtn{width:34px;height:34px;color:#cfe}.lvfocus .infobtn svg{width:24px;height:24px}.lvretnote.err{color:var(--bad,#c33)}.rttgtrow{display:flex;gap:8px;align-items:stretch}.rttgtrow select.fieldselect{flex:1 1 auto;width:auto;min-width:0}.rttgtrow .segtabs{flex:0 0 auto;padding:3px}.rttgtrow .segtabs button{padding:6px 12px}
 .mcchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.mcchip{display:inline-flex;align-items:center;gap:2px;padding:3px 4px 3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--fg);font-size:calc(14px*var(--fs));font-weight:600}.mcchip button{border:0;background:none;color:inherit;font-size:calc(17px*var(--fs));line-height:1;padding:2px 6px;cursor:pointer;border-radius:99px}.mcchip button:hover{background:var(--sunk)}
 .mcsug{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.mcsug .note{margin:0}.mcadd{position:relative}
 .magbulk{padding:10px 12px;margin:4px 0 8px;border-radius:8px;background:var(--sunk);border:1px solid var(--line)}
@@ -741,7 +747,7 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvgrid{display:grid;grid-template-columns:minmax(0,1fr) 76px 84px;gap:6px 8px}
 .lvgrid label{display:flex;flex-direction:column;gap:3px;color:#bbb;font-size:calc(12px*var(--fs));min-width:0}
 .lvgrid input,.lvgrid select{flex:none;height:auto;min-height:0;width:100%;padding:6px 8px;border-radius:7px;border:1px solid #444;background:#1b1b1b;color:#eee;font:inherit;font-size:calc(16px*var(--fs))}
-.lvstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px 4px;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:6px}
+.lvstats{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.6fr) minmax(0,1fr);gap:2px 4px;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:6px}
 .lvstats div{text-align:center;min-width:0}
 .lvstats b{display:block;font-family:var(--mono);font-size:calc(18px*var(--fs));color:#fff;line-height:1.1}
 .lvstats b small{font-size:calc(12px*var(--fs));color:#999}
@@ -749,6 +755,32 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvstats .wide{grid-column:1/-1;font-size:calc(13px*var(--fs));color:#bbb;border-top:1px solid #2a2a2a;padding-top:4px;margin-top:2px}
 .lvstats .wide b{display:inline;font-size:calc(13px*var(--fs))}
 .lvrow{display:flex;gap:8px}
+.lvrow[hidden]{display:none}
+.lvleft{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-height:0;min-width:0}
+.lvleft>.lvcam{flex:1 1 auto}
+@media(max-width:899px){.lvleft{flex:none}.lvleft>.lvcam{flex:none}}
+.lvstrip{flex:none}
+.lvgs b{white-space:nowrap}
+.lvstats .lvgu{display:inline-flex;margin:0 0 0 6px;vertical-align:middle;border:1px solid #444;border-radius:6px;overflow:hidden;text-transform:none;letter-spacing:0}
+.lvgu button{border:0;background:#1b1b1b;color:#bbb;font:inherit;font-size:calc(10.5px*var(--fs));padding:2px 7px;cursor:pointer}
+.lvgu button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg,#fff)}
+.lvaimrow{display:flex;gap:10px;align-items:flex-start}
+.lvaimrow .lvgrid{flex:1;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.lvaimrow .lvgw{grid-column:1/-1}
+.lvaims{flex:none;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:6px}
+.lvaims[hidden]{display:none}
+.lvapage{position:relative}
+.lvapage svg{display:block}
+.lvap{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #b9a88f;background:#d8c8ae;color:#333;font:inherit;font-weight:800;font-size:calc(11px*var(--fs));display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.lvap.done{background:#6f9a6f;border-color:#6f9a6f;color:#fff}
+.lvap.cur{background:#e0a24a;border-color:#fff;color:#111;box-shadow:0 0 0 3px rgba(224,162,74,.55)}
+.lvtop .lvchgo{width:auto}
+@media(max-width:600px){.live .lvtop{flex-wrap:wrap;gap:6px}.live .lvtop .mtitle{display:none}.live .lvtop .btn{padding:7px 10px;font-size:calc(14px*var(--fs));min-height:0}.live .lvtop .lvchip{font-size:calc(12px*var(--fs))}}
+.lvmic{position:relative}
+.lvmic .infobtn{margin:-4px 0 -4px auto;width:28px;height:28px;color:#cfe;flex:none}
+.live .lvside{overflow-x:hidden}
+.lvmic .infobtn svg{width:22px;height:22px}
+.lvmic[hidden]{display:none}
 .lvbtn{flex:1;min-height:44px;justify-content:center}
 .lvshot{flex:2;min-height:54px;border-radius:14px;border:0;background:var(--accent);color:var(--accent-fg,#fff);font:inherit;font-size:calc(21px*var(--fs));font-weight:800;cursor:pointer}
 .lvshot:disabled{opacity:.45;cursor:default}
@@ -9039,32 +9071,34 @@ function openLive(o){
   const groups=o.groups||[];
   const shotCount=g=>(g&&g.shots||[]).filter(x=>Number(x)>0).length||null;
   const v=document.createElement("div");v.className="viewer live";v.id="live";v.setAttribute("role","dialog");v.setAttribute("aria-label","Live target");
-  v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
-    '<div class="lvmain"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
+  v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><button class="btn lvchgo" id="lvChGo" type="button" hidden>Connect Athlon</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
+    '<div class="lvmain"><div class="lvleft"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
       '<div class="lvstat"><span class="lvpill warn" id="lvAng" hidden><i></i><span></span></span><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
       '<div class="lvbtns"><button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvFind" type="button" hidden>Find target again</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvauto" id="lvAuto" type="button" hidden>Find corners automatically</button></div><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
+      '<div class="lvstats lvstrip" id="lvStats"></div></div>'+
     '<div class="chgrip lvgrip" id="lvGrip" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Camera picture height. Drag up or down, or use the arrow keys." title="Drag to make the camera picture bigger or smaller. Double-tap to reset."><span></span></div>'+
     '<div class="lvside">'+
       '<div class="lvinfo"><span class="lvchip">'+esc(o.title||"Target")+'</span></div>'+
       '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
-      '<div class="lvrow"><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
-      '<div class="lvstats" id="lvStats"></div>'+
+      '<div class="lvrow" hidden><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
       (FOCUS_OS?'<div class="lvfocus"><button class="btn lvbtn" id="lvFocus" type="button">'+(FOCUS_OS==="ios"?'Turn on Range Focus':'Silence calls')+'</button><span class="infobtn" role="button" tabindex="0" data-ik="'+(FOCUS_OS==="ios"?'liveFocusIos':'liveFocusAnd')+'" aria-label="How to set up '+(FOCUS_OS==="ios"?'the Range Focus':'Do Not Disturb')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></div>':'')+
-      '<div class="lvgrid">'+
-        (groups.length?'<label>Charge for this aim<select id="lvGroup"></select></label>':'')+
+      '<div class="lvaimrow"><div class="lvaims" id="lvAims" role="group" aria-label="Aim points"></div><div class="lvgrid">'+
+        (groups.length?'<label class="lvgw">Charge for this aim<select id="lvGroup"></select></label>':'')+
         '<label>Shots<input id="lvWant" type="number" inputmode="numeric" min="1" step="1"></label>'+
-        '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label></div>'+
-      '<label class="lvmic lvretl"><input type="checkbox" id="lvRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale for the distance, with the hold for your zero on the aim point.</small></span></label>'+
+        '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label></div></div>'+
+      '<label class="lvmic lvretl"><input type="checkbox" id="lvRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle</span><span class="infobtn" role="button" tabindex="0" data-ik="liveRet" aria-label="About Show my reticle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
       '<div class="lvgrid lvretopts" id="lvRetOpts" hidden><label>Shooting profile<select id="lvRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="lvRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
       '<p class="note lvretnote" id="lvRetNote" hidden></p>'+
-      '<button class="btn lvchgo" id="lvChGo" type="button" hidden>Connect Athlon</button>'+
-      '<label class="lvmic" id="lvChL" hidden><input type="checkbox" id="lvCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot<small>When the connected chronograph measures a shot, Range Book looks for its hole and notes its velocity on it.</small></span></label>'+
-      '<label class="lvmic"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i><b></b></span><small>Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
+      '<label class="lvmic" id="lvChL" hidden><input type="checkbox" id="lvCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot</span><span class="infobtn" role="button" tabindex="0" data-ik="liveChrono" aria-label="About Chronograph finds each shot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
+      '<label class="lvmic" id="lvMicL"><input type="checkbox" id="lvMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="lvMeter" hidden><i></i><b></b></span></span><span class="infobtn" role="button" tabindex="0" data-ik="liveMic" aria-label="About Listen for shots"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
       '<div class="lvsens" id="lvSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-sens="normal">Normal</button><button type="button" data-sens="supp">Suppressed</button><button type="button" data-sens="quiet">Quiet .22</button></div>'+
-      '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it. Pinch the picture to zoom in or out and drag it to look around; <b>Zoom to aim</b> goes back.</p>'+
+      '<p class="note lvnote">Tap <b>Shot</b> after each shot. Tap a hole on the picture to add one it missed, or tap a mark to remove it. Pinch the picture to zoom in or out and drag it to look around.</p>'+
     '</div></div><div class="lvsheet" id="lvSheet" hidden></div>'+
-    (o.hosted?'<button class="lvdim" id="lvDim" type="button" hidden><b>Camera for your '+esc(o.hosted.host||"iPad")+'</b><span id="lvDimStat"></span><small>Tap to see the camera</small></button>':'');
+    (o.hosted?'<div class="lvdim" id="lvDim" role="button" tabindex="0" hidden><b>Camera for your '+esc(o.hosted.host||"iPad")+'</b><span id="lvDimStat"></span><small>Tap to see the camera</small><button class="btn lvpicon" id="lvPicOn" type="button">Keep the picture on</button></div>'+
+      '<button class="btn lvpicoff" id="lvPicOff" type="button">Dim the screen</button>':'');
   document.body.appendChild(v);
+  // an ⓘ inside a switch's label opens its tip without flipping the switch
+  v.addEventListener("click",e=>{if(e.target.closest(".lvmic .infobtn"))e.preventDefault();},true);
   const can=$("lvCan"),ctx=can.getContext("2d"),thumb=$("lvThumb"),tctx=thumb.getContext("2d"),camBox=$("lvCam");
   const video=document.createElement("video");video.setAttribute("playsinline","");video.muted=true;video.autoplay=true;
   const work=document.createElement("canvas"),wctx=work.getContext("2d",{willReadFrequently:true});
@@ -9415,7 +9449,8 @@ function openLive(o){
   function chNext(){const q=chQ;chQ=null;if(!q||closed||!lock||!ref||busy||pend||Date.now()-q.at>15000)return;pendVel={v:q.v,at:q.at};lastV=q.v;shot("chrono");}
   const chOn=()=>{try{return localStorage.getItem("rb.liveChrono")!=="0";}catch(e){return true;}};
   const unCh=window.RB_BTCHRONO?RB_BTCHRONO.onShot(s=>chronoVel(s.v,chOn())):null;
-  const chUI=()=>{liveChPaint($("lvChGo"));const l=$("lvChL");if(!l||!window.RB_BTCHRONO)return;l.hidden=RB_BTCHRONO.state()==="off";$("lvCh").checked=chOn();};
+  const chUI=()=>{liveChPaint($("lvChGo"));const l=$("lvChL");if(!l||!window.RB_BTCHRONO)return;const on=RB_BTCHRONO.state()!=="off";l.hidden=!on;$("lvCh").checked=chOn();
+    const ml=$("lvMicL");if(ml)ml.hidden=on&&!$("lvMic").checked;};
   const unChUI=window.RB_BTCHRONO?RB_BTCHRONO.sub(chUI):null;
   $("lvChGo").addEventListener("click",()=>liveChGo(setStat));
   $("lvCh").addEventListener("change",e=>{try{localStorage.setItem("rb.liveChrono",e.target.checked?"1":"0");}catch(x){}});chUI();
@@ -9505,16 +9540,33 @@ function openLive(o){
   }
   const moaOf=x=>x!=null&&dist>0?x/(dist/100*1.0472):null;
   const offTxt=r=>{if(r.dx==null)return "–";const lr=Math.abs(r.dx)<.005?"centered":U.s("in",Math.abs(r.dx),2)+" "+(r.dx>0?"right":"left"),ud=Math.abs(r.dy)<.005?"centered":U.s("in",Math.abs(r.dy),2)+" "+(r.dy>0?"high":"low");return lr+", "+ud;};
+  /* the numbers under the camera (2.47.15): shots, group size in inches and in MOA or MIL (your pick, remembered), mean radius
+     (how far the shots are from the group's center on average: steadier than group size, one flyer doesn't swing it) */
+  let GU=(()=>{try{return localStorage.getItem("rb.lvGU")==="mil"?"mil":"moa";}catch(e){return "moa";}})();
+  const angOf=x=>x==null||!(dist>0)?null:GU==="mil"?x/(dist/100*3.6):x/(dist/100*1.0472);
   function renderStats(){
-    const r=stats(aim),m=moaOf(r.size);
-    $("lvStats").innerHTML='<div><b>'+r.n+(want?'<small>/'+want+'</small>':'')+'</b><span>Shots</span></div><div><b>'+(r.size!=null?U.n("in",r.size,2):"–")+'</b><span>Group '+U.u("in")+'</span></div><div><b>'+(m!=null?m.toFixed(2):"–")+'</b><span>MOA</span></div><div><b>'+(r.mr!=null?U.n("in",r.mr,2):"–")+'</b><span>Mean rad.</span></div>'+
+    const r=stats(aim),a=angOf(r.size);
+    $("lvStats").innerHTML='<div><b>'+r.n+(want?'<small>/'+want+'</small>':'')+'</b><span>Shots</span></div>'+
+      '<div class="lvgs"><b>'+(r.size!=null?U.n("in",r.size,2)+'<small> '+esc(U.u("in"))+'</small>'+(a!=null?' · '+a.toFixed(2):''):"–")+'</b><span>Group size <span class="lvgu" role="group" aria-label="Group size in"><button type="button" data-gu="moa" aria-pressed="'+(GU==="moa")+'">MOA</button><button type="button" data-gu="mil" aria-pressed="'+(GU==="mil")+'">MIL</button></span></span></div>'+
+      '<div><b>'+(r.mr!=null?U.n("in",r.mr,2):"–")+'</b><span>Mean radius</span></div>'+
       '<div class="wide">Center from aim: <b>'+esc(offTxt(r))+'</b></div>';
+    $("lvStats").querySelectorAll("[data-gu]").forEach(b=>b.addEventListener("click",()=>{GU=b.dataset.gu;try{localStorage.setItem("rb.lvGU",GU);}catch(e){}renderStats();}));
+    aimMap();
     const total=holes.reduce((s,h)=>s+(h?h.length:0),0);
+    {const c=$("lvClose");if(c){const t=total&&dirty?"Save or discard":"← Back";if(c.textContent!==t)c.textContent=t;c.classList.toggle("primary",!!(total&&dirty));}}
     $("lvDone").disabled=!total;
     const n=aims().length;$("lvPrev").disabled=!lock||aim<=0;$("lvNext").disabled=!lock||aim>=n-1;
     $("lvAimChip").innerHTML=lock?'Aim <b>'+(aim+1)+'</b> of '+n+(grpFor(aim)?' · <b>'+esc(aimLabel(aim))+'</b>':''):'';
     $("lvView").textContent=ucrop?(view==="aim"?"Zoom to aim":"Whole target"):view==="aim"?"Whole target":"Zoom to aim";
   }
+  /* the aim points (2.47.15): a little drawing of this target's page, tap one to go to it. The current one is lit,
+     ones with shots are green. */
+  function aimMap(){const box=$("lvAims");if(!box)return;const A=aims();if(!lock||!A.length){box.hidden=true;box.innerHTML="";return;}box.hidden=false;
+    const W=pageW,H=pageH,k=Math.min(124/W,160/H),w=Math.round(W*k),h=Math.round(H*k),r=Math.max(10,Math.min(16,k*.8));
+    let s='<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><rect x=".5" y=".5" width="'+(w-1)+'" height="'+(h-1)+'" rx="3" fill="#f2f4f5" stroke="#777"/></svg>';
+    s+=A.map((a,i)=>{const n=(holes[i]||[]).length,cls=i===aim?"cur":n?"done":"";return '<button type="button" class="lvap '+cls+'" data-ap="'+i+'" style="left:'+(a.x*k)+'px;top:'+(a.y*k)+'px;width:'+(2*r)+'px;height:'+(2*r)+'px" aria-label="Aim '+(i+1)+(n?', '+n+' shot'+(n===1?'':'s'):'')+'"'+(i===aim?' aria-current="true"':'')+'>'+(i+1)+'</button>';}).join("");
+    box.innerHTML='<div class="lvapage" style="width:'+w+'px;height:'+h+'px">'+s+'</div>';
+    box.querySelectorAll("[data-ap]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.ap;if(i!==aim)goAim(i);}));}
   function fillAim(){
     const g=grpFor(aim);want=shotCount(g)||want||null;
     const wi=$("lvWant");if(wi)wi.value=want||"";
@@ -9578,6 +9630,7 @@ function openLive(o){
     const rc=can.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;zoomView(b,Math.min(6,Math.max(.3,z)),cx,cy,cx,cy);renderStats();}
   // a tap at a spot on the picture (0–1 across and down), from this screen or from a device watching it
   function tapAt(u,w){
+    if(o.hosted&&window.RB_CAM_PIC&&RB_CAM_PIC()&&v.classList.contains("lvpic"))return;
     if(man&&crop){const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);manTap(...fromDisp([crop[0]+u*rc.width/k,crop[1]+w*rc.height/k]));return;}
     if(!lock||!crop||refind)return;const rc=can.getBoundingClientRect(),k=can.width/crop[2]/(window.devicePixelRatio||1);
     const [cx,cy]=fromDisp([crop[0]+u*rc.width/k,crop[1]+w*rc.height/k]),[px,py]=applyH(lock.H,cx,cy);
@@ -9681,10 +9734,12 @@ function openLive(o){
       viewLabel:$("lvView").textContent,viewShown:!$("lvView").hidden,findShown:!$("lvFind").hidden,findLabel:$("lvFind").textContent,seek:$("lvFind").classList.contains("lvseek"),view,uz:uzNow(),
       manL:$("lvManual").hidden?null:$("lvManual").textContent,autoShown:!$("lvAuto").hidden,mdone:!$("lvMDone").hidden,doneLabel:$("lvDone").textContent,
       groups:gs?[...gs.options].map(o=>[o.value,o.textContent]):null,group:gs?gs.value:null,want:$("lvWant").value,dist:$("lvDist").value,unitIn:U.u("in"),unitYd:U.u("yd"),
-      mic:!!micT,sens,sheet,title:o.title||"",hosted:!!o.hosted,total:holes.reduce((s2,h)=>s2+(h?h.length:0),0),result:resTok,
+      mic:!!micT,sens,sheet,title:o.title||"",hosted:!!o.hosted,
+      // for the iPad's aim point map and its MOA / MIL switch (2.47.16)
+      aimMap:lock?{w:pageW,h:pageH,cur:aim,a:aims().map((a,i)=>[+a.x.toFixed(3),+a.y.toFixed(3),(holes[i]||[]).length])}:null,szIn:r.size,mrIn:r.mr,distYd:dist,dirty:!!dirty,total:holes.reduce((s2,h)=>s2+(h?h.length:0),0),result:resTok,
       geo:window.RB_MYGEO||null,ret:{on:!!RT.on,prof:RT.prof||null,zero:num(RT.zero)>0?num(RT.zero):null,note:(($("lvRetNote")||{}).textContent)||""}};
   }
-  const RM_CLICK=["lvbSave","lvbDiscard","lvbKeep","lvpKeep","lvpNone","lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvAuto","lvMDone","lvmOk","lvmRedo","lvFind"];
+  const RM_CLICK=["lvClose","lvbSave","lvbDiscard","lvbKeep","lvpKeep","lvpNone","lvShot","lvUndo","lvPrev","lvNext","lvDone","lvView","lvsNext","lvsSave","lvsMore","lvsDone","lvManual","lvAuto","lvMDone","lvmOk","lvmRedo","lvFind"];
   function rmRun(c){
     if(c.cmd==="click"&&RM_CLICK.includes(c.id)){const b=$(c.id);if(b&&!b.disabled)b.click();}
     else if(c.cmd==="tap"&&isFinite(c.u)&&isFinite(c.w))tapAt(Math.min(1,Math.max(0,c.u)),Math.min(1,Math.max(0,c.w)));
@@ -9692,6 +9747,7 @@ function openLive(o){
     else if(c.cmd==="sens"&&SENS[c.v])setSens(c.v);
     else if(c.cmd==="view"&&(c.v==="aim"||c.v==="full")){if(c.v!==view||ucrop){view=c.v;ucrop=null;renderStats();}}
     else if(c.cmd==="zoom"&&num(c.v)>0)setUz(num(c.v));
+    else if(c.cmd==="aim"&&lock){const i=parseInt(c.v,10);if(i>=0&&i<aims().length&&i!==aim)goAim(i);}
     else if(c.cmd==="chrono"&&num(c.v)>0)chronoVel(num(c.v),!!c.trig);
     // from the device that started it (2.37): end without saving, the save went through, the reticle settings
     else if(c.cmd==="end"&&o.hosted)close(true);
@@ -9933,8 +9989,16 @@ function openLive(o){
       setStat("Sent to your "+(o.hosted.host||"iPad")+". Waiting for it to save…","busy");
       const r=await new Promise((res,rej)=>{const t=setTimeout(()=>{resWait=null;rej(new Error("timeout"));},180000);resWait=c=>{clearTimeout(t);resWait=null;if(c.tok&&c.tok!==tok)return;c.ok?res(c):rej(new Error("save"));};});
       resTok="";return r;};
-    const dim=$("lvDim"),wake=()=>{dim.hidden=true;clearTimeout(dimT);dimT=setTimeout(()=>{if(!closed&&lock)dim.hidden=false;else wake();},30000);};
-    dim.addEventListener("click",wake);v.addEventListener("pointerdown",()=>{if(dim.hidden)wake();},true);wake();
+    /* the camera for an iPad goes dark after 30 s to save the battery. Keep the picture on (2.47.16, off unless picked,
+       remembered on this phone): just the target picture, zoomed to the aim point, to watch the shots from the bench when
+       the scope isn't next to it. No buttons: the iPad runs the session, and taps on the picture don't mark shots here. */
+    let PIC=(()=>{try{return localStorage.getItem("rb.camPic")==="1";}catch(e){return false;}})();
+    const dim=$("lvDim"),wake=()=>{dim.hidden=true;clearTimeout(dimT);if(PIC)return;dimT=setTimeout(()=>{if(!closed&&lock&&!PIC)dim.hidden=false;else wake();},30000);};
+    const picSet=on=>{PIC=on;try{localStorage.setItem("rb.camPic",on?"1":"0");}catch(e){}v.classList.toggle("lvpic",on);if(on){ucrop=null;view="aim";renderStats();}wake();};
+    dim.addEventListener("click",wake);v.addEventListener("pointerdown",()=>{if(dim.hidden)wake();},true);
+    $("lvPicOn").addEventListener("click",e=>{e.stopPropagation();picSet(true);});
+    $("lvPicOff").addEventListener("click",()=>{picSet(false);dim.hidden=false;clearTimeout(dimT);});
+    window.RB_CAM_PIC=()=>PIC;picSet(PIC);
     remotePush();
   }
   renderStats();setStat(status.t,status.k);
@@ -10007,19 +10071,18 @@ function openWatch(id,dev,host){
   clearTimeout(watchTimer);
   const HO=host&&host.o?host.o:null; // started here, with the phone as the camera (2.37)
   const v=document.createElement("div");v.className="viewer live watch";v.id="liveWatch";v.setAttribute("role","dialog");v.setAttribute("aria-label","Watching Live target");
-  v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span></div>'+
-    '<div class="lvmain"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill warn" id="wAng" hidden><i></i><span></span></span><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
+  v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><button class="btn lvchgo" id="wChGo" type="button" hidden>Connect Athlon</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span></div>'+
+    '<div class="lvmain"><div class="lvleft"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill warn" id="wAng" hidden><i></i><span></span></span><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
       '<div class="lvbtns"><button class="btn lvview" id="wView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="wFind" type="button" hidden>Find target again</button><button class="btn lvmanual" id="wManual" type="button" hidden></button><button class="btn lvauto" id="wAuto" type="button" hidden>Find corners automatically</button></div><button class="btn lvmdone" id="wMDone" type="button" hidden>Done</button></div>'+
+      '<div class="lvstats lvstrip" id="wStats"></div></div>'+
     '<div class="lvside"><div class="lvinfo"><span class="lvchip" id="wTitle"></span></div>'+
       '<div class="lvrow"><button class="lvshot" id="wShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="wUndo" type="button" disabled>↶ Undo</button></div>'+
-      '<div class="lvrow"><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
-      '<div class="lvstats" id="wStats"></div>'+
-      '<div class="lvgrid"><label id="wGroupL" hidden>Charge for this aim<select id="wGroup"></select></label><label>Shots<input id="wWant" type="number" inputmode="numeric" min="1" step="1"></label><label><span>Distance (<span id="wYd">yd</span>)</span><input id="wDist" type="number" inputmode="numeric" step="any"></label></div>'+
-      '<button class="btn lvchgo" id="wChGo" type="button" hidden>Connect Athlon</button>'+
-      '<label class="lvmic" id="wChL" hidden><input type="checkbox" id="wCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot <span class="note" id="wChV"></span><small>The chronograph connected to this '+esc(LIVE_DEV())+' sends each velocity to the '+esc(dev||"phone")+', which looks for that hole and notes the velocity on it.</small></span></label>'+
-      (HO?'<label class="lvmic"><input type="checkbox" id="whMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="whMeter" hidden><i></i><b></b></span><small>Uses this '+esc(LIVE_DEV())+'\'s microphone. Only when nobody is shooting near you: any loud bang counts as a shot.</small></span></label>'+
+      '<div class="lvrow" hidden><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
+      '<div class="lvaimrow"><div class="lvaims" id="wAims" role="group" aria-label="Aim points" hidden></div><div class="lvgrid"><label id="wGroupL" class="lvgw" hidden>Charge for this aim<select id="wGroup"></select></label><label>Shots<input id="wWant" type="number" inputmode="numeric" min="1" step="1"></label><label><span>Distance (<span id="wYd">yd</span>)</span><input id="wDist" type="number" inputmode="numeric" step="any"></label></div></div>'+
+      '<label class="lvmic" id="wChL" hidden><input type="checkbox" id="wCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot <span class="note" id="wChV"></span></span><span class="infobtn" role="button" tabindex="0" data-ik="liveChrono" aria-label="About Chronograph finds each shot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
+      (HO?'<label class="lvmic" id="whMicL"><input type="checkbox" id="whMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="whMeter" hidden><i></i><b></b></span></span><span class="infobtn" role="button" tabindex="0" data-ik="liveMic" aria-label="About Listen for shots"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
         '<div class="lvsens" id="whSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-whsens="normal">Normal</button><button type="button" data-whsens="supp">Suppressed</button><button type="button" data-whsens="quiet">Quiet .22</button></div>'+
-        '<label class="lvmic lvretl"><input type="checkbox" id="whRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle<small>Your scope\'s reticle over the target, to scale, with the hold for your zero on the aim point.</small></span></label>'+
+        '<label class="lvmic lvretl"><input type="checkbox" id="whRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle</span><span class="infobtn" role="button" tabindex="0" data-ik="liveRet" aria-label="About Show my reticle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
         '<div class="lvgrid lvretopts" id="whRetOpts" hidden><label>Shooting profile<select id="whRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="whRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
         '<p class="note lvretnote" id="whRetNote" hidden></p>'+
         '<p class="note lvnote" style="display:block!important">The '+esc(dev||"phone")+' finds the shots; this '+esc(LIVE_DEV())+' runs the session and saves the target. To switch to another gun, load or profile, tap <b>← Back</b> (it saves first), then start Live target again from there.</p>':
@@ -10053,7 +10116,18 @@ function openWatch(id,dev,host){
     st=S;if(!S)return;
     setStat(S.status||"",S.kind||"");{const a=$("wAng");if(a){a.hidden=!(S.ang&&S.ang.t);if(S.ang&&S.ang.t){a.className="lvpill "+(S.ang.k||"warn");a.lastChild.textContent=S.ang.t;}}}$("wChip").textContent=S.chip||"";$("wTitle").textContent=S.title||"";$("wYd").textContent=S.unitYd||"yd";
     const T=S.stats||{};
-    $("wStats").innerHTML='<div><b>'+esc(T.n)+(T.want?'<small>/'+esc(T.want)+'</small>':'')+'</b><span>Shots</span></div><div><b>'+esc(T.size)+'</b><span>Group '+esc(S.unitIn||"in")+'</span></div><div><b>'+esc(T.moa)+'</b><span>MOA</span></div><div><b>'+esc(T.mr)+'</b><span>Mean rad.</span></div><div class="wide">Center from aim: <b>'+esc(T.off)+'</b></div>';
+    // the same strip, switch and aim map as Live target on this device (2.47.16)
+    const GU=(()=>{try{return localStorage.getItem("rb.lvGU")==="mil"?"mil":"moa";}catch(e){return "moa";}})(),dy=num(S.distYd),ang=x=>x==null||!(dy>0)?null:GU==="mil"?x/(dy/100*3.6):x/(dy/100*1.0472),ga=ang(S.szIn);
+    $("wStats").innerHTML='<div><b>'+esc(T.n)+(T.want?'<small>/'+esc(T.want)+'</small>':'')+'</b><span>Shots</span></div>'+
+      '<div class="lvgs"><b>'+(S.szIn!=null?esc(T.size)+'<small> '+esc(S.unitIn||"in")+'</small>'+(ga!=null?' · '+ga.toFixed(2):''):'–')+'</b><span>Group size <span class="lvgu" role="group" aria-label="Group size in"><button type="button" data-gu="moa" aria-pressed="'+(GU==="moa")+'">MOA</button><button type="button" data-gu="mil" aria-pressed="'+(GU==="mil")+'">MIL</button></span></span></div>'+
+      '<div><b>'+esc(T.mr)+'</b><span>Mean radius</span></div><div class="wide">Center from aim: <b>'+esc(T.off||"–")+'</b></div>';
+    $("wStats").querySelectorAll("[data-gu]").forEach(b=>b.addEventListener("click",()=>{try{localStorage.setItem("rb.lvGU",b.dataset.gu);}catch(e){}render(st);}));
+    {const box=$("wAims"),M=S.aimMap;if(!M||!M.a||!M.a.length){box.hidden=true;box.innerHTML="";}else{box.hidden=false;
+      const k=Math.min(124/M.w,160/M.h),w=Math.round(M.w*k),h=Math.round(M.h*k),r=Math.max(10,Math.min(16,k*.8));
+      box.innerHTML='<div class="lvapage" style="width:'+w+'px;height:'+h+'px"><svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true"><rect x=".5" y=".5" width="'+(w-1)+'" height="'+(h-1)+'" rx="3" fill="#f2f4f5" stroke="#777"/></svg>'+
+        M.a.map(([x,y,n],i)=>'<button type="button" class="lvap '+(i===M.cur?"cur":n?"done":"")+'" data-ap="'+i+'" style="left:'+(x*k)+'px;top:'+(y*k)+'px;width:'+(2*r)+'px;height:'+(2*r)+'px" aria-label="Aim '+(i+1)+(n?', '+n+' shot'+(n===1?'':'s'):'')+'">'+(i+1)+'</button>').join("")+'</div>';
+      box.querySelectorAll("[data-ap]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.ap;cmd({cmd:"aim",v:i});box.querySelectorAll(".lvap").forEach(x=>x.classList.toggle("cur",x===b));}));}}
+    {const c=$("wClose"),t=S.total&&(HO||S.dirty)?"Save or discard":"← Back";if(c.textContent!==t)c.textContent=t;c.classList.toggle("primary",t!=="← Back");}
     const E=S.en||{};$("wShot").disabled=!E.shot;$("wUndo").disabled=!E.undo;$("wPrev").disabled=!E.prev;$("wNext").disabled=!E.next;$("wDone").disabled=!E.done;$("wDone").textContent=S.doneLabel||"Save";
     $("wView").hidden=!S.viewShown;if(Date.now()-wvT>2500)$("wView").textContent=S.viewLabel||"Whole target";$("wFind").hidden=!S.findShown;if(S.findLabel)$("wFind").textContent=S.findLabel;$("wFind").classList.toggle("lvseek",!!S.seek);
     $("wManual").hidden=!S.manL;$("wManual").textContent=S.manL||"";$("wAuto").hidden=!S.autoShown;$("wMDone").hidden=!S.mdone;
@@ -10088,13 +10162,14 @@ function openWatch(id,dev,host){
   // the chronograph on this device (2.44.7): each velocity goes to the phone, which puts it on the hole
   const chOn=()=>{try{return localStorage.getItem("rb.liveChrono")!=="0";}catch(e){return true;}};
   const unCh=window.RB_BTCHRONO?RB_BTCHRONO.onShot(s=>{if(closed)return;cmd({cmd:"chrono",v:s.v,trig:chOn()});$("wChV").textContent="Last: "+U.s("fps",s.v,0);}):null;
-  const chUI=()=>{liveChPaint($("wChGo"));const l=$("wChL");if(!l||!window.RB_BTCHRONO)return;l.hidden=RB_BTCHRONO.state()==="off";$("wCh").checked=chOn();};
+  const chUI=()=>{liveChPaint($("wChGo"));const l=$("wChL");if(!l||!window.RB_BTCHRONO)return;const on=RB_BTCHRONO.state()!=="off";l.hidden=!on;$("wCh").checked=chOn();
+    const ml=$("whMicL"),mi=$("whMic");if(ml)ml.hidden=on&&!(mi&&mi.checked);};
   const unChUI=window.RB_BTCHRONO?RB_BTCHRONO.sub(chUI):null;
   $("wChGo").addEventListener("click",()=>liveChGo(setStat));
   $("wCh").addEventListener("change",e=>{try{localStorage.setItem("rb.liveChrono",e.target.checked?"1":"0");}catch(x){}});chUI();
   const close=()=>{closed=true;if(unCh)unCh();if(unChUI)unChUI();if(HO)hostStop();document.removeEventListener("keydown",onKey);v.remove();watchList();};
   const onKey=e=>{if(e.key==="Escape")(HO?hostBack():close());};document.addEventListener("keydown",onKey);
-  $("wClose").addEventListener("click",()=>HO?hostBack():close());
+  $("wClose").addEventListener("click",()=>{if(HO)return hostBack();if(st&&st.total&&st.dirty){click("lvClose");return;}close();});
   /* ----- running the session from here (2.37) ----- */
   let started=0,live=false,doneTok="",ending=false,micT=null,mic=null,actx=null,sens="normal",retSent=false,startT=null;
   function hostStart(){if(closed||live)return;started=Date.now();
@@ -10179,8 +10254,8 @@ const LIVE_CAM_KEY="rb.liveCam";
    Edge). From a range trip it connects the same way as the trip's own button, so the shots also go into the trip's string. */
 let LIVE_CHRONO_GO=null;
 function liveChPaint(b){const C=window.RB_BTCHRONO;if(!b)return;if(!C||!C.supported()){b.hidden=true;return;}
-  const s=C.state();b.hidden=s==="on";b.disabled=s!=="off";
-  b.textContent=s==="off"?"Connect Athlon":s==="picking"?"Pick the Athlon in the list…":"Connecting to the Athlon…";}
+  const s=C.state();b.hidden=s==="on"&&!b.closest(".lvtop");b.disabled=s!=="off";
+  b.textContent=s==="off"?"Connect Athlon":s==="on"?"Athlon connected":s==="picking"?"Pick the Athlon in the list…":"Connecting to the Athlon…";}
 async function liveChGo(say){const C=window.RB_BTCHRONO;if(!C)return;
   try{await C.connect("athlon");if(LIVE_CHRONO_GO)await LIVE_CHRONO_GO();
     if(C.state()==="on")say("Athlon connected. With Chronograph finds each shot on, each velocity looks for its hole.","");}
@@ -13043,6 +13118,9 @@ window.APP_showTab=showTab;
 // short how-tos for the tiles; h is the How to Use topic ("#id" a section, "tool:Name" a Tools item, otherwise an h3's text)
 const INFO={
   liveAngle:{t:"Camera at an angle",noMore:true,b:"Live target finds the four corner squares and uses them to work out how the paper is tilted toward the camera. Every shot is turned back into real inches on the flat target before anything is measured, so group size, MOA, mean radius and group center come out the same whether the camera is straight on or off to the side.<br><b>How far off to the side:</b><br><b>Up to about 30°:</b> no real difference.<br><b>30° to 45°:</b> works well. The target looks narrower, so zoom in a little to keep the holes sharp.<br><b>45° to 60°:</b> still corrected, but the target looks only half to three-quarters as wide, so each hole is a thin oval. Holes that touch are harder to tell apart, and you'll fix more misses with <b>Undo</b>.<br><b>Past about 60°:</b> the corner squares get too thin to find reliably, and Live target says it can't see the target instead of giving wrong numbers.<br><b>You don't have to guess the angle.</b> Live target works it out from the corner squares and shows a note on the camera picture from about 45° (\"Camera about 50° off straight-on\") and a red warning from about 60°, on the phone and on an iPad watching it.<br><b>Keep the paper flat.</b> The correction assumes a flat sheet, so a curled, rippling or sagging target throws positions off, and more so the steeper the angle. Staple or tape all four corners. The same goes for tilting up or down, not just side to side."},
+  liveRet:{t:"Show my reticle",noMore:true,b:"Draws your scope's reticle over the target, to scale for the distance, with the hold for your zero on the aim point. Pick the Shooting profile and the zero it's sighted in at."},
+  liveMic:{t:"Listen for shots",noMore:true,b:"The microphone hears each shot and starts the search for its hole, so you don't have to tap <b>Shot</b>. Only use it when nobody is shooting near you: any loud bang counts as a shot. Pick <b>Suppressed</b> or <b>Quiet .22</b> for quieter guns. It's hidden while a chronograph is connected, since the chronograph does the same job better."},
+  liveChrono:{t:"Chronograph finds each shot",noMore:true,b:"Each velocity the connected chronograph measures starts the search for its hole (after the bullet's time of flight), and the velocity goes on that hole. One velocity marks one hole."},
   liveFocusIos:{t:"Range Focus",noMore:true,b:"Keeps calls and notifications from interrupting the phone on the target. Set it up once:<br><b>1. Make the Focus.</b> Settings › Focus › <b>+</b> › Custom, name it <b>Range</b>. Under People, pick <b>Allow notifications from</b> and add nobody; tap Calls and choose <b>Nobody</b>, and turn off <b>Allow Repeated Calls</b>. Under Apps, allow none.<br><b>2. Make the shortcut.</b> Open the Shortcuts app, tap <b>+</b>, add the action <b>Set Focus</b>, set it to turn <b>Range</b> on <b>until turned off</b>, and name the shortcut exactly <b>Range Book Focus</b>.<br><b>3. Use it.</b> Tap <b>Turn on Range Focus</b> here. The Shortcuts app opens for a moment; tap <b>◀ Range Book</b> at the top left to come back (Live target picks up where it was). Turn the Focus off afterwards from Control Center.<br>Also set <b>Auto-Lock</b> to <b>Never</b> on that phone (Settings › Display &amp; Brightness) and turn off <b>Low Power Mode</b>. Test it once with a call and a text before you walk down range."},
   liveFocusAnd:{t:"Silence calls (Android)",noMore:true,b:"Web apps can't turn on Do Not Disturb by themselves on Android, but it's two taps. Set it up once:<br><b>1.</b> Settings › Notifications (or Sound) › <b>Do Not Disturb</b> (called <b>Modes</b> on some phones). Under <b>People</b>, set Calls and Messages to <b>None</b> and turn off <b>Repeat callers</b>. Under <b>Apps</b>, allow none.<br><b>2.</b> At the range, swipe down twice from the top of the screen and tap <b>Do Not Disturb</b>, then come back here.<br>Also set <b>Screen timeout</b> to the longest time (Settings › Display), turn off <b>Battery Saver</b>, and test it once with a call and a text before you walk down range."},
   secTInputs:{t:"Inputs",b:"Enter the bullet weight, muzzle velocity and BC (from the box, or better, your chronograph) and pick the gun so its sight height fills in. Add the barrel twist and bullet length to see stability and spin drift. Everything updates as you type; on a phone this card folds to one line, so tap it to open.",h:"Fill in the fields"},
