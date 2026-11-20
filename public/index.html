@@ -1141,6 +1141,15 @@ table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))
 .sgopen{display:flex;flex-direction:column;gap:10px}
 .sghead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sghead b{font-size:calc(17px*var(--fs))}.sgtog{margin-left:auto}
 .sgmode{display:inline-flex;margin-left:auto}
+.tripmove{flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+body.tripspage #trajBack{display:none!important}
+.triphead{margin:0 0 14px}
+.triphead .backbtn{margin-bottom:6px}
+.triptitle{margin:2px 0 2px;font-size:calc(24px*var(--fs))}
+.tripprof{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;color:var(--muted)}
+.tripprof .linkbtn{font-weight:600}
+.tripmove[hidden]{display:none}
+.tripmove select{width:auto;max-width:100%}
 .sgzoom{display:flex;align-items:center;gap:10px;max-width:440px;margin:10px auto 0;font-size:calc(14px*var(--fs))}
 .sgzoom input{flex:1}
 .sgzoom b{min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
@@ -1488,6 +1497,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="banner twistbanner" id="trajPart" role="note" hidden></div>
   <div class="banner samplebanner" id="trajSample" role="note" hidden><b>Sample data.</b> This profile is a made-up example to show how Range Book works. Its velocity and conditions are not real load data. Don't load or shoot anything from it without checking it against a current published load manual for your exact components, and work up safely on your own. Delete it whenever you like.</div>
   <div class="row tripsbar" id="tripsBar"><button class="btn primary" id="tripsGo" type="button">Range trips</button><button class="btn" id="tripsNew" type="button">+ New range trip</button></div>
+  <div id="profTripCards"></div>
   <div class="cols tcols">
   <div class="col colL">
   <section class="card" aria-label="Inputs" id="secTInputs">
@@ -1758,10 +1768,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>The inputs fold up on a phone</h3>
       <p>On a phone, when you open a profile the <b>Inputs</b> card folds into a one-line summary (bullet, velocity, BC, gun, zero, weather) so the results are near the top. Tap it, or the <b>Inputs</b> link, to open it and change anything. Every other card on a profile (Point-blank range, Bullet path, Range table, Dope card, Range trips and the rest) folds up too: tap its title to close or open it. The app remembers which ones you closed on that phone or computer, and the links at the top open a closed card for you.</p>
       <h3>Range trips</h3>
-      <p>Every profile has a <b>Range trips</b> button at the top: it opens the profile's trip list, with <b>+ New range trip</b>. Tapping a trip there (or in the Range log) opens it on its own page. On the left, a bar of big buttons for the bench (<b>Connect Athlon</b>, <b>Live target</b> and <b>+ Photo</b>), then cards that fold up when you tap their title: <b>Trip details</b>, <b>Chronograph</b>, <b>Targets</b> and <b>Cold-bore shot</b>. A folded card shows a one-line summary (Trip details shows the date and place, and folds by itself once both are filled in). On the right, the profile's <b>Dope card &amp; reticle</b>, worked out for the trip's weather: its temperature, the air pressure from <b>Use the weather…</b>, and the wind (put "from 3 o'clock" in <b>Wind</b> for its direction). Anything the trip doesn't have comes from the profile, and nothing on the profile changes. On a phone it comes after the other cards. <b>Import chronograph file</b> and <b>+ Type in shots</b> are under <b>More</b> on the Chronograph card. The path at the top (profile › Range trips › date) takes you back. In <b>Trip details</b>, fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target</b> at the bottom of the Targets card opens the printable targets in Tools, set up for the trip: the trip's load, date, distance and gun go at the top of every target you print there (change any of them first, or tick <b>Print blank</b>), and <b>‹ Back to the trip</b> takes you back. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, or empty its box to delete it (Undo brings it back). Typed-in strings have <b>+ Shot</b> to add one. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
+      <p>Every profile has a <b>Range trips</b> button at the top: it opens the <b>Range log</b> showing only that profile's trips (tap <b>All profiles</b> for everything), with <b>+ New range trip</b>; <b>+ New range trip</b> on the profile starts one too. Tapping a trip opens it on its own page. Its title is the date and place; under it, <b>Profile:</b> opens the profile and <b>Change</b> moves the trip, with its targets, chronograph shots and notes, to another profile (for when the wrong one was picked). The one <b>‹</b> button at the top goes back where you came from: the Range log (to the same place in the list), Home, or the profile. On the left, a bar of big buttons for the bench (<b>Connect Athlon</b>, <b>Live target</b> and <b>+ Photo</b>), then cards that fold up when you tap their title: <b>Trip details</b>, <b>Chronograph</b>, <b>Targets</b> and <b>Cold-bore shot</b>. A folded card shows a one-line summary (Trip details shows the date and place, and folds by itself once both are filled in). On the right, the profile's <b>Dope card &amp; reticle</b>, worked out for the trip's weather: its temperature, the air pressure from <b>Use the weather…</b>, and the wind (put "from 3 o'clock" in <b>Wind</b> for its direction). Anything the trip doesn't have comes from the profile, and nothing on the profile changes. On a phone it comes after the other cards. <b>Import chronograph file</b> and <b>+ Type in shots</b> are under <b>More</b> on the Chronograph card. The path at the top (profile › Range trips › date) takes you back. In <b>Trip details</b>, fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target</b> at the bottom of the Targets card opens the printable targets in Tools, set up for the trip: the trip's load, date, distance and gun go at the top of every target you print there (change any of them first, or tick <b>Print blank</b>), and <b>‹ Back to the trip</b> takes you back. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, or empty its box to delete it (Undo brings it back). Typed-in strings have <b>+ Shot</b> to add one. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
       <h3>All your groups</h3>
       <p>Once a range trip has two or more measured groups, its <b>Targets</b> section shows <b>All groups together</b>: every group from that day on one target, each in its own color, with how big they are all together, the mean radius (the average distance of the shots from their center) and where the center is. <b>Around the aim point</b> lines them up on the aim point you marked, so you see where the gun really hits, zero shifts included; <b>Around each center</b> moves each group onto its own center, so you see only how tight it shoots. Groups at one distance are in inches (cm); mixed distances are in MOA. A group without an aim point is left out around the aim point, and the card says so.</p>
-      <p>The <b>All your groups</b> card (under a profile's trip list) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 8%.</p>
+      <p>The <b>All your groups</b> card (on the profile, folded up, and at the top of the Range log when it shows one profile) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 8%.</p>
       <h3>Suppressor on or off</h3>
       <p>A suppressor often moves the point of impact a little and changes the speed. Range Book can measure it from your own range trips, without a second profile. On a range trip, pick the suppressor under <b>Suppressor</b>, shoot some groups with it on and some with it off, and measure them with the aim point marked. Under <b>All groups together</b>, <b>Suppressor on or off</b> lists every group: they start as <b>On</b>, so tap <b>Off</b> on the ones you shot without it. Each chronograph string has the same <b>On</b>/<b>Off</b> for the speed. The trip then shows the difference (for example "0.6 MOA higher and 0.3 MOA right, 18 fps faster").</p>
       <p>The gun's page adds up every trip like that for each suppressor. On the gun's Shooting profiles, the <b>Suppressor</b> card picks what you're <b>Shooting with</b> (<b>None</b> or one of the suppressors ticked on the gun's page) and what it was <b>Zeroed with</b>. New range trips with the profile start with the suppressor you're shooting with. When they differ, the measured shift is added: the speed to the trajectory, the up and down part to the chart, range table, dope card and reticle, and the sideways part to the reticle hold. The dope card says so under its conditions. Zeroed with it and shooting with it, nothing changes.</p>
@@ -3814,7 +3824,7 @@ const FOLD=(()=>{try{return JSON.parse(localStorage.getItem("rb.fold")||"{}")||{
 // cards in FOLD_FRESH always start folded and aren't remembered (What's new on How to Use)
 const FOLD_FRESH=new Set(["help_hNew"]);
 // cards that start folded until you open them (2.46): set once, then rarely needed
-const FOLD_SHUT=new Set(["pbr","trueup","rel_Velocity_chart","share","gun_secGunPh","gun_secGunMags","gun_secGunRel","gun_secGunParts","guns_lu","guns_bar"]);
+const FOLD_SHUT=new Set(["pallgroups","veltemp","pbr","trueup","rel_Velocity_chart","share","gun_secGunPh","gun_secGunMags","gun_secGunRel","gun_secGunParts","guns_lu","guns_bar"]);
 function foldCard(sec,key){
   if(!sec||sec.querySelector(":scope>.sechead"))return;
   const fresh=FOLD_FRESH.has(key);
@@ -11620,9 +11630,9 @@ async function grpBackfill(list,after){if(grpFilling)return;const need=list.filt
   grpFilling=true;let any=false;
   for(const x of need.slice(0,40)){grpTried.add(x.id);try{const r=await API.get("/api/trips/"+x.id+"/photos");x.sum=tripSumFrom(r.photos||[]);any=true;}catch(e){}}
   grpFilling=false;if(any){queueTrips();after();}}
-function bindProfGroups(T,list){const sec=$("secAllGroups");if(!sec)return;const redraw=()=>{const old=$("secAllGroups");if(!old)return;const h=profGroupsHtml(T,list);if(!h){old.remove();return;}old.outerHTML=h;bindProfGroups(T,list);};
+function bindProfGroups(T,list,key){const sec=$("secAllGroups");if(!sec)return;const redraw=()=>{const old=$("secAllGroups");if(!old)return;const h=profGroupsHtml(T,list);if(!h){old.remove();return;}old.outerHTML=h;bindProfGroups(T,list,key);const n=$("secAllGroups"),b=n&&n.querySelector(":scope>.sechead");if(b&&b.getAttribute("aria-expanded")==="false")b.click();};
   bindGrpMode(sec,redraw);sec.querySelectorAll("[data-gf]").forEach(b=>b.addEventListener("click",()=>{GRP_FILTER=b.dataset.gf;try{localStorage.setItem("rb.grpFilter",GRP_FILTER);}catch(e){}redraw();}));
-  if(window.foldCard)window.foldCard(sec,"allgroups");}
+  if(window.foldCard)window.foldCard(sec,key||"allgroups");}
 function tripSummary(t){
   const sum=tripSumFrom(tripPhotos);
   if(JSON.stringify(sum)!==JSON.stringify(t.sum||null)){t.sum=sum;queueTrips();}
@@ -11659,7 +11669,11 @@ async function uploadTripPhotos(files){
     }finally{tripUploading--;if(tripOpen===id)renderTripPhotos();}
   }
 }
-function openTrip(id){
+/* where a trip was opened from (2.47.12), so its one Back button goes back there: the Range log (to the same place in the
+   list), Home, the profile's trip list, or the profile */
+let TRIP_FROM={k:"prof"},TRIP_NEXT=null;
+function openTrip(id,from){
+  TRIP_FROM=from||TRIP_NEXT||{k:"prof"};TRIP_NEXT=null;
   tripOpen=id;tripPhotos=[];renderTrips();
   window.scrollTo(0,0);
   API.get("/api/trips/"+id+"/photos").then(r=>{if(tripOpen!==id)return;tripPhotos=r.photos||[];renderTripPhotos();},()=>{});
@@ -11894,6 +11908,13 @@ function renderTrips(){
   const crumbs=(last)=>'<nav class="tripcrumbs" aria-label="Where you are"><button class="linkbtn" type="button" data-tcrumb="prof">‹ '+esc(T.name||"Profile")+'</button>'+(last?'<span aria-hidden="true">›</span><button class="linkbtn" type="button" id="tripBack">Range trips</button><span aria-hidden="true">›</span><span>'+esc(last)+'</span>':'<span aria-hidden="true">›</span><span>Range trips</span>')+'</nav>';
   const bindCrumbs=()=>root.querySelectorAll('[data-tcrumb="prof"]').forEach(b=>b.addEventListener("click",()=>{TRIPS_PAGE=false;tripOpen=null;tripPhotos=[];renderTrips();window.scrollTo(0,0);}));
   const t=tripOpen&&trips.find(x=>x.id===tripOpen&&x.trajId===T.id);
+  {const pc=$("profTripCards");if(pc){
+    // on the profile itself (2.47.12): every group from its trips on one target, and speed against temperature; both fold up
+    if(TRIPS_PAGE||!tripsLoaded)pc.innerHTML="";
+    else{const list=trips.filter(x=>x.trajId===T.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0));
+      const vt=velTempHtml(T,list);pc.innerHTML=profGroupsHtml(T,list)+(vt?'<section class="card" aria-label="Velocity and temperature" id="secVelTemp"><h2>Velocity and temperature</h2>'+vt+'</section>':'');
+      bindProfGroups(T,list,"pallgroups");bindVelTemp(T);{const v=$("secVelTemp");if(v&&window.foldCard)foldCard(v,"veltemp");}
+      grpBackfill(list,()=>{if(!tripOpen&&tripTraj&&tripTraj.id===T.id)renderTrips();});}}}
   if(!TRIPS_PAGE){root.innerHTML="";return;}
   if(!t){
     tripOpen=null;
@@ -11923,7 +11944,7 @@ function renderTrips(){
     if(window.RB_FILTER)RB_FILTER($("secTrips"),"trips");
     bindCrumbs();
     $("tripAdd").addEventListener("click",newTrip);
-    root.querySelectorAll("[data-trip]").forEach(b=>b.addEventListener("click",()=>openTrip(b.dataset.trip)));
+    root.querySelectorAll("[data-trip]").forEach(b=>b.addEventListener("click",()=>openTrip(b.dataset.trip,{k:"list"})));
     return;
   }
   const places=[...new Set([...trips.map(x=>String(x.place||"").trim()),...((window.RB_TRAJ&&RB_TRAJ.ranges())||[])].filter(Boolean))].sort();
@@ -11955,7 +11976,12 @@ function renderTrips(){
     '<div class="sgwrap" id="tripSG" hidden></div><div class="grpall" id="tripAll" hidden></div>'+
     '<p class="note">Tap a target to measure its groups, the same way as in Reloading. Printed Range Book targets are read by themselves.</p>'+
     '<div class="row"><button class="btn" id="tripTgtGo" type="button">Print a target</button></div>';
-  h=crumbs(t.date?fmtDate(t.date):"Range trip")+'<datalist id="dl_place">'+places.map(p=>'<option value="'+esc(p)+'">').join("")+'</datalist>'+
+  let hd;{const F=TRIP_FROM||{k:"prof"},bl=F.k==="log"?"Range log":F.k==="home"?"Home":F.k==="list"?"Range trips":(T.name||"Profile");
+    hd='<div class="triphead"><button class="backbtn" type="button" id="tripBack">‹ '+esc(bl)+'</button>'+
+      '<h2 class="triptitle">'+esc(t.date?fmtDate(t.date):"Range trip")+(t.place?' · '+esc(t.place):'')+'</h2>'+
+      '<p class="tripprof">Profile: <button class="linkbtn" type="button" data-tcrumb="prof">'+esc(T.name||"Profile")+' ›</button><button class="linkbtn" type="button" id="tripMove">Change</button></p>'+
+      '<div class="row tripmove" id="tripMoveRow" hidden><label for="tripMoveTo">Move this trip, with its targets, chronograph shots and notes, to</label><select id="tripMoveTo" class="fieldselect"></select><button class="btn primary" id="tripMoveGo" type="button">Move</button><button class="btn" id="tripMoveX" type="button">Cancel</button></div></div>';}
+  h=hd+'<datalist id="dl_place">'+places.map(p=>'<option value="'+esc(p)+'">').join("")+'</datalist>'+
     '<div class="tripcols" id="secTrips" aria-label="Range trip"><div class="tcol">'+sess+
       ttile("details",t,"Trip details",tripDetSum(t),h)+
       ttile("chrono",t,"Chronograph",tripChronoSum(t),chronoBody)+
@@ -12072,7 +12098,10 @@ function renderTrips(){
   {const tc=$("tp_can"),fit=()=>{const b=$("tpCanFit");if(!b)return;const tc2=tripCart(t);b.innerHTML=t.canId?canFitHtml(cans.find(c=>c.id===t.canId),tc2.cart,tc2.gun&&tc2.gun.name):"";};
     fit();if(tc)tc.addEventListener("change",()=>{t.canId=tc.value;t.updated=Date.now();queueTrips();fit();renderChrono();drawTripAll(t);canPing();});
     const tpp=$("tp_part");if(tpp)tpp.addEventListener("change",()=>setTimeout(fit));}
-  $("tripBack").addEventListener("click",()=>{tripOpen=null;tripPhotos=[];renderTrips();window.scrollTo(0,0);});
+  $("tripBack").addEventListener("click",()=>{const F=TRIP_FROM||{k:"prof"};tripOpen=null;tripPhotos=[];
+    if(F.k==="list"){renderTrips();window.scrollTo(0,0);return;}
+    TRIPS_PAGE=false;renderTrips();
+    if(F.k==="log"){showTab("log");requestAnimationFrame(()=>window.scrollTo(0,F.y||0));}else if(F.k==="home"){showTab("home");window.scrollTo(0,0);}else window.scrollTo(0,0);});
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
   $("tripLive").addEventListener("click",()=>{const id=t.id,C=tripCtx(t);
     // already connected for another trip (or none): its shots go to this one now (2.47.9)
@@ -12095,6 +12124,15 @@ function renderTrips(){
     tripsSaving=tripsSaving.then(()=>API.put("/api/doc/trips",{data:{trips:JSON.parse(JSON.stringify(trips))}})).then(()=>{tripsDirty=false;const el=$("tripState");if(el)el.textContent="Saved";});
     tripsSaving.then(()=>{if(ios)RB_PDF(url,"RangeBook-trip-"+String(t.date||"").replace(/[^0-9-]/g,"")+".pdf");else if(w)w.location.href=url;else location.href=url;},e=>{if(w)w.close();onWriteError(e);});
   });
+  // the wrong profile picked for this trip (2.47.11): move it, with everything on it, to another one
+  $("tripMove").addEventListener("click",()=>{const r=$("tripMoveRow"),sel=$("tripMoveTo"),all=((window.RB_TRAJ&&RB_TRAJ.all())||[]).filter(x=>x.id!==t.trajId);
+    if(!all.length){r.hidden=false;r.querySelector("label").textContent="There's no other profile to move it to.";sel.hidden=true;$("tripMoveGo").hidden=true;return;}
+    sel.innerHTML=all.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name||"Profile")+'</option>').join("");r.hidden=!r.hidden;});
+  $("tripMoveX").addEventListener("click",()=>{$("tripMoveRow").hidden=true;});
+  $("tripMoveGo").addEventListener("click",()=>{const to=$("tripMoveTo").value,from=t.trajId;if(!to||to===from)return;
+    t.trajId=to;t.updated=Date.now();queueTrips();const F=TRIP_FROM;RB_TRAJ.open(to);openTrip(t.id,F);
+    const nm=(((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===to)||{}).name||"the other profile";
+    RB_UNDO("Moved the trip to "+nm,()=>{t.trajId=from;t.updated=Date.now();queueTrips();RB_TRAJ.open(from);openTrip(t.id,F);});});
   const del=$("tripDel");
   del.addEventListener("click",()=>{
     const i=trips.indexOf(t);if(window.RB_BTCHRONO)RB_BTCHRONO.detach("trip:"+t.id);trips=trips.filter(x=>x.id!==t.id);tripOpen=null;tripPhotos=[];queueTrips();renderTrips();
@@ -12124,7 +12162,8 @@ function renderTrips(){
   renderTripPhotos();
 }
 window.RB_TARGETS=()=>renderTargets($("targetsRoot"));
-$("tripsGo").addEventListener("click",()=>{TRIPS_PAGE=true;tripOpen=null;tripPhotos=[];renderTrips();window.scrollTo(0,0);});
+// Range trips on a profile (2.47.12): the Range log, showing only this profile's trips
+$("tripsGo").addEventListener("click",()=>{const T=window.RB_TRAJ&&RB_TRAJ.cur();if(!T)return;logProf=T.id;logKind="all";logGun="";showTab("log");window.scrollTo(0,0);});
 $("tripsNew").addEventListener("click",()=>{if(!tripTraj)renderTrips();newTrip();});
 window.RB_TRIPS={
   // opening a profile shows the profile, not its trips page; keep: leave the trips page as it was (2.45)
@@ -12263,7 +12302,7 @@ window.RB_TESTING=(function(){
 })();
 /* ---------- Home: recent trips and loads, rounds fired, and anything that needs attention ---------- */
 /* ---------- range log: range trips + load-development days from Reloading, newest first ---------- */
-let logKind="all",logGun="";
+let logKind="all",logGun="",logProf="";   // logProf (2.47.12): only this profile's range trips
 function logEditing(){const a=document.activeElement;return a&&$("logRoot").contains(a)&&a.tagName==="INPUT"&&a.type!=="search";}
 function logEntries(){
   const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],tm=Object.fromEntries(T.map(t=>[t.id,t]));
@@ -12307,7 +12346,10 @@ function bindLogRanges(){
 function renderLog(){
   const root=$("logRoot");if(!root)return;
   const all=logEntries(),yr=String(new Date().getFullYear());
-  const list=all.filter(e=>(logKind==="all"||e.kind===logKind)&&(!logGun||e.gun===logGun));
+  const PR=((window.RB_TRAJ&&RB_TRAJ.all())||[]);if(logProf&&!PR.some(x=>x.id===logProf))logProf="";
+  const list=all.filter(e=>(logKind==="all"||e.kind===logKind)&&(!logGun||e.gun===logGun)&&(!logProf||(e.kind==="trip"&&e.trajId===logProf)));
+  const LP=logProf?PR.find(x=>x.id===logProf):null,profT=logProf?trips.filter(x=>x.trajId===logProf).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0)):[];
+  const usedProfs=PR.filter(x=>trips.some(t=>t.trajId===x.id));
   const thisYr=all.filter(e=>String(e.date).startsWith(yr));
   const bestYr=thisYr.filter(e=>e.best&&e.best.moa!=null).sort((a,b)=>a.best.moa-b.best.moa)[0];
   const usedGuns=[...new Set(all.map(e=>e.gun).filter(Boolean))].map(id=>rifles.find(r=>r.id===id)).filter(Boolean);
@@ -12315,7 +12357,10 @@ function renderLog(){
     [[new Set(thisYr.map(e=>e.date)).size,"days at the range in "+yr],[thisYr.reduce((a,e)=>a+e.rounds,0),"rounds in "+yr],[thisYr.filter(e=>e.kind==="trip").length,"range trips"],[thisYr.filter(e=>e.kind==="dev").length,"load-development days"]].map(([v,l])=>'<div class="tile"><b>'+v.toLocaleString()+'</b><span>'+l+'</span></div>').join("")+'</div>'+
     (bestYr?'<p class="note">Best group in '+yr+': <b>'+bestYr.best.moa.toFixed(2)+' MOA</b> with '+esc(bestYr.load)+(bestYr.date?' on '+esc(fmtDate(bestYr.date)):'')+'.</p>':'')+'</section>';
   h+=logRangesHtml();
-  h+='<section class="card" aria-label="Range log"><div class="row"><button class="btn primary" id="logNew" type="button">Start a range day</button></div>'+
+  // one profile picked: its groups on one target first, the same card as on the profile (2.47.12)
+  if(LP&&tripsLoaded)h+=profGroupsHtml(LP,profT);
+  h+='<section class="card" aria-label="Range log"><div class="row"><button class="btn primary" id="logNew" type="button">Start a range day</button>'+(LP?'<button class="btn" id="logNewTrip" type="button">+ New range trip with '+esc(LP.name||"this profile")+'</button>':'')+'</div>'+
+    (usedProfs.length>1||LP?'<div class="chips logprof" role="group" aria-label="Profile"><button type="button" class="btn small'+(!LP?' on':'')+'" data-lp="" aria-pressed="'+(!LP)+'">All profiles</button>'+usedProfs.map(x=>'<button type="button" class="btn small'+(x.id===logProf?' on':'')+'" data-lp="'+esc(x.id)+'" aria-pressed="'+(x.id===logProf)+'">'+esc(x.name||"Profile")+'</button>').join("")+'</div>':'')+
     '<div class="chips logkind" role="group" aria-label="Show">'+[["all","All"],["trip","Range trips"],["dev","Load development"]].map(([k,l])=>'<button type="button" class="btn small'+(logKind===k?' on':'')+'" data-lk="'+k+'" aria-pressed="'+(logKind===k)+'">'+l+'</button>').join("")+'</div>'+
     (usedGuns.length>1?'<select id="logGun" class="fieldselect" aria-label="Gun" style="max-width:260px"><option value="">All guns</option>'+RB_GUNOPTS(usedGuns,logGun,esc)+'</select>':'');
   if(!list.length)h+='<p class="note">'+(all.length?'Nothing matches.':'No range days yet. Log a range trip on a Shooting profile, or shoot groups for a Reloading load, and they show up here.')+'</p>';
@@ -12336,10 +12381,13 @@ function renderLog(){
   bindLogRanges();
   if(window.RB_FILTER)RB_FILTER(root.querySelector('[aria-label="Range log"]'),"log",1);
   $("logNew").addEventListener("click",()=>{homePick=true;showTab("home");});
+  root.querySelectorAll("[data-lp]").forEach(b=>b.addEventListener("click",()=>{logProf=b.dataset.lp;if(logProf)logKind="all";renderLog();}));
+  {const nt=$("logNewTrip");if(nt)nt.addEventListener("click",()=>{const id=logProf;showTab("traj");RB_TRAJ.open(id);TRIP_NEXT={k:"log",y:0};newTrip();});}
+  if(LP)bindProfGroups(LP,profT);
   root.querySelectorAll("[data-lk]").forEach(b=>b.addEventListener("click",()=>{logKind=b.dataset.lk;renderLog();}));
   {const gs=$("logGun");if(gs)gs.addEventListener("change",()=>{logGun=gs.value;renderLog();});}
   root.querySelectorAll("[data-log]").forEach(b=>b.addEventListener("click",()=>{const [k,id]=b.dataset.log.split(/:(.*)/);
-    if(k==="trip"){const t=trips.find(x=>x.id===id);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}
+    if(k==="trip"){const t=trips.find(x=>x.id===id);if(!t)return;const y=window.scrollY;showTab("traj");RB_TRAJ.open(t.trajId);openTrip(t.id,{k:"log",y});}
     else{const d=b.dataset.ld||"",L0=loads.get(id),lad=L0&&ensureLadders(L0).find(l=>(l.tested||"")===d);if(lad){relLad[id]=lad.id;if(LADFOLD[lad.id]){delete LADFOLD[lad.id];saveLadFold();}}
       showTab("rel");openLoad(id);setTimeout(()=>{const g=$("secGroups");if(g){const fb=g.querySelector(":scope>.sechead[aria-expanded='false']");if(fb)fb.click();const t=(lad&&$("lad_"+lad.id))||g;t.scrollIntoView({block:"start"});}},150);}}));
 }
@@ -12509,7 +12557,7 @@ function renderHome(){
 
   {const sa=$("hSeeLog");if(sa)sa.addEventListener("click",()=>showTab("log"));}
   root.querySelectorAll("[data-hpick]").forEach(b=>b.addEventListener("click",()=>{const t0=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===b.dataset.hpick);if(t0&&homePick&&t0.rifleId===homePick.gun)dayPart(t0.id);RB_TRAJ.open(b.dataset.hpick);startDay();}));
-  root.querySelectorAll("[data-htrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.htrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id);}));
+  root.querySelectorAll("[data-htrip]").forEach(b=>b.addEventListener("click",()=>{const t=trips.find(x=>x.id===b.dataset.htrip);if(!t)return;RB_TRAJ.open(t.trajId);openTrip(t.id,{k:"home"});}));
   root.querySelectorAll("[data-hload]").forEach(b=>b.addEventListener("click",()=>{showTab("rel");openLoad(b.dataset.hload);}));
   root.querySelectorAll("[data-hgo]").forEach(b=>b.addEventListener("click",()=>{const [k,a,c]=b.dataset.hgo.split(":");
     if(k==="rifle"){showTab("rifles");gunArea="guns";ammoOpen=null;rifleOpen=a;renderRifles();window.scrollTo(0,0);}
