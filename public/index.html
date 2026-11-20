@@ -1141,7 +1141,11 @@ table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))
 .sgopen{display:flex;flex-direction:column;gap:10px}
 .sghead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sghead b{font-size:calc(17px*var(--fs))}.sgtog{margin-left:auto}
 .sgmode{display:inline-flex;margin-left:auto}
-.sgact{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--sunk)}
+.sgzoom{display:flex;align-items:center;gap:10px;max-width:440px;margin:10px auto 0;font-size:calc(14px*var(--fs))}
+.sgzoom input{flex:1}
+.sgzoom b{min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
+.sghint{max-width:440px;margin:4px auto 0;text-align:center}
+.sgact{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px auto 0;max-width:440px;padding:10px 12px;border-radius:10px;background:var(--sunk)}
 .sgact[hidden]{display:none}
 .sgact .btn.danger{color:#c8402f}
 .sgmode+.sgtog{margin-left:0}
@@ -11392,21 +11396,27 @@ function inv3(m){const [a,b,c,d,e,f,g,h,i]=m,A=e*i-f*h,B=f*g-d*i,C=d*h-e*g,det=a
   return [A/det,(c*h-b*i)/det,(b*f-c*e)/det,B/det,(a*i-c*g)/det,(c*d-a*f)/det,C/det,(b*g-a*h)/det,(a*e-b*d)/det];}
 // can this group be shown on its photo? (a Live target photo: it knows where the page is, and the aim point)
 function sgPhotoOk(G){const p=G.ph,M=p&&normMeasure(p.measure);return !!(M&&Array.isArray(M.H)&&M.H.length===9&&G.grp&&G.grp.aim&&p.url&&p.w&&p.h&&!String(p.id).startsWith("tmp-"));}
-function sgPhotoMake(G,R,S,done){
-  const key=G.key+"@"+R.toFixed(3);if(SG_IMG.has(key))return;SG_IMG.set(key,{loading:true});
+// what the big picture shows (2.47.9): all the shots around the aim point, or zoomed in on the middle of the group
+const SG_ZOOM={};
+function sgView(G){const z=SG_ZOOM[G.key]||1,R0=sgR(G);if(z<=1)return {R:R0,cx:0,cy:0,z:1};
+  const med=a=>{const b=[...a].sort((x,y)=>x-y),n=b.length;return n%2?b[n>>1]:(b[n/2-1]+b[n/2])/2;};
+  return {R:Math.max(.5,R0/z),cx:med(G.pts.map(q=>q[0])),cy:med(G.pts.map(q=>q[1])),z};}
+const sgVKey=(G,V)=>G.key+"@"+V.R.toFixed(3)+","+V.cx.toFixed(3)+","+V.cy.toFixed(3);
+function sgPhotoMake(G,V,S,done){
+  const R=V.R,key=sgVKey(G,V);if(SG_IMG.has(key))return;SG_IMG.set(key,{loading:true});
   const p=G.ph,M=normMeasure(p.measure),im=new Image();
   im.onload=()=>{try{
     const IW=im.naturalWidth,IH=im.naturalHeight,fx=IW/p.w,fy=IH/p.h,c=document.createElement("canvas");c.width=IW;c.height=IH;const cx=c.getContext("2d",{willReadFrequently:true});cx.drawImage(im,0,0);
     const D=cx.getImageData(0,0,IW,IH).data,Hi=inv3(M.H);if(!Hi)throw 0;
     const A=applyH(M.H,G.grp.aim[0]*p.w,G.grp.aim[1]*p.h),N=Math.round(S*2),k=N/(2*R),o=document.createElement("canvas");o.width=N;o.height=N;
     const ox=o.getContext("2d"),out=ox.createImageData(N,N),O=out.data;
-    for(let v=0;v<N;v++){const y=(N/2-v-.5)/k;for(let u=0;u<N;u++){const x=(u+.5-N/2)/k,q=applyH(Hi,A[0]+x,A[1]-y),sx=q[0]*fx-.5,sy=q[1]*fy-.5,j=(v*N+u)*4;
+    for(let v=0;v<N;v++){const y=(N/2-v-.5)/k+V.cy;for(let u=0;u<N;u++){const x=(u+.5-N/2)/k+V.cx,q=applyH(Hi,A[0]+x,A[1]-y),sx=q[0]*fx-.5,sy=q[1]*fy-.5,j=(v*N+u)*4;
       const x0=Math.floor(sx),y0=Math.floor(sy);if(x0<0||y0<0||x0>=IW-1||y0>=IH-1){O[j]=O[j+1]=O[j+2]=40;O[j+3]=255;continue;}
       const ax=sx-x0,ay=sy-y0,i0=(y0*IW+x0)*4,i1=i0+4,i2=i0+IW*4,i3=i2+4;
       for(let ch=0;ch<3;ch++)O[j+ch]=(D[i0+ch]*(1-ax)+D[i1+ch]*ax)*(1-ay)+(D[i2+ch]*(1-ax)+D[i3+ch]*ax)*ay;O[j+3]=255;}}
     ox.putImageData(out,0,0);SG_IMG.set(key,{url:o.toDataURL("image/jpeg",.86)});}catch(e){SG_IMG.set(key,{fail:true});}done();};
   im.onerror=()=>{SG_IMG.set(key,{fail:true});done();};im.src=p.url;}
-const sgPhotoGet=(G,R)=>SG_IMG.get(G.key+"@"+R.toFixed(3))||null;
+const sgPhotoGet=(G,V)=>SG_IMG.get(sgVKey(G,V))||null;
 /* tags on a photo: a dark pill with the shot number in a dot of its color and the velocity, put where it covers no other hole
    or tag (nearest free spot first), with a thin line back to its hole when it had to go further out */
 function sgTags(P,S,hr,extra){const boxes=P.map(q=>({x:q.x-hr,y:q.y-hr,w:2*hr,h:2*hr})).concat(extra||[]),hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;
@@ -11421,12 +11431,14 @@ function sgTags(P,S,hr,extra){const boxes=P.map(q=>({x:q.x-hr,y:q.y-hr,w:2*hr,h:
       '<text x="'+(b.x+10)+'" y="'+(b.y+14.5)+'" text-anchor="middle" font-size="12" font-weight="800" fill="'+(dark?"#111":"#fff")+'">'+q.n+'</text>'+
       (q.v!=null?'<text x="'+(b.x+22)+'" y="'+(b.y+14.5)+'" font-size="13" font-weight="700" fill="#fff">'+q.v+'</text>':'');});
   return h;}
-function sgPlot(G,st,o){const S=o.size,P=G.pts,R=sgR(G),k=S/(2*R),X=x=>S/2+x*k,Y=y=>S/2-y*k,small=!!o.small,dr=Math.max(small?2:3,G.dia/2*k);
+function sgPlot(G,st,o){const V=o.view||{R:sgR(G),cx:0,cy:0},S=o.size,P=G.pts,R=V.R,k=S/(2*R),X=x=>S/2+(x-V.cx)*k,Y=y=>S/2-(y-V.cy)*k,small=!!o.small,dr=Math.max(small?2:3,G.dia/2*k),RR=R*1.02+Math.hypot(V.cx,V.cy);
+  // a bigger, invisible spot over each hole, to tap or drag it
+  const hits=small?'':P.map((q,i)=>'<circle class="sghit" data-sgh="'+i+'" cx="'+X(q[0])+'" cy="'+Y(q[1])+'" r="'+Math.max(dr+4,16)+'" fill="transparent"/>').join("");
   if(o.photo&&!small){
     let s='<svg class="sgsvg sgphoto" viewBox="0 0 '+S+' '+S+'" role="img" aria-label="'+esc(G.name)+' on the target photo: '+P.length+' shots'+(st.size!=null?', '+esc(U.s("in",st.size,2))+' group':'')+'">';
     s+='<defs><clipPath id="sgclip"><rect width="'+S+'" height="'+S+'" rx="10"/></clipPath></defs><g clip-path="url(#sgclip)"><image href="'+o.photo+'" x="0" y="0" width="'+S+'" height="'+S+'" preserveAspectRatio="none"/>';
-    for(let r=1;r<=R*1.02;r+=1)s+='<circle cx="'+X(0)+'" cy="'+Y(0)+'" r="'+(r*k)+'" fill="none" stroke="#fff" stroke-opacity=".55" stroke-dasharray="2 4"/>';
-    const lab=[];for(let r=1;r<=R*1.02;r+=1)lab.push(r);
+    for(let r=1;r<=RR;r+=1)s+='<circle cx="'+X(0)+'" cy="'+Y(0)+'" r="'+(r*k)+'" fill="none" stroke="#fff" stroke-opacity=".55" stroke-dasharray="2 4"/>';
+    const lab=[];for(let r=1;r<=RR;r+=1){const lx=X(r*.71),ly=Y(r*.71);if(lx>4&&lx<S-40&&ly>16&&ly<S-4)lab.push(r);}
     lab.forEach(r=>s+='<text x="'+(X(r*.71)+3)+'" y="'+(Y(r*.71)-3)+'" font-size="11" fill="#fff" stroke="#000" stroke-opacity=".45" stroke-width="2.5" paint-order="stroke">'+esc(+U.n("in",2*r,U.metric?1:2)+" "+U.u("in"))+'</text>');
     if(!SG_CLEAN&&st.size!=null)s+='<circle cx="'+X(st.mid[0])+'" cy="'+Y(st.mid[1])+'" r="'+(st.size/2*k)+'" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="5 4"/>';
     if(!SG_CLEAN&&P.length>1)s+='<path d="M'+(X(st.c[0])-6)+' '+Y(st.c[1])+'h12M'+X(st.c[0])+' '+(Y(st.c[1])-6)+'v12" stroke="#000" stroke-opacity=".5" stroke-width="4"/><path d="M'+(X(st.c[0])-6)+' '+Y(st.c[1])+'h12M'+X(st.c[0])+' '+(Y(st.c[1])-6)+'v12" stroke="#fff" stroke-width="2"/>';
@@ -11434,9 +11446,9 @@ function sgPlot(G,st,o){const S=o.size,P=G.pts,R=sgR(G),k=S/(2*R),X=x=>S/2+x*k,Y
     pts.forEach((q,i)=>s+='<circle cx="'+q.x+'" cy="'+q.y+'" r="'+hr+'" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="4.5"/><circle data-sgk="'+i+'" cx="'+q.x+'" cy="'+q.y+'" r="'+hr+'" fill="none" stroke="'+(q.v==null?"#fff":q.c)+'" stroke-width="2.5"/>');
     s+='<circle class="sghl" cx="0" cy="0" r="'+(hr+5)+'" fill="none" stroke="#fff" stroke-width="2.5" visibility="hidden"/>';
     s+=sgTags(pts,S,hr,lab.map(r=>({x:X(r*.71)+1,y:Y(r*.71)-15,w:40,h:15})));
-    return s+'</g></svg>';}
-  const rings=[];for(let r=1;r<=R*1.02;r+=.5)rings.push(r);
-  const lab=small?[]:rings.filter(r=>rings.length<7||r%1===0);
+    return s+hits+'</g></svg>';}
+  const rings=[];for(let r=1;r<=RR;r+=.5)rings.push(r);
+  const lab=small?[]:rings.filter(r=>(rings.length<7||r%1===0)&&X(r*.71)>4&&X(r*.71)<S-30&&Y(r*.71)>16&&Y(r*.71)<S-4);
   let s='<svg class="sgsvg'+(small?' small':'')+'" viewBox="0 0 '+S+' '+S+'"'+(small?' width="'+S+'" height="'+S+'"':'')+' role="img" aria-label="'+esc(G.name)+': '+P.length+' shots'+(st.size!=null?', '+esc(U.s("in",st.size,2))+' group':'')+'">';
   s+='<rect width="'+S+'" height="'+S+'" rx="10" fill="var(--sunk)"/>';
   rings.forEach(r=>s+='<circle cx="'+X(0)+'" cy="'+Y(0)+'" r="'+(r*k)+'" fill="none" stroke="var(--line)" stroke-width="1"/>');
@@ -11455,7 +11467,7 @@ function sgPlot(G,st,o){const S=o.size,P=G.pts,R=sgR(G),k=S/(2*R),X=x=>S/2+x*k,Y
     s+='<circle class="sghl" cx="0" cy="0" r="'+(dr+5)+'" fill="none" stroke="var(--fg)" stroke-width="2.5" visibility="hidden"/>';
     L.forEach((l,i)=>{if(l)s+='<text x="'+(l.x+2)+'" y="'+(l.y+l.h-3)+'" font-size="'+FS+'" font-weight="700" class="sgv" fill="'+pts[i].c+'" stroke="var(--sunk)" stroke-width="3" paint-order="stroke">'+esc(l.t)+'</text>';});}
   else{pts.forEach(p=>s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+dr+'" fill="'+p.c+'" stroke="var(--surface)" stroke-width="1"/>');s+=cross;}
-  return s+'</svg>';}
+  return s+hits+'</svg>';}
 // the scope on the trip's gun (its barrel or upper's, if it has one), for clicks
 function tripScope(){const T=tripTraj;if(!T||!T.rifleId)return null;const g=rifles.find(r=>r.id===T.rifleId);if(!g)return null;
   const sp=gunSpec(g)||g,bp=T.partId&&partById(T.partId),id=(bp&&bp.scopeId)||sp.scopeId;return id?scopes.find(x=>x.id===id)||null:null;}
@@ -11473,6 +11485,14 @@ function sgLoose(t,GS,refs){const left=new Map();GS.forEach(G=>G.pts.forEach(q=>
     const hit=[r,r-1,r+1].find(q=>left.get(q)>0);if(hit!=null)left.set(hit,left.get(hit)-1);else{out.push(r);if(refs)refs.push([x,i]);}});});
   if(refs&&!GS.some(G=>G.pts.some(q=>q[2]>0)))refs.length=0;
   return GS.some(G=>G.pts.some(q=>q[2]>0))?out:[];}
+// move one shot of a Live target group to (x, y) inches from its aim point, keeping its velocity (2.47.9)
+function sgMoveShot(G,k,x,y){const p=G.ph,M=normMeasure(p.measure),g=G.grp;if(!M||!Array.isArray(M.H)||!g||!g.aim||!(k>=0&&k<(g.shots||[]).length))return;
+  const Hi=inv3(M.H);if(!Hi)return;const A=applyH(M.H,g.aim[0]*p.w,g.aim[1]*p.h),q=applyH(Hi,A[0]+x,A[1]-y),txt0=measureText(p.measure,null);
+  g.shots[k]=[+(q[0]/p.w).toFixed(5),+(q[1]/p.h).toFixed(5)];
+  if(Array.isArray(g.hin)&&g.hin.length===g.shots.length){const P=applyH(M.H,g.shots[k][0]*p.w,g.shots[k][1]*p.h);g.hin[k]=[+(P[0]-A[0]).toFixed(3),+(A[1]-P[1]).toFixed(3)];}
+  const r=computeGroup(M,g,p.w,p.h),f=v=>v!=null?+v.toFixed(3):null;Object.assign(g,{size:f(r.size),moa:f(r.moa),mr:f(r.mr),dx:f(r.dx),dy:f(r.dy)});
+  const body={measure:p.measure},txt=measureText(p.measure,null);if(!p.caption||p.caption===txt0){p.caption=txt;body.caption=txt;}
+  API.patch("/api/photos/"+p.id,body).catch(onWriteError);renderTripPhotos();}
 // delete one shot from a Shot groups group: from its photo's measurement, with its velocity, saved straight away (2.47.9)
 function sgDelShot(G,k){const p=G.ph,M=normMeasure(p.measure),g=G.grp;if(!M||!g||!(k>=0&&k<(g.shots||[]).length))return;
   const txt0=measureText(p.measure,null);g.shots.splice(k,1);if(Array.isArray(g.hin))g.hin.splice(k,1);if(Array.isArray(g.vel))g.vel.splice(k,1);
@@ -11497,19 +11517,21 @@ function drawShotGroups(t){const box=$("tripSG");if(!box)return;const GS=tripSho
   const LR=[],G=GS.find(x=>x.key===cur),st=sgStats(G),dial=sgDial(st,G.d),hasV=st.va!=null,loose=sgLoose(t,GS,LR);
   const f=v=>U.s("fps",v,0);
   let h='<h3>Shot groups</h3><div class="sgstrip" role="group" aria-label="Groups">'+GS.map(x=>{const s2=sgStats(x);return '<button type="button" class="sgcell" data-sg="'+esc(x.key)+'" aria-pressed="'+(x.key===cur)+'">'+sgPlot(x,s2,{size:84,small:true})+'<b>'+esc(x.name)+'</b><span class="num">'+(s2.size!=null?esc(U.s("in",s2.size,2)):x.pts.length+' shot'+(x.pts.length===1?'':'s'))+(s2.va!=null?' · '+esc(U.n("fps",s2.va,0)):'')+'</span></button>';}).join("")+'</div>';
-  const phOk=sgPhotoOk(G),R0=sgR(G),pc=phOk&&SG_PHOTO?sgPhotoGet(G,R0):null;
-  if(phOk&&SG_PHOTO&&!pc)sgPhotoMake(G,R0,440,()=>{if(tripOpen===t.id&&SG_PICK[t.id]===G.key)drawShotGroups(t);});
+  const phOk=sgPhotoOk(G),V=sgView(G),pc=phOk&&SG_PHOTO?sgPhotoGet(G,V):null;
+  if(phOk&&SG_PHOTO&&!pc)sgPhotoMake(G,V,440,()=>{if(tripOpen===t.id&&SG_PICK[t.id]===G.key)drawShotGroups(t);});
   h+='<div class="sgopen"><div class="sghead"><b>'+esc(G.name)+'</b><span class="note">'+G.pts.length+' shot'+(G.pts.length===1?'':'s')+' at '+esc(U.s("yd",G.d,0))+'</span>'+
     (phOk?'<span class="sgmode" role="group" aria-label="Show as"><button type="button" class="btn small" data-sgm="0" aria-pressed="'+(!SG_PHOTO)+'">Chart</button><button type="button" class="btn small" data-sgm="1" aria-pressed="'+SG_PHOTO+'">Photo</button></span>':'')+
     '<button type="button" class="btn small sgtog" id="sgClean" aria-pressed="'+(!SG_CLEAN)+'">'+(SG_CLEAN?'Show':'Hide')+' circle and center</button></div>'+
-    '<div class="sgbody"><div class="sgplot">'+(pc&&pc.url?sgPlot(G,st,{size:440,photo:pc.url}):sgPlot(G,st,{size:440})+(phOk&&SG_PHOTO&&(!pc||pc.loading)?'<p class="note sgwait">Cutting the group out of the photo…</p>':pc&&pc.fail?'<p class="note">Couldn\'t load the photo for this group.</p>':''))+'</div><div class="sgright">'+
+    '<div class="sgbody"><div class="sgplot">'+(pc&&pc.url?sgPlot(G,st,{size:440,photo:pc.url,view:V}):sgPlot(G,st,{size:440,view:V})+(phOk&&SG_PHOTO&&(!pc||pc.loading)?'<p class="note sgwait">Cutting the group out of the photo…</p>':pc&&pc.fail?'<p class="note">Couldn\'t load the photo for this group.</p>':''))+'<label class="sgzoom"><span>Zoom</span><input type="range" id="sgZoom" min="1" max="8" step="0.5" value="'+V.z+'"><b id="sgZoomV">'+(V.z>1?V.z+'×':'All shots')+'</b></label>'+
+    (phOk?'<p class="note sghint">Drag a shot to move it; tap it to delete it.</p>':'')+
+    '<div class="sgact" id="sgAct" role="group" aria-label="Picked shot" hidden></div></div><div class="sgright">'+
     '<dl class="sgstats"><div><dt>Group</dt><dd>'+(st.size!=null?esc(U.s("in",st.size,2)):'–')+'</dd></div><div><dt>Average</dt><dd>'+(hasV?esc(U.s("fps",st.va,0)):'–')+'</dd></div><div><dt>SD</dt><dd>'+(st.vsd!=null?esc(U.s("fps",st.vsd,1)):'–')+'</dd></div><div><dt>ES</dt><dd>'+(st.ves!=null?esc(U.s("fps",st.ves,0)):'–')+'</dd></div></dl>'+
     (hasV?'<div class="sglegend"><span>Slower</span><span class="sggrad"></span><span>Faster</span></div>':'')+
     (hasV?'<table class="sgtbl"><thead><tr><th>Shot</th><th class="r">'+esc(U.u("fps"))+'</th><th class="r">vs. avg</th></tr></thead><tbody>'+G.pts.map((q,j)=>{const dv=q[2]>0?Math.round(U.n("fps",q[2]-st.va,0)):null;return '<tr data-sgrow="'+j+'" tabindex="0"><td class="num">'+(j+1)+'</td><td class="r"><span class="sgv"><i style="background:'+sgHeat(q[2],st)+'"></i>'+(q[2]>0?esc(U.n("fps",q[2],0)):'–')+'</span></td><td class="r num">'+(dv==null?'':(dv>0?'+':'')+dv)+'</td></tr>';}).join("")+'</tbody></table>':'')+
     '</div></div>'+
     '<div class="sgside">'+(hasV?'':'<p class="note">No velocities on this group. With the Athlon connected, Live target puts each shot\'s velocity on its hole.</p>')+
     (G.pts.length?'<div class="sgdial"><span>To center this group on the aim point</span><b>'+esc(dial.big)+'</b><span>'+esc(dial.small)+'</span></div>':'')+
-    '</div></div><div class="sgact" id="sgAct" role="group" aria-label="Picked shot" hidden></div>';
+    '</div></div>';
   if(loose.length)h+='<p class="note sgloose">Not on a target: '+loose.map(v=>esc(f(v))).join(", ")+'. <button type="button" class="linkbtn" id="sgLooseX">Remove '+(loose.length===1?'it':'these '+loose.length)+' from the trip</button></p>';
   // keep the row of small pictures scrolled where it was (2.47.7)
   const sx=(box.querySelector(".sgstrip")||{}).scrollLeft||0;
@@ -11530,7 +11552,18 @@ function drawShotGroups(t){const box=$("tripSG");if(!box)return;const GS=tripSho
     box.querySelectorAll("[data-sgrow]").forEach(r=>{const k=+r.dataset.sgrow;
       r.addEventListener("mouseenter",()=>show(k));r.addEventListener("mouseleave",()=>show(pin));
       r.addEventListener("click",()=>tog(k));r.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tog(k);}});});
-    if(svg)svg.querySelectorAll("[data-sgk]").forEach(c=>{c.style.cursor="pointer";c.style.pointerEvents="all";c.addEventListener("click",()=>tog(+c.dataset.sgk));});}
+    // a hole: tap to pick it (Delete shot), drag to move it to where it really is (a Live target photo only), saved on letting go
+    if(svg)svg.querySelectorAll("[data-sgh]").forEach(c=>{const k=+c.dataset.sgh;c.style.cursor=phOk?"grab":"pointer";c.style.touchAction="none";let d=null;
+      const at=e=>{const m=svg.getScreenCTM();if(!m)return [0,0];const q=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());return [q.x,q.y];};
+      c.addEventListener("pointerdown",e=>{e.preventDefault();try{c.setPointerCapture(e.pointerId);}catch(x){}d={p0:at(e),x0:+c.getAttribute("cx"),y0:+c.getAttribute("cy"),moved:false};});
+      c.addEventListener("pointermove",e=>{if(!d)return;const p=at(e),dx=p[0]-d.p0[0],dy=p[1]-d.p0[1];if(!d.moved&&Math.hypot(dx,dy)<5)return;if(!phOk)return;d.moved=true;
+        const nx=d.x0+dx,ny=d.y0+dy;c.setAttribute("cx",nx);c.setAttribute("cy",ny);svg.querySelectorAll('[data-sgk="'+k+'"]').forEach(o=>{o.setAttribute("cx",nx);o.setAttribute("cy",ny);});
+        if(act&&!act.hidden){act.hidden=true;}});
+      const up=()=>{if(!d)return;const D=d;d=null;if(!D.moved){tog(k);return;}
+        const S=440,kk=S/(2*V.R),x=(+c.getAttribute("cx")-S/2)/kk+V.cx,y=(S/2-+c.getAttribute("cy"))/kk+V.cy;sgMoveShot(G,k,x,y);};
+      c.addEventListener("pointerup",up);c.addEventListener("pointercancel",()=>{d=null;drawShotGroups(t);});});}
+  {const z=$("sgZoom");if(z){z.addEventListener("input",()=>{const v=+z.value;$("sgZoomV").textContent=v>1?v+"×":"All shots";});
+    z.addEventListener("change",()=>{SG_ZOOM[G.key]=+z.value;drawShotGroups(t);});}}
   {const lx=$("sgLooseX");if(lx)lx.addEventListener("click",()=>arm(lx,"sgloose"+t.id,"Tap again to remove "+(LR.length===1?"it":"all "+LR.length),()=>{
     // from the chronograph strings, last first so the places stay right; empty strings go too
     [...LR].sort((a,b)=>b[1]-a[1]).forEach(([x,i])=>x.shots.splice(i,1));t.strings=(t.strings||[]).filter(x=>!x.chrono||(x.shots||[]).some(v=>v!=null));
