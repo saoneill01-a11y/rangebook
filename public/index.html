@@ -1142,6 +1142,8 @@ table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))
 .sghead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sghead b{font-size:calc(17px*var(--fs))}.sgtog{margin-left:auto}
 .sgmode{display:inline-flex;margin-left:auto}
 .tripmove{flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.profallwin .infosheet{max-width:760px;max-height:92vh}
+.profallwin .card{box-shadow:none;margin:10px 0 0}
 body.tripspage #trajBack{display:none!important}
 .triphead{margin:0 0 14px}
 .triphead .backbtn{margin-bottom:6px}
@@ -1489,15 +1491,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <p class="sub" id="trajSub">Bullet path for your point-blank zero and up to three more. Everything updates as you type.</p>
   </header>
 
-  <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="false">Range log</button></div>
+  <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="false">Range log</button><button type="button" class="arealink" data-gorg>Ranges ›</button></div>
   <div id="trajList"></div>
   <div id="trajDetail" hidden>
   <div class="banner twistbanner" id="trajFit" role="alert" hidden></div>
   <div class="banner twistbanner" id="trajTwist" role="note" hidden></div>
   <div class="banner twistbanner" id="trajPart" role="note" hidden></div>
   <div class="banner samplebanner" id="trajSample" role="note" hidden><b>Sample data.</b> This profile is a made-up example to show how Range Book works. Its velocity and conditions are not real load data. Don't load or shoot anything from it without checking it against a current published load manual for your exact components, and work up safely on your own. Delete it whenever you like.</div>
-  <div class="row tripsbar" id="tripsBar"><button class="btn primary" id="tripsGo" type="button">Range trips</button><button class="btn" id="tripsNew" type="button">+ New range trip</button></div>
-  <div id="profTripCards"></div>
+  <div class="row tripsbar" id="tripsBar"><button class="btn primary" id="tripsGo" type="button">Range trips</button><button class="btn" id="tripsNew" type="button">+ New range trip</button><button class="btn" id="tripsAll" type="button">All groups</button></div>
   <div class="cols tcols">
   <div class="col colL">
   <section class="card" aria-label="Inputs" id="secTInputs">
@@ -1762,7 +1763,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Save the places you shoot under <a class=goto href=#go data-go=rifles:ranges>Gear &amp; Ranges › Ranges</a>: tap <b>+ New range</b>, give it a name, its address, its usual temperature and altitude and any notes, and add each target with its distance, angle (up or down, in degrees) and size if you like. Changes save as you type. Under <b>Dope</b>, pick a Shooting profile to see the dial and wind for every target with it; the size column shows each target in MOA or MIL, so you can see how much room you have, and <b>Use these conditions</b> sets that profile's temperature and altitude to the range's usual ones. The <b>Range log</b> has a <b>Saved ranges</b> card: pick a range and a Shooting profile there to see the same thing for that profile, and <b>Edit ranges ›</b> takes you to the range. Range names show up under <b>Where</b> on range trips.</p>
       <p>A range's targets are listed nearest first. If you walk or shoot them in another order, drag <b>⠿</b> beside a target to move it; the dope follows your order. <b>Sort by distance</b> puts them back nearest first.</p>
       <h3>A range's address and weather</h3>
-      <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>. Range Book shows what it found (up to five places, each with <b>See it on a map</b>) and asks which one is right: tap <b>Yes, use it</b> or <b>Use this one</b> and the full address goes into the Address box; <b>No</b> keeps what you had. Or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then tap <b>Get today's weather</b> on the range's <b>Weather</b> card to see today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there (tap <b>Refresh</b> later for the latest). Above the weather are <b>sunrise and sunset</b> for today and tomorrow, worked out on your phone (no signal needed), in the range's own time zone once you've looked up its weather (with the zone shown, like MDT, when it isn't your phone's). A range trip at a saved range, or one where you tapped the weather button, shows sunrise and sunset for the trip's date too. These are just the times: Range Book doesn't say when shooting or hunting is allowed, so check your local rules. Under <b>Dope</b>, and on the Range log's <b>Saved ranges</b> card, <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
+      <p>Type a range's <b>Address</b> (a street address, or the range's name and town) and tap <b>Find on the map</b>. Range Book shows what it found (up to five places, each with <b>See it on a map</b>) and asks which one is right: tap <b>Yes, use it</b> or <b>Use this one</b> and the full address goes into the Address box; <b>No</b> keeps what you had. Or tap <b>I'm here now</b> while you're standing at it. Range Book saves the spot, the ground's elevation (and puts it in <b>Altitude</b> if that's empty), and an <b>Open in Maps</b> link for directions. Then tap <b>Get today's weather</b> on the range's <b>Weather</b> card to see today's temperature, humidity, dew point, air pressure, pressure altitude, density altitude, elevation and wind there (tap <b>Refresh</b> later for the latest). Above the weather are <b>sunrise and sunset</b> for today and tomorrow, worked out on your phone (no signal needed), in the range's own time zone once you've looked up its weather (with the zone shown, like MDT, when it isn't your phone's). A range trip at a saved range, or one where you tapped the weather button, shows sunrise and sunset for the trip's date too. These are just the times: Range Book doesn't say when shooting or hunting is allowed, so check your local rules. Under <b>Dope</b>, and on a range in <b>Gear &amp; Ranges › Ranges</b> (<b>Ranges ›</b> next to Range log on Shooting goes there), <b>Use today's weather here</b> puts that weather on the profile. On a range trip whose <b>Where</b> is a saved range with an address, the weather button gets the weather at that range (no location needed); when you start a range day near a saved range, <b>Where</b> is filled in for you. The address is looked up with OpenStreetMap and the weather comes from Open-Meteo: only the address or the spot's coordinates are sent, never your name or account.</p>
       <h3>Put the cards in your order</h3>
       <p><b>Arrange profile cards</b>, in <a class=goto href=#go data-go=account:layout>Account › Layout</a>, lets you drag the cards (Inputs, Conditions, Bullet path, Point-blank range, Range table, True up velocity, Dope card &amp; reticle, Saved ranges) into the order you want, for example the dope card first. It's one order for every profile and the Tools trajectory calculator, and the links along the top follow it. On a big screen, Inputs and Conditions keep the left column and the rest the right, each in your order. <b>Usual order</b> puts them back.</p>
       <h3>The inputs fold up on a phone</h3>
@@ -1771,7 +1772,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Every profile has a <b>Range trips</b> button at the top: it opens the <b>Range log</b> showing only that profile's trips (tap <b>All profiles</b> for everything), with <b>+ New range trip</b>; <b>+ New range trip</b> on the profile starts one too. Tapping a trip opens it on its own page. Its title is the date and place; under it, <b>Profile:</b> opens the profile and <b>Change</b> moves the trip, with its targets, chronograph shots and notes, to another profile (for when the wrong one was picked). The one <b>‹</b> button at the top goes back where you came from: the Range log (to the same place in the list), Home, or the profile. On the left, a bar of big buttons for the bench (<b>Connect Athlon</b>, <b>Live target</b> and <b>+ Photo</b>), then cards that fold up when you tap their title: <b>Trip details</b>, <b>Chronograph</b>, <b>Targets</b> and <b>Cold-bore shot</b>. A folded card shows a one-line summary (Trip details shows the date and place, and folds by itself once both are filled in). On the right, the profile's <b>Dope card &amp; reticle</b>, worked out for the trip's weather: its temperature, the air pressure from <b>Use the weather…</b>, and the wind (put "from 3 o'clock" in <b>Wind</b> for its direction). Anything the trip doesn't have comes from the profile, and nothing on the profile changes. On a phone it comes after the other cards. <b>Import chronograph file</b> and <b>+ Type in shots</b> are under <b>More</b> on the Chronograph card. The path at the top (profile › Range trips › date) takes you back. In <b>Trip details</b>, fill in what you like: date, where, distance, rounds fired, temperature, wind, average velocity and SD, and notes. <b>Use the weather where I am</b> fills in the temperature and wind, and notes the humidity, air pressure, density altitude and elevation (they're on the trip report too). If <b>Where</b> is one of your saved ranges with an address, the button says <b>Use the weather at</b> that range and uses its spot; if you're near a saved range and <b>Where</b> is empty, it fills it in. <b>Import chronograph file</b> reads the same RangeCraft, Garmin Xero, MagnetoSpeed and LabRadar files as Reloading; each string is kept with its shots, average, SD and ES, and the trip's average velocity and SD are worked out from all of them (tap <b>Remove</b> on a string you don't want). Add target photos and tap one to measure its groups, the same way as in Reloading; printed Range Book targets are read by themselves. <b>Print a target</b> at the bottom of the Targets card opens the printable targets in Tools, set up for the trip: the trip's load, date, distance and gun go at the top of every target you print there (change any of them first, or tick <b>Print blank</b>), and <b>‹ Back to the trip</b> takes you back. The trip list shows the best group from each trip and how many rounds you've logged. If you enter an average velocity, a button lets you make it this profile's muzzle velocity. <b>Print trip report</b> at the bottom of a trip opens a PDF with the details, notes, chronograph strings and target photos with the groups drawn on, ready to print or save. You don't need a reloading load for any of this, so it works just as well for factory ammo. Your Reloading photos and data stay where they are. In <b>Chronograph</b>, each string shows its shots in numbered boxes, the same as a group in Reloading. Type over a shot to fix it, or empty its box to delete it (Undo brings it back). Typed-in strings have <b>+ Shot</b> to add one. The average, SD and ES update, and <b>Undo</b> puts them back. To type velocities in yourself, tap <b>+ Type in shots</b> for a new string with 5 boxes.</p>
       <h3>All your groups</h3>
       <p>Once a range trip has two or more measured groups, its <b>Targets</b> section shows <b>All groups together</b>: every group from that day on one target, each in its own color, with how big they are all together, the mean radius (the average distance of the shots from their center) and where the center is. <b>Around the aim point</b> lines them up on the aim point you marked, so you see where the gun really hits, zero shifts included; <b>Around each center</b> moves each group onto its own center, so you see only how tight it shoots. Groups at one distance are in inches (cm); mixed distances are in MOA. A group without an aim point is left out around the aim point, and the card says so.</p>
-      <p>The <b>All your groups</b> card (on the profile, folded up, and at the top of the Range log when it shows one profile) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 8%.</p>
+      <p>The <b>All your groups</b> card (the <b>All groups</b> button on a profile, next to <b>+ New range trip</b>, with the velocity and temperature chart; and at the top of the Range log when it shows one profile) does the same with every measured group from every trip with that profile, scaled to MOA so different distances compare: the mean radius, the typical group (the middle one of all your groups) with the best and worst, and the average center as a check on your zero. Pick <b>All trips</b>, <b>Last 90 days</b> or, when the gun has more than one barrel, <b>This barrel</b>. The newest trip is in color. A short note says how much that many shots can tell you: one 5-shot group can easily be 25% off, 40 shots get you within about 8%.</p>
       <h3>Suppressor on or off</h3>
       <p>A suppressor often moves the point of impact a little and changes the speed. Range Book can measure it from your own range trips, without a second profile. On a range trip, pick the suppressor under <b>Suppressor</b>, shoot some groups with it on and some with it off, and measure them with the aim point marked. Under <b>All groups together</b>, <b>Suppressor on or off</b> lists every group: they start as <b>On</b>, so tap <b>Off</b> on the ones you shot without it. Each chronograph string has the same <b>On</b>/<b>Off</b> for the speed. The trip then shows the difference (for example "0.6 MOA higher and 0.3 MOA right, 18 fps faster").</p>
       <p>The gun's page adds up every trip like that for each suppressor. On the gun's Shooting profiles, the <b>Suppressor</b> card picks what you're <b>Shooting with</b> (<b>None</b> or one of the suppressors ticked on the gun's page) and what it was <b>Zeroed with</b>. New range trips with the profile start with the suppressor you're shooting with. When they differ, the measured shift is added: the speed to the trajectory, the up and down part to the chart, range table, dope card and reticle, and the sideways part to the reticle hold. The dope card says so under its conditions. Zeroed with it and shooting with it, nothing changes.</p>
@@ -2190,7 +2191,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
   <div class="panel" id="panel-log" role="tabpanel" aria-labelledby="tab-traj" hidden>
     <header class="phead"><h1>Shooting</h1><p class="sub">Every day at the range: your range trips and the days you shot groups for a reloading load.</p></header>
-    <div class="areatabs" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="false">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="true">Range log</button></div>
+    <div class="areatabs" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="false">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="true">Range log</button><button type="button" class="arealink" data-gorg>Ranges ›</button></div>
     <div id="logRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
@@ -3824,7 +3825,7 @@ const FOLD=(()=>{try{return JSON.parse(localStorage.getItem("rb.fold")||"{}")||{
 // cards in FOLD_FRESH always start folded and aren't remembered (What's new on How to Use)
 const FOLD_FRESH=new Set(["help_hNew"]);
 // cards that start folded until you open them (2.46): set once, then rarely needed
-const FOLD_SHUT=new Set(["pallgroups","veltemp","pbr","trueup","rel_Velocity_chart","share","gun_secGunPh","gun_secGunMags","gun_secGunRel","gun_secGunParts","guns_lu","guns_bar"]);
+const FOLD_SHUT=new Set(["pbr","trueup","rel_Velocity_chart","share","gun_secGunPh","gun_secGunMags","gun_secGunRel","gun_secGunParts","guns_lu","guns_bar"]);
 function foldCard(sec,key){
   if(!sec||sec.querySelector(":scope>.sechead"))return;
   const fresh=FOLD_FRESH.has(key);
@@ -11908,13 +11909,6 @@ function renderTrips(){
   const crumbs=(last)=>'<nav class="tripcrumbs" aria-label="Where you are"><button class="linkbtn" type="button" data-tcrumb="prof">‹ '+esc(T.name||"Profile")+'</button>'+(last?'<span aria-hidden="true">›</span><button class="linkbtn" type="button" id="tripBack">Range trips</button><span aria-hidden="true">›</span><span>'+esc(last)+'</span>':'<span aria-hidden="true">›</span><span>Range trips</span>')+'</nav>';
   const bindCrumbs=()=>root.querySelectorAll('[data-tcrumb="prof"]').forEach(b=>b.addEventListener("click",()=>{TRIPS_PAGE=false;tripOpen=null;tripPhotos=[];renderTrips();window.scrollTo(0,0);}));
   const t=tripOpen&&trips.find(x=>x.id===tripOpen&&x.trajId===T.id);
-  {const pc=$("profTripCards");if(pc){
-    // on the profile itself (2.47.12): every group from its trips on one target, and speed against temperature; both fold up
-    if(TRIPS_PAGE||!tripsLoaded)pc.innerHTML="";
-    else{const list=trips.filter(x=>x.trajId===T.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0));
-      const vt=velTempHtml(T,list);pc.innerHTML=profGroupsHtml(T,list)+(vt?'<section class="card" aria-label="Velocity and temperature" id="secVelTemp"><h2>Velocity and temperature</h2>'+vt+'</section>':'');
-      bindProfGroups(T,list,"pallgroups");bindVelTemp(T);{const v=$("secVelTemp");if(v&&window.foldCard)foldCard(v,"veltemp");}
-      grpBackfill(list,()=>{if(!tripOpen&&tripTraj&&tripTraj.id===T.id)renderTrips();});}}}
   if(!TRIPS_PAGE){root.innerHTML="";return;}
   if(!t){
     tripOpen=null;
@@ -12165,6 +12159,22 @@ window.RB_TARGETS=()=>renderTargets($("targetsRoot"));
 // Range trips on a profile (2.47.12): the Range log, showing only this profile's trips
 $("tripsGo").addEventListener("click",()=>{const T=window.RB_TRAJ&&RB_TRAJ.cur();if(!T)return;logProf=T.id;logKind="all";logGun="";showTab("log");window.scrollTo(0,0);});
 $("tripsNew").addEventListener("click",()=>{if(!tripTraj)renderTrips();newTrip();});
+/* All groups (2.47.13): a profile's groups from every trip on one target, and its speed against temperature, in one popup */
+function profAllOpen(){
+  const T=window.RB_TRAJ&&RB_TRAJ.cur();if(!T)return;const old=$("profAll");if(old)old.remove();
+  const list=trips.filter(x=>x.trajId===T.id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0));
+  const w=document.createElement("div");w.className="infowrap profallwin";w.id="profAll";
+  const body=()=>{const g=tripsLoaded?profGroupsHtml(T,list):"",vt=velTempHtml(T,list);
+    return (g||'<p class="note">No measured groups yet. Measure the target photos on this profile\'s range trips (Live target does it for you), and every group shows up here on one target.</p>')+
+      (vt?'<section class="card" aria-label="Velocity and temperature" id="secVelTemp"><h2>Velocity and temperature</h2>'+vt+'</section>':'');};
+  w.innerHTML='<div class="infoback" data-pax></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="paT"><div class="infohead"><h2 id="paT">All groups · '+esc(T.name||"Profile")+'</h2><button class="infox" type="button" data-pax aria-label="Close">✕</button></div><div id="paBody">'+body()+'</div></div>';
+  document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("on"));
+  const bind=()=>{bindProfGroups(T,list,"pallpop");bindVelTemp(T);};bind();
+  // trips saved before 2.43.4: their groups get read in once, then drawn
+  grpBackfill(list,()=>{const b=$("paBody");if(b){b.innerHTML=body();bind();}});
+  const shut=()=>{w.remove();document.removeEventListener("keydown",esc1);};const esc1=e=>{if(e.key==="Escape")shut();};
+  document.addEventListener("keydown",esc1);w.querySelectorAll("[data-pax]").forEach(b=>b.addEventListener("click",shut));}
+$("tripsAll").addEventListener("click",profAllOpen);
 window.RB_TRIPS={
   // opening a profile shows the profile, not its trips page; keep: leave the trips page as it was (2.45)
   show(keep){if(!keep){TRIPS_PAGE=false;tripOpen=null;tripPhotos=[];}renderTrips();},
@@ -12356,7 +12366,6 @@ function renderLog(){
   let h='<section class="card" aria-label="This year at the range"><div class="tiles">'+
     [[new Set(thisYr.map(e=>e.date)).size,"days at the range in "+yr],[thisYr.reduce((a,e)=>a+e.rounds,0),"rounds in "+yr],[thisYr.filter(e=>e.kind==="trip").length,"range trips"],[thisYr.filter(e=>e.kind==="dev").length,"load-development days"]].map(([v,l])=>'<div class="tile"><b>'+v.toLocaleString()+'</b><span>'+l+'</span></div>').join("")+'</div>'+
     (bestYr?'<p class="note">Best group in '+yr+': <b>'+bestYr.best.moa.toFixed(2)+' MOA</b> with '+esc(bestYr.load)+(bestYr.date?' on '+esc(fmtDate(bestYr.date)):'')+'.</p>':'')+'</section>';
-  h+=logRangesHtml();
   // one profile picked: its groups on one target first, the same card as on the profile (2.47.12)
   if(LP&&tripsLoaded)h+=profGroupsHtml(LP,profT);
   h+='<section class="card" aria-label="Range log"><div class="row"><button class="btn primary" id="logNew" type="button">Start a range day</button>'+(LP?'<button class="btn" id="logNewTrip" type="button">+ New range trip with '+esc(LP.name||"this profile")+'</button>':'')+'</div>'+
@@ -13242,6 +13251,8 @@ new MutationObserver(()=>measurePins()).observe(document.body,{subtree:true,attr
 setTimeout(measurePins,0);
 document.querySelectorAll("#helpNav a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();const t=document.getElementById(a.getAttribute("href").slice(1));if(t)t.scrollIntoView({behavior:"smooth",block:"start"});}));
 document.querySelectorAll(".areatabs [data-area]").forEach(b=>b.addEventListener("click",()=>{if(b.getAttribute("aria-selected")!=="true")showTab(b.dataset.area);}));
+// Shooting › Ranges (2.47.13): your saved ranges, in Gear & Ranges, where each one shows the dial and wind for its targets
+document.querySelectorAll(".areatabs [data-gorg]").forEach(b=>b.addEventListener("click",()=>{if(window.RB_GEAR_RANGES)RB_GEAR_RANGES();}));
 document.querySelector(".topbar .brand").addEventListener("click",()=>{if(started)showTab("home");});
 const THEMES=[["range", "Range (default)", "#e2dccf", "#ffffff", "#0e5a61", "#d9ebec"], ["olive", "Olive Drab", "#dcdfcd", "#fbfcf6", "#4b5d23", "#e2e8cf"], ["fde", "Flat Dark Earth", "#e3d9c8", "#fffdf9", "#8a5a2b", "#f0e2d0"], ["steel", "Blued Steel", "#d6dde6", "#ffffff", "#2a4d7a", "#dce6f2"], ["blaze", "Blaze Orange", "#e6dbd3", "#ffffff", "#c2410c", "#fbe2d4"], ["plum", "Plum", "#e2d8de", "#fffcfe", "#6b2a5c", "#f0dfea"], ["lavender", "Lavender", "#e6e2f0", "#ffffff", "#5b4b9a", "#e7e2f6"], ["night", "Red Night", "#070303", "#110707", "#ff3b30", "#3a0e0b"]];
 let THEME={palette:"range",mode:"auto",camo:"",fs:""};
@@ -13438,7 +13449,18 @@ async function startApp(user,api){
   $("whoName").textContent=user.name;
   $("tab-admin").hidden=true;{const c=$("acctAdmin");if(c)c.hidden=!user.isAdmin;}
   if(started)return;started=true;
-  tabs.forEach(k=>{const b=$("tab-"+k);if(b)b.addEventListener("click",()=>showTab(k));});
+  // a tab opens where you left off in it; tapped again while you're in it, it goes to its main screen (2.47.12)
+  const tabNow=()=>tabs.find(x=>{const p=$("panel-"+x);return p&&!p.hidden;});
+  function tabHome(k){
+    if(tabNow()!==k)showTab(k);
+    if(k==="traj"&&window.RB_TRIPS&&RB_TRIPS.show)RB_TRIPS.show();   // out of a range trip or the trip list
+    const P=$("panel-"+k);
+    // then step back up, one ‹ button at a time, until there's none left (a load, a gun, a tool…)
+    for(let i=0;i<8&&P;i++){const b=[...P.querySelectorAll(".backbtn")].find(x=>x.id!=="helpBackBtn"&&x.id!=="tripBack"&&!x.hidden&&x.offsetParent!==null);if(!b)break;b.click();}
+    // Gear & Ranges: its first area (Guns) and the first list in it
+    if(k==="rifles"&&P)["data-garea","data-gsub"].forEach(a=>{const f=[...P.querySelectorAll("["+a+"]")].find(x=>x.offsetParent!==null);if(f&&f.getAttribute("aria-pressed")!=="true"&&!f.classList.contains("on"))f.click();});
+    window.scrollTo(0,0);}
+  tabs.forEach(k=>{const b=$("tab-"+k);if(b)b.addEventListener("click",()=>{const c=tabNow();if(c===k||TAB_PARENT[c]===k)tabHome(k);else showTab(k);});});
   $("acctBtn").addEventListener("click",()=>showTab("account"));
   $("refBack").addEventListener("click",()=>RB_GO("tools:lib"));
   // Account › Layout and Admin (2.46): the Arrange buttons and the Admin tab moved here

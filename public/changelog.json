@@ -2,11 +2,13 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.12",
+      "version": "2.47.13",
       "date": "2026-11-19",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
-        "Range trips are easier to get around. A trip's page has one ‹ button that goes back where you came from (the Range log, at the same place in the list; Home; or the profile), its date and place as the title, and Profile: with Change under it, to open the profile or move the trip with its targets, chronograph shots and notes to another one (with Undo). A profile's Range trips button opens the Range log showing just its trips, with All your groups at the top and + New range trip. The Range log has a chip for each profile you've shot with. All your groups and Velocity and temperature are now cards on the profile itself, folded until you open them.",
+        "Shooting: Ranges › next to Profiles and Range log goes to your saved ranges in Gear & Ranges (each shows the dial and wind for its targets). The Saved ranges card is gone from the Range log.",
+        "The main tabs: tapping one opens it where you left off, as before; tapping it again while you're in it goes to its main screen (Shooting: the profile list; Reloading: your loads; Gear & Ranges: Guns; Tools: all the tools).",
+        "Range trips are easier to get around. A trip's page has one ‹ button that goes back where you came from (the Range log, at the same place in the list; Home; or the profile), its date and place as the title, and Profile: with Change under it, to open the profile or move the trip with its targets, chronograph shots and notes to another one (with Undo). A profile's Range trips button opens the Range log showing just its trips, with All your groups at the top and + New range trip. The Range log has a chip for each profile you've shot with. On a profile, All groups (next to + New range trip) opens All your groups and Velocity and temperature together in one window.",
         "Range trips and Live target keep the time of every chronograph velocity and every hole found (and when each hole got its velocity), so shots and velocities can be matched up later if they ever get out of step.",
         "Range trips › Shot groups: a Zoom slider under the picture zooms in on the middle of the group (chart or photo). On a Live target group, drag a shot to where it really is: it moves on the target photo, keeps its velocity, and the group size updates.",
         "Range trips › Shot groups: tap a shot (its row in the table, or its hole on the chart or photo) for Delete shot, in a bar right under the chart. It comes off the target photo with its velocity, and the group size updates.",
