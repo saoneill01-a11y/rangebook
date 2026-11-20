@@ -765,7 +765,7 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvgu button{border:0;background:#1b1b1b;color:#bbb;font:inherit;font-size:calc(10.5px*var(--fs));padding:2px 7px;cursor:pointer}
 .lvgu button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg,#fff)}
 .lvaimrow{display:flex;gap:10px;align-items:flex-start}
-.lvaimrow .lvgrid{flex:1;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.lvaimrow .lvgrid{flex:1;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end}
 .lvaimrow .lvgw{grid-column:1/-1}
 .lvaims{flex:none;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:6px}
 .lvaims[hidden]{display:none}
@@ -9659,9 +9659,15 @@ function openLive(o){
     zoomView(gst.crop,gst.n>1&&gst.d>0&&m.d>0?gst.d/m.d:1,gst.mx,gst.my,m.mx,m.my);});
   const gEnd=e=>{if(!gPts.delete(e.pointerId))return;if(gMoved)noClick=Date.now();if(gPts.size)gStart();else{gst=null;if(gMoved){gMoved=false;renderStats();}}};
   can.addEventListener("pointerup",gEnd);can.addEventListener("pointercancel",gEnd);
-  can.addEventListener("wheel",e=>{if(!crop||!video.videoWidth)return;e.preventDefault();zoomView(ucrop||crop,Math.exp(e.deltaY*(e.ctrlKey?.01:.002)),e.clientX,e.clientY,e.clientX,e.clientY);renderStats();},{passive:false});
+  // a mouse wheel or a touchpad: pinch (ctrl+wheel in Chrome) or two-finger scroll; big scroll steps are evened out (2.47.20)
+  can.addEventListener("wheel",e=>{if(!crop||!video.videoWidth)return;e.preventDefault();const d=Math.max(-40,Math.min(40,e.deltaY*(e.deltaMode===1?16:1)));
+    zoomView(ucrop||crop,Math.exp(d*(e.ctrlKey?.012:.004)),e.clientX,e.clientY,e.clientX,e.clientY);renderStats();},{passive:false});
+  // Safari on a Mac sends a touchpad pinch as gesture events: zoom from where the pinch started. (On an iPad the fingers
+  // are handled above, so these are skipped while two fingers are down.)
+  {let g0=null;can.addEventListener("gesturestart",e=>{e.preventDefault();g0=gPts.size<2&&crop?{c:(ucrop||crop).slice()}:null;});
+    can.addEventListener("gesturechange",e=>{e.preventDefault();if(!g0||gPts.size>=2||!(e.scale>0))return;zoomView(g0.c,1/e.scale,e.clientX,e.clientY,e.clientX,e.clientY);renderStats();});
+    can.addEventListener("gestureend",e=>{e.preventDefault();g0=null;});}
   // Safari's own page zoom
-  ["gesturestart","gesturechange"].forEach(t=>can.addEventListener(t,e=>e.preventDefault()));
   can.addEventListener("click",e=>{if(Date.now()-noClick<400)return;const rc=can.getBoundingClientRect();tapAt((e.clientX-rc.left)/rc.width,(e.clientY-rc.top)/rc.height);});
   // the remote's zoom (2.47.6): how much wider (>1) or closer (<1) than the usual view. One zoom with the pinch above.
   const uzNow=()=>{if(!ucrop)return 1;const u=ucrop;ucrop=null;let b=null;try{b=wantCrop();}catch(e){}ucrop=u;return b&&b[2]>0?+(u[2]/b[2]).toFixed(3):1;};
@@ -10150,7 +10156,10 @@ function openWatch(id,dev,host){
   img.addEventListener("touchstart",e=>{if(e.touches.length===2){wpin={d:wtd(e.touches),z:st&&num(st.uz)>0?num(st.uz):1};wpinT=Date.now();e.preventDefault();}},{passive:false});
   img.addEventListener("touchmove",e=>{if(wpin&&e.touches.length===2){e.preventDefault();const d=wtd(e.touches);if(d>10){wz=Math.min(6,Math.max(.3,wpin.z*wpin.d/d));wzSend();}wpinT=Date.now();}},{passive:false});
   img.addEventListener("touchend",e=>{if(wpin&&e.touches.length<2){wpin=null;wpinT=Date.now();}});
-  img.addEventListener("wheel",e=>{e.preventDefault();wz=Math.min(6,Math.max(.3,(st&&num(st.uz)>0?num(st.uz):wz)*Math.exp(e.deltaY*(e.ctrlKey?.01:.002))));wzSend();},{passive:false});
+  img.addEventListener("wheel",e=>{e.preventDefault();const d=Math.max(-40,Math.min(40,e.deltaY*(e.deltaMode===1?16:1)));wz=Math.min(6,Math.max(.3,(st&&num(st.uz)>0?num(st.uz):wz)*Math.exp(d*(e.ctrlKey?.012:.004))));wzSend();},{passive:false});
+  {let gz=null;img.addEventListener("gesturestart",e=>{e.preventDefault();gz=wpin?null:(st&&num(st.uz)>0?num(st.uz):wz);});
+    img.addEventListener("gesturechange",e=>{e.preventDefault();if(gz==null||wpin||!(e.scale>0))return;wz=Math.min(6,Math.max(.3,gz/e.scale));wpinT=Date.now();wzSend();});
+    img.addEventListener("gestureend",e=>{e.preventDefault();gz=null;});}
   img.addEventListener("click",e=>{if(Date.now()-wpinT<500)return;if(!img.naturalWidth)return;const rc=img.getBoundingClientRect(),s=Math.min(rc.width/img.naturalWidth,rc.height/img.naturalHeight),dw=img.naturalWidth*s,dh=img.naturalHeight*s,ox=rc.left+(rc.width-dw)/2,oy=rc.top+(rc.height-dh)/2;
     const u=(e.clientX-ox)/dw,w=(e.clientY-oy)/dh;if(u<0||w<0||u>1||w>1)return;cmd({cmd:"tap",u,w});});
   function render(S){

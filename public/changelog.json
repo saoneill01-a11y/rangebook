@@ -2,11 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.20",
+      "version": "2.47.21",
       "date": "2026-11-19",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
-        "Live target: the Shots box is now called Shots per aim point.",
+        "Live target: the Shots box is now called Shots per aim point, and it lines up with Distance.",
+        "Live target on a Mac: pinching the touchpad zooms in Safari too, and two-finger scrolling zooms in and out smoothly instead of in big jumps.",
         "Live target now wears your color theme like the rest of Range Book: the picture and its numbers in one card, the controls in another with Aim points and At the bench headings, and your theme's color on Shot and Save or discard. Dark (top right) switches it to the dark look and is remembered on that device; the Night theme stays dark.",
         "Be the camera for your iPad: the waiting screen says what comes next: once the phone is aimed and focused, start Live target on the iPad, pick the phone, then tap Find target (on the iPad or the phone).",
         "Fixed (from 2.47.15): on an iPad or computer, part of the page's styling only applied on phones, so photo thumbnails showed full size and your color theme didn't show.",
