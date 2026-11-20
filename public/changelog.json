@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.10",
+      "version": "2.47.11",
       "date": "2026-11-19",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Range trips and Live target keep the time of every chronograph velocity and every hole found (and when each hole got its velocity), so shots and velocities can be matched up later if they ever get out of step.",
         "Range trips › Shot groups: a Zoom slider under the picture zooms in on the middle of the group (chart or photo). On a Live target group, drag a shot to where it really is: it moves on the target photo, keeps its velocity, and the group size updates.",
         "Range trips › Shot groups: tap a shot (its row in the table, or its hole on the chart or photo) for Delete shot, in a bar right under the chart. It comes off the target photo with its velocity, and the group size updates.",
         "Range trips › Shot groups: a Chart / Photo switch for groups shot with Live target. Photo shows the real paper around the aim point, cut from the target photo and straightened out, at the same scale as the chart, with 1-inch rings, the group circle and center, and each hole tagged with its shot number and velocity (colored slow to fast).",

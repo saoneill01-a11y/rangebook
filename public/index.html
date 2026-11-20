@@ -8686,8 +8686,10 @@ function openMeasure(pid,C){
   const prev=normMeasure(p.measure);
   const M=prev?JSON.parse(JSON.stringify(prev)):{v:2,a:null,b:null,scaleIn:1,dia:C.dia||.308,distance:C.dist||100,groups:[]};
   // each shot's velocity (Live target with a chronograph), found again by the shot itself or where it was (2.47.9)
-  const VEL=new Map(),VELP=new Map();M.groups.forEach(t=>{if(Array.isArray(t.vel))(t.shots||[]).forEach((q,i)=>{VEL.set(q,t.vel[i]);VELP.set(q[0]+","+q[1],t.vel[i]);});});
-  const velOf=t=>{const v=(t.shots||[]).map(q=>{const x=VEL.has(q)?VEL.get(q):VELP.get(q[0]+","+q[1]);return x>0?x:null;});return v.some(x=>x)?v:undefined;};
+  // and when it was found and when its velocity came (2.47.9)
+  const PER={};["vel","at","vat"].forEach(f=>{const a=new Map(),b=new Map();PER[f]=[a,b];M.groups.forEach(t=>{if(Array.isArray(t[f]))(t.shots||[]).forEach((q,i)=>{a.set(q,t[f][i]);b.set(q[0]+","+q[1],t[f][i]);});});});
+  const perOf=(t,f)=>{const [a,b]=PER[f],v=(t.shots||[]).map(q=>{const x=a.has(q)?a.get(q):b.get(q[0]+","+q[1]);return x>0?x:null;});return v.some(x=>x)?v:undefined;};
+  const velOf=t=>perOf(t,"vel");
   M.groups.forEach(t=>{if(t.groupId&&!lgroups.some(g=>g.id===t.groupId))t.groupId=null;});
   const shotCount=g=>(g&&g.shots||[]).filter(x=>Number(x)>0).length||null;
   const nextGroupId=()=>{const used=new Set(M.groups.map(t=>t.groupId).filter(Boolean));const g=lgroups.find(g=>!used.has(g.id));return g?g.id:null;};
@@ -8927,7 +8929,7 @@ function openMeasure(pid,C){
         const r=computeGroup(M,t,W,H),f=x=>x!=null?+x.toFixed(3):null;
         // a Live target photo keeps its shots in the order they were fired, so each hole can be matched to its velocity
         const hin=M.live&&M.H&&t.aim?t.shots.map(([x,y])=>{const P=applyH(M.H,x*W,y*H),A=applyH(M.H,t.aim[0]*W,t.aim[1]*H);return [+(P[0]-A[0]).toFixed(3),+(A[1]-P[1]).toFixed(3)];}):undefined;
-        out.groups.push({id:t.id,ai:t.ai!=null?t.ai:undefined,hin,vel:velOf(t),groupId:t.groupId||null,aim:t.aim,box:t.box,want:t.want||null,shots:t.shots.map(q=>[+q[0].toFixed(5),+q[1].toFixed(5)]),
+        out.groups.push({id:t.id,ai:t.ai!=null?t.ai:undefined,hin,vel:velOf(t),at:perOf(t,"at"),vat:perOf(t,"vat"),groupId:t.groupId||null,aim:t.aim,box:t.box,want:t.want||null,shots:t.shots.map(q=>[+q[0].toFixed(5),+q[1].toFixed(5)]),
           n:t.shots.length,size:f(r.size),moa:f(r.moa),mr:f(r.mr),dx:f(r.dx),dy:f(r.dy)});
       });
       const m=out.groups.length?out:null;
@@ -9356,7 +9358,7 @@ function openLive(o){
   function addFound(found,f){
     snap();
     if(!holes[aim])holes[aim]=[];
-    found.forEach(q=>holes[aim].push([q.x,q.y]));
+    {const now=Date.now();found.forEach(q=>holes[aim].push([q.x,q.y,null,now]));}   // [x, y, velocity, when found, when its velocity came] (2.47.9)
     ref=f;lastRefresh=Date.now();newest=holes[aim].length-1;
     // one new hole: it gets the chronograph's velocity (now, or when it comes in a moment later)
     let fv=null;if(found.length===1){fv=tagVel(holes[aim][newest]);lastFind=fv==null?{aim,k:newest,at:Date.now()}:null;}else pendVel=null;
@@ -9377,11 +9379,11 @@ function openLive(o){
     if(o.profile&&RB_TRAJ.tof){const t=RB_TRAJ.tof(o.profile,v,yd);if(t>0)return t;}
     return yd*3/(v*.7);}   // no BC: as if it averaged 70% of its muzzle velocity, on the long side
   const flightWait=(v,since)=>Math.max(650,Math.round(tof(v)*1000)+500-(since?Date.now()-since:0));
-  function tagVel(q){if(!q||!pendVel||Date.now()-pendVel.at>15000){pendVel=null;return null;}q[2]=Math.round(pendVel.v*10)/10;pendVel=null;dirty=true;return q[2];}
+  function tagVel(q){if(!q||!pendVel||Date.now()-pendVel.at>15000){pendVel=null;return null;}q[2]=Math.round(pendVel.v*10)/10;q[4]=pendVel.at;pendVel=null;dirty=true;return q[2];}
   function chronoVel(v,trig){
     if(closed||!(v>0))return;const now=Date.now();
     if(!busy&&lastFind&&now-lastFind.at<6000&&(!trig||now-lastFind.at<2500)){const q=(holes[lastFind.aim]||[])[lastFind.k];
-      if(q&&q[2]==null){q[2]=Math.round(v*10)/10;dirty=true;setStat("Shot "+(lastFind.k+1)+": "+U.s("fps",v,0)+".","");lastFind=null;renderStats();return;}}
+      if(q&&q[2]==null){q[2]=Math.round(v*10)/10;q[4]=now;dirty=true;setStat("Shot "+(lastFind.k+1)+": "+U.s("fps",v,0)+".","");lastFind=null;renderStats();return;}}
     // still looking for the last shot: this one waits its turn (its velocity mustn't land on the last shot's hole) (2.47.6)
     if(trig&&lock&&ref&&(busy||pend)){chQ={v,at:now};lastV=v;return;}
     lastFind=null;pendVel={v,at:now};lastV=v;
@@ -9564,7 +9566,7 @@ function openLive(o){
     const hs=holes[aim]||[],j=hs.findIndex(([x,y])=>Math.hypot(x-px,y-py)<tol);
     snap();if(!holes[aim])holes[aim]=[];
     if(j>=0){holes[aim].splice(j,1);newest=null;setStat("Removed that mark.","");}
-    else{holes[aim].push([px,py]);newest=holes[aim].length-1;const fv=tagVel(holes[aim][newest]);setStat("Added shot "+holes[aim].length+(fv!=null?", "+U.s("fps",fv,0):"")+".","");}
+    else{holes[aim].push([px,py,null,Date.now()]);newest=holes[aim].length-1;const fv=tagVel(holes[aim][newest]);setStat("Added shot "+holes[aim].length+(fv!=null?", "+U.s("fps",fv,0):"")+".","");}
     after();
   }
   /* ----- any target: tap its four corners, give its size, then tap each aim point ----- */
@@ -9822,7 +9824,7 @@ function openLive(o){
     aims().forEach((a,i)=>{const hs=holes[i]||[];if(!hs.length)return;const r=stats(i);
       const pts=[[a.cell[0],a.cell[1]],[a.cell[2],a.cell[1]],[a.cell[2],a.cell[3]],[a.cell[0],a.cell[3]]].map(([x,y])=>nrm([x,y]));
       const box=[Math.max(0,Math.min(...pts.map(p=>p[0]))),Math.max(0,Math.min(...pts.map(p=>p[1]))),Math.min(1,Math.max(...pts.map(p=>p[0]))),Math.min(1,Math.max(...pts.map(p=>p[1])))];
-      M.groups.push({id:"t"+Date.now().toString(36)+i,ai:i,groupId:a.groupId||null,aim:nrm([a.x,a.y]),box,want:want||null,shots:hs.map(nrm),hin:hs.map(([x,y])=>[+(x-a.x).toFixed(3),+(a.y-y).toFixed(3)]),...(hs.some(q=>q[2]>0)?{vel:hs.map(q=>q[2]>0?q[2]:null)}:{}),n:hs.length,size:f3(r.size),moa:f3(moaOf(r.size)),mr:f3(r.mr),dx:f3(r.dx),dy:f3(r.dy)});});
+      M.groups.push({id:"t"+Date.now().toString(36)+i,ai:i,groupId:a.groupId||null,aim:nrm([a.x,a.y]),box,want:want||null,shots:hs.map(nrm),hin:hs.map(([x,y])=>[+(x-a.x).toFixed(3),+(a.y-y).toFixed(3)]),...(hs.some(q=>q[2]>0)?{vel:hs.map(q=>q[2]>0?q[2]:null)}:{}),...(hs.some(q=>q[3])?{at:hs.map(q=>q[3]||null)}:{}),...(hs.some(q=>q[4])?{vat:hs.map(q=>q[4]||null)}:{}),n:hs.length,size:f3(r.size),moa:f3(moaOf(r.size)),mr:f3(r.mr),dx:f3(r.dx),dy:f3(r.dy)});});
     return {data,W,H,M};
   }
   $("lvDone").addEventListener("click",save);
@@ -10380,7 +10382,7 @@ function vZoom(v,p,C,pid){
       p.measure=M.groups.length?M:null;const body={measure:p.measure},txt=measureText(p.measure,L);if(!p.caption||p.caption===txt0){p.caption=txt;body.caption=txt;}
       API.patch("/api/photos/"+pid,body).catch(onWriteError);VZ={pid,s,f:mid()};openViewer(pid,C);};
     $("vsSave").addEventListener("click",()=>{const n=num($("vsV").value);if(!t.vel)t.vel=t.shots.map(()=>null);t.vel[j]=n>0?Math.round(U.from("fps",n)*10)/10:null;done();});
-    const del=$("vsDel");del.addEventListener("click",()=>arm(del,"vsdel"+k+":"+j,"Tap again to delete",()=>{t.shots.splice(j,1);if(Array.isArray(t.hin))t.hin.splice(j,1);if(Array.isArray(t.vel))t.vel.splice(j,1);done();}));
+    const del=$("vsDel");del.addEventListener("click",()=>arm(del,"vsdel"+k+":"+j,"Tap again to delete",()=>{t.shots.splice(j,1);["hin","vel","at","vat"].forEach(f=>{if(Array.isArray(t[f]))t[f].splice(j,1);});done();}));
     $("vsX").addEventListener("click",()=>bar.remove());
   }
 }
@@ -11495,7 +11497,7 @@ function sgMoveShot(G,k,x,y){const p=G.ph,M=normMeasure(p.measure),g=G.grp;if(!M
   API.patch("/api/photos/"+p.id,body).catch(onWriteError);renderTripPhotos();}
 // delete one shot from a Shot groups group: from its photo's measurement, with its velocity, saved straight away (2.47.9)
 function sgDelShot(G,k){const p=G.ph,M=normMeasure(p.measure),g=G.grp;if(!M||!g||!(k>=0&&k<(g.shots||[]).length))return;
-  const txt0=measureText(p.measure,null);g.shots.splice(k,1);if(Array.isArray(g.hin))g.hin.splice(k,1);if(Array.isArray(g.vel))g.vel.splice(k,1);
+  const txt0=measureText(p.measure,null);g.shots.splice(k,1);["hin","vel","at","vat"].forEach(f=>{if(Array.isArray(g[f]))g[f].splice(k,1);});
   const r=computeGroup(M,g,p.w,p.h),f=x=>x!=null?+x.toFixed(3):null;Object.assign(g,{n:g.shots.length,size:f(r.size),moa:f(r.moa),mr:f(r.mr),dx:f(r.dx),dy:f(r.dy)});
   if(!g.shots.length&&!g.aim)M.groups.splice(M.groups.indexOf(g),1);
   p.measure=M.groups.length?M:null;const body={measure:p.measure},txt=measureText(p.measure,null);if(!p.caption||p.caption===txt0){p.caption=txt;body.caption=txt;}
@@ -11671,6 +11673,9 @@ function tripChronoSink(tid,sid){
     shot(s){const t=trips.find(o=>o.id===tid);if(!t)return;t.strings=t.strings||[];let x=t.strings.find(o=>o.id===sid);
       if(!x){x={id:sid,name:(window.RB_BTCHRONO?RB_BTCHRONO.name():"BLIPR"),date:t.date||todayISO(),chrono:true,shots:[]};t.strings.push(x);}
       x.shots=x.shots||[];const k=x.shots.indexOf(null),v=Math.round(s.v);if(k>=0)x.shots[k]=v;else x.shots.push(v);
+      // every velocity with the time it came in (2.47.9), kept apart from the strings so editing them doesn't touch it:
+      // for matching shots and velocities up later, or working out what went wrong
+      t.chronoLog=t.chronoLog||[];t.chronoLog.push({v:Math.round(s.v*10)/10,at:s.at||Date.now(),n:s.n!=null?s.n:undefined,s:sid});if(t.chronoLog.length>2000)t.chronoLog.splice(0,t.chronoLog.length-2000);
       if(s.ammo!=null){x.ammoN=(x.ammoN||0)+1;x.ammoF=Math.round(((num(x.ammoF)||0)*(x.ammoN-1)+s.ammo)/x.ammoN*10)/10;}
       const aired=tripAir(t);t.updated=Date.now();
       if(tripOpen===tid&&TRIP_HOOK&&TRIP_HOOK.id===tid&&$("tripChrono")){const a=document.activeElement;TRIP_HOOK.totals();TRIP_HOOK.render(a&&a.id&&a.id.startsWith("ts_")?a.id:null);if(aired)TRIP_HOOK.fields();}
