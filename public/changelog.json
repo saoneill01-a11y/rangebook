@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.17",
+      "version": "2.47.18",
       "date": "2026-11-19",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Be the camera for your iPad: the waiting screen says what comes next: once the phone is aimed and focused, start Live target on the iPad, pick the phone, then tap Find target (on the iPad or the phone).",
         "Fixed (from 2.47.15): on an iPad or computer, part of the page's styling only applied on phones, so photo thumbnails showed full size and your color theme didn't show.",
         "A phone on the scope as the camera for your iPad: its dark screen has Keep the picture on, to watch the shots on the phone when the scope isn't next to the bench. It shows just the target picture, zoomed to the aim point (taps don't mark shots there; the iPad runs the session), with Dim the screen to go back. Off unless you pick it, and remembered on that phone.",
         "Live target has a new layout. Save or discard is at the top left in place of ← Back (it asks Save and exit, Discard or Keep going), with Connect Athlon next to it. Under the camera, a strip as wide as the picture shows the shots, the group size in inches and in MOA or MIL (a switch, remembered) and the mean radius, with the center from the aim point. The side bar has a little drawing of the target's aim points: the current one is lit, ones with shots are green, and tapping one goes to it (in place of ‹ Aim and Next aim ›). Show my reticle, Listen for shots and Chronograph finds each shot explain themselves in an ⓘ, and Listen for shots goes away while a chronograph is connected. The same layout on an iPhone, and on the iPad watching a phone on the scope (or running the session with the phone as its camera): its aim point map moves the phone to that aim point, and Save or discard asks there.",

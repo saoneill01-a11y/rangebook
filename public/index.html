@@ -10324,7 +10324,7 @@ function cameraStandby(){
   v.innerHTML='<div class="lvtop"><button class="btn" id="cwClose" type="button">← Stop</button><b class="mtitle">Camera for your iPad</b></div>'+
     '<div class="lvmain"><div class="lvcam" id="cwCam"><video id="cwVid" playsinline muted autoplay></video><div class="lvstat"><span class="lvpill busy" id="cwStat"><i></i><span>Starting the camera…</span></span></div></div>'+
     '<label class="cwlens" id="cwLensL" hidden><span>Camera lens</span><select id="cwLens"></select></label>'+
-    '<p class="note cwnote">Aim this phone at the target with all four corner squares in view. Then on your iPad (signed in to this account), start Live target from a ladder, a range trip or Tools › Live target, and pick this phone. The screen goes dark after 30 seconds to save battery; tap it to see the camera.</p></div>'+
+    '<p class="note cwnote">Aim this phone at the target with all four corner squares in view, and focus it. When it\'s aimed and focused, start Live target on your iPad (signed in to this account, from a ladder, a range trip or Tools › Live target) and pick this phone, then tap <b>Find target</b>, on the iPad or here. The screen goes dark after 30 seconds to save battery; tap it to see the camera.</p></div>'+
     '<button class="lvdim" id="cwDim" type="button" hidden><b>Camera for your iPad</b><span id="cwDimStat"></span><small>Tap to see the camera</small></button>';
   document.body.appendChild(v);document.body.classList.add("noscroll");
   const vid=$("cwVid"),dim=$("cwDim");let stream=null,closed=false,hosted=false,H={sid:null},T=null,wake=null,dimT=null,fails=0;
