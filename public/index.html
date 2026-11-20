@@ -775,6 +775,39 @@ body,input,textarea,select{font-feature-settings:"calt" 0}
 .lvap.done{background:#6f9a6f;border-color:#6f9a6f;color:#fff}
 .lvap.cur{background:#e0a24a;border-color:#fff;color:#111;box-shadow:0 0 0 3px rgba(224,162,74,.55)}
 .lvtop .lvchgo{width:auto}
+/* Live target in the site's colors (2.47.19); .lvdark (the Dark button) and the Night theme keep the dark look */
+:root:not([data-palette="night"]) .live:not(.lvdark){background:var(--bg);color:var(--fg)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .mtitle{color:var(--accent);font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:calc(20px*var(--fs))}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvtop .btn,:root:not([data-palette="night"]) .live:not(.lvdark) .lvside .btn,:root:not([data-palette="night"]) .live:not(.lvdark) .lvsheet .btn{background:var(--surface);color:var(--fg);border-color:var(--line)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .btn.primary,:root:not([data-palette="night"]) .live:not(.lvdark) .lvtop .btn.primary,:root:not([data-palette="night"]) .live:not(.lvdark) .lvside .btn.primary{background:var(--accent);color:var(--accent-fg,#fff);border-color:var(--accent)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvchip{background:var(--sunk);border-color:var(--line);color:var(--muted)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvchip b{color:var(--fg)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvleft,:root:not([data-palette="night"]) .live:not(.lvdark) .lvside{background:var(--surface);border-radius:14px;padding:10px;box-shadow:0 1px 0 var(--line),0 4px 14px rgba(0,0,0,.06)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvstats{background:transparent;border:0;padding:4px 2px 0}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvstats b{color:var(--fg)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvstats b small,:root:not([data-palette="night"]) .live:not(.lvdark) .lvstats span{color:var(--muted)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvstats .wide{color:var(--muted);border-top-color:var(--line)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvgu{border-color:var(--line)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvgu button{background:var(--surface);color:var(--muted)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvgu button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg,#fff)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvaims{background:var(--sunk);border-color:var(--line)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvgrid label{color:var(--muted)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvgrid input,:root:not([data-palette="night"]) .live:not(.lvdark) .lvgrid select{background:var(--surface);color:var(--fg);border-color:var(--line)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvmic{color:var(--fg)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvtog{background:var(--line)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvmic input:checked+.lvtog{background:var(--accent)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvmic .infobtn,:root:not([data-palette="night"]) .live:not(.lvdark) .lvfocus .infobtn{color:var(--accent)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvnote,:root:not([data-palette="night"]) .live:not(.lvdark) .lvretnote{color:var(--muted)!important}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvsens{color:var(--muted)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvsens button{background:var(--surface);color:var(--fg);border-color:var(--line)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvsens button.on{background:var(--accent);color:var(--accent-fg,#fff);border-color:var(--accent)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvstat .lvpill{background:rgba(255,255,255,.93);color:#1b201c;border-color:rgba(0,0,0,.12)}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvgrip span{background:var(--line)}
+.lvh{margin:4px 0 -2px;font-family:var(--display);font-size:calc(15px*var(--fs));text-transform:uppercase;letter-spacing:.05em;color:#bbb}
+:root:not([data-palette="night"]) .live:not(.lvdark) .lvh{color:var(--accent)}
+:root[data-palette="night"] .lvdarkb{display:none}
+.lvdarkb{flex:none}
+
 @media(max-width:600px){.live .lvtop{flex-wrap:wrap;gap:6px}.live .lvtop .mtitle{display:none}.live .lvtop .btn{padding:7px 10px;font-size:calc(14px*var(--fs));min-height:0}.live .lvtop .lvchip{font-size:calc(12px*var(--fs))}}
 .lvmic{position:relative}
 .lvmic .infobtn{margin:-4px 0 -4px auto;width:28px;height:28px;color:#cfe;flex:none}
@@ -9066,12 +9099,16 @@ const LIVE_LENS={
     return st;
   }
 };
+/* Live target in the site's colors (2.47.19), or dark at a tap (Dark, remembered on this device). The Night theme stays dark. */
+function liveDark(v,b){if(!b)return;let on=false;try{on=localStorage.getItem("rb.lvDark")==="1";}catch(e){}
+  const set=x=>{on=x;v.classList.toggle("lvdark",on);b.setAttribute("aria-pressed",String(on));b.textContent=on?"Light":"Dark";try{localStorage.setItem("rb.lvDark",on?"1":"0");}catch(e){}};
+  set(on);b.addEventListener("click",()=>set(!on));}
 function openLive(o){
   // o: {title, groups (this ladder's groups, in order), dist, dia, profile (a range trip's Shooting profile, for the reticle), save(dataUrl,w,h,measure) → Promise}
   const groups=o.groups||[];
   const shotCount=g=>(g&&g.shots||[]).filter(x=>Number(x)>0).length||null;
   const v=document.createElement("div");v.className="viewer live";v.id="live";v.setAttribute("role","dialog");v.setAttribute("aria-label","Live target");
-  v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><button class="btn lvchgo" id="lvChGo" type="button" hidden>Connect Athlon</button><b class="mtitle">Live target</b><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
+  v.innerHTML='<div class="lvtop"><button class="btn" id="lvClose" type="button">← Back</button><button class="btn lvchgo" id="lvChGo" type="button" hidden>Connect Athlon</button><b class="mtitle">Live target</b><button class="btn lvdarkb" id="lvDarkB" type="button" aria-pressed="false" title="Dark screen for Live target">Dark</button><button class="btn lvremote" id="lvRemote" type="button" aria-pressed="false">Remote</button><span class="lvchip" id="lvAimChip"></span></div>'+
     '<div class="lvmain"><div class="lvleft"><div class="lvcam" id="lvCam"><canvas id="lvCan"></canvas><canvas id="lvThumb" class="lvthumb" hidden></canvas>'+
       '<div class="lvstat"><span class="lvpill warn" id="lvAng" hidden><i></i><span></span></span><span class="lvpill" id="lvStat"><i></i><span></span></span></div>'+
       '<div class="lvbtns"><button class="btn lvview" id="lvView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="lvFind" type="button" hidden>Find target again</button><button class="btn lvmanual" id="lvManual" type="button">Not a Range Book target?</button><button class="btn lvauto" id="lvAuto" type="button" hidden>Find corners automatically</button></div><button class="btn lvmdone" id="lvMDone" type="button" hidden>Done</button></div>'+
@@ -9081,11 +9118,13 @@ function openLive(o){
       '<div class="lvinfo"><span class="lvchip">'+esc(o.title||"Target")+'</span></div>'+
       '<div class="lvrow"><button class="lvshot" id="lvShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="lvUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow" hidden><button class="btn lvbtn" id="lvPrev" type="button" aria-label="Previous aim point">‹ Aim</button><button class="btn lvbtn" id="lvNext" type="button">Next aim ›</button><button class="btn primary lvbtn" id="lvDone" type="button" disabled>Save</button></div>'+
-      (FOCUS_OS?'<div class="lvfocus"><button class="btn lvbtn" id="lvFocus" type="button">'+(FOCUS_OS==="ios"?'Turn on Range Focus':'Silence calls')+'</button><span class="infobtn" role="button" tabindex="0" data-ik="'+(FOCUS_OS==="ios"?'liveFocusIos':'liveFocusAnd')+'" aria-label="How to set up '+(FOCUS_OS==="ios"?'the Range Focus':'Do Not Disturb')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></div>':'')+
+      '<h3 class="lvh">Aim points</h3>'+
       '<div class="lvaimrow"><div class="lvaims" id="lvAims" role="group" aria-label="Aim points"></div><div class="lvgrid">'+
         (groups.length?'<label class="lvgw">Charge for this aim<select id="lvGroup"></select></label>':'')+
         '<label>Shots<input id="lvWant" type="number" inputmode="numeric" min="1" step="1"></label>'+
         '<label>Distance ('+U.u("yd")+')<input id="lvDist" type="number" inputmode="numeric" step="any"></label></div></div>'+
+      '<h3 class="lvh">At the bench</h3>'+
+      (FOCUS_OS?'<div class="lvfocus"><button class="btn lvbtn" id="lvFocus" type="button">'+(FOCUS_OS==="ios"?'Turn on Range Focus':'Silence calls')+'</button><span class="infobtn" role="button" tabindex="0" data-ik="'+(FOCUS_OS==="ios"?'liveFocusIos':'liveFocusAnd')+'" aria-label="How to set up '+(FOCUS_OS==="ios"?'the Range Focus':'Do Not Disturb')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></div>':'')+
       '<label class="lvmic lvretl"><input type="checkbox" id="lvRet"><span class="lvtog" aria-hidden="true"></span><span>Show my reticle</span><span class="infobtn" role="button" tabindex="0" data-ik="liveRet" aria-label="About Show my reticle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
       '<div class="lvgrid lvretopts" id="lvRetOpts" hidden><label>Shooting profile<select id="lvRetProf"></select></label><label>Zero ('+U.u("yd")+')<input id="lvRetZero" type="number" inputmode="numeric" step="any"></label></div>'+
       '<p class="note lvretnote" id="lvRetNote" hidden></p>'+
@@ -9096,7 +9135,7 @@ function openLive(o){
     '</div></div><div class="lvsheet" id="lvSheet" hidden></div>'+
     (o.hosted?'<div class="lvdim" id="lvDim" role="button" tabindex="0" hidden><b>Camera for your '+esc(o.hosted.host||"iPad")+'</b><span id="lvDimStat"></span><small>Tap to see the camera</small><button class="btn lvpicon" id="lvPicOn" type="button">Keep the picture on</button></div>'+
       '<button class="btn lvpicoff" id="lvPicOff" type="button">Dim the screen</button>':'');
-  document.body.appendChild(v);
+  document.body.appendChild(v);liveDark(v,$("lvDarkB"));
   // an ⓘ inside a switch's label opens its tip without flipping the switch
   v.addEventListener("click",e=>{if(e.target.closest(".lvmic .infobtn"))e.preventDefault();},true);
   const can=$("lvCan"),ctx=can.getContext("2d"),thumb=$("lvThumb"),tctx=thumb.getContext("2d"),camBox=$("lvCam");
@@ -10071,14 +10110,16 @@ function openWatch(id,dev,host){
   clearTimeout(watchTimer);
   const HO=host&&host.o?host.o:null; // started here, with the phone as the camera (2.37)
   const v=document.createElement("div");v.className="viewer live watch";v.id="liveWatch";v.setAttribute("role","dialog");v.setAttribute("aria-label","Watching Live target");
-  v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><button class="btn lvchgo" id="wChGo" type="button" hidden>Connect Athlon</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span></div>'+
+  v.innerHTML='<div class="lvtop"><button class="btn" id="wClose" type="button">← Back</button><button class="btn lvchgo" id="wChGo" type="button" hidden>Connect Athlon</button><b class="mtitle">'+(HO?'Live target · '+esc(dev||"phone")+' camera':'Watching the '+esc(dev||"phone"))+'</b><span class="lvchip" id="wChip"></span><button class="btn lvdarkb" id="wDarkB" type="button" aria-pressed="false" title="Dark screen for Live target">Dark</button></div>'+
     '<div class="lvmain"><div class="lvleft"><div class="lvcam" id="wCam"><img id="wImg" alt="The phone\'s Live target screen"><div class="lvstat"><span class="lvpill warn" id="wAng" hidden><i></i><span></span></span><span class="lvpill busy" id="wStat"><i></i><span>Connecting…</span></span></div>'+
       '<div class="lvbtns"><button class="btn lvview" id="wView" type="button" hidden>Whole target</button><button class="btn lvmanual" id="wFind" type="button" hidden>Find target again</button><button class="btn lvmanual" id="wManual" type="button" hidden></button><button class="btn lvauto" id="wAuto" type="button" hidden>Find corners automatically</button></div><button class="btn lvmdone" id="wMDone" type="button" hidden>Done</button></div>'+
       '<div class="lvstats lvstrip" id="wStats"></div></div>'+
     '<div class="lvside"><div class="lvinfo"><span class="lvchip" id="wTitle"></span></div>'+
       '<div class="lvrow"><button class="lvshot" id="wShot" type="button" disabled>Shot</button><button class="btn lvbtn" id="wUndo" type="button" disabled>↶ Undo</button></div>'+
       '<div class="lvrow" hidden><button class="btn lvbtn" id="wPrev" type="button" disabled>‹ Aim</button><button class="btn lvbtn" id="wNext" type="button" disabled>Next aim ›</button><button class="btn primary lvbtn" id="wDone" type="button" disabled>Save</button></div>'+
+      '<h3 class="lvh">Aim points</h3>'+
       '<div class="lvaimrow"><div class="lvaims" id="wAims" role="group" aria-label="Aim points" hidden></div><div class="lvgrid"><label id="wGroupL" class="lvgw" hidden>Charge for this aim<select id="wGroup"></select></label><label>Shots<input id="wWant" type="number" inputmode="numeric" min="1" step="1"></label><label><span>Distance (<span id="wYd">yd</span>)</span><input id="wDist" type="number" inputmode="numeric" step="any"></label></div></div>'+
+      '<h3 class="lvh">At the bench</h3>'+
       '<label class="lvmic" id="wChL" hidden><input type="checkbox" id="wCh"><span class="lvtog" aria-hidden="true"></span><span>Chronograph finds each shot <span class="note" id="wChV"></span></span><span class="infobtn" role="button" tabindex="0" data-ik="liveChrono" aria-label="About Chronograph finds each shot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
       (HO?'<label class="lvmic" id="whMicL"><input type="checkbox" id="whMic"><span class="lvtog" aria-hidden="true"></span><span>Listen for shots <span class="lvmeter" id="whMeter" hidden><i></i><b></b></span></span><span class="infobtn" role="button" tabindex="0" data-ik="liveMic" aria-label="About Listen for shots"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M12 10.8v6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></span></label>'+
         '<div class="lvsens" id="whSens" hidden role="group" aria-label="Microphone sensitivity"><span>Sensitivity</span><button type="button" data-whsens="normal">Normal</button><button type="button" data-whsens="supp">Suppressed</button><button type="button" data-whsens="quiet">Quiet .22</button></div>'+
@@ -10089,7 +10130,7 @@ function openWatch(id,dev,host){
       '<div class="lvsens" id="wSens" hidden role="group" aria-label="Microphone sensitivity"><span>Microphone</span><button type="button" data-wsens="normal">Normal</button><button type="button" data-wsens="supp">Suppressed</button><button type="button" data-wsens="quiet">Quiet .22</button></div>'+
       '<p class="note lvnote" style="display:block!important">Everything here runs on the phone: tap <b>Shot</b> after each shot, or tap a hole on the picture to add it or a mark to remove it. Turn the microphone on from the phone.</p>')+
     '</div></div><div class="lvsheet" id="wSheet" hidden></div>';
-  document.body.appendChild(v);
+  document.body.appendChild(v);liveDark(v,$("wDarkB"));
   let closed=false,seq=0,st=null,lastGroups="";
   const img=$("wImg");
   const cmd=b=>rfetch("POST","/api/remote/"+id+"/cmd",b).catch(()=>setStat("Couldn't reach the phone. Check the signal.","bad"));
