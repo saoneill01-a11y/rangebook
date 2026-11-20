@@ -2,10 +2,13 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.14",
+      "version": "2.47.15",
       "date": "2026-11-19",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Ammo: typing a known cartridge (like 22 LR) fills in the bullet diameter, not only picking it from the list. Ammo already saved with a cartridge but no diameter gets it when you open it.",
+        "Start a range day: once you pick a gun, the ammo, the factory ammo catalog (searching too) and the other Shooting profiles list only what that gun's chamber can fire.",
+        "Fixed: on an iPad or computer, the big chronograph velocity and the Disconnect / Keep connected question showed up unstyled at the bottom of the page instead of over it.",
         "Shooting: Ranges › next to Profiles and Range log goes to your saved ranges in Gear & Ranges (each shows the dial and wind for its targets). The Saved ranges card is gone from the Range log.",
         "The main tabs: tapping one opens it where you left off, as before; tapping it again while you're in it goes to its main screen (Shooting: the profile list; Reloading: your loads; Gear & Ranges: Guns; Tools: all the tools).",
         "Range trips are easier to get around. A trip's page has one ‹ button that goes back where you came from (the Range log, at the same place in the list; Home; or the profile), its date and place as the title, and Profile: with Change under it, to open the profile or move the trip with its targets, chronograph shots and notes to another one (with Undo). A profile's Range trips button opens the Range log showing just its trips (its chip lit up), with + New range trip. The Range log has a chip for each profile you've shot with. On a profile, All groups (next to + New range trip) opens All your groups and Velocity and temperature together in one window.",
@@ -13,7 +16,7 @@
         "Range trips › Shot groups: a Zoom slider under the picture zooms in on the middle of the group (chart or photo). On a Live target group, drag a shot to where it really is: it moves on the target photo, keeps its velocity, and the group size updates.",
         "Range trips › Shot groups: tap a shot (its row in the table, or its hole on the chart or photo) for Delete shot, in a bar right under the chart. It comes off the target photo with its velocity, and the group size updates.",
         "Range trips › Shot groups: a Chart / Photo switch for groups shot with Live target. Photo shows the real paper around the aim point, cut from the target photo and straightened out, at the same scale as the chart, with 1-inch rings, the group circle and center, and each hole tagged with its shot number and velocity (colored slow to fast).",
-        "Chronograph: each velocity shows big at the top of the screen for a moment, with where it went (the range trip, Live target), or a warning when nothing is open to keep it. Starting Live target from a range trip moves the chronograph's shots to that trip, and a trip whose chronograph shots are going somewhere else says so, with Send them to this trip. After you save a Live target, Range Book asks whether to disconnect the chronograph or keep it connected.",
+        "Chronograph: each velocity shows big at the top of the screen for a moment, with Athlon over it; when no range trip or Live target is open to keep it, it says so and has a red outline. Starting Live target from a range trip moves the chronograph's shots to that trip, and a trip whose chronograph shots are going somewhere else says so, with Send them to this trip. After you save a Live target, Range Book asks whether to disconnect the chronograph or keep it connected.",
         "Range trips › Shot groups: Remove these from the trip clears chronograph velocities that aren't on any hole (shots from another trip, or before Live target was on).",
         "Live target: ← Back with shots not saved asks Save and exit, Discard or Keep going, instead of only offering to throw them away.",
         "Target photos: tap the picture to zoom in there, drag to look around, pinch to zoom, tap again to zoom out. Zoomed in, each shot shows its number in the order fired and its velocity. Tap a shot to change its velocity or delete it; it's saved straight away and the group size updates.",

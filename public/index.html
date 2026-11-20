@@ -859,14 +859,16 @@ header.hashelp>h1{padding-right:180px}
 @media(prefers-reduced-motion:reduce){.infosheet,.infoback{transition:none}}
 /* Range Book BLIPR (Bluetooth chronograph): the pill while connected, the tool, the settings sheet */
 .chhud{position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:44;display:flex;align-items:center;gap:8px;padding:8px 14px 8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:15px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.18);cursor:pointer;max-width:calc(100vw - 32px);white-space:nowrap}
-@media (max-width:760px){.chhud{bottom:calc(var(--tabh,56px) + 14px + env(safe-area-inset-bottom,0px))}
 .chbig{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 64px);z-index:90;transform:translate(-50%,-16px);opacity:0;pointer-events:none;background:rgba(14,14,14,.92);color:#fff;border-radius:18px;padding:10px 26px 12px;text-align:center;display:flex;flex-direction:column;gap:2px;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px);box-shadow:0 8px 30px rgba(0,0,0,.35)}
 .chbig.on{opacity:1;transform:translate(-50%,0)}
 .chbig b{font-size:46px;line-height:1.05;font-variant-numeric:tabular-nums;font-weight:800}
 .chbig b small{font-size:18px;font-weight:600;opacity:.8}
 .chbig span{font-size:14px;opacity:.88}
 .chbig.lost span{color:#ffb38a;opacity:1}
+.chbig em{font-style:normal;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.chbig.lost{box-shadow:0 0 0 3px #e5484d,0 8px 30px rgba(0,0,0,.35)}
 .chask{position:fixed;left:50%;bottom:calc(var(--tabh,56px) + 70px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:91;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:12px 16px;border-radius:14px;background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.3);max-width:calc(100vw - 32px);font-size:15px}}
+@media (max-width:760px){.chhud{bottom:calc(var(--tabh,56px) + 14px + env(safe-area-inset-bottom,0px))}
 .chhud i{width:10px;height:10px;border-radius:50%;background:var(--z3);flex:0 0 auto}
 .chhud[data-dot="lost"] i{background:var(--warn)}.chhud[data-dot="pause"] i{background:var(--muted)}
 .chhud .hv{overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}.chhud .hv small{font-size:12px;color:var(--muted);font-weight:500}
@@ -2780,9 +2782,11 @@ window.RB_BTCHRONO=(function(){
   function bigShot(s){
     if(!document.body)return;if(!big){big=document.createElement("div");big.className="chbig";big.setAttribute("role","status");document.body.appendChild(big);}
     const u=U(),v=u?u.n("fps",s.v,0):Math.round(s.v),live=!!document.getElementById("lvCan")||!!document.getElementById("wCam");
-    const to=s.test?"Test shot: not saved":[sink&&sink.label?sink.label:"",live?"Live target":""].filter(Boolean).join(" and ");
-    big.innerHTML='<b>'+esc(Number(v).toLocaleString())+' <small>'+esc(u?u.u("fps"):"fps")+'</small></b><span>'+esc(to?"→ "+to:"Not saved anywhere: no range trip or Live target is open")+'</span>';
-    big.classList.toggle("lost",!to);big.classList.add("on");clearTimeout(bigT);bigT=setTimeout(()=>big.classList.remove("on"),2600);}
+    // the chronograph's name over the number; a line under it only when the shot isn't kept, outlined red when nothing saves it
+    const kept=!!(sink&&sink.label)||live,nm=isAth()?"Athlon":chName();
+    big.innerHTML='<em>'+esc(nm)+'</em><b>'+esc(Number(v).toLocaleString())+' <small>'+esc(u?u.u("fps"):"fps")+'</small></b>'+
+      (s.test?'<span>Test shot: not saved</span>':kept?'':'<span>Not saved anywhere: no range trip or Live target is open</span>');
+    big.classList.toggle("lost",!s.test&&!kept);big.classList.add("on");clearTimeout(bigT);bigT=setTimeout(()=>big.classList.remove("on"),2600);}
   // after a Live target is saved: still connected? Disconnect or keep it (2.47.9)
   let ask=null;
   function askKeep(){
@@ -6172,7 +6176,12 @@ function renderAmmo(root){
         const oa=num(a.coal);if(RL&&oa>0&&C.oal&&oa>C.oal+.0005)out.push('<span class="err">COAL '+dim(oa)+' is longer than the SAAMI maximum of '+dim(C.oal)+'. Make sure it fits your magazine and chamber.</span>');}
       box.innerHTML=out.map(x=>'<div>'+x+'</div>').join("");};
     note();["af_cartridge","af_dia","af_coal"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>setTimeout(note,0));});
-    const ce=$("af_cartridge");if(ce&&!ce.disabled)RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[],onPick:c=>{if(c&&!(num(a.dia)>0)){a.dia=c.d;const di=$("af_dia");if(di)U.fill(di,"dim",c.d,2,4);queueAmmo();if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}note();}});}
+    // a known cartridge fills in its bullet diameter (when it's still empty), whether it was picked from the list or typed (2.47.15)
+    const fillDia=c=>{if(c&&c.d>0&&!(num(a.dia)>0)){a.dia=c.d;const di=$("af_dia");if(di)U.fill(di,"dim",c.d,2,4);queueAmmo();if(window.TRAJ_AMMO)TRAJ_AMMO(ammo);}};
+    const ce=$("af_cartridge");if(ce&&!ce.disabled){RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[],onPick:c=>{fillDia(c);note();}});
+      ["input","change"].forEach(ev=>ce.addEventListener(ev,()=>setTimeout(()=>{fillDia(RB_CARTS.find(ce.value.trim()));note();},0)));
+      // ammo saved before this, with its cartridge but no diameter: filled in when it's opened
+      if(a.cartridge&&!(num(a.dia)>0)){fillDia(RB_CARTS.find(String(a.cartridge).trim()));note();}}}
   FIELDS.forEach(([k,lab,t])=>{const el=$("af_"+k);if(!el)return;
     el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{a[k]=t==="number"?readU(el,k,FIELD_U,a[k]):el.value;queueAmmo();if(a.shared&&SHARE_KEYS.includes(k))pushShared(a);$("rifTitle").textContent=ammoLabel(a);if(k==="bought"||k==="lowAt"||k==="price"||k==="perBox"||k==="cpr"||k==="charge")draw();});});
   if(RL){bindReloadSrc(a);
@@ -12465,11 +12474,13 @@ function renderHome(){
     }else{
       const gid=homePick===true?"":(homePick.gun||""),g=rifles.find(r=>r.id===gid);
       const favFirst=(a,b)=>(b.fav?1:0)-(a.fav?1:0)||(a.fav?(a.favN==null?1e9:a.favN)-(b.favN==null?1e9:b.favN):0)||byUse(a,b);
-      const mine=T.filter(t=>!gid||t.rifleId===gid).sort(favFirst),rest=gid?T.filter(t=>t.rifleId!==gid).sort(favFirst):[];
-      const fa=ammo.filter(a=>!mine.some(t=>t.ammoId===a.id));
+      // with a gun picked, only ammo (and other profiles) its chamber can fire (2.47.15)
+      const gcart=g?gunCart(g):"",fitsG=c=>{if(!gcart)return true;if(!c)return false;if(!window.RB_CARTS)return c===gcart;const f=RB_CARTS.fits(gcart,c);return f.ok&&!f.skip;};
+      const mine=T.filter(t=>!gid||t.rifleId===gid).sort(favFirst),rest=gid?T.filter(t=>t.rifleId!==gid&&fitsG(t.cart)).sort(favFirst):[];
+      const fa=ammo.filter(a=>!mine.some(t=>t.ammoId===a.id)&&fitsG(a.cartridge));
       h+='<div class="rdhead"><b>Range day</b>'+(g?' with '+esc(g.name||"Unnamed gun"):'')+' · What are you shooting?'+(rifles.length?' <button class="linkbtn" type="button" id="hGunBack">Change gun</button>':'')+'</div>';
       if(mine.length)h+='<div class="cartgroup">'+mine.map(t=>card('data-hpick="'+esc(t.id)+'"',(t.fav?"★ ":"")+t.name,t.cart)).join("")+'</div>';
-      if(fa.length)h+='<p class="note rdsub">Ammunition'+(g?' (makes a Shooting profile for this gun)':'')+'</p><div class="cartgroup">'+fa.map(a=>card('data-hammo="'+esc(a.id)+'"',ammoLabel(a),a.cartridge||"")).join("")+'</div>';
+      if(fa.length)h+='<p class="note rdsub">'+(gcart?esc(gcart)+' ammunition':'Ammunition')+(g?' (makes a Shooting profile for this gun)':'')+'</p><div class="cartgroup">'+fa.map(a=>card('data-hammo="'+esc(a.id)+'"',ammoLabel(a),a.cartridge||"")).join("")+'</div>';
       // factory ammo you don't have yet, from the catalog: the gun's cartridge first, or search all of it (2.17)
       h+='<p class="note rdsub">Factory ammo from the catalog</p><div class="field" style="max-width:420px;margin-bottom:6px"><input id="hCatQ" class="name" type="search" autocomplete="off" placeholder="Search maker, bullet or cartridge" aria-label="Search the factory ammo catalog"></div><div class="cartgroup" id="hCatList"></div>';
       if(rest.length)h+='<p class="note rdsub">Other Shooting profiles</p><div class="cartgroup">'+rest.map(t=>card('data-hpick="'+esc(t.id)+'"',(t.fav?"★ ":"")+t.name,t.cart)).join("")+'</div>';
@@ -12555,9 +12566,9 @@ function renderHome(){
     const CAT=(window.RB_AMMO_CATALOG||[]).filter(c=>!ammo.some(a=>a.catItem===c.item));
     const card=(attr,t,d)=>'<button class="loaditem" type="button" '+attr+'><span class="t">'+esc(t)+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+'</button>';
     const draw=()=>{const w=q.value.toLowerCase().split(/\s+/).filter(Boolean),hit=c=>w.every(x=>[c.mfr,c.line,c.cart,c.bullet,c.item].join(" ").toLowerCase().includes(x));
-      const list=w.length?CAT.filter(hit):CAT.filter(c=>fits(c.cart)),cap=40;
+      const list=(w.length?CAT.filter(hit):CAT).filter(c=>!gc||fits(c.cart)),cap=40;
       box.innerHTML=list.length?list.slice(0,cap).map(c=>card('data-hcat="'+esc(c.item)+'"',[c.mfr,c.line,c.bullet].filter(Boolean).join(" "),[c.cart,U.s("fps",c.v,0,true),c.bc!=null?"BC "+c.bc:"no published BC"].filter(Boolean).join(" · "))).join("")+(list.length>cap?'<p class="note">'+(list.length-cap)+' more. Add a word to narrow it down.</p>':'')
-        :'<p class="note">'+(w.length?'Nothing in the catalog matches that.':gc?'Nothing in the catalog for '+esc(gc)+'. Search to see other cartridges.':'Type to search the catalog.')+'</p>';
+        :'<p class="note">'+(w.length?'Nothing in the catalog'+(gc?' for '+esc(gc):'')+' matches that.':gc?'Nothing in the catalog for '+esc(gc)+'.':'Type to search the catalog.')+'</p>';
       box.querySelectorAll("[data-hcat]").forEach(b=>b.addEventListener("click",()=>{const id=window.RB_ADD_CATALOG_AMMO&&RB_ADD_CATALOG_AMMO(b.dataset.hcat);pickAmmo(ammo.find(x=>x.id===id));}));};
     q.addEventListener("input",draw);draw();}}
   $("hNewLoad").addEventListener("click",()=>{showTab("rel");createLoad();});
