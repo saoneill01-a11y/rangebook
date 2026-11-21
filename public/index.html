@@ -271,7 +271,9 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .gtile.gty-rifle>.loaditem,.gtile.gty-pistol>.loaditem,.gtile.gty-shotgun>.loaditem{border-left-color:var(--gk)!important}
 .lthumb:has(img.gph){width:84px;height:56px}.lthumb:has(img.gph.long){width:136px;height:56px}.lthumb:has(img.gphoto){width:136px;height:90px}.lthumb img.gphoto{object-fit:cover}.lthumb img.gphoto.fit{object-fit:contain}.lthumb:has(img.gphoto.fit){background:#fff}.lthumb img.gph.long{transform:scale(1.06)}@media(max-width:400px){.lthumb:has(img.gph.long){width:112px;height:46px}.lthumb:has(img.gphoto){width:112px;height:74px}}.lthumb img.gph{object-fit:cover}img.gkpic{width:42px;height:28px;object-fit:cover;border-radius:5px;flex:none}.gkinds img.gkpic{width:27px;height:18px;border-radius:3px}.gty-rifle .lthumb,.gty-pistol .lthumb,.gty-shotgun .lthumb{background:color-mix(in srgb,var(--gk) 14%,var(--surface));color:var(--gk)}
 svg.gico{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}.lthumb svg.gico{width:46px;height:20px}
+.akhead{margin:20px 0 2px;padding-bottom:4px;border-bottom:2px solid var(--line);font-size:calc(18px*var(--fs))}.aksearch{margin:2px 0 8px}
 .segtabs.gkinds{display:inline-flex;align-self:flex-start;max-width:100%;flex-wrap:wrap;margin:10px 0 4px}.segtabs.gkinds button{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:5px 12px}.gkinds .gico{width:26px;height:11px}.gkn{opacity:.7;font-weight:500}
+@media (max-width:420px){.segtabs.gkinds.akinds{display:flex;flex-wrap:nowrap;align-self:stretch}.segtabs.gkinds.akinds button{flex:1 1 auto;min-width:0;justify-content:center;padding:5px 4px;gap:4px}.segtabs.akinds img.gkpic{width:22px;height:15px}}
 .loaditem{display:flex;flex-direction:column;gap:2px;text-align:left;width:100%;padding:11px 12px;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;background:linear-gradient(to bottom,var(--surface),var(--sunk));cursor:pointer;font:inherit;color:inherit;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(0,0,0,.10),0 3px 8px rgba(0,0,0,.12);transition:transform .12s,box-shadow .12s,border-color .12s}
 .loaditem:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 4px rgba(0,0,0,.12),0 8px 16px rgba(0,0,0,.14)}
@@ -1123,7 +1125,7 @@ body.tripspage #trajJump{display:none!important}
 .shotadd input{flex:1 1 200px;min-width:0}
 .triphead{margin-bottom:6px}
 .picrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.picbox{width:min(360px,100%);height:225px;border-radius:10px;overflow:hidden;flex:none;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent);border:1px solid var(--line)}
-.picbox img{width:100%;height:100%;object-fit:contain;display:block}
+.picbox img{width:100%;height:100%;object-fit:contain;display:block}.pastetip{display:block;margin-top:4px}
 .picbox:has(>img){background:var(--sunk)}.picbox:has(>img.gearph){background:#f6efe3}.picbox svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.4}
 .picbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1 1 160px;min-width:0}.picbtns .note{flex:1 0 100%;margin:0}
 .lthumb svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6}
@@ -6407,17 +6409,40 @@ function addFromShared(sh){const d=sh.data||{};
 const catBox=item=>boxes.find(b=>b.item===item);
 const thumbOf=a=>{const b=boxesFor(a)[0];return b?b.url:null;};
 window.RB_CATLABEL=item=>{const c=AMMO_CATALOG.find(x=>x.item===item);return c?catLabel(c):"Catalog item "+item;};
-async function smallJpeg(file){
-  const im=await loadImage(file),k=Math.min(1,900/Math.max(im.naturalWidth,im.naturalHeight));
-  const w=Math.round(im.naturalWidth*k),h=Math.round(im.naturalHeight*k),c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);
-  return {data:c.toDataURL("image/jpeg",.6),w,h};
+/* a picture shrunk to fit max, on a white background (2.47.41). A cut-out with a see-through background (like Copy Subject on a Mac
+   or iPhone) is trimmed to the object, given a little room and made 3:2 like the list pictures, so the clear part isn't saved as black. */
+async function flatJpeg(file,max,q){
+  const im=await loadImage(file),k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));
+  const w=Math.max(1,Math.round(im.naturalWidth*k)),h=Math.max(1,Math.round(im.naturalHeight*k)),c=document.createElement("canvas");c.width=w;c.height=h;
+  const cx=c.getContext("2d");cx.drawImage(im,0,0,w,h);
+  let sx=0,sy=0,sw=w,sh=h;
+  if(/png|webp|gif|tiff|heic/i.test(file.type||"png")){
+    const a=cx.getImageData(0,0,w,h).data;let clear=0,x0=w,y0=h,x1=-1,y1=-1;
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){const v=a[(y*w+x)*4+3];if(v<250)clear++;if(v>24){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}}
+    if(clear>w*h*.02&&x1>=x0){const ow=x1-x0+1,oh=y1-y0+1,pad=Math.round(Math.max(ow,oh)*.06);
+      sw=ow+2*pad;sh=oh+2*pad;if(sw/sh>1.5)sh=Math.round(sw/1.5);else sw=Math.round(sh*1.5);
+      sx=Math.round(x0+ow/2-sw/2);sy=Math.round(y0+oh/2-sh/2);}}
+  const k2=Math.min(1,max/Math.max(sw,sh)),W=Math.round(sw*k2),H=Math.round(sh*k2),o=document.createElement("canvas");o.width=W;o.height=H;
+  const ox=o.getContext("2d");ox.fillStyle="#fff";ox.fillRect(0,0,W,H);ox.drawImage(c,sx,sy,sw,sh,0,0,W,H);
+  return {data:o.toDataURL("image/jpeg",q),w:W,h:H};
 }
+const smallJpeg=file=>flatJpeg(file,900,.6);
 // gun photos: a bit sharper than box photos, still small enough for a phone signal
-async function gunJpeg(file){
-  const im=await loadImage(file),k=Math.min(1,1600/Math.max(im.naturalWidth,im.naturalHeight));
-  const w=Math.round(im.naturalWidth*k),h=Math.round(im.naturalHeight*k),c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);
-  return {data:c.toDataURL("image/jpeg",.8),w,h};
-}
+const gunJpeg=file=>flatJpeg(file,1600,.8);
+/* paste (⌘V) or drop a picture on a gear page (2.47.41): it goes to that page's picture or photos box, the same as picking a file.
+   Inputs marked data-paste take it; the highest number wins when a page has more than one (the Picture over More photos). */
+// a folded section still counts (its card is on screen); pasting opens it so you see the upload
+function pasteTarget(){let best=null;document.querySelectorAll("input[type=file][data-paste]").forEach(i=>{const box=i.closest("section,.card")||i.closest(".field,.row");
+  if(!box||!box.offsetParent)return;if(!best||+i.dataset.paste>+best.dataset.paste)best=i;});return best;}
+function pasteFiles(files){const imgs=[...files].filter(f=>/^image\//.test(f.type));if(!imgs.length)return false;const inp=pasteTarget();if(!inp)return false;
+  const sb=inp.closest(".secbody");if(sb&&sb.hidden){const hd=sb.previousElementSibling;if(hd&&hd.classList.contains("sechead"))hd.click();}
+  const dt=new DataTransfer();(inp.multiple?imgs:imgs.slice(0,1)).forEach(f=>dt.items.add(f));inp.files=dt.files;inp.dispatchEvent(new Event("change",{bubbles:true}));return true;}
+if(!window.__rbPaste){window.__rbPaste=1;
+  document.addEventListener("paste",e=>{const cd=e.clipboardData;if(!cd)return;const files=[...cd.items||[]].filter(i=>i.kind==="file").map(i=>i.getAsFile()).filter(Boolean);
+    if(files.length&&pasteFiles(files))e.preventDefault();});
+  document.addEventListener("dragover",e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes("Files")&&pasteTarget()){e.preventDefault();e.dataTransfer.dropEffect="copy";}});
+  document.addEventListener("drop",e=>{if(e.dataTransfer&&e.dataTransfer.files.length&&pasteTarget()){e.preventDefault();pasteFiles(e.dataTransfer.files);}});}
+const PASTE_TIP=matchMedia("(hover:hover) and (pointer:fine)").matches?'<span class="note pastetip">Or paste a picture (⌘V on a Mac, Ctrl+V on Windows) or drag one here.</span>':'';
 async function uploadGun(r,files){
   for(const f of files){
     gunUp++;renderRifles();
@@ -6611,7 +6636,7 @@ function renderAmmo(root){
         note:'Pick factory ammo to fill in the maker\'s published BC and velocity (a few Nosler and all the Barnes velocities are from dealer listings), or enter yours from the box. Shaded ones were shared by people on this Range Book, not taken from the maker. <b>+ Reloaded ammo</b> makes an entry from one of your Reloading recipes. To fix something in this list, open it in <a class=goto href=#go data-go=tools:lib:ammo>Tools › Library</a>.'});
       gearHead("Add ammo","‹ Ammo");
       $("ammoAddRel").addEventListener("click",()=>{const b=$("relAddBox");b.hidden=!b.hidden;if(!b.hidden)drawRelAdd(b,null,a=>{ammoAdding=false;ammoOpen=a.id;renderRifles();window.scrollTo(0,0);});});
-      bindAddScreen({onQ:v=>{ammoCatQ=v;},bind:shdel,
+      bindAddScreen({onQ:v=>{ammoCatQ=v;},bind:shdel,kindOf:it=>it.shared?ammoKindOf(it.g):ammoKindOf(it.x.cart,it.x.shell),
         items:()=>{const cat=libItems("ammo").map(it=>{const c=it.x,cb=catBox(c.item);return Object.assign(it,{thumb:cb?'<img alt="" loading="lazy" src="'+esc(cb.url)+'">':"",
             d:U.s("fps",c.v,0,true)+(c.tb?" ("+BBL(c.tb)+" barrel)":"")+" · "+(c.bc!=null?"BC "+c.bc+" G1"+(c.g7?" / "+c.g7+" G7":""):"no published BC"),
             m:it.m||(c.dealer?"Velocity from a dealer, BC from "+c.mfr:"Maker data"),words:it.words+" "+catLabel(c)});});
@@ -6668,7 +6693,7 @@ function renderAmmo(root){
     (a.sharedFrom?'<p class="note">Copied from a load someone shared here.</p>':'')+'</section>';
   if(!RL){const bx=boxesFor(a);
     h+='<section class="card" aria-label="Box photo" id="ammoBoxPh"><h2>Box</h2>'+(bx.length?'<div class="boxgrid">'+bx.map(b=>'<figure class="boxph"><a href="'+esc(b.url)+'" target="_blank" rel="noopener"><img src="'+esc(b.url)+'" alt="Ammo box" loading="lazy"></a><figcaption>'+(a.catItem?'by '+esc(b.mine?'you':b.by):'')+((b.mine||(ME&&ME.isAdmin))?' <button class="btn small danger" type="button" data-bxdel="'+esc(b.id)+'">Delete</button>':'')+'</figcaption></figure>').join("")+'</div>':'<p class="note">No photo of this box yet.</p>')+
-      (window.GUEST?'<p class="note">Box photos need an account.</p>':'<div class="row"><label class="btn" for="boxIn" style="cursor:pointer">+ Add a photo of the box</label><input id="boxIn" type="file" accept="image/*" hidden><span class="savestate">'+(boxUp?'Uploading…':'')+'</span></div>'+
+      (window.GUEST?'<p class="note">Box photos need an account.</p>':'<div class="row"><label class="btn" for="boxIn" style="cursor:pointer">+ Add a photo of the box</label><input id="boxIn" type="file" accept="image/*" hidden data-paste="2"><span class="savestate">'+(boxUp?'Uploading…':'')+'</span></div>'+
       '<p class="note">'+(!BOX_SHARED?'Only you can see this photo. (Sharing box photos with everyone is turned off on this Range Book.)':a.catItem?'This load is in the catalog, so the photo is shared with everyone on this Range Book to help them recognize the box. Admins can remove photos that don\'t match.':(a.shared||a.sharedFrom)?'This load is shared, so its photo is shared with everyone on this Range Book too. Admins can remove photos that don\'t match.':'Only you can see this photo unless you share the load.')+' A quick phone snap is plenty; it\'s shrunk before it\'s saved.</p>')+'</section>';}
   h+='<section class="card" aria-label="Rounds" id="ammoRounds"><h2>Rounds</h2><div id="ammoBox"></div>'+
     '<div class="row"><input id="ammoBuyN" type="number" inputmode="numeric" placeholder="Rounds" style="max-width:110px" aria-label="'+(RL?'Rounds loaded':'Rounds bought')+'"><button class="btn" id="ammoBuy" type="button">'+(RL?'+ Loaded more':'+ Bought more')+'</button></div>'+(RL&&a.loadId?'<p class="note">Batches you log on the Reloading recipe at '+(num(a.charge)!=null?num(a.charge)+' gr':'this charge')+' are added here automatically.</p>':'')+'</section>'+
@@ -6878,7 +6903,7 @@ function renderRifles(){
         '<div class="row"><button class="btn" type="button" data-ptnew="barrel" data-ptgun="'+esc(r.id)+'">+ Add barrel</button></div></section>';})()+
       (()=>{const ps=gunPhotosOf(r.id);
         return '<section class="card" aria-label="Gun photos" id="secGunPh"><h2>Photos</h2>'+(ps.length?'<div class="boxgrid gungrid">'+ps.map(p=>'<figure class="boxph"><a href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Photo of '+esc(r.name||"this gun")+'" loading="lazy"></a><figcaption>'+(p.at?esc((d=>fmtDate(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')))(new Date(p.at))):'')+' <button class="linkbtn danger" type="button" data-gdel="'+esc(p.id)+'">Delete</button></figcaption></figure>').join("")+'</div>':'<p class="note">No photos yet.</p>')+
-          (window.GUEST?'<p class="note">Gun photos need an account.</p>':'<div class="row"><label class="btn" for="gunIn" style="cursor:pointer">+ Add photos</label><input id="gunIn" type="file" accept="image/*" multiple hidden><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these. Handy for insurance records along with the serial number.</p>')+'</section>';})()+
+          (window.GUEST?'<p class="note">Gun photos need an account.</p>':'<div class="row"><label class="btn" for="gunIn" style="cursor:pointer">+ Add photos</label><input id="gunIn" type="file" accept="image/*" multiple hidden data-paste="2"><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these. Handy for insurance records along with the serial number.</p>'+(PASTE_TIP?'<p>'+PASTE_TIP+'</p>':''))+'</section>';})()+
       vaultCardHtml(r.id)+
       '<section class="card" aria-label="Round count" id="secRounds"><h2>Round count</h2><div id="rcBox"></div><div class="grid">'+
       (r.type==="shotgun"?'':field("rf_barrelLife","Barrel life (rounds)",r.barrelLife,"number"))+field("rf_roundsBase",r.type==="shotgun"?"Shells before Range Book":"Rounds before Range Book",r.roundsBase,"number")+
@@ -7453,7 +7478,7 @@ const qtyTxt=v=>{const n=num(v);return n==null?"":(Math.round(n*100)/100).toLoca
 // the photos card shared by suppressors and inventory (the gun one, under another id)
 function gearPhotosHtml(id,what){const ps=gunPhotosOf(id);
   return '<section class="card" aria-label="Photos"><h2>Photos</h2>'+(ps.length?'<div class="boxgrid gungrid">'+ps.map(p=>'<figure class="boxph"><a href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Photo of '+esc(what)+'" loading="lazy"></a><figcaption>'+(p.at?esc((d=>fmtDate(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')))(new Date(p.at))):'')+' <button class="linkbtn danger" type="button" data-gdel="'+esc(p.id)+'">Delete</button></figcaption></figure>').join("")+'</div>':'<p class="note">No photos yet.</p>')+
-    (window.GUEST?'<p class="note">Photos need an account.</p>':'<div class="row"><label class="btn" for="gearIn" style="cursor:pointer">+ Add photos</label><input id="gearIn" type="file" accept="image/*" multiple hidden><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these.</p>')+'</section>';}
+    (window.GUEST?'<p class="note">Photos need an account.</p>':'<div class="row"><label class="btn" for="gearIn" style="cursor:pointer">+ Add photos</label><input id="gearIn" type="file" accept="image/*" multiple hidden data-paste="1"><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these.</p>'+(PASTE_TIP?'<p>'+PASTE_TIP+'</p>':''))+'</section>';}
 function bindGearPhotos(root,id){
   {const gi=$("gearIn");if(gi)gi.addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadGun({id},f);});}
   root.querySelectorAll("[data-gdel]").forEach(b=>b.addEventListener("click",()=>{const pid=b.dataset.gdel,i=gunPhotos.findIndex(p=>p.id===pid),ph=gunPhotos[i];gunPhotos=gunPhotos.filter(p=>p.id!==pid);renderRifles();
@@ -7496,8 +7521,8 @@ function picFieldHtml(id,what,icon){const p=picOf(id);
   return '<div class="field wide picfield"><span class="flabel">Picture</span><div class="picrow">'+
     (p?'<a class="picbox" href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Picture of '+esc(what)+'"></a>':'<span class="picbox empty">'+icon+'</span>')+
     '<div class="picbtns">'+(window.GUEST?'<span class="note">Pictures need an account.</span>':
-      '<label class="btn" for="picIn" style="cursor:pointer">'+(p?'Replace picture':'+ Add picture')+'</label><input id="picIn" type="file" accept="image/*" hidden>'+
-      (p?'<button class="btn danger" type="button" id="picDel">Remove</button>':'')+(picUp?'<span class="savestate">Uploading…</span>':'')+'<span class="note">Shows on the list. Only you can see it.</span>')+'</div></div></div>';}
+      '<label class="btn" for="picIn" style="cursor:pointer">'+(p?'Replace picture':'+ Add picture')+'</label><input id="picIn" type="file" accept="image/*" hidden data-paste="3">'+
+      (p?'<button class="btn danger" type="button" id="picDel">Remove</button>':'')+(picUp?'<span class="savestate">Uploading…</span>':'')+'<span class="note">Shows on the list. Only you can see it.</span>'+PASTE_TIP+'')+'</div></div></div>';}
 function bindPicField(id){
   const inp=$("picIn");if(inp)inp.addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;picUp++;renderRifles();
     try{const {data,w,h}=await gunJpeg(f),old=gunPhotosOf(picKey(id)),res=await API.post("/api/gunphotos",{data,w,h,rifle:picKey(id)});
@@ -7954,7 +7979,7 @@ function renderScopes(root){
         :(window.GUEST?'<p class="note">Reticle pictures need an account.</p>':
           (ph?(sc.pic&&sc.pic.ppu>0?'<p class="note">Your picture, with the scale set: '+esc(String(sc.pic.val))+' '+(MIL?'MIL':'MOA')+' from the center. The dope card puts the dot on it.</p>':'<p class="err">Set the scale so Range Book knows how big the marks are. Until then the dope card uses the plain reticle.</p>'):
             '<p class="note">Upload a picture of just your reticle, straight on. Best is the maker\'s drawing of it, from their website or the manual, on a white background (a screenshot is fine). A photo through the scope works too: point it at something bright and even, like a white wall or an overcast sky, turn it to full power with the reticle sharp, and hold the phone straight behind the eyepiece. It stays private to you.</p>')+
-          '<div class="row"><label class="btn'+(ph?'':' primary')+'" for="scPicIn" style="cursor:pointer">'+(ph?'Replace picture':'+ Upload a picture')+'</label><input id="scPicIn" type="file" accept="image/*" hidden>'+(ph?'<button class="btn'+(sc.pic&&sc.pic.ppu>0?'':' primary')+'" type="button" id="scCal">Set the scale</button><button class="btn danger" type="button" id="scPicDel">Remove picture</button>':'')+'<span class="savestate">'+(retUp?'Uploading…':'')+'</span></div>'))+
+          '<div class="row"><label class="btn'+(ph?'':' primary')+'" for="scPicIn" style="cursor:pointer">'+(ph?'Replace picture':'+ Upload a picture')+'</label><input id="scPicIn" type="file" accept="image/*" hidden data-paste="2">'+(ph?'<button class="btn'+(sc.pic&&sc.pic.ppu>0?'':' primary')+'" type="button" id="scCal">Set the scale</button><button class="btn danger" type="button" id="scPicDel">Remove picture</button>':'')+'<span class="savestate">'+(retUp?'Uploading…':'')+'</span></div>'))+
       '</div></div></section>'+
       '<section class="card" aria-label="Guns with this scope"><h2>On</h2>'+(gs.length?'<div class="cartgroup">'+gs.map(g=>'<button class="loaditem" type="button" data-sgun="'+esc(g.id)+'"><span class="t">'+esc(g.name||"Unnamed gun")+'</span></button>').join("")+'</div><p class="note">Every Shooting profile that uses this gun takes its MOA or MIL and reticle from this scope.</p>':'<p class="note">Not on a gun yet. Pick the gun under <b>On gun</b> above.</p>')+'</section>'+
       '<div class="row endrow"><button class="btn danger" type="button" id="scopeDel">Delete '+KW+'</button></div>';
@@ -8221,18 +8246,36 @@ function addMatch(x,w,nums){const t=lc(x.t+" "+(x.d||"")+" "+x.g+" "+(x.words||"
   return t.includes(w)||t.replace(/[^a-z0-9]+/g,"").includes(w.replace(/[^a-z0-9]+/g,""));}
 const addTile=(x,n)=>(x.after?'<div class="sharedrow">':'')+'<button class="loaditem'+(x.thumb?' withthumb':'')+(x.cls?' '+x.cls:'')+'" type="button" data-addi="'+n+'">'+(x.thumb?'<span class="lthumb">'+x.thumb+'</span><span class="ltext">':'')+
   '<span class="t">'+esc(x.t)+'</span>'+(x.d?'<span class="d">'+esc(x.d)+'</span>':'')+(x.m?'<span class="m">'+esc(x.m)+'</span>':'')+(x.thumb?'</span>':'')+'</button>'+(x.after?x.after+'</div>':'');
-/* o: items() → [{t,d,m,g,gk,words,thumb,cls,...}] or null while loading · load() a promise for the list · nums · onPick(item) · onOwn() · onQ(text) · empty (when nothing's listed) */
+/* factory ammo in Rifle / Pistol / Shotgun tabs (2.47.40), on Add ammo and Tools › Library › Factory ammo; typing searches all three */
+const AMMO_KINDS=[["rifle","Rifle"],["pistol","Pistol"],["shotgun","Shotgun"]],AKO={rifle:0,pistol:1,shotgun:2};
+let ammoKindSel="rifle";try{const k=localStorage.getItem("rb.ammokind");if(k in AKO)ammoKindSel=k;}catch(e){}
+function ammoKindOf(cart,shell){if(shell)return "shotgun";const g=gunTypeGuess(cart);return g in AKO?g:"rifle";}
+function ammoKindTabs(counts,searching){
+  return '<div class="segtabs gkinds akinds" role="radiogroup" aria-label="Show">'+AMMO_KINDS.map(([k,l])=>{const on=!searching&&ammoKindSel===k;
+    return '<button type="button" role="radio" data-akind="'+k+'" aria-checked="'+on+'" aria-selected="'+on+'">'+kindPic(k)+esc(l)+' <span class="gkn">'+(counts[k]||0).toLocaleString()+'</span></button>';}).join("")+'</div>'+
+    (searching?'<p class="note aksearch">Searching rifle, pistol and shotgun ammo. Tap a tab to clear the search.</p>':'');}
+function setAmmoKind(k){if(!(k in AKO))return;ammoKindSel=k;try{localStorage.setItem("rb.ammokind",k);}catch(e){}}
+/* o: items() → [{t,d,m,g,gk,words,thumb,cls,...}] or null while loading · load() a promise for the list · nums · onPick(item) · onOwn() · onQ(text) · empty (when nothing's listed)
+   · kindOf(item) → "rifle"/"pistol"/"shotgun" splits the list into those tabs (factory ammo) */
 function bindAddScreen(o){
   const box=$("addCat"),qi=$("addQ");if(!box||!qi)return;let lim=200;
   const draw=()=>{const its=o.items();if(!its){return;}
     if(!its.length){box.innerHTML='<p class="note">'+(o.empty||'Nothing listed. Tap <b>'+esc($("addOwn").textContent)+'</b>.')+'</p>';return;}
-    const words=lc(qi.value).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean),hit=its.filter(x=>words.every(w=>addMatch(x,w,o.nums))).sort((a,b)=>(a.gk||0)-(b.gk||0)||String(a.g).localeCompare(String(b.g),undefined,{numeric:true}));
-    if(!hit.length){box.innerHTML='<p class="note">No match. Try fewer words, or tap <b>'+esc($("addOwn").textContent)+'</b>.</p>';return;}
-    const shown=hit.slice(0,lim),by=new Map();shown.forEach((x,n)=>{x._n=n;if(!by.has(x.g))by.set(x.g,[]);by.get(x.g).push(x);});
-    const keys=[...by.keys()].sort((a,b)=>(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(a).localeCompare(String(b),undefined,{numeric:true}));
-    box.innerHTML=keys.map(g=>'<h3 class="catmk">'+esc(g)+'</h3><div class="cartgroup">'+by.get(g).map(x=>addTile(x,x._n)).join("")+'</div>').join("")+
+    const words=lc(qi.value).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean),KO=o.kindOf;
+    let hit=its.filter(x=>words.every(w=>addMatch(x,w,o.nums))),tabs="";
+    if(KO){const cnt={};hit.forEach(x=>{x._k=KO(x);cnt[x._k]=(cnt[x._k]||0)+1;});tabs=ammoKindTabs(cnt,!!words.length);if(!words.length)hit=hit.filter(x=>x._k===ammoKindSel);}
+    const ko=x=>KO&&words.length?AKO[x._k]:0;
+    hit.sort((a,b)=>ko(a)-ko(b)||(a.gk||0)-(b.gk||0)||String(a.g).localeCompare(String(b.g),undefined,{numeric:true}));
+    const bindTabs=()=>box.querySelectorAll("[data-akind]").forEach(b=>b.addEventListener("click",()=>{setAmmoKind(b.dataset.akind);if(qi.value){qi.value="";if(o.onQ)o.onQ("");}lim=200;draw();}));
+    if(!hit.length){box.innerHTML=tabs+'<p class="note">'+(KO&&!words.length?'No '+ammoKindSel+' ammo listed yet.':'No match. Try fewer words, or tap <b>'+esc($("addOwn").textContent)+'</b>.')+'</p>';bindTabs();return;}
+    const shown=hit.slice(0,lim),by=new Map();shown.forEach((x,n)=>{x._n=n;const g=(KO?x._k+"|":"")+x.g;if(!by.has(g))by.set(g,[]);by.get(g).push(x);});
+    const keys=[...by.keys()].sort((a,b)=>ko(by.get(a)[0])-ko(by.get(b)[0])||(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(by.get(a)[0].g).localeCompare(String(by.get(b)[0].g),undefined,{numeric:true}));
+    const multi=KO&&words.length&&new Set(shown.map(x=>x._k)).size>1;let lastK=null;
+    box.innerHTML=tabs+keys.map(g=>{const f=by.get(g)[0],kh=multi&&f._k!==lastK?'<h3 class="akhead">'+esc(AMMO_KINDS[AKO[f._k]][1])+'</h3>':'';lastK=f._k;
+        return kh+'<h3 class="catmk">'+esc(f.g)+'</h3><div class="cartgroup">'+by.get(g).map(x=>addTile(x,x._n)).join("")+'</div>';}).join("")+
       (hit.length>lim?'<div class="row addmore"><span class="note">'+(hit.length-lim).toLocaleString()+' more. Type to narrow it down, or </span><button class="btn small" type="button" id="addAll">show all '+hit.length.toLocaleString()+'</button></div>':'');
     box.querySelectorAll("[data-addi]").forEach(b=>b.addEventListener("click",()=>o.onPick(shown[+b.dataset.addi])));
+    bindTabs();
     if(o.bind)o.bind(box);
     const al=$("addAll");if(al)al.addEventListener("click",()=>{lim=hit.length;draw();});};
   qi.addEventListener("input",()=>{lim=200;if(o.onQ)o.onQ(qi.value);draw();});
@@ -8295,15 +8338,22 @@ window.RB_LIBPAGE=(function(){
     const L=D.list(),words=lc(q).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean);
     const all=L.map((x,i)=>({i,x,t:D.label(x),d:D.sub(x),g:D.group(x),gk:D.gk?D.gk(x):0,words:(D.words?D.words(x):"")+(LIBED.changed(kind,i).length?" edited":"")}));
     // in group order first (2.43.9), so the first page shows whole groups from the top instead of the list's own order
-    const hit=all.filter(it=>it.i===open||words.every(w=>addMatch(it,w,D.num))).sort((a,b)=>(a.gk||0)-(b.gk||0)||String(a.g).localeCompare(String(b.g),undefined,{numeric:true})||a.i-b.i);
+    let hit=all.filter(it=>it.i===open||words.every(w=>addMatch(it,w,D.num))),tabs="";
+    // factory ammo: Rifle / Pistol / Shotgun tabs; a search looks through all three (2.47.40)
+    const AK=kind==="ammo";
+    if(AK){const cnt={};hit.forEach(it=>{it._k=ammoKindOf(it.x.cart,it.x.shell);cnt[it._k]=(cnt[it._k]||0)+1;});tabs=ammoKindTabs(cnt,!!words.length);if(!words.length)hit=hit.filter(it=>it._k===ammoKindSel);}
+    const ko=it=>AK&&words.length?AKO[it._k]:0;
+    hit.sort((a,b)=>ko(a)-ko(b)||(a.gk||0)-(b.gk||0)||String(a.g).localeCompare(String(b.g),undefined,{numeric:true})||a.i-b.i);
     const shown=hit.slice(0,lim);if(open!=null&&!shown.some(it=>it.i===open)){const o=hit.find(it=>it.i===open);if(o)shown.push(o);}
-    const by=new Map();shown.forEach(it=>{if(!by.has(it.g))by.set(it.g,[]);by.get(it.g).push(it);});
-    const keys=[...by.keys()].sort((a,b)=>(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(a).localeCompare(String(b),undefined,{numeric:true}));
+    const by=new Map();shown.forEach(it=>{const g=(AK?it._k+"|":"")+it.g;if(!by.has(g))by.set(g,[]);by.get(g).push(it);});
+    const keys=[...by.keys()].sort((a,b)=>ko(by.get(a)[0])-ko(by.get(b)[0])||(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(by.get(a)[0].g).localeCompare(String(by.get(b)[0].g),undefined,{numeric:true}));
+    const multi=AK&&words.length&&new Set(shown.map(it=>it._k)).size>1;let lastK=null;
+    const kh=it=>{const h=multi&&it._k!==lastK?'<h3 class="akhead">'+esc(AMMO_KINDS[AKO[it._k]][1])+'</h3>':'';lastK=it._k;return h;};
     const ne=LIBED.editedCount(kind);
     let h='<section class="card" aria-label="'+esc(D.title)+'" id="libKind"><p class="note">From the makers\' published data. Tap one to see all of it, fix something for your own use, or add it to your '+esc(D.mine.split(" › ").pop().toLowerCase())+'.'+(ne?' You\'ve edited '+ne+'; search <b>edited</b> to see them.':'')+'</p>'+
       '<div class="row crtools"><input id="libQ" type="search" placeholder="Search '+esc(D.title.toLowerCase())+'" aria-label="Search '+esc(D.title.toLowerCase())+'" value="'+esc(q)+'">'+(LIB_ADD[kind]&&!window.GUEST?'<button class="btn" type="button" id="libAdd">+ Add '+esc(D.one)+'</button>':'')+'</div>'+
-      '<p class="note libcount">'+(words.length?hit.length.toLocaleString()+' of '+L.length.toLocaleString():L.length.toLocaleString()+' '+esc(D.title.toLowerCase()))+'</p>';
-    h+=hit.length?keys.map(g=>'<h3 class="crgh">'+esc(g)+'</h3><div class="crlist">'+by.get(g).map(it=>{const isO=open===it.i;
+      (AK?tabs:'<p class="note libcount">'+(words.length?hit.length.toLocaleString()+' of '+L.length.toLocaleString():L.length.toLocaleString()+' '+esc(D.title.toLowerCase()))+'</p>');
+    h+=hit.length?keys.map(g=>kh(by.get(g)[0])+'<h3 class="crgh">'+esc(by.get(g)[0].g)+'</h3><div class="crlist">'+by.get(g).map(it=>{const isO=open===it.i;
       return '<div class="crow'+(isO?' open':'')+'" data-lrow="'+it.i+'"><button type="button" class="crhead" data-lr="'+it.i+'" aria-expanded="'+isO+'">'+rowHead(kind,it.x,it.i)+'</button>'+(isO?editor(kind,it.i):'')+'</div>';}).join("")+'</div>').join(""):'<p class="note">Nothing matches.</p>';
     if(hit.length>lim)h+='<div class="row addmore"><span class="note">'+(hit.length-lim).toLocaleString()+' more. Type to narrow it down, or </span><button class="btn small" type="button" id="libAll">show all '+hit.length.toLocaleString()+'</button></div>';
     return h+'</section>';}
@@ -8326,6 +8376,7 @@ window.RB_LIBPAGE=(function(){
     if(!list)return;const kind=list,D=LIB_DEF[kind];
     const qi=$("libQ");if(qi)qi.addEventListener("input",()=>{q=qi.value;lim=150;draw();});
     const al=$("libAll");if(al)al.addEventListener("click",()=>{lim=1e9;draw();});
+    root.querySelectorAll("[data-akind]").forEach(b=>b.addEventListener("click",()=>{setAmmoKind(b.dataset.akind);q="";lim=150;open=null;draw();}));
     {const ad=$("libAdd");if(ad)ad.addEventListener("click",()=>libAdd(list));}
     root.querySelectorAll("[data-lr]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.lr;open=open===i?null:i;draw();if(open!=null){const r=document.querySelector('[data-lrow="'+i+'"]');if(r&&r.getBoundingClientRect().top<60)r.scrollIntoView({block:"start"});}}));
     if(open==null)return;const i=open;
