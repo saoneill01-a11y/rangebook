@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.27",
+      "version": "2.47.28",
       "date": "2026-11-20",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Guns list by kind: buttons at the top show All, Rifles, Pistols or Shotguns (remembered on this device); each kind has its own colored heading, picture (when a gun has no photo) and tile stripe. Shotguns show shells fired and their shotgun profiles and patterns in place of loads.",
         "Pattern board: on a shotgun profile's page, tap New pattern, pick the choke and distance, and take a picture of a sheet you shot once. Tap the paper's 4 corners and your aim mark; Range Book finds the pellet holes (tap to add or take off any), puts the 30\" circle on the thickest part and gives the % in the circle, the 20\" core and outer ring, the biggest gap, and how far the pattern centered from your aim. Saved patterns are listed on the page, and the Pattern and choke tables use your patterns in place of the estimates for that choke.",
         "Shotgun page for birdshot and buckshot: the pattern at 20 to 40 yd for the choke you pick (a picture with the 30\" circle, how wide it is and how many pellets land in the circle), pellet count from the payload and shot size, pellet speed and energy by distance with how far it's good for clays, doves, pheasant, ducks, geese, turkey or deer, lead on a crossing target at 30, 40 or 50 mph, and your chokes side by side. All estimates from standard shotgun formulas until the pattern board measures your own gun.",
         "Shotgun profiles: Start a range trip with a shotgun makes a profile for the gun and its shells, listed under Shooting › Profiles by gauge, and the range trip links to it like any other. Slugs get the full profile (trajectory, dope card, Live target). Other shells get a Shotgun page with the gun, the shells, the choke in the gun and the box velocity; pattern spread, pellet counts and energy, and lead are coming there.",
