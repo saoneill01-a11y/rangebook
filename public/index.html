@@ -392,6 +392,12 @@ a.goto{color:var(--accent);font-weight:600;text-decoration:underline;text-underl
 a.goto:hover{text-decoration-thickness:2px}a.goto:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
 .shot.flyer input{border-color:var(--warn)!important;color:var(--warn)!important;box-shadow:0 0 0 2px var(--warn);font-weight:700}
 .shot.flyer label{color:var(--warn);font-weight:700}
+.shot.loose input{border:2px dashed var(--accent)!important;background:var(--accent-soft)!important}
+.shot.loose label{color:var(--accent);font-weight:700}
+.loosetag{font:inherit;font-size:calc(11px*var(--fs));font-weight:700;line-height:1.2;min-height:28px;padding:4px 0;border:0;background:none;color:var(--accent);cursor:pointer;text-decoration:underline;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loosebar{scroll-margin:90px 0 110px;display:flex;flex-direction:column;gap:8px;margin-top:10px;padding:10px 12px;border:2px dashed var(--accent);border-radius:8px;background:var(--accent-soft);max-width:440px}
+.loosebar p{margin:0}.loosebar .row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0}.loosebar .btn{margin-left:0}
+.tssloose{color:var(--accent);font-weight:600}
 .flynote{position:relative;margin:10px 0 4px;padding:9px 12px;border:1.5px solid var(--warn);border-radius:10px;background:var(--surface);color:var(--warn);font-size:calc(14px*var(--fs));line-height:1.4;animation:flypop .25s ease-out}
 .flynote::before{content:"";position:absolute;top:-7px;left:var(--ax,18px);width:12px;height:12px;background:var(--surface);border-left:1.5px solid var(--warn);border-top:1.5px solid var(--warn);transform:rotate(45deg)}
 @keyframes flypop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
@@ -12053,7 +12059,7 @@ window.RB_CANSHIFTTXT=canShiftTxt;
    group's average with its velocity next to it, the group size as a dashed circle and its center as a +, and how to dial the
    scope to center it. Live target groups carry each hole's velocity from the chronograph. ---------- */
 let SG_CLEAN=(()=>{try{return localStorage.getItem("rb.sgClean")==="1";}catch(e){return false;}})();
-const SG_PICK={};
+const SG_PICK={},SG_LOOSE={};
 function tripShotGroups(){
   const out=[],ph=tripPhotos;
   ph.forEach((p,pi)=>{const M=normMeasure(p.measure);if(!M||!(M.distance>0))return;const k=M.distance/100*1.0472;
@@ -12179,11 +12185,30 @@ function sgDial(st,d){const up=-st.c[1],rt=-st.c[0],moaIn=1.0472*d/100,milIn=3.6
   return {big:cap(ud(up))+" "+Math.abs(up/moaIn).toFixed(2)+" MOA, "+lr(rt)+" "+Math.abs(rt/moaIn).toFixed(2),
     small:"or "+ud(up)+" "+Math.abs(up/milIn).toFixed(2)+" mil, "+lr(rt)+" "+Math.abs(rt/milIn).toFixed(2)+(sc?" · set the scope's click value on Gear & Ranges to get clicks":" · pick the gun's scope on Gear & Ranges to get clicks")};}
 // chronograph velocities this trip that aren't on any hole (a miss, or a shot before Live target was on)
-function sgLoose(t,GS,refs){const left=new Map();GS.forEach(G=>G.pts.forEach(q=>{if(q[2]>0){const v=Math.round(q[2]);left.set(v,(left.get(v)||0)+1);}}));
-  const out=[];(t.strings||[]).forEach(x=>{if(!x.chrono)return;(x.shots||[]).forEach((v,i)=>{if(!(num(v)>0))return;const r=Math.round(num(v));
-    const hit=[r,r-1,r+1].find(q=>left.get(q)>0);if(hit!=null)left.set(hit,left.get(hit)-1);else{out.push(r);if(refs)refs.push([x,i]);}});});
-  if(refs&&!GS.some(G=>G.pts.some(q=>q[2]>0)))refs.length=0;
-  return GS.some(G=>G.pts.some(q=>q[2]>0))?out:[];}
+/* every chronograph shot on the trip, in order, paired with the hole that has its velocity (2.47.43).
+   A shot with no hole is off target ("loose"), but only once some hole on the trip has a velocity at all.
+   sug: the hole it most likely belongs to, a hole with no velocity right after the hole of the shot before it, or right before the hole of the shot after it.
+   blanks: every hole with no velocity. */
+function sgPair(t,GS){
+  const pool=new Map();GS.forEach(G=>G.pts.forEach((q,k)=>{if(q[2]>0){const r=Math.round(q[2]);if(!pool.has(r))pool.set(r,[]);pool.get(r).push([G,k]);}}));
+  const any=pool.size>0,list=[],blanks=[];
+  GS.forEach(G=>G.pts.forEach((q,k)=>{if(!(q[2]>0))blanks.push({G,k});}));
+  (t.strings||[]).forEach(x=>{if(!x.chrono)return;(x.shots||[]).forEach((v,i)=>{if(!(num(v)>0))return;const r=Math.round(num(v));
+    const hit=[r,r-1,r+1].find(q=>(pool.get(q)||[]).length),h=hit!=null?pool.get(hit).shift():null;
+    list.push({x,i,v:num(v),G:h?h[0]:null,k:h?h[1]:null});});});
+  if(!any)return {list:[],blanks};
+  const taken=new Set(),open=(G,k)=>G&&k>=0&&k<G.pts.length&&!(G.pts[k][2]>0)&&!taken.has(G.key+"|"+k);
+  list.forEach((o,j)=>{if(o.G)return;o.loose=true;let a=null,b=null;
+    for(let m=j-1;m>=0&&!a;m--)if(list[m].G)a=list[m];for(let m=j+1;m<list.length&&!b;m++)if(list[m].G)b=list[m];
+    if(a&&open(a.G,a.k+1))o.sug={G:a.G,k:a.k+1,after:a.k};else if(b&&open(b.G,b.k-1))o.sug={G:b.G,k:b.k-1,before:b.k};
+    if(o.sug)taken.add(o.sug.G.key+"|"+o.sug.k);});
+  return {list,blanks};}
+// give one hole a velocity (or take it off with v = null), saved straight away (2.47.43)
+function sgSetVel(G,k,v){const p=G.ph,M=normMeasure(p&&p.measure);if(!M)return;const g=M.groups.find(x=>x===G.grp)||M.groups.find(x=>G.grp&&x.id===G.grp.id);
+  const n=g?(g.shots||[]).length:0;if(!(k>=0&&k<n))return;
+  if(!Array.isArray(g.vel)||g.vel.length!==n){const o=Array.isArray(g.vel)?g.vel:[];g.vel=Array.from({length:n},(_,j)=>num(o[j])>0?o[j]:null);}
+  g.vel[k]=v>0?Math.round(v):null;p.measure=M;
+  API.patch("/api/photos/"+p.id,{measure:p.measure}).catch(onWriteError);renderTripPhotos();}
 // move one shot of a Live target group to (x, y) inches from its aim point, keeping its velocity (2.47.9)
 function sgMoveShot(G,k,x,y){const p=G.ph,M=normMeasure(p.measure),g=G.grp;if(!M||!Array.isArray(M.H)||!g||!g.aim||!(k>=0&&k<(g.shots||[]).length))return;
   const Hi=inv3(M.H);if(!Hi)return;const A=applyH(M.H,g.aim[0]*p.w,g.aim[1]*p.h),q=applyH(Hi,A[0]+x,A[1]-y),txt0=measureText(p.measure,null);
@@ -12211,9 +12236,9 @@ function sgJoin(t){const S=t.strings||[];let ch=false;const live=window.RB_BTCHR
     S.splice(i,1);ch=true;}
   return ch;}
 function drawShotGroups(t){const box=$("tripSG");if(!box)return;const GS=tripShotGroups();
-  if(!GS.length){box.innerHTML="";box.hidden=true;return;}box.hidden=false;
+  if(!GS.length){box.innerHTML="";box.hidden=true;if(TRIP_HOOK&&TRIP_HOOK.id===t.id&&TRIP_HOOK.marks)TRIP_HOOK.marks();return;}box.hidden=false;
   let cur=SG_PICK[t.id];if(!GS.some(G=>G.key===cur))cur=GS[0].key;SG_PICK[t.id]=cur;
-  const LR=[],G=GS.find(x=>x.key===cur),st=sgStats(G),dial=sgDial(st,G.d),hasV=st.va!=null,loose=sgLoose(t,GS,LR);
+  const G=GS.find(x=>x.key===cur),st=sgStats(G),dial=sgDial(st,G.d),hasV=st.va!=null;
   const f=v=>U.s("fps",v,0);
   let h='<h3>Shot groups</h3><div class="sgstrip" role="group" aria-label="Groups">'+GS.map(x=>{const s2=sgStats(x);return '<button type="button" class="sgcell" data-sg="'+esc(x.key)+'" aria-pressed="'+(x.key===cur)+'">'+sgPlot(x,s2,{size:84,small:true})+'<b>'+esc(x.name)+'</b><span class="num">'+(s2.size!=null?esc(U.s("in",s2.size,2)):x.pts.length+' shot'+(x.pts.length===1?'':'s'))+(s2.va!=null?' · '+esc(U.n("fps",s2.va,0)):'')+'</span></button>';}).join("")+'</div>';
   const phOk=sgPhotoOk(G),V=sgView(G),pc=phOk&&SG_PHOTO?sgPhotoGet(G,V):null;
@@ -12231,7 +12256,6 @@ function drawShotGroups(t){const box=$("tripSG");if(!box)return;const GS=tripSho
     '<div class="sgside">'+(hasV?'':'<p class="note">No velocities on this group. With the Athlon connected, Live target puts each shot\'s velocity on its hole.</p>')+
     (G.pts.length?'<div class="sgdial"><span>To center this group on the aim point</span><b>'+esc(dial.big)+'</b><span>'+esc(dial.small)+'</span></div>':'')+
     '</div></div>';
-  if(loose.length)h+='<p class="note sgloose">Not on a target: '+loose.map(v=>esc(f(v))).join(", ")+'. <button type="button" class="linkbtn" id="sgLooseX">Remove '+(loose.length===1?'it':'these '+loose.length)+' from the trip</button></p>';
   // keep the row of small pictures scrolled where it was (2.47.7)
   const sx=(box.querySelector(".sgstrip")||{}).scrollLeft||0;
   box.innerHTML=h;{const sp=box.querySelector(".sgstrip");if(sp)sp.scrollLeft=sx;}
@@ -12263,12 +12287,9 @@ function drawShotGroups(t){const box=$("tripSG");if(!box)return;const GS=tripSho
       c.addEventListener("pointerup",up);c.addEventListener("pointercancel",()=>{d=null;drawShotGroups(t);});});}
   {const z=$("sgZoom");if(z){z.addEventListener("input",()=>{const v=+z.value;$("sgZoomV").textContent=v>1?v+"×":"All shots";});
     z.addEventListener("change",()=>{SG_ZOOM[G.key]=+z.value;drawShotGroups(t);});}}
-  {const lx=$("sgLooseX");if(lx)lx.addEventListener("click",()=>arm(lx,"sgloose"+t.id,"Tap again to remove "+(LR.length===1?"it":"all "+LR.length),()=>{
-    // from the chronograph strings, last first so the places stay right; empty strings go too
-    [...LR].sort((a,b)=>b[1]-a[1]).forEach(([x,i])=>x.shots.splice(i,1));t.strings=(t.strings||[]).filter(x=>!x.chrono||(x.shots||[]).some(v=>v!=null));
-    t.updated=Date.now();queueTrips();if(TRIP_HOOK&&TRIP_HOOK.id===t.id){TRIP_HOOK.totals();TRIP_HOOK.render();}drawShotGroups(t);}));}
   box.querySelectorAll("[data-sgm]").forEach(b=>b.addEventListener("click",()=>{SG_PHOTO=b.dataset.sgm==="1";try{localStorage.setItem("rb.sgPhoto",SG_PHOTO?"1":"0");}catch(e){}drawShotGroups(t);}));
-  $("sgClean").addEventListener("click",()=>{SG_CLEAN=!SG_CLEAN;try{localStorage.setItem("rb.sgClean",SG_CLEAN?"1":"0");}catch(e){}drawShotGroups(t);});}
+  $("sgClean").addEventListener("click",()=>{SG_CLEAN=!SG_CLEAN;try{localStorage.setItem("rb.sgClean",SG_CLEAN?"1":"0");}catch(e){}drawShotGroups(t);});
+  if(TRIP_HOOK&&TRIP_HOOK.id===t.id&&TRIP_HOOK.marks)TRIP_HOOK.marks();}
 // A · on a range trip: every measured group from its photos
 function tripAllHtml(t){const G=(t.sum&&t.sum.g)||[];if(G.length<2)return "";
   const anyAim=G.some(g=>g.a);if(GRP_MODE==="aim"&&!anyAim)GRP_MODE="center";
@@ -12687,6 +12708,33 @@ function renderTrips(){
   // each string shows its shots as boxes, like a load-development group: type over one to fix it, + Shot / − Shot to add or delete
   const strStats=x=>{const st=stats({shots:x.shots},null);return st?st.n+' shot'+(st.n===1?'':'s')+' · avg <b>'+vS(st.avg)+'</b> '+U.u("fps")+(st.n>1?' · SD <b>'+sdS(st.sd)+'</b> · ES <b>'+esS(st.es)+'</b>':''):'No velocities yet.';};
   const allStats=()=>{const S=t.strings||[];if(S.length<2)return "";const st=stats({shots:S.flatMap(x=>x.shots||[])},null);return st?'All strings together: '+st.n+' shots · avg '+U.s("fps",st.avg,0,true)+' · SD '+sdS(st.sd)+' · ES '+esS(st.es):"";};
+  /* a velocity that isn't on any hole on the trip's targets gets marked "Off target": tap it to delete it,
+     or put it on a hole that has no velocity (the likely one first) (2.47.43) */
+  const looseMarks=tapped=>{const looseOpen=SG_LOOSE[t.id];const box=$("tripChrono");if(!box)return;const P=sgPair(t,tripShotGroups()),L=P.list.filter(o=>o.loose);
+    box.querySelectorAll(".shot.loose").forEach(e=>{e.classList.remove("loose");const b=e.querySelector(".loosetag");if(b)b.remove();});
+    L.forEach(o=>{const e=box.querySelector('.shots[data-shotset="'+CSS.escape(o.x.id)+'"] .shot[data-k="'+o.i+'"]');if(!e)return;e.classList.add("loose");
+      const b=document.createElement("button");b.type="button";b.className="loosetag";b.textContent="Off target";
+      b.setAttribute("aria-label","Shot "+(o.i+1)+", "+U.s("fps",o.v,0)+", isn't on a target. Delete it or put it on a shot.");
+      const key=o.x.id+":"+o.i+":"+Math.round(o.v);b.addEventListener("click",()=>{SG_LOOSE[t.id]=SG_LOOSE[t.id]===key?null:key;looseMarks(true);});e.appendChild(b);});
+    const n=$("tssLoose");if(n){n.hidden=!L.length;n.textContent=L.length?(L.length===1?"1 velocity isn't":L.length+" velocities aren't")+" on a hole on your targets. Tap Off target under "+(L.length===1?"it":"one")+" to delete it or put it on a shot.":"";}
+    const o=L.find(o=>o.x.id+":"+o.i+":"+Math.round(o.v)===looseOpen);if(!o){box.querySelectorAll(".loosebar").forEach(e=>e.remove());return;}
+    const set=box.querySelector('.shots[data-shotset="'+CSS.escape(o.x.id)+'"]');if(!set)return;
+    const hole=(G,k)=>G.name+", shot "+(k+1),sug=o.sug,rest=P.blanks.filter(b=>!(sug&&b.G===sug.G&&b.k===sug.k));
+    let h='<p><b>Shot '+(o.i+1)+' · '+esc(U.s("fps",o.v,0))+'</b> isn\'t on a target.</p>';
+    if(sug)h+='<div class="row"><button type="button" class="btn small primary" data-lput="s">Put it on '+esc(hole(sug.G,sug.k))+'</button><span class="note">Likely: it came right '+(sug.after!=null?'after shot '+(sug.after+1):'before shot '+(sug.before+1))+' of '+esc(sug.G.name)+'.</span></div>';
+    if(rest.length)h+='<div class="row"><span class="note">'+(sug?'Or put it on':'Put it on')+'</span>'+rest.map((b,j)=>'<button type="button" class="btn small" data-lput="'+j+'">'+esc(hole(b.G,b.k))+'</button>').join("")+'</div>';
+    if(!sug&&!rest.length)h+='<p class="note">Every hole on your targets already has a velocity, so there\'s no shot to put it on.</p>';
+    h+='<div class="row"><button type="button" class="btn small danger" data-ldel>Delete this velocity</button><button type="button" class="btn small" data-lx>Cancel</button></div>';
+    {const was=box.querySelector(".loosebar");if(was&&was.dataset.key===looseOpen&&was.dataset.h===h)return;box.querySelectorAll(".loosebar").forEach(e=>e.remove());}
+    const bar=document.createElement("div");bar.dataset.key=looseOpen;bar.dataset.h=h;bar.className="loosebar";bar.setAttribute("role","group");bar.setAttribute("aria-label","Off-target shot");bar.innerHTML=h;set.after(bar);
+    if(tapped)bar.scrollIntoView({block:"nearest",behavior:"smooth"});
+    bar.querySelectorAll("[data-lput]").forEach(b=>b.addEventListener("click",()=>{const d=b.dataset.lput==="s"?sug:rest[+b.dataset.lput];if(!d)return;SG_LOOSE[t.id]=null;
+      const G=d.G,k=d.k;sgSetVel(G,k,o.v);RB_UNDO("Put "+U.s("fps",o.v,0)+" on "+hole(G,k),()=>sgSetVel(G,k,null));}));
+    const del=bar.querySelector("[data-ldel]");del.addEventListener("click",()=>arm(del,"ldel"+o.x.id+":"+o.i,"Tap again to delete",()=>{
+      const x=o.x,i=o.i;if(x.shots[i]==null||Math.round(num(x.shots[i]))!==Math.round(o.v))return;const v=x.shots.splice(i,1)[0];SG_LOOSE[t.id]=null;
+      t.updated=Date.now();chronoTotals();queueTrips();renderChrono();
+      RB_UNDO("Deleted shot "+(i+1)+" ("+U.s("fps",v,0)+")",()=>{x.shots.splice(Math.min(i,x.shots.length),0,v);t.updated=Date.now();chronoTotals();queueTrips();if(tripOpen===t.id)renderChrono();});}));
+    bar.querySelector("[data-lx]").addEventListener("click",()=>{SG_LOOSE[t.id]=null;looseMarks();});};
   const renderChrono=focusId=>{
     const box=$("tripChrono");if(!box)return;if(sgJoin(t)){t.updated=Date.now();chronoTotals();queueTrips();}const S=t.strings||[];
     if(!S.length){box.innerHTML='<p class="note">Import the file from your RangeCraft, Garmin Xero, MagnetoSpeed or LabRadar, or tap <b>+ Type in shots</b> to enter the velocities yourself. The average and SD fill in from the shots.</p>';if(window.RB_BTCHRONO)RB_BTCHRONO.paint();return;}
@@ -12699,7 +12747,7 @@ function renderTrips(){
         '<div class="shots" data-shotset="'+esc(x.id)+'">'+(x.shots||[]).map((v,k)=>'<div class="shot" data-k="'+k+'"><label for="ts_'+esc(x.id)+'_'+k+'">'+(k+1)+'</label><input id="ts_'+esc(x.id)+'_'+k+'" data-ts="'+i+'" data-k="'+k+'" type="number" inputmode="numeric" step="1" enterkeyhint="next" placeholder="'+U.u("fps")+'" value="'+(v==null?"":esc(U.n("fps",Number(v),0)))+'"></div>').join("")+'</div>'+
         shotPickBar(x.id)+
         (x.chrono?'':'<div class="row"><button class="btn" type="button" data-taddshot="'+i+'">+ Shot</button></div>')+'</div>';});
-    h+='<p class="note">Tap a velocity to fix it; empty it to delete that shot.</p>';
+    h+='<p class="note">Tap a velocity to fix it; empty it to delete that shot.</p><p class="note tssloose" id="tssLoose" hidden></p>';
     h+='<p class="note" id="tssAll">'+allStats()+'</p>';
     box.innerHTML=h+'</div>';
     const changed=()=>{t.updated=Date.now();chronoTotals();queueTrips();};
@@ -12722,11 +12770,12 @@ function renderTrips(){
     if(window.RB_BTCHRONO)RB_BTCHRONO.paint();
     box.querySelectorAll("[data-sdel]").forEach(b=>b.addEventListener("click",()=>(()=>{const i=+b.dataset.sdel,st=t.strings[i];if(window.RB_BTCHRONO)RB_BTCHRONO.detach("trip:"+t.id+":"+st.id);t.strings.splice(i,1);chronoTotals();queueTrips();renderChrono();
       RB_UNDO("Deleted chronograph string",()=>{t.strings.splice(Math.min(i,t.strings.length),0,st);chronoTotals();queueTrips();if(tripOpen===t.id)renderChrono();});})()));
+    looseMarks();
     if(focusId){const f=$(focusId);if(f){f.focus();f.scrollIntoView({block:"nearest"});}}
   };
   renderChrono();
   // BLIPR: shots from the Bluetooth chronograph fill a string as they're measured (Tools → Chronograph has the device's settings)
-  TRIP_HOOK={id:t.id,totals:chronoTotals,render:renderChrono,fields(){U.fill($("tp_temp"),"F",t.temp,0,1);const n=$("tripWxRep");if(n)n.innerHTML=tripWxRep(t);tripAirUse(t);}};
+  TRIP_HOOK={id:t.id,totals:chronoTotals,render:renderChrono,marks:looseMarks,fields(){U.fill($("tp_temp"),"F",t.temp,0,1);const n=$("tripWxRep");if(n)n.innerHTML=tripWxRep(t);tripAirUse(t);}};
   const chronoGo=async(sid,which)=>{
     if(!window.RB_BTCHRONO)return;const msg=$("tripChronoMsg");msg.classList.remove("err");
     try{await RB_BTCHRONO.connect(which);}catch(e){if(e.message){msg.classList.add("err");msg.textContent=e.message;}return;}
