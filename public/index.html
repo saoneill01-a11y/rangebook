@@ -1220,7 +1220,11 @@ table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))
 .sgpic{width:100%;display:block}.sgpbg{fill:var(--sunk)}.sgp30{fill:none;stroke:var(--accent);stroke-width:2}.sgp10{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}.sgpd{fill:var(--fg);fill-opacity:.75}.sgcap{text-align:center;margin:4px 0 0}
 .sgbig{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:8px}.sgbig b{display:block;font-size:calc(22px*var(--fs))}.sgbig span{color:var(--muted);font-size:calc(12px*var(--fs))}
 .sgtab{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}.sgtab th{color:var(--muted);font-weight:500;text-align:right;padding:3px 6px;font-size:calc(12px*var(--fs));border-bottom:1px solid var(--line)}.sgtab td{text-align:right;padding:5px 6px;border-bottom:1px solid var(--line)}.sgtab th:first-child,.sgtab td:first-child{text-align:left}#sgProfCard .sgtab tr.hi td,#sgProfCard .sgtab tr.hi td:first-child{background:var(--accent-soft)}
-.sgest{margin:0 0 12px}
+.sgest{margin:0 0 12px}#sgProfCard .sgcard{overflow-x:auto}#sgProfCard .sgtab th,#sgProfCard .sgtab td,#pbBody .sgtab td{white-space:normal;min-width:0}@media(max-width:480px){.sgtab th,.sgtab td{padding:4px 3px;font-size:calc(12px*var(--fs))}}
+.sgtag{background:var(--accent);color:var(--accent-fg);border-radius:99px;padding:1px 7px;font-size:calc(10.5px*var(--fs));font-weight:600;margin-left:4px;white-space:nowrap}.sgtab td.sgsrc{color:var(--muted);font-size:calc(12px*var(--fs))}
+.pblist{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}.pbitem{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;text-align:left;border:1px solid var(--line);background:var(--sunk);color:var(--fg);border-radius:8px;padding:8px 10px;cursor:pointer;font:inherit}.pbitem span{color:var(--muted)}
+.infosheet.pbsheet{max-width:760px;max-height:92vh}.pbview{overflow:auto;max-height:62vh;border:1px solid var(--line);border-radius:8px;background:var(--sunk);margin:4px 0 10px}.pbview canvas{display:block;width:100%;cursor:crosshair}
+.pbzoom{display:flex;align-items:center;gap:8px;margin:4px 0}.pbzoom label{color:var(--muted);font-size:calc(12.5px*var(--fs))}.pbzoom input{flex:1;max-width:260px}.pbnum{width:76px}.pbask{margin:2px 0 8px}#pbBody .note.bad{color:var(--warn)}#pbBody .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .profallwin .infosheet{max-width:760px;max-height:92vh}
 .profallwin .card{box-shadow:none;margin:10px 0 0}
 body.tripspage #trajBack{display:none!important}
@@ -3944,6 +3948,7 @@ function sgProfShow(L){const det=$("trajDetail");if(!det)return;det.classList.to
   let choke=SGV.ch[L.id];if(!list.some(x=>x[0]===choke))choke=list.length?list[0][0]:"Modified";SGV.ch[L.id]=choke;
   const t=a?(a.shotType||"lead"):"lead",d=a?SGX.dia(a.shot,t):null,pg=d?SGX.grains(d,t):null;
   const pellets=a&&num(a.pellets)?num(a.pellets):a&&num(a.oz)&&pg?num(a.oz)*437.5/pg:null;
+  const MS=pbMeasured(L),sig=(c,y)=>MS[c]?MS[c].per*y:SGX.sigma(c,y,t);
   const vel=a&&(num(a.measVel)||num(a.boxVel))||num(L.mv)||null,v0=vel||(t==="buck"?1325:1200);
   const ch=g?(g.chokeIn?g.chokeIn+(g.chokeIn2?" / "+g.chokeIn2:"")+(g.chokeSys==="fixed"?" (fixed)":""):"Not set on the gun"):"";
   let h=card("Shotgun",'<dl class="sgfacts">'+(g?row("Gun",[g.nick||g.name,F.gunLine(g)].filter(Boolean).join(" · "),"g:"+g.id):row("Gun","None picked"))+
@@ -3953,9 +3958,10 @@ function sgProfShow(L){const det=$("trajDetail");if(!det)return;det.classList.to
     (!a?'<p class="note">Pick the shells for this profile to see the pattern, pellet energy and lead.</p>':
      !list.length?'<p class="note">No choke is set on the gun, so this page uses Modified. Set the choke on the gun to change it.</p>':'')+
     (a&&!vel?'<p class="note">No velocity on the shells, so this uses '+U.s("fps",v0,0,true)+'.</p>':''));
+  const info={list,choke,t,d,pellets,shells:a?F.ammoName(a):""};
   if(a){
     const YDS=t==="buck"?[10,15,20,25,30,40]:[20,25,30,35,40],SY=SGV.yd&&YDS.includes(SGV.yd)?SGV.yd:YDS[Math.floor(YDS.length/2)];SGV.yd=SY;
-    const s=SGX.sigma(choke,SY,t),f30=SGX.inside(15,s),buck=t==="buck";
+    const s=sig(choke,SY),f30=SGX.inside(15,s),buck=t==="buck";
     // the pattern picture: a fixed 64" square (40" for buckshot) so it visibly opens up with distance; the same pellets every time
     const FR=buck?40:64,px=220/FR,r30=15*px,N=Math.min(900,Math.round(pellets||300));let seed=7,dots="";const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
     const dr=buck?Math.max(2,d*px*1.4):1.2;
@@ -3963,14 +3969,14 @@ function sgProfShow(L){const det=$("trajDetail");if(!det)return;det.classList.to
     const pic='<svg class="sgpic" viewBox="0 0 220 220" role="img"><title>Pattern at '+escL(yd(SY))+'</title><rect width="220" height="220" rx="8" class="sgpbg"/><circle cx="110" cy="110" r="'+r30.toFixed(1)+'" class="sgp30"/>'+
       (buck?'<circle cx="110" cy="110" r="'+(5*px).toFixed(1)+'" class="sgp10"/>':'')+'<g class="sgpd">'+dots+'</g></svg>';
     const ptab='<table class="sgtab"><tr><th>Distance</th><th>Pattern</th><th>In 30"</th>'+(pellets?'<th>Pellets in 30"</th>':'')+(buck?'<th>In 10"</th>':'')+'</tr>'+
-      YDS.map(y=>{const sg=SGX.sigma(choke,y,t),p=SGX.inside(15,sg),p10=SGX.inside(5,sg);return '<tr'+(y===SY?' class="hi"':'')+'><td>'+yd(y)+'</td><td>'+inch(SGX.across(sg))+'</td><td>'+pct(p)+'</td>'+(pellets?'<td>'+n0(p*pellets)+'</td>':'')+(buck?'<td>'+(p10*pellets).toFixed(1)+'</td>':'')+'</tr>';}).join("")+'</table>';
+      YDS.map(y=>{const sg=sig(choke,y),p=SGX.inside(15,sg),p10=SGX.inside(5,sg);const me=(L.patterns||[]).some(e=>e.choke===choke&&e.yd===y&&(!e.ammoId||e.ammoId===L.ammoId));return '<tr'+(y===SY?' class="hi"':'')+'><td>'+yd(y)+(me?' <span class="sgtag">Measured</span>':'')+'</td><td>'+inch(SGX.across(sg))+'</td><td>'+pct(p)+'</td>'+(pellets?'<td>'+n0(p*pellets)+'</td>':'')+(buck?'<td>'+(p10*pellets).toFixed(1)+'</td>':'')+'</tr>';}).join("")+'</table>';
     h+=card("Pattern",'<div class="sgrow"><span class="lbl">At</span>'+seg("sgyd",YDS.map(y=>[y,yd(y)]),SY,"Distance")+'</div><div class="sgpat"><div>'+pic+
       '<p class="note sgcap">'+(buck?'10" and 30" circles':'30" circle')+' · this square is '+inch(FR)+' across</p></div><div><div class="sgbig"><div><b>'+inch(SGX.across(s))+'</b><span>pattern across at '+yd(SY)+'</span></div><div><b>'+pct(f30)+'</b><span>in the 30" circle'+(pellets?' (about '+n0(f30*pellets)+' pellets)':'')+'</span></div></div>'+ptab+'</div></div>'+
-      '<p class="note">Pattern across holds about 9 in 10 pellets. '+escL(choke)+' is rated about '+(SGX.CHOKE40[choke]||60)+'% in a 30" circle at 40 yd with lead'+(/steel|TSS|tungsten|blend/.test(t)?'; hard shot like this patterns about one choke tighter':'')+'.</p>');
+      '<p class="note">Pattern across holds about 9 in 10 pellets. '+(MS[choke]?'These come from your '+MS[choke].n+' pattern'+(MS[choke].n>1?'s':'')+' with '+escL(choke)+' and this shell; other distances are worked out from '+(MS[choke].n>1?'them':'it')+'.</p>':(escL(choke)+' is rated about '+(SGX.CHOKE40[choke]||60)+'% in a 30" circle at 40 yd with lead'+(/steel|TSS|tungsten|blend/.test(t)?'; hard shot like this patterns about one choke tighter':'')+'.</p>')));
     if(d){const FY=buck?[0,10,20,30,40,50]:[0,20,30,40,50],fl=SGX.fly(v0,d,pg,70),E=v=>pg*v*v/450240;
       const etab='<table class="sgtab"><tr><th>Distance</th><th>Speed</th><th>Energy per pellet</th><th>Time to get there</th></tr>'+FY.map(y=>'<tr'+(y===SY?' class="hi"':'')+'><td>'+(y?yd(y):"Muzzle")+'</td><td>'+U.s("fps",fl[y].v,0,true)+'</td><td>'+U.s("ftlb",E(fl[y].v),E(fl[y].v)<10?1:0)+'</td><td>'+(y?fl[y].t.toFixed(2)+" s":"0")+'</td></tr>').join("")+'</table>';
       // the farthest distance where each pellet still hits hard enough and enough of them land
-      const good=[],short=[];SGX.usesFor(t,d).forEach(k=>{const [nm,eMin,nMin,R]=SGX.USES[k];let far=0;for(let y=10;y<=70;y++){if(E(fl[y].v)<eMin||(pellets&&SGX.inside(R,SGX.sigma(choke,y,t))*pellets<nMin))break;far=y;}
+      const good=[],short=[];SGX.usesFor(t,d).forEach(k=>{const [nm,eMin,nMin,R]=SGX.USES[k];let far=0;for(let y=10;y<=70;y++){if(E(fl[y].v)<eMin||(pellets&&SGX.inside(R,sig(choke,y))*pellets<nMin))break;far=y;}
         far=Math.floor(far/5)*5;if(far>=15)good.push(nm+" "+yd(far));else short.push(nm);});
       h+=card("Pellet speed and energy",etab+(good.length?'<p class="note"><b>Good out to about:</b> '+escL(good.join(" · "))+'.</p>':'')+(short.length?'<p class="note">Not enough for '+escL(short.join(" or "))+' with this shell and choke.</p>':'')+
         '<p class="note">"Good" means each pellet still hits hard enough and enough land in the '+(buck?'10" vital area':'30" circle (10" for a turkey\'s head)')+'.</p>');
@@ -3979,15 +3985,201 @@ function sgProfShow(L){const det=$("trajDetail");if(!det)return;det.classList.to
           '<table class="sgtab"><tr><th>Distance</th><th>Lead</th><th>About</th></tr>'+[20,25,30,35,40].map(y=>{const ld=fs*fl[y].t;return '<tr'+(y===SY?' class="hi"':'')+'><td>'+yd(y)+'</td><td>'+U.s("ft",ld,1)+'</td><td>'+Math.round(ld*12/4.25)+' clay widths</td></tr>';}).join("")+'</table>'+
           '<p class="note">How far ahead of a target crossing straight in front of you the shot has to be aimed, from the pellets\' travel time. Angles need less. Your swing and style change how it looks to you.</p>');}
     }else h+=card("Pellet speed and energy",'<p class="note">Add the shot size to the shells (like 8, 7½ or 00) to see pellet counts, energy and lead.</p>');
-    if(list.length>1)h+=card("Your chokes with this shell at "+yd(SY),'<table class="sgtab"><tr><th>Choke</th><th>Pattern</th><th>In 30"</th>'+(pellets?'<th>Pellets in 30"</th>':'')+'</tr>'+
-      list.map(([c])=>{const sg=SGX.sigma(c,SY,t),p=SGX.inside(15,sg);return '<tr'+(c===choke?' class="hi"':'')+'><td>'+escL(c)+'</td><td>'+inch(SGX.across(sg))+'</td><td>'+pct(p)+'</td>'+(pellets?'<td>'+n0(p*pellets)+'</td>':'')+'</tr>';}).join("")+'</table>');
-    h+='<p class="note sgest">All of this is estimated from standard shotgun formulas. A pattern board shows what your own gun and shells really do.</p>';
+    if(list.length>1)h+=card("Your chokes with this shell at "+yd(SY),'<table class="sgtab"><tr><th>Choke</th><th>Pattern</th><th>In 30"</th>'+(pellets?'<th>Pellets in 30"</th>':'')+'<th></th></tr>'+
+      list.map(([c])=>{const sg=sig(c,SY),p=SGX.inside(15,sg);return '<tr'+(c===choke?' class="hi"':'')+'><td>'+escL(c)+'</td><td>'+inch(SGX.across(sg))+'</td><td>'+pct(p)+'</td>'+(pellets?'<td>'+n0(p*pellets)+'</td>':'')+'<td class="sgsrc">'+(MS[c]?'from yours':'estimate')+'</td></tr>';}).join("")+'</table>');
   }
+  {const P=(L.patterns||[]).slice().sort((x,y)=>(y.at||0)-(x.at||0));
+    h+=card("Pattern board",(P.length?'<div class="pblist">'+P.map(e=>{const pc=e.pel?Math.round(e.n30/e.pel*100)+'%':e.n30+' holes',o=e.off?[Math.abs(e.off[1])>=.5?U.s("in",Math.abs(e.off[1]),0)+(e.off[1]>0?" high":" low"):"",Math.abs(e.off[0])>=.5?U.s("in",Math.abs(e.off[0]),0)+(e.off[0]>0?" right":" left"):""].filter(Boolean).join(", ")||"centered":"";
+      return '<button type="button" class="pbitem" data-pbopen="'+escL(e.id)+'"><span>'+escL(pbDate(e.date))+' · '+escL(e.choke)+' · '+yd(e.yd)+(e.ammoId&&e.ammoId!==L.ammoId?' · other shells':'')+'</span><b>'+pc+' in 30"'+(o?' · '+escL(o):'')+'</b></button>';}).join("")+'</div>':
+      '<p class="note">Shoot a sheet of paper once and take a picture of it. Range Book counts the holes, puts the 30" circle on the pattern and shows how your gun and shells really pattern.</p>')+
+      '<div class="row"><button class="btn primary" type="button" data-pbnew>New pattern</button></div>');}
+  if(a)h+='<p class="note sgest">'+(Object.keys(MS).length?'Chokes marked "from yours" use your patterns; the rest, and the pellet speed, energy and lead, are':'All of this is')+' estimated from standard shotgun formulas.</p>';
   box.innerHTML=h;
   box.querySelectorAll("[data-sggo]").forEach(b=>b.addEventListener("click",()=>{const [k,id]=b.dataset.sggo.split(":");showTab("rifles");if(k==="g"){if(window.RB_OPEN_GUN)RB_OPEN_GUN(id,L.id);}else if(window.RB_OPEN_AMMO)RB_OPEN_AMMO(id,L.id);}));
   box.querySelectorAll("[data-sgch]").forEach(b=>b.addEventListener("click",()=>{SGV.ch[L.id]=b.dataset.sgch;sgProfShow(L);}));
   box.querySelectorAll("[data-sgyd]").forEach(b=>b.addEventListener("click",()=>{SGV.yd=+b.dataset.sgyd;sgProfShow(L);}));
+  box.querySelectorAll("[data-pbnew]").forEach(b=>b.addEventListener("click",()=>pbOpen(L,info)));
+  box.querySelectorAll("[data-pbopen]").forEach(b=>b.addEventListener("click",()=>{const e=(L.patterns||[]).find(x=>x.id===b.dataset.pbopen);if(e)pbOpen(L,info,e);}));
   box.querySelectorAll("[data-sgmph]").forEach(b=>b.addEventListener("click",()=>{SGV.mph=+b.dataset.sgmph;sgProfShow(L);}));}
+/* pattern board (2.47.27): a picture of a sheet of paper shot once with the shotgun. You tap the paper's 4 corners and the aim mark;
+   the paper is flattened to a straight-on picture at a known number of pixels per inch, the pellet holes are found as small spots
+   that differ from the paper around them, and the 30" circle goes where it holds the most holes (the usual way a pattern is scored). */
+const PBX=(()=>{
+  function hom(src,dst){const A=[],b=[];for(let i=0;i<4;i++){const [x,y]=src[i],[u,v]=dst[i];A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v);}
+    for(let c=0;c<8;c++){let p=c;for(let r=c+1;r<8;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[b[c],b[p]]=[b[p],b[c]];if(Math.abs(A[c][c])<1e-12)return null;
+      for(let r=0;r<8;r++){if(r===c)continue;const f=A[r][c]/A[c][c];for(let k=c;k<8;k++)A[r][k]-=f*A[c][k];b[r]-=f*b[c];}}
+    return [...b.map((v,i)=>v/A[i][i]),1];}
+  const ap=(h,x,y)=>{const w=h[6]*x+h[7]*y+h[8];return [(h[0]*x+h[1]*y+h[2])/w,(h[3]*x+h[4]*y+h[5])/w];};
+  // 4 taps in any order → top-left, top-right, bottom-right, bottom-left
+  function order(p){const cx=p.reduce((s,q)=>s+q[0],0)/4,cy=p.reduce((s,q)=>s+q[1],0)/4;const s=p.slice().sort((a,b)=>Math.atan2(a[1]-cy,a[0]-cx)-Math.atan2(b[1]-cy,b[0]-cx));
+    // after sorting by angle (from −180°), find the one nearest the top-left and start there
+    let k=0,best=1e18;s.forEach((q,i)=>{const d=q[0]+q[1];if(d<best){best=d;k=i;}});return [0,1,2,3].map(i=>s[(k+i)%4]);}
+  // the flattened paper: src is RGBA {data,width,height}; corners TL,TR,BR,BL in its pixels; S pixels per inch
+  function flatten(src,corners,wIn,hIn,S){const W=Math.round(wIn*S),H=Math.round(hIn*S),h=hom([[0,0],[W,0],[W,H],[0,H]],corners);if(!h)return null;
+    const out=new Uint8ClampedArray(W*H*4),d=src.data,sw=src.width,sh=src.height;
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const [u,v]=ap(h,x+.5,y+.5),x0=Math.floor(u-.5),y0=Math.floor(v-.5),fx=u-.5-x0,fy=v-.5-y0,o=(y*W+x)*4;
+      if(x0<0||y0<0||x0+1>=sw||y0+1>=sh){out[o+3]=255;continue;}
+      for(let c=0;c<3;c++){const i=(y0*sw+x0)*4+c;out[o+c]=(d[i]*(1-fx)+d[i+4]*fx)*(1-fy)+(d[i+sw*4]*(1-fx)+d[i+sw*4+4]*fx)*fy;}out[o+3]=255;}
+    return {data:out,width:W,height:H};}
+  // holes: spots that differ from the paper within about an inch. pelletIn: pellet size, so we know how big one hole is.
+  // aim: the aim mark (inches); ink near it is left out. Returns holes in inches from the paper's top-left.
+  function findHoles(img,S,pelletIn,aim){const W=img.width,H=img.height,N=W*H,L=new Float32Array(N),d=img.data;
+    for(let i=0;i<N;i++)L[i]=.3*d[i*4]+.59*d[i*4+1]+.11*d[i*4+2];
+    // the paper's own brightness around each spot: an average over a square about 1" across (from a summed table)
+    const R=Math.max(6,Math.round(S*.6)),I=new Float64Array((W+1)*(H+1));
+    for(let y=0;y<H;y++){let r=0;for(let x=0;x<W;x++){r+=L[y*W+x];I[(y+1)*(W+1)+x+1]=I[y*(W+1)+x+1]+r;}}
+    const bg=new Float32Array(N);for(let y=0;y<H;y++){const y0=Math.max(0,y-R),y1=Math.min(H,y+R+1);for(let x=0;x<W;x++){const x0=Math.max(0,x-R),x1=Math.min(W,x+R+1);
+      bg[y*W+x]=(I[y1*(W+1)+x1]-I[y0*(W+1)+x1]-I[y1*(W+1)+x0]+I[y0*(W+1)+x0])/((x1-x0)*(y1-y0));}}
+    const m=Math.round(S*.6),inside=(x,y)=>x>=m&&y>=m&&x<W-m&&y<H-m;
+    // how much the paper itself varies (grain, light), so the cut-off adapts to the picture
+    const dif=new Float32Array(N),samp=[];for(let i=0;i<N;i++){dif[i]=L[i]-bg[i];if(i%7===0)samp.push(Math.abs(dif[i]));}
+    samp.sort((a,b)=>a-b);const noise=samp[Math.floor(samp.length/2)]||1;
+    const unitExp=Math.max(2,Math.PI*Math.pow(Math.max(.06,pelletIn||.09)*1.15*S/2,2));
+    function blobs(sign){const T=Math.max(18,noise*6),mk=new Uint8Array(N),seen=new Uint8Array(N),out=[];
+      for(let i=0;i<N;i++)if(sign*dif[i]>T)mk[i]=1;
+      for(let y=m;y<H-m;y++)for(let x=m;x<W-m;x++){const i=y*W+x;if(!mk[i]||seen[i])continue;
+        let st=[i],a=0,sx=0,sy=0,sw=0,x0=x,x1=x,y0=y,y1=y;seen[i]=1;
+        while(st.length){const j=st.pop(),jx=j%W,jy=(j-jx)/W,w=sign*dif[j];a++;sx+=jx*w;sy+=jy*w;sw+=w;if(jx<x0)x0=jx;if(jx>x1)x1=jx;if(jy<y0)y0=jy;if(jy>y1)y1=jy;
+          for(const k of [j-1,j+1,j-W,j+W,j-W-1,j-W+1,j+W-1,j+W+1]){const kx=k%W,ky=(k-kx)/W;if(k>=0&&k<N&&!seen[k]&&mk[k]&&inside(kx,ky)&&Math.abs(kx-jx)<=1){seen[k]=1;st.push(k);}}}
+        out.push({a,x:sx/sw,y:sy/sw,bw:x1-x0+1,bh:y1-y0+1});}
+      return out;}
+    // dark holes (paper over a dark backstop) or light ones (paper with light behind it): use whichever finds more pellet-size spots
+    let best=null;for(const sign of [-1,1]){const b=blobs(sign),ok=b.filter(q=>q.a>=unitExp*.25&&q.a<=unitExp*4).length;if(!best||ok>best.ok)best={b,ok};}
+    const B=best.b,small=B.filter(q=>q.a>=unitExp*.25&&q.a<=unitExp*3).map(q=>q.a).sort((a,b)=>a-b);
+    const unit=small.length>=15?Math.max(unitExp*.4,small[Math.floor(small.length/2)]):unitExp,holes=[];
+    for(const q of B){if(q.a<unit*.3)continue;const long=Math.max(q.bw,q.bh)/Math.max(1,Math.min(q.bw,q.bh)),fill=q.a/(q.bw*q.bh);
+      if(q.a>unit*14||(q.a>unit*3&&(long>3||fill<.3)))continue;   // ink: the aim mark, writing, tape edges
+      const xi=q.x/S,yi=q.y/S;if(aim&&q.a>unit*2.5&&Math.hypot(xi-aim[0],yi-aim[1])<1.5)continue;
+      const n=q.a<unit*1.7?1:Math.min(8,Math.round(q.a/unit));
+      // touching holes: one per pellet, spread around the spot
+      if(n===1)holes.push([xi,yi]);else{const r=Math.sqrt(q.a/Math.PI)/S*.5;for(let k=0;k<n;k++){const t=2*Math.PI*k/n;holes.push([xi+r*Math.cos(t),yi+r*Math.sin(t)]);}}}
+    return holes.map(([x,y])=>[+x.toFixed(2),+y.toFixed(2)]);}
+  // where the 30" circle holds the most holes (ties: nearer the middle of all the holes); then the numbers
+  function score(holes,wIn,hIn,aim){const R=15,R2=R*R,n=holes.length;if(!n)return null;
+    const mx=holes.reduce((s,q)=>s+q[0],0)/n,my=holes.reduce((s,q)=>s+q[1],0)/n;
+    const cnt=(cx,cy)=>{let c=0;for(const q of holes){const dx=q[0]-cx,dy=q[1]-cy;if(dx*dx+dy*dy<=R2)c++;}return c;};
+    let bc=-1,bx=mx,by=my,bd=0;const tryAt=(x,y)=>{const c=cnt(x,y),d=Math.hypot(x-mx,y-my);if(c>bc||(c===bc&&d<bd)){bc=c;bx=x;by=y;bd=d;}};
+    for(let y=0;y<=hIn;y+=.5)for(let x=0;x<=wIn;x+=.5)tryAt(x,y);
+    const fx=bx,fy=by;for(let y=fy-.5;y<=fy+.5;y+=.125)for(let x=fx-.5;x<=fx+.5;x+=.125)tryAt(x,y);
+    const in30=holes.filter(q=>Math.hypot(q[0]-bx,q[1]-by)<=15),in20=in30.filter(q=>Math.hypot(q[0]-bx,q[1]-by)<=10).length;
+    const pc=[in30.reduce((s,q)=>s+q[0],0)/Math.max(1,in30.length),in30.reduce((s,q)=>s+q[1],0)/Math.max(1,in30.length)];
+    // the biggest empty round spot inside the 30" circle (and on the paper)
+    let gap=0;for(let y=by-15;y<=by+15;y+=.5)for(let x=bx-15;x<=bx+15;x+=.5){const e=15-Math.hypot(x-bx,y-by);if(e<=gap||x<0||y<0||x>wIn||y>hIn)continue;
+      let g=Math.min(e,x,y,wIn-x,hIn-y);for(const q of in30){const dd=Math.hypot(q[0]-x,q[1]-y);if(dd<g)g=dd;if(g<=gap)break;}if(g>gap)gap=g;}
+    return {c:[+bx.toFixed(2),+by.toFixed(2)],n30:in30.length,n20:in20,total:n,pc:[+pc[0].toFixed(2),+pc[1].toFixed(2)],
+      off:aim?[+(pc[0]-aim[0]).toFixed(1),+(aim[1]-pc[1]).toFixed(1)]:null,gap:+(2*gap).toFixed(1),small:wIn<30||hIn<30};}
+  return {hom,ap,order,flatten,findHoles,score};
+})();
+/* ----- the pattern board screens: set up → tap the paper's corners and the aim mark → check the holes → result, saved on the profile.
+   The flattened picture is kept as a photo (it doesn't show in Live target pictures); the holes, in inches, are kept on the profile. ----- */
+let PB=null;
+const pbDate=d=>{const p=String(d||"").split("-");return p.length===3?["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+p[1]-1]+" "+(+p[2])+", "+p[0]:String(d||"");};
+const pbSig=p=>15/Math.sqrt(-2*Math.log(1-Math.min(.98,Math.max(.05,p))));   // the pattern spread that puts share p in the 30" circle
+const pbShare=(e)=>e.n30/(e.pel||e.total||1);
+// measured spread per yard for each choke, from this profile's patterns with its current shells
+function pbMeasured(L){const out={};(L.patterns||[]).filter(e=>!e.ammoId||e.ammoId===L.ammoId).forEach(e=>{if(!(e.yd>0))return;(out[e.choke]=out[e.choke]||[]).push(pbSig(pbShare(e))/e.yd);});
+  for(const k in out){const a=out[k];out[k]={per:a.reduce((s,v)=>s+v,0)/a.length,n:a.length};}return out;}
+function pbClose(){if(!PB)return;const w=PB.w;PB=null;w.classList.remove("on");setTimeout(()=>w.remove(),180);}
+function pbOpen(L,info,entry){if(PB)pbClose();
+  let last={};try{last=JSON.parse(localStorage.getItem("rb.pbpaper")||"{}");}catch(e){}
+  const w=document.createElement("div");w.className="infowrap pbwrap";
+  w.innerHTML='<div class="infoback" data-pbx></div><div class="infosheet pbsheet" role="dialog" aria-modal="true" aria-labelledby="pbT"><div class="infohead"><h2 id="pbT">'+(entry?"Pattern":"New pattern")+'</h2><button class="infox" type="button" data-pbx aria-label="Close">✕</button></div><div id="pbBody"></div></div>';
+  document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("on"));
+  w.addEventListener("click",ev=>{if(ev.target.closest("[data-pbx]"))pbClose();});
+  PB={w,L,info,entry:entry||null,choke:entry?entry.choke:info.choke,yd:entry?entry.yd:(SGV.yd||30),pw:entry?entry.w:(last.w||40),ph:entry?entry.h:(last.h||40),corners:[],aim:null,zoom:1};
+  if(entry){PB.holes=entry.holes.map(q=>q.slice());PB.aim=entry.aim;pbStep("result");
+    const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{if(!PB||PB.entry!==entry)return;const c=document.createElement("canvas");c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext("2d").drawImage(im,0,0);PB.flat=c;PB.S=c.width/entry.w;pbStep(PB.step);};
+    im.onerror=()=>{if(PB&&PB.entry===entry){PB.noPic=true;pbStep(PB.step);}};im.src=entry.photoUrl||("/api/photos/"+entry.photoId);}
+  else pbStep("setup");}
+function pbStep(step){if(!PB)return;PB.step=step;const b=PB.w.querySelector("#pbBody"),P=PB,yd=y=>U.s("yd",y,0);
+  const seg=(key,opts,on,lab)=>'<div class="segtabs small sgseg" role="radiogroup" aria-label="'+escL(lab)+'">'+opts.map(([v,t])=>'<button type="button" role="radio" data-'+key+'="'+escL(v)+'" aria-checked="'+(String(v)===String(on))+'" aria-selected="'+(String(v)===String(on))+'">'+escL(t)+'</button>').join("")+'</div>';
+  const zoomRow='<div class="pbzoom"><label for="pbZ">Zoom</label><input id="pbZ" type="range" min="1" max="5" step=".25" value="'+P.zoom+'"></div>';
+  if(step==="setup"){const Y=[20,25,30,35,40],other=!Y.includes(P.yd);
+    b.innerHTML='<div class="sgrow"><span class="lbl">Choke</span>'+seg("pbch",(P.info.list.length?P.info.list:[[P.choke,P.choke]]),P.choke,"Choke")+'</div>'+
+      '<div class="sgrow"><span class="lbl">Distance</span>'+seg("pbyd",Y.map(y=>[y,yd(y)]).concat([["o","Other"]]),other?"o":P.yd,"Distance")+
+      (other?'<input id="pbYo" type="number" inputmode="decimal" class="pbnum" aria-label="Distance ('+U.u("yd")+')" value="'+U.n("yd",P.yd,0)+'"> '+U.u("yd"):'')+'</div>'+
+      '<div class="sgrow"><span class="lbl">Paper size</span><input id="pbW" type="number" inputmode="decimal" class="pbnum" aria-label="Paper width ('+U.u("in")+')" value="'+U.n("in",P.pw,1)+'"> × <input id="pbH" type="number" inputmode="decimal" class="pbnum" aria-label="Paper height ('+U.u("in")+')" value="'+U.n("in",P.ph,1)+'"> '+U.u("in")+'</div>'+
+      '<p class="note">Hang a big sheet (butcher paper or cardboard, at least '+U.s("in",36,0)+' across), put an aim mark in the middle, and shoot it once from the distance above. Then take a picture straight on with all 4 corners of the paper showing. A dark backstop or shade behind the paper makes the holes easy to see.</p>'+
+      '<div class="row"><label class="btn primary pbfile">Take picture<input type="file" accept="image/*" capture="environment" hidden></label><label class="btn pbfile">Choose picture<input type="file" accept="image/*" hidden></label></div>'+
+      '<p class="note bad" id="pbErr" hidden></p>';
+    b.querySelectorAll("[data-pbch]").forEach(x=>x.addEventListener("click",()=>{P.choke=x.dataset.pbch;pbStep("setup");}));
+    b.querySelectorAll("[data-pbyd]").forEach(x=>x.addEventListener("click",()=>{P.yd=x.dataset.pbyd==="o"?(Y.includes(P.yd)?45:P.yd):+x.dataset.pbyd;pbStep("setup");}));
+    const rd=(id,k,f)=>{const el=b.querySelector(id);if(el)el.addEventListener("input",()=>{const v=U.from(k,parseFloat(el.value));if(v>0)f(v);});};
+    rd("#pbYo","yd",v=>P.yd=Math.round(v));rd("#pbW","in",v=>P.pw=v);rd("#pbH","in",v=>P.ph=v);
+    b.querySelectorAll(".pbfile input").forEach(inp=>inp.addEventListener("change",()=>{const f=inp.files&&inp.files[0];if(!f)return;
+      try{localStorage.setItem("rb.pbpaper",JSON.stringify({w:P.pw,h:P.ph}));}catch(e){}
+      const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);const k=Math.min(1,3000/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement("canvas");
+        c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);P.src=c;P.corners=[];P.aim=null;P.zoom=1;pbStep("corners");};
+      im.onerror=()=>{URL.revokeObjectURL(u);const e=b.querySelector("#pbErr");e.textContent="That picture couldn't be opened. Try another one.";e.hidden=false;};im.src=u;}));
+    return;}
+  if(step==="corners"){const n=P.corners.length,needAim=n>=4;
+    b.innerHTML='<p class="pbask"><b>'+(needAim?'Now tap the middle of your aim mark.':'Tap the 4 corners of the paper.')+'</b> '+(needAim?'':'('+(n+1)+' of 4)')+'</p>'+zoomRow+'<div class="pbview"><canvas id="pbC"></canvas></div>'+
+      '<div class="row"><button class="btn" type="button" id="pbUndo"'+(n?'':' disabled')+'>Undo tap</button>'+(needAim?'<button class="btn" type="button" id="pbNoAim">No aim mark</button>':'')+'<button class="btn" type="button" id="pbBack">Back</button></div>';
+    const c=b.querySelector("#pbC"),src=P.src,k=Math.min(1,1600/Math.max(src.width,src.height));c.width=Math.round(src.width*k);c.height=Math.round(src.height*k);
+    const x=c.getContext("2d");x.drawImage(src,0,0,c.width,c.height);const r=Math.max(6,c.width/90);x.lineWidth=Math.max(2,r/3);
+    P.corners.forEach(([px,py],i)=>{x.strokeStyle="#19d3c5";x.beginPath();x.arc(px*k,py*k,r,0,7);x.stroke();x.fillStyle="#19d3c5";x.font="bold "+Math.round(r*1.6)+"px sans-serif";x.fillText(String(i+1),px*k+r*1.2,py*k-r*1.2);});
+    if(n===4){const o=PBX.order(P.corners);x.strokeStyle="rgba(25,211,197,.8)";x.beginPath();o.forEach(([px,py],i)=>i?x.lineTo(px*k,py*k):x.moveTo(px*k,py*k));x.closePath();x.stroke();}
+    pbZoom(b,c);
+    c.addEventListener("click",ev=>{const R=c.getBoundingClientRect(),p=[(ev.clientX-R.left)/R.width*src.width,(ev.clientY-R.top)/R.height*src.height];
+      if(P.corners.length<4){P.corners.push(p);pbStep("corners");}else pbFind(p);});
+    b.querySelector("#pbUndo").addEventListener("click",()=>{P.corners.pop();pbStep("corners");});
+    b.querySelector("#pbBack").addEventListener("click",()=>pbStep("setup"));
+    {const na=b.querySelector("#pbNoAim");if(na)na.addEventListener("click",()=>pbFind(null));}
+    return;}
+  if(step==="holes"||step==="result"){const sc=P.holes&&P.holes.length?PBX.score(P.holes,P.entry?P.entry.w:P.pw,P.entry?P.entry.h:P.ph,P.aim):null;P.sc=sc;
+    const pel=P.info.pellets,pic=P.flat?zoomRow+'<div class="pbview"><canvas id="pbC"></canvas></div>':(P.noPic?'<p class="note">The picture for this pattern couldn\'t be loaded.</p>':'<p class="note">Loading the picture…</p>');
+    if(step==="holes"){const ed=P.found!=null?(P.holes.length-P.found):0;
+      b.innerHTML='<p class="pbask"><b>Check the holes.</b> Tap a spot to add a hole the app missed, or tap a mark to take it off. Zoom in to see them better.</p>'+pic+
+        '<div class="sgbig"><div><b>'+P.holes.length+'</b><span>holes on the paper</span></div>'+(sc?'<div><b>'+sc.n30+'</b><span>in the 30" circle</span></div>':'')+(P.found!=null&&ed?'<div><b>'+(ed>0?"+":"")+ed+'</b><span>changed by you</span></div>':'')+'</div>'+
+        '<p class="note">Teal rings are holes inside the 30" circle, gray ones are outside it. The circle sits where it holds the most holes; the red cross is your aim mark.</p>'+
+        '<div class="row"><button class="btn primary" type="button" id="pbOk"'+(sc?'':' disabled')+'>Looks right</button>'+(P.entry?'':'<button class="btn" type="button" id="pbRe">Retake</button>')+'</div>';
+      b.querySelector("#pbOk").addEventListener("click",()=>pbStep("result"));{const re=b.querySelector("#pbRe");if(re)re.addEventListener("click",()=>pbStep("setup"));}}
+    else{const e=P.entry,yd0=e?e.yd:P.yd,ch=e?e.choke:P.choke,est=SGX.inside(15,SGX.sigma(ch,yd0,P.info.t)),pct=sc&&pel?sc.n30/pel:null;
+      const off=sc&&sc.off?[Math.abs(sc.off[1])>=.05?U.s("in",Math.abs(sc.off[1]),1)+(sc.off[1]>0?" high":" low"):"",Math.abs(sc.off[0])>=.05?U.s("in",Math.abs(sc.off[0]),1)+(sc.off[0]>0?" right":" left"):""].filter(Boolean).join(", ")||"Right on":"";
+      b.innerHTML=(e?'<p class="note" style="margin-top:0">'+escL([pbDate(e.date),ch,yd(yd0)].join(" · "))+'</p>':'')+pic+
+        (sc?'<div class="sgbig"><div><b>'+(pct!=null?Math.round(pct*100)+'%':sc.n30)+'</b><span>'+(pct!=null?'in the 30" circle ('+sc.n30+' of about '+Math.round(pel)+' pellets)':'holes in the 30" circle (add the shells\' payload and shot size to get a %)')+'</span></div>'+
+          (off?'<div><b>'+escL(off)+'</b><span>pattern center from the aim mark</span></div>':'')+'</div>'+
+          '<table class="sgtab"><tr><th></th><th>Pellets</th><th>Share</th></tr><tr><td>Inner 20" core</td><td>'+sc.n20+'</td><td>'+Math.round(sc.n20/Math.max(1,sc.n30)*100)+'%</td></tr><tr><td>Outer ring (20 to 30")</td><td>'+(sc.n30-sc.n20)+'</td><td>'+Math.round((sc.n30-sc.n20)/Math.max(1,sc.n30)*100)+'%</td></tr>'+
+          '<tr><td>Biggest gap in the 30"</td><td colspan="2">'+U.s("in",sc.gap,1)+(sc.gap>=4.25?' (a clay fits through)':'')+'</td></tr></table>'+
+          (pct!=null?'<p class="note">The estimate for '+escL(ch)+' at '+yd(yd0)+' was '+Math.round(est*100)+'%; '+(Math.abs(pct-est)<.04?'this matches it.':pct<est?'this shell shoots it more open.':'this shell shoots it tighter.')+'</p>':'')+
+          (sc.small?'<p class="note bad">The paper is smaller than the 30" circle, so pellets outside the paper weren\'t counted. Use a sheet at least '+U.s("in",36,0)+' across.</p>':''):'<p class="note">No holes yet.</p>')+
+        '<div class="row">'+(e?'<button class="btn" type="button" id="pbEdit"'+(P.flat?'':' disabled')+'>Edit holes</button><button class="btn danger" type="button" id="pbDel">Delete</button>'+(P.dirty?'<button class="btn primary" type="button" id="pbUpd">Save changes</button>':'<button class="btn primary" type="button" data-pbx>Done</button>'):
+          '<button class="btn primary" type="button" id="pbSave"'+(sc?'':' disabled')+'>Save to the profile</button><button class="btn" type="button" id="pbBackH">Back to the holes</button>')+'</div><p class="note bad" id="pbErr" hidden></p>';
+      {const x=b.querySelector("#pbSave");if(x)x.addEventListener("click",pbSave);}
+      {const x=b.querySelector("#pbUpd");if(x&&sc)x.addEventListener("click",()=>{Object.assign(e,{holes:P.holes,n30:sc.n30,n20:sc.n20,total:sc.total,c:sc.c,off:sc.off,gap:sc.gap});save();const L=P.L;pbClose();sgProfShow(L);});}
+      {const x=b.querySelector("#pbBackH");if(x)x.addEventListener("click",()=>pbStep("holes"));}
+      {const x=b.querySelector("#pbEdit");if(x)x.addEventListener("click",()=>{P.found=P.holes.length;pbStep("holes");});}
+      {const x=b.querySelector("#pbDel");if(x)x.addEventListener("click",()=>{const L=P.L,i=(L.patterns||[]).indexOf(e);if(i<0)return;L.patterns.splice(i,1);save();pbClose();sgProfShow(L);
+        RB_UNDO("Deleted pattern",()=>{L.patterns.splice(Math.min(i,L.patterns.length),0,e);save();sgProfShow(L);},()=>{if(e.photoId&&!(L.patterns||[]).includes(e))API.del("/api/photos/"+e.photoId).catch(()=>{});});});}}
+    const c=b.querySelector("#pbC");if(c)pbDraw(c,step==="holes");
+    return;}}
+function pbZoom(b,c){const z=b.querySelector("#pbZ"),set=()=>{c.style.width=(PB.zoom*100)+"%";};set();if(z)z.addEventListener("input",()=>{const v=b.querySelector(".pbview"),fx=(v.scrollLeft+v.clientWidth/2)/v.scrollWidth,fy=(v.scrollTop+v.clientHeight/2)/v.scrollHeight;
+  PB.zoom=+z.value;set();v.scrollLeft=fx*v.scrollWidth-v.clientWidth/2;v.scrollTop=fy*v.scrollHeight-v.clientHeight/2;});}
+// the flattened paper with the holes, the 30" and 20" circles and the aim mark; in the holes step a tap adds or removes a hole
+function pbDraw(c,edit){const P=PB,f=P.flat,S=P.S;c.width=f.width;c.height=f.height;const x=c.getContext("2d");x.drawImage(f,0,0);const sc=P.sc,r=Math.max(4,S*.28);
+  if(sc){x.lineWidth=Math.max(2,S*.12);x.strokeStyle="#19d3c5";x.beginPath();x.arc(sc.c[0]*S,sc.c[1]*S,15*S,0,7);x.stroke();x.setLineDash([S*.6,S*.4]);x.beginPath();x.arc(sc.c[0]*S,sc.c[1]*S,10*S,0,7);x.stroke();x.setLineDash([]);}
+  x.lineWidth=Math.max(1.5,S*.08);P.holes.forEach(([hx,hy])=>{const inn=sc&&Math.hypot(hx-sc.c[0],hy-sc.c[1])<=15;x.strokeStyle=inn?"#19d3c5":"#9aa3a3";x.beginPath();x.arc(hx*S,hy*S,r,0,7);x.stroke();});
+  if(P.aim){const [ax,ay]=P.aim;x.strokeStyle="#e0443a";x.lineWidth=Math.max(2,S*.12);x.beginPath();x.moveTo(ax*S-S,ay*S);x.lineTo(ax*S+S,ay*S);x.moveTo(ax*S,ay*S-S);x.lineTo(ax*S,ay*S+S);x.stroke();}
+  pbZoom(PB.w,c);
+  if(edit)c.addEventListener("click",ev=>{const R=c.getBoundingClientRect(),px=(ev.clientX-R.left)/R.width*f.width/S,py=(ev.clientY-R.top)/R.height*f.height/S;
+    let bi=-1,bd=.4;P.holes.forEach(([hx,hy],i)=>{const d=Math.hypot(hx-px,hy-py);if(d<bd){bd=d;bi=i;}});
+    P.dirty=true;if(bi>=0)P.holes.splice(bi,1);else P.holes.push([+px.toFixed(2),+py.toFixed(2)]);
+    const v=PB.w.querySelector(".pbview"),sl=v?v.scrollLeft:0,st=v?v.scrollTop:0;pbStep("holes");const v2=PB.w.querySelector(".pbview");if(v2){v2.scrollLeft=sl;v2.scrollTop=st;}});}
+// flatten the paper and find the holes (aimTap: where the aim mark was tapped on the picture, or null)
+function pbFind(aimTap){const P=PB,b=P.w.querySelector("#pbBody");b.innerHTML='<p class="pbask"><b>Finding the holes…</b></p>';
+  setTimeout(()=>{if(PB!==P)return;try{const o=PBX.order(P.corners),S=Math.min(25,1500/Math.max(P.pw,P.ph)),src=P.src,img=src.getContext("2d").getImageData(0,0,src.width,src.height);
+    const flat=PBX.flatten(img,o,P.pw,P.ph,S);if(!flat)throw new Error("corners");
+    const toIn=PBX.hom(o,[[0,0],[P.pw,0],[P.pw,P.ph],[0,P.ph]]);P.aim=aimTap?PBX.ap(toIn,aimTap[0],aimTap[1]).map(v=>+v.toFixed(2)):null;
+    const c=document.createElement("canvas");c.width=flat.width;c.height=flat.height;c.getContext("2d").putImageData(new ImageData(flat.data,flat.width,flat.height),0,0);
+    P.flat=c;P.S=S;P.holes=PBX.findHoles(flat,S,P.info.d,aimTap?P.aim:null);P.found=P.holes.length;P.zoom=1;pbStep("holes");}
+  catch(e){P.corners=[];pbStep("corners");const a=P.w.querySelector(".pbask");if(a)a.insertAdjacentHTML("afterend",'<p class="note bad">That didn\'t work. Tap the 4 corners again, going around the paper.</p>');}},30);}
+async function pbSave(){const P=PB,L=P.L,sc=P.sc,btn=P.w.querySelector("#pbSave"),er=P.w.querySelector("#pbErr");if(!sc||!btn)return;btn.disabled=true;btn.textContent="Saving…";
+  const e={id:"pb"+Date.now().toString(36),date:(d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()),at:Date.now(),choke:P.choke,yd:P.yd,w:P.pw,h:P.ph,ammoId:L.ammoId||null,shells:P.info.shells||"",
+    pel:P.info.pellets?Math.round(P.info.pellets):null,holes:P.holes,aim:P.aim,n30:sc.n30,n20:sc.n20,total:sc.total,c:sc.c,off:sc.off,gap:sc.gap};
+  try{const data=P.flat.toDataURL("image/jpeg",.82),r=await API.post("/api/live",{data,w:P.flat.width,h:P.flat.height,measure:{pattern:true,profile:L.id},caption:"Pattern board · "+P.choke+" · "+U.s("yd",P.yd,0),created:Date.now()}),ph=r&&r.photo;
+    if(ph){e.photoId=ph.id;e.photoUrl=ph.url;}}
+  catch(err){btn.disabled=false;btn.textContent="Save to the profile";er.textContent="Couldn't save the picture. Check the connection and try again.";er.hidden=false;return;}
+  if(!PB||PB!==P)return;(L.patterns=L.patterns||[]).push(e);save();pbClose();sgProfShow(L);}
 // + New profile that's left without a gun, ammo, cartridge or any numbers is dropped when you go back to the list or open another (2.30.4)
 let NEWPROF=null;
 function sweepNewProf(keepId){const id=NEWPROF;if(!id||id===keepId)return;NEWPROF=null;const i=state.loads.findIndex(l=>l.id===id);if(i<0||state.loads.length<2)return;const L=state.loads[i];
@@ -10246,7 +10438,7 @@ async function liveStore(data,w,h,M,caption,prev){
 }
 window.addEventListener("rb-photo-id",e=>{const d=e.detail||{};let hit=false;liveSaved.forEach(x=>{if(x.id===d.tmp){x.id=d.id;x.url="/api/photos/"+d.id;hit=true;}});if(hit)renderLiveSaved();});
 window.addEventListener("rb-synced",()=>{if(liveLoaded&&liveSaved.some(x=>/^tmp-/.test(x.id))){liveLoaded=false;renderLiveSaved();}});
-function liveEnsure(){if(liveLoaded)return Promise.resolve(liveSaved);return API.get("/api/live").then(r=>{const got=r.photos||[];liveSaved=[...liveSaved.filter(x=>/^tmp-/.test(x.id)&&!got.some(g=>g.id===x.id)),...got];liveLoaded=true;return liveSaved;});}
+function liveEnsure(){if(liveLoaded)return Promise.resolve(liveSaved);return API.get("/api/live").then(r=>{const got=(r.photos||[]).filter(p=>!(p.measure&&p.measure.pattern));liveSaved=[...liveSaved.filter(x=>/^tmp-/.test(x.id)&&!got.some(g=>g.id===x.id)),...got];liveLoaded=true;return liveSaved;});}
 const liveWhen=p=>p.created?new Date(p.created).toLocaleString(undefined,{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"}):"";
 function liveCtx(){
   return {kind:"live",get photos(){return liveSaved;},ro:false,L:null,lgroups:[],dia:.308,dist:null,
