@@ -6072,30 +6072,37 @@ const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shot
 // a small outline picture for each kind of gun (2.47.28): shown on a gun with no photo, and on the Guns list headings
 const GUN_ICON={rifle:'<path d="M2 11h26l3-2h15v2.5H31l-3 2h-5l-2 5h-4l1.5-5H2z"/><path d="M13 6.5h11v2.5H13z"/>',pistol:'<path d="M13 4h23v5H24l-1.5 2.5H20L17.5 18h-5l2.5-8h-2z"/>',
   shotgun:'<path d="M2 11h20l2-2h22v2.5H24l-3 2h-4l-2 5h-4l1.5-5H2z"/><path d="M29 14h8"/>'};
-/* placeholder pictures (2.47.29): public/img/guns/[kind]-[type][-suppressed].jpg, picked from the gun's Action when it's set,
-   else guessed from its name, maker, model and cartridge; "-suppressed" when a suppressor is ticked on the gun */
+/* placeholder pictures (2.47.29): public/img/guns/[kind]-[type][-irons|-scope|-dot][-suppressed].jpg, picked from the gun's Action
+   when it's set, else guessed from its name, maker, model and cartridge; the optic part from the gun's Optic (2.47.30; over/unders,
+   side-by-sides and revolvers have none); "-suppressed" when a suppressor is ticked on the gun */
 const RIFLE_ACTIONS=[["bolt","Bolt action"],["ar","Semi-auto, AR style"],["semi","Semi-auto"],["lever","Lever action"],["break","Break action / single shot"],["pump","Pump"]];
 const PISTOL_ACTIONS=[["polymer","Semi-auto (striker, polymer)"],["1911","Semi-auto (1911 style)"],["revda","Revolver (double action)"],["revsa","Revolver (single action)"]];
 function gunPicName(r,sibs){sibs=sibs||[r];const t=sibs.map(x=>[x.name,x.nick,x.mfr,x.model,x.cartridge].filter(Boolean).join(" ")).join(" ");
   const ty=GUN_TYPES.some(g=>g[0]===r.type)?r.type:(window.RB_CARTS&&RB_CARTS.gauge(r.cartridge))?"shotgun":gunTypeGuess(r.cartridge)||"rifle";
   const sup=sibs.some(x=>gunCans(x).length),a=String(r.action||"");let k;
+  // the optic on the gun: none (iron sights), a scope, or a red dot / holographic sight
+  const oid=sibs.map(x=>x.scopeId).find(Boolean),o=oid&&scopes.find(x=>x.id===oid),opt=!o?"irons":window.isDotSight&&isDotSight(o)?"dot":"scope";
   if(ty==="shotgun"){k={"Pump":"pump","Semi-auto":"semi-auto","Over/under":"over-under","Side-by-side":"side-by-side","Single shot":"over-under"}[a]||
       (/over.?(and.?)?under|\bO\/U\b|\b68[67]\b|DT.?11|Citori|Caesar|Perazzi|Krieghoff|\b725\b|Silver Pigeon|\bSKB\b|Redhead/i.test(t)?"over-under":
        /side.?by.?side|\bSxS\b|coach gun|double barrel/i.test(t)?"side-by-side":
-       /semi|auto|A[34]00|1301|Super Black Eagle|\bSBE\b|Vinci|Montefeltro|\b1100\b|11-87|\bV3\b|Maxus|\bA5\b|SX[34]|Versa.?Max|M3000|Affinity|\bM[24]\b/i.test(t)?"semi-auto":"pump");}
+       /semi|auto|A[34]00|1301|Super Black Eagle|\bSBE\b|Vinci|Montefeltro|\b1100\b|11-87|\bV3\b|Maxus|\bA5\b|SX[34]|Versa.?Max|M3000|Affinity|\bM[24]\b/i.test(t)?"semi-auto":"pump");
+    if(k==="pump"||k==="semi-auto")k+="-"+opt;}
   else if(ty==="pistol"){k={"1911":"1911-semi","polymer":"compact-polymer","revda":"revolver-da","revsa":"revolver-sa"}[a]||
       (/single.?action|Blackhawk|Vaquero|Wrangler|Single.?Six|Bearcat|\bSAA\b|Peacemaker|Uberti|Cimarron|Rough Rider|Frontier/i.test(t)?"revolver-sa":
        /revolver|Python|Anaconda|Cobra|GP.?100|SP.?101|\bLCR\b|Redhawk|[JKLN].?frame|Judge|Rhino|Model (10|19|27|29|36|60|64|66|442|586|617|629|642|686)\b|\.38 Spec|\.357 Mag|\.44 Mag|\.45 Colt|\.327/i.test(t)?"revolver-da":
-       /1911|2011|Commander|Officer|Government|Gov.?t|Kimber|Gold Cup|Range Officer|Ronin|Garrison|Emissary|Dan Wesson|Wilson Combat|Les Baer|Staccato|\bSTI\b|Nighthawk|Rock Island|\bRIA\b|Tisas/i.test(t)?"1911-semi":"compact-polymer");}
+       /1911|2011|Commander|Officer|Government|Gov.?t|Kimber|Gold Cup|Range Officer|Ronin|Garrison|Emissary|Dan Wesson|Wilson Combat|Les Baer|Staccato|\bSTI\b|Nighthawk|Rock Island|\bRIA\b|Tisas/i.test(t)?"1911-semi":"compact-polymer");
+    // semi-autos come with iron sights or a red dot (a scope shows as a red dot)
+    if(k==="1911-semi"||k==="compact-polymer")k=(k==="1911-semi"?"1911":k)+"-"+(opt==="irons"?"irons":"dot");}
   else{k={"bolt":"bolt-action-scoped","ar":"ar15","semi":"semi-auto-hunting","lever":"lever-action","break":"break-action","pump":"semi-auto-hunting"}[a]||
       (sibs.some(x=>x.build&&(x.build.lowerId||x.build.upperId))||/\bAR[- ]?(15|10)?\b|\bM4\b|\bM16\b|\bMSR\b|LR.?308|SR.?25|\bDPMS\b|\bBCM\b|Daniel Defense|\bPSA\b|Aero Precision|\bLMT\b|LWRC|\bSCAR\b|\bMCX\b|Tavor|\bAUG\b|\bAK\b|AK.?47|\bAR-|carbine/i.test(t)?"ar15":
        /10\/22|Model 60|Marlin 60|\bBAR\b|M1A|Mini.?(14|30)|Garand|\bSKS\b|\bR1\b|7400|semi/i.test(t)?"semi-auto-hunting":
        /lever|Marlin|Henry|Winchester (Model )?(94|1873|1886|1892|1894|1895)|Rossi|\b336\b|\b1894\b|\b1895\b/i.test(t)?"lever-action":
-       /break|single.?shot|H&R|Handi|Encore|Contender|No\.? ?1\b|double rifle/i.test(t)?"break-action":"bolt-action-scoped");}
+       /break|single.?shot|H&R|Handi|Encore|Contender|No\.? ?1\b|double rifle/i.test(t)?"break-action":"bolt-action-scoped");
+    k=k.replace("-scoped","")+"-"+opt;}
   return ty+"-"+k+(sup?"-suppressed":"");}
 const gunPicImg=(r,sibs)=>'<img alt="" loading="lazy" class="gph" src="/img/guns/'+gunPicName(r,sibs)+'.jpg">';
 window.RB_GUN_PIC=(r,sibs)=>gunPicImg(r,sibs);
-const KIND_PIC={rifle:"rifle-bolt-action-scoped",pistol:"pistol-compact-polymer",shotgun:"shotgun-pump"};
+const KIND_PIC={rifle:"rifle-bolt-action-scope",pistol:"pistol-compact-polymer-irons",shotgun:"shotgun-pump-irons"};
 const kindPic=k=>KIND_PIC[k]?'<img alt="" class="gkpic" src="/img/guns/'+KIND_PIC[k]+'.jpg">':"";
 const gunIcon=(k,cls)=>GUN_ICON[k]?'<svg class="gico'+(cls?' '+cls:'')+'" viewBox="0 0 48 20" aria-hidden="true">'+GUN_ICON[k]+'</svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
 // the Guns list filter: "" all, or one kind; remembered on this device
