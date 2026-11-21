@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.30",
+      "version": "2.47.31",
       "date": "2026-11-20",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "New detailed pictures for over/under shotguns and double- and single-action revolvers, with and without a suppressor, to match the rest of the gun pictures.",
         "Gun pictures follow the optic: a gun with no optic shows iron sights, a scope shows a scope and a red dot or holographic sight shows a red dot (rifles, pump and semi-auto shotguns; 1911 and polymer pistols get iron sights or a red dot). New detailed pictures for those guns; over/unders, side-by-sides and revolvers keep theirs.",
         "Gun pictures: a gun without a photo shows a picture of its kind and action (bolt, AR, lever, break-action or semi-auto rifles; 1911, polymer, double- or single-action revolver pistols; pump, semi-auto, over/under or side-by-side shotguns), with a suppressor on it when one is ticked on the gun. Rifles and pistols get an Action choice on their page (shotguns already had one); when it's not set the picture is guessed from the name and model. Rifles are green, pistols red and shotguns purple on the Guns list.",
         "Guns list by kind: buttons at the top show All, Rifles, Pistols or Shotguns (remembered on this device); each kind has its own colored heading, picture (when a gun has no photo) and tile stripe. Shotguns show shells fired and their shotgun profiles and patterns in place of loads.",
