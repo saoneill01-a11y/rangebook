@@ -1214,7 +1214,13 @@ table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))
 .sgfacts{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:4px 0 10px}
 .sgfacts div{display:contents}
 .sgfacts dt{color:var(--muted)}
-.sgfacts dd{margin:0;font-weight:600}
+.sgfacts dd{margin:0;font-weight:600}.sgfacts{grid-template-columns:auto minmax(0,1fr)}.sgfacts dt{white-space:nowrap}.sgfacts dd .linkbtn{white-space:normal;text-align:left;max-width:100%}
+#sgProfCard .sgcard{margin-bottom:12px}.sgrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px}.sgrow .lbl{color:var(--muted);font-size:calc(12.5px*var(--fs))}.sgseg{flex-wrap:wrap;max-width:100%}
+.sgpat{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:16px;align-items:start}@media (max-width:620px){.sgpat{grid-template-columns:minmax(0,1fr)}.sgpat .sgpic{max-width:260px;margin:0 auto}}
+.sgpic{width:100%;display:block}.sgpbg{fill:var(--sunk)}.sgp30{fill:none;stroke:var(--accent);stroke-width:2}.sgp10{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}.sgpd{fill:var(--fg);fill-opacity:.75}.sgcap{text-align:center;margin:4px 0 0}
+.sgbig{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:8px}.sgbig b{display:block;font-size:calc(22px*var(--fs))}.sgbig span{color:var(--muted);font-size:calc(12px*var(--fs))}
+.sgtab{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}.sgtab th{color:var(--muted);font-weight:500;text-align:right;padding:3px 6px;font-size:calc(12px*var(--fs));border-bottom:1px solid var(--line)}.sgtab td{text-align:right;padding:5px 6px;border-bottom:1px solid var(--line)}.sgtab th:first-child,.sgtab td:first-child{text-align:left}#sgProfCard .sgtab tr.hi td,#sgProfCard .sgtab tr.hi td:first-child{background:var(--accent-soft)}
+.sgest{margin:0 0 12px}
 .profallwin .infosheet{max-width:760px;max-height:92vh}
 .profallwin .card{box-shadow:none;margin:10px 0 0}
 body.tripspage #trajBack{display:none!important}
@@ -3889,18 +3895,99 @@ function fillSelect(){
 function trajHead(){const d=TVIEW==="detail",nm=d?(cur().name||"Untitled profile"):"";{const sb=$("trajSample");if(sb)sb.hidden=!(d&&cur().sample);}$("trajBack").hidden=!d;$("trajSub").hidden=d;
   $("trajTitle").textContent=d?nm:"Shooting";$("trajTitle").classList.toggle("sr",d);const jn=$("trajJumpName");if(jn){jn.textContent=nm;jn.title=nm;}
   sgProfShow(d&&cur().sg?cur():null);}
-/* a shotgun profile with shot (2.48): no trajectory or dope card. For now it shows the gun, the shells and the choke; pattern and
-   shot estimates are to come. Slugs use the normal profile page. */
+/* shotgun estimates (2.47.26): pellets, pattern, pellet speed and energy, and lead, from the shells and the choke. Standard
+   shotgun rules of thumb, not measured: the pattern board will replace them with your gun's own numbers.
+   - shot size → pellet size: US numbers are 0.17 in − n/100 (#8 = .09 in, #7½ = .095), letters B to FF, buckshot 000 to #4
+   - pellet weight from its size and what it's made of; the pellet count from the payload when the box doesn't give it
+   - speed: a ball slowed by air (sea level), stepped out a yard at a time
+   - pattern: round and bell-shaped, spreading evenly with distance, sized so the choke puts its rated share in a 30" circle at 40 yd */
+const SGX=(()=>{
+  const DENS={lead:11.1,copper:11.1,bismuth:9.6,steel:7.86,blend:7.86,tungsten:12,TSS:18,buck:11.1};
+  const LET={B:.17,BB:.18,BBB:.19,T:.20,TT:.21,F:.22,FF:.23},BUCK={"000":.36,"00":.33,"0":.32,"1":.30,"2":.27,"3":.25,"4":.24};
+  function dia(size,type){const s=String(size||"").replace(/½/g,".5").replace(/buck(shot)?|#|no\.?/ig,"").trim().toUpperCase();if(!s)return null;
+    if(type==="buck"&&BUCK[s])return BUCK[s];if(LET[s])return LET[s];const n=parseFloat(s);return isFinite(n)&&n>=1&&n<=12?+(.17-n/100).toFixed(3):null;}
+  const grains=(d,type)=>Math.PI/6*Math.pow(d*2.54,3)*(DENS[type]||11.1)*15.4324;
+  const cd=M=>M<.6?.47:M<.8?.47+(M-.6)*.65:M<1?.6+(M-.8)*1.5:M<1.2?.9+(M-1)*.4:.98;
+  // speed (fps) and time (s) at each whole yard out to maxYd
+  function fly(v0,d,gr,maxYd){const m=gr/15432.4,A=Math.PI*Math.pow(d*.0254/2,2),out=[];let v=v0*.3048,x=0,t=0,next=0;const dx=.05;
+    while(next<=maxYd){if(x/.9144>=next-1e-6){out.push({v:v/.3048,t});next++;continue;}const vn=v*Math.exp(-1.225*cd(v/340.3)*.9*A/(2*m)*dx);t+=2*dx/(v+vn);v=vn;x+=dx;}
+    return out;}
+  const CHOKE40={"Cylinder":40,"Skeet":45,"Improved Cylinder":50,"Light Modified":55,"Modified":60,"Improved Modified":65,"Light Full":68,"Full":70,"Extra Full":75,"Turkey":80};
+  const hard=t=>/steel|TSS|tungsten|blend/.test(t||"");
+  // the pattern's spread (inches): hard shot keeps a tighter pattern; buckshot's few big pellets spread about 1" per yard from a cylinder bore
+  function sigma(choke,yd,type){let p=CHOKE40[choke]||60;if(hard(type))p=Math.min(90,p+10);return 15/Math.sqrt(-2*Math.log(1-p/100))*yd/40*(type==="buck"?.6:1);}
+  const inside=(R,s)=>1-Math.exp(-R*R/(2*s*s));
+  const across=s=>2*2.146*s;   // holds 90% of the pellets
+  // "good out to": energy each pellet needs (ft-lb) and pellets needed in the 30" circle (10" for turkey heads and deer)
+  const USES={clays:["clays",.7,150,15],doves:["doves and quail",.9,120,15],pheasant:["pheasant",1.8,90,15],ducks:["ducks",2.5,80,15],geese:["geese",4.5,50,15],turkey:["turkey",1,100,5],deer:["deer",60,3,5]};
+  // turkey only for turkey shot: TSS or tungsten, or #6 and bigger in lead or bismuth (small shot can carry the energy up close but isn't a turkey load)
+  const usesFor=(t,d)=>{const tk=/TSS|tungsten/.test(t)||d>=.11;return (t==="buck"?["deer"]:/steel|blend/.test(t)?["clays","doves","ducks","geese"]:/bismuth|tungsten|TSS/.test(t)?["pheasant","ducks","geese","turkey"]:["clays","doves","pheasant","turkey"]).filter(k=>k!=="turkey"||tk);};
+  return {dia,grains,fly,sigma,inside,across,CHOKE40,USES,usesFor};
+})();
+let SGV={yd:30,mph:40,ch:{}};
+/* a shotgun profile with shot (2.48): no trajectory or dope card. The gun, the shells and the choke, then the estimates above.
+   Slugs use the normal profile page. */
 function sgProfShow(L){const det=$("trajDetail");if(!det)return;det.classList.toggle("sgprof",!!L);{const j=$("trajJump");if(j&&L)j.hidden=true;}
   let box=$("sgProfCard");if(!L){if(box)box.remove();return;}
-  if(!box){box=document.createElement("section");box.className="card";box.id="sgProfCard";box.setAttribute("aria-label","Shotgun");const tb=$("tripsBar");(tb||det.firstChild).after(box);}
+  if(!box){box=document.createElement("div");box.id="sgProfCard";const tb=$("tripsBar");(tb||det.firstChild).after(box);}
   const F=window.RB_GEAR_FIND,g=F&&L.rifleId?F.gun(L.rifleId):null,a=F&&L.ammoId?F.ammo(L.ammoId):null;
   const row=(k,v,go)=>'<div><dt>'+escL(k)+'</dt><dd>'+(go?'<button class="linkbtn" type="button" data-sggo="'+go+'">'+escL(v)+' ›</button>':escL(v))+'</dd></div>';
+  const seg=(key,opts,on,lab)=>'<div class="segtabs small sgseg" role="radiogroup" aria-label="'+escL(lab)+'">'+opts.map(([v,t])=>'<button type="button" role="radio" data-'+key+'="'+escL(v)+'" aria-checked="'+(String(v)===String(on))+'" aria-selected="'+(String(v)===String(on))+'">'+escL(t)+'</button>').join("")+'</div>';
+  const card=(h,body)=>'<section class="card sgcard" aria-label="'+escL(h)+'"><h2>'+escL(h)+'</h2>'+body+'</section>';
+  const yd=y=>U.s("yd",y,0),inch=x=>U.s("in",x,0),pct=x=>Math.round(x*100)+"%",n0=x=>Math.round(x).toLocaleString();
+  // the chokes to choose from: what's in the gun now (each barrel), then the other tubes you have
+  const two=g&&(g.action==="Over/under"||g.action==="Side-by-side"),list=[];
+  if(g){const add=(c,t)=>{if(c&&!list.some(x=>x[0]===c))list.push([c,t]);};
+    if(two&&g.chokeIn&&g.chokeIn===g.chokeIn2)add(g.chokeIn,g.chokeIn+" (both barrels)");
+    add(g.chokeIn,g.chokeIn+(two?" (1st barrel)":" (in the gun)"));if(two)add(g.chokeIn2,g.chokeIn2+" (2nd barrel)");
+    if(g.chokeSys!=="fixed")(Array.isArray(g.chokes)?g.chokes:[]).forEach(c=>add(c,c));}
+  let choke=SGV.ch[L.id];if(!list.some(x=>x[0]===choke))choke=list.length?list[0][0]:"Modified";SGV.ch[L.id]=choke;
+  const t=a?(a.shotType||"lead"):"lead",d=a?SGX.dia(a.shot,t):null,pg=d?SGX.grains(d,t):null;
+  const pellets=a&&num(a.pellets)?num(a.pellets):a&&num(a.oz)&&pg?num(a.oz)*437.5/pg:null;
+  const vel=a&&(num(a.measVel)||num(a.boxVel))||num(L.mv)||null,v0=vel||(t==="buck"?1325:1200);
   const ch=g?(g.chokeIn?g.chokeIn+(g.chokeIn2?" / "+g.chokeIn2:"")+(g.chokeSys==="fixed"?" (fixed)":""):"Not set on the gun"):"";
-  box.innerHTML='<h2>Shotgun</h2><dl class="sgfacts">'+(g?row("Gun",[g.nick||g.name,F.gunLine(g)].filter(Boolean).join(" · "),"g:"+g.id):row("Gun","None picked"))+
-    (a?row("Shells",F.ammoName(a),"a:"+a.id):row("Shells","None picked"))+(g?row("Choke in the gun",ch):'')+(a&&num(a.boxVel)?row("Velocity on the box",U.s("fps",num(a.boxVel),0,true)):'')+'</dl>'+
-    '<p class="note">Shotgun shot has no bullet path to chart. Pattern spread, pellet counts, pellet energy by distance and lead on crossing targets are coming to this page. Range trips work as for any profile.</p>';
-  box.querySelectorAll("[data-sggo]").forEach(b=>b.addEventListener("click",()=>{const [k,id]=b.dataset.sggo.split(":");showTab("rifles");if(k==="g"){if(window.RB_OPEN_GUN)RB_OPEN_GUN(id,L.id);}else if(window.RB_OPEN_AMMO)RB_OPEN_AMMO(id,L.id);}));}
+  let h=card("Shotgun",'<dl class="sgfacts">'+(g?row("Gun",[g.nick||g.name,F.gunLine(g)].filter(Boolean).join(" · "),"g:"+g.id):row("Gun","None picked"))+
+    (a?row("Shells",F.ammoName(a),"a:"+a.id):row("Shells","None picked"))+(g?row("Choke in the gun",ch):'')+
+    (vel?row(a&&num(a.measVel)?"Your measured velocity":"Velocity on the box",U.s("fps",vel,0,true)):'')+(pellets?row("Pellets",(num(a.pellets)?"":"about ")+n0(pellets)+(d?" ("+d.toFixed(3).replace(/^0/,"")+" in each)":"")):'')+'</dl>'+
+    (list.length>1?'<div class="sgrow"><span class="lbl">Choke</span>'+seg("sgch",list,choke,"Choke")+'</div>':'')+
+    (!a?'<p class="note">Pick the shells for this profile to see the pattern, pellet energy and lead.</p>':
+     !list.length?'<p class="note">No choke is set on the gun, so this page uses Modified. Set the choke on the gun to change it.</p>':'')+
+    (a&&!vel?'<p class="note">No velocity on the shells, so this uses '+U.s("fps",v0,0,true)+'.</p>':''));
+  if(a){
+    const YDS=t==="buck"?[10,15,20,25,30,40]:[20,25,30,35,40],SY=SGV.yd&&YDS.includes(SGV.yd)?SGV.yd:YDS[Math.floor(YDS.length/2)];SGV.yd=SY;
+    const s=SGX.sigma(choke,SY,t),f30=SGX.inside(15,s),buck=t==="buck";
+    // the pattern picture: a fixed 64" square (40" for buckshot) so it visibly opens up with distance; the same pellets every time
+    const FR=buck?40:64,px=220/FR,r30=15*px,N=Math.min(900,Math.round(pellets||300));let seed=7,dots="";const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+    const dr=buck?Math.max(2,d*px*1.4):1.2;
+    for(let i=0;i<N;i++){const rr=s*Math.sqrt(-2*Math.log(1-rnd()*.9999)),th=2*Math.PI*rnd(),x=110+rr*Math.cos(th)*px,y=110+rr*Math.sin(th)*px;if(x>-3&&x<223&&y>-3&&y<223)dots+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+dr.toFixed(1)+'"/>';}
+    const pic='<svg class="sgpic" viewBox="0 0 220 220" role="img"><title>Pattern at '+escL(yd(SY))+'</title><rect width="220" height="220" rx="8" class="sgpbg"/><circle cx="110" cy="110" r="'+r30.toFixed(1)+'" class="sgp30"/>'+
+      (buck?'<circle cx="110" cy="110" r="'+(5*px).toFixed(1)+'" class="sgp10"/>':'')+'<g class="sgpd">'+dots+'</g></svg>';
+    const ptab='<table class="sgtab"><tr><th>Distance</th><th>Pattern</th><th>In 30"</th>'+(pellets?'<th>Pellets in 30"</th>':'')+(buck?'<th>In 10"</th>':'')+'</tr>'+
+      YDS.map(y=>{const sg=SGX.sigma(choke,y,t),p=SGX.inside(15,sg),p10=SGX.inside(5,sg);return '<tr'+(y===SY?' class="hi"':'')+'><td>'+yd(y)+'</td><td>'+inch(SGX.across(sg))+'</td><td>'+pct(p)+'</td>'+(pellets?'<td>'+n0(p*pellets)+'</td>':'')+(buck?'<td>'+(p10*pellets).toFixed(1)+'</td>':'')+'</tr>';}).join("")+'</table>';
+    h+=card("Pattern",'<div class="sgrow"><span class="lbl">At</span>'+seg("sgyd",YDS.map(y=>[y,yd(y)]),SY,"Distance")+'</div><div class="sgpat"><div>'+pic+
+      '<p class="note sgcap">'+(buck?'10" and 30" circles':'30" circle')+' · this square is '+inch(FR)+' across</p></div><div><div class="sgbig"><div><b>'+inch(SGX.across(s))+'</b><span>pattern across at '+yd(SY)+'</span></div><div><b>'+pct(f30)+'</b><span>in the 30" circle'+(pellets?' (about '+n0(f30*pellets)+' pellets)':'')+'</span></div></div>'+ptab+'</div></div>'+
+      '<p class="note">Pattern across holds about 9 in 10 pellets. '+escL(choke)+' is rated about '+(SGX.CHOKE40[choke]||60)+'% in a 30" circle at 40 yd with lead'+(/steel|TSS|tungsten|blend/.test(t)?'; hard shot like this patterns about one choke tighter':'')+'.</p>');
+    if(d){const FY=buck?[0,10,20,30,40,50]:[0,20,30,40,50],fl=SGX.fly(v0,d,pg,70),E=v=>pg*v*v/450240;
+      const etab='<table class="sgtab"><tr><th>Distance</th><th>Speed</th><th>Energy per pellet</th><th>Time to get there</th></tr>'+FY.map(y=>'<tr'+(y===SY?' class="hi"':'')+'><td>'+(y?yd(y):"Muzzle")+'</td><td>'+U.s("fps",fl[y].v,0,true)+'</td><td>'+U.s("ftlb",E(fl[y].v),E(fl[y].v)<10?1:0)+'</td><td>'+(y?fl[y].t.toFixed(2)+" s":"0")+'</td></tr>').join("")+'</table>';
+      // the farthest distance where each pellet still hits hard enough and enough of them land
+      const good=[],short=[];SGX.usesFor(t,d).forEach(k=>{const [nm,eMin,nMin,R]=SGX.USES[k];let far=0;for(let y=10;y<=70;y++){if(E(fl[y].v)<eMin||(pellets&&SGX.inside(R,SGX.sigma(choke,y,t))*pellets<nMin))break;far=y;}
+        far=Math.floor(far/5)*5;if(far>=15)good.push(nm+" "+yd(far));else short.push(nm);});
+      h+=card("Pellet speed and energy",etab+(good.length?'<p class="note"><b>Good out to about:</b> '+escL(good.join(" · "))+'.</p>':'')+(short.length?'<p class="note">Not enough for '+escL(short.join(" or "))+' with this shell and choke.</p>':'')+
+        '<p class="note">"Good" means each pellet still hits hard enough and enough land in the '+(buck?'10" vital area':'30" circle (10" for a turkey\'s head)')+'.</p>');
+      if(!buck){const M=[30,40,50],mph=M.includes(SGV.mph)?SGV.mph:40,fs=mph*5280/3600;
+        h+=card("Lead on a crossing target",'<div class="sgrow"><span class="lbl">Target speed</span>'+seg("sgmph",[[30,U.s("mph",30,0)],[40,U.s("mph",40,0)+" clay"],[50,U.s("mph",50,0)+" duck"]],mph,"Target speed")+'</div>'+
+          '<table class="sgtab"><tr><th>Distance</th><th>Lead</th><th>About</th></tr>'+[20,25,30,35,40].map(y=>{const ld=fs*fl[y].t;return '<tr'+(y===SY?' class="hi"':'')+'><td>'+yd(y)+'</td><td>'+U.s("ft",ld,1)+'</td><td>'+Math.round(ld*12/4.25)+' clay widths</td></tr>';}).join("")+'</table>'+
+          '<p class="note">How far ahead of a target crossing straight in front of you the shot has to be aimed, from the pellets\' travel time. Angles need less. Your swing and style change how it looks to you.</p>');}
+    }else h+=card("Pellet speed and energy",'<p class="note">Add the shot size to the shells (like 8, 7½ or 00) to see pellet counts, energy and lead.</p>');
+    if(list.length>1)h+=card("Your chokes with this shell at "+yd(SY),'<table class="sgtab"><tr><th>Choke</th><th>Pattern</th><th>In 30"</th>'+(pellets?'<th>Pellets in 30"</th>':'')+'</tr>'+
+      list.map(([c])=>{const sg=SGX.sigma(c,SY,t),p=SGX.inside(15,sg);return '<tr'+(c===choke?' class="hi"':'')+'><td>'+escL(c)+'</td><td>'+inch(SGX.across(sg))+'</td><td>'+pct(p)+'</td>'+(pellets?'<td>'+n0(p*pellets)+'</td>':'')+'</tr>';}).join("")+'</table>');
+    h+='<p class="note sgest">All of this is estimated from standard shotgun formulas. A pattern board shows what your own gun and shells really do.</p>';
+  }
+  box.innerHTML=h;
+  box.querySelectorAll("[data-sggo]").forEach(b=>b.addEventListener("click",()=>{const [k,id]=b.dataset.sggo.split(":");showTab("rifles");if(k==="g"){if(window.RB_OPEN_GUN)RB_OPEN_GUN(id,L.id);}else if(window.RB_OPEN_AMMO)RB_OPEN_AMMO(id,L.id);}));
+  box.querySelectorAll("[data-sgch]").forEach(b=>b.addEventListener("click",()=>{SGV.ch[L.id]=b.dataset.sgch;sgProfShow(L);}));
+  box.querySelectorAll("[data-sgyd]").forEach(b=>b.addEventListener("click",()=>{SGV.yd=+b.dataset.sgyd;sgProfShow(L);}));
+  box.querySelectorAll("[data-sgmph]").forEach(b=>b.addEventListener("click",()=>{SGV.mph=+b.dataset.sgmph;sgProfShow(L);}));}
 // + New profile that's left without a gun, ammo, cartridge or any numbers is dropped when you go back to the list or open another (2.30.4)
 let NEWPROF=null;
 function sweepNewProf(keepId){const id=NEWPROF;if(!id||id===keepId)return;NEWPROF=null;const i=state.loads.findIndex(l=>l.id===id);if(i<0||state.loads.length<2)return;const L=state.loads[i];
