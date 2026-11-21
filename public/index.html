@@ -6429,19 +6429,6 @@ async function flatJpeg(file,max,q){
 const smallJpeg=file=>flatJpeg(file,900,.6);
 // gun photos: a bit sharper than box photos, still small enough for a phone signal
 const gunJpeg=file=>flatJpeg(file,1600,.8);
-/* paste (⌘V) or drop a picture on a gear page (2.47.41): it goes to that page's picture or photos box, the same as picking a file.
-   Inputs marked data-paste take it; the highest number wins when a page has more than one (the Picture over More photos). */
-// a folded section still counts (its card is on screen); pasting opens it so you see the upload
-function pasteTarget(){let best=null;document.querySelectorAll("input[type=file][data-paste]").forEach(i=>{const box=i.closest("section,.card")||i.closest(".field,.row");
-  if(!box||!box.offsetParent)return;if(!best||+i.dataset.paste>+best.dataset.paste)best=i;});return best;}
-function pasteFiles(files){const imgs=[...files].filter(f=>/^image\//.test(f.type));if(!imgs.length)return false;const inp=pasteTarget();if(!inp)return false;
-  const sb=inp.closest(".secbody");if(sb&&sb.hidden){const hd=sb.previousElementSibling;if(hd&&hd.classList.contains("sechead"))hd.click();}
-  const dt=new DataTransfer();(inp.multiple?imgs:imgs.slice(0,1)).forEach(f=>dt.items.add(f));inp.files=dt.files;inp.dispatchEvent(new Event("change",{bubbles:true}));return true;}
-if(!window.__rbPaste){window.__rbPaste=1;
-  document.addEventListener("paste",e=>{const cd=e.clipboardData;if(!cd)return;const files=[...cd.items||[]].filter(i=>i.kind==="file").map(i=>i.getAsFile()).filter(Boolean);
-    if(files.length&&pasteFiles(files))e.preventDefault();});
-  document.addEventListener("dragover",e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes("Files")&&pasteTarget()){e.preventDefault();e.dataTransfer.dropEffect="copy";}});
-  document.addEventListener("drop",e=>{if(e.dataTransfer&&e.dataTransfer.files.length&&pasteTarget()){e.preventDefault();pasteFiles(e.dataTransfer.files);}});}
 const PASTE_TIP=matchMedia("(hover:hover) and (pointer:fine)").matches?'<span class="note pastetip">Or paste a picture (⌘V on a Mac, Ctrl+V on Windows) or drag one here.</span>':'';
 async function uploadGun(r,files){
   for(const f of files){
@@ -6693,7 +6680,7 @@ function renderAmmo(root){
     (a.sharedFrom?'<p class="note">Copied from a load someone shared here.</p>':'')+'</section>';
   if(!RL){const bx=boxesFor(a);
     h+='<section class="card" aria-label="Box photo" id="ammoBoxPh"><h2>Box</h2>'+(bx.length?'<div class="boxgrid">'+bx.map(b=>'<figure class="boxph"><a href="'+esc(b.url)+'" target="_blank" rel="noopener"><img src="'+esc(b.url)+'" alt="Ammo box" loading="lazy"></a><figcaption>'+(a.catItem?'by '+esc(b.mine?'you':b.by):'')+((b.mine||(ME&&ME.isAdmin))?' <button class="btn small danger" type="button" data-bxdel="'+esc(b.id)+'">Delete</button>':'')+'</figcaption></figure>').join("")+'</div>':'<p class="note">No photo of this box yet.</p>')+
-      (window.GUEST?'<p class="note">Box photos need an account.</p>':'<div class="row"><label class="btn" for="boxIn" style="cursor:pointer">+ Add a photo of the box</label><input id="boxIn" type="file" accept="image/*" hidden data-paste="2"><span class="savestate">'+(boxUp?'Uploading…':'')+'</span></div>'+
+      (window.GUEST?'<p class="note">Box photos need an account.</p>':'<div class="row"><label class="btn" for="boxIn" style="cursor:pointer">+ Add a photo of the box</label><input id="boxIn" type="file" accept="image/*" hidden><span class="savestate">'+(boxUp?'Uploading…':'')+'</span></div>'+
       '<p class="note">'+(!BOX_SHARED?'Only you can see this photo. (Sharing box photos with everyone is turned off on this Range Book.)':a.catItem?'This load is in the catalog, so the photo is shared with everyone on this Range Book to help them recognize the box. Admins can remove photos that don\'t match.':(a.shared||a.sharedFrom)?'This load is shared, so its photo is shared with everyone on this Range Book too. Admins can remove photos that don\'t match.':'Only you can see this photo unless you share the load.')+' A quick phone snap is plenty; it\'s shrunk before it\'s saved.</p>')+'</section>';}
   h+='<section class="card" aria-label="Rounds" id="ammoRounds"><h2>Rounds</h2><div id="ammoBox"></div>'+
     '<div class="row"><input id="ammoBuyN" type="number" inputmode="numeric" placeholder="Rounds" style="max-width:110px" aria-label="'+(RL?'Rounds loaded':'Rounds bought')+'"><button class="btn" id="ammoBuy" type="button">'+(RL?'+ Loaded more':'+ Bought more')+'</button></div>'+(RL&&a.loadId?'<p class="note">Batches you log on the Reloading recipe at '+(num(a.charge)!=null?num(a.charge)+' gr':'this charge')+' are added here automatically.</p>':'')+'</section>'+
@@ -6903,7 +6890,7 @@ function renderRifles(){
         '<div class="row"><button class="btn" type="button" data-ptnew="barrel" data-ptgun="'+esc(r.id)+'">+ Add barrel</button></div></section>';})()+
       (()=>{const ps=gunPhotosOf(r.id);
         return '<section class="card" aria-label="Gun photos" id="secGunPh"><h2>Photos</h2>'+(ps.length?'<div class="boxgrid gungrid">'+ps.map(p=>'<figure class="boxph"><a href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Photo of '+esc(r.name||"this gun")+'" loading="lazy"></a><figcaption>'+(p.at?esc((d=>fmtDate(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')))(new Date(p.at))):'')+' <button class="linkbtn danger" type="button" data-gdel="'+esc(p.id)+'">Delete</button></figcaption></figure>').join("")+'</div>':'<p class="note">No photos yet.</p>')+
-          (window.GUEST?'<p class="note">Gun photos need an account.</p>':'<div class="row"><label class="btn" for="gunIn" style="cursor:pointer">+ Add photos</label><input id="gunIn" type="file" accept="image/*" multiple hidden data-paste="2"><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these. Handy for insurance records along with the serial number.</p>'+(PASTE_TIP?'<p>'+PASTE_TIP+'</p>':''))+'</section>';})()+
+          (window.GUEST?'<p class="note">Gun photos need an account.</p>':'<div class="row"><label class="btn" for="gunIn" style="cursor:pointer">+ Add photos</label><input id="gunIn" type="file" accept="image/*" multiple hidden><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these. Handy for insurance records along with the serial number.</p>'+(PASTE_TIP?'<p>'+PASTE_TIP+'</p>':''))+'</section>';})()+
       vaultCardHtml(r.id)+
       '<section class="card" aria-label="Round count" id="secRounds"><h2>Round count</h2><div id="rcBox"></div><div class="grid">'+
       (r.type==="shotgun"?'':field("rf_barrelLife","Barrel life (rounds)",r.barrelLife,"number"))+field("rf_roundsBase",r.type==="shotgun"?"Shells before Range Book":"Rounds before Range Book",r.roundsBase,"number")+
@@ -7478,7 +7465,7 @@ const qtyTxt=v=>{const n=num(v);return n==null?"":(Math.round(n*100)/100).toLoca
 // the photos card shared by suppressors and inventory (the gun one, under another id)
 function gearPhotosHtml(id,what){const ps=gunPhotosOf(id);
   return '<section class="card" aria-label="Photos"><h2>Photos</h2>'+(ps.length?'<div class="boxgrid gungrid">'+ps.map(p=>'<figure class="boxph"><a href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Photo of '+esc(what)+'" loading="lazy"></a><figcaption>'+(p.at?esc((d=>fmtDate(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')))(new Date(p.at))):'')+' <button class="linkbtn danger" type="button" data-gdel="'+esc(p.id)+'">Delete</button></figcaption></figure>').join("")+'</div>':'<p class="note">No photos yet.</p>')+
-    (window.GUEST?'<p class="note">Photos need an account.</p>':'<div class="row"><label class="btn" for="gearIn" style="cursor:pointer">+ Add photos</label><input id="gearIn" type="file" accept="image/*" multiple hidden data-paste="1"><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these.</p>'+(PASTE_TIP?'<p>'+PASTE_TIP+'</p>':''))+'</section>';}
+    (window.GUEST?'<p class="note">Photos need an account.</p>':'<div class="row"><label class="btn" for="gearIn" style="cursor:pointer">+ Add photos</label><input id="gearIn" type="file" accept="image/*" multiple hidden><span class="savestate">'+(gunUp?'Uploading…':'')+'</span></div><p class="note">Only you can see these.</p>'+(PASTE_TIP?'<p>'+PASTE_TIP+'</p>':''))+'</section>';}
 function bindGearPhotos(root,id){
   {const gi=$("gearIn");if(gi)gi.addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadGun({id},f);});}
   root.querySelectorAll("[data-gdel]").forEach(b=>b.addEventListener("click",()=>{const pid=b.dataset.gdel,i=gunPhotos.findIndex(p=>p.id===pid),ph=gunPhotos[i];gunPhotos=gunPhotos.filter(p=>p.id!==pid);renderRifles();
@@ -7521,7 +7508,7 @@ function picFieldHtml(id,what,icon){const p=picOf(id);
   return '<div class="field wide picfield"><span class="flabel">Picture</span><div class="picrow">'+
     (p?'<a class="picbox" href="'+esc(p.url)+'" target="_blank" rel="noopener"><img src="'+esc(p.url)+'" alt="Picture of '+esc(what)+'"></a>':'<span class="picbox empty">'+icon+'</span>')+
     '<div class="picbtns">'+(window.GUEST?'<span class="note">Pictures need an account.</span>':
-      '<label class="btn" for="picIn" style="cursor:pointer">'+(p?'Replace picture':'+ Add picture')+'</label><input id="picIn" type="file" accept="image/*" hidden data-paste="3">'+
+      '<label class="btn" for="picIn" style="cursor:pointer">'+(p?'Replace picture':'+ Add picture')+'</label><input id="picIn" type="file" accept="image/*" hidden>'+
       (p?'<button class="btn danger" type="button" id="picDel">Remove</button>':'')+(picUp?'<span class="savestate">Uploading…</span>':'')+'<span class="note">Shows on the list. Only you can see it.</span>'+PASTE_TIP+'')+'</div></div></div>';}
 function bindPicField(id){
   const inp=$("picIn");if(inp)inp.addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;picUp++;renderRifles();
@@ -7979,7 +7966,7 @@ function renderScopes(root){
         :(window.GUEST?'<p class="note">Reticle pictures need an account.</p>':
           (ph?(sc.pic&&sc.pic.ppu>0?'<p class="note">Your picture, with the scale set: '+esc(String(sc.pic.val))+' '+(MIL?'MIL':'MOA')+' from the center. The dope card puts the dot on it.</p>':'<p class="err">Set the scale so Range Book knows how big the marks are. Until then the dope card uses the plain reticle.</p>'):
             '<p class="note">Upload a picture of just your reticle, straight on. Best is the maker\'s drawing of it, from their website or the manual, on a white background (a screenshot is fine). A photo through the scope works too: point it at something bright and even, like a white wall or an overcast sky, turn it to full power with the reticle sharp, and hold the phone straight behind the eyepiece. It stays private to you.</p>')+
-          '<div class="row"><label class="btn'+(ph?'':' primary')+'" for="scPicIn" style="cursor:pointer">'+(ph?'Replace picture':'+ Upload a picture')+'</label><input id="scPicIn" type="file" accept="image/*" hidden data-paste="2">'+(ph?'<button class="btn'+(sc.pic&&sc.pic.ppu>0?'':' primary')+'" type="button" id="scCal">Set the scale</button><button class="btn danger" type="button" id="scPicDel">Remove picture</button>':'')+'<span class="savestate">'+(retUp?'Uploading…':'')+'</span></div>'))+
+          '<div class="row"><label class="btn'+(ph?'':' primary')+'" for="scPicIn" style="cursor:pointer">'+(ph?'Replace picture':'+ Upload a picture')+'</label><input id="scPicIn" type="file" accept="image/*" hidden>'+(ph?'<button class="btn'+(sc.pic&&sc.pic.ppu>0?'':' primary')+'" type="button" id="scCal">Set the scale</button><button class="btn danger" type="button" id="scPicDel">Remove picture</button>':'')+'<span class="savestate">'+(retUp?'Uploading…':'')+'</span></div>'))+
       '</div></div></section>'+
       '<section class="card" aria-label="Guns with this scope"><h2>On</h2>'+(gs.length?'<div class="cartgroup">'+gs.map(g=>'<button class="loaditem" type="button" data-sgun="'+esc(g.id)+'"><span class="t">'+esc(g.name||"Unnamed gun")+'</span></button>').join("")+'</div><p class="note">Every Shooting profile that uses this gun takes its MOA or MIL and reticle from this scope.</p>':'<p class="note">Not on a gun yet. Pick the gun under <b>On gun</b> above.</p>')+'</section>'+
       '<div class="row endrow"><button class="btn danger" type="button" id="scopeDel">Delete '+KW+'</button></div>';
