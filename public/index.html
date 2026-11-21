@@ -1210,6 +1210,11 @@ table.trtbl{width:100%;border-collapse:collapse;font-size:calc(13.5px*var(--fs))
 .sghead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sghead b{font-size:calc(17px*var(--fs))}.sgtog{margin-left:auto}
 .sgmode{display:inline-flex;margin-left:auto}
 .tripmove{flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+#trajDetail.sgprof>.cols,#trajDetail.sgprof>.twistbanner{display:none!important}
+.sgfacts{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:4px 0 10px}
+.sgfacts div{display:contents}
+.sgfacts dt{color:var(--muted)}
+.sgfacts dd{margin:0;font-weight:600}
 .profallwin .infosheet{max-width:760px;max-height:92vh}
 .profallwin .card{box-shadow:none;margin:10px 0 0}
 body.tripspage #trajBack{display:none!important}
@@ -3854,11 +3859,11 @@ function fillSelect(){
   let fixed=false;state.loads.forEach(l=>{if(l.cart===undefined){l.cart=guessCart(l);fixed=true;}if(!l.zpb){migZ(l);fixed=true;}if(l.cart&&window.RB_CARTS){const c=RB_CARTS.canon(l.cart);if(c!==l.cart){l.cart=c;fixed=true;}}});if(fixed)save();
   let h='<div class="card"><div class="row"><button class="btn primary" id="newBtn" type="button">+ New profile</button></div>';
   const item=l=>{
-    const d=[l.w>0?l.w+" gr":"",l.mv>0?U.s("fps",l.mv,0,true):"",l.bc>0?"BC "+l.bc:""].filter(Boolean).join(" · ");
+    const d=l.sg?"Shotgun"+(l.mv>0?" · "+U.s("fps",l.mv,0,true):""):[l.w>0?l.w+" gr":"",l.mv>0?U.s("fps",l.mv,0,true):"",l.bc>0?"BC "+l.bc:""].filter(Boolean).join(" · ");
     const zs=(l.z||[]).filter(z=>z!=null);
     const nt=window.RB_TRIPS?RB_TRIPS.count(l.id):0;
     const pbz=num((l.z||[])[3]),uz=(l.z||[]).slice(0,3).map(num).filter(z=>z>0);
-    const m=[[pbz>0?"Point-blank "+U.s("yd",pbz,0):"",uz.length?"zeros "+uz.map(z=>U.n("yd",z,0)).join(", ")+" "+U.u("yd"):""].filter(Boolean).join(", ").replace(/^z/,"Z")||"No zeros",l.rifleName?l.rifleName:"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ");
+    const m=l.sg?[l.rifleName||"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ")||"Shotgun profile":[[pbz>0?"Point-blank "+U.s("yd",pbz,0):"",uz.length?"zeros "+uz.map(z=>U.n("yd",z,0)).join(", ")+" "+U.u("yd"):""].filter(Boolean).join(", ").replace(/^z/,"Z")||"No zeros",l.rifleName?l.rifleName:"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ");
     return '<div class="gtile" data-tfid="'+escL(l.id)+'"><button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled profile")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+(fitCheck(l)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>'+
       '<button type="button" class="favstar" data-tfav="'+escL(l.id)+'" aria-pressed="'+!!l.fav+'" aria-label="'+(l.fav?'Remove '+escL(l.name||"this profile")+' from favorites':'Add '+escL(l.name||"this profile")+' to favorites')+'" title="'+(l.fav?'Favorite':'Mark as a favorite')+'">'+TSTAR(l.fav)+'</button></div>';
   };
@@ -3882,7 +3887,20 @@ function fillSelect(){
   root.querySelectorAll("[data-topen]").forEach(bt=>bt.addEventListener("click",()=>openTraj(bt.dataset.topen)));
 }
 function trajHead(){const d=TVIEW==="detail",nm=d?(cur().name||"Untitled profile"):"";{const sb=$("trajSample");if(sb)sb.hidden=!(d&&cur().sample);}$("trajBack").hidden=!d;$("trajSub").hidden=d;
-  $("trajTitle").textContent=d?nm:"Shooting";$("trajTitle").classList.toggle("sr",d);const jn=$("trajJumpName");if(jn){jn.textContent=nm;jn.title=nm;}}
+  $("trajTitle").textContent=d?nm:"Shooting";$("trajTitle").classList.toggle("sr",d);const jn=$("trajJumpName");if(jn){jn.textContent=nm;jn.title=nm;}
+  sgProfShow(d&&cur().sg?cur():null);}
+/* a shotgun profile with shot (2.48): no trajectory or dope card. For now it shows the gun, the shells and the choke; pattern and
+   shot estimates are to come. Slugs use the normal profile page. */
+function sgProfShow(L){const det=$("trajDetail");if(!det)return;det.classList.toggle("sgprof",!!L);{const j=$("trajJump");if(j&&L)j.hidden=true;}
+  let box=$("sgProfCard");if(!L){if(box)box.remove();return;}
+  if(!box){box=document.createElement("section");box.className="card";box.id="sgProfCard";box.setAttribute("aria-label","Shotgun");const tb=$("tripsBar");(tb||det.firstChild).after(box);}
+  const F=window.RB_GEAR_FIND,g=F&&L.rifleId?F.gun(L.rifleId):null,a=F&&L.ammoId?F.ammo(L.ammoId):null;
+  const row=(k,v,go)=>'<div><dt>'+escL(k)+'</dt><dd>'+(go?'<button class="linkbtn" type="button" data-sggo="'+go+'">'+escL(v)+' ›</button>':escL(v))+'</dd></div>';
+  const ch=g?(g.chokeIn?g.chokeIn+(g.chokeIn2?" / "+g.chokeIn2:"")+(g.chokeSys==="fixed"?" (fixed)":""):"Not set on the gun"):"";
+  box.innerHTML='<h2>Shotgun</h2><dl class="sgfacts">'+(g?row("Gun",[g.nick||g.name,F.gunLine(g)].filter(Boolean).join(" · "),"g:"+g.id):row("Gun","None picked"))+
+    (a?row("Shells",F.ammoName(a),"a:"+a.id):row("Shells","None picked"))+(g?row("Choke in the gun",ch):'')+(a&&num(a.boxVel)?row("Velocity on the box",U.s("fps",num(a.boxVel),0,true)):'')+'</dl>'+
+    '<p class="note">Shotgun shot has no bullet path to chart. Pattern spread, pellet counts, pellet energy by distance and lead on crossing targets are coming to this page. Range trips work as for any profile.</p>';
+  box.querySelectorAll("[data-sggo]").forEach(b=>b.addEventListener("click",()=>{const [k,id]=b.dataset.sggo.split(":");showTab("rifles");if(k==="g"){if(window.RB_OPEN_GUN)RB_OPEN_GUN(id,L.id);}else if(window.RB_OPEN_AMMO)RB_OPEN_AMMO(id,L.id);}));}
 // + New profile that's left without a gun, ammo, cartridge or any numbers is dropped when you go back to the list or open another (2.30.4)
 let NEWPROF=null;
 function sweepNewProf(keepId){const id=NEWPROF;if(!id||id===keepId)return;NEWPROF=null;const i=state.loads.findIndex(l=>l.id===id);if(i<0||state.loads.length<2)return;const L=state.loads[i];
@@ -3962,7 +3980,7 @@ window.RB_TRAJ={
     const r=rifleOf(L),a=L.ammoId&&(AMMO||[]).find(x=>x.id===L.ammoId);
     L.name=[a?ammoName(a):(SCRATCH.qcCat||[num(L.w)?num(L.w)+" gr":"",L.cart||""].filter(Boolean).join(" ")||"New profile"),r?r.name:""].filter(Boolean).join(" · ");
     state.loads.push(L);RB_TRAJ.scratchOff();state.cur=L.id;save();RB_TRAJ.open(L.id);},
-  cur(){if(TVIEW!=="detail"||SCR)return null;const L=cur();return L?{id:L.id,name:L.name,rifleId:L.rifleId||null,partId:L.partId,cal:L.cal,mv:L.mv,mvtemp:num(L.mvtemp),tsens:num(L.tsens),temp:num(L.temp)}:null;},
+  cur(){if(TVIEW!=="detail"||SCR)return null;const L=cur();return L?{id:L.id,name:L.name,sg:!!L.sg,rifleId:L.rifleId||null,partId:L.partId,cal:L.cal,mv:L.mv,mvtemp:num(L.mvtemp),tsens:num(L.tsens),temp:num(L.temp)}:null;},
   // a velocity measured at a known temperature (e.g. a range trip's average): it becomes the load's muzzle velocity "measured at" that temperature
   setMV(v,temp){const L=cur();L.mv=v;delete L.mvSrc;if(temp!=null&&isFinite(temp))L.mvtemp=Math.round(temp);fillInputs();render();save();if(!IN_OPEN)$("inSum").textContent=inSummary(L);},
   // the air from the chronograph's sensors (w.temp °F, w.alt ft) into any profile
@@ -3976,7 +3994,7 @@ window.RB_TRAJ={
     const a=document.activeElement;if(a&&$("panel-traj")&&$("panel-traj").contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;
     if(JSON.stringify(d.loads)===JSON.stringify(state.loads))return;const c=state.cur;state=d;if(c&&state.loads.some(l=>l.id===c))state.cur=c;fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
-  all(){return state.loads.map(l=>({id:l.id,fav:!!l.fav,favN:l.fav?favRank(l):null,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
+  all(){return state.loads.map(l=>({id:l.id,sg:!!l.sg,fav:!!l.fav,favN:l.fav?favRank(l):null,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
   canSel(id){const l=state.loads.find(x=>x.id===id);return l?canSelOf(l):"";},
   setPart(id,partId){const L=state.loads.find(l=>l.id===id);if(!L)return;L.partId=partId||"";const r=rifleOf(L);if(r){L.rifleName=r.name||"";const rs=num(r.sightHeight),tw=num(r.twist);if(rs>0){L.sh=rs;L._rifleSh=rs;}if(tw>0){L.twist=tw;L._rifleTw=tw;}}save();if(L===cur()&&TVIEW==="detail"){fillInputs();fillRifle();render();}},
   forTools(){return state.loads.concat(SCR&&SCRATCH?[SCRATCH]:[]).map(l=>({id:l.id,label:l.name||"Untitled profile",rifleId:l.rifleId||null,w:num(l.w),d:num(l.cal),l:num(l.blen),tip:num(l.tip),twist:num(l.twist),mv:num(l.mv),temp:num(l.temp),alt:num(l.alt)}));},
@@ -5205,6 +5223,7 @@ window.TRAJ_ADD=function(spec){
   if(spec.blen>0)L.blen=spec.blen;else L.blen=null;
   L.cart=spec.cartridge||L.cart||"";
   if(spec.ammoId)L.ammoId=spec.ammoId;else delete L.ammoId;
+  if(spec.sg)L.sg=true;else delete L.sg;   // shotgun shells other than slugs (2.48): a shotgun profile, without the ballistics
   if(spec.partId!==undefined&&spec.rifleId)L.partId=spec.partId;else delete L.partId;
   if(spec.cal>0){L.cal=spec.cal;L.calUnit=spec.calUnit==="mm"?"mm":"in";}
   // from Tools → Trajectory calculator: its zero and conditions too
@@ -5755,6 +5774,8 @@ document.getElementById("rifHeadBack").addEventListener("click",()=>{if(partOpen
   rifleOpen=null;ammoOpen=null;ammoReturnTraj=null;gunReturnTraj=null;scopeOpen=null;scopeAdding=false;scopeFromGun=null;rangeOpen=null;renderRifles();gearBackToList();});
 let ammoReturnTraj=null,gunReturnTraj=null;
 // a profile's Edit button on its gun: open the gun, with a way back to the profile
+// for the shotgun profile page (2.48): a gun or ammo by id, and their one-line names
+window.RB_GEAR_FIND={gun:id=>rifles.find(r=>r.id===id)||null,ammo:id=>ammo.find(a=>a.id===id)||null,ammoName:a=>ammoLabel(a),gunLine:g=>rifleSummary(g)};
 window.RB_OPEN_GUN=(id,ret)=>{if(!rifles.some(r=>r.id===id))return;gunArea="guns";rifleOpen=id;canOpen=null;scopeOpen=null;partOpen=null;gunReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_OPEN_AMMO=(id,ret)=>{if(!ammo.some(a=>a.id===id))return;gunArea="ammo";ammoOpen=id;ammoReturnTraj=ret||null;showTab("rifles");renderRifles();window.scrollTo(0,0);};
 window.RB_NEW_FACTORY_AMMO=(cart,ret)=>{const a={id:newAmmoId(),mfr:"",name:"",bcm:"G1",cartridge:cart||""};ammo.push(a);queueAmmo();RB_OPEN_AMMO(a.id,ret);const el=$("af_mfr");if(el)el.focus();return a.id;};
@@ -12173,7 +12194,7 @@ function renderTrips(){
     '<div class="field wide"><label for="tp_notes">Notes</label><textarea id="tp_notes" data-tf="notes" placeholder="How it shot, dope used, what to try next time…">'+esc(t.notes||"")+'</textarea></div></div>';
   const sess='<div class="tripsess" role="group" aria-label="At the bench">'+
       '<button class="sbtn" id="tripAth" type="button" data-athbtn><b>Connect Athlon</b><span>tap to connect</span></button>'+
-      '<button class="sbtn" id="tripLive" type="button"><b>Live target</b><span>find each shot</span></button>'+
+      (T.sg?'':'<button class="sbtn" id="tripLive" type="button"><b>Live target</b><span>find each shot</span></button>')+
       '<label class="sbtn" for="tripPhotoIn"><b>+ Photo</b><span>target photo</span></label><input id="tripPhotoIn" type="file" accept="image/*" multiple hidden></div>'+
     '<p class="note" id="tripChronoMsg" aria-live="polite"></p>';
   const chronoBody='<div id="tripChrono"></div><div class="row" id="tripMvRow"></div>'+
@@ -12196,7 +12217,7 @@ function renderTrips(){
       '<div class="row endrow"><span class="savestate" id="tripState"></span>'+(window.GUEST?'':'<button class="btn" id="tripPrint" type="button">Print trip report</button>')+'<button class="btn danger" id="tripDel" type="button">Delete this trip</button></div>'+
     '</div><div class="tcol" id="tripDopeSlot"></div></div>';
   root.innerHTML=h;
-  bindCrumbs();bindTtiles(root,t);dopeTo($("tripDopeSlot"));tripAirUse(t);
+  bindCrumbs();bindTtiles(root,t);if(!T.sg)dopeTo($("tripDopeSlot"));else{const ds=$("tripDopeSlot");if(ds)ds.hidden=true;}tripAirUse(t);
   let airT=null;
   root.oninput=e=>{const id=e.target&&e.target.id;if(id==="tp_temp"||id==="tp_windMph"){clearTimeout(airT);airT=setTimeout(()=>{if(tripOpen===t.id)tripAirUse(t);},400);}
     if(id==="tp_date"||id==="tp_place"||id==="tp_distance")ttSet("details",tripDetSum(t));else if(/^cb_/.test(id))setTimeout(()=>ttSet("cold",tripColdSum(t)));};
@@ -12309,7 +12330,7 @@ function renderTrips(){
     TRIPS_PAGE=false;renderTrips();
     if(F.k==="log"){showTab("log");requestAnimationFrame(()=>window.scrollTo(0,F.y||0));}else if(F.k==="home"){showTab("home");window.scrollTo(0,0);}else window.scrollTo(0,0);});
   $("tripPhotoIn").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";uploadTripPhotos(f);});
-  $("tripLive").addEventListener("click",()=>{const id=t.id,C=tripCtx(t);
+  if($("tripLive"))$("tripLive").addEventListener("click",()=>{const id=t.id,C=tripCtx(t);
     // already connected for another trip (or none): its shots go to this one now (2.47.9)
     {const CH=window.RB_BTCHRONO;if(CH&&CH.state()!=="off"&&!String(CH.sinkKey()||"").startsWith("trip:"+t.id+":"))chronoGo(null,CH.kind()==="athlon"?"athlon":undefined);}
     startLive({title:(t.place||"Range trip")+(t.date?" · "+fmtDate(t.date):""),groups:[],dist:num(t.distance)||100,dia:C.dia,profile:t.trajId,
@@ -12331,7 +12352,7 @@ function renderTrips(){
     tripsSaving.then(()=>{if(ios)RB_PDF(url,"RangeBook-trip-"+String(t.date||"").replace(/[^0-9-]/g,"")+".pdf");else if(w)w.location.href=url;else location.href=url;},e=>{if(w)w.close();onWriteError(e);});
   });
   // the wrong profile picked for this trip (2.47.11): move it, with everything on it, to another one
-  $("tripMove").addEventListener("click",()=>{const r=$("tripMoveRow"),sel=$("tripMoveTo"),all=((window.RB_TRAJ&&RB_TRAJ.all())||[]).filter(x=>x.id!==t.trajId);
+  if($("tripMove"))$("tripMove").addEventListener("click",()=>{const r=$("tripMoveRow"),sel=$("tripMoveTo"),all=((window.RB_TRAJ&&RB_TRAJ.all())||[]).filter(x=>x.id!==t.trajId);
     if(!all.length){r.hidden=false;r.querySelector("label").textContent="There's no other profile to move it to.";sel.hidden=true;$("tripMoveGo").hidden=true;return;}
     sel.innerHTML=all.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name||"Profile")+'</option>').join("");r.hidden=!r.hidden;});
   $("tripMoveX").addEventListener("click",()=>{$("tripMoveRow").hidden=true;});
@@ -12758,9 +12779,12 @@ function renderHome(){
   const pickAmmo=a=>{if(!a)return;
     const gid=homePick&&homePick.gun||"",g=rifles.find(r=>r.id===gid);
     const ex=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(t=>t.ammoId===a.id&&(t.rifleId||"")===gid);
+    const birdshot=isShell(a)&&!/slug|sabot/.test(a.shotType||"");
     if(ex){dayPart(ex.id);RB_TRAJ.open(ex.id);startDay();return;}
+    // shotgun shells other than slugs (2.48): no Shooting profile, just the gun and the shells for the trip
+    if(birdshot){showTab("traj");window.TRAJ_ADD({name:(g?(g.nick||g.name||"Shotgun")+" · ":"")+ammoLabel(a),w:0,mv:num(a.boxVel)||0,rifleId:g?g.id:null,rifleName:g?g.name:"",cartridge:a.cartridge,ammoId:a.id,sg:true});startDay();return;}
     const sp=ammoTrajSpec(a,gunSpec(g));if(g&&homePick&&homePick.part!==undefined){sp.partId=homePick.part;const pp=parts.find(p=>p.id===homePick.part);const eg=effGun(g,pp);if(pp){sp.sh=num(eg.sightHeight);sp.twist=num(eg.twist);sp.rifleName=eg.name;}}
-    if(!(sp.w>0&&sp.mv>0&&num(a.bc)>0)){const e=$("hPickErr");e.hidden=false;e.innerHTML='That ammo needs its bullet weight, BC and a velocity first. <button class="linkbtn" type="button" id="hFixAmmo">Open it</button>';
+    if(!(sp.w>0&&sp.mv>0&&num(a.bc)>0)){const e=$("hPickErr");e.hidden=false;e.innerHTML=(isShell(a)?'That slug needs its slug weight, BC and a velocity first.':'That ammo needs its bullet weight, BC and a velocity first.')+' <button class="linkbtn" type="button" id="hFixAmmo">Open it</button>';
       $("hFixAmmo").addEventListener("click",()=>{homePick=false;showTab("rifles");gunArea="ammo";rifleOpen=null;ammoOpen=a.id;renderRifles();window.scrollTo(0,0);});return;}
     showTab("traj");window.TRAJ_ADD(sp);startDay();};
   root.querySelectorAll("[data-hammo]").forEach(b=>b.addEventListener("click",()=>pickAmmo(ammo.find(x=>x.id===b.dataset.hammo))));

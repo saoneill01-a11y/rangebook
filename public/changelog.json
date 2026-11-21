@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.24",
+      "version": "2.47.25",
       "date": "2026-11-19",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Shotgun profiles: Start a range trip with a shotgun makes a profile for the gun and its shells, listed under Shooting › Profiles by gauge, and the range trip links to it like any other. Slugs get the full profile (trajectory, dope card, Live target). Other shells get a Shotgun page with the gun, the shells, the choke in the gun and the box velocity; pattern spread, pellet counts and energy, and lead are coming there.",
         "Shotgun shells: ammo whose cartridge is a gauge (type 12 ga, 20 Gauge, .410…) gets shell boxes: length, shot (lead, steel, bismuth, TSS, buckshot, slug…), shot size, payload, pellets, and slug weight and BC. The catalog has 160 factory shells from Federal, Winchester, Remington, Fiocchi, Kent, Hornady, Rio, Aguila, Estate, Brenneke, Apex and Boss (target, upland, waterfowl, turkey, buckshot and slugs), from the makers' own pages. Start a range trip with a shotgun lists only shells of its gauge that fit its chamber (2¾\" shells in a 3\" chamber, never 3½\").",
         "Shotguns: pick Shotgun on a gun and its page changes. Gauge (10, 12, 16, 20, 28, .410) and chamber length in place of the cartridge, Smoothbore or Rifled (twist only for a rifled barrel), the action (pump, semi-auto, over/under, side-by-side…), and Chokes: a fixed choke, or tick the screw-in tubes you have and pick which is in the gun (one for each barrel on an over/under or side-by-side). No suppressor list or barrel life for shotguns. The gun list shows the gauge, chamber, action and chokes. Gauges match each other however they're written (12 ga, 12-gauge, 12 Gauge), and never match a rifle cartridge.",
         "Renamed: the Range log is now Range trips (Shooting › Range trips, and See all range trips on Home), and Start a range day is now Start a range trip.",
