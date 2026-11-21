@@ -2,10 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.33",
+      "version": "2.47.34",
       "date": "2026-11-20",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Five more animal targets behind the reticle: black bear, hog, mule deer, moose and bighorn sheep, life size with their vital zones, facing left like the others.",
+        "Rifle and shotgun pictures on the Guns list and Home are bigger: a wider box trimmed above and below so the long guns fill it. Pistols stay the same.",
         "New animal targets behind the reticle: elk, whitetail, pronghorn, coyote and an upright prairie dog, redrawn in their natural colors with white patches and dark antlers, horns and hooves, facing left. Each is life size by real shoulder height, with the vital zone moved to sit behind the front shoulder. The gray look and night mode still recolor them.",
         "New detailed pictures for side-by-side shotguns, with and without a suppressor, so every gun picture is now in the same style.",
         "New detailed pictures for over/under shotguns and double- and single-action revolvers, with and without a suppressor, to match the rest of the gun pictures.",
