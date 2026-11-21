@@ -265,10 +265,11 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .cartgroup{display:flex;flex-direction:column;gap:6px}
 .cartname{font-family:var(--display);font-weight:600;font-size:calc(14px*var(--fs));text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 /* Guns list by kind (2.47.28): each kind has its color, picture and heading */
-.gty-rifle{--gk:var(--accent)}.gty-pistol{--gk:#b0662a}.gty-shotgun{--gk:#7b58a8}
+.gty-rifle{--gk:#3f6b3a}.gty-pistol{--gk:#c2372f}.gty-shotgun{--gk:#6a4592}
 .gtyhead{display:flex;align-items:center;gap:8px;margin-top:8px;padding-bottom:5px;border-bottom:2px solid var(--gk);color:var(--gk)}
 .gtyhead .gico{width:34px;height:15px}.gtyn{font-family:var(--display);font-weight:600;font-size:calc(16px*var(--fs));text-transform:uppercase;letter-spacing:.08em;flex:1}.gtyc{font-size:calc(12.5px*var(--fs));font-weight:600}
-.gtile.gty-pistol>.loaditem,.gtile.gty-shotgun>.loaditem{border-left-color:var(--gk)!important}.gty-rifle .lthumb,.gty-pistol .lthumb,.gty-shotgun .lthumb{background:color-mix(in srgb,var(--gk) 14%,var(--surface));color:var(--gk)}
+.gtile.gty-rifle>.loaditem,.gtile.gty-pistol>.loaditem,.gtile.gty-shotgun>.loaditem{border-left-color:var(--gk)!important}
+.lthumb:has(img.gph){width:84px;height:56px}.lthumb img.gph{object-fit:cover}img.gkpic{width:42px;height:28px;object-fit:cover;border-radius:5px;flex:none}.gkinds img.gkpic{width:27px;height:18px;border-radius:3px}.gty-rifle .lthumb,.gty-pistol .lthumb,.gty-shotgun .lthumb{background:color-mix(in srgb,var(--gk) 14%,var(--surface));color:var(--gk)}
 svg.gico{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}.lthumb svg.gico{width:46px;height:20px}
 .segtabs.gkinds{display:inline-flex;align-self:flex-start;max-width:100%;flex-wrap:wrap;margin:10px 0 4px}.segtabs.gkinds button{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:5px 12px}.gkinds .gico{width:26px;height:11px}.gkn{opacity:.7;font-weight:500}
 .loaditem{display:flex;flex-direction:column;gap:2px;text-align:left;width:100%;padding:11px 12px;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;background:linear-gradient(to bottom,var(--surface),var(--sunk));cursor:pointer;font:inherit;color:inherit;
@@ -6071,12 +6072,40 @@ const GUN_TYPES=[["rifle","Rifle","Rifles"],["pistol","Pistol","Pistols"],["shot
 // a small outline picture for each kind of gun (2.47.28): shown on a gun with no photo, and on the Guns list headings
 const GUN_ICON={rifle:'<path d="M2 11h26l3-2h15v2.5H31l-3 2h-5l-2 5h-4l1.5-5H2z"/><path d="M13 6.5h11v2.5H13z"/>',pistol:'<path d="M13 4h23v5H24l-1.5 2.5H20L17.5 18h-5l2.5-8h-2z"/>',
   shotgun:'<path d="M2 11h20l2-2h22v2.5H24l-3 2h-4l-2 5h-4l1.5-5H2z"/><path d="M29 14h8"/>'};
+/* placeholder pictures (2.47.29): public/img/guns/[kind]-[type][-suppressed].jpg, picked from the gun's Action when it's set,
+   else guessed from its name, maker, model and cartridge; "-suppressed" when a suppressor is ticked on the gun */
+const RIFLE_ACTIONS=[["bolt","Bolt action"],["ar","Semi-auto, AR style"],["semi","Semi-auto"],["lever","Lever action"],["break","Break action / single shot"],["pump","Pump"]];
+const PISTOL_ACTIONS=[["polymer","Semi-auto (striker, polymer)"],["1911","Semi-auto (1911 style)"],["revda","Revolver (double action)"],["revsa","Revolver (single action)"]];
+function gunPicName(r,sibs){sibs=sibs||[r];const t=sibs.map(x=>[x.name,x.nick,x.mfr,x.model,x.cartridge].filter(Boolean).join(" ")).join(" ");
+  const ty=GUN_TYPES.some(g=>g[0]===r.type)?r.type:(window.RB_CARTS&&RB_CARTS.gauge(r.cartridge))?"shotgun":gunTypeGuess(r.cartridge)||"rifle";
+  const sup=sibs.some(x=>gunCans(x).length),a=String(r.action||"");let k;
+  if(ty==="shotgun"){k={"Pump":"pump","Semi-auto":"semi-auto","Over/under":"over-under","Side-by-side":"side-by-side","Single shot":"over-under"}[a]||
+      (/over.?(and.?)?under|\bO\/U\b|\b68[67]\b|DT.?11|Citori|Caesar|Perazzi|Krieghoff|\b725\b|Silver Pigeon|\bSKB\b|Redhead/i.test(t)?"over-under":
+       /side.?by.?side|\bSxS\b|coach gun|double barrel/i.test(t)?"side-by-side":
+       /semi|auto|A[34]00|1301|Super Black Eagle|\bSBE\b|Vinci|Montefeltro|\b1100\b|11-87|\bV3\b|Maxus|\bA5\b|SX[34]|Versa.?Max|M3000|Affinity|\bM[24]\b/i.test(t)?"semi-auto":"pump");}
+  else if(ty==="pistol"){k={"1911":"1911-semi","polymer":"compact-polymer","revda":"revolver-da","revsa":"revolver-sa"}[a]||
+      (/single.?action|Blackhawk|Vaquero|Wrangler|Single.?Six|Bearcat|\bSAA\b|Peacemaker|Uberti|Cimarron|Rough Rider|Frontier/i.test(t)?"revolver-sa":
+       /revolver|Python|Anaconda|Cobra|GP.?100|SP.?101|\bLCR\b|Redhawk|[JKLN].?frame|Judge|Rhino|Model (10|19|27|29|36|60|64|66|442|586|617|629|642|686)\b|\.38 Spec|\.357 Mag|\.44 Mag|\.45 Colt|\.327/i.test(t)?"revolver-da":
+       /1911|2011|Commander|Officer|Government|Gov.?t|Kimber|Gold Cup|Range Officer|Ronin|Garrison|Emissary|Dan Wesson|Wilson Combat|Les Baer|Staccato|\bSTI\b|Nighthawk|Rock Island|\bRIA\b|Tisas/i.test(t)?"1911-semi":"compact-polymer");}
+  else{k={"bolt":"bolt-action-scoped","ar":"ar15","semi":"semi-auto-hunting","lever":"lever-action","break":"break-action","pump":"semi-auto-hunting"}[a]||
+      (sibs.some(x=>x.build&&(x.build.lowerId||x.build.upperId))||/\bAR[- ]?(15|10)?\b|\bM4\b|\bM16\b|\bMSR\b|LR.?308|SR.?25|\bDPMS\b|\bBCM\b|Daniel Defense|\bPSA\b|Aero Precision|\bLMT\b|LWRC|\bSCAR\b|\bMCX\b|Tavor|\bAUG\b|\bAK\b|AK.?47|\bAR-|carbine/i.test(t)?"ar15":
+       /10\/22|Model 60|Marlin 60|\bBAR\b|M1A|Mini.?(14|30)|Garand|\bSKS\b|\bR1\b|7400|semi/i.test(t)?"semi-auto-hunting":
+       /lever|Marlin|Henry|Winchester (Model )?(94|1873|1886|1892|1894|1895)|Rossi|\b336\b|\b1894\b|\b1895\b/i.test(t)?"lever-action":
+       /break|single.?shot|H&R|Handi|Encore|Contender|No\.? ?1\b|double rifle/i.test(t)?"break-action":"bolt-action-scoped");}
+  return ty+"-"+k+(sup?"-suppressed":"");}
+const gunPicImg=(r,sibs)=>'<img alt="" loading="lazy" class="gph" src="/img/guns/'+gunPicName(r,sibs)+'.jpg">';
+window.RB_GUN_PIC=(r,sibs)=>gunPicImg(r,sibs);
+const KIND_PIC={rifle:"rifle-bolt-action-scoped",pistol:"pistol-compact-polymer",shotgun:"shotgun-pump"};
+const kindPic=k=>KIND_PIC[k]?'<img alt="" class="gkpic" src="/img/guns/'+KIND_PIC[k]+'.jpg">':"";
 const gunIcon=(k,cls)=>GUN_ICON[k]?'<svg class="gico'+(cls?' '+cls:'')+'" viewBox="0 0 48 20" aria-hidden="true">'+GUN_ICON[k]+'</svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
 // the Guns list filter: "" all, or one kind; remembered on this device
 let gunKind="";try{gunKind=localStorage.getItem("rb.gunkind")||"";}catch(e){}
 /* ---------- shotguns (2.48): gauge and chamber in place of the cartridge, smooth or rifled bore, the action, and chokes ---------- */
 const SG_ACTIONS=["Pump","Semi-auto","Over/under","Side-by-side","Single shot","Bolt","Lever"];
 const SG_CHOKES=["Cylinder","Skeet","Improved Cylinder","Light Modified","Modified","Improved Modified","Light Full","Full","Extra Full","Turkey"];
+// the Action list on a rifle's or pistol's page follows its type
+function gactUI(r){const e=$("rf_gaction");if(!e)return;const L=r.type==="pistol"?PISTOL_ACTIONS:RIFLE_ACTIONS;if(e.dataset.k===(r.type||""))return;e.dataset.k=r.type||"";
+  if(r.action&&!L.some(([k])=>k===r.action))r.action=null;e.innerHTML='<option value="">Not set</option>'+L.map(([v,t])=>'<option value="'+v+'"'+(r.action===v?' selected':'')+'>'+esc(t)+'</option>').join("");}
 const sgTwo=r=>r.action==="Over/under"||r.action==="Side-by-side";
 const sgSel=(id,label,val,opts,blank,cls)=>'<div class="field'+(cls||'')+'"><label for="'+id+'">'+label+'</label><select id="'+id+'" class="fieldselect">'+(blank!=null?'<option value="">'+esc(blank)+'</option>':'')+opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return '<option value="'+esc(v)+'"'+(String(val??"")===String(v)?' selected':'')+'>'+esc(t)+'</option>';}).join("")+'</select></div>';
 function sgFormHtml(r){const G=RB_CARTS.GAUGES,g=RB_CARTS.gauge(r.cartridge),ch=g?g.ch:[2.5,2.75,3,3.5];
@@ -6717,15 +6746,15 @@ function renderRifles(){
       rifles.forEach(r=>{const sibs=buildSibs(r);if(r.build&&r.build.lowerId){if(seenLo.has(r.build.lowerId))return;seenLo.add(r.build.lowerId);}
         const tys=sibs.map(tyOf),kind=tys.includes("rifle")?"rifle":tys.find(Boolean)||"";entries.push({r,sibs,kind,ty:sibs.some(x=>x.fav)?"__fav":kind,n:r.build&&r.build.lowerId?buildName(r):(r.name||"")});});
       const kinds=GUN_TYPES.filter(([k])=>entries.some(e=>e.kind===k));if(gunKind&&!kinds.some(([k])=>k===gunKind))gunKind="";
-      if(kinds.length>1)h+='<div class="segtabs gkinds" role="radiogroup" aria-label="Show">'+[["","All",entries.length]].concat(kinds.map(([k,,pl])=>[k,pl,entries.filter(e=>e.kind===k).length])).map(([k,l,n])=>'<button type="button" role="radio" data-gkind="'+k+'" aria-checked="'+(gunKind===k)+'" aria-selected="'+(gunKind===k)+'">'+(k?gunIcon(k):'')+esc(l)+' <span class="gkn">'+n+'</span></button>').join("")+'</div>';
+      if(kinds.length>1)h+='<div class="segtabs gkinds" role="radiogroup" aria-label="Show">'+[["","All",entries.length]].concat(kinds.map(([k,,pl])=>[k,pl,entries.filter(e=>e.kind===k).length])).map(([k,l,n])=>'<button type="button" role="radio" data-gkind="'+k+'" aria-checked="'+(gunKind===k)+'" aria-selected="'+(gunKind===k)+'">'+(k?kindPic(k):'')+esc(l)+' <span class="gkn">'+n+'</span></button>').join("")+'</div>';
       const shown=gunKind?entries.filter(e=>e.kind===gunKind):entries;
       const star=(r,sibs,nm)=>{const on=sibs.some(x=>x.fav);return '<button type="button" class="favstar" data-rfav="'+esc(r.id)+'" aria-pressed="'+on+'" aria-label="'+(on?'Remove '+esc(nm)+' from favorites':'Add '+esc(nm)+' to favorites')+'" title="'+(on?'Favorite':'Mark as a favorite')+'">'+favSvg(on)+'</button>';};
       groups.forEach(([gk,gl])=>{const list=shown.filter(e=>e.ty===gk);if(!list.length)return;
-      h+=GUN_ICON[gk]?'<div class="cartgroup gty-'+gk+'"><div class="gtyhead">'+gunIcon(gk)+'<span class="gtyn">'+esc(gl)+'</span><span class="gtyc">'+list.length+'</span></div>':'<div class="cartgroup"><div class="cartname">'+esc(gl)+' <span class="note">'+list.length+'</span></div>';
+      h+=GUN_ICON[gk]?'<div class="cartgroup gty-'+gk+'"><div class="gtyhead">'+kindPic(gk)+'<span class="gtyn">'+esc(gl)+'</span><span class="gtyc">'+list.length+'</span></div>':'<div class="cartgroup"><div class="cartname">'+esc(gl)+' <span class="note">'+list.length+'</span></div>';
       if(gk==="__fav"){h=h.replace(/<div class="cartgroup"><div class="cartname">★ Favorites <span class="note">(\d+)<\/span><\/div>$/,(m,n)=>'<div class="cartgroup" id="gFavs"><div class="cartname">★ Favorites <span class="note">'+n+'</span>'+(list.length>1?' <span class="note favhint">'+(window.RB_FAV_HINT||"Drag to reorder")+'</span>':'')+'</div>');}
       list.sort((x,y)=>(gk==="__fav"?gunFavN(x.sibs)-gunFavN(y.sibs):0)||x.n.localeCompare(y.n,undefined,{numeric:true})).forEach(({r,sibs,kind,n:gname})=>{
         if(r.build&&r.build.lowerId){const lo=partById(r.build.lowerId),lr=lo?partRounds(lo):null,nl=sibs.reduce((a,x)=>a+usedBy(x.id).length,0),gp=sibs.map(x=>gunPhotosOf(x.id)[0]).find(Boolean);
-          const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':gunIcon(tyOf(r)||sibs.map(tyOf).find(Boolean));
+          const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':gunPicImg(r,sibs);
           h+='<div class="gtile'+(kind?' gty-'+kind:'')+'" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([lo&&serialFind(lo),...sibs.map(serialFind)].filter(Boolean).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext grow"><span class="t">'+esc(gname)+'</span>'+
             '<span class="d">'+esc([r.nick&&gunMakeModel(r)?gunMakeModel(r):"",sibs.length+(sibs.length===1?' upper':' uppers'),lo&&(lo.serial||lo.serialEnc)?'Serial '+serialTxt(lo):''].filter(Boolean).join(' · '))+'</span>'+
             '<span class="varchips">'+sibs.map(x=>'<span class="varchip" data-rvar="'+esc(x.id)+'">'+esc(x.varLabel||"No upper yet")+'</span>').join("")+'</span>'+
@@ -6736,7 +6765,7 @@ function renderRifles(){
         const sgun=tyOf(r)==="shotgun"||!!(window.RB_CARTS&&RB_CARTS.gauge(r.cartridge)),sgp=sgun?((window.RB_TRAJ&&RB_TRAJ.all())||[]).filter(t=>t.sg&&t.rifleId===r.id):[],npat=sgp.reduce((a,t)=>a+(t.pats||0),0);
         const rt=sgun?(rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> shells</span>':''):rc.total?'<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(rc.pct>=80?' <span class="lowtag">· barrel wearing</span>':'')+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>':'';
         const gp=gunPhotosOf(r.id)[0];
-        const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':gunIcon(tyOf(r)||(sgun?"shotgun":""));
+        const thumb=gp?'<img alt="" loading="lazy" src="'+esc(gp.url)+'">':gunPicImg(r,sibs);
         h+='<div class="gtile'+(kind?' gty-'+kind:'')+'" data-gfid="'+esc(r.id)+'"><button class="loaditem withthumb" type="button" data-ropen="'+esc(r.id)+'" data-find="'+esc([serialFind(r),lo0&&serialFind(lo0)].filter(Boolean).join(" "))+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(r.name||"Unnamed gun")+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+rt+
           '<span class="m">'+(sgun?(sgp.length?sgp.length+' shotgun profile'+(sgp.length===1?'':'s')+(npat?' · '+npat+' pattern'+(npat===1?'':'s'):''):'Not in a shotgun profile yet'):n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet')+'</span></span></button>'+star(r,sibs,r.name||"this gun")+'</div>';
       });
@@ -6769,6 +6798,7 @@ function renderRifles(){
         const facts=[["Cartridge",sp.cartridge||""],["Barrel",num(sp.barrel)?BBL(num(sp.barrel)):""],["Threaded barrel",sp.threaded?"Yes":"No"],["Twist",num(sp.twist)?"1:"+(U.metric?U.s("dim",num(sp.twist),0):num(sp.twist)):""],["Sight height",num(sp.sightHeight)>0?U.s("in",num(sp.sightHeight),U.metric?1:2):""],[sc&&sc.kind&&sc.kind!=="scope"?"Sight":"Scope",sc?scopeLabel(sc)+(isDotSight(sc)?" ("+dotDesc(sc)+")":""):""],["Serial number",lo&&lo.serial?lo.serial:""]].filter(f=>f[1]);
         return t+pick("lower",lows,"Lower")+pick("upper",ups,"Upper")+
           '<div class="field wide"><div class="compcard"><div class="ccfacts">'+(facts.length?facts.map(f=>'<span><i>'+esc(f[0])+'</i>'+esc(f[1])+'</span>').join(""):'<span class="note">Pick a lower and an upper.</span>')+'</div></div><span class="note">The cartridge, barrel, twist, sight height and scope come from the upper, and the serial number from the lower. Change them on their own pages.</span></div>';})()+
+      (r.type!=="shotgun"?sgSel("rf_gaction","Action",r.action,r.type==="pistol"?PISTOL_ACTIONS:RIFLE_ACTIONS,"Not set"):'')+
       (r.type==="shotgun"?sgFormHtml(r):
       field("rf_cartridge","Cartridge (chambered for)",r.cartridge,"text"," wide")+'<div class="field wide cartinfo" id="rf_cartNote"></div>')+
       field("rf_serial","Serial number",r.serial,"text")+
@@ -6868,17 +6898,18 @@ function renderRifles(){
     queueRifles();syncRifleIntoLoads(r);renderRifles();}));
   root.querySelectorAll("[data-gpartopen]").forEach(b=>b.addEventListener("click",()=>{partFromGun=r.id;partOpen=b.dataset.gpartopen;rifleOpen=null;renderRifles();window.scrollTo(0,0);}));
   sgBind(r,root);
+  {const e=$("rf_gaction");if(e)e.addEventListener("change",()=>{r.action=e.value||null;queueRifles();});}
   {const ce=$("rf_cartridge"),nt=$("rf_cartNote");if(ce){const draw=()=>{nt.innerHTML=esc(RB_CARTS.info(r.cartridge));};draw();
     ce.placeholder="e.g. 308 Winchester, 5.56 NATO, 9mm";
-    const typeUI=()=>{root.querySelectorAll("[data-gtype]").forEach(b=>{const on=b.dataset.gtype===r.type;b.setAttribute("aria-selected",on);b.setAttribute("aria-checked",on);});const tn=$("rf_typeNote");if(tn)tn.hidden=!(r.typeGuessed&&r.type);};
-    root.querySelectorAll("[data-gtype]").forEach(b=>b.addEventListener("click",()=>{const was=r.type==="shotgun";r.type=b.dataset.gtype;delete r.typeGuessed;queueRifles();
-      if(was!==(r.type==="shotgun")){const y=window.scrollY;renderRifles();window.scrollTo(0,y);}else typeUI();}));
+    const typeUI=()=>{root.querySelectorAll("[data-gtype]").forEach(b=>{const on=b.dataset.gtype===r.type;b.setAttribute("aria-selected",on);b.setAttribute("aria-checked",on);});gactUI(r);const tn=$("rf_typeNote");if(tn)tn.hidden=!(r.typeGuessed&&r.type);};
+    root.querySelectorAll("[data-gtype]").forEach(b=>b.addEventListener("click",()=>{const was=r.type;r.type=b.dataset.gtype;delete r.typeGuessed;if(was!==r.type)delete r.action;queueRifles();
+      if(was!==r.type){const y=window.scrollY;renderRifles();window.scrollTo(0,y);}else typeUI();}));
     ce.addEventListener("input",()=>{r.cartridge=ce.value.trim();{const cf=$("rfCanFit");if(cf)cf.innerHTML=gunCans(r).map(id=>canFitHtml(cans.find(c=>c.id===id),gunCart(r))).join("");}if(!r.type||r.typeGuessed){const g=gunTypeGuess(r.cartridge);if(g&&g!==r.type){r.type=g;r.typeGuessed=true;typeUI();}}queueRifles();syncRifleIntoLoads(r);draw();});
     ce.addEventListener("change",()=>{if(ce.value.trim())rememberCartridge(RB_CARTS.canon(ce.value));});
     RB_CARTS.picker(ce,{extra:()=>comps.cartridges||[]});}else{
     const typeUI=()=>{root.querySelectorAll("[data-gtype]").forEach(b=>{const on=b.dataset.gtype===r.type;b.setAttribute("aria-selected",on);b.setAttribute("aria-checked",on);});};
-    root.querySelectorAll("[data-gtype]").forEach(b=>b.addEventListener("click",()=>{const was=r.type==="shotgun";r.type=b.dataset.gtype;delete r.typeGuessed;queueRifles();
-      if(was!==(r.type==="shotgun")){const y=window.scrollY;renderRifles();window.scrollTo(0,y);}else typeUI();}));}}
+    root.querySelectorAll("[data-gtype]").forEach(b=>b.addEventListener("click",()=>{const was=r.type;r.type=b.dataset.gtype;delete r.typeGuessed;if(was!==r.type)delete r.action;queueRifles();
+      if(was!==r.type){const y=window.scrollY;renderRifles();window.scrollTo(0,y);}else typeUI();}));}}
   serBind("rf_serial",r,queueRifles);
   [["nick",false],["mfr",false],["model",false],["barrel",true],["twist",true],["sightHeight",true],["notes",false]].forEach(([k,isNum])=>{
     const el=$("rf_"+k);if(!el)return;
@@ -13047,7 +13078,7 @@ function renderHome(){
     G.sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)||(a.fav?gunFavN(a.sb)-gunFavN(b.sb):0)||b.tot-a.tot||a.nm.localeCompare(b.nm,undefined,{numeric:true}));
     const icon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h15l3-2v4h-3l-1 2h-5l-1 3H7l1-3H3z"/></svg>';
     h+='<section class="card" aria-label="Most used guns" data-hsec="guns"><h2>Most used guns</h2><div class="cartgroup" id="homeGuns">'+G.map(x=>{const rc=x.rc||{},life=rc.life!=null?rc.life:null;
-      return '<button class="loaditem withthumb" type="button" data-hgo="rifle:'+esc(x.r.id)+'"><span class="lthumb">'+(x.ph?'<img alt="" loading="lazy" src="'+esc(x.ph.url)+'">':icon)+'</span><span class="ltext grow"><span class="t">'+(x.fav?'<span class="favmark" title="Favorite">'+favSvg(true)+'</span> ':'')+esc(x.nm)+'</span>'+
+      return '<button class="loaditem withthumb" type="button" data-hgo="rifle:'+esc(x.r.id)+'"><span class="lthumb">'+(x.ph?'<img alt="" loading="lazy" src="'+esc(x.ph.url)+'">':window.RB_GUN_PIC?RB_GUN_PIC(x.r,x.sb):icon)+'</span><span class="ltext grow"><span class="t">'+(x.fav?'<span class="favmark" title="Favorite">'+favSvg(true)+'</span> ':'')+esc(x.nm)+'</span>'+
         '<span class="m">'+(x.tot||0).toLocaleString()+' rounds'+(rc.pct!=null?' · '+Math.round(rc.pct)+'% of barrel life':'')+(x.sb.length>1?' · '+x.sb.length+' uppers':'')+'</span>'+
         (life>0?'<span class="lifebar mini'+(rc.pct>=80?' warn':'')+'"><span style="width:'+Math.min(100,rc.pct).toFixed(1)+'%"></span></span>':'')+'</span></button>';}).join("")+'</div>'+
       '<div class="row" id="homeGunsMore" hidden><button class="linkbtn" type="button" data-hgo="guns">All '+G.length+' guns ›</button></div></section>';}

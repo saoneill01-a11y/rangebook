@@ -1325,7 +1325,7 @@ async function api(req, res, url) {
 }
 
 /* ---------------- static files ---------------- */
-const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png", ".svg": "image/svg+xml", ".ico": "image/x-icon", ".json": "application/json", ".webmanifest": "application/manifest+json" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".svg": "image/svg+xml", ".ico": "image/x-icon", ".json": "application/json", ".webmanifest": "application/manifest+json" };
 /* Text files (the app page, scripts, JSON) are sent compressed, about a quarter of the size: the browser unpacks them
    to exactly the same bytes. Each file is packed once and kept in memory until it changes on disk; gzip is ready at
    once, and the smaller brotli copy is made in the background and used from then on. Images are already compressed. */
