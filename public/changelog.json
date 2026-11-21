@@ -2,10 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.36",
+      "version": "2.47.37",
       "date": "2026-11-20",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "New app icon: three 45 ACP rounds and two empty cases on a target with a red center. Pictures for things without a photo of their own: ammo (rifle, pistol, rimfire, shotgun shells, reloads), magazines (AR, pistol, rimfire, rifle box), inventory (targets, cleaning, ear and eye protection, range bags, cases, supplies, gear) and loads; the Reloading component lists (bullets, powder, primers, brass) now show a picture on each row.",
+        "Your own optic and suppressor photos on their lists are the same size as gun photos, with the whole picture showing.",
         "Optics and suppressors without a photo of their own show a picture of their kind on their list and page: scope, red dot, pistol reflex sight, holographic or prism sight; rifle, pistol or rimfire suppressor. The Picture box on an optic's or suppressor's page is bigger. And a turkey joins the targets behind the reticle.",
         "Your own gun photos on the Guns list and Home are as wide as the rifle and shotgun pictures, and a bit taller so more of the photo shows.",
         "Five more animal targets behind the reticle: black bear, hog, mule deer, moose and bighorn sheep, life size with their vital zones, facing left like the others.",

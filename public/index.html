@@ -269,7 +269,7 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .gtyhead{display:flex;align-items:center;gap:8px;margin-top:8px;padding-bottom:5px;border-bottom:2px solid var(--gk);color:var(--gk)}
 .gtyhead .gico{width:34px;height:15px}.gtyn{font-family:var(--display);font-weight:600;font-size:calc(16px*var(--fs));text-transform:uppercase;letter-spacing:.08em;flex:1}.gtyc{font-size:calc(12.5px*var(--fs));font-weight:600}
 .gtile.gty-rifle>.loaditem,.gtile.gty-pistol>.loaditem,.gtile.gty-shotgun>.loaditem{border-left-color:var(--gk)!important}
-.lthumb:has(img.gph){width:84px;height:56px}.lthumb:has(img.gph.long){width:136px;height:56px}.lthumb:has(img.gphoto){width:136px;height:90px}.lthumb img.gphoto{object-fit:cover}.lthumb img.gph.long{transform:scale(1.06)}@media(max-width:400px){.lthumb:has(img.gph.long){width:112px;height:46px}.lthumb:has(img.gphoto){width:112px;height:74px}}.lthumb img.gph{object-fit:cover}img.gkpic{width:42px;height:28px;object-fit:cover;border-radius:5px;flex:none}.gkinds img.gkpic{width:27px;height:18px;border-radius:3px}.gty-rifle .lthumb,.gty-pistol .lthumb,.gty-shotgun .lthumb{background:color-mix(in srgb,var(--gk) 14%,var(--surface));color:var(--gk)}
+.lthumb:has(img.gph){width:84px;height:56px}.lthumb:has(img.gph.long){width:136px;height:56px}.lthumb:has(img.gphoto){width:136px;height:90px}.lthumb img.gphoto{object-fit:cover}.lthumb img.gphoto.fit{object-fit:contain}.lthumb:has(img.gphoto.fit){background:#fff}.lthumb img.gph.long{transform:scale(1.06)}@media(max-width:400px){.lthumb:has(img.gph.long){width:112px;height:46px}.lthumb:has(img.gphoto){width:112px;height:74px}}.lthumb img.gph{object-fit:cover}img.gkpic{width:42px;height:28px;object-fit:cover;border-radius:5px;flex:none}.gkinds img.gkpic{width:27px;height:18px;border-radius:3px}.gty-rifle .lthumb,.gty-pistol .lthumb,.gty-shotgun .lthumb{background:color-mix(in srgb,var(--gk) 14%,var(--surface));color:var(--gk)}
 svg.gico{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}.lthumb svg.gico{width:46px;height:20px}
 .segtabs.gkinds{display:inline-flex;align-self:flex-start;max-width:100%;flex-wrap:wrap;margin:10px 0 4px}.segtabs.gkinds button{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:5px 12px}.gkinds .gico{width:26px;height:11px}.gkn{opacity:.7;font-weight:500}
 .loaditem{display:flex;flex-direction:column;gap:2px;text-align:left;width:100%;padding:11px 12px;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;background:linear-gradient(to bottom,var(--surface),var(--sunk));cursor:pointer;font:inherit;color:inherit;
@@ -5967,7 +5967,7 @@ function renderList(){
       let best=null,bestSd=null;
       gs.forEach((g,i)=>{const mo=groupMoa(g);if(mo!=null&&(!best||mo<best.v))best={v:mo,g,i};const st=stats(g,L);if(st&&st.n>=3&&(!bestSd||st.sd<bestSd.sd))bestSd={sd:st.sd,g,i};});
       const bestTxt=[best?'<b>'+best.v.toFixed(2)+' MOA</b> at '+esc(gName(best.g,best.i)):'',bestSd?'<b>SD '+bestSd.sd.toFixed(1)+'</b> at '+esc(gName(bestSd.g,bestSd.i)):''].filter(Boolean).join(' · ');
-      const thumb=(m.photoUrl||m.photoId)?'<img alt="" loading="lazy" src="'+esc(m.photoUrl||("/api/photos/"+m.photoId))+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>';
+      const thumb=(m.photoUrl||m.photoId)?'<img alt="" loading="lazy" src="'+esc(m.photoUrl||("/api/photos/"+m.photoId))+'">':'<img alt="" loading="lazy" class="gph gearph" src="/img/gear/ammo-reload.jpg">';
       return '<button class="loaditem withthumb" type="button" data-open="'+esc(id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(L.title||"Untitled load")+(L.subsonic?' <span class="chip subchip">Subsonic</span>':'')+(recipeMismatch(L)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+
         (comp?'<span class="d">'+esc(comp)+'</span>':'')+
         (bestTxt?'<span class="best">Best: '+bestTxt+'</span>':'')+
@@ -6599,7 +6599,7 @@ function renderAmmo(root){
         const m=[a.locked?'<span class="sharetag">Locked</span>':'',a.shared?'<span class="sharetag">Shared</span>':'',u.onHand!=null?(u.low?'<span class="lowtag">Low: '+u.onHand.toLocaleString()+' left</span>':u.onHand.toLocaleString()+' rounds on hand'):"",u.ppr!=null?"$"+u.ppr.toFixed(2)+"/round":"",u.loadsUsing.length?"in "+u.loadsUsing.length+" Shooting profile"+(u.loadsUsing.length===1?"":"s"):""].filter(Boolean).join(" · ");
         const tu=rl?null:thumbOf(a);
         const icon=rl?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21V9l3-5 3 5v12z"/><path d="M9 15h6"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="13" rx="1.5"/><path d="M4 10h16M9 6v4M15 6v4"/></svg>';
-        return '<button class="loaditem withthumb" type="button" data-aopen="'+esc(a.id)+'"><span class="lthumb">'+(tu?'<img alt="" loading="lazy" src="'+esc(tu)+'">':icon)+'</span><span class="ltext"><span class="t">'+esc(ammoLabel(a))+(ammoSub(a)?' <span class="chip subchip">Subsonic</span>':'')+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+m+'</span>':'')+'</span></button>';};
+        return '<button class="loaditem withthumb" type="button" data-aopen="'+esc(a.id)+'"><span class="lthumb">'+(tu?'<img alt="" loading="lazy" src="'+esc(tu)+'">':gearPh(ammoPicName(a)))+'</span><span class="ltext"><span class="t">'+esc(ammoLabel(a))+(ammoSub(a)?' <span class="chip subchip">Subsonic</span>':'')+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+m+'</span>':'')+'</span></button>';};
     const bySort=(x,y)=>ammoLabel(x).localeCompare(ammoLabel(y),undefined,{numeric:true});
     const relA=ammo.filter(isReload).sort(bySort),facA=ammo.filter(a=>!isReload(a)).sort(bySort);
     if(relA.length)h+='<section class="card" aria-label="Reloaded ammo"><h2>Reloaded ammo</h2><div class="cartgroup">'+relA.map(ammoRow).join("")+'</div></section>';
@@ -7424,8 +7424,26 @@ function canPicName(c){const t=[c.caliber,c.mfr,c.model].filter(Boolean).join(" 
   const gs=canGuns(c);if(gs.length&&gs.every(g=>g.type==="pistol"))return "suppressor-pistol";
   if(/\b9 ?mm\b|45 ?acp|\b40 ?s&w|\b10 ?mm\b|\bpistol\b|\.380\b|\bbooster\b/i.test(t)&&!/rifle|30 ?cal|\.30\b|7\.62|308|6\.5|5\.56|223|300/i.test(t))return "suppressor-pistol";
   return "suppressor-rifle";}
+/* placeholder pictures for ammo, magazines, reloading components and inventory (2.47.37), from public/img/gear/ */
+function ammoPicName(a){if(isReload(a))return "ammo-reload";if(isShell(a))return "ammo-shotshell";const c=String(a.cartridge||"");
+  if(/rimfire|\b(22|17)\s*(lr|long rifle|short|wmr|win mag|hmr|hm2|wsm)\b/i.test(c))return "ammo-rimfire";
+  return gunTypeGuess(c)==="pistol"?"ammo-pistol":"ammo-rifle";}
+function magPicName(m){const gs=(m.gunIds||[]).map(id=>rifles.find(r=>r.id===id)).filter(Boolean),cs=magCarts(m),t=[m.mfr,m.model,cs.join(" ")].filter(Boolean).join(" ");
+  if(/rimfire|\b(22|17)\s*(lr|wmr|hmr|mag)\b|\bbx-?1\b|10\/22/i.test(t))return "mag-rimfire";
+  if(gs.length&&gs.every(g=>g.type==="pistol"))return "mag-pistol";
+  if(gs.some(g=>g.build&&(g.build.lowerId||g.build.upperId))||/pmag|\bar-?15\b|stanag|\b(223|5\.56|300 ?(blk|blackout|aac)|6\.5 ?grendel|224 valkyrie|6mm arc|350 legend|450 bushmaster|458 socom)\b/i.test(t))return "mag-ar";
+  if(cs.length&&cs.every(c=>gunTypeGuess(c)==="pistol"))return "mag-pistol";
+  return "mag-box";}
+function invPicName(it){const t=[invName(it),it.cat].filter(Boolean).join(" ");
+  if(/target|paster|steel|backer/i.test(t))return "inv-targets";
+  if(/clean|solvent|oil|lube|patch|\brod\b|brush|bore|snake/i.test(t))return "inv-cleaning";
+  if(/\bear|\beye|muff|plug|glasses|hearing|protection/i.test(t))return "inv-hearing";
+  if(/\bbag\b|backpack|\bpack\b|pouch/i.test(t))return "inv-bag";
+  if(/\bcase\b/i.test(t))return "inv-case";
+  return it.kind==="equipment"?"inv-gear":"inv-supplies";}
+const COMP_PIC={bullets:"comp-bullets",powders:"comp-powder",primers:"comp-primers",brass:"comp-brass"};
 const gearPh=f=>'<img alt="" loading="lazy" class="gph gearph'+(/^(optic-scope|suppressor)/.test(f)?' long':'')+'" src="/img/gear/'+f+'.jpg">';
-const gearThumb=id=>{const p=picOf(id)||gunPhotosOf(id)[0];return p?'<img alt="" loading="lazy" src="'+esc(p.url)+'">':null;};
+const gearThumb=(id,cls)=>{const p=picOf(id)||gunPhotosOf(id)[0];return p?'<img alt="" loading="lazy"'+(cls?' class="'+cls+'"':'')+' src="'+esc(p.url)+'">':null;};
 /* one Picture for a scope or suppressor (kept with the gun photos under "pic-" and its id, so a scope's reticle picture stays separate) */
 const picKey=id=>"pic-"+id;
 const picOf=id=>{const ps=gunPhotosOf(picKey(id));return ps.length?ps[ps.length-1]:null;};
@@ -7471,7 +7489,7 @@ function renderCans(root){
   if(!c){
     h='<section class="card" aria-label="Suppressors list"><div class="row"><button class="btn primary" id="canAdd" type="button">+ Add suppressor</button></div>';
     if(!cans.length)h+='<p class="note">No suppressors yet. Add each one with its serial number and approval date. Put one on a gun if it lives there; leave it off if it moves between guns, and pick it on each range trip. Its round count comes from the range trips shot with it.</p>';
-    else h+='<div class="cartgroup">'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(x=>{const gs=canGuns(x),rc=canRounds(x),th=gearThumb(x.id);
+    else h+='<div class="cartgroup">'+[...cans].sort((a,b)=>canName(a).localeCompare(canName(b),undefined,{numeric:true})).map(x=>{const gs=canGuns(x),rc=canRounds(x),th=gearThumb(x.id,"gphoto fit");
       return '<button class="loaditem withthumb" type="button" data-canopen="'+esc(x.id)+'"><span class="lthumb">'+(th||gearPh(canPicName(x)))+'</span><span class="ltext grow"><span class="t">'+esc(canName(x))+'</span>'+
         '<span class="d">'+esc([x.caliber||"",x.serial||x.serialEnc?"Serial "+serialTxt(x):"",x.approved?"Approved "+fmtDate(x.approved):""].filter(Boolean).join(" · "))+'</span>'+
         '<span class="best"><b>'+rc.total.toLocaleString()+'</b> rounds'+(rc.due?' <span class="lowtag">· due for cleaning</span>':'')+'</span>'+
@@ -7665,7 +7683,7 @@ function renderInv(root){
       const d=[it.cat||"",it.where||"",g?"With "+(g.name||"a gun"):""].filter(Boolean).join(" · ");
       const m=cons?[num(it.qty)!=null?qtyTxt(it.qty)+" on hand":"",num(it.warnAt)!=null?"warn at "+qtyTxt(it.warnAt):"",it.due&&!invDue(it)?"Next "+fmtDate(it.due):""].filter(Boolean).join(" · ")
         :[it.serial||it.serialEnc?"Serial "+serialTxt(it):"",it.bought?"Bought "+fmtDate(it.bought):"",it.price||"",it.due&&!invDue(it)?"Next "+fmtDate(it.due):""].filter(Boolean).join(" · ");
-      return '<button class="loaditem withthumb" type="button" data-invo="'+esc(it.id)+'"><span class="lthumb">'+(th||INV_ICON[cons?"consumable":"equipment"])+'</span><span class="ltext grow"><span class="t">'+esc(invName(it))+chips+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+esc(m)+'</span>':'')+'</span></button>';};
+      return '<button class="loaditem withthumb" type="button" data-invo="'+esc(it.id)+'"><span class="lthumb">'+(th||gearPh(invPicName(it)))+'</span><span class="ltext grow"><span class="t">'+esc(invName(it))+chips+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(m?'<span class="m">'+esc(m)+'</span>':'')+'</span></button>';};
     const by=(a,b)=>String(a.cat||"").localeCompare(String(b.cat||""),undefined,{numeric:true})||invName(a).localeCompare(invName(b),undefined,{numeric:true});
     const att=inv.filter(it=>invLow(it)||invDue(it)).sort((a,b)=>(invDays(a)==null?1e9:invDays(a))-(invDays(b)==null?1e9:invDays(b))||by(a,b));
     const rest=inv.filter(it=>!att.includes(it)),cons=rest.filter(it=>it.kind!=="equipment").sort(by),eq=rest.filter(it=>it.kind==="equipment").sort(by);
@@ -7760,7 +7778,7 @@ function renderMags(root){
       const d=[magCarts(m).join(", "),num(m.cap)?num(m.cap)+" rounds":"",(m.gunIds||[]).map(gunNm).filter(Boolean).join(", ")].filter(Boolean).join(" · ");
       const last=n?magIssues(m).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")))[0]:null;
       const mm=[m.where||"",last?"Last problem "+(last.date?fmtDate(last.date):"")+(last.note?": "+last.note:""):""].filter(Boolean).join(" · ");
-      return '<button class="loaditem withthumb'+(m.retired?' used':'')+'" type="button" data-mago="'+esc(m.id)+'"><span class="lthumb">'+(th||MAG_ICON)+'</span><span class="ltext grow"><span class="t">'+(magNum(m)?'#'+esc(magNum(m)):'<span class="none">No Mag #</span>')+chips+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(mm?'<span class="m">'+esc(mm)+'</span>':'')+'</span></button>';};
+      return '<button class="loaditem withthumb'+(m.retired?' used':'')+'" type="button" data-mago="'+esc(m.id)+'"><span class="lthumb">'+(th||gearPh(magPicName(m)))+'</span><span class="ltext grow"><span class="t">'+(magNum(m)?'#'+esc(magNum(m)):'<span class="none">No Mag #</span>')+chips+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+(mm?'<span class="m">'+esc(mm)+'</span>':'')+'</span></button>';};
     const types=[...new Set(mags.map(magType))].sort((a,b)=>(a?0:1)-(b?0:1)||a.localeCompare(b,undefined,{numeric:true}));
     let h='<section class="card" aria-label="Magazines list"><div class="row"><button class="btn primary" id="magAdd" type="button">+ Add magazine</button></div>';
     if(!mags.length)h+='<p class="note">Give each magazine a <b>Mag #</b> (the number or mark you put on it with a paint pen or tape) so you can tell them apart. When one causes a jam or a failure to feed, log it on that mag, and retire it if it keeps happening. Mags of the same maker and model are listed together.</p>';
@@ -7845,7 +7863,7 @@ function renderScopes(root){
     if(!scopes.length)h+='<p class="note">No optics yet. Add the scope or sight on each gun. A scope\'s units and click value then set the dope card for every profile that uses that gun, and the reticle on the card can look like yours. A red dot or holographic sight gives holds in inches and dot widths instead.</p>';
     else{const item=x=>{const gs=onGun(x);
       const sp=picOf(x.id);
-      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'" data-find="'+esc(serialFind(x))+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" src="'+esc(sp.url)+'">':gearPh(opticPicName(x)))+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
+      return '<button class="loaditem withthumb" type="button" data-sopen="'+esc(x.id)+'" data-find="'+esc(serialFind(x))+'"><span class="lthumb">'+(sp?'<img alt="" loading="lazy" class="gphoto fit" src="'+esc(sp.url)+'">':gearPh(opticPicName(x)))+'</span><span class="ltext grow"><span class="t">'+esc(scopeLabel(x))+'</span><span class="d">'+esc([nickOf(x)?[x.mfr,x.model].filter(Boolean).join(" "):"",scopeSpec(x)].filter(Boolean).join(" · "))+'</span><span class="m">'+(gs.length?'On '+esc(gs.map(g=>g.name||"Unnamed gun").join(", ")):'Not on a gun')+(x.retMode==="pic"&&x.pic?' · your reticle picture':'')+'</span></span></button>';};
       const grp=x=>isDotSight(x)?"dot":x.kind==="prism"?"prism":"scope",by=(a,b)=>scopeLabel(a).localeCompare(scopeLabel(b),undefined,{numeric:true});
       [["scope","Scopes"],["dot","Red dots and holographic sights"],["prism","Prism sights"]].forEach(([gk,gl])=>{const L=scopes.filter(x=>grp(x)===gk).sort(by);if(!L.length)return;
         h+='<div class="cartgroup"><div class="cartname">'+gl+' <span class="note">'+L.length+'</span></div>'+L.map(item).join("")+'</div>';});}
@@ -8469,7 +8487,8 @@ function renderComps(){
       [...list].sort((a,b)=>K.label(a).localeCompare(K.label(b),undefined,{numeric:true})).forEach(c=>{const n=usedBy(c.id).length,d=K.detail(c),oh=num(c.onHand);
         const stock=oh!=null?(isLow(c)?'<span class="lowtag">Low: '+esc(fmtQty(compKind,oh))+' left</span>':'<span class="stock">'+esc(fmtQty(compKind,oh))+' on hand</span>'):'';
         const use=compKind==="brass"?'Loaded '+lotLoaded(c)+' time'+(lotLoaded(c)===1?'':'s'):(n?'Used by '+n+' load'+(n===1?'':'s'):'Not used by any loads yet');
-        h+='<button class="loaditem" type="button" data-copen="'+esc(c.id)+'"><span class="t">'+esc(K.label(c))+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+'<span class="m">'+stock+(stock?' · ':'')+esc(use)+'</span></button>';});
+        h+=COMP_PIC[compKind]?'<button class="loaditem withthumb" type="button" data-copen="'+esc(c.id)+'"><span class="lthumb">'+gearPh(COMP_PIC[compKind])+'</span><span class="ltext grow"><span class="t">'+esc(K.label(c))+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+'<span class="m">'+stock+(stock?' · ':'')+esc(use)+'</span></span></button>':
+        '<button class="loaditem" type="button" data-copen="'+esc(c.id)+'"><span class="t">'+esc(K.label(c))+'</span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+'<span class="m">'+stock+(stock?' · ':'')+esc(use)+'</span></button>';});
       h+='</div>';
     }
     h+='</section>';
