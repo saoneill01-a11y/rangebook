@@ -618,7 +618,8 @@ async function api(req, res, url) {
       const units = uq === "m" ? "m" : uq === "yd" ? "yd" : pr && pr.units === "metric" ? "m" : "yd";
       const buf = targetPdf(T, mt[1], fill.name || fill.load || fill.date || fill.dist || fill.gun ? fill : null, units);
       if (!buf) throw new HttpError(404, "No such target.");
-      res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${mt[1]}.pdf"`, "Content-Length": buf.length, ...SECURITY_HEADERS });
+      // never kept by the browser or a proxy like Cloudflare (which keeps anything ending in .pdf unless told not to): it's your data, and it changes (2.47.46)
+      res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${mt[1]}.pdf"`, "Content-Length": buf.length, "Cache-Control": "private, no-store", ...SECURITY_HEADERS });
       return res.end(buf);
     }
   }
@@ -997,7 +998,8 @@ async function api(req, res, url) {
     if (!t) throw new HttpError(404, "That range trip isn't on the server yet. If you made it without a signal, open Range Book with a signal so it syncs, then try again.");
     const photos = q("SELECT id, caption, file, w, h, measure FROM trip_photos WHERE owner_id=? AND trip_id=? ORDER BY created_at").all(user.id, t.id).map((r) => ({ ...r, measure: parseMeasure(r.measure) }));
     const buf = tripReportPdf({ calc: getDoc(user.id, "calc"), rifles: getDoc(user.id, "rifles"), prefs: getDoc(user.id, "prefs") }, t, photos, (file) => { try { return fs.readFileSync(path.join(PHOTO_DIR, path.basename(file))); } catch { return null; } });
-    res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-trip-${String(t.date || "undated").replace(/[^0-9-]/g, "")}.pdf"`, "Content-Length": buf.length, ...SECURITY_HEADERS });
+    // not kept by the browser or Cloudflare (see the target PDF above) (2.47.46)
+    res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-trip-${String(t.date || "undated").replace(/[^0-9-]/g, "")}.pdf"`, "Content-Length": buf.length, "Cache-Control": "private, no-store", ...SECURITY_HEADERS });
     return res.end(buf);
   }
   m = /^\/api\/trips\/([A-Za-z0-9_-]{1,80})\/photos$/.exec(p);
