@@ -348,6 +348,8 @@ class Pdf {
   constructor() { this.pages = []; this.sizes = []; this.images = []; this.alphas = new Map(); this.W = 612; this.H = 792; this.M = 50; this.addPage(); }
   // a new page, upright, or sideways (wide) when asked (2.47.45)
   addPage(wide) { this.W = wide ? 792 : 612; this.H = wide ? 612 : 792; this.cur = []; this.pages.push(this.cur); this.sizes.push([this.W, this.H]); this.y = this.M; }
+  // a page of any size (the printable targets: 11 x 17, or Letter sideways); the page being drawn takes it (2.47.62)
+  size(W, H) { this.W = W; this.H = H; this.sizes[this.sizes.length - 1] = [W, H]; }
   alpha(op) { const k = "A" + Math.round(op * 100); this.alphas.set(k, op); return k; }
   imgName(buf) { const hit = this.images.find((im) => im.buf === buf); if (hit) return hit.name; const info = jpegInfo(buf); if (!info) return null; const name = "Im" + (this.images.length + 1); this.images.push({ name, buf, info }); return name; }
   /* a marks layout from public/marks.js ({W, H, items}), its top-left at (X, Y) scaled by k; photo and icon are JPEG buffers.
@@ -647,7 +649,7 @@ function targetPdf(T, layoutId, fill, du) {
   const pdf = new Pdf(), I = 72, X = (v) => v * I;
   // a target taped together from two Letter pages: each page is printed sideways and shows its own strip of the sheet
   const parts = F.pages || null;
-  pdf.W = PW * I; pdf.H = parts ? 8.5 * I : PH * I;
+  pdf.size(PW * I, parts ? 8.5 * I : PH * I);
   pdf.title = "Range Book target - " + L.name + (SH ? " (" + SH + ")" : "");
   const GRID = "#8fa2b5", INK = "#111111";
   const sheet = () => {
@@ -665,8 +667,12 @@ function targetPdf(T, layoutId, fill, du) {
   // the side marks that tell the app this is a two-page target
   if (F.marked && T.mark) T.mark.uv.forEach(([u, v]) => { const mx = F.fid[0][0] + u * (F.fid[1][0] - F.fid[0][0]), my = F.fid[0][1] + v * (F.fid[3][1] - F.fid[0][1]), ms = T.mark.size; pdf.rect(X(mx - ms / 2), X(my - ms / 2), X(ms), X(ms), INK); });
   const hx = Math.max(1.6, F.fid[0][0] + fs / 2 + 0.3);
-  pdf.text(X(hx), X(0.6), "RANGE BOOK", { size: 13, bold: true, color: INK });
-  pdf.text(X(PW - hx), X(0.6), L.name + (SH ? " · " + SH : ""), { size: 10, color: INK, align: "right" });
+  // the Range Book banner, like the range report's, centered between the top squares (2.47.62). Live target still finds
+  // the page: it looks only for the corner squares and the rings around the aim points.
+  { const TEAL = "#0e5a61", H0 = 104, ts = H0 * 0.42, w = H0 + 10 + textWidth("Range Book", ts, true) + H0 * 0.38, k = (0.55 * I) / H0;
+    const items = [{ k: "rect", x: 0, y: 0, w, h: H0, r: H0 / 2, fill: "#ffffff", stroke: TEAL, sw: H0 * 0.034 }, { k: "icon", cx: H0 / 2, cy: H0 / 2, r: (H0 / 2) * 0.8 },
+      { k: "text", x: H0 + 10, y: H0 / 2 + ts * 0.36, s: "Range Book", size: ts, bold: true, fill: TEAL }];
+    pdf.draw({ W: w, H: H0, items }, (pdf.W - w * k) / 2, X(0.22), k, null, reportIcon()); }
   if (fill) {
     // filled in from a range trip: the values in bold after each label
     const FS = PW > 9 ? 9.5 : 8.5;
@@ -708,7 +714,7 @@ function targetPdf(T, layoutId, fill, du) {
   if (!parts) { sheet(); return pdf.build(null); }
   const PG = 8.5 * I;
   parts.forEach((pt, i) => {
-    if (i) pdf.addPage();
+    if (i) { pdf.addPage(); pdf.size(PW * I, 8.5 * I); }
     const top = pt.show != null ? pt.show : pt.from, bot = Math.min(pt.to, pt.from + 8.5);
     // only this page's strip of the sheet, moved up to the top of the page
     pdf.cur.push(`q 0 ${(PG - X(bot - pt.from)).toFixed(2)} ${pdf.W} ${X(bot - top).toFixed(2)} re W n 1 0 0 1 0 ${X(pt.from).toFixed(2)} cm`);

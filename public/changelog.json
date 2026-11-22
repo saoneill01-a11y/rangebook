@@ -2,10 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.61",
+      "version": "2.47.62",
       "date": "2026-11-21",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Printable targets have the Range Book banner across the top, the same as the range report, in place of the plain RANGE BOOK lettering. Live target finds them just as before.",
+        "Fixed: the 11 x 17 and two-page printable targets came out cut down to Letter size since 2.47.45. They print full size again.",
         "A new look for the name at the top: a pill like the range report's banner, with the app icon on its own teal disc so it isn't squeezed against the edge (it stays teal whatever theme you pick), and where you are beside it (the tab, and on a bigger screen the part of it you're in).",
         "True zero: a new tile on a range trip, under Targets. Range Book now works out where your scope is really zeroed from how high or low your groups landed against the aim point, with how sure it is; the zero shows at the top of the tile even when it's folded. Untick any group you shot with a different hold, or after moving the scope, to leave it out. One tap puts that zero into the Shooting profile (Undo puts it back), or it shows the clicks to move the scope instead.",
         "Factory ammo: nine Fiocchi loads were listed twice, once for the 20-round box and once for the 50-round box. Each is listed once now, with both item numbers. Ammo you already saved from either one still links to it.",
