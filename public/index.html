@@ -519,6 +519,10 @@ details.oldrel>summary{cursor:pointer;font-weight:600}
 .viewer .vgsbs{padding:2px 12px 12px;border-bottom:1px solid #2c2c2c;background:#1b1b17}.viewer .vgsbs .sbsd{margin-top:4px;border-top:0;padding-top:4px;color:var(--fg)}.viewer .vgsbs .sbsd .note{color:var(--muted)}
 .viewer svg.mover.dim>g[data-g]{opacity:.2}.viewer svg.mover.dim>g[data-g].on,.viewer svg.mover>g.vring{opacity:1}
 .viewer .vfoot{position:relative;flex:0 0 auto}
+.viewer .vswitch{display:inline-flex;gap:0;border:1px solid #444;border-radius:8px;overflow:hidden;flex:none}.viewer .vswitch .btn{border:0;border-radius:0;margin:0}
+.viewer .vswitch .btn[aria-pressed="true"],.viewer .vrep .btn[aria-pressed="true"]{background:#e8e8e8;color:#111}
+.viewer .vrep{padding:10px 12px;border-top:1px solid #2c2c2c;font-size:calc(13px*var(--fs));color:#aaa}.viewer .vrep .btn{margin:0}
+@media (max-width:599px){.viewer .vbar:first-child{flex-wrap:wrap}.viewer .vswitch{order:3;flex:1 1 100%}.viewer .vswitch .btn{flex:1}}
 .viewer .vmorebox{display:contents}.viewer .vmorebtn{display:none}.viewer .vdel{margin-left:auto}
 @media (min-width:760px) and (min-aspect-ratio:1/1){.viewer .vmain{flex-direction:row}.viewer .vside{flex:0 0 min(380px,36%);max-height:none}}
 @media (max-width:599px){.viewer .vmorebtn{display:inline-flex;margin-left:auto}.viewer .vmorebox{display:none}
@@ -1978,7 +1982,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>Range Book checks every string as the velocities come in, from a file or typed in, here and on range trips. A shot that's way off from the rest of its string (a chronograph misread, an echo or a typo, like 1,312 in a string of 2,800s) turns red, with a note saying it might not be correct. Check it against your chronograph, fix the number, or delete it (<b>More</b> › <b>− Shot</b> on a ladder group; empty its box on a range trip). It only flags shots far outside the string's normal spread (needs at least 3 shots), so an ordinary flyer isn't marked. <a class=goto href=#go data-go=tools:chrono>Tools › Chronograph import check</a> marks them too.</p>
       <h3>Target photos</h3>
       <p>Each target photo belongs to the ladder you shot it with. Tap <b>+ Photo</b> in that ladder (or next to the ladder's name on the <b>Targets</b> card) to take a picture or choose one. The Targets card shows the photos under each ladder, and each ladder shows its own photos too. Tap a photo to see it full size, add a caption, delete it, or move it to another ladder with <b>Shot with</b>. When you measure groups on a photo, you pick from that ladder's charges. Photos added before ladders existed are linked for you when the app can tell which ladder they go with; open any that say <b>Pick a ladder</b> and choose one.</p>
-      <p>To keep a copy of a target photo, open it and tap <b>Download photo</b> (the picture as taken) or <b>Download with marks</b> (with the measured shots and groups drawn on it). On a phone it opens the share sheet, so you can <b>Save Image</b> to your photos, save it to Files or send it; on a computer it downloads.</p>
+      <p><b>Your own photo of a Live target page:</b> Live target's picture comes through the scope, so it can be blurry. Take a clear photo of the same page afterward (straight on, all four black corner squares showing), open the Live target photo and tap <b>Add your own photo</b> (under <b>More</b> on a phone). Range Book finds the corner squares and puts every hole, aim point and velocity it recorded onto your photo. Both are kept: <b>Live target</b> / <b>Your photo</b> at the top switches between them, and <b>Range report uses</b> picks which one goes in the range report (your photo, unless you pick the Live target one). The range report shows each measured target on a page of its own, with a bubble beside each group, then the target photo measured like by hand at the end.</p>
+      <p>To keep a copy of a target photo, open it and tap <b>Download photo</b> (the picture as taken) or <b>Download with marks</b> (the page with each group measured on it: its size on a line between its two farthest holes, a bubble with the shots, size, mean radius and how far it is from the aim point, and each hole's number and velocity beside it). On a phone it opens the share sheet, so you can <b>Save Image</b> to your photos, save it to Files or send it; on a computer it downloads.</p>
       <h3>Measure groups from a photo</h3>
       <p>One photo can hold several groups, each with its own aim point and charge weight. Measuring gives you two sizes: the <b>group size</b> (center to center of the two widest holes) and the <b>mean radius</b>, the average distance of every hole from the group's center. Mean radius uses every shot, so it's a steadier way to compare charges, especially with small groups. Both show on each group and in the Summary, along with how far the group's center is from your aim point (for a zero check). Typing a group size by hand clears the photo's mean radius, since it no longer matches.</p>
       <ol>
@@ -9026,13 +9031,84 @@ function loadCtx(){
       if(changed){queueSave(openId);refreshComputed();drawChargeChart();}
     }};
 }
+/* your own photo of a Live target page (2.47.45): a photo of the same printed page, saved with the target and marked from what
+   Live target recorded, through the page's corner squares. It's its own photo record whose measure says which photo it's of
+   ({of, H, Hinv}, no groups of its own, so it never counts twice); the Live target photo's measure names it (mine) and says
+   which picture the range report uses (rep: "live", or your photo). It's not shown on its own: the Live target photo's
+   viewer switches between the two. */
+const isTwin=p=>!!(p&&p.measure&&p.measure.of);
+function twinOf(p,C){const M=p&&p.measure;if(!M||!M.mine)return null;return (C.photos||[]).find(x=>x.id===M.mine&&isTwin(x)&&x.measure.of===p.id)||null;}
+function mapToTwin(M,p,T){if(!M||!Array.isArray(M.H)||!T||!T.measure||!Array.isArray(T.measure.Hinv))return M;const w=p.w||1000,h=p.h||1000,w2=T.w||1000,h2=T.h||1000;
+  const mp=q=>{if(!q)return q;const pg=applyH(M.H,q[0]*w,q[1]*h),x=applyH(T.measure.Hinv,pg[0],pg[1]);return [+(x[0]/w2).toFixed(5),+(x[1]/h2).toFixed(5)];};
+  return Object.assign({},M,{a:mp(M.a),b:mp(M.b),H:T.measure.H,mapped:true,groups:(M.groups||[]).map(g=>Object.assign({},g,{shots:(g.shots||[]).map(mp),aim:g.aim?mp(g.aim):g.aim,box:null}))});}
+const VMINE={};   // a Live target photo's id → false while its viewer shows the Live target picture instead of your photo
+// the drawings shared with the range report (public/marks.js), loaded the first time they're needed
+let RBM_P=null;
+function loadMarks(){if(window.RBMarks)return Promise.resolve(window.RBMarks);return RBM_P||(RBM_P=new Promise((res,rej)=>{const m=document.querySelector('meta[name="rb-version"]'),v=m&&m.content&&m.content.indexOf("__")<0?m.content:"";
+  const sc=document.createElement("script");sc.src="/marks.js"+(v?"?v="+encodeURIComponent(v):"");sc.onload=()=>window.RBMarks?res(window.RBMarks):rej(new Error("marks"));sc.onerror=()=>{RBM_P=null;rej(new Error("marks"));};document.head.appendChild(sc);}));}
+const markTw=(()=>{let x=null;return (t,size,bold)=>{x=x||document.createElement("canvas").getContext("2d");x.font=(bold?"700 ":"400 ")+size+"px Helvetica, Arial, sans-serif";return x.measureText(String(t)).width;};})();
+const markFmt=C=>({len:(v,d)=>U.s("in",v,d),lenN:(v,d)=>String(U.n("in",v,d)),lenMark:U.metric?" cm":'"',fps:v=>String(U.n("fps",v,0)),fpsSd:v=>Number(U.n("fps",v,1)).toFixed(1),fpsU:U.u("fps"),name:(t,k)=>tgLabel(t,k,C&&C.L)});
+function markSub(C){if(C&&C.kind==="trip"){const t=trips.find(x=>x.id===tripOpen)||{};return [t.date?fmtDate(t.date):"",t.place||"",num(t.distance)>0?U.s("yd",num(t.distance),0):"",(tripTraj&&tripTraj.name)||""].filter(Boolean).join(" · ");}
+  return C&&C.L?(C.L.title||""):"";}
+/* the photo measured like by hand, as a JPEG: the background and photo drawn here, the marks (an SVG from marks.js) over them,
+   then the icon. (Pictures inside an SVG drawn to a canvas don't load everywhere, so the photo never goes inside it.) */
+async function markedJpeg(blob,p,C){
+  const RBM=await loadMarks(),T=await loadTargets().catch(()=>null);
+  const u=URL.createObjectURL(blob);
+  try{
+    const im=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u;});
+    const ic=await new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src="/icon-192.png";});
+    const W=im.naturalWidth,H=im.naturalHeight,M=normMeasure(p.measure),G=RBM.prep(M,W,H,markFmt(C));if(!G)throw new Error("no marks");
+    let fid=null;if(T&&M&&M.layout){const L0=(T.layouts||[]).find(l=>l.id===M.layout),fk=(L0&&L0.fmt)||"letter";fid=(T.formats&&T.formats[fk]&&T.formats[fk].fid)||T.fid||null;}
+    let crop=RBM.pageCrop(M,p.w||W,p.h||H,fid);if(crop&&p.w&&p.w!==W){const k=W/p.w;crop=crop.map(v=>v*k);}
+    const L=RBM.photo({tw:markTw,head:{title:"Range Book",sub:markSub(C)},w:W,h:H,holeR:G.holeR,groups:G.groups,crop});
+    const sc=Math.min(2.4,4200/L.H),cv=document.createElement("canvas");cv.width=Math.round(L.W*sc);cv.height=Math.round(L.H*sc);const x=cv.getContext("2d");
+    const bg=L.items.find(i=>i.bg);x.fillStyle=bg?bg.fill:"#2b2b2b";x.fillRect(0,0,cv.width,cv.height);
+    const ii=L.items.find(i=>i.k==="img"),cr=ii.crop||[0,0,W,H];x.drawImage(im,cr[0],cr[1],cr[2]-cr[0],cr[3]-cr[1],ii.x*sc,ii.y*sc,ii.w*sc,ii.h*sc);
+    const sv=RBM.toSvg(L,null,null,true);
+    const si=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(sv);});
+    x.drawImage(si,0,0,cv.width,cv.height);
+    const icI=L.items.find(i=>i.k==="icon");if(ic&&icI){x.save();x.beginPath();x.arc(icI.cx*sc,icI.cy*sc,icI.r*sc,0,Math.PI*2);x.clip();x.drawImage(ic,(icI.cx-icI.r)*sc,(icI.cy-icI.r)*sc,2*icI.r*sc,2*icI.r*sc);x.restore();}
+    return await new Promise((res,rej)=>cv.toBlob(b=>b?res(b):rej(new Error("jpeg")),"image/jpeg",.9));
+  }finally{URL.revokeObjectURL(u);}
+}
+// pick your own photo of this page, find its corner squares, save it with the target
+function addMine(p0,C,pid,btn){
+  const inp=document.createElement("input");inp.type="file";inp.accept="image/*";
+  inp.addEventListener("change",async()=>{const fl=inp.files&&inp.files[0];if(!fl)return;
+    const say=(m,bad)=>{let el=$("vMineMsg");if(!el){el=document.createElement("p");el.id="vMineMsg";el.className="vres";el.setAttribute("role","status");const ft=document.querySelector("#viewer .vfoot");if(ft)ft.before(el);}el.textContent=m;el.style.color=bad?"#ff8a6b":"";};
+    btn.disabled=true;say("Reading your photo…");
+    try{
+      const M=normMeasure(p0.measure),T=await loadTargets(),{data,w,h}=await compress(fl);
+      const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=data;});
+      let r=null;try{r=detectRBTarget(img,T);}catch(e){r=null;}
+      const fmtOf=id=>{const L0=(T.layouts||[]).find(l=>l.id===id);return (L0&&L0.fmt)||"letter";};
+      if(!r){say("Couldn't find the four black corner squares on that photo. Take it straight on with all four squares showing, and try again.",true);btn.disabled=false;return;}
+      if(r.fmt!==fmtOf(M.layout)){say("That's a different size of Range Book target than this one. Pick a photo of this same page.",true);btn.disabled=false;return;}
+      say("Adding your photo…");
+      const tid=tripOpen,rp=await API.post("/api/trips/"+tid+"/photos",{data,w,h,caption:""}),ph=rp&&rp.photo;if(!ph)throw new Error("save");
+      ph.measure={v:2,of:pid,H:r.H,Hinv:r.Hinv,layout:r.layout.id,groups:[]};
+      await API.patch("/api/photos/"+ph.id,{measure:ph.measure});
+      if(tripOpen===tid)tripPhotos.push(ph);
+      M.mine=ph.id;delete M.rep;p0.measure=M;API.patch("/api/photos/"+pid,{measure:M}).catch(onWriteError);
+      VMINE[pid]=true;if(viewerId===pid)openViewer(pid,C);
+    }catch(e){btn.disabled=false;say("Couldn't add that photo. Check your connection and try again.",true);}
+  });
+  inp.click();
+}
 function openViewer(pid,C){
   C=C||loadCtx();
-  const p=C.photos.find(x=>x.id===pid);if(!p)return;
+  const p0=C.photos.find(x=>x.id===pid);if(!p0)return;
   viewerId=pid;closeViewer(true);VCTX=C;
-  const v=document.createElement("div");v.className="viewer";v.id="viewer";v.setAttribute("role","dialog");v.setAttribute("aria-label","Target photo");
+  // with your own photo saved, it's shown (marked from the Live target picture) unless the Live target picture was picked
+  const tw=twinOf(p0,C),mine=!!tw&&VMINE[pid]!==false,M0=normMeasure(p0.measure);
+  const p=mine?Object.assign({},tw,{caption:p0.caption,measure:mapToTwin(M0,p0,tw)}):p0;
+  const canMine=!C.ro&&!tw&&C.kind==="trip"&&M0&&Array.isArray(M0.H)&&M0.layout&&M0.layout!=="custom"&&M0.groups.some(g=>(g.shots||[]).length);
+  const v=document.createElement("div");v.className="viewer";v.id="viewer";if(mine)v.dataset.mine="1";v.setAttribute("role","dialog");v.setAttribute("aria-label","Target photo");
   const ro=C.ro;
-  v.innerHTML='<div class="vbar"><button class="btn" id="vClose" type="button">← Back</button><input id="vCap" placeholder="Caption, e.g. 44.5 gr, 100 yd, 0.8 in group" value="'+esc(p.caption||"")+'" aria-label="Caption"'+(ro?' disabled':'')+'></div>'+
+  v.innerHTML='<div class="vbar"><button class="btn" id="vClose" type="button">← Back</button>'+
+    (tw?'<span class="vswitch" role="group" aria-label="Picture"><button type="button" class="btn small" data-vpic="live" aria-pressed="'+!mine+'">Live target</button><button type="button" class="btn small" data-vpic="mine" aria-pressed="'+mine+'">Your photo</button></span>':'')+
+    '<input id="vCap" placeholder="Caption, e.g. 44.5 gr, 100 yd, 0.8 in group" value="'+esc(p.caption||"")+'" aria-label="Caption"'+(ro?' disabled':'')+'></div>'+
     '<div class="vmain">'+
     '<div class="imgwrap">'+(overlaySvg(p)&&p.w&&p.h
       ?overlaySvg(p).replace('aria-hidden="true">','role="img" aria-label="Target photo with measured shots"><image href="'+esc(p.url)+'" x="0" y="0" width="'+p.w+'" height="'+p.h+'"/>')
@@ -9050,13 +9126,15 @@ function openViewer(pid,C){
       if(C.kind==="load"&&C.L&&(C.L.ladders||[]).length&&!ro)side+='<div class="vbar"><label for="vLad" style="font-size:13px">Shot with</label><select id="vLad" class="fieldselect" style="width:auto;max-width:70%">'+
         C.L.ladders.map(l=>'<option value="'+esc(l.id)+'">'+esc(ladderName(C.L,l)+(l.tested?" · "+fmtDate(l.tested):""))+'</option>').join("")+(photoLadder(p,C.L)?'':'<option value="" disabled>Pick a ladder</option>')+'</select></div>';
       if(C.kind==="live"){const d=liveDest();side+=d.any?'<div class="vbar"><label for="vMove" style="font-size:13px">Move to</label><select id="vMove" class="fieldselect" style="width:auto;max-width:75%">'+d.html+'</select></div><p class="vres" id="vMoveMsg"></p>':'<p class="vres">Make a range trip (Shooting) or a ladder (Reloading) to add this to one.</p>';}
+      if(tw&&!ro){const rep=M0&&M0.rep==="live"?"live":"mine";side+='<div class="vbar vrep"><span>Range report uses</span><button type="button" class="btn small" data-vrep="mine" aria-pressed="'+(rep==="mine")+'">Your photo</button><button type="button" class="btn small" data-vrep="live" aria-pressed="'+(rep==="live")+'">Live target</button></div>';}
       return side?'<div class="vside" role="region" aria-label="Groups on this target">'+side+'</div>':'';})()+
     '</div>'+
     // the buttons stay at the bottom; on a phone the downloads and Delete fold into More
     '<div class="vbar vfoot">'+((!ro||p.measure)?'<button class="btn" id="vMeasure" type="button">'+(ro?'Show measurement':p.measure?'Edit measurement':'Measure groups')+'</button>':'')+
     '<button class="btn vmorebtn" id="vMore" type="button" aria-expanded="false" aria-controls="vMoreBox">More ▾</button><div class="vmorebox" id="vMoreBox">'+
+    (canMine?'<button class="btn" id="vMine" type="button">Add your own photo</button>':'')+
     '<button class="btn" id="vDl" type="button">Download photo</button>'+(overlaySvg(p)?'<button class="btn" id="vDlM" type="button">Download with marks</button>':'')+
-    (ro?'':'<button class="btn danger vdel" id="vDel" type="button">Delete photo</button>')+'</div></div>';
+    (ro?'':'<button class="btn danger vdel" id="vDel" type="button">'+(mine?'Remove your photo':'Delete photo')+'</button>')+'</div></div>';
   document.body.appendChild(v);
   vZoom(v,p,C,pid);
   {const mv=$("vMore"),ft=v.querySelector(".vfoot");
@@ -9080,24 +9158,30 @@ function openViewer(pid,C){
     if(VSEL&&VSEL.pid===pid&&G[VSEL.k])pick(VSEL.k);else if(G.length===1){const sb=G[0].querySelector(".vgsbs");if(sb)sb.hidden=false;G[0].querySelector(".vgrow").setAttribute("aria-expanded","true");VSEL=null;}else VSEL=null;}
   $("vClose").addEventListener("click",()=>closeViewer());
   $("vCap").addEventListener("input",e=>{
-    const val=e.target.value;p.caption=val;clearTimeout(capTimer);
+    const val=e.target.value;p.caption=val;p0.caption=val;clearTimeout(capTimer);
     capTimer=setTimeout(()=>{if(!ro)API.patch("/api/photos/"+pid,{caption:val}).catch(onWriteError);},600);
   });
   if(!ro)$("vDel").addEventListener("click",()=>{
-    const back=C.remove(pid);closeViewer();
-    RB_UNDO("Deleted photo",back?()=>back():null,()=>API.del("/api/photos/"+pid).catch(onWriteError));
+    // on your photo: only your photo goes, the Live target picture stays
+    if(mine){const M=normMeasure(p0.measure),was={mine:M.mine,rep:M.rep},back=C.remove(tw.id);delete M.mine;delete M.rep;p0.measure=M;closeViewer();
+      RB_UNDO("Removed your photo",()=>{Object.assign(M,was);if(M.rep==null)delete M.rep;back&&back();},()=>{API.patch("/api/photos/"+pid,{measure:p0.measure}).catch(onWriteError);API.del("/api/photos/"+tw.id).catch(onWriteError);});return;}
+    // the Live target photo takes your photo of it with it
+    const back=C.remove(pid),back2=tw?C.remove(tw.id):null;closeViewer();
+    RB_UNDO("Deleted photo",back?()=>{back();if(back2)back2();}:null,()=>{API.del("/api/photos/"+pid).catch(onWriteError);if(tw)API.del("/api/photos/"+tw.id).catch(onWriteError);});
   });
+  v.querySelectorAll("[data-vpic]").forEach(b=>b.addEventListener("click",()=>{VMINE[pid]=b.dataset.vpic==="mine";openViewer(pid,C);}));
+  v.querySelectorAll("[data-vrep]").forEach(b=>b.addEventListener("click",()=>{const M=normMeasure(p0.measure);if(!M)return;
+    if(b.dataset.vrep==="live")M.rep="live";else delete M.rep;p0.measure=M;API.patch("/api/photos/"+pid,{measure:M}).catch(onWriteError);
+    v.querySelectorAll("[data-vrep]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));}));
+  {const am=$("vMine");if(am)am.addEventListener("click",()=>addMine(p0,C,pid,am));}
   document.addEventListener("keydown",escClose);
   {const vl=$("vLad");if(vl){vl.value=photoLadder(p,C.L)||"";vl.addEventListener("change",()=>{if(!vl.value)return;p.ladderId=vl.value;API.patch("/api/photos/"+pid,{ladderId:p.ladderId}).catch(onWriteError);C.render();});}}
   const mb=$("vMeasure");if(mb)mb.addEventListener("click",()=>openMeasure(pid,C));
   // downloads: fetched as soon as the photo opens, so a tap can hand them straight to the phone's share sheet
   {const base="RangeBook-target-"+(String(p.caption||(C.L&&C.L.title)||p.id||"photo").trim().replace(/[^A-Za-z0-9.-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"photo");
     const orig=fetch(p.url,{credentials:"same-origin"}).then(r=>{if(!r.ok)throw new Error();return r.blob();});
-    let marked=null;const mk=()=>marked||(marked=orig.then(b=>new Promise((res,rej)=>{const u=URL.createObjectURL(b),im=new Image();im.onload=()=>{
-      const W=im.naturalWidth,H=im.naturalHeight,cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d");x.drawImage(im,0,0);
-      const sv=overlaySvg(Object.assign({},p,{w:W,h:H})).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" ');
-      const si=new Image();si.onload=()=>{x.drawImage(si,0,0,W,H);URL.revokeObjectURL(u);cv.toBlob(bb=>bb?res(bb):rej(),"image/jpeg",.92);};si.onerror=rej;
-      si.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(sv);};im.onerror=rej;im.src=u;})));
+    // with marks: measured like by hand, each group's size, mean radius and offset, each shot's number and velocity (2.47.45)
+    let marked=null;const mk=()=>marked||(marked=orig.then(b=>markedJpeg(b,p,C)));
     if($("vDlM"))mk().catch(()=>{});
     const ext=t=>/png/.test(t)?".png":/webp/.test(t)?".webp":".jpg";
     const go=(btn,pr,suffix)=>{const was=btn.textContent;btn.disabled=true;btn.textContent="Getting it…";
@@ -11122,7 +11206,7 @@ function vZoom(v,p,C,pid){
     const dx=a[0][0]-g0.a[0][0],dy=a[0][1]-g0.a[0][1];if(Math.hypot(dx,dy)>6)g0.moved=true;if(g0.moved&&s>1){tx=g0.tx+dx;ty=g0.ty+dy;apply();}});
   const up=e=>{if(!P.has(e.pointerId))return;P.delete(e.pointerId);if(P.size){start();g0.moved=true;return;}if(!g0)return;const g=g0;g0=null;if(g.moved)return;
     if(s<1.8){zoomAt(3,e.clientX,e.clientY);return;}
-    const h=C.ro?null:hitShot(e.clientX,e.clientY);if(h){shotMenu(h);return;}zoomAt(1,e.clientX,e.clientY);};
+    const h=C.ro||v.dataset.mine?null:hitShot(e.clientX,e.clientY);if(h){shotMenu(h);return;}zoomAt(1,e.clientX,e.clientY);};
   wrap.addEventListener("pointerup",up);wrap.addEventListener("pointercancel",e=>{P.delete(e.pointerId);if(!P.size)g0=null;});
   wrap.addEventListener("wheel",e=>{e.preventDefault();zoomAt(s*Math.exp(-e.deltaY*.002),e.clientX,e.clientY);},{passive:false});
   // Safari's own pinch would zoom the whole page instead
@@ -12114,7 +12198,7 @@ window.RB_CANSHIFTTXT=canShiftTxt;
 let SG_CLEAN=(()=>{try{return localStorage.getItem("rb.sgClean")==="1";}catch(e){return false;}})();
 const SG_PICK={},SG_LOOSE={};
 function tripShotGroups(){
-  const out=[],ph=tripPhotos;
+  const out=[],ph=tripPhotos.filter(p=>!isTwin(p));
   ph.forEach((p,pi)=>{const M=normMeasure(p.measure);if(!M||!(M.distance>0))return;const k=M.distance/100*1.0472;
     const conv=grpMoa(p);
     M.groups.forEach((g,gi)=>{const n=(g.shots||[]).length;if(!n)return;let P=null;
@@ -12348,7 +12432,7 @@ function tripAllHtml(t){const G=(t.sum&&t.sum.g)||[];if(G.length<2)return "";
   const anyAim=G.some(g=>g.a);if(GRP_MODE==="aim"&&!anyAim)GRP_MODE="center";
   const R=grpSet(G,GRP_MODE);if(!R.n)return "";
   const ds=[...new Set(R.use.map(g=>g.d))],one=ds.length===1,k=one?ds[0]/100*1.0472:1,unit=one?U.u("in"):"MOA",kk=one&&U.metric?k*2.54:k;
-  const ph=tripPhotos.filter(p=>!String(p.id).startsWith("tmp-")).map(p=>p.id);
+  const ph=tripPhotos.filter(p=>!String(p.id).startsWith("tmp-")&&!isTwin(p)).map(p=>p.id);
   const lab=g=>{const [pid,gid]=g.k.split(":"),pi=ph.indexOf(pid),same=G.filter(x=>x.k.startsWith(pid+":")),gi=same.indexOf(g);return (pi>=0?"Photo "+(pi+1):"Photo")+(same.length>1?" · group "+(gi+1):"");};
   const col=g=>GRP_COL[G.indexOf(g)%GRP_COL.length];
   return '<h3>All groups together</h3>'+grpModeTabs(anyAim)+
@@ -12409,8 +12493,8 @@ function photoThumb(p){
 function renderTripPhotos(){
   const t=trips.find(x=>x.id===tripOpen);if(!t)return;
   const g=$("tripPhotoGrid");
-  if(g){g.innerHTML=tripPhotos.map(photoThumb).join("");g.querySelectorAll("[data-photo]").forEach(b=>b.addEventListener("click",()=>openViewer(b.dataset.photo,tripCtx(t))));}
-  const st=$("tripPhotoState");if(st)st.textContent=tripUploading?"Uploading "+tripUploading+" photo"+(tripUploading>1?"s":"")+"…":(tripPhotos.length?"":"No target photos yet.");
+  if(g){g.innerHTML=tripPhotos.filter(p=>!isTwin(p)).map(photoThumb).join("");g.querySelectorAll("[data-photo]").forEach(b=>b.addEventListener("click",()=>openViewer(b.dataset.photo,tripCtx(t))));}
+  const st=$("tripPhotoState");if(st)st.textContent=tripUploading?"Uploading "+tripUploading+" photo"+(tripUploading>1?"s":"")+"…":(tripPhotos.some(p=>!isTwin(p))?"":"No target photos yet.");
   tripSummary(t);
   ttSet("targets",tripTgtSum(t));renderColdPick(t);
   const b=$("tripBest");if(b){const s=t.sum;b.hidden=!(s&&s.best);if(s&&s.best)b.innerHTML='Best group this trip: <b>'+esc(tripBestTxt(s.best))+'</b>'+(s.groups>1?' · '+s.groups+' groups measured':'');}
@@ -12652,7 +12736,7 @@ function bindTtiles(root,t){root.querySelectorAll(".ttile>.sechead").forEach(b=>
 const ttSet=(k,h)=>{const e=$("tts_"+k);if(e)e.innerHTML=h;};
 const tripDetSum=t=>esc([t.date?fmtDate(t.date):"No date",String(t.place||"").trim(),num(t.distance)?U.s("yd",num(t.distance),0):""].filter(Boolean).join(" · "));
 const tripChronoSum=t=>{const all=(t.strings||[]).flatMap(x=>x.shots||[]),st=all.some(v=>num(v)>0)?stats({shots:all},null):null;return st?st.n+' shot'+(st.n===1?'':'s')+' · avg '+vS(st.avg)+' '+U.u("fps")+(st.n>1?' · SD '+sdS(st.sd)+' · ES '+esS(st.es):''):num(t.avgVel)>0?'avg '+vS(num(t.avgVel))+' '+U.u("fps")+(num(t.sd)!=null?' · SD '+sdS(num(t.sd)):'')+' (typed in)':'No shots yet';};
-const tripTgtSum=t=>{const s=t.sum||{},n=tripPhotos.length;return (n?n+' target'+(n===1?'':'s'):'No targets yet')+(s.best?' · best '+esc(tripBestTxt(s.best)):'');};
+const tripTgtSum=t=>{const s=t.sum||{},n=tripPhotos.filter(p=>!isTwin(p)).length;return (n?n+' target'+(n===1?'':'s'):'No targets yet')+(s.best?' · best '+esc(tripBestTxt(s.best)):'');};
 const tripColdSum=t=>{const c=t.cold;if(!c||(!c.x&&!c.y))return 'Not filled in';const f=(v,a,b)=>Math.abs(v)<.005?"":U.s("in",Math.abs(v),2)+" "+(v>0?a:b);return [f(c.y,"high","low"),f(c.x,"right","left")].filter(Boolean).join(", ")||'On the aim point';};
 function renderTrips(){
   const root=$("tripsRoot");if(!root)return;

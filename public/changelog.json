@@ -2,10 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.44",
+      "version": "2.47.45",
       "date": "2026-11-21",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Add your own photo of a Live target page: open the Live target photo and tap Add your own photo (under More on a phone). Range Book finds the page's four corner squares and puts every hole, aim point and velocity it recorded onto your photo, so a clear picture taken afterward is marked without marking anything. Both pictures are kept; Live target / Your photo switches between them, and Range report uses picks which one the report shows.",
+        "The range report shows each measured target on a page of its own, turned sideways: the photo with a bubble beside each group (shots, size and MOA, mean radius, how far from the aim point, and every shot's velocity in firing order, colored slower to faster), a numbered dot on each hole, and the Range Book banner. At the end, each target again, measured like by hand: its size on a line between the two farthest holes and each hole's number and velocity beside it. Download with marks on a target photo saves that same picture.",
         "A target photo with several groups is easier to read: the photo gets most of the screen, with one row per group beside it (on an iPad turned sideways or a computer) or under it (on a phone or an upright iPad), giving its size, MOA and average velocity. Tap a group and it stands out on the photo with a ring around its shots while the others fade, and its Shot by shot opens under the row; zoomed in, only its shots get numbers and velocities. The buttons stay at the bottom of the screen; on a phone, Download photo, Download with marks and Delete photo are under More.",
         "On a range trip, a chronograph velocity that isn't on any hole on your targets (a shot that missed the paper, or a hole you marked yourself because Live target didn't catch it) is marked Off target right in the Chronograph box, instead of in a line under Shot groups. Tap Off target to delete that velocity, or put it on a hole that has no velocity. The hole it most likely belongs to (the one right after the shot before it) is listed first. Undo works for both.",
         "A picture pasted or dragged in was added twice in 2.47.41 (a second paste handler on top of the one Range Book already had); now it is added once.",
