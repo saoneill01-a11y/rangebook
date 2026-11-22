@@ -505,6 +505,25 @@ details.oldrel>summary{cursor:pointer;font-weight:600}
 .viewer input{flex:1 1 180px;min-width:0;padding:9px 10px;border-radius:7px;border:1px solid #444;background:#1b1b1b;color:#eee;font:inherit}
 .viewer .btn{background:#222;color:#eee;border-color:#444}
 .viewer .btn.danger{color:#ff8a6b}
+.viewer .vmain{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:10px}
+.viewer .vmain>.imgwrap{flex:1 1 auto;min-height:0;min-width:0}
+.viewer .vside{flex:0 1 auto;max-height:42%;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;color:#eee;background:#151515;border:1px solid #2c2c2c;border-radius:10px}
+.viewer .vside>.vbar{padding:8px 12px}
+.viewer .vghead{margin:0;padding:8px 12px;color:#aaa;font-size:calc(13px*var(--fs));border-bottom:1px solid #2c2c2c;position:sticky;top:0;background:#151515;z-index:1}.viewer .vghead span{color:#777}
+.viewer .vgrow{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;margin:0;text-align:left;padding:10px 12px;background:none;border:0;border-bottom:1px solid #2c2c2c;border-radius:0;color:#eee;font:inherit;font-size:calc(14px*var(--fs));cursor:pointer}
+.viewer .vgrow:hover{background:#1e1e1e}.viewer .vgrow:focus-visible{outline:2px solid var(--gc);outline-offset:-2px}
+.viewer .vgrow .dot{width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 1.5px #000}
+.viewer .vgn{display:flex;flex-direction:column;min-width:0}.viewer .vgn span{color:#999;font-size:calc(12.5px*var(--fs))}
+.viewer .vgs{display:flex;flex-direction:column;align-items:flex-end;font-family:var(--mono);font-size:calc(13px*var(--fs));color:#ddd;white-space:nowrap}.viewer .vgs span{color:#999;font-size:calc(12px*var(--fs))}
+.viewer .vg.on .vgrow{background:#24231d;box-shadow:inset 4px 0 0 var(--gc)}
+.viewer .vgsbs{padding:2px 12px 12px;border-bottom:1px solid #2c2c2c;background:#1b1b17}.viewer .vgsbs .sbsd{margin-top:4px;border-top:0;padding-top:4px;color:var(--fg)}.viewer .vgsbs .sbsd .note{color:var(--muted)}
+.viewer svg.mover.dim>g[data-g]{opacity:.2}.viewer svg.mover.dim>g[data-g].on,.viewer svg.mover>g.vring{opacity:1}
+.viewer .vfoot{position:relative;flex:0 0 auto}
+.viewer .vmorebox{display:contents}.viewer .vmorebtn{display:none}.viewer .vdel{margin-left:auto}
+@media (min-width:760px) and (min-aspect-ratio:1/1){.viewer .vmain{flex-direction:row}.viewer .vside{flex:0 0 min(380px,36%);max-height:none}}
+@media (max-width:599px){.viewer .vmorebtn{display:inline-flex;margin-left:auto}.viewer .vmorebox{display:none}
+  .viewer .vfoot.open .vmorebox{display:flex;flex-direction:column;align-items:stretch;gap:6px;position:absolute;right:0;bottom:calc(100% + 6px);min-width:220px;background:#1b1b1b;border:1px solid #444;border-radius:10px;padding:8px;z-index:3;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+  .viewer .vmorebox .btn{margin-left:0;justify-content:flex-start}}
 .linkbtn{border:1px solid var(--line);background:var(--sunk);border-radius:6px;padding:4px 8px;font-family:var(--body);font-size:calc(12px*var(--fs));cursor:pointer;color:var(--accent);white-space:nowrap}
 /* tab sizing (kept last so it wins) */
 .tabs .tab{flex:1 1 auto;min-width:0;padding:9px 6px;white-space:nowrap}
@@ -9014,20 +9033,51 @@ function openViewer(pid,C){
   const v=document.createElement("div");v.className="viewer";v.id="viewer";v.setAttribute("role","dialog");v.setAttribute("aria-label","Target photo");
   const ro=C.ro;
   v.innerHTML='<div class="vbar"><button class="btn" id="vClose" type="button">← Back</button><input id="vCap" placeholder="Caption, e.g. 44.5 gr, 100 yd, 0.8 in group" value="'+esc(p.caption||"")+'" aria-label="Caption"'+(ro?' disabled':'')+'></div>'+
+    '<div class="vmain">'+
     '<div class="imgwrap">'+(overlaySvg(p)&&p.w&&p.h
       ?overlaySvg(p).replace('aria-hidden="true">','role="img" aria-label="Target photo with measured shots"><image href="'+esc(p.url)+'" x="0" y="0" width="'+p.w+'" height="'+p.h+'"/>')
       :'<img alt="Target photo" src="'+esc(p.url)+'">')+'</div>'+
-    (()=>{const M=normMeasure(p.measure);if(!M)return "";const L=C.L;const rows=M.groups.map((t,k)=>t.size!=null?'<div><span class="dot" style="background:'+TG_COLORS[k%TG_COLORS.length]+'"></span>'+esc(tgLine(t,M,tgLabel(t,k,L)))+'</div>':'').join("");return rows?'<div class="vres">'+rows+'</div>':"";})()+
-    // Live target with a chronograph (2.44.7): each hole's velocity, and whether speed moved the shots up or down
-    (()=>{const M=normMeasure(p.measure);if(!M)return "";return M.groups.filter(t=>Array.isArray(t.vel)&&Array.isArray(t.hin)&&t.vel.some(x=>x>0)).map((t,k)=>'<div class="vsbs">'+(M.groups.length>1?'<b>'+esc(tgLabel(t,M.groups.indexOf(t),C.L))+'</b>':'')+shotByShotHtml({holes:t.hin,shots:t.vel})+'</div>').join("");})()+
-    (C.kind==="load"&&C.L&&(C.L.ladders||[]).length&&!ro?'<div class="vbar"><label for="vLad" style="font-size:13px">Shot with</label><select id="vLad" class="fieldselect" style="width:auto;max-width:70%">'+
-      C.L.ladders.map(l=>'<option value="'+esc(l.id)+'">'+esc(ladderName(C.L,l)+(l.tested?" · "+fmtDate(l.tested):""))+'</option>').join("")+(photoLadder(p,C.L)?'':'<option value="" disabled>Pick a ladder</option>')+'</select></div>':'')+
-    (C.kind==="live"?(()=>{const d=liveDest();return d.any?'<div class="vbar"><label for="vMove" style="font-size:13px">Move to</label><select id="vMove" class="fieldselect" style="width:auto;max-width:75%">'+d.html+'</select></div><p class="vres" id="vMoveMsg"></p>':'<p class="vres">Make a range trip (Shooting) or a ladder (Reloading) to add this to one.</p>';})():'')+
-    '<div class="vbar">'+((!ro||p.measure)?'<button class="btn" id="vMeasure" type="button">'+(ro?'Show measurement':p.measure?'Edit measurement':'Measure groups')+'</button>':'')+
+    // beside the photo (or under it on a phone): one row per group; tap it to pick that group out on the photo and see its shots (2.47.44)
+    (()=>{const M=normMeasure(p.measure),L=C.L;let side="";
+      if(M&&M.groups.length){const many=M.groups.length>1;
+        side+='<p class="vghead">'+(many?M.groups.length+' groups':'1 group')+(M.distance?' at '+esc(U.s("yd",M.distance,0)):'')+(many?' <span>· tap one to see it on the photo</span>':'')+'</p>';
+        side+=M.groups.map((t,k)=>{const n=(t.shots||[]).length,c=TG_COLORS[k%TG_COLORS.length],V=Array.isArray(t.vel)?t.vel.filter(x=>num(x)>0).map(Number):[],avg=V.length?V.reduce((a2,b2)=>a2+b2,0)/V.length:null;
+          const sbs=Array.isArray(t.vel)&&Array.isArray(t.hin)&&V.length?shotByShotHtml({holes:t.hin,shots:t.vel}).replace('<details class="sbsd">','<details class="sbsd" open>'):"";
+          return '<div class="vg" data-vg="'+k+'" style="--gc:'+c+'"><button type="button" class="vgrow" aria-expanded="false"><span class="dot" style="background:'+c+'"></span>'+
+            '<span class="vgn"><b>'+esc(tgLabel(t,k,L))+'</b><span>'+n+' shot'+(n===1?'':'s')+'</span></span>'+
+            '<span class="vgs">'+(t.size!=null?'<b>'+esc(U.s("in",t.size,2))+'</b>'+(t.moa!=null?'<span>'+t.moa.toFixed(2)+' MOA</span>':''):'<span>not measured</span>')+(avg!=null?'<span>avg '+esc(U.s("fps",avg,0))+'</span>':'')+'</span></button>'+
+            (sbs?'<div class="vgsbs" hidden>'+sbs+'</div>':'')+'</div>';}).join("");}
+      if(C.kind==="load"&&C.L&&(C.L.ladders||[]).length&&!ro)side+='<div class="vbar"><label for="vLad" style="font-size:13px">Shot with</label><select id="vLad" class="fieldselect" style="width:auto;max-width:70%">'+
+        C.L.ladders.map(l=>'<option value="'+esc(l.id)+'">'+esc(ladderName(C.L,l)+(l.tested?" · "+fmtDate(l.tested):""))+'</option>').join("")+(photoLadder(p,C.L)?'':'<option value="" disabled>Pick a ladder</option>')+'</select></div>';
+      if(C.kind==="live"){const d=liveDest();side+=d.any?'<div class="vbar"><label for="vMove" style="font-size:13px">Move to</label><select id="vMove" class="fieldselect" style="width:auto;max-width:75%">'+d.html+'</select></div><p class="vres" id="vMoveMsg"></p>':'<p class="vres">Make a range trip (Shooting) or a ladder (Reloading) to add this to one.</p>';}
+      return side?'<div class="vside" role="region" aria-label="Groups on this target">'+side+'</div>':'';})()+
+    '</div>'+
+    // the buttons stay at the bottom; on a phone the downloads and Delete fold into More
+    '<div class="vbar vfoot">'+((!ro||p.measure)?'<button class="btn" id="vMeasure" type="button">'+(ro?'Show measurement':p.measure?'Edit measurement':'Measure groups')+'</button>':'')+
+    '<button class="btn vmorebtn" id="vMore" type="button" aria-expanded="false" aria-controls="vMoreBox">More ▾</button><div class="vmorebox" id="vMoreBox">'+
     '<button class="btn" id="vDl" type="button">Download photo</button>'+(overlaySvg(p)?'<button class="btn" id="vDlM" type="button">Download with marks</button>':'')+
-    (ro?'':'<button class="btn danger" id="vDel" type="button" style="margin-left:auto">Delete photo</button>')+'</div>';
+    (ro?'':'<button class="btn danger vdel" id="vDel" type="button">Delete photo</button>')+'</div></div>';
   document.body.appendChild(v);
   vZoom(v,p,C,pid);
+  {const mv=$("vMore"),ft=v.querySelector(".vfoot");
+    mv.addEventListener("click",e=>{e.stopPropagation();const o=!ft.classList.contains("open");ft.classList.toggle("open",o);mv.setAttribute("aria-expanded",String(o));});
+    v.addEventListener("click",e=>{if(ft.classList.contains("open")&&!e.target.closest(".vmorebox")&&e.target!==mv){ft.classList.remove("open");mv.setAttribute("aria-expanded","false");}});}
+  {const G=[...v.querySelectorAll(".vg")],svg=v.querySelector(".imgwrap svg.mover"),M=normMeasure(p.measure);
+    // a picked group: its marks stay bright with a dashed ring around its shots, the others go faint
+    const pick=k=>{v.dataset.vsel=k==null?"":String(k);VSEL=k==null?null:{pid,k};
+      G.forEach(g=>{const on=k!=null&&+g.dataset.vg===k;g.classList.toggle("on",on);g.querySelector(".vgrow").setAttribute("aria-expanded",String(on));const sb=g.querySelector(".vgsbs");if(sb)sb.hidden=!on;});
+      if(svg){svg.classList.toggle("dim",k!=null);svg.querySelectorAll("g[data-g]").forEach(g=>g.classList.toggle("on",+g.dataset.g===k));
+        const old=svg.querySelector(".vring");if(old)old.remove();
+        const t=k!=null&&M?M.groups[k]:null,Q=t?(t.shots||[]):[];
+        if(Q.length){const W=p.w||1000,H=p.h||1000,cx=Q.reduce((a,q)=>a+q[0]*W,0)/Q.length,cy=Q.reduce((a,q)=>a+q[1]*H,0)/Q.length,
+          rr=Math.max(W/40,...Q.map(q=>Math.hypot(q[0]*W-cx,q[1]*H-cy)))*1.25+W/120,sw=Math.max(1.5,W/400),c=TG_COLORS[k%TG_COLORS.length];
+          const g=document.createElementNS("http://www.w3.org/2000/svg","g");g.setAttribute("class","vring");g.setAttribute("data-g",String(k));
+          g.innerHTML='<circle cx="'+cx+'" cy="'+cy+'" r="'+rr+'" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="'+sw*3+'" stroke-dasharray="'+sw*6+' '+sw*4+'"/><circle cx="'+cx+'" cy="'+cy+'" r="'+rr+'" fill="none" stroke="'+c+'" stroke-width="'+sw*1.5+'" stroke-dasharray="'+sw*6+' '+sw*4+'"/><circle cx="'+cx+'" cy="'+cy+'" r="'+sw*2.2+'" fill="'+c+'" stroke="#000" stroke-width="'+sw*.6+'"/>';
+          svg.appendChild(g);}}
+      if(v._vzRedraw)v._vzRedraw();};
+    G.forEach(g=>g.querySelector(".vgrow").addEventListener("click",()=>{const k=+g.dataset.vg;pick(v.dataset.vsel===String(k)?null:k);if(v.dataset.vsel!=="")g.scrollIntoView({block:"nearest",behavior:"smooth"});}));
+    // the same group stays picked when the photo is drawn again (after editing a shot); a single group just shows its shots
+    if(VSEL&&VSEL.pid===pid&&G[VSEL.k])pick(VSEL.k);else if(G.length===1){const sb=G[0].querySelector(".vgsbs");if(sb)sb.hidden=false;G[0].querySelector(".vgrow").setAttribute("aria-expanded","true");VSEL=null;}else VSEL=null;}
   $("vClose").addEventListener("click",()=>closeViewer());
   $("vCap").addEventListener("input",e=>{
     const val=e.target.value;p.caption=val;clearTimeout(capTimer);
@@ -9594,9 +9644,10 @@ function overlaySvg(p){
   let ppi=null;if(M.a&&M.b&&M.scaleIn>0)ppi=Math.hypot((M.a[0]-M.b[0])*W,(M.a[1]-M.b[1])*H)/M.scaleIn;
   const r=ppi?Math.max(W/250,M.dia/2*ppi):W/120,sw=Math.max(1.5,W/400);
   let h='<svg class="mover" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
-  M.groups.forEach((t,k)=>{const c=TG_COLORS[k%TG_COLORS.length];
+  M.groups.forEach((t,k)=>{const c=TG_COLORS[k%TG_COLORS.length];h+='<g data-g="'+k+'">';
     (t.shots||[]).forEach(q=>{h+='<circle cx="'+q[0]*W+'" cy="'+q[1]*H+'" r="'+r+'" fill="none" stroke="#000" stroke-opacity=".6" stroke-width="'+sw*2+'"/><circle cx="'+q[0]*W+'" cy="'+q[1]*H+'" r="'+r+'" fill="none" stroke="'+c+'" stroke-width="'+sw+'"/>';});
     if(t.aim){const x=t.aim[0]*W,y=t.aim[1]*H,R=r*1.3;h+='<g stroke="'+c+'" stroke-width="'+sw+'" fill="none"><circle cx="'+x+'" cy="'+y+'" r="'+R+'"/><path d="M'+(x-R*1.7)+' '+y+'H'+(x+R*1.7)+'M'+x+' '+(y-R*1.7)+'V'+(y+R*1.7)+'"/></g>';}
+    h+='</g>';
   });
   return h+'</svg>';
 }
@@ -11003,6 +11054,7 @@ function liveForLadder(lid){
     }});
 }
 function escClose(e){if(e.key==="Escape")closeViewer();}
+let VSEL=null;   // the group picked on the open target photo: {pid, k}
 /* ----- the photo viewer (2.47.9): tap the picture to zoom in there, drag to look around, pinch to zoom, tap again to zoom
    out. Zoomed in, each shot shows its number (in the order fired) and its velocity; tap a shot to change its velocity or
    delete it, saved straight away. ----- */
@@ -11022,17 +11074,18 @@ function vZoom(v,p,C,pid){
     const B=base(),wr=wrap.getBoundingClientRect(),m=Math.min(B.w/W,B.h/H),ox=(B.w-W*m)/2,oy=(B.h-H*m)/2;
     lay.setAttribute("width",wr.width);lay.setAttribute("height",wr.height);lay.setAttribute("viewBox","0 0 "+wr.width+" "+wr.height);
     const S=(x,y)=>[B.x+tx+s*(ox+x*W*m)-wr.left,B.y+ty+s*(oy+y*H*m)-wr.top],hr=Math.max(7,rImg*m*s);
+    const sel=v.dataset.vsel!=null&&v.dataset.vsel!==""?+v.dataset.vsel:null,dim=k=>sel!=null&&k!==sel;
     const P=[];M.groups.forEach((t,k)=>(t.shots||[]).forEach((q,j)=>{const [x,y]=S(q[0],q[1]);const vv=Array.isArray(t.vel)&&t.vel[j]>0?Math.round(U.n("fps",t.vel[j],0)):null;
       P.push({x,y,k,j,c:TG_COLORS[k%TG_COLORS.length],v:vv});}));
     let h="";
     // aim points: a thin cross
-    M.groups.forEach((t,k)=>{if(!t.aim)return;const [x,y]=S(t.aim[0],t.aim[1]),c=TG_COLORS[k%TG_COLORS.length];h+='<path d="M'+(x-14)+' '+y+'h28M'+x+' '+(y-14)+'v28" stroke="#000" stroke-opacity=".55" stroke-width="4"/><path d="M'+(x-14)+' '+y+'h28M'+x+' '+(y-14)+'v28" stroke="'+c+'" stroke-width="2"/>';});
-    P.forEach(q=>{h+='<circle cx="'+q.x+'" cy="'+q.y+'" r="'+hr+'" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="4"/><circle cx="'+q.x+'" cy="'+q.y+'" r="'+hr+'" fill="none" stroke="'+q.c+'" stroke-width="2"/>';});
+    M.groups.forEach((t,k)=>{if(!t.aim||dim(k))return;const [x,y]=S(t.aim[0],t.aim[1]),c=TG_COLORS[k%TG_COLORS.length];h+='<path d="M'+(x-14)+' '+y+'h28M'+x+' '+(y-14)+'v28" stroke="#000" stroke-opacity=".55" stroke-width="4"/><path d="M'+(x-14)+' '+y+'h28M'+x+' '+(y-14)+'v28" stroke="'+c+'" stroke-width="2"/>';});
+    P.forEach(q=>{h+='<g'+(dim(q.k)?' opacity=".22"':'')+'><circle cx="'+q.x+'" cy="'+q.y+'" r="'+hr+'" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="4"/><circle cx="'+q.x+'" cy="'+q.y+'" r="'+hr+'" fill="none" stroke="'+q.c+'" stroke-width="2"/></g>';});
     // labels: the shot number in a small dot of the group's color, and the velocity beside it, each placed where it covers no
     // other hole or label (nearest free spot first), with a thin line back to the hole when it had to go further out
     const boxes=P.map(q=>({x:q.x-hr,y:q.y-hr,w:2*hr,h:2*hr})),hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;
     const dirs=[[1,-1],[-1,-1],[1,1],[-1,1],[1,0],[-1,0],[0,-1],[0,1]],FS=13;
-    P.forEach((q,i)=>{const t=String(q.j+1)+(q.v!=null?"  "+q.v:""),w=(q.v!=null?String(q.v).length*7.6+30:22),bh=20;let best=null;
+    P.forEach((q,i)=>{if(dim(q.k))return;const t=String(q.j+1)+(q.v!=null?"  "+q.v:""),w=(q.v!=null?String(q.v).length*7.6+30:22),bh=20;let best=null;
       for(const r0 of [4,12,22,34,50]){const rad=hr+r0;for(const [dx,dy] of dirs){const cx=q.x+dx*rad*.8,cy=q.y+dy*rad*.8,b={x:dx>0?cx:dx<0?cx-w:cx-w/2,y:dy>0?cy:dy<0?cy-bh:cy-bh/2,w,h:bh};
         if(b.x<2||b.y<2||b.x+w>wr.width-2||b.y+bh>wr.height-2)continue;if(boxes.some((o,j)=>j!==i&&hit(b,o)))continue;best={b,far:r0>12};break;}if(best)break;}
       if(!best)best={b:{x:q.x+hr+2,y:q.y-hr-bh,w,h:bh},far:false};boxes.push(best.b);const b=best.b;
@@ -11053,7 +11106,7 @@ function vZoom(v,p,C,pid){
   const mid=()=>{const B=base(),wr=wrap.getBoundingClientRect();return [(wr.left+wr.width/2-B.x-tx)/(B.w*s),(wr.top+wr.height/2-B.y-ty)/(B.h*s)];};
   if(VZ&&VZ.pid===pid){const z=VZ;requestAnimationFrame(()=>{const B=base(),wr=wrap.getBoundingClientRect();s=z.s;
     tx=wr.left+wr.width/2-B.x-s*z.f[0]*B.w;ty=wr.top+wr.height/2-B.y-s*z.f[1]*B.h;apply();});}
-  VZ=null;apply();
+  VZ=null;apply();v._vzRedraw=apply;
   window.addEventListener("resize",apply);new MutationObserver(()=>{if(!document.body.contains(v))window.removeEventListener("resize",apply);}).observe(document.body,{childList:true});
   // the shot under a tap, from where the picture sits on screen
   const hitShot=(cx,cy)=>{if(!M||!isSvg)return null;const B=base(),m=Math.min(B.w/W,B.h/H),X=((cx-B.x-tx)/s-(B.w-W*m)/2)/m,Y=((cy-B.y-ty)/s-(B.h-H*m)/2)/m;
