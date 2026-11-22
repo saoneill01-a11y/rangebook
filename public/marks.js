@@ -255,5 +255,7 @@
     const [a, b, c, d, e, f, g, h, i] = m, A = e * i - f * h, B = -(d * i - f * g), C = d * h - e * g, D = a * A + b * B + c * C;
     if (!D) return null; return [A / D, -(b * i - c * h) / D, (b * f - c * e) / D, B / D, (a * i - c * g) / D, -(a * f - c * d) / D, C / D, -(a * h - b * g) / D, (a * e - b * d) / D];
   }
-  return { COLORS, applyH, inv3, mapMeasure, heat, prep, pageCrop, report, photo, toSvg };
+  // the Range Book banner on its own (the top of the range report's first page) (2.47.47)
+  function banner(o) { const it = [], w = headW(o.head, 104, o.tw) + 8; header(it, w / 2, 4, w, 104, o.head); return { W: w, H: 112, items: it }; }
+  return { COLORS, applyH, inv3, mapMeasure, heat, prep, pageCrop, report, photo, banner, toSvg };
 });

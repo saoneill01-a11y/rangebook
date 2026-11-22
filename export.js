@@ -741,7 +741,11 @@ function tripReportPdf(d, t, photos, readPhoto) {
   const rifle = calcRifle(T, d);
   const head = (t.date ? fmtDate(t.date) : "Range trip") + (t.place ? " · " + t.place : "");
   pdf.title = "Range trip - " + head;
-  pdf.text(pdf.M, pdf.y + 10, "RANGE BOOK · RANGE TRIP", { size: 9, bold: true, color: ACC });
+  // the Range Book banner across the top, the same as on the target pages (2.47.47)
+  const sub = [head, numv(t.distance) != null ? cs("yd", t.distance, 0) : "", rifle, T.name || ""].filter(Boolean).join(" · ");
+  { const B = RBM.banner({ tw: (s2, size, bold) => textWidth(s2, size, bold), head: { title: "Range Book", sub } }), k = Math.min(0.56, (pdf.W - 2 * pdf.M) / B.W);
+    pdf.draw(B, (pdf.W - B.W * k) / 2, pdf.y - 22, k, null, reportIcon()); pdf.y += B.H * k - 10; }
+  pdf.text(pdf.M, pdf.y + 10, "RANGE TRIP", { size: 9, bold: true, color: ACC });
   pdf.y += 36; pdf.text(pdf.M, pdf.y, head, { size: 20, bold: true });
   pdf.y += 16; pdf.text(pdf.M, pdf.y, [T.name || "", T.cart || "", rifle].filter(Boolean).join(" · "), { size: 10, color: MUTED });
   pdf.y += 12; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y, ACC, 1.5); pdf.y += 4;
@@ -771,7 +775,7 @@ function tripReportPdf(d, t, photos, readPhoto) {
     for (const { x, i, s } of S) { pdf.y += 4; pdf.ensure(24); pdf.y += 10; pdf.text(pdf.M, pdf.y, x.name || "String " + (i + 1), { size: 9, bold: true }); pdf.para(s.shots.map((q, j) => `${j + 1}: ${cv("fps", q, 0)}`).join(" · "), { size: 9, indent: 10, gap: 1.4 }); }
   }
   const shown = photos.filter((p) => !(p.measure && p.measure.of));
-  if (shown.length) reportTargets(pdf, photos, readPhoto, ACC, MUTED, [head, numv(t.distance) != null ? cs("yd", t.distance, 0) : "", rifle, T.name || ""].filter(Boolean).join(" · "));
+  if (shown.length) reportTargets(pdf, photos, readPhoto, ACC, MUTED, sub);
   else { pdf.y += 16; pdf.para("No target photos on this trip.", { size: 9, color: MUTED }); }
   return pdf.build((p, ops, n, total) => {
     p.cur = ops;

@@ -2,10 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.46",
+      "version": "2.47.48",
       "date": "2026-11-21",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "The app icon now sits beside Range Book at the top of every page.",
+        "The range trip report starts with the Range Book banner (the icon, Range Book, and the trip's date, place, distance, gun and profile), the same as on its target pages.",
         "Fixed: a range trip report (or a target's PDF) could come back as an older copy when Range Book is behind Cloudflare, which keeps any file ending in .pdf unless told not to. Reports are now never kept by the browser or Cloudflare, so you always get the latest, and no saved copy can be handed to anyone else.",
         "On a range trip, the Connect Athlon, Live target and + Photo buttons run across the whole page and stay at the top as you scroll, with a new Report button beside them for the range report (it was Print trip report at the bottom).",
         "Add your own photo of a Live target page: open the Live target photo and tap Add your own photo (under More on a phone). Range Book finds the page's four corner squares and puts every hole, aim point and velocity it recorded onto your photo, so a clear picture taken afterward is marked without marking anything. Both pictures are kept; Live target / Your photo switches between them, and Range report uses picks which one the report shows.",
