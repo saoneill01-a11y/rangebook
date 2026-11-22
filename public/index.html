@@ -1060,7 +1060,7 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .sechead{display:flex;align-items:center;gap:6px 12px;width:100%;border:0;background:none;padding:0;cursor:pointer;text-align:left;font:inherit;color:inherit;flex-wrap:wrap}
 .sechead h2{flex:none}
 .secsum{order:3;flex:1 1 100%;min-width:0;font-size:calc(13px*var(--fs));color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.sechead[aria-expanded="true"] .secsum{display:none}
+.sechead[aria-expanded="true"] .secsum{display:none}.ttile .secsum.keep,.sechead[aria-expanded="true"] .secsum.keep{display:block;-webkit-line-clamp:unset;color:var(--fg);margin-top:4px}.secsum.keep .tzlab{display:block;font-size:calc(13px*var(--fs));color:var(--muted)}.secsum.keep .tzbig{display:block;margin:2px 0 0}
 .chev{margin-left:auto;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-right:4px}
 .sechead[aria-expanded="true"] .chev{transform:rotate(-135deg)}
 .secbody{display:flex;flex-direction:column;gap:12px}
@@ -1308,7 +1308,7 @@ body.tripspage #trajBack{display:none!important}
 .sgtbl td{padding:4px 6px;border-top:1px solid var(--line)}.sgtbl tr[data-sgrow]{cursor:pointer}.sgtbl tr[data-sgrow]:hover td,.sgtbl tr.on td{background:var(--sunk)}.sgtbl tr.on td{font-weight:700}.sgtbl tr[data-sgrow]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}.sgtbl td:first-child{text-align:left}.sgtbl .r{text-align:right}.sgtbl .num{font-variant-numeric:tabular-nums}
 .sgv i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px}
 @media(max-width:560px){.sgbody{grid-template-columns:minmax(0,1fr)}}
-.tzcard{margin:14px 0 4px}.tzcard:empty{display:none}.tzbig{font-size:calc(28px*var(--fs));font-weight:700;line-height:1.1;margin:2px 0 4px}.tzpill{display:inline-block;font-size:calc(12px*var(--fs));padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);vertical-align:middle;margin-left:8px;font-weight:600}.tzsvg{width:100%;max-width:440px;height:auto;display:block;margin:8px 0}.tzrows{max-width:440px;margin:6px 0 10px}.tzrow{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid var(--line)}.tzrow:last-child{border-bottom:0;font-weight:700}.tzsure{max-width:440px;border-radius:8px;padding:7px 10px;margin:6px 0 10px;background:var(--sunk)}.tzsure.good{background:var(--accent-soft)}.tzbtns{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
+.tzcard{margin:14px 0 4px}.tzcard:empty{display:none}.tzbig{font-size:calc(28px*var(--fs));font-weight:700;line-height:1.15;margin:2px 0 4px}.tzpill{display:inline-block;font-size:calc(12px*var(--fs));padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);vertical-align:middle;margin-left:8px;font-weight:600}.tzsvg{width:100%;max-width:440px;height:auto;display:block;margin:8px 0}.tzrows{max-width:440px;margin:6px 0 10px}.tzrow{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid var(--line)}.tzrow:last-child{border-bottom:0;font-weight:700}.tzsure{max-width:440px;border-radius:8px;padding:7px 10px;margin:6px 0 10px;background:var(--sunk)}.tzsure.good{background:var(--accent-soft)}.tzbtns{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
 .grpall{margin:10px 0 4px}.grpall .segtabs,#secAllGroups .segtabs{max-width:440px}.grpall:empty{display:none}.grpwrap{margin:10px 0 8px}.grpsvg{width:220px;height:220px;display:block}
 .grpkey{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:calc(12.5px*var(--fs));color:var(--muted);margin:2px 0 6px}.grpk{display:inline-flex;align-items:center;gap:6px}.grpk i{width:10px;height:10px;border-radius:50%;flex:none}
 #secAllGroups .segtabs{margin:0 0 8px}
@@ -1900,7 +1900,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <h3>Shot groups</h3>
       <p>On a range trip, <b>Targets</b> has a <b>Shot groups</b> card: a small picture of each group; tap one to open it. Each hole is colored slow (blue) to fast (red) against that group's average, with its velocity beside it, and under it are the group size, average, SD and ES, and how to dial to center the group. <b>Chart</b> / <b>Photo</b> switches a Live target group to the real paper, the <b>Zoom</b> slider zooms in, and <b>Hide circle and center</b> clears those marks. Tap a shot for <b>Delete shot</b>, or drag a Live target shot to where it really hit. A velocity that isn't on any hole (a shot off the paper, or a hole you marked yourself) is marked <b>Off target</b> on the Chronograph card: tap <b>Off target</b> to delete it, or put it on a hole that has no velocity (the likely one is listed first).</p>
       <h3>True zero</h3>
-      <p>Under <b>Shot groups</b>, a range trip's <b>True zero</b> card works out where your scope is really zeroed from how high or low the groups landed. It uses each group's center against its aim point (mark the aim point when you measure), only up and down, with this trip's temperature and the trip's Shooting profile. It gives the far zero in big numbers and the near one under it, with a picture of the bullet's path for the profile's zero and the real one, each group's offset, and <b>How sure</b>: how close it can pin the zero down from how many shots you fired and how well the groups agree. If the groups are on the aim point as closely as your shots can tell, it says your zero looks right instead.</p>
+      <p>A range trip's <b>True zero</b> tile, under <b>Targets</b>, works out where your scope is really zeroed from how high or low the groups landed. It uses each group's center against its aim point (mark the aim point when you measure), only up and down, with this trip's temperature and the trip's Shooting profile. The far zero shows in big numbers at the top of the tile, even when it's folded; open it for the near zero, with a picture of the bullet's path for the profile's zero and the real one, each group's offset, and <b>How sure</b>: how close it can pin the zero down from how many shots you fired and how well the groups agree. If the groups are on the aim point as closely as your shots can tell, it says your zero looks right instead.</p>
       <p><b>Use … as this profile's zero</b> puts the new zero into the profile, so its dope card and range table match where the rifle really shoots (tap <b>Undo</b> to put it back). Or leave the profile alone and move the scope the clicks it shows. It assumes you held or dialed what the profile's dope says for each distance; at long range a high or low group can also mean the velocity is off, which <b>True up velocity</b> on the profile handles.</p>
       <h3>All your groups</h3>
       <p>Once a range trip has two or more measured groups, its <b>Targets</b> section shows <b>All groups together</b>: every group from that day on one target, each in its own color, with how big they are all together, the mean radius (the average distance of the shots from their center) and where the center is. <b>Around the aim point</b> lines them up on the aim point you marked, so you see where the gun really hits, zero shifts included; <b>Around each center</b> moves each group onto its own center, so you see only how tight it shoots. Groups at one distance are in inches (cm); mixed distances are in MOA. A group without an aim point is left out around the aim point, and the card says so.</p>
@@ -12503,9 +12503,11 @@ function tzAgree(R){const G=R.use;if(G.length<2)return true;const c=G.map(g=>g.p
   const sdc=Math.sqrt(c.reduce((a,v)=>a+(v-m)*(v-m),0)/(c.length-1));
   const w=G.map(g=>{const cx=g.p.reduce((a,q)=>a+q[0],0)/g.p.length,cy=g.p.reduce((a,q)=>a+q[1],0)/g.p.length;return g.p.reduce((a,q)=>a+Math.hypot(q[0]-cx,q[1]-cy),0)/g.p.length/1.2533;});
   const sig=w.reduce((a,v)=>a+v,0)/w.length,nn=G.reduce((a,g)=>a+g.p.length,0)/G.length;return sdc<=2*sig/Math.sqrt(nn);}
-function tripZeroHtml(t){const T=trueZero(t);if(!T)return "";
-  if(T.noAim)return '<h3>True zero</h3><p class="note">Mark the aim point when you measure a group, and this shows where your scope is really zeroed.</p>';
-  if(T.err)return '<h3>True zero</h3><p class="note">'+esc(T.err)+'</p>';
+// the tile's always-showing line (sum) and what opens under it (body); null when the trip has no measured groups or profile
+function tripZeroHtml(t){const T=trueZero(t);if(!T)return null;
+  if(T.noAim)return {sum:'Mark the aim point when you measure a group to see it',body:'<p class="note">Mark the aim point when you measure a group, and this shows where your scope is really zeroed.</p>'};
+  if(T.err)return {sum:esc(T.err),body:'<p class="note">'+esc(T.err)+'</p>'};
+  const big=(lab,txt,pill)=>'<span class="tzlab">'+lab+'</span><span class="tzbig">'+txt+(pill?'<span class="tzpill">'+pill+'</span>':'')+'</span>';let sum="";
   const {B,R,z0,far,near,one,ds}=T,X=one?ds[0]:100,kIn=X/100*1.0472;
   const ud=v=>Math.abs(v)<0.005?"on the aim point":esc(U.s("in",Math.abs(v),2))+" "+(v>0?"high":"low");
   const udM=v=>Math.abs(v)<0.005?"on the aim point":Math.abs(v).toFixed(2)+" MOA "+(v>0?"high":"low");
@@ -12515,16 +12517,16 @@ function tripZeroHtml(t){const T=trueZero(t);if(!T)return "";
   const rows=R.use.map(g=>'<div class="tzrow"><span>'+esc(lab(g))+' <span class="note">· '+g.p.length+' shot'+(g.p.length===1?'':'s')+(one?'':' at '+esc(U.s("yd",g.d,0)))+'</span></span><span class="num">'+(one?ud(gy(g)*kIn):udM(gy(g)))+'</span></div>').join("")+
     '<div class="tzrow"><span>All together</span><span class="num">'+(one?ud(R.cy*kIn):udM(R.cy))+'</span></div>';
   const done=!!(t.tz&&t.tz.to>0&&T.from);
-  let h='<h3>True zero</h3>';
-  if(far==null){
+  let h='';
+  if(far==null){sum='Groups too low for the bullet to reach the line of sight';
     h+='<p class="tline">These groups landed '+(one?ud(R.cy*kIn):udM(R.cy))+'. That\'s too low for the bullet ever to come up to the line of sight, so there\'s no zero distance to give: the scope needs to come up.</p>';
   }else if(!T.sure&&!done){
-    h+='<p class="note" style="margin-top:0">Where your scope is really zeroed</p><div class="tzbig">'+esc(U.s("yd",z0,0))+' looks right</div>'+
-      '<p class="tline">Your groups average '+(one?ud(R.cy*kIn):udM(R.cy))+(one?' at '+esc(U.s("yd",X,0)):'')+', which is within what '+R.n+' shot'+(R.n===1?'':'s')+' can tell apart from dead on. Shoot more groups to narrow it down.</p>';
+    sum=big("Where your scope is really zeroed",esc(U.s("yd",z0,0))+" looks right");
+    h+='<p class="tline">Your groups average '+(one?ud(R.cy*kIn):udM(R.cy))+(one?' at '+esc(U.s("yd",X,0)):'')+', which is within what '+R.n+' shot'+(R.n===1?'':'s')+' can tell apart from dead on. Shoot more groups to narrow it down.</p>';
   }else{
     const zf=Math.round(far);
-    h+='<p class="note" style="margin-top:0">'+(done?'Worked out from this trip':'Your scope is really zeroed at')+'</p><div class="tzbig">about '+esc(U.s("yd",zf,0))+'<span class="tzpill">'+(done?'now the profile\'s zero':'profile says '+esc(U.s("yd",T.from||z0,0)))+'</span></div>'+
-      '<p class="tline">'+(near!=null?'Near zero about '+esc(U.s("yd",Math.round(near),0))+'. ':'')+'From '+R.use.length+' group'+(R.use.length===1?'':'s')+' ('+R.n+' shot'+(R.n===1?'':'s')+')'+(one?' at '+esc(U.s("yd",X,0)):'')+' that landed '+(one?ud(R.cy*kIn):udM(R.cy))+' of the aim point on average.</p>';
+    sum=big(done?"Worked out from this trip":"Your scope is really zeroed at","about "+esc(U.s("yd",zf,0)),done?"now the profile's zero":"profile says "+esc(U.s("yd",T.from||z0,0)));
+    h+=      '<p class="tline">'+(near!=null?'Near zero about '+esc(U.s("yd",Math.round(near),0))+'. ':'')+'From '+R.use.length+' group'+(R.use.length===1?'':'s')+' ('+R.n+' shot'+(R.n===1?'':'s')+')'+(one?' at '+esc(U.s("yd",X,0)):'')+' that landed '+(one?ud(R.cy*kIn):udM(R.cy))+' of the aim point on average.</p>';
     h+=tzChart(T,X);
   }
   h+='<div class="tzrows">'+rows+'</div>';
@@ -12535,7 +12537,7 @@ function tripZeroHtml(t){const T=trueZero(t);if(!T)return "";
       '<p class="tline">Or keep '+esc(U.s("yd",z0,0))+': move the scope <b>'+esc(dial.big.toLowerCase())+'</b>. <span class="note">'+esc(dial.small.split(" · ")[0].replace(/, (left|right) [0-9.]+$/,""))+'</span></p>';}
   if(done)h+='<p class="tline">This profile\'s zero was set to '+esc(U.s("yd",Math.round(t.tz.to),0))+' from this trip (it was '+esc(U.s("yd",T.from,0))+'). Its dope card and range table use the new zero.</p>';
   h+='<p class="note">Only up and down counts; left and right is wind or the scope\'s windage. This assumes you held or dialed what this profile\'s dope says for each distance. At long range, a group that\'s high or low can also mean the velocity is off: see <b>True up velocity</b> on the profile.</p>';
-  return h;}
+  return {sum,body:h};}
 // the bullet's path: the profile's zero (dashed) and the real one, with the line of sight and where the groups landed
 function tzChart(T,X){const {B,z0,far,near}=T,W=440,H=150,pl=36,pr=10,pt=12,pb=26,xmax=Math.min(B.last,Math.max(far*1.35,(T.from||z0)*1.35,X*1.25,150));
   const real=x=>B.at(x).path+x*T.ang*1,prof=x=>B.at(x).path;const xs=[];for(let i=0;i<=60;i++)xs.push(Math.max(1,xmax*i/60));
@@ -12552,7 +12554,8 @@ function tzChart(T,X){const {B,z0,far,near}=T,W=440,H=150,pl=36,pr=10,pt=12,pb=2
     '<line x1="'+(W-150)+'" x2="'+(W-134)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" stroke="var(--accent)" stroke-width="2.2"/><text x="'+(W-130)+'" y="'+(H-8)+'" font-size="11" fill="var(--fg)">real</text>'+
     '<line x1="'+(W-96)+'" x2="'+(W-80)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="'+(W-76)+'" y="'+(H-8)+'" font-size="11" fill="var(--fg)">profile</text>';
   return g+'</svg>';}
-function drawTripZero(t){const box=$("tripZero");if(!box)return;let h="";try{h=tripZeroHtml(t);}catch(e){console.warn("true zero",e);h="";}box.innerHTML=h;box.hidden=!h;
+function drawTripZero(t){const box=$("tripZero");if(!box)return;let r=null;try{r=tripZeroHtml(t);}catch(e){console.warn("true zero",e);r=null;}
+  const tile=box.closest(".ttile");if(tile)tile.hidden=!r;box.innerHTML=r?r.body:"";ttSet("zero",r?r.sum:"");
   const u=$("tzUse");if(u)u.addEventListener("click",()=>{const T=trueZero(t);if(!T||T.far==null)return;const before=t.tz?Object.assign({},t.tz):null;
     const was=RB_TRAJ.setZero(t.trajId,T.far);if(!was)return;t.tz={from:T.from||T.z0,to:Math.round(T.far)};t.updated=Date.now();queueTrips();drawTripZero(t);
     if(window.RB_UNDO)RB_UNDO("Set the zero to "+U.s("yd",Math.round(T.far),0),()=>{RB_TRAJ.putZero(t.trajId,was);if(before)t.tz=before;else delete t.tz;t.updated=Date.now();queueTrips();drawTripZero(t);});});}
@@ -12837,8 +12840,8 @@ function tripAirUse(t){const a=t?tripAirOf(t):null;if(window.RB_TRAJ&&RB_TRAJ.tr
 function setTripsPage(on){const d=$("trajDetail");if(d)d.classList.toggle("tripspage",on);document.body.classList.toggle("tripspage",on);}
 // the folding tiles on a trip: remembered on this device, except Trip details, which folds by itself once the date and place are in
 const TFOLD=(()=>{try{return JSON.parse(localStorage.getItem("rb.tripFold")||"{}")||{};}catch(e){return {};}})(),TDET={};
-function ttile(k,t,title,sum,body){const o=k==="details"?(t.id in TDET?TDET[t.id]:!(t.date&&String(t.place||"").trim())):!TFOLD[k];
-  return '<section class="card ttile" data-tt="'+k+'"><button class="sechead" type="button" aria-expanded="'+o+'" aria-controls="ttb_'+k+'"><h2>'+title+'</h2><span class="secsum" id="tts_'+k+'">'+sum+'</span><span class="chev" aria-hidden="true"></span></button><div class="secbody" id="ttb_'+k+'"'+(o?'':' hidden')+'>'+body+'</div></section>';}
+function ttile(k,t,title,sum,body,keep){const o=k==="details"?(t.id in TDET?TDET[t.id]:!(t.date&&String(t.place||"").trim())):!TFOLD[k];
+  return '<section class="card ttile" data-tt="'+k+'"><button class="sechead" type="button" aria-expanded="'+o+'" aria-controls="ttb_'+k+'"><h2>'+title+'</h2><span class="secsum'+(keep?' keep':'')+'" id="tts_'+k+'">'+sum+'</span><span class="chev" aria-hidden="true"></span></button><div class="secbody" id="ttb_'+k+'"'+(o?'':' hidden')+'>'+body+'</div></section>';}
 function bindTtiles(root,t){root.querySelectorAll(".ttile>.sechead").forEach(b=>b.addEventListener("click",()=>{const k=b.parentNode.dataset.tt,body=b.nextElementSibling,o=body.hidden;body.hidden=!o;b.setAttribute("aria-expanded",String(o));
   if(k==="details")TDET[t.id]=o;else{if(o)delete TFOLD[k];else TFOLD[k]=1;try{localStorage.setItem("rb.tripFold",JSON.stringify(TFOLD));}catch(e){}}
   if(o)window.dispatchEvent(new Event("resize"));}));}
@@ -12922,7 +12925,7 @@ function renderTrips(){
   const chronoBody='<div id="tripChrono"></div><div class="row" id="tripMvRow"></div>'+
     '<details class="tmore"><summary>More</summary><div class="row"><label class="btn" for="tripChronoIn" style="cursor:pointer">Import chronograph file</label><input id="tripChronoIn" type="file" multiple accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button class="btn" id="tripShotAdd" type="button">+ Type in shots</button></div></details>';
   const tgtBody='<p class="tripbest" id="tripBest" hidden></p><div class="photos" id="tripPhotoGrid"></div><span class="savestate" id="tripPhotoState"></span>'+
-    '<div class="sgwrap" id="tripSG" hidden></div><div class="grpall" id="tripAll" hidden></div><div class="tzcard" id="tripZero" hidden></div>'+
+    '<div class="sgwrap" id="tripSG" hidden></div><div class="grpall" id="tripAll" hidden></div>'+
     '<p class="note">Tap a target to measure its groups, the same way as in Reloading. Printed Range Book targets are read by themselves.</p>'+
     '<div class="row"><button class="btn" id="tripTgtGo" type="button">Print a target</button></div>';
   let hd;{const F=TRIP_FROM||{k:"prof"},bl=F.k==="log"?"Range trips":F.k==="home"?"Home":F.k==="list"?"Range trips":(T.name||"Profile");
@@ -12935,11 +12938,12 @@ function renderTrips(){
       ttile("details",t,"Trip details",tripDetSum(t),h)+
       ttile("chrono",t,"Chronograph",tripChronoSum(t),chronoBody)+
       ttile("targets",t,"Targets",tripTgtSum(t),tgtBody)+
+      ttile("zero",t,"True zero","",'<div class="tzcard" id="tripZero"></div>',true)+
       ttile("cold",t,"Cold-bore shot",tripColdSum(t),'<div id="coldPick"></div><details class="tmore"><summary>Type it in yourself</summary>'+coldHtml(t).replace(/^<h3>Cold-bore shot<\/h3><p class="note"[^>]*>.*?<\/p>/,"")+'</details>')+
       '<div class="row endrow"><span class="savestate" id="tripState"></span>'+'<button class="btn danger" id="tripDel" type="button">Delete this trip</button></div>'+
     '</div><div class="tcol" id="tripDopeSlot"></div></div>';
   root.innerHTML=h;
-  bindCrumbs();bindTtiles(root,t);if(!T.sg)dopeTo($("tripDopeSlot"));else{const ds=$("tripDopeSlot");if(ds)ds.hidden=true;}tripAirUse(t);
+  bindCrumbs();bindTtiles(root,t);drawTripZero(t);if(!T.sg)dopeTo($("tripDopeSlot"));else{const ds=$("tripDopeSlot");if(ds)ds.hidden=true;}tripAirUse(t);
   let airT=null;
   root.oninput=e=>{const id=e.target&&e.target.id;if(id==="tp_temp"||id==="tp_windMph"){clearTimeout(airT);airT=setTimeout(()=>{if(tripOpen===t.id)tripAirUse(t);},400);}
     if(id==="tp_date"||id==="tp_place"||id==="tp_distance")ttSet("details",tripDetSum(t));else if(/^cb_/.test(id))setTimeout(()=>ttSet("cold",tripColdSum(t)));};
