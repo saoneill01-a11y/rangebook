@@ -14509,6 +14509,8 @@ function runTour(STEPS){
   function show(){
     const S=STEPS[i];
     if(S.go&&!S._went){S._went=true;try{S.go();}catch(e){}card.style.visibility="hidden";setTimeout(()=>{card.style.visibility="";show();},380);return;}
+    // a step whose part isn't on this screen (a profile with no suppressor, say) is skipped, the way the tour was going (2.47.49)
+    if(S.el&&!target(S)){const k=i+dir;if(k>0&&k<STEPS.length){S._went=false;i=k;show();return;}}
     STEPS.forEach(x=>{if(x!==S)x._went=false;});
     $("tourT").textContent=S.t;$("tourB").innerHTML=S.b;$("tourN").textContent=(i+1)+" of "+STEPS.length;
     $("tourDots").innerHTML=STEPS.map((x,k)=>'<i'+(k===i?' class="on"':'')+'></i>').join("");
@@ -14522,9 +14524,10 @@ function runTour(STEPS){
   // the page can still be drawing (charts, photos) and move things: keep following
   const follow=setInterval(()=>{bring();place();},500);
   function end(){clearInterval(follow);window.removeEventListener("resize",place);window.removeEventListener("scroll",place,true);document.removeEventListener("keydown",key,true);ov.remove();}
-  const key=e=>{if(e.key==="Escape"){e.preventDefault();end();}else if(e.key==="ArrowRight"){e.preventDefault();$("tourNext").click();}else if(e.key==="ArrowLeft"&&i>0){e.preventDefault();i--;show();}};
-  $("tourNext").addEventListener("click",()=>{if(i>=STEPS.length-1)return end();i++;show();});
-  $("tourBack").addEventListener("click",()=>{if(i>0){i--;show();}});
+  const key=e=>{if(e.key==="Escape"){e.preventDefault();end();}else if(e.key==="ArrowRight"){e.preventDefault();$("tourNext").click();}else if(e.key==="ArrowLeft"&&i>0){e.preventDefault();dir=-1;i--;show();}};
+  let dir=1;
+  $("tourNext").addEventListener("click",()=>{if(i>=STEPS.length-1)return end();dir=1;i++;show();});
+  $("tourBack").addEventListener("click",()=>{if(i>0){dir=-1;i--;show();}});
   $("tourSkip").addEventListener("click",end);
   window.addEventListener("resize",place);window.addEventListener("scroll",place,true);document.addEventListener("keydown",key,true);
   show();
@@ -14541,7 +14544,7 @@ function startTabTour(tab){
   let STEPS=[];
   if(tab==="home")STEPS=[
     {t:"Home",b:"Your range trips, loads and guns at a glance, and the quickest way to start a range trip."},
-    {el:()=>q("#hNewTrip"),t:"Start a range trip",b:"Pick the gun, then the profile or ammo (or factory ammo from the catalog), and it opens a range trip with today's weather. If you're at one of your saved ranges, it fills in where you are. The buttons next to it start a new reloading load and open the calculator, the Range trips and Tools."},
+    {el:()=>q("#hNewTrip"),t:"Start a range trip",b:"Pick the gun, then the profile or ammo (or factory ammo from the catalog), and it opens a range trip with today's weather. If you're at one of your saved ranges, it fills in where you are. <b>+ New load</b> next to it starts a new reloading load."},
     {el:()=>q('#panel-home [aria-label="Needs attention"]'),t:"Needs attention",b:"Components running low, a barrel near the end of its life, a gun due for cleaning. Tap one to go take care of it."},
     {el:()=>q('#panel-home [aria-label="Recent range trips"]'),t:"Recent range trips",b:"Your latest trips with their best groups. Tap one to open it, or <b>See all range trips</b>."},
     {el:()=>q('#panel-home [aria-label="Recent reloading"]'),t:"Recent reloading",b:"The reloading loads you've worked on lately. Tap one to pick up where you left off."},
@@ -14556,7 +14559,7 @@ function startTabTour(tab){
       {el:()=>q("#newBtn"),t:"Your profiles",b:"Each profile is a gun and the ammo you shoot in it, with its zero and conditions. <b>+ New profile</b> starts a blank one; pick <b>Short</b>, <b>Medium</b> or <b>Long</b> on its chart for 200, 400 or 1,000 yd. Tap a profile in the list to open it.",go:list},
       {el:()=>q('#trajSeg [data-area="log"]'),t:"Range trips",b:"Every day you've shot, in one place: range trips from every profile and the days you shot groups for a Reloading load, with your rounds and best groups.",go:list},
       ...(has?[card("#secTInputs","secTInputs",null,open),card("#secTWx","secTWx",null,open),card("#secTChart","secTChart",null,open),card("#secTTable","secTTable",null,open),
-        {el:()=>q("#effBtn"),t:"Effective range",b:"Turn it on and set a minimum speed or energy (the maker's lowest expansion speed is offered when Range Book knows the ammo); the pencil next to it changes them later. The chart, range table, dope card and Field mode mark where the bullet drops below it.",go:open},
+        {el:()=>q("#effBtn"),t:"Effective range",go:()=>{open();const d=document.getElementById("chartMore");if(d)d.open=true;},b:"Turn it on and set a minimum speed or energy (the maker's lowest expansion speed is offered when Range Book knows the ammo); the pencil next to it changes them later. The chart, range table, dope card and Field mode mark where the bullet drops below it."},
         card("#secTCan","secTCan",null,open),card("#secTDope","secTDope",null,open),
         {el:()=>q("#tripsGo"),t:"Range trips",b:"Each day at the range with this profile: where, the conditions, the chronograph and the targets. <b>+ New range trip</b> starts one.",go:open}]:[]),
       END];
@@ -14568,25 +14571,26 @@ function startTabTour(tab){
     const has=!!document.querySelector("#relRoot .loaditem")||(REL&&true);
     STEPS=[
       {t:"The Reloading tab",b:"Your load recipes and how you work them up: ladder tests, chronograph strings, charts and target photos, then the finished load and the batches you load.",go:list},
-      {el:()=>q("#relSeg"),t:"Loads, Components, Notes and Reference",b:"<b>Loads</b> are your recipes. <b>Components</b> keeps your bullets, powders, primers and brass, with what's on hand and what it cost. <b>Notes</b> is for anything that isn't about one load. <b>Reference</b> has cartridge specs (bullet diameter, trim-to length, primer size), cartridges by bullet diameter, powder burn rates, pressure signs and a glossary.",go:list},
+      {el:()=>q("#relSeg"),t:"Loads, Components and Notes",b:"<b>Loads</b> are your recipes. <b>Components</b> keeps your bullets, powders, primers and brass, with what's on hand and what it cost. <b>Notes</b> is for anything that isn't about one load. Cartridge specs, bullet diameters, powder burn rates, pressure signs and the glossary are in Tools › Library.",go:list},
       {el:()=>q("#relNew"),t:"Add a load",b:"Enter the cartridge and gun, pick your components and your manual's max charge. <b>Create and plan a ladder</b> goes straight to the ladder planner.",go:list},
       ...(has?[{el:()=>q(".viewbar"),t:"Develop and Load",b:"Each load has two views. <b>Develop</b> is for working it up; <b>Load</b> is the finished load sheet, with the batches you've loaded.",go:open("develop")},
         card("#secRecipe","secRecipe",null,open("develop")),card("#secGroups","secGroups",null,open("develop")),card("#secSummary","secSummary",null,open("develop")),
         card("#secCharts","secCharts",null,open("develop")),card("#secTargets","secTargets",null,open("develop")),card("#secBatches","secBatches",null,open("load"))]:[]),
-      {el:()=>q("#panel-ref .refnav"),t:"Reference",b:"Pick a list here: <b>Library</b> (opens Tools › Library, with everything that's built in), <b>Cartridges</b>, <b>Bullet diameters</b>, <b>Powder burn rates</b>, <b>Pressure signs</b> or <b>Glossary</b>. The burn-rate order is only for orientation, never for swapping powders.",go:()=>{showTab("ref",false);}},
       END];
   }
   if(tab==="rifles"){
-    const area=a=>()=>{showTab("rifles",false);click("#rifHeadBack");click('#rifSeg [data-garea="'+a+'"]');};
+    // Optics and Suppressors sit on the second row under Guns, Magazines under Inventory (2.46): open the tab above, then the one on the row
+    const area=a=>()=>{showTab("rifles",false);click("#rifHeadBack");const top={scopes:"guns",cans:"guns",mags:"inv"}[a]||a;click('#rifSeg [data-garea="'+top+'"]');
+      if(top!==a){const sub=()=>click('#rifSub2 [data-gsub="'+a+'"]');sub();setTimeout(sub,80);}};
     STEPS=[
       {t:"The Gear & Ranges tab",b:"Your guns, optics, suppressors, magazines, the ammo you shoot, the rest of your gear, the ranges you shoot at and notes about it all.",go:area("guns")},
-      {el:()=>q("#rifSeg"),t:"Eight lists",b:"<b>Guns</b>, <b>Optics</b>, <b>Suppressors</b>, <b>Magazines</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. On a phone the row scrolls sideways.",go:area("guns")},
+      {el:()=>q("#rifSeg"),t:"Five lists",b:"<b>Guns</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. <b>Optics</b> and <b>Suppressors</b> are on a second row under Guns, and <b>Magazines</b> under Inventory.",go:area("guns")},
       {el:()=>q("#rifleAdd"),t:"Guns",b:"Add each gun with its serial number, barrel, twist, sight height, optic, suppressors and photos. Tap the star to make it a favorite. Its page counts the rounds fired, tracks barrel life and cleaning, and keeps a cold-bore log. <b>Export Excel</b> and <b>Export PDF</b> make a list for insurance.",go:area("guns")},
       {el:()=>q("#secLU"),t:"Lowers, uppers and barrels",b:"For ARs and other guns built from a lower and an upper: add the parts, build a gun from them, and add more uppers to the same lower as variations you pick when you shoot. Spare barrels for a complete gun go under <b>Barrels</b>.",go:area("guns")},
       {el:()=>q("#scopeAdd"),t:"Optics",b:"Add your scopes from a list of popular ones, or a red dot, holographic or prism sight (every <b>+ Add</b> button in Range Book works this way: search the list, tap yours, or enter it yourself), with a picture, and put each on a gun. A gun's scope sets MOA or MIL on its profiles, and the dope card's reticle can look like yours or be a picture of it (Range Book finds the crosshair in your picture). A bullet drop reticle can show which distance each mark lines up with.",go:area("scopes")},
       {el:()=>q("#canAdd"),t:"Suppressors",b:"Serial number, tax stamp date, a picture and its own round count from the range trips and training sessions shot with it. Tick the guns you use it on; each Shooting profile then picks it on its Suppressor card. Mark range trip groups with it on or off, and the gun's page shows how much it moves your point of impact. Keep the tax stamp in the document vault, locked with a passphrase only you know.",go:area("cans")},
       {el:()=>q("#magAdd"),t:"Magazines",b:"Each magazine with its <b>Mag #</b> (the number you paint on it), grouped by maker and model. Log a jam or failure to feed on the mag that caused it, and retire the bad ones.",go:area("mags")},
-      {el:()=>q("#ammoAddGo"),t:"Ammo",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low. <b>+ Add ammo</b> lists about 355 popular factory loads with their bullet, BC and box velocity: search, and tap one to add it.",go:area("ammo")},
+      {el:()=>q("#ammoAddGo"),t:"Ammo",b:"Your reloaded and factory ammo, with rounds on hand (bought or loaded, minus what your range trips fire) and a warning when you're running low. <b>+ Add ammo</b> lists more than 600 factory loads and about 160 shotgun shells, in Rifle, Pistol and Shotgun tabs, with their bullet, BC and box velocity: search, and tap one to add it.",go:area("ammo")},
       {el:()=>q("#invAddC"),t:"Inventory",b:"Everything else: supplies with a count and a low warning (batteries, targets, earplugs), and equipment with serial numbers and reminders to check or replace it.",go:area("inv")},
       {el:()=>q("#rgAdd"),t:"Ranges",b:"Save the places you shoot, with the address and each target's distance, angle and size (in the order you walk them, if you like). A range's page shows sunrise and sunset, today's weather there and the dial and wind for every target with any of your Shooting profiles.",go:area("ranges")},
       {el:()=>q("#gnAdd"),t:"Notes",b:"Notes about your gear, with pictures and files. Tick <b>Lock in the vault</b> on a note to encrypt it and everything on it with your vault passphrase.",go:area("notes")},
@@ -14597,7 +14601,7 @@ function startTabTour(tab){
     STEPS=[
       {t:"The Training tab",b:"Practice with the shot timer, kept apart from your range trips: training profiles, sessions with the drills you ran, and your progress.",go:list},
       {el:()=>q("#trProfAdd"),t:"Training profiles",b:"A profile is a gun and the ammo you train with. Open one and start a session each day you practice; its rounds count toward the gun, barrel, suppressor and ammo.",go:list},
-      {el:()=>q("#trTimer"),t:"Shot timer",b:"In a session, tap a drill and the timer opens right there. This button opens it on its own (Tools › Shot timer).",go:list},
+      {el:()=>q("#trTimer"),t:"Shot timer",b:"In a session, tap a drill and the timer opens right there. This button opens it on its own.",go:list},
       {el:()=>q("[data-trd]"),t:"Drills",b:"Six common drills are built in. Tap one to set your par time.",go:list},
       {el:()=>q("#trAdd"),t:"Your own drills",b:"Add a drill with its shots, distance, par time and how it's shot.",go:list},
       END];}
@@ -14611,8 +14615,7 @@ function startTabTour(tab){
       {el:()=>q('[data-tooltile="chrono"]'),t:"Chronograph import check",b:"See how Range Book reads your chronograph's export, string by string, before you import it. Suspicious shots are marked.",go:tiles},
       {el:()=>q('[data-tooltile="btchrono"]'),t:"Chronographs",b:"Connect an Athlon Rangecraft over Bluetooth. Velocities show as you shoot, and a range trip or ladder can take them straight into its boxes.",go:tiles},
       {el:()=>q('[data-tooltile="lib"]'),t:"Library",b:"Everything built in: bullets, cartridges, powders, primers, factory ammo, scopes, red dots and suppressors. Tap anything to see all of it, fix a number for your own use (<b>Revert</b> puts it back), or add it to yours.",go:tiles},
-      {el:()=>q('[data-tooltile="hit"]'),t:"Hit chance",b:info("@Hit chance"),go:tiles},
-      {el:()=>q('[data-tooltile="timer"]'),t:"Shot timer",b:"A start beep, then your first shot and every split from the microphone, with a par time. Works with a Bluetooth speaker. Save runs to the Training tab.",go:tiles},
+      {el:()=>q('[data-tooltile="conv"]'),t:"Convert",b:info("@Convert"),go:tiles},
       {el:()=>q('[data-tooltile="live"]'),t:"Live target",b:info("@Live target"),go:tiles},
       {el:()=>q('[data-tooltile="targets"]'),t:"Printable targets",b:info("@Printable targets"),go:tiles},
       END];
