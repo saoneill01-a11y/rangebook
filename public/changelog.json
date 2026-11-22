@@ -2,10 +2,11 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.48",
+      "version": "2.47.49",
       "date": "2026-11-21",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "How to Use and the help notes are up to date with everything in 2.47: the range trip's button bar and Report, Get weather and Wind from, Shot groups and Off target velocities, target photos and your own photo, Live target's Save or discard and aim point drawing, shotguns and pattern boards, the Gear & Ranges tabs, the factory ammo tabs, and more.",
         "The app icon now sits beside Range Book at the top of every page.",
         "The range trip report starts with the Range Book banner (the icon, Range Book, and the trip's date, place, distance, gun and profile), the same as on its target pages.",
         "Fixed: a range trip report (or a target's PDF) could come back as an older copy when Range Book is behind Cloudflare, which keeps any file ending in .pdf unless told not to. Reports are now never kept by the browser or Cloudflare, so you always get the latest, and no saved copy can be handed to anyone else.",
