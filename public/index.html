@@ -215,8 +215,9 @@ img{max-width:100%}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:22;background:var(--bg);padding:max(12px,env(safe-area-inset-top,0px)) 0 6px;box-shadow:0 8px 0 var(--bg)}
 /* the name as a pill like the range report's banner (2.47.60): the app icon in a ring, the name, and where you are */
 .brand{display:inline-flex;align-items:center;gap:10px;min-width:0;max-width:100%;width:fit-content;box-sizing:border-box;background:var(--surface);border:2px solid var(--accent);border-radius:999px;padding:3px 16px 3px 3px;font-family:var(--body);font-weight:700;font-size:calc(19px*var(--fs));letter-spacing:0;text-transform:none;color:var(--accent);line-height:1.2}
-.brand .mark{width:calc(34px*var(--fs));height:calc(34px*var(--fs));border-radius:50%;flex:none;background:var(--accent);display:flex;align-items:center;justify-content:center}
-.brand .mark::after{content:"";width:76%;height:76%;border-radius:50%;background:#0f5a5e url("/icon-192.png") center/cover no-repeat}
+/* one teal disc (2.47.61): the icon's own teal fills the circle around it, whatever the theme */
+.brand .mark{width:calc(34px*var(--fs));height:calc(34px*var(--fs));border-radius:50%;flex:none;background:#0f5a5e;display:flex;align-items:center;justify-content:center}
+.brand .mark::after{content:"";width:84%;height:84%;border-radius:50%;background:#0f5a5e url("/icon-192.png") center/cover no-repeat}
 .brand .bname{white-space:nowrap}
 .bloc{display:flex;align-items:center;gap:5px;min-width:0;font-weight:500;font-size:calc(14px*var(--fs));color:var(--muted);white-space:nowrap;overflow:hidden}
 .bloc:empty{display:none}
