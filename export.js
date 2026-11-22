@@ -8,6 +8,8 @@
  * Both are written by hand here so the app needs no third-party packages.
  */
 const zlib = require("node:zlib");
+const nfs = require("node:fs"), npath = require("node:path");
+const RBM = require("./public/marks.js");
 
 /* ======================= shared helpers ======================= */
 function stats(g, L) {
@@ -343,8 +345,44 @@ function jpegInfo(buf) {
 }
 
 class Pdf {
-  constructor() { this.pages = []; this.images = []; this.W = 612; this.H = 792; this.M = 50; this.addPage(); }
-  addPage() { this.cur = []; this.pages.push(this.cur); this.y = this.M; }
+  constructor() { this.pages = []; this.sizes = []; this.images = []; this.alphas = new Map(); this.W = 612; this.H = 792; this.M = 50; this.addPage(); }
+  // a new page, upright, or sideways (wide) when asked (2.47.45)
+  addPage(wide) { this.W = wide ? 792 : 612; this.H = wide ? 612 : 792; this.cur = []; this.pages.push(this.cur); this.sizes.push([this.W, this.H]); this.y = this.M; }
+  alpha(op) { const k = "A" + Math.round(op * 100); this.alphas.set(k, op); return k; }
+  imgName(buf) { const hit = this.images.find((im) => im.buf === buf); if (hit) return hit.name; const info = jpegInfo(buf); if (!info) return null; const name = "Im" + (this.images.length + 1); this.images.push({ name, buf, info }); return name; }
+  /* a marks layout from public/marks.js ({W, H, items}), its top-left at (X, Y) scaled by k; photo and icon are JPEG buffers.
+     Each shape is drawn in its own q … Q so colors, line widths, dashes and see-through never leak into the next */
+  draw(L, X, Y, k, photo, icon) {
+    const H = this.H, f = (v) => v.toFixed(2), px = (x) => X + x * k, py = (y) => H - (Y + y * k);
+    const rr = (x, y, w, h, r, top) => { const x0 = px(x), y1 = py(y), x1 = px(x + w), y0 = py(y + h); r = Math.min(r * k, (x1 - x0) / 2, (y1 - y0) / 2); const c = 0.5523 * r;
+      if (!r) return `${f(x0)} ${f(y0)} ${f(x1 - x0)} ${f(y1 - y0)} re`;
+      const b = top ? `${f(x0)} ${f(y0)} m ${f(x1)} ${f(y0)} l` : `${f(x0 + r)} ${f(y0)} m ${f(x1 - r)} ${f(y0)} l ${f(x1 - r + c)} ${f(y0)} ${f(x1)} ${f(y0 + r - c)} ${f(x1)} ${f(y0 + r)} c`;
+      return b + ` ${f(x1)} ${f(y1 - r)} l ${f(x1)} ${f(y1 - r + c)} ${f(x1 - r + c)} ${f(y1)} ${f(x1 - r)} ${f(y1)} c ${f(x0 + r)} ${f(y1)} l ${f(x0 + r - c)} ${f(y1)} ${f(x0)} ${f(y1 - r + c)} ${f(x0)} ${f(y1 - r)} c` +
+        (top ? ` ${f(x0)} ${f(y0)} l h` : ` ${f(x0)} ${f(y0 + r)} l ${f(x0)} ${f(y0 + r - c)} ${f(x0 + r - c)} ${f(y0)} ${f(x0 + r)} ${f(y0)} c h`); };
+    const circ = (cx, cy, r) => { const x = px(cx), y = py(cy), q = r * k, c = 0.5523 * q;
+      return `${f(x + q)} ${f(y)} m ${f(x + q)} ${f(y + c)} ${f(x + c)} ${f(y + q)} ${f(x)} ${f(y + q)} c ${f(x - c)} ${f(y + q)} ${f(x - q)} ${f(y + c)} ${f(x - q)} ${f(y)} c ${f(x - q)} ${f(y - c)} ${f(x - c)} ${f(y - q)} ${f(x)} ${f(y - q)} c ${f(x + c)} ${f(y - q)} ${f(x + q)} ${f(y - c)} ${f(x + q)} ${f(y)} c h`; };
+    const paint = (t, path) => { const fill = t.fill && t.fill !== "none", st = !!t.stroke; if (!fill && !st) return;
+      this.cur.push("q " + (t.op != null && t.op < 1 ? `/${this.alpha(t.op)} gs ` : "") + (fill ? this.color(t.fill) + " " : "") + (st ? `${this.color(t.stroke, true)} ${f((t.sw || 1) * k)} w ` : "") +
+        (t.dash ? `[${t.dash.map((d) => f(d * k)).join(" ")}] 0 d ` : "") + path + (fill && st ? " B" : fill ? " f" : " S") + " Q"); };
+    for (const t of L.items) {
+      if (t.k === "rect") paint(t, rr(t.x, t.y, t.w, Math.min(t.h, L.H - t.y), t.r || 0, t.top));
+      else if (t.k === "circle") paint(t, circ(t.cx, t.cy, t.r));
+      else if (t.k === "line") {
+        paint({ stroke: t.stroke, sw: t.sw, dash: t.dash, op: t.op }, `${f(px(t.x1))} ${f(py(t.y1))} m ${f(px(t.x2))} ${f(py(t.y2))} l`);
+        const head = (ax, ay, bx, by) => { const dx = bx - ax, dy = by - ay, L2 = Math.hypot(dx, dy) || 1, ux = dx / L2, uy = dy / L2, len = (t.sw || 1) * 5, wd = (t.sw || 1) * 2.4;
+          const p = (x, y) => `${f(px(x))} ${f(py(y))}`; this.cur.push(`q ${this.color(t.stroke)} ${p(bx, by)} m ${p(bx - ux * len - uy * wd, by - uy * len + ux * wd)} l ${p(bx - ux * len + uy * wd, by - uy * len - ux * wd)} l h f Q`); };
+        if (t.a1) head(t.x1, t.y1, t.x2, t.y2); if (t.a0) head(t.x2, t.y2, t.x1, t.y1);
+      } else if (t.k === "text") this.text(px(t.x), Y + t.y * k, t.s, { size: t.size * k, bold: !!t.bold, color: t.fill, align: t.anchor === "middle" ? "center" : t.anchor === "end" ? "right" : "left" });
+      else if (t.k === "img" && photo) {
+        const name = this.imgName(photo); if (!name) continue; const info = jpegInfo(photo), cr = t.crop || [0, 0, info.w, info.h], sc = (t.w * k) / (cr[2] - cr[0]);
+        const iw = info.w * sc, ih = info.h * sc, left = px(t.x) - cr[0] * sc, topY = Y + t.y * k - cr[1] * sc;
+        this.cur.push(`q ${f(px(t.x))} ${f(py(t.y + t.h))} ${f(t.w * k)} ${f(t.h * k)} re W n ${f(iw)} 0 0 ${f(ih)} ${f(left)} ${f(H - topY - ih)} cm /${name} Do Q`);
+      } else if (t.k === "icon" && icon) {
+        const name = this.imgName(icon); if (!name) continue; const d = 2 * t.r * k;
+        this.cur.push(`q ${circ(t.cx, t.cy, t.r)} W n ${f(d)} 0 0 ${f(d)} ${f(px(t.cx - t.r))} ${f(py(t.cy + t.r))} cm /${name} Do Q`);
+      }
+    }
+  }
   ensure(h) { if (this.y + h > this.H - this.M - 20) this.addPage(); }
   color(hex, stroke) { const n = parseInt(hex.slice(1), 16); return `${((n >> 16) & 255) / 255} ${((n >> 8) & 255) / 255} ${(n & 255) / 255} ${stroke ? "RG" : "rg"}`; }
   text(x, y, str, { size = 10, bold = false, color = "#1b201c", align = "left", page } = {}) {
@@ -405,11 +443,13 @@ class Pdf {
     }
     const xobj = Object.keys(imgIds).length ? `/XObject << ${Object.entries(imgIds).map(([n, id]) => `/${n} ${id} 0 R`).join(" ")} >>` : "";
     const pageIds = [];
+    const gsx = this.alphas.size ? `/ExtGState << ${[...this.alphas].map(([n, a]) => `/${n} << /ca ${a} /CA ${a} >>`).join(" ")} >>` : "";
     this.pages.forEach((ops, i) => {
+      [this.W, this.H] = this.sizes[i] || [612, 792];
       if (footer) footer(this, ops, i + 1, this.pages.length);
       const content = zlib.deflateSync(Buffer.from(ops.join("\n"), "latin1"));
       const cid = add(Buffer.concat([Buffer.from(`<< /Length ${content.length} /Filter /FlateDecode >>\nstream\n`), content, Buffer.from("\nendstream")]));
-      pageIds.push(add(Buffer.from(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${this.W} ${this.H}] /Resources << /Font << /F1 ${f1} 0 R /F2 ${f2} 0 R >> ${xobj} >> /Contents ${cid} 0 R >>`)));
+      pageIds.push(add(Buffer.from(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${this.W} ${this.H}] /Resources << /Font << /F1 ${f1} 0 R /F2 ${f2} 0 R >> ${xobj} ${gsx} >> /Contents ${cid} 0 R >>`)));
     });
     objs[pagesId - 1] = Buffer.from(`<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>`);
     objs[catalogId - 1] = Buffer.from(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
@@ -701,7 +741,11 @@ function tripReportPdf(d, t, photos, readPhoto) {
   const rifle = calcRifle(T, d);
   const head = (t.date ? fmtDate(t.date) : "Range trip") + (t.place ? " · " + t.place : "");
   pdf.title = "Range trip - " + head;
-  pdf.text(pdf.M, pdf.y + 10, "RANGE BOOK · RANGE TRIP", { size: 9, bold: true, color: ACC });
+  // the Range Book banner across the top, the same as on the target pages (2.47.47)
+  const sub = [head, numv(t.distance) != null ? cs("yd", t.distance, 0) : "", rifle, T.name || ""].filter(Boolean).join(" · ");
+  { const B = RBM.banner({ tw: (s2, size, bold) => textWidth(s2, size, bold), head: { title: "Range Book", sub } }), k = Math.min(0.56, (pdf.W - 2 * pdf.M) / B.W);
+    pdf.draw(B, (pdf.W - B.W * k) / 2, pdf.y - 22, k, null, reportIcon()); pdf.y += B.H * k - 10; }
+  pdf.text(pdf.M, pdf.y + 10, "RANGE TRIP", { size: 9, bold: true, color: ACC });
   pdf.y += 36; pdf.text(pdf.M, pdf.y, head, { size: 20, bold: true });
   pdf.y += 16; pdf.text(pdf.M, pdf.y, [T.name || "", T.cart || "", rifle].filter(Boolean).join(" · "), { size: 10, color: MUTED });
   pdf.y += 12; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y, ACC, 1.5); pdf.y += 4;
@@ -730,13 +774,60 @@ function tripReportPdf(d, t, photos, readPhoto) {
       S.map(({ x, i, s }) => [x.name || "String " + (i + 1), x.date ? fmtDate(x.date) : "", s.n, cv("fps", s.avgT, 0), cv("fps", s.sd).toFixed(1), cv("fps", s.es, 0), s.me != null ? cs("ftlb", s.me, 0) : ""]));
     for (const { x, i, s } of S) { pdf.y += 4; pdf.ensure(24); pdf.y += 10; pdf.text(pdf.M, pdf.y, x.name || "String " + (i + 1), { size: 9, bold: true }); pdf.para(s.shots.map((q, j) => `${j + 1}: ${cv("fps", q, 0)}`).join(" · "), { size: 9, indent: 10, gap: 1.4 }); }
   }
-  if (photos.length) pdfPhotos(pdf, photos, null, readPhoto, ACC, MUTED, true);
+  const shown = photos.filter((p) => !(p.measure && p.measure.of));
+  if (shown.length) reportTargets(pdf, photos, readPhoto, ACC, MUTED, sub);
   else { pdf.y += 16; pdf.para("No target photos on this trip.", { size: 9, color: MUTED }); }
   return pdf.build((p, ops, n, total) => {
     p.cur = ops;
     p.line(p.M, p.H - 34, p.W - p.M, p.H - 34);
     p.text(p.M, p.H - 22, `Range Book · range trip · ${head}`, { size: 8, color: MUTED, page: ops });
     p.text(p.W - p.M, p.H - 22, `Page ${n} of ${total}`, { size: 8, color: MUTED, align: "right", page: ops });
+  });
+}
+
+/* ---------- marked targets in the trip report (2.47.45) ----------
+   A target with measured groups gets a sideways page: the photo with a bubble beside it for each group (size, mean radius,
+   how far from the aim point, each shot's velocity in order). Your own photo of a Live target page (one whose measure says
+   which photo it is of) stands in for the Live target picture unless that target is set to use the Live target picture;
+   its marks are the Live target's, moved onto it through the page's corner squares. Then, at the end, each target on its own
+   page, measured like by hand. Photos without marks are shown as before. */
+let TARGETS = null;
+const targetsDoc = () => { if (!TARGETS) { try { TARGETS = JSON.parse(nfs.readFileSync(npath.join(__dirname, "public", "targets.json"), "utf8")); } catch { TARGETS = {}; } } return TARGETS; };
+const fidOf = (M) => { const T = targetsDoc(), L = (T.layouts || []).find((l) => l.id === M.layout), fk = (L && L.fmt) || "letter"; return (T.formats && T.formats[fk] && T.formats[fk].fid) || T.fid || null; };
+let ICON = undefined;
+const reportIcon = () => { if (ICON === undefined) { try { ICON = nfs.readFileSync(npath.join(__dirname, "public", "img", "rb-icon.jpg")); } catch { ICON = null; } } return ICON; };
+const markFmt = () => ({ len: (v, d) => cs("in", v, d), lenN: (v, d) => String(cv("in", v, d)), lenMark: METRIC ? " cm" : '"', fps: (v) => String(cv("fps", v, 0)), fpsSd: (v) => cv("fps", v, 1).toFixed(1), fpsU: ul("fps"),
+  name: (t, k) => (t.ai != null ? "Aim " + (t.ai + 1) : "Group " + (k + 1)) });
+function reportTargets(pdf, photos, readPhoto, ACC, MUTED, sub) {
+  const twins = photos.filter((p) => p.measure && p.measure.of), marked = [], plain = [];
+  for (const p of photos) {
+    if (p.measure && p.measure.of) continue;
+    const M = normMeasure(p.measure);
+    if (!M || !M.groups.some((g) => (g.shots || []).length)) { plain.push(p); continue; }
+    let use = { p, M };
+    const tw = M.mine && M.rep !== "live" ? twins.find((x) => x.id === M.mine && x.measure.of === p.id) : null;
+    if (tw) { const M2 = RBM.mapMeasure(M, p.w, p.h, tw.measure, tw.w, tw.h); if (M2) use = { p: tw, M: M2 }; }
+    const buf = readPhoto(use.p.file), info = buf && jpegInfo(buf);
+    if (!info) { plain.push(p); continue; }
+    marked.push({ ...use, buf, info, G: RBM.prep(use.M, info.w, info.h, markFmt()) });
+  }
+  const tw2 = (s2, size, bold) => textWidth(s2, size, bold), head = { title: "Range Book", sub }, icon = reportIcon();
+  const opts = { tw: tw2, head, velHead: "Shot · " + ul("fps") };
+  marked.forEach((m, i) => {
+    pdf.addPage(true);
+    pdf.text(pdf.M, pdf.y - 18, marked.length > 1 ? `Target ${i + 1} of ${marked.length}` : "Target", { size: 12, bold: true, color: ACC });
+    const L = RBM.report({ ...opts, w: m.info.w, h: m.info.h, holeR: m.G.holeR, groups: m.G.groups });
+    const aw = pdf.W - 2 * 30, ah = pdf.H - pdf.y - 50, k = Math.min(aw / L.W, ah / L.H);
+    pdf.draw(L, (pdf.W - L.W * k) / 2, pdf.y - 8, k, m.buf, icon);
+  });
+  if (plain.length) { pdf.addPage(); pdfPhotos(pdf, plain, null, readPhoto, ACC, MUTED, true); }
+  marked.forEach((m, i) => {
+    pdf.addPage();
+    pdf.text(pdf.M, pdf.y - 18, marked.length > 1 ? `Target photo ${i + 1} of ${marked.length}` : "Target photo", { size: 12, bold: true, color: ACC });
+    const crop = RBM.pageCrop(m.M, m.info.w, m.info.h, fidOf(m.M));
+    const L = RBM.photo({ ...opts, w: m.info.w, h: m.info.h, holeR: m.G.holeR, groups: m.G.groups, crop });
+    const aw = pdf.W - 2 * 40, ah = pdf.H - pdf.y - 50, k = Math.min(aw / L.W, ah / L.H);
+    pdf.draw(L, (pdf.W - L.W * k) / 2, pdf.y - 8, k, m.buf, icon);
   });
 }
 
