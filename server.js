@@ -412,6 +412,8 @@ const SECURITY_HEADERS = {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob:",
+    // the iPhone/iPad app plays an outside camera's video through Media Source; a blob: address for it needs this (2.47.55)
+    "media-src 'self' blob:",
     // the offline helper (sw.js) runs under this policy too, and it fetches the spreadsheet reader and fonts to keep copies
     "connect-src 'self' https://api.open-meteo.com https://geocoding-api.open-meteo.com https://nominatim.openstreetmap.org https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com",
     "frame-ancestors 'none'",
