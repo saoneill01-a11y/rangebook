@@ -14421,7 +14421,8 @@ function prefsData(){return {theme:THEME,units:U.metric?"metric":"imperial",beta
 function betaNotice(then){
   const v=appVersion();let local=null;try{local=localStorage.getItem("rangebook.betaSeen");}catch(e){}
   // shown once ever (2.46): after that, only the small "updated to" note says a new version arrived
-  if(!v||BETA_SEEN||local){then();return;}
+  // never in the Range Book iPhone/iPad app (2.47.56): the App Store doesn't allow apps that call themselves beta
+  if(!v||BETA_SEEN||local||window.RB_APP){then();return;}
   const w=document.createElement("div");w.className="infowrap betawrap";w.hidden=true;
   w.innerHTML='<div class="infoback"></div><div class="infosheet betabox" role="alertdialog" aria-modal="true" aria-labelledby="betaT" aria-describedby="betaB">'+
     '<div class="betatag">BETA</div><h2 id="betaT">Range Book is still in beta</h2>'+
