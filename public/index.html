@@ -8523,6 +8523,8 @@ function targetSvg(T,L){
   for(let x=gx0;x<=gx1+.001;x+=1)h+='<line x1="'+x+'" y1="'+gy0+'" x2="'+x+'" y2="'+gy1+'" stroke="#8fa2b5" stroke-width=".02"/>';
   for(let y=gy0;y<=gy1+.001;y+=1)h+='<line x1="'+gx0+'" y1="'+y+'" x2="'+gx1+'" y2="'+y+'" stroke="#8fa2b5" stroke-width=".02"/>';
   F.forEach(([x,y],i)=>{h+='<rect x="'+(x-fs/2)+'" y="'+(y-fs/2)+'" width="'+fs+'" height="'+fs+'" fill="#111"/>'+(i===0?'<rect x="'+(x-fs/5)+'" y="'+(y-fs/5)+'" width="'+(fs*2/5)+'" height="'+(fs*2/5)+'" fill="#fff"/>':'');});
+  // the Range Book banner at the top, as printed (2.47.62)
+  {const ph=.55,pw=2.25,px=(PW-pw)/2,py=.22,ci="tgic"+String(L.id).replace(/[^\w-]/g,"");h+='<rect x="'+px+'" y="'+py+'" width="'+pw+'" height="'+ph+'" rx="'+(ph/2)+'" fill="#fff" stroke="#0e5a61" stroke-width=".019"/><clipPath id="'+ci+'"><circle cx="'+(px+ph/2)+'" cy="'+(py+ph/2)+'" r="'+(ph*.4)+'"/></clipPath><image href="/icon-192.png" x="'+(px+ph*.1)+'" y="'+(py+ph*.1)+'" width="'+(ph*.8)+'" height="'+(ph*.8)+'" clip-path="url(#'+ci+')"/><text x="'+(px+ph+.05)+'" y="'+(py+ph/2+.08)+'" font-size=".23" font-weight="700" font-family="Helvetica,Arial,sans-serif" fill="#0e5a61">Range Book</text>';}
   if(Fm.marked&&T.mark)T.mark.uv.forEach(([u,v])=>{const mx=F[0][0]+u*(F[1][0]-F[0][0]),my=F[0][1]+v*(F[3][1]-F[0][1]),ms=T.mark.size;h+='<rect x="'+(mx-ms/2)+'" y="'+(my-ms/2)+'" width="'+ms+'" height="'+ms+'" fill="#111"/>';});
   (L.rings||[]).forEach(r=>L.aims.forEach(a=>{h+='<circle cx="'+a.x+'" cy="'+a.y+'" r="'+r+'" fill="none" stroke="#8a9aa8" stroke-width=".03"/>';}));
   if(Fm.seam)h+='<path d="M0 '+Fm.seam+'H'+PW+'" stroke="#111" stroke-width=".04" stroke-dasharray=".25 .15"/>';
