@@ -2,10 +2,12 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.47.51",
+      "version": "2.47.52",
       "date": "2026-11-21",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
       "items": [
+        "Even more factory ammo, each read from the maker's own website: 200 PPU (Prvi Partizan) loads, 162 Fiocchi (Range Dynamics, Hyperformance, Field Dynamics, Defense Dynamics and more), 132 Magtech (with its test barrels) and 53 Aguila, rimfire included. The catalog now has more than 1,400 factory loads.",
+        "In the Range Book iPhone and iPad app, the chronograph help no longer sends you to the Bluefy app: Bluetooth works right in the app.",
         "More factory ammo: 79 Wolf loads (Performance, PolyFormance, Military Classic and Gold, plus Match .22 LR) and 181 Sellier & Bellot loads (FMJ, SP, SPCE, eXergy Blue and Edge, PTS, Sierra GameKing, Target Match, XRG Defense, Nontox, pistol and rimfire), with velocities, and S&B's BCs and test barrels, straight from their own websites. The catalog now has almost 900 factory loads. Wolf doesn't publish item numbers, so its loads don't show one.",
         "Fixed the tab tours: Effective range opens More chart options and points at its button, Reloading's tour no longer mentions the Reference tab, the Gear & Ranges tour opens Optics, Suppressors and Magazines on the second row, and the Tools tour shows Convert instead of Hit chance and the shot timer (now on the dope card and Training). A step whose part isn't on the screen (a profile with no suppressor) is skipped instead of pointing at nothing.",
         "How to Use and the help notes are up to date with everything in 2.47: the range trip's button bar and Report, Get weather and Wind from, Shot groups and Off target velocities, target photos and your own photo, Live target's Save or discard and aim point drawing, shotguns and pattern boards, the Gear & Ranges tabs, the factory ammo tabs, and more.",
