@@ -2,6 +2,18 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
+      "version": "2.48.0",
+      "date": "2026-11-22",
+      "title": "Range Book for iPhone and iPad",
+      "items": [
+        "Range Book: Shooting Log is on the App Store, for iPhone and iPad. It opens your own Range Book server, the same as the website, and adds what a web page on an iPhone or iPad can't do. Your data stays on your server, and the website stays free.",
+        "In the app, a Bluetooth chronograph (the Athlon Rangecraft) connects without the Bluefy app.",
+        "In the app, Live target can use a Longshot spotting-scope camera: pick Longshot under Which camera?, and Range Book joins the camera's own Wi-Fi for you and marks each hole as it lands.",
+        "In the app, Range Book opens with no signal at the range, from a copy kept on your phone, and sends what you did once the server answers again.",
+        "How to Use has a new section on the app, and the Bluetooth help points iPhone and iPad users to it."
+      ]
+    },
+    {
       "version": "2.47.62",
       "date": "2026-11-21",
       "title": "Athlon chronograph, range trips on their own page, less clutter",
