@@ -641,7 +641,26 @@ function exportPdf(d, readPhoto) {
 
 /* ---------- printable Range Book targets (vector PDF, Letter or 11 x 17, inches → points) ---------- */
 const targetFmt = (T, L) => (T.formats && T.formats[L.fmt || "letter"]) || { page: T.page || [8.5, 11], fid: T.fid, fidSize: T.fidSize, grid: T.grid };
-function targetPdf(T, layoutId, fill, du) {
+// a fun target's picture (2.49.0), drawn from its own units with one transform: shapes in T.art, where it goes in L.art
+function targetArt(pdf, T, L, look) {
+  const a = L.art, A = a && T.art && T.art[a.k];
+  if (!A) return;
+  const pal = A.pal[look === "bw" ? "bw" : "color"], s = a.s * 72, f = (v) => +v.toFixed(4), w = (pt) => f(pt / s);
+  const eo = A.rule === "evenodd" ? "*" : "";
+  pdf.cur.push(`q ${f((A.flip ? -1 : 1) * s)} 0 0 ${f(-s)} ${f(a.x * 72)} ${f(pdf.H - a.y * 72)} cm`);
+  for (const [k, d] of A.shapes) {
+    // the shapes use only M, L, C and Z, all absolute
+    const tok = d.match(/[MLCZ]|-?\d*\.?\d+(?:e-?\d+)?/g) || [];
+    let ops = "", cmd = "", nums = [];
+    const flush = () => { const n = cmd === "C" ? 6 : 2; for (let i = 0; i + n <= nums.length; i += n) { ops += nums.slice(i, i + n).join(" ") + (cmd === "C" ? " c " : cmd === "M" && i === 0 ? " m " : " l "); } nums = []; };
+    for (const t of tok) { if (/[MLCZ]/.test(t)) { flush(); cmd = t; if (t === "Z") ops += "h "; } else nums.push(t); }
+    flush();
+    if (k === "guide") pdf.cur.push(`q ${pdf.color("#9aa3aa", true)} ${w(1.8)} w [${w(8.6)} ${w(5.8)}] 0 d ${ops}S Q`);
+    else pdf.cur.push(`q ${pdf.color(pal[k === "light" ? 1 : k === "dark" ? 2 : 0])} ` + (k === "body" ? `${pdf.color("#7a7a7a", true)} ${w(1)} w ${ops}B${eo} Q` : `${ops}f${eo} Q`));
+  }
+  pdf.cur.push("Q");
+}
+function targetPdf(T, layoutId, fill, du, look) {
   du = du === "m" ? "m" : "yd";
   const L = T.layouts.find((x) => x.id === layoutId);
   if (!L) return null;
@@ -657,6 +676,7 @@ function targetPdf(T, layoutId, fill, du) {
   const [gx0, gy0, gx1, gy1] = F.grid;
   for (let x = gx0; x <= gx1 + 1e-9; x += 1) pdf.line(X(x), X(gy0), X(x), X(gy1), GRID, 0.75);
   for (let y = gy0; y <= gy1 + 1e-9; y += 1) pdf.line(X(gx0), X(y), X(gx1), X(y), GRID, 0.75);
+  targetArt(pdf, T, L, look);
   // corner squares the app looks for (top-left one is hollow so it knows which way is up)
   const fs = F.fidSize;
   F.fid.forEach(([cx, cy], i) => {
@@ -665,6 +685,8 @@ function targetPdf(T, layoutId, fill, du) {
   });
   // header, between the top squares
   // the side marks that tell the app this is a two-page target
+  // which animal (2.49.0): one small square on the left side, at its own height
+  (L.tags || []).forEach(([u, v]) => { const mx = F.fid[0][0] + u * (F.fid[1][0] - F.fid[0][0]), my = F.fid[0][1] + v * (F.fid[3][1] - F.fid[0][1]), ms = T.mark ? T.mark.size : 0.6; pdf.rect(X(mx - ms / 2), X(my - ms / 2), X(ms), X(ms), INK); });
   if (F.marked && T.mark) T.mark.uv.forEach(([u, v]) => { const mx = F.fid[0][0] + u * (F.fid[1][0] - F.fid[0][0]), my = F.fid[0][1] + v * (F.fid[3][1] - F.fid[0][1]), ms = T.mark.size; pdf.rect(X(mx - ms / 2), X(my - ms / 2), X(ms), X(ms), INK); });
   const hx = Math.max(1.6, F.fid[0][0] + fs / 2 + 0.3);
   // the Range Book banner, like the range report's, centered between the top squares (2.47.62). Live target still finds
@@ -701,12 +723,17 @@ function targetPdf(T, layoutId, fill, du) {
     pdf.line(cx, cy - arm, cx, cy - gap, INK, 0.5); pdf.line(cx, cy + gap, cx, cy + arm, INK, 0.5);
     pdf.disc(cx, cy, X(0.06), INK);
     const lx = X(a.cell[0] + 0.12), ly = X(a.cell[1] + 0.3);
-    pdf.text(lx, ly, String(k + 1), { size: 14, bold: true, color: INK });
-    if (L.aims.length > 1) pdf.text(lx + 16 + (k >= 9 ? 8 : 0), ly - 1, "_______ gr", { size: 8.5, color: "#444444" });
+    if (!(L.art && L.aims.length === 1)) pdf.text(lx, ly, String(k + 1), { size: 14, bold: true, color: INK });
+    if (L.aims.length > 1 && !L.art) pdf.text(lx + 16 + (k >= 9 ? 8 : 0), ly - 1, "_______ gr", { size: 8.5, color: "#444444" });
   });
   (L.rings || []).forEach((r) => L.aims.forEach((a) => pdf.text(X(a.x + r) + 2, X(a.y) - 3, r + '"', { size: 7.5, color: "#5b6b78" })));
   // footer, between the bottom squares: how to use + a 1 inch check
   const fy = parts ? F.fid[3][1] + 0.35 : PH - 0.45;
+  // a fun animal target: how big it looks, just above the footer
+  { const A = L.art && T.art && T.art[L.art.k];
+    if (A && L.art.frac) { const u = du === "m" ? "meters" : "yards", nt = "1/" + L.art.frac + " size: at 100 " + u + " it looks like a real " + A.noun + " at " + (100 * L.art.frac).toLocaleString("en-US") + " " + u + ".", tw = textWidth(nt, 9.5, true);
+      pdf.rect(X(PW / 2) - tw / 2 - 5, X(fy - 0.6) - 10, tw + 10, 14, "#ffffff");
+      pdf.text(X(PW / 2), X(fy - 0.6), nt, { size: 9.5, bold: true, color: "#333333", align: "center" }); } }
   pdf.text(X(hx), X(fy - 0.25), parts ? "Print both pages at Actual size (100%) on Letter paper. Photograph the whole target with all 4 squares showing." : "Print at Actual size (100%)" + (PW > 9 ? " on 11 x 17 (Tabloid / Ledger) paper" : "") + ". Photograph the whole page with all 4 squares showing.", { size: 7.5, color: INK });
   pdf.line(X(hx), X(fy), X(hx + 1), X(fy), INK, 0.8); pdf.line(X(hx), X(fy - 0.07), X(hx), X(fy + 0.07), INK, 0.8); pdf.line(X(hx + 1), X(fy - 0.07), X(hx + 1), X(fy + 0.07), INK, 0.8);
   pdf.text(X(hx + 1.1), X(fy + 0.03), "this line should measure exactly 1 inch", { size: 7.5, color: "#444444" });
