@@ -2,6 +2,17 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
+      "version": "2.49.0",
+      "date": "2026-11-22",
+      "title": "Fun targets",
+      "items": [
+        "Tools › Printable targets has fun targets: a Silhouette with 5 aim points, an Armed threat (a masked gunman) with 3, and a Whitetail deer, Elk and Turkey with the aim point on the heart and lungs.",
+        "Each comes in all three sizes: Letter, 11 × 17, and two Letter pages taped together.",
+        "Print them in color or black and white. The pictures are light, so the holes still show up dark and measuring a photo or Live target works the same as on the other targets.",
+        "The animals are drawn smaller than life, and the page says how far away a real one would look: on Letter paper the deer is 1/10 size, so at 100 yards it looks like a real deer at 1,000 yards."
+      ]
+    },
+    {
       "version": "2.48.0",
       "date": "2026-11-22",
       "title": "Range Book for iPhone and iPad",

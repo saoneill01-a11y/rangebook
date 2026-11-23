@@ -618,7 +618,7 @@ async function api(req, res, url) {
       // yards or metres: the page says which (a guest has no saved settings), otherwise your setting
       const pr = who ? getDoc(who.id, "prefs") : null, uq = qp("u", 2);
       const units = uq === "m" ? "m" : uq === "yd" ? "yd" : pr && pr.units === "metric" ? "m" : "yd";
-      const buf = targetPdf(T, mt[1], fill.name || fill.load || fill.date || fill.dist || fill.gun ? fill : null, units);
+      const buf = targetPdf(T, mt[1], fill.name || fill.load || fill.date || fill.dist || fill.gun ? fill : null, units, qp("look", 4) === "bw" ? "bw" : "color");
       if (!buf) throw new HttpError(404, "No such target.");
       // never kept by the browser or a proxy like Cloudflare (which keeps anything ending in .pdf unless told not to): it's your data, and it changes (2.47.46)
       res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="RangeBook-target-${mt[1]}.pdf"`, "Content-Length": buf.length, "Cache-Control": "private, no-store", ...SECURITY_HEADERS });
