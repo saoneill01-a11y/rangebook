@@ -75,11 +75,11 @@ function colName(i) { let s = ""; i++; while (i) { const m = (i - 1) % 26; s = S
 const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
 <numFmts count="2"><numFmt numFmtId="164" formatCode="0.0"/><numFmt numFmtId="165" formatCode="0.000"/></numFmts>
-<fonts count="4"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font><font><b/><sz val="13"/><name val="Arial"/></font><font><i/><sz val="10"/><color rgb="FF808080"/><name val="Arial"/></font></fonts>
+<fonts count="5"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font><font><b/><sz val="13"/><name val="Arial"/></font><font><i/><sz val="10"/><color rgb="FF808080"/><name val="Arial"/></font><font><sz val="10"/><color rgb="FF5B645D"/><name val="Arial"/></font></fonts>
 <fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0E5A61"/><bgColor indexed="64"/></patternFill></fill></fills>
 <borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
 <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-<cellXfs count="8">
+<cellXfs count="9">
 <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
 <xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>
 <xf numFmtId="14" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyAlignment="1"><alignment horizontal="left"/></xf>
@@ -88,6 +88,7 @@ const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>
 <xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/>
 <xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/>
+<xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"/>
 </cellXfs>
 <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
 </styleSheet>`;
@@ -97,20 +98,25 @@ function excelDate(iso) {
   return (Date.UTC(+m[1], +m[2] - 1, +m[3]) - Date.UTC(1899, 11, 30)) / 86400000;
 }
 // A cell is a string, a number, null, or {v, s} with an explicit style; {date:"YYYY-MM-DD"} for dates.
-function sheetXml(sheet) {
-  const rows = sheet.rows, ncols = sheet.cols.length;
+/* sheet.banner = {sub} (2.50): the Range Book banner (a picture: the icon and name in a pill, public/img/rb-banner.png) across the
+   top, a line of text under it, then the headings. No banner row has more than one cell, so Import from a spreadsheet still finds
+   the headings (the first row with two or more). */
+const bannerRows = (sheet) => (sheet.banner ? 3 : 0);
+function sheetXml(sheet, drawing) {
+  const rows = sheet.rows, ncols = sheet.cols.length, B = bannerRows(sheet);
   let x = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">`;
-  x += `<sheetViews><sheetView workbookViewId="0"${sheet.selected ? ' tabSelected="1"' : ""}><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A2" sqref="A2"/></sheetView></sheetViews>`;
+  x += `<sheetViews><sheetView workbookViewId="0"${sheet.selected ? ' tabSelected="1"' : ""}><pane ySplit="${B + 1}" topLeftCell="A${B + 2}" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A${B + 2}" sqref="A${B + 2}"/></sheetView></sheetViews>`;
   x += `<sheetFormatPr defaultRowHeight="13"/><cols>`;
   sheet.cols.forEach((c, i) => { x += `<col min="${i + 1}" max="${i + 1}" width="${c.w}" customWidth="1"/>`; });
   x += `</cols><sheetData>`;
-  const all = [sheet.cols.map((c) => ({ v: c.h, s: 1 })), ...rows];
+  const top = B ? [[], [{ v: sheet.banner.sub || "", s: 8 }], []] : [];
+  const all = [...top, sheet.cols.map((c) => ({ v: c.h, s: 1 })), ...rows];
   all.forEach((row, r) => {
-    x += `<row r="${r + 1}"${r === 0 ? ' ht="28" customHeight="1"' : ""}>`;
+    x += `<row r="${r + 1}"${r === B ? ' ht="28" customHeight="1"' : B && r === 0 ? ' ht="50" customHeight="1"' : ""}>`;
     row.forEach((cell, c) => {
       if (cell == null || cell === "") return;
       const ref = colName(c) + (r + 1);
-      let v = cell, s = r === 0 ? 1 : (sheet.cols[c].s || 0);
+      let v = cell, s = r === B ? 1 : r < B ? 0 : (sheet.cols[c].s || 0);
       if (typeof cell === "object") {
         if ("date" in cell) { const n = excelDate(cell.date); if (n == null) { v = cell.date || ""; s = 0; } else { v = n; s = 2; } }
         else { v = cell.v; if (cell.s != null) s = cell.s; }
@@ -122,7 +128,7 @@ function sheetXml(sheet) {
     x += `</row>`;
   });
   x += `</sheetData>`;
-  if (all.length > 1 && !sheet.noFilter) x += `<autoFilter ref="A1:${colName(ncols - 1)}${all.length}"/>`;
+  if (all.length > B + 1 && !sheet.noFilter) x += `<autoFilter ref="A${B + 1}:${colName(ncols - 1)}${all.length}"/>`;
   // drop-down lists: {col, src: "Lists!$A$2:$A$99" or ["a","b"], to: last row}; any typed value is still allowed
   if (sheet.validations && sheet.validations.length) {
     x += `<dataValidations count="${sheet.validations.length}">`;
@@ -135,18 +141,34 @@ function sheetXml(sheet) {
     }
     x += `</dataValidations>`;
   }
-  x += `<pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>`;
+  x += `<pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/>${drawing ? '<drawing r:id="rId1"/>' : ""}</worksheet>`;
   return x;
 }
+// the banner picture, anchored in the top-left cell: 264 x 60 px
+let BANNER_PNG;
+const bannerPng = () => { if (BANNER_PNG === undefined) { try { BANNER_PNG = nfs.readFileSync(npath.join(__dirname, "public", "img", "rb-banner.png")); } catch { BANNER_PNG = null; } } return BANNER_PNG; };
+function drawingXml() {
+  const cx = 264 * 9525, cy = 60 * 9525;
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><xdr:oneCellAnchor><xdr:from><xdr:col>0</xdr:col><xdr:colOff>38100</xdr:colOff><xdr:row>0</xdr:row><xdr:rowOff>28575</xdr:rowOff></xdr:from><xdr:ext cx="${cx}" cy="${cy}"/><xdr:pic><xdr:nvPicPr><xdr:cNvPr id="2" name="Range Book"/><xdr:cNvPicPr><a:picLocks noChangeAspect="1"/></xdr:cNvPicPr></xdr:nvPicPr><xdr:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></xdr:blipFill><xdr:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:oneCellAnchor></xdr:wsDr>`;
+}
 function buildXlsx(sheets) {
-  const files = [];
-  files.push({ name: "[Content_Types].xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>` });
+  const files = [], icon = sheets.some((s) => s.banner) ? bannerPng() : null, pic = sheets.map((s) => !!(s.banner && icon));
+  files.push({ name: "[Content_Types].xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${icon ? '<Default Extension="png" ContentType="image/png"/>' : ""}<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>` + (pic[i] ? `<Override PartName="/xl/drawings/drawing${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>` : "")).join("")}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>` });
   files.push({ name: "_rels/.rels", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>` });
   files.push({ name: "docProps/core.xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>Range Book export</dc:title><dc:creator>Range Book</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${new Date().toISOString().replace(/\.\d+Z$/, "Z")}</dcterms:created></cp:coreProperties>` });
-  files.push({ name: "xl/workbook.xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews><sheets>${sheets.map((s, i) => `<sheet name="${xmlEsc(s.name)}" sheetId="${i + 1}"${s.hidden ? ' state="hidden"' : ""} r:id="rId${i + 1}"/>`).join("")}</sheets><definedNames>${sheets.map((s, i) => s.rows.length && !s.hidden && !s.noFilter ? `<definedName name="_xlnm._FilterDatabase" localSheetId="${i}" hidden="1">'${xmlEsc(s.name)}'!$A$1:$${colName(s.cols.length - 1)}$${s.rows.length + 1}</definedName>` : "").join("")}</definedNames></workbook>` });
+  files.push({ name: "xl/workbook.xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews><sheets>${sheets.map((s, i) => `<sheet name="${xmlEsc(s.name)}" sheetId="${i + 1}"${s.hidden ? ' state="hidden"' : ""} r:id="rId${i + 1}"/>`).join("")}</sheets><definedNames>${sheets.map((s, i) => s.rows.length && !s.hidden && !s.noFilter ? `<definedName name="_xlnm._FilterDatabase" localSheetId="${i}" hidden="1">'${xmlEsc(s.name)}'!$A$${bannerRows(s) + 1}:$${colName(s.cols.length - 1)}$${s.rows.length + 1 + bannerRows(s)}</definedName>` : "").join("")}</definedNames></workbook>` });
   files.push({ name: "xl/_rels/workbook.xml.rels", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("")}<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>` });
   files.push({ name: "xl/styles.xml", data: STYLES });
-  sheets.forEach((s, i) => files.push({ name: `xl/worksheets/sheet${i + 1}.xml`, data: sheetXml(s) }));
+  sheets.forEach((s, i) => files.push({ name: `xl/worksheets/sheet${i + 1}.xml`, data: sheetXml(s, pic[i]) }));
+  if (icon) {
+    files.push({ name: "xl/media/rb-banner.png", data: icon });
+    sheets.forEach((s, i) => {
+      if (!pic[i]) return;
+      files.push({ name: `xl/worksheets/_rels/sheet${i + 1}.xml.rels`, data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing${i + 1}.xml"/></Relationships>` });
+      files.push({ name: `xl/drawings/drawing${i + 1}.xml`, data: drawingXml() });
+      files.push({ name: `xl/drawings/_rels/drawing${i + 1}.xml.rels`, data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/rb-banner.png"/></Relationships>` });
+    });
+  }
   return zip(files);
 }
 
@@ -902,13 +924,14 @@ function partRoundsX(p, d) {
 }
 // suppressors and inventory (2.20), from the rifles doc
 const canList = (d) => (d.rifles && Array.isArray(d.rifles.cans) ? d.rifles.cans : []);
+const gunsWithCan = (d, id) => (d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : []).filter((r) => r.canId === id || (Array.isArray(r.canIds) && r.canIds.includes(id)));
 const invList = (d) => (d.rifles && Array.isArray(d.rifles.inventory) ? d.rifles.inventory : []);
 function canSheet(d) {
   const rows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], trips = d.trips && Array.isArray(d.trips.trips) ? d.trips.trips : [];
   const nm = (c) => [c.mfr, c.model].filter(Boolean).join(" ") || "Unnamed suppressor";
   return { name: "Suppressors", rows: canList(d).slice().sort((a, b) => nm(a).localeCompare(nm(b), undefined, { numeric: true })).map((c) => {
     const tr = trips.filter((t) => t.canId === c.id).reduce((a, t) => a + (numv(t.rounds) || 0), 0);
-    return [c.mfr || "", c.model || "", c.caliber || "", c.serial || "", c.approved || "", rows.filter((r) => r.canId === c.id).map((r) => r.name || "").join(", "), (numv(c.roundsBase) || 0) + tr, c.cleaned || "", c.notes || ""]; }),
+    return [c.mfr || "", c.model || "", c.caliber || "", c.serial || "", c.approved || "", gunsWithCan(d, c.id).map((r) => r.name || "").join(", "), (numv(c.roundsBase) || 0) + tr, c.cleaned || "", c.notes || ""]; }),
     cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 22 }, { h: "Rated for", w: 18 }, { h: "Serial number", w: 18 }, { h: "Tax stamp approved", w: 14 }, { h: "On gun", w: 24 }, { h: "Rounds", w: 9 }, { h: "Last cleaned", w: 12 }, { h: "Notes", w: 40, s: 5 }] };
 }
 function invSheet(d) {
@@ -966,45 +989,69 @@ function gunsXlsx(d) {
     return [gunMfr(r), gunModel(r), r.nick || "", gunType(r), r.builtFrom || "", r.cartridge || "", r.serial || "", numv(r.barrel) != null ? cv("dim", r.barrel, METRIC ? 0 : null) : r.barrel || "", ynX(r.threaded), twistTxt(numv(r.twist) != null && METRIC ? cv("dim", r.twist, 0) : r.twist), cv("in", r.sightHeight, METRIC ? 2 : null), scopeTxt(r, d), rc.total || null, rc.life, rc.pct, r.barrelSince ? { date: r.barrelSince } : null, r.cleaned ? { date: r.cleaned } : null, numv(r.cleanEvery), rc.since, uses || null, (d.gunPhotos || []).filter((p) => p.rifle_id === r.id).length || null, r.notes || ""];
   });
   const extra = [...(partList(d).length ? [partSheet(d)] : []), ...gearSheets(d)];
-  return buildXlsx([{ name: "Guns", selected: true, rows, cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 24 }, { h: "Nickname", w: 16 }, { h: "Type", w: 10 }, { h: "Built from (lower + upper)", w: 30 }, { h: "Cartridge", w: 20 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 11 }, { h: "Threaded", w: 9 }, { h: "Twist" + (METRIC ? " (mm)" : ""), w: 9 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Optic", w: 34 }, { h: "Round count", w: 12 }, { h: "Barrel life", w: 11 }, { h: "Barrel life used (%)", w: 17 }, { h: "Barrel fitted", w: 13 }, { h: "Last cleaned", w: 13 }, { h: "Clean every", w: 11 }, { h: "Rounds since cleaning", w: 18 }, { h: "Loads using it", w: 13 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] }, ...extra]);
+  const banner = { sub: `Guns, optics and suppressors of ${d.user.display_name || d.user.username} · exported ${fmtDate(localDay())}` };
+  extra.forEach((x) => { x.banner = banner; });
+  return buildXlsx([{ name: "Guns", selected: true, banner, rows, cols: [{ h: "Manufacturer", w: 16 }, { h: "Model", w: 24 }, { h: "Nickname", w: 16 }, { h: "Type", w: 10 }, { h: "Built from (lower + upper)", w: 30 }, { h: "Cartridge", w: 20 }, { h: "Serial number", w: 18 }, { h: "Barrel (" + ul("dim") + ")", w: 11 }, { h: "Threaded", w: 9 }, { h: "Twist" + (METRIC ? " (mm)" : ""), w: 9 }, { h: "Sight height (" + ul("in") + ")", w: 15 }, { h: "Optic", w: 34 }, { h: "Round count", w: 12 }, { h: "Barrel life", w: 11 }, { h: "Barrel life used (%)", w: 17 }, { h: "Barrel fitted", w: 13 }, { h: "Last cleaned", w: 13 }, { h: "Clean every", w: 11 }, { h: "Rounds since cleaning", w: 18 }, { h: "Loads using it", w: 13 }, { h: "Photos", w: 8 }, { h: "Notes", w: 60, s: 5 }] }, ...extra]);
 }
 function gunsPdf(d, readPhoto) {
   useUnits(d);
   const pdf = new Pdf(), ACC = "#0e5a61", MUTED = "#5b645d", content = pdf.W - 2 * pdf.M;
-  const name = d.user.display_name || d.user.username, today = localDay(), guns = gunList(d), gid = new Set(guns.map((r) => r.id)), photos = (d.gunPhotos || []).filter((p) => gid.has(p.rifle_id));
-  pdf.title = `Guns - ${name}`;
-  pdf.text(pdf.M, pdf.y + 10, "RANGE BOOK", { size: 11, bold: true, color: ACC });
-  pdf.y += 40; pdf.text(pdf.M, pdf.y, `Guns of ${name}`, { size: 22, bold: true });
-  pdf.y += 18; pdf.text(pdf.M, pdf.y, `Exported ${fmtDate(today)} · ${guns.length} gun${guns.length === 1 ? "" : "s"} · ${photos.length} photo${photos.length === 1 ? "" : "s"}`, { size: 10, color: MUTED });
+  const name = d.user.display_name || d.user.username, today = localDay(), guns = gunList(d);
+  // optics and suppressors too (2.50), with their photos (they're kept with the gun photos, by the item's id)
+  const onm = (x) => [x.mfr, x.model].filter(Boolean).join(" ") || "Unnamed optic", cnm = (c) => [c.mfr, c.model].filter(Boolean).join(" ") || "Unnamed suppressor";
+  const optics = opticList(d).slice().sort((a, b) => onm(a).localeCompare(onm(b), undefined, { numeric: true })), cans = canList(d).slice().sort((a, b) => cnm(a).localeCompare(cnm(b), undefined, { numeric: true }));
+  const ids = new Set([...guns, ...optics, ...cans].map((r) => r.id)), photos = (d.gunPhotos || []).filter((p) => ids.has(p.rifle_id));
+  const nPh = (id) => photos.filter((p) => p.rifle_id === id).length;
+  const allRows = d.rifles && Array.isArray(d.rifles.rows) ? d.rifles.rows : [], trips = d.trips && Array.isArray(d.trips.trips) ? d.trips.trips : [];
+  const canRounds = (c) => (numv(c.roundsBase) || 0) + trips.filter((t) => t.canId === c.id).reduce((a, t) => a + (numv(t.rounds) || 0), 0);
+  const KIND = { dot: "Red dot", holo: "Holographic", prism: "Prism" }, dotK = (x) => x.kind === "dot" || x.kind === "holo", t2 = (v) => String(+(+v).toFixed(2));
+  const opticBits = (x) => dotK(x) ? [numv(x.dot) ? t2(x.dot) + " MOA dot" : "", numv(x.ring) ? t2(x.ring) + " MOA ring" : "", numv(x.magnifier) ? numv(x.magnifier) + "x magnifier" : ""].filter(Boolean).join(", ")
+    : [numv(x.magMin) && numv(x.magMax) ? numv(x.magMin) + "-" + numv(x.magMax) + "x" : numv(x.magMax) ? numv(x.magMax) + "x" : "", numv(x.obj) ? numv(x.obj) + " mm" : "", x.fp || "", x.unit === "mil" ? "MIL" : x.unit === "moa" ? "MOA" : ""].filter(Boolean).join(", ");
+  const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+  pdf.title = `Guns, optics and suppressors - ${name}`;
+  // the Range Book banner across the top, the same as on the range report
+  { const B = RBM.banner({ tw: (s2, size, bold) => textWidth(s2, size, bold), head: { title: "Range Book", sub: `Guns, optics and suppressors · exported ${fmtDate(today)}` } }), k = Math.min(0.56, content / B.W);
+    pdf.draw(B, (pdf.W - B.W * k) / 2, pdf.y - 22, k, null, reportIcon()); pdf.y += B.H * k - 10; }
+  pdf.y += 30; pdf.text(pdf.M, pdf.y, `Gear of ${name}`, { size: 22, bold: true });
+  pdf.y += 18; pdf.text(pdf.M, pdf.y, [plural(guns.length, "gun"), plural(optics.length, "optic"), plural(cans.length, "suppressor"), plural(photos.length, "photo")].join(" · "), { size: 10, color: MUTED });
   pdf.y += 14; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y, ACC, 1.5); pdf.y += 10;
-  if (!guns.length) { pdf.y += 10; pdf.para("No guns yet.", { size: 10, color: MUTED }); }
-  else {
+  const section = (t) => { pdf.y += 18; pdf.ensure(70); pdf.text(pdf.M, pdf.y, t, { size: 13, bold: true, color: ACC }); pdf.y += 4; };
+  if (!guns.length && !optics.length && !cans.length) { pdf.y += 10; pdf.para("No guns, optics or suppressors yet.", { size: 10, color: MUTED }); }
+  if (guns.length) {
+    section("Guns");
     pdf.table([{ h: "Gun", w: 170 }, { h: "Serial number", w: 110 }, { h: "Barrel", w: 55 }, { h: "Twist", w: 50 }, { h: "Rounds", w: 55, align: "right" }, { h: "Photos", w: content - 440, align: "right" }],
-      guns.map((r) => [r.name || "Unnamed gun", r.serial || "", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : "", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist), gunRounds(r, d).total || "", photos.filter((p) => p.rifle_id === r.id).length || ""]));
+      guns.map((r) => [r.name || "Unnamed gun", r.serial || "", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : "", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist), gunRounds(r, d).total || "", nPh(r.id) || ""]));
   }
-  for (const r of guns) {
+  if (optics.length) {
+    section("Optics");
+    pdf.table([{ h: "Optic", w: 170 }, { h: "Kind", w: 70 }, { h: "Serial number", w: 110 }, { h: "On gun", w: content - 400 }, { h: "Photos", w: 50, align: "right" }],
+      optics.map((x) => [onm(x) + (x.nick ? ` (${x.nick})` : ""), KIND[x.kind] || "Scope", x.serial || "", allRows.filter((r) => r.scopeId === x.id).map((r) => r.name || "").join(", "), nPh(x.id) || ""]));
+  }
+  if (cans.length) {
+    section("Suppressors");
+    pdf.table([{ h: "Suppressor", w: 150 }, { h: "Rated for", w: 90 }, { h: "Serial number", w: 100 }, { h: "On gun", w: content - 445 }, { h: "Rounds", w: 55, align: "right" }, { h: "Photos", w: 50, align: "right" }],
+      cans.map((c) => [cnm(c), c.caliber || "", c.serial || "", gunsWithCan(d, c.id).map((r) => r.name || "").join(", "), canRounds(c) || "", nPh(c.id) || ""]));
+  }
+  // one page for each: its facts two across, notes, then photos two across
+  const itemPage = (label, title, facts, notes, id) => {
     pdf.addPage();
-    const rc = gunRounds(r, d);
-    pdf.text(pdf.M, pdf.y + 8, "GUN", { size: 9, bold: true, color: ACC });
-    pdf.y += 30; pdf.text(pdf.M, pdf.y, r.name || "Unnamed gun", { size: 18, bold: true });
+    pdf.text(pdf.M, pdf.y + 8, label, { size: 9, bold: true, color: ACC });
+    pdf.y += 30; pdf.text(pdf.M, pdf.y, title, { size: 18, bold: true });
     pdf.y += 12; pdf.line(pdf.M, pdf.y, pdf.W - pdf.M, pdf.y); pdf.y += 6;
-    const facts = [["Type", gunType(r)], ["Built from", r.builtFrom || ""], ["Cartridge", r.cartridge || ""], ["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : ""], ["Threaded barrel", ynX(r.threaded)], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""], [(() => { const L = d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : [], x = r.scopeId && L.find((y) => y.id === r.scopeId); return x && x.kind && x.kind !== "scope" ? "Sight" : "Scope"; })(), scopeTxt(r, d)],
-      ["Round count", rc.total ? rc.total.toLocaleString("en-US") + (rc.base ? ` (${rc.base.toLocaleString("en-US")} before Range Book)` : "") : ""], ["Barrel life", rc.life ? rc.life.toLocaleString("en-US") + " rounds" + (rc.pct != null ? `, ${rc.pct}% used` : "") : ""],
-      ["Barrel fitted", r.barrelSince ? fmtDate(r.barrelSince) : ""], ["Last cleaned", r.cleaned ? fmtDate(r.cleaned) + (rc.since != null ? ` (${rc.since} rounds since)` : "") : ""], ["Clean every", numv(r.cleanEvery) ? numv(r.cleanEvery) + " rounds" : ""]].filter((x) => x[1]);
+    facts = facts.filter((x) => x[1]);
     const colW = content / 2;
     for (let i = 0; i < facts.length; i += 2) {
       pdf.ensure(28); pdf.y += 14;
       [facts[i], facts[i + 1]].forEach((x, k) => {
         if (!x) return; const px = pdf.M + k * colW;
         pdf.text(px, pdf.y, x[0].toUpperCase(), { size: 7.5, bold: true, color: MUTED });
-        let v = x[1]; while (v.length > 1 && textWidth(v, 10.5, false) > colW - 12) v = v.slice(0, -2) + "…";
+        let v = String(x[1]); while (v.length > 1 && textWidth(v, 10.5, false) > colW - 12) v = v.slice(0, -2) + "…";
         pdf.text(px, pdf.y + 12, v, { size: 10.5 });
       });
       pdf.y += 14;
     }
-    if (r.notes) { pdf.y += 12; pdf.ensure(30); pdf.text(pdf.M, pdf.y + 4, "NOTES", { size: 7.5, bold: true, color: MUTED }); pdf.y += 2; pdf.para(r.notes, { size: 9.5 }); }
-    // photos, two across
-    const ph = photos.filter((p) => p.rifle_id === r.id).map((p) => { const buf = readPhoto(p.file), info = buf && jpegInfo(buf); return info ? { buf, info } : null; }).filter(Boolean);
+    if (notes) { pdf.y += 12; pdf.ensure(30); pdf.text(pdf.M, pdf.y + 4, "NOTES", { size: 7.5, bold: true, color: MUTED }); pdf.y += 2; pdf.para(notes, { size: 9.5 }); }
+    const ph = photos.filter((p) => p.rifle_id === id).map((p) => { const buf = readPhoto(p.file), info = buf && jpegInfo(buf); return info ? { buf, info } : null; }).filter(Boolean);
     if (ph.length) {
       pdf.y += 22; pdf.ensure(60); pdf.text(pdf.M, pdf.y, "Photos", { size: 12, bold: true, color: ACC }); pdf.y += 8;
       const gap = 12, cw = (content - gap) / 2, maxH = 230;
@@ -1016,13 +1063,32 @@ function gunsPdf(d, readPhoto) {
         pdf.y += rowH + gap;
       }
     }
+  };
+  for (const r of guns) {
+    const rc = gunRounds(r, d);
+    itemPage("GUN", r.name || "Unnamed gun", [["Type", gunType(r)], ["Built from", r.builtFrom || ""], ["Cartridge", r.cartridge || ""], ["Serial number", r.serial || ""], ["Barrel", numv(r.barrel) != null ? cs("dim", r.barrel, METRIC ? 0 : 2) : r.barrel ? r.barrel + " in" : ""], ["Threaded barrel", ynX(r.threaded)], ["Twist", twistTxt(numv(r.twist) != null && METRIC ? cs("dim", r.twist, 0) : r.twist)], ["Sight height", numv(r.sightHeight) != null ? cs("in", r.sightHeight, METRIC ? 1 : 2) : ""], [(() => { const L = d.rifles && Array.isArray(d.rifles.scopes) ? d.rifles.scopes : [], x = r.scopeId && L.find((y) => y.id === r.scopeId); return x && x.kind && x.kind !== "scope" ? "Sight" : "Scope"; })(), scopeTxt(r, d)],
+      ["Suppressor", gunCans(r, d)],
+      ["Round count", rc.total ? rc.total.toLocaleString("en-US") + (rc.base ? ` (${rc.base.toLocaleString("en-US")} before Range Book)` : "") : ""], ["Barrel life", rc.life ? rc.life.toLocaleString("en-US") + " rounds" + (rc.pct != null ? `, ${rc.pct}% used` : "") : ""],
+      ["Barrel fitted", r.barrelSince ? fmtDate(r.barrelSince) : ""], ["Last cleaned", r.cleaned ? fmtDate(r.cleaned) + (rc.since != null ? ` (${rc.since} rounds since)` : "") : ""], ["Clean every", numv(r.cleanEvery) ? numv(r.cleanEvery) + " rounds" : ""]], r.notes, r.id);
+  }
+  for (const x of optics) {
+    const dk = dotK(x);
+    itemPage("OPTIC", onm(x), [["Kind", KIND[x.kind] || "Scope"], ["Nickname", x.nick || ""], ["Serial number", x.serial || ""], ["On gun", allRows.filter((r) => r.scopeId === x.id).map((r) => r.name || "").join(", ")],
+      ["Details", opticBits(x)], ["Click value", numv(x.click) ? numv(x.click) + (dk ? " MOA" : x.turret === "mil" ? " MIL" : x.turret === "moa" ? " MOA" : "") : ""], ["Reticle", dk ? "" : x.reticle || ""], ["SFP marks true at", !dk && x.fp === "SFP" && numv(x.sfpTrue) ? numv(x.sfpTrue) + "x" : ""]], x.notes, x.id);
+  }
+  for (const c of cans) {
+    const n = canRounds(c);
+    itemPage("SUPPRESSOR", cnm(c), [["Rated for", c.caliber || ""], ["Serial number", c.serial || ""], ["Tax stamp approved", c.approved ? (/^\d{4}-\d{2}-\d{2}$/.test(c.approved) ? fmtDate(c.approved) : c.approved) : ""], ["On gun", gunsWithCan(d, c.id).map((r) => r.name || "").join(", ")],
+      ["Round count", n ? n.toLocaleString("en-US") : ""], ["Last cleaned", c.cleaned ? (/^\d{4}-\d{2}-\d{2}$/.test(c.cleaned) ? fmtDate(c.cleaned) : c.cleaned) : ""]], c.notes, c.id);
   }
   return pdf.build((p, ops, n, total) => {
     p.cur = ops;
     p.line(p.M, p.H - 34, p.W - p.M, p.H - 34);
-    p.text(p.M, p.H - 22, `Range Book · guns of ${name} · exported ${fmtDate(today)}`, { size: 8, color: MUTED, page: ops });
+    p.text(p.M, p.H - 22, `Range Book · gear of ${name} · exported ${fmtDate(today)}`, { size: 8, color: MUTED, page: ops });
     p.text(p.W - p.M, p.H - 22, `Page ${n} of ${total}`, { size: 8, color: MUTED, align: "right", page: ops });
   });
 }
+// the suppressors on a gun, as one line
+const gunCans = (r, d) => { const ids = Array.isArray(r.canIds) && r.canIds.length ? r.canIds : r.canId ? [r.canId] : []; return ids.map((id) => canList(d).find((c) => c.id === id)).filter(Boolean).map((c) => [c.mfr, c.model].filter(Boolean).join(" ")).join(", "); };
 
 module.exports = { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf, zip, buildXlsx };
