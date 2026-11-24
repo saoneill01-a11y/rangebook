@@ -15,6 +15,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const zlib = require("node:zlib");
 const crypto = require("node:crypto");
+const os = require("node:os");
 
 const DOC_KEYS = ["calc", "brass", "rifles", "components", "prefs", "trips", "ammo", "notes", "training", "testing"];
 const DATA_SHEET = "RangeBook data";
@@ -135,11 +136,12 @@ function readSheets(buf) {
   return out;
 }
 
-module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, APP_VERSION, zip }) {
+module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, APP_VERSION, zip, tarEntries }) {
   const parse = (s) => { try { return s ? JSON.parse(s) : null; } catch { return null; } };
 
   /* ---------- everything that belongs to one account ---------- */
-  function payload(uid, withPhotos) {
+  const payload = (uid, withPhotos) => payloadOf(q, getDoc, uid, withPhotos);
+  function payloadOf(q, getDoc, uid, withPhotos) {
     const u = q("SELECT username, display_name FROM users WHERE id=?").get(uid) || {};
     const out = {
       format: "rangebook-data", version: 1, app: APP_VERSION, exportedAt: new Date().toISOString(),
@@ -191,9 +193,53 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
   }
 
   /* ---------- importing ---------- */
-  function readFile(buf) {
+  /* A nightly backup (2.43.26): the folder's rangebook.db (on its own, or in a .zip or .tar/.tar.gz of the folder) holds
+     every account on the server. Only the importing account's own data is taken from it, matched by username, and it's
+     added like any backup: nothing already here is changed. */
+  const SQLITE_MAGIC = Buffer.from("SQLite format 3\0");
+  function nightly(buf, uid) {
+    let dbBuf = null, root = "", list = null;
+    if (buf.length > 100 && buf.subarray(0, 16).equals(SQLITE_MAGIC)) dbBuf = buf;
+    else {
+      if (buf[0] === 0x1f && buf[1] === 0x8b) { try { buf = zlib.gunzipSync(buf, { maxOutputLength: 1024 * 1024 * 1024 }); } catch { return null; } }
+      if (buf.length >= 512 && buf.toString("utf8", 257, 262) === "ustar" && tarEntries) list = [...tarEntries(buf)];
+      else if (buf.length > 4 && buf.readUInt32LE(0) === 0x04034b50) { try { const z = unzip(buf); list = [...z.keys()].map((n) => [n, z.get(n)]); } catch { return null; } }
+      if (!list) return null;
+      const dbe = list.find(([n]) => /(^|\/)rangebook\.db$/.test(n));
+      if (!dbe) return null;
+      root = dbe[0].slice(0, -"rangebook.db".length);
+      dbBuf = typeof dbe[1] === "function" ? dbe[1]() : dbe[1];
+    }
+    const { DatabaseSync } = require("node:sqlite");
+    const tmp = path.join(os.tmpdir(), "rb-nightly-" + crypto.randomUUID() + ".db");
+    fs.writeFileSync(tmp, dbBuf);
+    let bk;
+    try { bk = new DatabaseSync(tmp, { readOnly: true }); } catch { fs.rmSync(tmp, { force: true }); throw new Error("The database in that backup couldn't be opened."); }
+    try {
+      const me = q("SELECT username FROM users WHERE id=?").get(uid) || {};
+      const bq = (sql) => { const st = bk.prepare(sql); return { get: (...a) => st.get(...a), all: (...a) => st.all(...a) }; };
+      const has = new Set(bk.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map((r) => r.name));
+      const them = bq("SELECT id FROM users WHERE lower(username)=lower(?)").get(me.username || "");
+      if (!them) throw new Error("That backup has no account named \u201c" + (me.username || "") + "\u201d, so there's nothing in it to bring back into yours.");
+      // tables a newer Range Book added may be missing from an older backup: they read as empty
+      const safeQ = (sql) => { const t = (/FROM\s+(\w+)/i.exec(sql) || [])[1]; if (t && !has.has(t)) return { get: () => undefined, all: () => [] }; return bq(sql); };
+      const gd = (id, k) => { const r = bq("SELECT data FROM user_docs WHERE user_id=? AND key=?").get(id, k); return r ? parse(r.data) : null; };
+      const d = payloadOf(safeQ, gd, them.id, true);
+      d.format = "rangebook-backup"; d.nightly = true;
+      // the photo, vault and gear-note files all sit in the folder's photos/
+      const files = new Map();
+      if (list) for (const [n, f] of list) {
+        if (!n.startsWith(root + "photos/")) continue; const b = path.basename(n); if (!b || b.startsWith(".")) continue;
+        const get = typeof f === "function" ? f : () => f;
+        files.set("photos/" + b, get); files.set("vault/" + b, get); files.set("files/" + b, get);
+      }
+      return { d, files, kind: "nightly" };
+    } finally { try { bk.close(); } catch {} fs.rmSync(tmp, { force: true }); }
+  }
+  function readFile(buf, uid) {
+    const n = nightly(buf, uid); if (n) return n;
     let files;
-    try { files = unzip(buf); } catch { throw new Error("That file isn't a Range Book backup (.zip) or an Excel export from Range Book."); }
+    try { files = unzip(buf); } catch { throw new Error("That file isn't a Range Book backup (.zip), an Excel export from Range Book, or a nightly backup (its rangebook.db, or a .zip of its folder)."); }
     if (files.has("rangebook-backup.json")) {
       const d = parse(files.get("rangebook-backup.json")().toString("utf8"));
       if (!d || !Array.isArray(d.loads)) throw new Error("That backup file is damaged.");
@@ -204,7 +250,7 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
       if (!d || !Array.isArray(d.loads)) throw new Error("That Excel file doesn't have Range Book's data in it. Only Excel exports made with Range Book 2.2 or newer can be imported; use Download backup for a complete copy.");
       return { d, files: null, kind: "excel" };
     }
-    throw new Error("That file isn't a Range Book backup (.zip) or an Excel export from Range Book.");
+    throw new Error("That file isn't a Range Book backup (.zip), an Excel export from Range Book, or a nightly backup (its rangebook.db, or a .zip of its folder).");
   }
 
   // a row's identity inside a list: its id, or (for rows without one) the row itself
@@ -231,7 +277,7 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
   }
 
   function importInto(uid, buf) {
-    const { d, files, kind } = readFile(buf);
+    const { d, files, kind } = readFile(buf, uid);
     const res = { kind, loads: { added: 0, skipped: 0 }, lists: {}, photos: { added: 0, skipped: 0 }, vault: null, from: d.account || null, made: d.exportedAt || null };
     const written = [], t = now();
     const newFile = (orig) => {
