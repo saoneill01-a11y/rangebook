@@ -2,6 +2,18 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
+      "version": "2.50.0",
+      "date": "2026-11-23",
+      "title": "Tidier Account and Admin",
+      "items": [
+        "The Help tab is called Help now (it was How to Use), and its page is shorter at the top.",
+        "Account is tidier. Every tile folds: tap its title. The Account tile has your password (Change password opens a popup), Sign out, Open Admin for admins, Units as one button that switches between Imperial and Metric, and Storage.",
+        "Look has the themes, then picture tiles for light or dark, the camo background and text size. Layout has the phone tab bar and the Arrange buttons. Import and Export puts the exports and the imports in two boxes of their own.",
+        "Admin lists everyone one line each, sorted by name, with a search box. Tap a person for a popup with everything you can do for them. + Add user makes up the temporary password for you, with a Copy button. Guest access, sharing and storage are together under Settings.",
+        "Gear & Ranges has an Import / Export button next to Guns, Optics and Suppressors. The Excel and PDF exports now include your optics and suppressors, and both start with the Range Book banner. The PDF has a page for each gun, optic and suppressor, with its photos."
+      ]
+    },
+    {
       "version": "2.49.0",
       "date": "2026-11-22",
       "title": "Fun targets",

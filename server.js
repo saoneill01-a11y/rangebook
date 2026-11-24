@@ -25,7 +25,7 @@ const SEED_FILE = process.env.SEED_FILE || path.join(__dirname, "seed", "initial
 const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || "admin").trim();
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
 // the version is the newest entry in public/changelog.json (the What's new page reads the same file)
-// where people can get this copy's source code (the AGPL asks a hosted copy to say); shown on How to Use
+// where people can get this copy's source code (the AGPL asks a hosted copy to say); shown on the Help page
 // the official project; a changed copy run for other people should set SOURCE_URL to where its own code is published
 const DEFAULT_SOURCE_URL = "https://github.com/saoneill01-a11y/rangebook";
 const SOURCE_URL = /^https?:\/\/[^\s"'<>]+$/.test(process.env.SOURCE_URL || "") ? process.env.SOURCE_URL : DEFAULT_SOURCE_URL;
@@ -508,7 +508,7 @@ function sendGunExport(res, uid, kind, serials) {
   const buf = kind === "xlsx" ? gunsXlsx(d) : gunsPdf(d, (file) => { try { return fs.readFileSync(path.join(PHOTO_DIR, path.basename(file))); } catch { return null; } });
   res.writeHead(200, {
     "Content-Type": kind === "xlsx" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf",
-    "Content-Disposition": `attachment; filename="RangeBook-guns-${safe}-${day}.${kind}"`,
+    "Content-Disposition": `attachment; filename="RangeBook-gear-${safe}-${day}.${kind}"`,
     "Content-Length": buf.length, "Cache-Control": "no-store", ...SECURITY_HEADERS,
   });
   res.end(buf);
