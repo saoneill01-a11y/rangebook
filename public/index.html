@@ -281,7 +281,7 @@ textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 svg.gico{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}.lthumb svg.gico{width:46px;height:20px}
 .akhead{margin:20px 0 2px;padding-bottom:4px;border-bottom:2px solid var(--line);font-size:calc(18px*var(--fs))}.aksearch{margin:2px 0 8px}
 .segtabs.gkinds{display:inline-flex;align-self:flex-start;max-width:100%;flex-wrap:wrap;margin:10px 0 4px}.segtabs.gkinds button{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:5px 12px}.gkinds .gico{width:26px;height:11px}.gkn{opacity:.7;font-weight:500}
-@media (max-width:420px){.segtabs.gkinds.akinds{display:flex;flex-wrap:nowrap;align-self:stretch}.segtabs.gkinds.akinds button{flex:1 1 auto;min-width:0;justify-content:center;padding:5px 4px;gap:4px}.segtabs.akinds img.gkpic{width:22px;height:15px}}
+@media (max-width:420px){.segtabs.gkinds.akinds{display:flex;flex-wrap:nowrap;align-self:stretch}.segtabs.gkinds.akinds button{flex:1 1 auto;min-width:0;justify-content:center;padding:5px 4px;gap:4px}.segtabs.akinds img.gkpic{width:22px;height:15px}.segtabs.akinds:has([data-akind="shared"]) .gkpic{display:none}}
 .loaditem{display:flex;flex-direction:column;gap:2px;text-align:left;width:100%;padding:11px 12px;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;background:linear-gradient(to bottom,var(--surface),var(--sunk));cursor:pointer;font:inherit;color:inherit;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(0,0,0,.10),0 3px 8px rgba(0,0,0,.12);transition:transform .12s,box-shadow .12s,border-color .12s}
 .loaditem:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 4px rgba(0,0,0,.12),0 8px 16px rgba(0,0,0,.14)}
@@ -1171,9 +1171,10 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .usheet .ugrp h3{margin:0 0 8px;font-size:calc(13px*var(--fs));font-family:var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .usheet .row{flex-wrap:wrap}
 .usheet .note{margin:4px 0}
-.usearchrow{display:flex;gap:10px;align-items:center}.usearchrow .usearch{flex:1;min-width:0}.usearchrow .btn{flex:none}
+.usearchrow{display:flex;gap:10px;align-items:center}
+.urow .unick{color:var(--muted);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.usearchrow .usearch{flex:1;min-width:0}.usearchrow .btn{flex:none}
 .actg{display:flex;align-items:center;gap:8px;font-weight:600;white-space:nowrap;cursor:pointer}.actg input{width:20px;height:20px;margin:0;accent-color:var(--accent)}
-.acq{display:flex;align-items:center;gap:8px}.acq input{width:7.5em}
+.acq{display:flex;align-items:center;gap:8px}.acq input{width:7.5em}.acq #nickIn{width:11em}
 .aclbl .savestate:empty{display:none}
 #au_form,#au_added{display:flex;flex-direction:column;gap:10px}#au_form[hidden],#au_added[hidden]{display:none}#au_res{margin:0}#au_form .row{margin-top:4px}
 .usheet .uquotaedit,.usheet .unameedit{margin-top:10px;gap:8px;align-items:center}.usheet .uquotaedit select{flex:1 1 220px;width:auto}.usheet .unameedit input{flex:1 1 200px}
@@ -1621,6 +1622,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .vartabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
 .loaditem.used{background:var(--bg);border-left-color:var(--line);box-shadow:none;opacity:.72}
 .sharetag{color:var(--accent);font-weight:700}
+.crow.shrow>.crhead{background:var(--accent-soft);border-left:5px solid var(--accent)}
+.shfacts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 16px;margin:0 0 10px}
+svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .loaditem.sharedload{background:linear-gradient(to bottom,var(--accent-soft),color-mix(in srgb,var(--accent-soft) 85%,var(--accent) 15%));border-color:var(--accent);border-left-width:5px}
 .sharebadge{display:inline-block;font-family:var(--body);font-size:calc(11px*var(--fs));font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:99px;background:var(--accent);color:var(--accent-fg);margin-right:2px}
 .ammocat .segtabs button{font-size:calc(13px*var(--fs))}
@@ -1883,6 +1887,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <details class="hmore"><summary>Learn more about Getting started</summary>      <h3>Signing in</h3>
       <p>The admin makes your account and gives you a temporary password. The first time you sign in you'll choose your own. To change it later, tap <b>More</b> at the bottom right, then <b>Account</b> (on a computer, <b>Account</b> is at the top right). Want a different name shown (on shared loads, box photos and the greeting on Home)? Ask the admin; they can change it with <b>Edit name</b> on the Admin page.</p>
       <h3>Units, colors, text size and the tab bar</h3>
+      <p>To choose what name other people here see on ammo, box photos and Shooting profiles you share, type a <b>Nickname</b> in <a class=goto href=#go data-go=account:nickname>More › Account</a> and tap <b>Save</b>. It also greets you on Home. Leave it blank to use your name. Nobody can pick a name someone else here already goes by, and admins still see your real name next to it (and can clear a nickname that shouldn't be there).</p>
       <p>To use metric, go to <a class=goto href=#go data-go=account:units>More › Account › Units</a> and tap the <b>Imperial</b> button to switch it to <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>On a phone, the bar along the bottom shows four tabs and <b>More</b>. To choose which four, and their order, go to <a class=goto href=#go data-go=account:tabs>More › Account › Layout › Phone tab bar</a> and tap <b>Choose the tabs</b>: tick <b>In the bar</b> for up to four (Home, Shooting, Reloading, Gear &amp; Ranges, Tools, Training and Help) and drag them into order. The rest are under <b>More</b>. A computer always shows every tab along the top.</p>
       <p>Pick a color theme under <a class=goto href=#go data-go=account:theme>More › Account › Look</a>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange, Plum, Lavender or Red Night. Under the themes, pick <b>Woodland camo</b> or <b>Digital camo</b> for a faint camo pattern behind the page in your theme's colors, or <b>Plain</b> for none. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
@@ -2196,7 +2201,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <p>On <a class=goto href=#go data-go=rifles:ammo>Gear &amp; Ranges › Ammo</a>, tap <b>+ Add ammo</b>. It works like adding a scope: a search box, the factory loads in tiles grouped by cartridge (smallest bullet first), <b>+ Enter factory ammo yourself</b>, and <b>+ Reloaded ammo</b> to make an entry from one of your Reloading recipes. Type a cartridge, maker or weight to narrow it down. There are more than 1,400 factory rifle, rimfire and handgun loads, from 17 HMR to 50 BMG (Federal, Hornady, Winchester, Remington, Sig Sauer, Nosler, Berger, Norma, Black Hills, Lapua, PMC, Barnes, CCI, Speer, Magtech, Fiocchi, PPU, Aguila, Underwood, Buffalo Bore, Wolf and Sellier &amp; Bellot), plus about 160 shotgun shells, in <b>Rifle</b>, <b>Pistol</b> and <b>Shotgun</b> tabs (the search box looks through all three), with the bullet, BC and box velocity already filled in from the maker's published data (a few Nosler and all the Barnes velocities come from gun-shop listings instead, with the BC from the makers' bullet data). Where a maker doesn't publish a BC, the load says so; enter one from the bullet maker to use it in the calculator; tap one to add it to your list. Not listed? Tap <b>+ Enter factory ammo yourself</b> on the same screen and fill in the maker, cartridge, bullet, weight, BC, the velocity on the box (and your measured velocity if you've chronographed it), plus rounds bought, price and lot number. <b>Use in calculator</b> (pick the gun first if you like) makes a profile on <a class=goto href=#go data-go=traj>Shooting</a> with those numbers. You can also pick the ammo in a Shooting profile's <b>Ammunition</b> box. Tap it to open a short list: your reloaded ammo, your factory ammo, and the catalog loads for that load's cartridge. Type in its search box (a maker, powder, bullet weight or cartridge) to search everything, including the whole catalog. Picking a catalog load fills in the numbers and adds it to your Ammunition for you. The range trips you log on that profile count down your rounds on hand (bought minus fired), and <b>+ Bought more</b> adds a new box. Set <b>Warn when fewer than</b> and Home tells you when you're running low. If your range trips have average velocities, it offers to use their average as your measured velocity.</p>
       <p><b>Shotgun shells:</b> ammo whose cartridge is a gauge (12 ga, 20 Gauge, .410) gets shell boxes: length, shot type and size, payload, pellets, and slug weight and BC. <b>Start a range trip</b> lists only the shells of the gun's gauge that fit its chamber.</p>
       <h3>Sharing factory loads</h3>
-      <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b> (it isn't there if an admin has turned sharing off under Admin › Settings). It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads show up under their cartridge on the <b>+ Add ammo</b> screen, shaded and marked <b>SHARED</b> with the person's name so you can tell them from the maker's data; tap one to add it to their own list. You can remove your own shared loads there, and admins can remove any of them. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
+      <p>Entered a factory load that isn't in the catalog? Open it and tick <b>Share this load with everyone on this Range Book</b> (it isn't there if an admin has turned sharing off under Admin › Settings). It shares the maker, product, cartridge, bullet, weight, BC, diameter, box velocity and its box photo; your rounds, price, lot, measured velocity and notes stay private. Changes you make later update the shared copy, and unticking it (or deleting the ammo) removes it. Shared loads have their own <b>Shared</b> tab, next to <b>Rifle</b>, <b>Pistol</b> and <b>Shotgun</b>, on the <b>+ Add ammo</b> screen and in <a class=goto href=#go data-go=tools:lib:ammo>Tools › Library › Factory ammo</a>. Each one is shaded and listed under its cartridge, with who shared it and when, so you can tell them from the maker's data (searching looks through them too). Tap one to add it to your own list. You can remove your own shared loads there, and admins can remove any of them. The name others see is your <b>Nickname</b> if you've set one in <a class=goto href=#go data-go=account:nickname>More › Account</a>, or your name if not. If someone's account is deleted, the loads they shared (and their box photos) stay for everyone, listed as shared by a former member.</p>
       <h3>Box photos</h3>
       <p>Open any factory ammo and tap <b>+ Add a photo of the box</b>. A quick phone snap is fine; it's shrunk before it's saved. If the ammo came from the catalog, the photo is shared with everyone on this Range Book, so the next person can tell at a glance it's the right box, and it shows next to that load in the catalog. (An admin can turn that sharing off under <b>Admin › Settings</b>; then everyone's box photos are private, and loads can't be shared either.) Photos of ammo you entered yourself stay private. You can delete your own photos; admins can delete any shared photo that doesn't match (there's a list of them all on the Admin page).</p>
       <p>The tabs along the top are <b>Guns</b>, <b>Ammo</b>, <b>Inventory</b>, <b>Ranges</b> and <b>Notes</b>. <b>Optics</b> and <b>Suppressors</b> are on a second row under Guns, and <b>Magazines</b> under Inventory.</p>
@@ -2489,6 +2494,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <header><h1>Account</h1><p class="sub" id="acctWho" hidden></p></header>
     <section class="card" aria-label="Account" id="acctMain"><h2>Account</h2>
       <div class="acrow"><div class="aclbl"><b id="acName"></b><span class="note" id="acUser"></span></div><div class="row"><button class="btn" type="button" id="acPwBtn">Change password</button><button class="btn" type="button" id="acSignOut">Sign out</button></div></div>
+      <div class="acrow" id="acNick"><div class="aclbl"><b>Nickname</b><span class="note">What everyone else here sees on ammo, photos and profiles you share. Leave it blank to use your name.</span><span class="savestate" id="nickState"></span></div><div class="acq"><input id="nickIn" class="text" type="text" maxlength="30" placeholder="Optional" aria-label="Nickname" autocomplete="off" spellcheck="false"><button class="btn" type="button" id="nickSave">Save</button></div></div>
       <div class="acrow" id="acctAdmin" hidden><div class="aclbl"><b>Admin</b><span class="note">Add people, reset passwords, settings and backups.</span></div><button class="btn primary" type="button" id="acAdmin">Open Admin</button></div>
       <p class="note ok" id="acPwOk" hidden>Password changed. Your other devices will need to sign in again.</p>
       <div class="acblk" id="acUnits"><h3 class="acsub">Units</h3>
@@ -4879,7 +4885,7 @@ function render(){
     const out=$("pbRes");
     if(!PBR)out.innerHTML='<p class="err">This load can\'t stay inside a '+U.s("in",size,1)+' target from close in; try a bigger target size.</p>';
     else out.innerHTML='<div class="pbzeros"><div class="pbbig"><span>Near zero</span><b>'+(PBR.nz!=null?U.s("yd",PBR.nz,0):'—')+'</b></div><div class="pbbig"><span>Far zero</span><b>'+U.s("yd",PBR.z,0)+'</b></div></div>'+
-      '<div class="pbline">Zero at either one; it\'s the same path. The bullet rises through your line of sight at the near zero and comes back down through it at the far zero. The far zero is more forgiving: being a little off at the near zero moves the far end much more, so if you sight in close, check it at the far zero too.</div>'+
+      '<div class="pbline">Zero at either one; it\'s the same path.</div>'+
       '<div class="pbline">Stays within ±'+U.s("in",r,U.metric?1:2)+' from <b>'+U.s("yd",PBR.near,0)+'</b> to <b>'+(PBR.beyond?'past '+U.s("yd",lim,0):U.s("yd",PBR.far,0))+'</b>'+(PBR.near>0?' (closer than '+U.s("yd",PBR.near,0)+' it\'s still low, because the scope sits above the bore)':'')+'.</div>'+
       '<div class="pbline">Maximum point-blank range: <b>'+(PBR.beyond?'past '+U.s("yd",lim,0):U.s("yd",PBR.far,0))+'</b>. Highest point: +'+U.s("in",PBR.apex.y,1)+' at '+U.s("yd",PBR.apex.x,0)+'.</div>';
     }
@@ -6549,6 +6555,8 @@ function pushShared(a,now){clearTimeout(shareTimers[a.id]);if(!BOX_SHARED)return
   API.put("/api/sharedammo/"+a.id,{data:d}).then(()=>loadShared()).catch(e=>{const el=$("ammoShareMsg");if(el){el.classList.add("err");el.textContent=e.message;}});};
   if(now)go();else shareTimers[a.id]=setTimeout(go,1200);}
 function unshare(id){clearTimeout(shareTimers[id]);return API.del("/api/sharedammo/"+id).then(()=>loadShared()).catch(onWriteError);}
+// after a nickname changes, the "Shared by" names are fetched again (2.51)
+window.RB_SHAREDRELOAD=()=>loadShared().then(()=>{if(gunArea==="ammo"&&!$("panel-rifles").hidden)renderRifles();});
 function loadShared(){if(window.GUEST)return Promise.resolve();return API.get("/api/sharedammo").then(r=>{sharedAmmo=(r&&r.ammo)||[];if(r&&r.shared===false)BOX_SHARED=false;},()=>{});}
 function addFromShared(sh){const d=sh.data||{};
   const a={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),...d,bcm:d.bcm==="G7"?"G7":"G1",sharedFrom:sh.id,notes:"Shared by "+sh.by+" on this Range Book. Check it against your box."};
@@ -6747,12 +6755,11 @@ function ammoUse(a){
   if(isReload(a)){ppr=num(a.cpr)>0?num(a.cpr):null;if(ppr==null&&(a.bulletId||a.powderId||a.primerId)){const rc=roundCost({bulletId:a.bulletId,powderId:a.powderId,primerId:a.primerId},num(a.charge),a.lotId);ppr=rc.total;}}
   return {fired,trained,onHand,ppr,avgVel:velN?Math.round(velSum/velN):null,velN,loadsUsing,low:onHand!=null&&num(a.lowAt)!=null&&onHand<num(a.lowAt)};
 }
-function renderAmmo(root){
-  if(ammoOpen&&!ammo.some(a=>a.id===ammoOpen))ammoOpen=null;
-  let h;
-  if(!ammoOpen){
+// match what people typed as a cartridge ("308 win", "6.5 creed") to the catalog's caliber name (2.51: shared by + Add ammo and the Library)
+let AMMO_CAL_FN=null,AMMO_CAL_N=-1;
+function ammoCalOf(t){
+  if(!AMMO_CAL_FN||AMMO_CAL_N!==AMMO_CATALOG.length){AMMO_CAL_N=AMMO_CATALOG.length;
     const norm=t=>String(t||"").toLowerCase().replace(/(\d)\.(\d)/g,"$1$2").replace(/[^a-z0-9]+/g," ").trim();
-    // every load people can pick: the maker catalog plus loads shared here, grouped by caliber
     const known=new Map();AMMO_CATALOG.forEach(c=>known.set(norm(c.cart),c.cart));
     // match what people type ("308 win", "6.5 creed", "300 blk") to the catalog's caliber names; leave it alone if it's ambiguous
     const ALIAS={blk:"blackout",aac:"",spfd:"springfield",spfld:"springfield",sprg:"springfield",sw:"s w",auto:"acp",cm:"creedmoor",nato:"",win:"winchester",rem:"remington",rm:"remington mag",wm:"winchester mag",spl:"special",magnum:"mag",gov:"government",govt:"government"};
@@ -6761,22 +6768,30 @@ function renderAmmo(root){
       const toks=toksOf(n);
       const hits=[...known.entries()].filter(([k])=>{const kt=toksOf(k);return toks.length&&toks.length<=kt.length&&toks.every((w,i)=>kt[i].startsWith(w));});
       return hits.length===1?hits[0][1]:raw;};
+    AMMO_CAL_FN=calOf;}
+  return AMMO_CAL_FN(t);}
+function renderAmmo(root){
+  if(ammoOpen&&!ammo.some(a=>a.id===ammoOpen))ammoOpen=null;
+  let h;
+  if(!ammoOpen){
+    // every load people can pick: the maker catalog plus loads shared here, grouped by caliber
+    const calOf=ammoCalOf;
     const picks=[...AMMO_CATALOG.map(c=>({kind:"cat",cal:c.cart,c,key:c.item,label:c.mfr+" "+c.line+" "+c.bullet,search:catLabel(c)+" "+c.item})),
       ...(window.GUEST?[]:sharedAmmo).map(x=>{const d=x.data||{};return {kind:"shared",cal:calOf(d.cartridge),x,key:x.id,label:[d.mfr,d.name||d.bullet].filter(Boolean).join(" ")+(d.weight?" "+d.weight+" gr":""),search:ammoLabel(d)+" "+(d.bullet||"")+" "+x.by};})];
     const shdel=el=>el.querySelectorAll("[data-shdel]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();arm(b,"shd"+b.dataset.shdel,"Tap again",()=>{const own=ammo.find(a=>a.id===b.dataset.shdel);if(own){own.shared=false;queueAmmo();}unshare(b.dataset.shdel).then(()=>renderRifles());});}));
     if(ammoAdding){
       root.innerHTML=addScreenHtml({title:"Add ammo",q:ammoCatQ,ph:"Search: 6.5 creedmoor, hornady, 168…",own:"+ Enter factory ammo yourself",
         more:'<button class="btn" id="ammoAddRel" type="button">+ Reloaded ammo</button><span class="savestate" id="rifleState"></span>',after:'<div id="relAddBox" hidden></div>',
-        note:'Pick factory ammo to fill in the maker\'s published BC and velocity (a few Nosler and all the Barnes velocities are from dealer listings), or enter yours from the box. Shaded ones were shared by people on this Range Book, not taken from the maker. <b>+ Reloaded ammo</b> makes an entry from one of your Reloading recipes. To fix something in this list, open it in <a class=goto href=#go data-go=tools:lib:ammo>Tools › Library</a>.'});
+        note:'Pick factory ammo to fill in the maker\'s published BC and velocity (a few Nosler and all the Barnes velocities are from dealer listings), or enter yours from the box. The <b>Shared</b> tab has factory ammo people on this Range Book entered themselves, not taken from the maker. <b>+ Reloaded ammo</b> makes an entry from one of your Reloading recipes. To fix something in this list, open it in <a class=goto href=#go data-go=tools:lib:ammo>Tools › Library</a>.'});
       gearHead("Add ammo","‹ Ammo");
       $("ammoAddRel").addEventListener("click",()=>{const b=$("relAddBox");b.hidden=!b.hidden;if(!b.hidden)drawRelAdd(b,null,a=>{ammoAdding=false;ammoOpen=a.id;renderRifles();window.scrollTo(0,0);});});
-      bindAddScreen({onQ:v=>{ammoCatQ=v;},bind:shdel,kindOf:it=>it.shared?ammoKindOf(it.g):ammoKindOf(it.x.cart,it.x.shell),
+      bindAddScreen({onQ:v=>{ammoCatQ=v;},bind:shdel,kindOf:it=>it.shared?"shared":ammoKindOf(it.x.cart,it.x.shell),
         items:()=>{const cat=libItems("ammo").map(it=>{const c=it.x,cb=catBox(c.item);return Object.assign(it,{thumb:cb?'<img alt="" loading="lazy" src="'+esc(cb.url)+'">':"",
             d:U.s("fps",c.v,0,true)+(c.tb?" ("+BBL(c.tb)+" barrel)":"")+" · "+(c.bc!=null?"BC "+c.bc+" G1"+(c.g7?" / "+c.g7+" G7":""):"no published BC"),
             m:it.m||(c.dealer?"Velocity from a dealer, BC from "+c.mfr:"Maker data"),words:it.words+" "+catLabel(c)});});
           const sh=picks.filter(p=>p.kind==="shared").map(p=>{const x=p.x,d=x.data||{},bx=boxes.find(b=>b.ammo===x.id);
             return {shared:x,t:p.label||"Unnamed ammo",g:p.cal,gk:num(d.dia)||(window.RB_CARTS&&RB_CARTS.dia(p.cal))||0,cls:"sharedload",thumb:bx?'<img alt="" loading="lazy" src="'+esc(bx.url)+'">':"",words:p.search,
-              d:[d.boxVel?U.s("fps",Number(d.boxVel),0,true):"",d.bc?"BC "+d.bc+" "+(d.bcm==="G7"?"G7":"G1"):"no BC"].filter(Boolean).join(" · "),m:"Shared by "+(x.mine?"you":x.by),
+              d:[d.boxVel?U.s("fps",Number(d.boxVel),0,true):"",d.bc?"BC "+d.bc+" "+(d.bcm==="G7"?"G7":"G1"):"no BC"].filter(Boolean).join(" · "),m:"Shared by "+(x.mine?"you":x.by)+(shDate(x.at)?" · "+shDate(x.at):""),
               after:(x.mine||(ME&&ME.isAdmin))?'<button class="btn small danger" type="button" data-shdel="'+esc(x.id)+'">Remove</button>':""};});
           return cat.concat(sh);},
         onPick:it=>{ammoAdding=false;if(it.shared)addFromShared(it.shared);else libAdd("ammo",it.i);},
@@ -8382,13 +8397,22 @@ function addMatch(x,w,nums){const t=lc(x.t+" "+(x.d||"")+" "+x.g+" "+(x.words||"
 const addTile=(x,n)=>(x.after?'<div class="sharedrow">':'')+'<button class="loaditem'+(x.thumb?' withthumb':'')+(x.cls?' '+x.cls:'')+'" type="button" data-addi="'+n+'">'+(x.thumb?'<span class="lthumb">'+x.thumb+'</span><span class="ltext">':'')+
   '<span class="t">'+esc(x.t)+'</span>'+(x.d?'<span class="d">'+esc(x.d)+'</span>':'')+(x.m?'<span class="m">'+esc(x.m)+'</span>':'')+(x.thumb?'</span>':'')+'</button>'+(x.after?x.after+'</div>':'');
 /* factory ammo in Rifle / Pistol / Shotgun tabs (2.47.40), on Add ammo and Tools › Library › Factory ammo; typing searches all three */
-const AMMO_KINDS=[["rifle","Rifle"],["pistol","Pistol"],["shotgun","Shotgun"]],AKO={rifle:0,pistol:1,shotgun:2};
+const AMMO_KINDS=[["rifle","Rifle"],["pistol","Pistol"],["shotgun","Shotgun"],["shared","Shared"]],AKO={rifle:0,pistol:1,shotgun:2,shared:3};
+// Shared (2.51): factory ammo people here entered and shared; not for guests, or when the admin has sharing off
+const sharedTabOn=()=>!window.GUEST&&BOX_SHARED;
+const akSel=()=>ammoKindSel==="shared"&&!sharedTabOn()?"rifle":ammoKindSel;
+const SHARED_PIC='<svg class="gkpic akshpic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5.2 6-5.2s5.4 1.8 6 5.2"/><circle cx="17" cy="9" r="2.6"/><path d="M15.6 13.9c.5-.1.9-.1 1.4-.1 2.4 0 4.3 1.5 4.8 4.3"/></svg>';
 let ammoKindSel="rifle";try{const k=localStorage.getItem("rb.ammokind");if(k in AKO)ammoKindSel=k;}catch(e){}
 function ammoKindOf(cart,shell){if(shell)return "shotgun";const g=gunTypeGuess(cart);return g in AKO?g:"rifle";}
 function ammoKindTabs(counts,searching){
-  return '<div class="segtabs gkinds akinds" role="radiogroup" aria-label="Show">'+AMMO_KINDS.map(([k,l])=>{const on=!searching&&ammoKindSel===k;
-    return '<button type="button" role="radio" data-akind="'+k+'" aria-checked="'+on+'" aria-selected="'+on+'">'+kindPic(k)+esc(l)+' <span class="gkn">'+(counts[k]||0).toLocaleString()+'</span></button>';}).join("")+'</div>'+
-    (searching?'<p class="note aksearch">Searching rifle, pistol and shotgun ammo. Tap a tab to clear the search.</p>':'');}
+  const sel=akSel();
+  return '<div class="segtabs gkinds akinds" role="radiogroup" aria-label="Show">'+AMMO_KINDS.filter(([k])=>k!=="shared"||sharedTabOn()).map(([k,l])=>{const on=!searching&&sel===k;
+    return '<button type="button" role="radio" data-akind="'+k+'" aria-checked="'+on+'" aria-selected="'+on+'">'+(k==="shared"?SHARED_PIC:kindPic(k))+esc(l)+' <span class="gkn">'+(counts[k]||0).toLocaleString()+'</span></button>';}).join("")+'</div>'+
+    (searching?'<p class="note aksearch">Searching every tab. Tap a tab to clear the search.</p>':!searching&&sel==="shared"?'<p class="note aksearch">Factory ammo people on this Range Book entered themselves and shared, not taken from the maker. Check it against your box.</p>':'');}
+// what's shown when a tab has nothing in it
+const akEmpty=()=>akSel()==="shared"?'Nobody here has shared any factory ammo yet. To share yours, open factory ammo you entered yourself and tick <b>Share this load with everyone on this Range Book</b>.':'No '+akSel()+' ammo listed yet.';
+// the date a shared load was last changed, short
+const shDate=t=>{try{return t?new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"";}catch(e){return "";}};
 function setAmmoKind(k){if(!(k in AKO))return;ammoKindSel=k;try{localStorage.setItem("rb.ammokind",k);}catch(e){}}
 /* o: items() → [{t,d,m,g,gk,words,thumb,cls,...}] or null while loading · load() a promise for the list · nums · onPick(item) · onOwn() · onQ(text) · empty (when nothing's listed)
    · kindOf(item) → "rifle"/"pistol"/"shotgun" splits the list into those tabs (factory ammo) */
@@ -8398,11 +8422,11 @@ function bindAddScreen(o){
     if(!its.length){box.innerHTML='<p class="note">'+(o.empty||'Nothing listed. Tap <b>'+esc($("addOwn").textContent)+'</b>.')+'</p>';return;}
     const words=lc(qi.value).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean),KO=o.kindOf;
     let hit=its.filter(x=>words.every(w=>addMatch(x,w,o.nums))),tabs="";
-    if(KO){const cnt={};hit.forEach(x=>{x._k=KO(x);cnt[x._k]=(cnt[x._k]||0)+1;});tabs=ammoKindTabs(cnt,!!words.length);if(!words.length)hit=hit.filter(x=>x._k===ammoKindSel);}
+    if(KO){const cnt={};hit.forEach(x=>{x._k=KO(x);cnt[x._k]=(cnt[x._k]||0)+1;});tabs=ammoKindTabs(cnt,!!words.length);if(!words.length){const sel=akSel();hit=hit.filter(x=>x._k===sel);}}
     const ko=x=>KO&&words.length?AKO[x._k]:0;
     hit.sort((a,b)=>ko(a)-ko(b)||(a.gk||0)-(b.gk||0)||String(a.g).localeCompare(String(b.g),undefined,{numeric:true}));
     const bindTabs=()=>box.querySelectorAll("[data-akind]").forEach(b=>b.addEventListener("click",()=>{setAmmoKind(b.dataset.akind);if(qi.value){qi.value="";if(o.onQ)o.onQ("");}lim=200;draw();}));
-    if(!hit.length){box.innerHTML=tabs+'<p class="note">'+(KO&&!words.length?'No '+ammoKindSel+' ammo listed yet.':'No match. Try fewer words, or tap <b>'+esc($("addOwn").textContent)+'</b>.')+'</p>';bindTabs();return;}
+    if(!hit.length){box.innerHTML=tabs+'<p class="note">'+(KO&&!words.length?akEmpty():'No match. Try fewer words, or tap <b>'+esc($("addOwn").textContent)+'</b>.')+'</p>';bindTabs();return;}
     const shown=hit.slice(0,lim),by=new Map();shown.forEach((x,n)=>{x._n=n;const g=(KO?x._k+"|":"")+x.g;if(!by.has(g))by.set(g,[]);by.get(g).push(x);});
     const keys=[...by.keys()].sort((a,b)=>ko(by.get(a)[0])-ko(by.get(b)[0])||(by.get(a)[0].gk||0)-(by.get(b)[0].gk||0)||String(by.get(a)[0].g).localeCompare(String(by.get(b)[0].g),undefined,{numeric:true}));
     const multi=KO&&words.length&&new Set(shown.map(x=>x._k)).size>1;let lastK=null;
@@ -8464,6 +8488,16 @@ window.RB_LIBPAGE=(function(){
     h+='<div class="row"><button type="button" class="btn primary" data-ladd>+ Add to my '+esc(D.mine.split(" › ").pop().toLowerCase())+'</button>'+(chg.length?'<button type="button" class="btn" data-lrevall>Revert all changes</button>':'')+'</div>'+
       '<p class="note">'+(chg.length?'Changed boxes are colored. ':'')+'Your changes are used when you add this from here or from <b>'+esc(D.mine)+'</b>; <b>Revert</b> puts the maker\'s number back. Ones you\'ve already added keep their own numbers.</p></div>';
     return h;}
+  // a shared load (2.51): what was shared, who shared it, and add it to yours
+  const shLabel=d=>[d.mfr,d.name||d.bullet].filter(Boolean).join(" ")+(d.weight?" "+d.weight+" gr":"")||"Unnamed ammo";
+  const shSub=x=>{const d=x.data||{};return [d.boxVel?U.s("fps",Number(d.boxVel),0,true):"",d.bc?"BC "+d.bc+" "+(d.bcm==="G7"?"G7":"G1"):"no BC","Shared by "+(x.mine?"you":x.by),shDate(x.at)].filter(Boolean).join(" · ");};
+  function shEditor(x){const d=x.data||{},bx=boxes.find(b=>b.ammo===x.id);
+    const fact=(l,v)=>v!=null&&v!==""?'<div><span class="note">'+l+'</span><br><b>'+esc(String(v))+'</b></div>':'';
+    return '<div class="cred"><div class="shfacts">'+fact("Maker",d.mfr)+fact("Product",d.name)+fact("Cartridge",d.cartridge)+fact("Bullet",d.bullet)+fact("Weight",d.weight?d.weight+" gr":"")+
+      fact("BC",d.bc?d.bc+" "+(d.bcm==="G7"?"G7":"G1"):"")+fact("Bullet diameter",d.dia?d.dia+" in":"")+fact("Box velocity",d.boxVel?U.s("fps",Number(d.boxVel),0,true):"")+'</div>'+
+      (bx?'<div class="boxgrid"><figure class="boxph"><a href="'+esc(bx.url)+'" target="_blank" rel="noopener"><img src="'+esc(bx.url)+'" alt="Ammo box" loading="lazy"></a></figure></div>':'')+
+      '<p class="note">Shared by <b>'+esc(x.mine?"you":x.by)+'</b>'+(shDate(x.at)?' · '+esc(shDate(x.at)):'')+'. Entered by hand, not taken from the maker, so check it against your box.</p>'+
+      '<div class="row"><button type="button" class="btn primary" data-shadd>+ Add to my ammo</button>'+((x.mine||(ME&&ME.isAdmin))?'<button type="button" class="btn danger" data-shrem>Remove</button>':'')+'</div></div>';}
   // + Add on a Library list (2.46.2): one that isn't in the list, added where you keep them (Components or Gear & Ranges)
   const LIB_ADD={bullets:["brass:bullets","compAdd"],powders:["brass:powders","compAdd"],primers:["brass:primers","compAdd"],ammo:["rifles:ammo","ammoAddGo"],scopes:["rifles:scopes","scopeAdd"],dots:["rifles:scopes","scopeAdd"],cans:["rifles:cans","canAdd"]};
   function libAdd(kind){const a=LIB_ADD[kind];if(!a)return;RB_GO(a[0]);let n=0;const t=setInterval(()=>{const b=document.getElementById(a[1]);if(b&&b.offsetParent){clearInterval(t);b.click();}else if(++n>20)clearInterval(t);},100);}
@@ -8472,11 +8506,13 @@ window.RB_LIBPAGE=(function(){
     LIBED.apply(kind);
     const L=D.list(),words=lc(q).replace(/[^a-z0-9.]+/g," ").split(" ").filter(Boolean);
     const all=L.map((x,i)=>({i,x,t:D.label(x),d:D.sub(x),g:D.group(x),gk:D.gk?D.gk(x):0,words:(D.words?D.words(x):"")+(LIBED.changed(kind,i).length?" edited":"")}));
+    if(kind==="ammo"&&sharedTabOn())sharedAmmo.forEach(x=>{const d=x.data||{},cal=ammoCalOf(d.cartridge);
+      all.push({i:"sh:"+x.id,sh:x,x:d,t:shLabel(d),d:shSub(x),g:cal,gk:num(d.dia)||(window.RB_CARTS&&RB_CARTS.dia(cal))||0,words:ammoLabel(d)+" "+(d.bullet||"")+" "+(d.cartridge||"")+" "+x.by+" shared"});});
     // in group order first (2.43.9), so the first page shows whole groups from the top instead of the list's own order
     let hit=all.filter(it=>it.i===open||words.every(w=>addMatch(it,w,D.num))),tabs="";
     // factory ammo: Rifle / Pistol / Shotgun tabs; a search looks through all three (2.47.40)
     const AK=kind==="ammo";
-    if(AK){const cnt={};hit.forEach(it=>{it._k=ammoKindOf(it.x.cart,it.x.shell);cnt[it._k]=(cnt[it._k]||0)+1;});tabs=ammoKindTabs(cnt,!!words.length);if(!words.length)hit=hit.filter(it=>it._k===ammoKindSel);}
+    if(AK){const cnt={};hit.forEach(it=>{it._k=it.sh?"shared":ammoKindOf(it.x.cart,it.x.shell);cnt[it._k]=(cnt[it._k]||0)+1;});tabs=ammoKindTabs(cnt,!!words.length);if(!words.length){const sel=akSel();hit=hit.filter(it=>it._k===sel);}}
     const ko=it=>AK&&words.length?AKO[it._k]:0;
     hit.sort((a,b)=>ko(a)-ko(b)||(a.gk||0)-(b.gk||0)||String(a.g).localeCompare(String(b.g),undefined,{numeric:true})||a.i-b.i);
     const shown=hit.slice(0,lim);if(open!=null&&!shown.some(it=>it.i===open)){const o=hit.find(it=>it.i===open);if(o)shown.push(o);}
@@ -8489,7 +8525,8 @@ window.RB_LIBPAGE=(function(){
       '<div class="row crtools"><input id="libQ" type="search" placeholder="Search '+esc(D.title.toLowerCase())+'" aria-label="Search '+esc(D.title.toLowerCase())+'" value="'+esc(q)+'">'+(LIB_ADD[kind]&&!window.GUEST?'<button class="btn" type="button" id="libAdd">+ Add '+esc(D.one)+'</button>':'')+'</div>'+
       (AK?tabs:'<p class="note libcount">'+(words.length?hit.length.toLocaleString()+' of '+L.length.toLocaleString():L.length.toLocaleString()+' '+esc(D.title.toLowerCase()))+'</p>');
     h+=hit.length?keys.map(g=>kh(by.get(g)[0])+'<h3 class="crgh">'+esc(by.get(g)[0].g)+'</h3><div class="crlist">'+by.get(g).map(it=>{const isO=open===it.i;
-      return '<div class="crow'+(isO?' open':'')+'" data-lrow="'+it.i+'"><button type="button" class="crhead" data-lr="'+it.i+'" aria-expanded="'+isO+'">'+rowHead(kind,it.x,it.i)+'</button>'+(isO?editor(kind,it.i):'')+'</div>';}).join("")+'</div>').join(""):'<p class="note">Nothing matches.</p>';
+      if(it.sh)return '<div class="crow shrow'+(isO?' open':'')+'" data-lrow="'+esc(it.i)+'"><button type="button" class="crhead" data-lr="'+esc(it.i)+'" aria-expanded="'+isO+'"><span class="t">'+esc(it.t)+'</span><span class="d">'+esc(it.d)+'</span></button>'+(isO?shEditor(it.sh):'')+'</div>';
+      return '<div class="crow'+(isO?' open':'')+'" data-lrow="'+it.i+'"><button type="button" class="crhead" data-lr="'+it.i+'" aria-expanded="'+isO+'">'+rowHead(kind,it.x,it.i)+'</button>'+(isO?editor(kind,it.i):'')+'</div>';}).join("")+'</div>').join(""):'<p class="note">'+(AK&&!words.length?akEmpty():'Nothing matches.')+'</p>';
     if(hit.length>lim)h+='<div class="row addmore"><span class="note">'+(hit.length-lim).toLocaleString()+' more. Type to narrow it down, or </span><button class="btn small" type="button" id="libAll">show all '+hit.length.toLocaleString()+'</button></div>';
     return h+'</section>';}
   function visible(){const s=document.querySelector('[data-toolsec="lib"]');return !!(s&&!s.hidden&&!$("panel-tools").hidden);}
@@ -8513,8 +8550,13 @@ window.RB_LIBPAGE=(function(){
     const al=$("libAll");if(al)al.addEventListener("click",()=>{lim=1e9;draw();});
     root.querySelectorAll("[data-akind]").forEach(b=>b.addEventListener("click",()=>{setAmmoKind(b.dataset.akind);q="";lim=150;open=null;draw();}));
     {const ad=$("libAdd");if(ad)ad.addEventListener("click",()=>libAdd(list));}
-    root.querySelectorAll("[data-lr]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.lr;open=open===i?null:i;draw();if(open!=null){const r=document.querySelector('[data-lrow="'+i+'"]');if(r&&r.getBoundingClientRect().top<60)r.scrollIntoView({block:"start"});}}));
+    root.querySelectorAll("[data-lr]").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.lr,i=/^\d+$/.test(v)?+v:v;open=open===i?null:i;draw();if(open!=null){const r=document.querySelector('[data-lrow="'+i+'"]');if(r&&r.getBoundingClientRect().top<60)r.scrollIntoView({block:"start"});}}));
     if(open==null)return;const i=open;
+    if(typeof i==="string"){const x=sharedAmmo.find(s=>"sh:"+s.id===i);if(!x)return;
+      const ad=root.querySelector("[data-shadd]");if(ad)ad.addEventListener("click",()=>{RB_GO("rifles:ammo");addFromShared(x);});
+      const rm=root.querySelector("[data-shrem]");if(rm)rm.addEventListener("click",()=>{if(rm.dataset.armed){const own=ammo.find(a=>a.id===x.id);if(own){own.shared=false;queueAmmo();}open=null;unshare(x.id).then(()=>draw());return;}
+        rm.dataset.armed="1";rm.textContent="Tap again to remove";setTimeout(()=>{if(document.body.contains(rm)){delete rm.dataset.armed;rm.textContent="Remove";}},4000);});
+      return;}
     D.fields.forEach(f=>{const el=$("lb_"+f[0]);if(!el)return;el.addEventListener(f[2]==="sel"?"change":"input",()=>setVal(kind,i,f,el));});
     root.querySelectorAll("[data-lrev]").forEach(b=>b.addEventListener("click",()=>{LIBED.revert(kind,i,b.dataset.lrev);draw();}));
     const ra=root.querySelector("[data-lrevall]");if(ra)ra.addEventListener("click",()=>{const was=LIBED.revert(kind,i,null);draw();if(window.RB_UNDO&&was)RB_UNDO("Put back the original "+D.one,()=>{LIBED.restore(kind,i,was);draw();});});
@@ -13560,7 +13602,7 @@ function renderHome(){
   const mon=sumR(t=>String(t.date||"").startsWith(ym))+sumU(d=>d.startsWith(ym)),year=sumR(t=>String(t.date||"").startsWith(yr))+sumU(d=>d.startsWith(yr));
   const tripsYear=live.filter(t=>String(t.date||"").startsWith(yr)).length;
   let loaded=0;loads.forEach((L,id)=>{if(!isMine(id))return;(L.batches||[]).forEach(b=>{if(String(b.date||"").startsWith(yr))loaded+=b.n||0;});});
-  $("homeTitle").textContent=ME&&ME.name&&ME.username!=="guest"?"Hi, "+(n=>n.charAt(0).toUpperCase()+n.slice(1))(ME.name.split(" ")[0]):"Range Book";
+  $("homeTitle").textContent=ME&&ME.name&&ME.username!=="guest"?"Hi, "+(ME.nickname||(n=>n.charAt(0).toUpperCase()+n.slice(1))(ME.name.split(" ")[0])):"Range Book";
   let h='<section class="card" aria-label="Quick start" data-hsec="quick"><div class="row homeacts"><button class="btn primary" id="hNewTrip" type="button">Start a range trip</button><button class="btn" id="hNewLoad" type="button">+ New load</button></div>';
   if(homePick){
     // range day: pick the gun, then what you're shooting through it; makes the trip and fills in the weather
@@ -14297,7 +14339,7 @@ function helpGo(topic){
    "rnotes", "targets", "account"…), "rifles:<area>", "brass:<kind>", "tools:<tool>", "account:<card>", "admin:<card>", "help:<topic>"
    (underscores for spaces; "#id" or an h3's text), or "tour"; "#elementId" after it scrolls to that part. */
 // a tile by its aria-label, or "#id" for a part of a tile (2.50: Units, Text size, Phone tab bar, Export and Import sit inside bigger tiles)
-const GO_CARD={backup:"#acExport",export:"#acExport",import:"#importCard",units:"#acUnits",storage:"#acctStorage",theme:"Look",look:"Look",text:"#acText",tabs:"#acTabs",feedback:"Feedback",vault:"Document vault",password:"Account",account:"Account",adduser:"Users",users:"Users",settings:"Settings",layout:"Layout",admin:"#acctAdmin"};
+const GO_CARD={nickname:"#acNick",backup:"#acExport",export:"#acExport",import:"#importCard",units:"#acUnits",storage:"#acctStorage",theme:"Look",look:"Look",text:"#acText",tabs:"#acTabs",feedback:"Feedback",vault:"Document vault",password:"Account",account:"Account",adduser:"Users",users:"Users",settings:"Settings",layout:"Layout",admin:"#acctAdmin"};
 function flashEl(el){if(!el)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{el.scrollIntoView({block:"start",behavior:"smooth"});const f=el.querySelector("h2")||el;
   clearTimeout(f._hft);f.classList.remove("hflash");void f.offsetWidth;f.classList.add("hflash");f._hft=setTimeout(()=>f.classList.remove("hflash"),2200);}));}
 const GO_BACKNAME={home:"Home",traj:"Shooting",rel:"Reloading",ref:"Reference",brass:"Components",rnotes:"Notes",rifles:"Gear & Ranges",log:"Range trips",account:"Account",admin:"Admin",help:"Help",sheetimp:"Import"};
@@ -14653,6 +14695,15 @@ async function startApp(user,api){
   $("acctForm").addEventListener("submit",async e=>{e.preventDefault();if(await submitPassword("ac")){["ac_cur","ac_new","ac_rep"].forEach(i=>$(i).value="");RB_SHEET.close($("pwSheet"));$("acPwOk").hidden=false;}});
   $("acctWho").textContent=user.name+" ("+user.username+")"+(user.isAdmin?" · admin":"");
   $("acName").textContent=user.name||user.username;$("acUser").textContent="Signed in as "+user.username+(user.isAdmin?" · admin":"");
+  // a nickname (2.51): what everyone else here sees on things you share
+  if(GUEST)$("acNick").hidden=true;
+  else{const ni=$("nickIn"),ns=$("nickState");ni.value=user.nickname||"";
+    const saveNick=async()=>{ns.className="savestate";ns.textContent="Saving…";
+      try{const r=await API.put("/api/me/nickname",{nickname:ni.value});ME.nickname=(r.user&&r.user.nickname)||"";ni.value=ME.nickname;
+        ns.className="savestate ok";ns.textContent=ME.nickname?"Saved. Others see you as "+ME.nickname+".":"Saved. Others see your name.";
+        if(window.RB_SHAREDRELOAD)RB_SHAREDRELOAD();if(REL&&!$("panel-home").hidden)REL.onHome();}
+      catch(e){ns.className="savestate err";ns.textContent=e.message;}};
+    $("nickSave").addEventListener("click",saveNick);ni.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveNick();}});}
   try{const t=JSON.parse(localStorage.getItem("rangebook.theme")||"null");if(t)THEME=t;}catch(e){}
   renderThemePicker();
   document.querySelectorAll("#themeMode [data-mode]").forEach(b=>b.addEventListener("click",()=>applyTheme(Object.assign({},THEME,{mode:b.dataset.mode}),true)));
@@ -15119,16 +15170,17 @@ async function loadAdmin(){
     const sq=r.quotaMB||0;ADM_USERS=r.users;
     /* 2.50: one line per person, a search box, and a popup with everything you can do for them */
     const chipsOf=u=>[u.isSuper?'<span class="chip super">Super admin</span>':u.isAdmin?'<span class="chip">Admin</span>':'',u.disabled?'<span class="chip off">Turned off</span>':'',u.mustChange?'<span class="chip warn">Hasn\'t set a password yet</span>':'',u.isMe?'<span class="chip me">You</span>':''].join("");
-    box.innerHTML=r.users.map(u=>'<button type="button" class="urow'+(u.disabled?' off':'')+'" data-u="'+u.id+'" data-q="'+esc(((u.name||"")+" "+u.username).toLowerCase())+'"><span class="un">'+esc(u.name||u.username)+'</span>'+(u.name&&u.name!==u.username?'<span class="uu">'+esc(u.username)+'</span>':'')+'<span class="chips">'+chipsOf(u)+'</span><span class="us">'+fmtBytes(u.used)+'</span><span class="go" aria-hidden="true">›</span></button>').join("");
+    const nickOf=u=>u.nickname?'<span class="unick">“'+esc(u.nickname)+'”</span>':'';
+    box.innerHTML=r.users.map(u=>'<button type="button" class="urow'+(u.disabled?' off':'')+'" data-u="'+u.id+'" data-q="'+esc(((u.name||"")+" "+u.username+" "+(u.nickname||"")).toLowerCase())+'"><span class="un">'+esc(u.name||u.username)+'</span>'+(u.name&&u.name!==u.username?'<span class="uu">'+esc(u.username)+'</span>':'')+nickOf(u)+'<span class="chips">'+chipsOf(u)+'</span><span class="us">'+fmtBytes(u.used)+'</span><span class="go" aria-hidden="true">›</span></button>').join("");
     adminFilter();
     box.querySelectorAll(".urow").forEach(row=>row.addEventListener("click",()=>openUser(+row.dataset.u)));
     function cardHtml(u){
       const locked=u.isSuper&&!meSuper; // the owner's account: hands off
       const grp=(t,h)=>h?'<div class="ugrp"><h3>'+t+'</h3>'+h+'</div>':'';
-      return '<p class="note">'+esc(u.username)+' · '+u.loads+' load'+(u.loads===1?'':'s')+' · last sign-in '+esc(when(u.lastLogin))+'</p><div class="chips">'+chipsOf(u)+'</div>'+
+      return '<p class="note">'+esc(u.username)+(u.nickname?' · goes by <b>'+esc(u.nickname)+'</b>':'')+' · '+u.loads+' load'+(u.loads===1?'':'s')+' · last sign-in '+esc(when(u.lastLogin))+'</p><div class="chips">'+chipsOf(u)+'</div>'+
         '<p class="note ustore">Storage: <b>'+fmtBytes(u.used)+'</b>'+(u.limit?' of '+fmtBytes(u.limit):'')+(u.quota==null?(sq?' (the server\'s limit)':' (no limit)'):u.quota===-1?' (no limit, set for them)':' (set for them)')+'</p>'+storeBar(u.used,u.limit)+
         (locked?'<p class="note">This is the super admin. Only they can change this account.</p>':
-        grp("Account",'<div class="row">'+'<button class="btn" type="button" data-act="name">Edit name</button><button class="btn" type="button" data-act="quota">Storage limit</button>'+(u.isMe?'':'<button class="btn" type="button" data-act="reset">Reset password</button>')+
+        grp("Account",'<div class="row">'+'<button class="btn" type="button" data-act="name">Edit name</button>'+(u.nickname?'<button class="btn" type="button" data-act="nickclear">Clear nickname</button>':'')+'<button class="btn" type="button" data-act="quota">Storage limit</button>'+(u.isMe?'':'<button class="btn" type="button" data-act="reset">Reset password</button>')+
           (u.isSuper?'':'<button class="btn" type="button" data-act="admin">'+(u.isAdmin?'Remove admin':'Make admin')+'</button>')+
           (meSuper&&u.isAdmin&&!u.isSuper&&!u.disabled?'<button class="btn" type="button" data-act="super">Make super admin</button>':'')+'</div>'+
           QUOTA_EDIT(u)+NAME_EDIT(u))+
@@ -15162,6 +15214,8 @@ async function loadAdmin(){
             if(u.isMe&&ME){ME.name=nm||ME.username;const w=$("whoName");if(w)w.textContent=ME.name;const a=$("acctWho");if(a)a.textContent=ME.name+" ("+ME.username+")"+(ME.isAdmin?" · admin":"");const an=$("acName");if(an)an.textContent=ME.name;const mw=$("moreWho");if(mw)mw.textContent=ME.name!==ME.username?ME.name+" · "+ME.username:ME.username;}
             loadAdmin();}
           if(act==="admin"){await API.patch("/api/admin/users/"+id,{isAdmin:!u.isAdmin});loadAdmin();}
+          if(act==="nickclear")confirmTwice("Tap again to clear it",async()=>{try{await API.patch("/api/admin/users/"+id,{nickname:""});
+            if(u.isMe&&ME){ME.nickname="";const ni=$("nickIn");if(ni)ni.value="";}if(window.RB_SHAREDRELOAD)RB_SHAREDRELOAD();loadAdmin();}catch(e){showResult(out,esc(e.message),true);}});
           if(act==="super")confirmTwice("Tap again: "+(u.name||u.username)+" becomes super admin",async()=>{try{await API.post("/api/admin/super",{id});loadAdmin();}catch(e){showResult(out,esc(e.message),true);}});
           if(act==="toggle"){await API.patch("/api/admin/users/"+id,{disabled:!u.disabled});loadAdmin();}
           if(act==="delete")confirmTwice("Tap again: deletes their loads and photos",async()=>{try{await API.del("/api/admin/users/"+id);loadAdmin();}catch(e){showResult(out,esc(e.message),true);}});
@@ -15198,7 +15252,8 @@ window.RB_TOOLS=(function(){
   // show the tiles (t = null) or one tool
   function view(t){
     // the Library has its own lists (lib:bullets…); Cartridges is one of them
-    let libSub=null;if(t==="cart")t="lib:cart";if(t==="moa")t="conv"; // MOA · MIL · inches is part of Convert (2.46)if(typeof t==="string"&&t.startsWith("lib:")){libSub=t.slice(4)||null;t="lib";}
+    let libSub=null;if(t==="cart")t="lib:cart";if(t==="moa")t="conv"; // MOA · MIL · inches is part of Convert (2.46)
+    if(typeof t==="string"&&t.startsWith("lib:")){libSub=t.slice(4)||null;t="lib";}
     tool=TOOLS.includes(t)?t:null;
     $("toolTiles").hidden=!!tool;$("toolsArr").hidden=!!tool;
     document.querySelectorAll("[data-toolsec]").forEach(s=>s.hidden=s.dataset.toolsec!==tool);
