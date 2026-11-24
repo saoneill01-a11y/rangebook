@@ -176,6 +176,8 @@ if (!q("PRAGMA table_info(photos)").all().some((c) => c.name === "ladder_id")) d
 if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "accepted_terms")) db.exec("ALTER TABLE users ADD COLUMN accepted_terms INTEGER");
 // storage limit for one person (2.43.16): NULL = the server's limit, -1 = no limit, a number = that many MB
 if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "quota_mb")) db.exec("ALTER TABLE users ADD COLUMN quota_mb INTEGER");
+// a nickname each person can choose (2.51): what everyone else here sees on things they share; blank uses their name
+if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "nickname")) db.exec("ALTER TABLE users ADD COLUMN nickname TEXT");
 const ladderIdOf = (v) => (typeof v === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(v) ? v : null);
 const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
 // sharing ammo with everyone (box photos of catalog ammo, loads people share, and their photos) is on unless the
@@ -400,7 +402,10 @@ async function readJson(req, limit = 1024 * 1024) {
   try { return JSON.parse(buf.toString("utf8")); } catch { throw new HttpError(400, "The request wasn't valid JSON."); }
 }
 const ID_RE = /^[A-Za-z0-9_-]{1,64}$/;
-const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, isAdmin: !!u.is_admin, isSuper: !!u.is_admin && isSuper(u), mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms });
+// the name other people see: the nickname if there is one, else the display name, else the username
+const pubName = (r) => (r && ((r.nickname || "").trim() || r.display_name || r.username)) || "";
+const cleanNick = (v) => String(v == null ? "" : v).replace(/[\u0000-\u001f\u007f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 30);
+const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, nickname: (u.nickname || "").trim(), isAdmin: !!u.is_admin, isSuper: !!u.is_admin && isSuper(u), mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms });
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -648,6 +653,18 @@ async function api(req, res, url) {
   if (p === "/api/me" && method === "GET") return send(res, 200, { user: publicUser(user) });
   if (p === "/api/me/storage" && method === "GET") return send(res, 200, { used: userUsage(user.id), limit: userLimit(user.id) });
   if (p === "/api/me/accept-terms" && method === "POST") { q("UPDATE users SET accepted_terms=? WHERE id=?").run(now(), user.id); user.accepted_terms = now(); return send(res, 200, { user: publicUser(user) }); }
+  if (p === "/api/me/nickname" && method === "PUT") {
+    if (user.username === "guest") throw new HttpError(400, "Guests can't set a nickname.");
+    const nick = cleanNick((await readJson(req)).nickname);
+    if (nick) {
+      // nobody can take a name someone else here goes by
+      const clash = q("SELECT 1 AS x FROM users WHERE id<>? AND (lower(trim(coalesce(nickname,'')))=lower(?) OR lower(username)=lower(?) OR lower(trim(display_name))=lower(?))").get(user.id, nick, nick, nick);
+      if (clash) throw new HttpError(400, "Someone here already goes by that. Try another.");
+    }
+    q("UPDATE users SET nickname=? WHERE id=?").run(nick || null, user.id);
+    user.nickname = nick || null;
+    return send(res, 200, { user: publicUser(user) });
+  }
   if (p === "/api/me/password" && method === "POST") {
     const { current, next } = await readJson(req);
     if (!verifyPassword(String(current || ""), user.pass)) throw new HttpError(400, "Your current password isn't right.");
@@ -706,8 +723,10 @@ async function api(req, res, url) {
 
   /* ---- people directory (for sharing) ---- */
   if (p === "/api/users" && method === "GET") {
-    const rows = q("SELECT id, username, display_name FROM users WHERE disabled=0 AND id<>? ORDER BY display_name COLLATE NOCASE").all(user.id);
-    return send(res, 200, { users: rows.map((r) => ({ id: r.id, username: r.username, name: r.display_name || r.username })) });
+    const rows = q("SELECT id, username, display_name, nickname FROM users WHERE disabled=0 AND id<>?").all(user.id);
+    const list = rows.map((r) => ({ id: r.id, username: r.username, name: pubName(r) }));
+    list.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base", numeric: true }));
+    return send(res, 200, { users: list });
   }
 
   /* ---- per-user documents: calculator state, brass notes ---- */
@@ -728,7 +747,7 @@ async function api(req, res, url) {
     const shares = q("SELECT ls.load_id, ls.user_id FROM load_shares ls JOIN loads l ON l.id=ls.load_id WHERE l.owner_id=?").all(user.id);
     const shareMap = {};
     for (const s of shares) (shareMap[s.load_id] ||= []).push(s.user_id);
-    const shared = q(`SELECT l.id, l.data, l.updated_at, u.display_name, u.username, u.id AS owner_id
+    const shared = q(`SELECT l.id, l.data, l.updated_at, u.display_name, u.username, u.nickname, u.id AS owner_id
                       FROM load_shares s JOIN loads l ON l.id=s.load_id JOIN users u ON u.id=l.owner_id
                       WHERE s.user_id=? AND u.disabled=0`).all(user.id);
     const ph = {};
@@ -739,7 +758,7 @@ async function api(req, res, url) {
     return send(res, 200, {
       loads: [
         ...own.map((r) => ({ id: r.id, mine: true, data: JSON.parse(r.data), sharedWith: shareMap[r.id] || [], updatedAt: r.updated_at, ...pinfo(r.id) })),
-        ...shared.map((r) => ({ id: r.id, mine: false, owner: { id: r.owner_id, name: r.display_name || r.username }, data: JSON.parse(r.data), updatedAt: r.updated_at, ...pinfo(r.id) })),
+        ...shared.map((r) => ({ id: r.id, mine: false, owner: { id: r.owner_id, name: pubName(r) }, data: JSON.parse(r.data), updatedAt: r.updated_at, ...pinfo(r.id) })),
       ],
     });
   }
@@ -812,8 +831,8 @@ async function api(req, res, url) {
   /* ---- factory loads people chose to share with everyone on this server ---- */
   if (p === "/api/sharedammo" && method === "GET") {
     if (!shareBoxPhotos() && !(user.is_admin && url.searchParams.get("all") === "1")) return send(res, 200, { shared: false, ammo: [] });
-    const rows = q("SELECT s.id, s.owner_id, s.data, s.updated_at, u.display_name, u.username FROM shared_ammo s LEFT JOIN users u ON u.id=s.owner_id ORDER BY s.updated_at DESC").all();
-    return send(res, 200, { shared: shareBoxPhotos(), ammo: rows.map((r) => ({ id: r.id, data: JSON.parse(r.data), by: r.display_name || r.username || "a former member", mine: r.owner_id != null && r.owner_id === user.id, at: r.updated_at })) });
+    const rows = q("SELECT s.id, s.owner_id, s.data, s.updated_at, u.display_name, u.username, u.nickname FROM shared_ammo s LEFT JOIN users u ON u.id=s.owner_id ORDER BY s.updated_at DESC").all();
+    return send(res, 200, { shared: shareBoxPhotos(), ammo: rows.map((r) => ({ id: r.id, data: JSON.parse(r.data), by: pubName(r) || "a former member", mine: r.owner_id != null && r.owner_id === user.id, at: r.updated_at })) });
   }
   m = /^\/api\/sharedammo\/([A-Za-z0-9_-]{1,80})$/.exec(p);
   if (m) {
@@ -843,9 +862,9 @@ async function api(req, res, url) {
   if (p === "/api/boxphotos" && method === "GET") {
     const sharing = shareBoxPhotos(), adminAll = user.is_admin && url.searchParams.get("all") === "1";
     const rows = sharing || adminAll
-      ? q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.cat_item IS NOT NULL OR b.owner_id=? OR b.ammo_id IN (SELECT id FROM shared_ammo) ORDER BY b.created_at DESC").all(user.id)
-      : q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.owner_id=? ORDER BY b.created_at DESC").all(user.id);
-    return send(res, 200, { shared: sharing, photos: rows.map((r) => ({ id: r.id, item: r.cat_item, ammo: r.cat_item ? null : r.ammo_id, w: r.w, h: r.h, at: r.created_at, by: r.display_name || r.username || "a former member", mine: r.owner_id != null && r.owner_id === user.id, url: `/api/photos/${r.id}` })) });
+      ? q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username, u.nickname FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.cat_item IS NOT NULL OR b.owner_id=? OR b.ammo_id IN (SELECT id FROM shared_ammo) ORDER BY b.created_at DESC").all(user.id)
+      : q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username, u.nickname FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.owner_id=? ORDER BY b.created_at DESC").all(user.id);
+    return send(res, 200, { shared: sharing, photos: rows.map((r) => ({ id: r.id, item: r.cat_item, ammo: r.cat_item ? null : r.ammo_id, w: r.w, h: r.h, at: r.created_at, by: pubName(r) || "a former member", mine: r.owner_id != null && r.owner_id === user.id, url: `/api/photos/${r.id}` })) });
   }
   if (p === "/api/boxphotos" && method === "POST") {
     const body = await readJson(req, 4 * 1024 * 1024);
@@ -861,7 +880,7 @@ async function api(req, res, url) {
     const catItem = shareBoxPhotos() ? item : null, ownAmmo = catItem ? null : (ammoId || null);
     if (!catItem && !ownAmmo) throw new HttpError(400, "Which ammo is this a photo of?");
     q("INSERT INTO box_photos(id,cat_item,ammo_id,owner_id,file,w,h,created_at) VALUES(?,?,?,?,?,?,?,?)").run(pid, catItem, ownAmmo, user.id, file, body.w | 0 || null, body.h | 0 || null, now());
-    return send(res, 200, { photo: { id: pid, item: catItem, ammo: ownAmmo, w: body.w | 0 || null, h: body.h | 0 || null, at: now(), by: user.display_name || user.username, mine: true, url: `/api/photos/${pid}` } });
+    return send(res, 200, { photo: { id: pid, item: catItem, ammo: ownAmmo, w: body.w | 0 || null, h: body.h | 0 || null, at: now(), by: pubName(user), mine: true, url: `/api/photos/${pid}` } });
   }
   m = /^\/api\/boxphotos\/([A-Za-z0-9-]{1,80})$/.exec(p);
   if (m && method === "DELETE") {
@@ -1251,10 +1270,10 @@ async function api(req, res, url) {
     }
     if (p === "/api/admin/users" && method === "GET") {
       const sid = superId();
-      const rows = q(`SELECT u.id, u.username, u.display_name, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login, u.quota_mb,
+      const rows = q(`SELECT u.id, u.username, u.display_name, u.nickname, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login, u.quota_mb,
                         (SELECT COUNT(*) FROM loads l WHERE l.owner_id=u.id) AS loads
                       FROM users u ORDER BY u.username COLLATE NOCASE`).all();
-      return send(res, 200, { quotaMB: serverQuotaMB(), users: rows.map((r) => ({ used: userUsage(r.id), quota: r.quota_mb == null ? null : r.quota_mb, limit: userLimit(r.id), id: r.id, username: r.username, name: r.display_name, isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
+      return send(res, 200, { quotaMB: serverQuotaMB(), users: rows.map((r) => ({ used: userUsage(r.id), quota: r.quota_mb == null ? null : r.quota_mb, limit: userLimit(r.id), id: r.id, username: r.username, name: r.display_name, nickname: (r.nickname || "").trim(), isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
     }
     if (p === "/api/admin/users" && method === "POST") {
       const b = await readJson(req);
@@ -1301,6 +1320,7 @@ async function api(req, res, url) {
           if (b.disabled) q("DELETE FROM sessions WHERE user_id=?").run(id);
         }
         if ("name" in b) q("UPDATE users SET display_name=? WHERE id=?").run(String(b.name || "").trim().slice(0, 80), id);
+        if ("nickname" in b) q("UPDATE users SET nickname=? WHERE id=?").run(cleanNick(b.nickname) || null, id);
         // storage limit: null = the server's, "none" = no limit, or a number of MB
         if ("quota" in b) { const v = b.quota; let o = null; if (v === "none" || v === -1) o = -1; else if (v != null && v !== "") { o = Math.round(Number(v)); if (!(o >= 1 && o <= 10000000)) throw new HttpError(400, "Enter a number of MB (1 or more)."); }
           q("UPDATE users SET quota_mb=? WHERE id=?").run(o, id); }
