@@ -7,7 +7,7 @@ ENV NODE_ENV=production \
     DATA_DIR=/data
 
 WORKDIR /app
-COPY server.js export.js backup.js merge.js ./
+COPY server.js export.js backup.js merge.js shares.js ./
 COPY public ./public
 COPY seed ./seed
 
