@@ -15,6 +15,7 @@ const zlib = require("node:zlib");
 const { DatabaseSync } = require("node:sqlite");
 const { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf, zip, buildXlsx } = require("./export.js");
 const backupKit = require("./backup.js");
+const shareKit = require("./shares.js");
 const MERGE = require("./merge.js");
 
 /* ---------------- configuration ---------------- */
@@ -168,6 +169,16 @@ CREATE INDEX IF NOT EXISTS photos_load ON photos(load_id);
 CREATE INDEX IF NOT EXISTS trip_photos_trip ON trip_photos(owner_id, trip_id);
 CREATE INDEX IF NOT EXISTS shares_user ON load_shares(user_id);
 CREATE INDEX IF NOT EXISTS gun_photos_owner ON gun_photos(owner_id, rifle_id);
+CREATE TABLE IF NOT EXISTS item_shares(
+  owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  kind TEXT NOT NULL,
+  item_id TEXT NOT NULL,
+  everyone INTEGER NOT NULL DEFAULT 0,
+  users TEXT NOT NULL DEFAULT '[]',
+  opts TEXT NOT NULL DEFAULT '{}',
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY(owner_id, kind, item_id)
+);
 `);
 const q = (sql) => db.prepare(sql);
 if (!q("PRAGMA table_info(photos)").all().some((c) => c.name === "measure")) db.exec("ALTER TABLE photos ADD COLUMN measure TEXT");
@@ -445,6 +456,46 @@ function getDocRow(uid, key) {
 function getDoc(uid, key) {
   const r = q("SELECT data FROM user_docs WHERE user_id=? AND key=?").get(uid, key);
   return r ? JSON.parse(r.data) : null;
+}
+/* ---- Shooting profiles and range trips shared with other people (2.52, see shares.js) ---- */
+const SHARE_KINDS = ["profile", "trip"];
+const shareRow = (r) => { let users = [], opts = {}; try { users = JSON.parse(r.users) || []; } catch { /* none */ } try { opts = JSON.parse(r.opts) || {}; } catch { /* none */ }
+  return { kind: r.kind, id: r.item_id, owner: r.owner_id, everyone: !!r.everyone, users: users.filter((x) => Number.isInteger(x)), opts }; };
+const shareSees = (sh, uid) => sh.owner !== uid && (sh.everyone || sh.users.includes(uid));
+// everything shared with this person, from accounts that are still turned on
+function sharesFor(uid) {
+  return q("SELECT s.* FROM item_shares s JOIN users u ON u.id=s.owner_id WHERE u.disabled=0 AND s.owner_id<>?").all(uid).map(shareRow).filter((sh) => shareSees(sh, uid));
+}
+function shareViews(uid) {
+  const out = [], docsOf = new Map();
+  const docs = (oid) => { if (!docsOf.has(oid)) docsOf.set(oid, { calc: getDoc(oid, "calc"), trips: getDoc(oid, "trips"), rifles: getDoc(oid, "rifles"), ammo: getDoc(oid, "ammo") }); return docsOf.get(oid); };
+  const ownerOf = new Map();
+  const who = (oid) => { if (!ownerOf.has(oid)) ownerOf.set(oid, pubName(q("SELECT username, display_name, nickname FROM users WHERE id=?").get(oid)) || "Someone"); return ownerOf.get(oid); };
+  const list = sharesFor(uid), seen = new Set(list.map((sh) => sh.owner + ":" + sh.kind + ":" + sh.id));
+  for (const sh of list.slice()) {
+    if (sh.kind !== "trip" || !(sh.opts && sh.opts.profile)) continue;
+    const d = docs(sh.owner), t = (d.trips && Array.isArray(d.trips.trips) ? d.trips.trips : []).find((x) => x.id === sh.id);
+    const k = t && t.trajId ? sh.owner + ":profile:" + t.trajId : null;
+    if (k && !seen.has(k)) { seen.add(k); list.push({ kind: "profile", id: t.trajId, owner: sh.owner, everyone: sh.everyone, users: sh.users, opts: {} }); }
+  }
+  for (const sh of list) {
+    const d = docs(sh.owner);
+    let view = null;
+    if (sh.kind === "profile") {
+      const L = (d.calc && Array.isArray(d.calc.loads) ? d.calc.loads : []).find((c) => c.id === sh.id);
+      view = L ? shareKit.profileView(L, d) : null;
+    } else if (sh.kind === "trip") {
+      const t = (d.trips && Array.isArray(d.trips.trips) ? d.trips.trips : []).find((x) => x.id === sh.id);
+      if (t) {
+        const photos = q("SELECT id, caption, w, h, measure FROM trip_photos WHERE owner_id=? AND trip_id=? ORDER BY created_at").all(sh.owner, t.id)
+          .filter((r) => { const m = parseMeasure(r.measure); return !(m && m.of); })
+          .map((r) => ({ id: r.id, caption: r.caption || "", w: r.w, h: r.h, measure: parseMeasure(r.measure), url: `/api/photos/${r.id}` }));
+        view = shareKit.tripView(t, d, sh.opts || {}, photos);
+      }
+    }
+    if (view) out.push({ kind: sh.kind, id: sh.id, key: sh.owner + ":" + sh.kind + ":" + sh.id, by: who(sh.owner), view });
+  }
+  return out;
 }
 /* Saves from several devices are merged, keeping the newest edit to each piece (see merge.js).
    edit_times remembers when each piece of a document was last changed. */
@@ -828,6 +879,28 @@ async function api(req, res, url) {
       return send(res, 200, { photo: { id: pid, caption: body.caption || "", w: body.w | 0 || null, h: body.h | 0 || null, measure: null, ladderId: lad, url: `/api/photos/${pid}` } });
     }
   }
+  /* ---- Shooting profiles and range trips you share, and the ones shared with you (2.52) ---- */
+  if (p === "/api/shares" && method === "GET") {
+    if (user.username === "guest") return send(res, 200, { mine: [], withMe: [] });
+    const mine = q("SELECT * FROM item_shares WHERE owner_id=?").all(user.id).map(shareRow).map((sh) => ({ kind: sh.kind, id: sh.id, everyone: sh.everyone, users: sh.users, opts: sh.opts }));
+    return send(res, 200, { mine, withMe: shareViews(user.id) });
+  }
+  m = /^\/api\/shares\/(profile|trip)\/([A-Za-z0-9_.-]{1,80})$/.exec(p);
+  if (m) {
+    const [, kind, iid] = m;
+    if (method === "PUT") {
+      const b = await readJson(req);
+      const everyone = !!b.everyone, users = [...new Set((Array.isArray(b.users) ? b.users : []).map(Number).filter((x) => Number.isInteger(x) && x > 0 && x !== user.id))].slice(0, 500);
+      const opts = kind === "trip" ? { range: !!(b.opts && b.opts.range), notes: !!(b.opts && b.opts.notes), profile: !!(b.opts && b.opts.profile) } : {};
+      if (!everyone && !users.length) { q("DELETE FROM item_shares WHERE owner_id=? AND kind=? AND item_id=?").run(user.id, kind, iid); return send(res, 200, { share: null }); }
+      q(`INSERT INTO item_shares(owner_id,kind,item_id,everyone,users,opts,updated_at) VALUES(?,?,?,?,?,?,?)
+         ON CONFLICT(owner_id,kind,item_id) DO UPDATE SET everyone=excluded.everyone, users=excluded.users, opts=excluded.opts, updated_at=excluded.updated_at`)
+        .run(user.id, kind, iid, everyone ? 1 : 0, JSON.stringify(users), JSON.stringify(opts), now());
+      return send(res, 200, { share: { kind, id: iid, everyone, users, opts } });
+    }
+    if (method === "DELETE") { q("DELETE FROM item_shares WHERE owner_id=? AND kind=? AND item_id=?").run(user.id, kind, iid); return send(res, 200, { share: null }); }
+  }
+
   /* ---- factory loads people chose to share with everyone on this server ---- */
   if (p === "/api/sharedammo" && method === "GET") {
     if (!shareBoxPhotos() && !(user.is_admin && url.searchParams.get("all") === "1")) return send(res, 200, { shared: false, ammo: [] });
@@ -1164,6 +1237,9 @@ async function api(req, res, url) {
     let ph = q("SELECT * FROM photos WHERE id=?").get(m[1]), table = "photos", access = null;
     if (ph) access = canRead(user, ph.load_id);
     else { ph = q("SELECT * FROM trip_photos WHERE id=? AND owner_id=?").get(m[1], user.id); table = "trip_photos"; if (ph) access = "owner"; }
+    if (!ph) { const tp = q("SELECT * FROM trip_photos WHERE id=?").get(m[1]);
+      if (tp && tp.trip_id) { const sr = q("SELECT s.* FROM item_shares s JOIN users u ON u.id=s.owner_id WHERE u.disabled=0 AND s.owner_id=? AND s.kind='trip' AND s.item_id=?").get(tp.owner_id, tp.trip_id);
+        if (sr && shareSees(shareRow(sr), user.id)) { if (method !== "GET") throw new HttpError(403, "Only the owner can change this photo."); ph = tp; table = "trip_photos"; access = "shared"; } } }
     if (!ph) { const g = q("SELECT * FROM gun_photos WHERE id=? AND owner_id=?").get(m[1], user.id); if (g) { if (method !== "GET") throw new HttpError(400, "Use the gun photo controls for this one."); ph = g; table = "gun_photos"; access = "shared"; } }
     if (!ph) { const b = q("SELECT * FROM box_photos WHERE id=?").get(m[1]); if (b && (b.owner_id === user.id || ((shareBoxPhotos() || user.is_admin) && (b.cat_item || (b.ammo_id && q("SELECT 1 AS ok FROM shared_ammo WHERE id=?").get(b.ammo_id)))))) { if (method !== "GET") throw new HttpError(400, "Use the box photo controls for this one."); ph = b; table = "box_photos"; access = "shared"; } }
     if (!ph || !access) throw new HttpError(404, "Photo not found.");

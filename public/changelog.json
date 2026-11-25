@@ -2,11 +2,22 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
+      "version": "2.52.0",
+      "date": "2026-11-24",
+      "title": "Share Shooting profiles and range trips",
+      "items": [
+        "Share a Shooting profile or a range trip with everyone here or with the people you pick, from its new Sharing card. The card shows what they'll see and what's never shared: serial numbers, gun and optic photos, prices, your other gear and where the weather was taken stay private. A trip's range and notes are shared only if you tick them.",
+        "On a range trip, Also share its Shooting profile lets the same people see its profile too. Untick it to take that back; sharing the profile from its own card isn't affected. Anything you've shared has a Shared badge in your lists.",
+        "Things shared with you are under Shared with me at the bottom of Shooting (the Shared with me link beside Range trips jumps there) and of Shooting › Range trips. They open view only. A profile shows its bullet path chart and range table, and Make my own copy puts it in your own profiles. A trip shows the gun and weather, the chronograph (tap it for every shot), its shot groups with each shot's velocity, all the groups together and each target with its marks.",
+        "Your nickname shows on the Shooting profiles and range trips you share too, as well as on factory ammo, box photos and reloading loads."
+      ]
+    },
+    {
       "version": "2.51.0",
       "date": "2026-11-23",
       "title": "Nicknames and shared ammo",
       "items": [
-        "You can choose a nickname in Account. Everyone else here sees it on ammo, box photos and Shooting profiles you share, and Home greets you with it. Leave it blank to use your name. Nobody can take a name someone else already goes by, and admins still see real names (and can clear a nickname).",
+        "You can choose a nickname in Account. Everyone else here sees it on factory ammo, box photos and reloading loads you share, and Home greets you with it. Leave it blank to use your name. Nobody can take a name someone else already goes by, and admins still see real names (and can clear a nickname).",
         "Factory ammo people have shared has its own Shared tab, next to Rifle, Pistol and Shotgun, in Tools › Library › Factory ammo and on the + Add ammo screen. Each load shows who shared it and when. In the Library, tap one to see all of it, then add it to your ammo.",
         "Links that open one Library list (like Tools › Library in the Add ammo note) go straight to that list again.",
         "The Near zero and Far zero card on a range trip is shorter."

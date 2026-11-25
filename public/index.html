@@ -1171,6 +1171,43 @@ section.card,#panel-help section.card{scroll-margin-top:var(--stick,110px)}
 .usheet .ugrp h3{margin:0 0 8px;font-size:calc(13px*var(--fs));font-family:var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .usheet .row{flex-wrap:wrap}
 .usheet .note{margin:4px 0}
+/* sharing a Shooting profile or a range trip (2.52) */
+#trajDetail.scratch #profShare{display:none}
+.shmode{margin:2px 0 10px}
+.shpeople{margin:0 0 10px}
+.shopts{display:flex;flex-direction:column;gap:6px;margin:0 0 10px}
+.shyn{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:6px 0 8px}
+.shyn>div{border-radius:10px;padding:10px 12px;font-size:calc(13px*var(--fs));line-height:1.55}
+.shyn b{display:block;margin-bottom:2px}
+.shyn .yes{background:color-mix(in srgb,#2e7d32 12%,var(--surface));border:1px solid color-mix(in srgb,#2e7d32 35%,var(--line))}
+.shyn .no{background:color-mix(in srgb,#c62828 10%,var(--surface));border:1px solid color-mix(in srgb,#c62828 30%,var(--line))}
+.shyn ul{margin:0;padding-left:18px}
+.shview .infosheet{max-width:760px;max-height:90vh}
+.shban{background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:8px 12px;margin:0 0 12px;font-size:calc(13px*var(--fs))}
+.shfacts2{display:grid;grid-template-columns:minmax(90px,max-content) 1fr;gap:6px 14px;margin:0 0 12px}
+.shfacts2 dt{color:var(--muted);font-size:calc(13px*var(--fs))}.shfacts2 dd{margin:0}.shfacts2 .wxrep{display:flex;flex-direction:column;gap:2px;margin:0}
+.shtable{width:100%;border-collapse:collapse;margin:4px 0 12px;font-variant-numeric:tabular-nums}
+.shtable th,.shtable td{text-align:right;padding:5px 8px;border-bottom:1px solid var(--line)}.shtable th:first-child,.shtable td:first-child{text-align:left}
+.shtable th{font-size:calc(12px*var(--fs));color:var(--muted);font-weight:600}
+.shphotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:6px 0 12px}
+.shphotos img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
+.shh{font-family:var(--body);font-size:calc(13px*var(--fs));font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)}
+.shvia{margin-top:2px}
+#trajList>#shWith_all{margin-top:14px}
+.shsub{margin:14px 0 6px}
+.shpath{width:100%;height:auto;display:block;margin:4px 0 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.shpath text{font-family:var(--body);fill:var(--muted)}
+details.shchrono{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0 12px}
+details.shchrono>summary{cursor:pointer;font-family:var(--body);font-weight:600;font-size:calc(15px*var(--fs));text-transform:none;letter-spacing:0;color:var(--fg)}
+details.shchrono h4{margin:12px 0 4px;font-size:calc(14px*var(--fs))}
+.shshots{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:4px 10px;font-variant-numeric:tabular-nums;font-size:calc(13px*var(--fs))}
+.shshots span b{color:var(--muted);font-weight:600;margin-right:4px}
+.shsg .sgstrip{margin-top:4px}
+.shtgt{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin:6px 0 12px}
+.shtgt a{display:block}.shtgt img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
+.ownshare{display:inline-flex;align-items:center;gap:4px;font-family:var(--body);font-size:calc(12px*var(--fs));font-weight:700;letter-spacing:0;text-transform:none;line-height:1;padding:3px 8px 3px 6px;border-radius:999px;background:var(--accent);color:var(--accent-fg);vertical-align:2px;margin-left:4px;white-space:nowrap}
+.ownshare svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.shtag{display:inline-block;font-size:calc(11px*var(--fs));font-weight:700;padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);margin-left:6px;vertical-align:1px}
 .usearchrow{display:flex;gap:10px;align-items:center}
 .urow .unick{color:var(--muted);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.usearchrow .usearch{flex:1;min-width:0}.usearchrow .btn{flex:none}
 .actg{display:flex;align-items:center;gap:8px;font-weight:600;white-space:nowrap;cursor:pointer}.actg input{width:20px;height:20px;margin:0;accent-color:var(--accent)}
@@ -1703,7 +1740,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
     <p class="sub" id="trajSub">Bullet path for your point-blank zero and up to three more. Everything updates as you type.</p>
   </header>
 
-  <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="false">Range trips</button><button type="button" class="arealink" data-gorg>Ranges ›</button></div>
+  <div class="areatabs" id="trajSeg" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="true">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="false">Range trips</button><button type="button" class="arealink" data-goshared hidden>Shared with me ›</button><button type="button" class="arealink" data-gorg>Ranges ›</button></div>
   <div id="trajList"></div>
   <div id="trajDetail" hidden>
   <div class="banner twistbanner" id="trajFit" role="alert" hidden></div>
@@ -1857,6 +1894,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
   </div>
   </div>
   <div class="row tarrrow" hidden><button class="linkbtn" type="button" id="trajArrange">Arrange these cards</button></div>
+  <section class="card" aria-label="Sharing" id="profShare" hidden></section>
   <div id="tripsRoot" class="tripsroot"></div>
   <details class="moredet profmore"><summary>More</summary><div class="row endrow"><button class="btn" id="resetBtn" type="button" hidden>Reset to defaults</button><button class="btn danger" id="delBtn" type="button">Delete profile</button></div></details>
   <p class="note endnote" id="delNote" hidden>This is your only profile. Add another one before deleting it.</p>
@@ -1887,7 +1925,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
       <details class="hmore"><summary>Learn more about Getting started</summary>      <h3>Signing in</h3>
       <p>The admin makes your account and gives you a temporary password. The first time you sign in you'll choose your own. To change it later, tap <b>More</b> at the bottom right, then <b>Account</b> (on a computer, <b>Account</b> is at the top right). Want a different name shown (on shared loads, box photos and the greeting on Home)? Ask the admin; they can change it with <b>Edit name</b> on the Admin page.</p>
       <h3>Units, colors, text size and the tab bar</h3>
-      <p>To choose what name other people here see on ammo, box photos and Shooting profiles you share, type a <b>Nickname</b> in <a class=goto href=#go data-go=account:nickname>More › Account</a> and tap <b>Save</b>. It also greets you on Home. Leave it blank to use your name. Nobody can pick a name someone else here already goes by, and admins still see your real name next to it (and can clear a nickname that shouldn't be there).</p>
+      <p>To choose what name other people here see on things you share (factory ammo, box photos, reloading loads, Shooting profiles and range trips), type a <b>Nickname</b> in <a class=goto href=#go data-go=account:nickname>More › Account</a> and tap <b>Save</b>. It also greets you on Home. Leave it blank to use your name. Nobody can pick a name someone else here already goes by, and admins still see your real name next to it (and can clear a nickname that shouldn't be there).</p>
       <p>To use metric, go to <a class=goto href=#go data-go=account:units>More › Account › Units</a> and tap the <b>Imperial</b> button to switch it to <b>Metric</b>. Distances then show in metres, velocities in m/s, bullet drop, drift and group sizes in centimetres, cartridge sizes (COAL, case and bullet length, twist, barrel) in millimetres, energy in joules, temperatures in °C, wind in km/h, altitude in metres and bulk powder in kilograms. Bullet weights and powder charges stay in grains. Nothing you've saved changes, only how it's shown, so you can switch back and forth. The setting follows your account to your other devices, and the Excel and PDF exports and printed targets use it too. In metric, the range table and dope card step in whole metres, the wind brackets are 10, 20 and 30 km/h, and a zero typed in metres stays that many metres. A zero you set in yards shows its metric equivalent (100 yd shows as 91 m). The help on this page uses imperial units.</p>
       <p>On a phone, the bar along the bottom shows four tabs and <b>More</b>. To choose which four, and their order, go to <a class=goto href=#go data-go=account:tabs>More › Account › Layout › Phone tab bar</a> and tap <b>Choose the tabs</b>: tick <b>In the bar</b> for up to four (Home, Shooting, Reloading, Gear &amp; Ranges, Tools, Training and Help) and drag them into order. The rest are under <b>More</b>. A computer always shows every tab along the top.</p>
       <p>Pick a color theme under <a class=goto href=#go data-go=account:theme>More › Account › Look</a>: Range (the original), Olive Drab, Flat Dark Earth, Blued Steel, Blaze Orange, Plum, Lavender or Red Night. Under the themes, pick <b>Woodland camo</b> or <b>Digital camo</b> for a faint camo pattern behind the page in your theme's colors, or <b>Plain</b> for none. Each one can follow your phone's light/dark setting or stay light or dark. Red Night is always dark red-on-black, so it won't wreck your night vision. Your choice follows your account to your other devices.</p>
@@ -2136,6 +2174,10 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
       </ul>
       <h3>Share a load</h3>
       <p>Open the load and tick people under <b>Sharing</b>. They can see the load, its velocities and photos but can't change anything. Untick to stop sharing. Loads shared with you appear under <b>Shared with me</b>; use <b>Duplicate recipe</b> to make your own editable copy.</p>
+      <h3>Share a Shooting profile or a range trip</h3>
+      <p>Open a Shooting profile and use its <b>Sharing</b> card, or open a range trip and use its <b>Sharing</b> tile. Pick <b>Nobody</b>, <b>Everyone</b> (people added later too) or <b>Pick people</b> and tick names. The card shows what they'll see and what's never shared before you share anything. Anything you've shared has a <b>Shared</b> badge in your Shooting profiles and Range trips lists, and on the trip's own page.</p>
+      <p>They see the gun's make, model, cartridge, barrel, twist and sight height, the optic's make, model, click value and reticle, the ammo, and the calculator's numbers (zero, conditions and a range table). A trip adds the date, the weather (temperature, wind, pressure and humidity, never where it was taken), chronograph strings, all your groups together and the target photos. Tick <b>Include the range</b> or <b>Include my notes</b> on a trip to add those. Serial numbers, gun and optic photos, prices, your other gear and your Coriolis latitude are never shared. On a shared trip, <b>Also share its Shooting profile</b> lets the same people see its profile too; untick it to take that back. Sharing the profile from its own <b>Sharing</b> card is separate, and unticking the box on a trip doesn't change it.</p>
+      <p>Shared things show under <b>Shared with me</b> at the bottom of Shooting (profiles and trips; the <b>Shared with me ›</b> link beside <b>Range trips</b> jumps there) and of <b>Shooting › Range trips</b> (trips), marked with who shared them (their nickname, if they've set one). A shared profile shows its bullet path chart and range table; a shared trip shows the chronograph (tap it to see every shot), its shot groups with each shot's velocity, all the groups together, and each target with its groups and velocities marked. They open view only: you can't open their gun or change anything. On a shared profile, <b>+ Make my own copy</b> puts a copy in your own profiles, where you can pick your gun and change anything; theirs stays as it is. Changes they make later show up the next time you open it, and they can stop sharing at any time.</p>
       <h3>Back up, export and import</h3>
       <p>Tap <a class=goto href=#go data-go=account>More › Account</a> (or <b>Account</b> at the top on a computer). <b>Download backup</b> saves everything in your account in one .zip file, photos included. <b>Download Excel</b> and <b>Download PDF</b> are for reading and printing (the PDF includes your target photos).</p>
       <p><b>Bringing things back from a nightly backup.</b> If something went missing, <b>Account › Import and Export › Import</b> also takes one of the server's nightly backups: the <b>rangebook.db</b> file from a dated folder in the backups folder (or a .zip of the whole folder, which brings photos too). Only your own account is read from it, and like any import it only <b>adds</b> what's missing, so anything you've changed since stays as it is.</p>
@@ -2426,7 +2468,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
   </div>
   <div class="panel" id="panel-log" role="tabpanel" aria-labelledby="tab-traj" hidden>
     <header class="phead"><h1>Shooting</h1><p class="sub">Every day at the range: your range trips and the days you shot groups for a reloading load.</p></header>
-    <div class="areatabs" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="false">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="true">Range trips</button><button type="button" class="arealink" data-gorg>Ranges ›</button></div>
+    <div class="areatabs" role="tablist" aria-label="Shooting"><button type="button" role="tab" data-area="traj" aria-selected="false">Profiles</button><button type="button" role="tab" data-area="log" aria-selected="true">Range trips</button><button type="button" class="arealink" data-goshared hidden>Shared with me ›</button><button type="button" class="arealink" data-gorg>Ranges ›</button></div>
     <div id="logRoot" class="col"><div class="card"><p class="note">Loading…</p></div></div>
   </div>
   <div class="panel" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
@@ -2494,7 +2536,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
     <header><h1>Account</h1><p class="sub" id="acctWho" hidden></p></header>
     <section class="card" aria-label="Account" id="acctMain"><h2>Account</h2>
       <div class="acrow"><div class="aclbl"><b id="acName"></b><span class="note" id="acUser"></span></div><div class="row"><button class="btn" type="button" id="acPwBtn">Change password</button><button class="btn" type="button" id="acSignOut">Sign out</button></div></div>
-      <div class="acrow" id="acNick"><div class="aclbl"><b>Nickname</b><span class="note">What everyone else here sees on ammo, photos and profiles you share. Leave it blank to use your name.</span><span class="savestate" id="nickState"></span></div><div class="acq"><input id="nickIn" class="text" type="text" maxlength="30" placeholder="Optional" aria-label="Nickname" autocomplete="off" spellcheck="false"><button class="btn" type="button" id="nickSave">Save</button></div></div>
+      <div class="acrow" id="acNick"><div class="aclbl"><b>Nickname</b><span class="note">What everyone else here sees on things you share: factory ammo, box photos, reloading loads, Shooting profiles and range trips. Leave it blank to use your name.</span><span class="savestate" id="nickState"></span></div><div class="acq"><input id="nickIn" class="text" type="text" maxlength="30" placeholder="Optional" aria-label="Nickname" autocomplete="off" spellcheck="false"><button class="btn" type="button" id="nickSave">Save</button></div></div>
       <div class="acrow" id="acctAdmin" hidden><div class="aclbl"><b>Admin</b><span class="note">Add people, reset passwords, settings and backups.</span></div><button class="btn primary" type="button" id="acAdmin">Open Admin</button></div>
       <p class="note ok" id="acPwOk" hidden>Password changed. Your other devices will need to sign in again.</p>
       <div class="acblk" id="acUnits"><h3 class="acsub">Units</h3>
@@ -2546,6 +2588,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
     <div id="sxRoot" class="col"></div>
   </div>
 </div>
+<div class="infowrap usheet shview" id="shView" data-sheet hidden><div class="infoback" data-sclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="shViewT"><div class="infohead"><h2 id="shViewT">Shared with you</h2><button class="infox" type="button" data-sclose aria-label="Close">✕</button></div><div id="shViewBody"></div></div></div>
 <footer class="sitefoot" id="siteFoot">Powered by Range Book · <a href="https://rangebook.org" target="_blank" rel="noopener">rangebook.org</a></footer>
 
 <script>
@@ -4037,7 +4080,7 @@ function fillSelect(){
     const nt=window.RB_TRIPS?RB_TRIPS.count(l.id):0;
     const pbz=num((l.z||[])[3]),uz=(l.z||[]).slice(0,3).map(num).filter(z=>z>0);
     const m=l.sg?[l.rifleName||"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ")||"Shotgun profile":[[pbz>0?"Point-blank "+U.s("yd",pbz,0):"",uz.length?"zeros "+uz.map(z=>U.n("yd",z,0)).join(", ")+" "+U.u("yd"):""].filter(Boolean).join(", ").replace(/^z/,"Z")||"No zeros",l.rifleName?l.rifleName:"",nt?nt+" range trip"+(nt===1?"":"s"):""].filter(Boolean).join(" · ");
-    return '<div class="gtile" data-tfid="'+escL(l.id)+'"><button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled profile")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+(fitCheck(l)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>'+
+    return '<div class="gtile" data-tfid="'+escL(l.id)+'"><button class="loaditem" type="button" data-topen="'+escL(l.id)+'"><span class="t">'+escL(l.name||"Untitled profile")+(l.lr?' <span class="chip lrchip">Long range</span>':'')+(window.RB_SHARES?RB_SHARES.badge("profile",l.id):'')+(l.ammoId&&window.RB_AMMO_SUB&&RB_AMMO_SUB(l.ammoId)?' <span class="chip subchip">Subsonic</span>':'')+(fitCheck(l)?' <span class="chip warnchip">Check cartridge</span>':'')+'</span>'+(d?'<span class="d">'+escL(d)+'</span>':'')+'<span class="m">'+escL(m)+'</span></button>'+
       '<button type="button" class="favstar" data-tfav="'+escL(l.id)+'" aria-pressed="'+!!l.fav+'" aria-label="'+(l.fav?'Remove '+escL(l.name||"this profile")+' from favorites':'Add '+escL(l.name||"this profile")+' to favorites')+'" title="'+(l.fav?'Favorite':'Mark as a favorite')+'">'+TSTAR(l.fav)+'</button></div>';
   };
   const coll=new Intl.Collator(undefined,{numeric:false,sensitivity:"base"});
@@ -4053,6 +4096,7 @@ function fillSelect(){
   });
   h+='</div>';
   root.innerHTML=h;
+  if(window.RB_SHARES)RB_SHARES.listInto(root,"profile");
   if(window.RB_FILTER)RB_FILTER(root.querySelector(".card"),"traj");
   $("newBtn").addEventListener("click",()=>newLoad());
   {const fg=$("tFavs");if(fg&&favs.length>1)RB_SORT(fg,".gtile","data-tfid",ids=>{ids.forEach((id,i)=>{const L=state.loads.find(x=>x.id===id);if(L)L.favN=i;});save();fillSelect();if(window.RB_TRIPS&&RB_TRIPS.changed)RB_TRIPS.changed();});}
@@ -4367,7 +4411,7 @@ const FOLD=(()=>{try{return JSON.parse(localStorage.getItem("rb.fold")||"{}")||{
 // cards in FOLD_FRESH always start folded and aren't remembered (What's new on How to Use)
 const FOLD_FRESH=new Set(["help_hNew"]);
 // cards that start folded until you open them (2.46): set once, then rarely needed
-const FOLD_SHUT=new Set(["admin_Backups","pbr","trueup","rel_Velocity_chart","share","gun_secGunPh","gun_secGunMags","gun_secGunRel","gun_secGunParts","guns_lu","guns_bar"]);
+const FOLD_SHUT=new Set(["admin_Backups","pbr","trueup","rel_Velocity_chart","share","profshare","gun_secGunPh","gun_secGunMags","gun_secGunRel","gun_secGunParts","guns_lu","guns_bar"]);
 function foldCard(sec,key){
   if(!sec||sec.querySelector(":scope>.sechead"))return;
   const fresh=FOLD_FRESH.has(key);
@@ -4387,7 +4431,9 @@ window.foldCard=foldCard;
 window.foldAll=(root,prefix)=>{if(!root)return;root.querySelectorAll("section.card:not(.collapsible)").forEach(sec=>{if(sec.id==="shareSec")return;const h=sec.querySelector(":scope>h2");if(!h)return;
   foldCard(sec,prefix+"_"+String(sec.id||sec.getAttribute("aria-label")||h.textContent).replace(/[^A-Za-z0-9]+/g,"_"));});};
 [["#secTWx","wx"],["#secTChart","chart"],["#secTTable","table"],["#trajDetail [aria-label='True up']","trueup"],["#secTDope","dope"],["#secTRanges","ranges"]].forEach(([q,k])=>foldCard(document.querySelector(q),k));
-function openTraj(id){sweepNewProf(id);state.cur=id;save();showTrajView("detail");fillInputs();trajHead();try{scopeCols(cur());}catch(e){}render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();window.scrollTo(0,0);}
+function openTraj(id){sweepNewProf(id);state.cur=id;save();showTrajView("detail");fillInputs();trajHead();try{scopeCols(cur());}catch(e){}render();setInOpen(!isPhone());if(window.RB_TRIPS)RB_TRIPS.show();
+  {const ps=$("profShare");if(ps){if(window.RB_SHARES&&!window.GUEST)RB_SHARES.tile(ps,"profile",id);else ps.hidden=true;}}
+  window.scrollTo(0,0);}
 /* a profile left without a name is named after its gun and ammo ("gun - ammo"), and keeps up as they change */
 function profAuto(L){let g="",a="";
   try{const r=rifleOf(L);g=(r&&r.name)||L.rifleName||"";}catch(e){g=L.rifleName||"";}
@@ -4436,6 +4482,22 @@ window.RB_TRAJ={
     const a=document.activeElement;if(a&&$("panel-traj")&&$("panel-traj").contains(a)&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;
     if(JSON.stringify(d.loads)===JSON.stringify(state.loads))return;const c=state.cur;state=d;if(c&&state.loads.some(l=>l.id===c))state.cur=c;fillSelect();},
   open(id){if(window.APP_showTab)APP_showTab("traj");openTraj(id);},
+  /* a profile someone shared with you (2.52): how high to dial and how far the wind pushes it, out to its range;
+     unit is "mil" or "moa" (their optic's) */
+  sharedTable(P,unit){if(!P||P.sg)return null;const L=Object.assign({},base,P);
+    if(!(num(L.mv)>0&&num(L.w)>0&&num(L.bc)>0&&num(L.sh)!=null))return null;
+    const ai=Math.round(L.adj||0)-1,zs=(L.z||[]).map(num),za=ai>=0&&ai<4&&zs[ai]>0?zs[ai]:zs.find(z=>z>0);if(!(za>0))return null;
+    try{const Le=Object.assign({},L,{mv:effMV(L)}),S=simulate(Le),AC=angleCos(Le),sh=num(Le.sh),lim=Math.min(S.MR,S.last);
+      const path=x=>S.at(S.G,x)*AC+x*(sh-S.at(S.G,za))/za-sh,UF=unit==="mil"?3.6:1.0472,drift=x=>10*1.46667*(S.at(S.t,x)-x*3/Le.mv)*12;
+      const st=Le.lr?100:50,dp=L.dope||{},to=num(dp[U.metric?"toM":"to"])||(Le.lr?1000:500),rows=[];for(let dd=st;dd<=to&&rows.length<24;dd+=st){const x=U.from("yd",dd);if(x>lim)break;const p=path(x);
+        rows.push({d:dd,up:-p/(x*UF/100),wind:drift(x)/(x*UF/100),v:S.at(S.v,x)});}
+      const end=Math.min(to,U.n("yd",lim,3)),pts=[];for(let i=0;i<=80;i++){const dd=end*i/80,x=U.from("yd",dd);pts.push([dd,path(x)]);}
+      return {zero:za,zeroD:U.n("yd",za,0),unit:unit==="mil"?"MIL":"MOA",rows,pts,end,sh};}catch(e){return null;}},
+  // make your own copy: the calculator's numbers, with the gun as a name only
+  copyShared(v,by){const P=v&&v.inputs;if(!P)return null;const L=Object.assign(clone(base),clone(P));
+    L.id="u"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);L.builtin=false;delete L.nameAuto;delete L.fav;delete L.favN;
+    L.name=String(v.name||"Shared profile")+(by?" (from "+by+")":"");if(v.cart)L.cart=v.cart;if(v.gun&&v.gun.label)L.rifleName=v.gun.label;
+    if(!Array.isArray(L.z))L.z=[100,null,null,null];state.loads.push(L);save();RB_TRAJ.open(L.id);return L.id;},
   all(){return state.loads.map(l=>({id:l.id,sg:!!l.sg,pats:(l.patterns||[]).length,fav:!!l.fav,favN:l.fav?favRank(l):null,name:l.name||"Untitled profile",rifleId:l.rifleId||null,partId:l.partId,ammoId:l.ammoId||null,cart:l.cart||""}));},
   canSel(id){const l=state.loads.find(x=>x.id===id);return l?canSelOf(l):"";},
   // True zero on a range trip (2.47.57): the zero box in use (or the first one) takes the worked-out zero. Returns what was there, for undo.
@@ -13057,7 +13119,7 @@ function renderTrips(){
         const thumb=s.photoId?'<img alt="" loading="lazy" src="'+esc("/api/photos/"+s.photoId)+'">':'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>';
         const d=[num(x.distance)?U.s("yd",num(x.distance),0):"",num(x.rounds)?num(x.rounds)+" rounds":"",x.temp!=null&&x.temp!==""?U.s("F",num(x.temp),0):"",tripWindTxt(x)].filter(Boolean).join(" · ");
         const m=[s.photos?s.photos+" photo"+(s.photos===1?"":"s"):"",num(x.avgVel)?U.s("fps",num(x.avgVel),0,true)+(num(x.sd)!=null?" · SD "+sdS(num(x.sd)):""):"",x.notes?x.notes.replace(/\s+/g," ").slice(0,80)+(x.notes.length>80?"…":""):""].filter(Boolean).join(" · ");
-        h+='<button class="loaditem withthumb" type="button" data-trip="'+esc(x.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(x.date?fmtDate(x.date):"No date")+(x.place?' · '+esc(x.place):'')+'</span>'+
+        h+='<button class="loaditem withthumb" type="button" data-trip="'+esc(x.id)+'"><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(x.date?fmtDate(x.date):"No date")+(x.place?' · '+esc(x.place):'')+RB_SHARES.badge("trip",x.id)+'</span>'+
           (d?'<span class="d">'+esc(d)+'</span>':'')+(s.best?'<span class="best">Best: <b>'+esc(tripBestTxt(s.best))+'</b></span>':'')+(m?'<span class="m">'+esc(m)+'</span>':'')+'</span></button>';
       });
       h+='</div>';
@@ -13105,7 +13167,7 @@ function renderTrips(){
     '<div class="row"><button class="btn" id="tripTgtGo" type="button">Print a target</button></div>';
   let hd;{const F=TRIP_FROM||{k:"prof"},bl=F.k==="log"?"Range trips":F.k==="home"?"Home":F.k==="list"?"Range trips":(T.name||"Profile");
     hd='<div class="triphead"><button class="backbtn" type="button" id="tripBack">‹ '+esc(bl)+'</button>'+
-      '<h2 class="triptitle">'+esc(t.date?fmtDate(t.date):"Range trip")+(t.place?' · '+esc(t.place):'')+'</h2>'+
+      '<h2 class="triptitle">'+esc(t.date?fmtDate(t.date):"Range trip")+(t.place?' · '+esc(t.place):'')+RB_SHARES.badge("trip",t.id)+'</h2>'+
       '<p class="tripprof">Profile: <button class="linkbtn" type="button" data-tcrumb="prof">'+esc(T.name||"Profile")+' ›</button><button class="linkbtn" type="button" id="tripMove">Change</button></p>'+
       '<div class="row tripmove" id="tripMoveRow" hidden><label for="tripMoveTo">Move this trip, with its targets, chronograph shots and notes, to</label><select id="tripMoveTo" class="fieldselect"></select><button class="btn primary" id="tripMoveGo" type="button">Move</button><button class="btn" id="tripMoveX" type="button">Cancel</button></div></div>';}
   h=hd+'<datalist id="dl_place">'+places.map(p=>'<option value="'+esc(p)+'">').join("")+'</datalist>'+
@@ -13114,11 +13176,12 @@ function renderTrips(){
       ttile("chrono",t,"Chronograph",tripChronoSum(t),chronoBody)+
       ttile("targets",t,"Targets",tripTgtSum(t),tgtBody)+
       ttile("zero",t,"True zero","",'<div class="tzcard" id="tripZero"></div>',true)+
+      (window.GUEST?'':ttile("share",t,"Sharing",esc(RB_SHARES.sum("trip",t.id)),'<div id="tripShare"></div>'))+
       ttile("cold",t,"Cold-bore shot",tripColdSum(t),'<div id="coldPick"></div><details class="tmore"><summary>Type it in yourself</summary>'+coldHtml(t).replace(/^<h3>Cold-bore shot<\/h3><p class="note"[^>]*>.*?<\/p>/,"")+'</details>')+
       '<div class="row endrow"><span class="savestate" id="tripState"></span>'+'<button class="btn danger" id="tripDel" type="button">Delete this trip</button></div>'+
     '</div><div class="tcol" id="tripDopeSlot"></div></div>';
   root.innerHTML=h;
-  bindCrumbs();bindTtiles(root,t);drawTripZero(t);if(!T.sg)dopeTo($("tripDopeSlot"));else{const ds=$("tripDopeSlot");if(ds)ds.hidden=true;}tripAirUse(t);
+  bindCrumbs();bindTtiles(root,t);drawTripZero(t);{const ts=$("tripShare");if(ts)RB_SHARES.tile(ts,"trip",t.id,{traj:T});}if(!T.sg)dopeTo($("tripDopeSlot"));else{const ds=$("tripDopeSlot");if(ds)ds.hidden=true;}tripAirUse(t);
   let airT=null;
   root.oninput=e=>{const id=e.target&&e.target.id;if(id==="tp_temp"||id==="tp_windMph"){clearTimeout(airT);airT=setTimeout(()=>{if(tripOpen===t.id)tripAirUse(t);},400);}
     if(id==="tp_date"||id==="tp_place"||id==="tp_distance")ttSet("details",tripDetSum(t));else if(/^cb_/.test(id))setTimeout(()=>ttSet("cold",tripColdSum(t)));};
@@ -13337,6 +13400,159 @@ function profAllOpen(){
   const shut=()=>{w.remove();document.removeEventListener("keydown",esc1);};const esc1=e=>{if(e.key==="Escape")shut();};
   document.addEventListener("keydown",esc1);w.querySelectorAll("[data-pax]").forEach(b=>b.addEventListener("click",shut));}
 $("tripsAll").addEventListener("click",profAllOpen);
+/* ---------- sharing a Shooting profile or a range trip with other people (2.52) ----------
+   The owner picks Nobody, Everyone or some people on a profile's or a trip's Sharing card. The server builds what the other
+   person sees from a short list of fields (see shares.js): the gun, optic and ammo as plain facts, the calculator's numbers,
+   the weather but not where it came from, shots, groups and target photos; the range and the notes only if ticked.
+   Shared items show under Shared with me on Shooting (profiles) and Shooting › Range trips (trips), and open view only. */
+window.RB_SHARES=(function(){
+  let mine=new Map(),withMe=[],busy=null,cur=null;
+  const K=(k,id)=>k+":"+id,get=(k,id)=>mine.get(K(k,id))||null;
+  const nameOf=id=>{const p=people.find(x=>x.id===id);return p?p.name:null;};
+  function sum(k,id){const s=get(k,id);if(!s)return "Not shared";if(s.everyone)return "Everyone";const n=s.users.map(nameOf).filter(Boolean);return n.length?(n.length>3?n.slice(0,3).join(", ")+" and "+(n.length-3)+" more":n.join(", ")):"Not shared";}
+  function redraw(){document.querySelectorAll("[data-goshared]").forEach(b=>b.hidden=window.GUEST||!withMe.length);
+    if(window.RB_TRAJ&&RB_TRAJ.listChanged)RB_TRAJ.listChanged();const pl=$("panel-log");if(pl&&!pl.hidden&&!logEditing())renderLog();
+    const ps=$("profShare"),pk=ps&&ps.dataset.shk;if(pk&&pk.startsWith("profile:")&&!ps.contains(document.activeElement))tile(ps,"profile",pk.slice(8));}
+  function load(){if(window.GUEST)return Promise.resolve();
+    return busy=busy||API.get("/api/shares").then(r=>{mine=new Map(((r&&r.mine)||[]).map(x=>[K(x.kind,x.id),x]));withMe=(r&&r.withMe)||[];busy=null;redraw();},()=>{busy=null;});}
+  function put(k,id,b){return API.put("/api/shares/"+k+"/"+encodeURIComponent(id),b).then(r=>{if(r&&r.share)mine.set(K(k,id),r.share);else mine.delete(K(k,id));return r;});}
+  const li=a=>'<ul>'+a.filter(Boolean).map(x=>'<li>'+x+'</li>').join("")+'</ul>';
+  function ynHtml(k,o){
+    const yes=k==="profile"?["The gun's make, model, cartridge, barrel, twist and sight height","The optic's make, model, click value and reticle","The ammo, zero, conditions and range table"]
+      :["The date, gun, optic and ammo","The weather: temperature, wind, pressure and humidity","Chronograph strings, groups and target photos",o.range?"The range's name":"",o.notes?"Your notes":"",o.profile?"Its Shooting profile, with its range table":""];
+    const no=k==="profile"?["Serial numbers","Photos of the gun or optic","Notes, prices and your other gear","Your Coriolis latitude"]
+      :["Where the weather was taken from","Serial numbers, gun photos and prices",o.range?"":"The range",o.notes?"":"Your notes"];
+    return '<div class="shyn"><div class="yes"><b>They\'ll see</b>'+li(yes)+'</div><div class="no"><b>Never shared</b>'+li(no)+'</div></div>'+
+      '<p class="note">They can\'t open your gun or change anything.'+(k==="profile"?' They can make their own copy of the profile to change.':'')+' <b>Everyone</b> includes people added later.</p>';}
+  /* the Sharing card (a profile) or tile body (a trip); opt.traj: the trip's profile */
+  function tile(el,k,id,opt){if(!el)return;if(window.GUEST){el.hidden=true;return;}opt=opt||{};el.hidden=false;
+    const s=get(k,id)||{everyone:false,users:[],opts:{}},mode=s.everyone?"all":s.users.length?"some":"none",o=s.opts||{};
+    // a profile shared from its range trips (Also share its Shooting profile ticked there)
+    const via=k==="profile"?[...mine.values()].filter(x=>x.kind==="trip"&&x.opts&&x.opts.profile&&trips.some(t=>t.id===x.id&&t.trajId===id)).map(x=>({x,t:trips.find(t=>t.id===x.id)})):[];
+    const viaTxt=via.map(({x,t})=>(t.date?fmtDate(t.date):"a range trip")+" ("+sum("trip",x.id)+")");
+    let h=(k==="profile"?'<h2>Sharing'+(via.length||mode!=="none"?' <span class="shh">· Shared</span>':'')+'</h2>':'')+
+      (via.length?'<div class="shban shvia">Shared from '+(via.length===1?'its range trip':'its range trips')+': <b>'+esc(viaTxt.join("; "))+'</b>. To stop, untick <b>Also share its Shooting profile</b> on '+(via.length===1?'that trip':'those trips')+'.'+(mode!=="none"?' It\'s also shared on its own below.':'')+'</div>':'')+
+      '<p class="note">Share this '+(k==="profile"?'Shooting profile':'range trip')+(via.length?' on its own':'')+' with other people on this Range Book. They see it view only.</p>'+
+      '<div class="segtabs shmode" role="radiogroup" aria-label="Share with">'+[["none","Nobody"],["all","Everyone"],["some","Pick people"]].map(([v,l])=>'<button type="button" role="radio" data-shm="'+v+'" aria-checked="'+(mode===v)+'" aria-selected="'+(mode===v)+'">'+l+'</button>').join("")+'</div>'+
+      '<div class="sharelist shpeople"'+(mode==="some"?'':' hidden')+'>'+(people.length?people.map(p=>'<label class="toggle"><input type="checkbox" data-shu="'+p.id+'"'+(s.users.includes(p.id)?' checked':'')+'> '+esc(p.name)+(people.filter(q=>q.name===p.name).length>1?' <span class="note">('+esc(p.username)+')</span>':'')+'</label>').join(""):'<p class="note">There\'s nobody else on this Range Book yet.</p>')+'</div>';
+    if(k==="trip"){const T=opt.traj,ps=T?get("profile",T.id):null;
+      h+='<div class="shopts"><label class="toggle"><input type="checkbox" data-sho="range"'+(o.range?' checked':'')+'> Include the range'+(String((trips.find(x=>x.id===id)||{}).place||"").trim()?' ('+esc(trips.find(x=>x.id===id).place)+')':'')+'</label>'+
+        '<label class="toggle"><input type="checkbox" data-sho="notes"'+(o.notes?' checked':'')+'> Include my notes</label>'+
+        (T&&mode!=="none"?'<label class="toggle"><input type="checkbox" data-sho="profile"'+(o.profile?' checked':'')+'> Also share its Shooting profile, '+esc(T.name||"this profile")+', with the same people</label>':'')+
+        (T&&ps?'<p class="note" style="margin:0">'+esc(T.name||"Its Shooting profile")+' is also shared on its own, from the profile\'s Sharing card ('+esc(sum("profile",T.id))+'). That stays as it is whether this box is ticked or not.</p>':'')+'</div>';}
+    h+=ynHtml(k,o)+'<span class="savestate" data-shst></span>';
+    el.innerHTML=h;el.dataset.shk=k+":"+id;if(k==="profile"&&window.foldCard)foldCard(el,"profshare");
+    const st=el.querySelector("[data-shst]"),pick=()=>[...el.querySelectorAll("[data-shu]")].filter(x=>x.checked).map(x=>+x.dataset.shu);
+    const tick=n=>!!(el.querySelector('[data-sho="'+n+'"]')||{}).checked;
+    const save=(m)=>{const body={everyone:m==="all",users:m==="some"?pick():[],opts:{range:tick("range"),notes:tick("notes"),profile:m!=="none"&&tick("profile")}};
+      if(st){st.className="savestate";st.textContent="Saving…";}
+      return put(k,id,body).then(()=>{
+        redraw();
+        if(k==="trip"){ttSet("share",esc(sum("trip",id)));{const h2=document.querySelector(".triptitle");if(h2&&tripOpen===id){const o=h2.querySelector(".ownshare");if(o)o.remove();h2.insertAdjacentHTML("beforeend",badge("trip",id));}}const ps=$("profShare");if(ps&&opt.traj&&ps.dataset.shk==="profile:"+opt.traj.id)tile(ps,"profile",opt.traj.id);}tile(el,k,id,opt);const s2=el.querySelector("[data-shst]");if(s2){s2.className="savestate ok";s2.textContent=m==="none"?"Not shared":"Saved";}
+        if(k==="profile"){const sh=el.querySelector(":scope>.secbody");if(sh)sh.hidden=false;}},e=>{onWriteError(e);if(st)st.textContent="";});};
+    el.querySelectorAll("[data-shm]").forEach(b=>b.addEventListener("click",()=>{const m=b.dataset.shm;
+      el.querySelectorAll("[data-shm]").forEach(x=>{const on=x===b;x.setAttribute("aria-checked",on);x.setAttribute("aria-selected",on);});
+      const pl=el.querySelector(".shpeople");if(pl)pl.hidden=m!=="some";
+      if(m==="some"&&!pick().length){if(st){st.className="savestate";st.textContent="Tick the people to share it with.";}return;}
+      save(m);}));
+    el.querySelectorAll("[data-shu]").forEach(c=>c.addEventListener("change",()=>save(pick().length?"some":"none")));
+    el.querySelectorAll("[data-sho]").forEach(c=>c.addEventListener("change",()=>{const s3=get(k,id);if(s3)save(s3.everyone?"all":"some");}));
+}
+  /* Shared with me: a card on Shooting (profiles) or Shooting › Range trips (trips) */
+  function listInto(root,k0){if(!root||window.GUEST)return;const both=k0==="profile",kinds=both?["profile","trip"]:[k0];if(!withMe.some(x=>kinds.includes(x.kind)))return;
+    const itemsOf=k=>withMe.filter(x=>x.kind===k).sort((a,b)=>k==="trip"?String(b.view.date||"").localeCompare(String(a.view.date||"")):String(a.view.name||"").localeCompare(String(b.view.name||""),undefined,{numeric:true})).map(x=>{const v=x.view;
+      let t,d;
+      if(k==="profile"){t=v.name;d=[v.cart,v.gun&&v.gun.label,v.ammo&&v.ammo.label].filter(Boolean).join(" · ");}
+      else{const P=v.profile||{},g=(v.sum&&v.sum.g)||[];t=(v.date?fmtDate(v.date):"Range trip")+(v.place?" · "+v.place:"");
+        d=[P.cart,P.gun&&P.gun.label,g.length?g.length+" group"+(g.length===1?"":"s"):"",v.sum&&v.sum.best?"best "+tripBestTxt(v.sum.best):""].filter(Boolean).join(" · ");}
+      return '<button class="loaditem" type="button" data-shopen="'+esc(x.key)+'"><span class="t">'+esc(t||"Untitled")+'<span class="shtag">Shared by '+esc(x.by)+'</span></span>'+(d?'<span class="d">'+esc(d)+'</span>':'')+'</button>';}).join("");
+    const sec=document.createElement("section");sec.className="card";sec.setAttribute("aria-label","Shared with me");sec.id=both?"shWith_all":"shWith_"+k0;
+    const grp=k=>{const h=itemsOf(k);return h?(both?'<div class="cartname shsub">'+(k==="profile"?'Shooting profiles':'Range trips')+'</div>':'')+'<div class="cartgroup">'+h+'</div>':'';};
+    sec.innerHTML='<h2>Shared with me</h2><p class="note">'+(both?'Shooting profiles and range trips':'Range trips')+' other people here have shared with you. Tap one to see it.</p>'+kinds.map(grp).join("");
+    root.appendChild(sec);sec.querySelectorAll("[data-shopen]").forEach(b=>b.addEventListener("click",()=>open(b.dataset.shopen)));}
+  const row=(l,v)=>v?'<dt>'+l+'</dt><dd>'+v+'</dd>':'';
+  // the bullet's path against the line of sight, from the muzzle out to the table's last distance
+  function pathSvg(T){if(!T||!T.pts||T.pts.length<2)return "";const W=640,H=230,L=46,R=14,Tp=12,B=30,pw=W-L-R,ph=H-Tp-B;
+    const ys=T.pts.map(q=>U.n("in",q[1],2)),lo=Math.min(0,...ys),hi=Math.max(0,...ys),span=Math.max(1,hi-lo);
+    const nice=[1,2,5,10,20,25,50,100,200,500],stp=nice.find(v=>span/v<=6)||1000,y0=Math.floor(lo/stp)*stp,y1=Math.ceil(hi/stp)*stp;
+    const X=d=>L+d/T.end*pw,Y=v=>Tp+(y1-v)/(y1-y0||1)*ph;
+    let g='';for(let v=y0;v<=y1+1e-9;v+=stp)g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(Y(v)+4).toFixed(1)+'" font-size="11" text-anchor="end">'+(+v.toFixed(2))+'</text>';
+    const xs=T.end<=300?50:T.end<=800?100:200;for(let d=0;d<=T.end+1e-9;d+=xs)g+='<text x="'+X(d).toFixed(1)+'" y="'+(H-10)+'" font-size="11" text-anchor="middle">'+d+'</text>';
+    const line=T.pts.map((q,i)=>(i?'L':'M')+X(q[0]).toFixed(1)+' '+Y(U.n("in",q[1],2)).toFixed(1)).join("");
+    return '<svg class="shpath" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Bullet path">'+g+
+      '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--muted)" stroke-dasharray="5 4" stroke-width="1.2"/>'+
+      '<path d="'+line+'" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>'+
+      (T.zeroD<=T.end?'<circle cx="'+X(T.zeroD).toFixed(1)+'" cy="'+Y(0).toFixed(1)+'" r="4.5" fill="var(--accent)"/>':'')+
+      '</svg>';}
+  const gunTxt=g=>g?esc([g.label,g.cartridge,num(g.barrel)!=null?BBL(num(g.barrel)):"",g.twist?(/^\s*1\s*:/.test(String(g.twist))?g.twist:"1:"+g.twist)+" twist":""].filter(Boolean).join(" · ")):"";
+  const opticTxt=o=>o?esc([o.label,num(o.magMin)&&num(o.magMax)?num(o.magMin)+"-"+num(o.magMax)+"x":"",o.fp,o.unit?(o.unit==="mil"?"MIL":"MOA"):"",num(o.click)?num(o.click)+" clicks":"",o.reticle].filter(Boolean).join(" · ")):"";
+  const ammoTxt=a=>a?esc(a.label+(a.reload?" (reloaded)":"")):"";
+  function profBody(x){const v=x.view,P=v.inputs||{},unit=v.optic&&v.optic.unit==="mil"?"mil":"moa",zs=(P.z||[]).slice(0,3).map(num).filter(z=>z>0);
+    let h='<div class="shban">Shared by <b>'+esc(x.by)+'</b> · view only</div><dl class="shfacts2">'+
+      row("Gun",gunTxt(v.gun))+row("Optic",opticTxt(v.optic))+row("Sight height",num(P.sh)!=null?esc(U.s("in",num(P.sh),2)):"")+row("Ammo",ammoTxt(v.ammo))+
+      row("Bullet",esc([num(P.w)?num(P.w)+" gr":"",num(P.bc)?"BC "+P.bc+" "+(P.bcm==="G7"?"G7":"G1"):""].filter(Boolean).join(" · ")))+
+      row("Muzzle velocity",num(P.mv)?esc(U.s("fps",num(P.mv),0,true)):"")+row("Zero",zs.length?esc(zs.map(z=>U.s("yd",z,0)).join(", ")):"")+
+      row("Conditions",esc([P.temp!=null&&P.temp!==""?U.s("F",num(P.temp),0):"",num(P.alt)?U.s("ft",num(P.alt),0,true)+" altitude":""].filter(Boolean).join(" · ")))+'</dl>';
+    const T=window.RB_TRAJ&&RB_TRAJ.sharedTable?RB_TRAJ.sharedTable(P,unit):null;
+    if(T&&T.pts)h+='<h3>Bullet path</h3><p class="note">'+(U.metric?'Centimeters':'Inches')+' above or below the line of sight (the dashed line), out to '+esc(U.s("yd",T.end,0))+'. The dot is the '+esc(U.s("yd",T.zeroD,0))+' zero.</p>'+pathSvg(T);
+    if(T&&T.rows.length)h+='<h3>Range table</h3><p class="note">Zeroed at '+esc(U.s("yd",T.zero,0))+', in their conditions. Wind is a full-value 10 '+esc(U.u("mph"))+'.</p><table class="shtable"><thead><tr><th>'+esc(U.u("yd"))+'</th><th>Up ('+T.unit+')</th><th>Wind ('+T.unit+')</th><th>'+esc(U.u("fps"))+'</th></tr></thead><tbody>'+
+      T.rows.map(r=>'<tr><td>'+r.d+'</td><td>'+r.up.toFixed(1)+'</td><td>'+r.wind.toFixed(1)+'</td><td>'+esc(vS(r.v))+'</td></tr>').join("")+'</tbody></table>';
+    h+='<div class="row"><button class="btn primary" type="button" id="shCopy">+ Make my own copy</button></div><p class="note">The copy goes into your own Shooting profiles, where you can pick your gun and change anything. It doesn\'t change theirs.</p>';
+    return h;}
+  function tripBody(x){const v=x.view,P=v.profile||{},S=v.strings||[];
+    let h='<div class="shban">Shared by <b>'+esc(x.by)+'</b> · view only</div><dl class="shfacts2">'+
+      row("Profile",esc(P.name||""))+row("Gun",gunTxt(P.gun))+row("Optic",opticTxt(P.optic))+row("Ammo",ammoTxt(P.ammo))+row("Suppressor",v.can?esc(v.can.label):"")+
+      row("Distance",num(v.distance)?esc(U.s("yd",num(v.distance),0)):"")+row("Rounds",num(v.rounds)?esc(String(num(v.rounds))):"")+
+      row("Weather",v.wx&&v.wx.at||v.windNote?'<div class="wxrep">'+tripWxRep(v)+'</div>':"")+
+      row("Cold-bore shot",v.cold&&(num(v.cold.x)||num(v.cold.y))?esc(tripColdSum(v)):"")+'</dl>';
+    if(v.notes)h+='<h3>Notes</h3><p style="white-space:pre-wrap">'+esc(v.notes)+'</p>';
+    const SS=S.map((s,i)=>({s,i,st:(s.shots||[]).some(q=>num(q)>0)?stats({shots:s.shots},null):null})).filter(o=>o.st);
+    if(SS.length){const all=SS.flatMap(o=>o.s.shots.filter(q=>num(q)>0)),at=stats({shots:all},null);
+      h+='<details class="shchrono"><summary>Chronograph · '+at.n+' shot'+(at.n===1?'':'s')+' · avg '+esc(vS(at.avg))+' '+esc(U.u("fps"))+(at.n>1?' · SD '+esc(sdS(at.sd))+' · ES '+esc(esS(at.es)):'')+'</summary>'+
+        SS.map(o=>'<h4>'+esc(o.s.name||"String "+(o.i+1))+'</h4><p class="note" style="margin:0 0 6px">'+o.st.n+' shots · avg '+esc(vS(o.st.avg))+(o.st.n>1?' · SD '+esc(sdS(o.st.sd))+' · ES '+esc(esS(o.st.es)):'')+'</p>'+
+          '<div class="shshots">'+o.s.shots.map((q,j)=>num(q)>0?'<span><b>'+(j+1)+'</b>'+esc(vS(num(q)))+'</span>':'').join("")+'</div>').join("")+'</details>';}
+    h+='<div id="shSG" class="shsg"></div><div id="shAll"></div>';
+    const ph=v.photos||[];
+    if(ph.length)h+='<h3>Targets</h3><div class="shtgt">'+ph.map(p=>'<a href="'+esc(p.url)+'" target="_blank" rel="noopener" data-shph="'+esc(p.id)+'"><img src="'+esc(p.url)+'" alt="'+esc(p.caption||"Target photo")+'" loading="lazy"></a>').join("")+'</div>';
+    return h;}
+  // the trip's groups, the way the owner sees them, without anything to change (view only)
+  function drawSG(x){const box=$("shSG");if(!box)return;const v=x.view,kp=tripPhotos,kt=tripTraj;let GS=[];
+    try{tripPhotos=(v.photos||[]).map(p=>Object.assign({},p));tripTraj={cal:num(((v.profile||{}).inputs||{}).cal)||null};GS=tripShotGroups();}catch(e){GS=[];}finally{tripPhotos=kp;tripTraj=kt;}
+    if(!GS.length){box.innerHTML="";return;}let cur=GS[0].key;
+    const unit=(v.profile&&v.profile.optic&&v.profile.optic.unit)==="mil"?"mil":"moa";
+    const draw=()=>{const G=GS.find(g=>g.key===cur),st=sgStats(G),hasV=st.va!=null,per=G.d*(unit==="mil"?3.6:1.0472)/100;
+      const up=-st.c[1]/per,rt=-st.c[0]/per,dir=(a,p,n)=>Math.abs(a)<.05?"":Math.abs(a).toFixed(1)+" "+unit.toUpperCase()+" "+(a>0?p:n);
+      const dl=[dir(up,"up","down"),dir(rt,"right","left")].filter(Boolean).join(", ")||"Centered";
+      box.innerHTML='<h3>Shot groups</h3><div class="sgstrip" role="group" aria-label="Groups">'+GS.map(g=>{const s2=sgStats(g);return '<button type="button" class="sgcell" data-shsg="'+esc(g.key)+'" aria-pressed="'+(g.key===cur)+'">'+sgPlot(g,s2,{size:84,small:true})+'<b>'+esc(g.name)+'</b><span class="num">'+(s2.size!=null?esc(U.s("in",s2.size,2)):g.pts.length+' shot'+(g.pts.length===1?'':'s'))+(s2.va!=null?' · '+esc(U.n("fps",s2.va,0)):'')+'</span></button>';}).join("")+'</div>'+
+        '<div class="sgopen"><div class="sghead"><b>'+esc(G.name)+'</b><span class="note">'+G.pts.length+' shot'+(G.pts.length===1?'':'s')+' at '+esc(U.s("yd",G.d,0))+'</span></div>'+
+        '<div class="sgbody"><div class="sgplot">'+sgPlot(G,st,{size:440})+'</div><div class="sgright">'+
+        '<dl class="sgstats"><div><dt>Group</dt><dd>'+(st.size!=null?esc(U.s("in",st.size,2)):'–')+'</dd></div><div><dt>Average</dt><dd>'+(hasV?esc(U.s("fps",st.va,0)):'–')+'</dd></div><div><dt>SD</dt><dd>'+(st.vsd!=null?esc(U.s("fps",st.vsd,1)):'–')+'</dd></div><div><dt>ES</dt><dd>'+(st.ves!=null?esc(U.s("fps",st.ves,0)):'–')+'</dd></div></dl>'+
+        (hasV?'<div class="sglegend"><span>Slower</span><span class="sggrad"></span><span>Faster</span></div><table class="sgtbl"><thead><tr><th>Shot</th><th class="r">'+esc(U.u("fps"))+'</th><th class="r">vs. avg</th></tr></thead><tbody>'+
+          G.pts.map((q,j)=>{const dv=q[2]>0?Math.round(U.n("fps",q[2]-st.va,0)):null;return '<tr><td class="num">'+(j+1)+'</td><td class="num r">'+(q[2]>0?esc(U.n("fps",q[2],0)):'–')+'</td><td class="num r">'+(dv==null?'':(dv>0?'+':'')+dv)+'</td></tr>';}).join("")+'</tbody></table>':'<p class="note">No velocities on this group.</p>')+
+        '</div></div><div class="sgside">'+(G.pts.length?'<div class="sgdial"><span>To center this group on the aim point</span><b>'+esc(dl)+'</b></div>':'')+'</div></div>';
+      box.querySelectorAll("[data-shsg]").forEach(b=>b.addEventListener("click",()=>{cur=b.dataset.shsg;draw();}));};
+    draw();}
+  // each measured target as the owner's report shows it: the marks and each shot's velocity drawn on the photo
+  function drawTargets(x){(x.view.photos||[]).forEach(p=>{const M=normMeasure(p.measure);if(!M||!M.groups.some(g=>(g.shots||[]).length))return;
+    fetch(p.url,{credentials:"same-origin"}).then(r=>r.ok?r.blob():Promise.reject()).then(b=>markedJpeg(b,p,{kind:"share",L:null})).then(j=>{
+      const a=document.querySelector('#shViewBody [data-shph="'+CSS.escape(p.id)+'"]');if(!a||cur!==x)return;const u=URL.createObjectURL(j);a.href=u;const im=a.querySelector("img");if(im){im.src=u;im.alt="Target with its groups and velocities";}}).catch(()=>{});});}
+  // All groups together, drawn the way your own trips draw it (labels count this trip's photos)
+  function drawAll(x){const box=$("shAll");if(!box)return;const keep=tripPhotos;let h="";
+    try{tripPhotos=(x.view.photos||[]).slice();h=tripAllHtml(Object.assign({},x.view,{canId:""}));}catch(e){h="";}finally{tripPhotos=keep;}
+    box.innerHTML=h;bindGrpMode(box,()=>drawAll(x));}
+  function open(key){const x=withMe.find(o=>o.key===key);if(!x)return;cur=x;const sh=$("shView"),b=$("shViewBody");if(!sh||!b)return;
+    $("shViewT").textContent=x.kind==="profile"?(x.view.name||"Shooting profile"):((x.view.date?fmtDate(x.view.date):"Range trip")+(x.view.place?" · "+x.view.place:""));
+    b.innerHTML=x.kind==="profile"?profBody(x):tripBody(x);
+    if(x.kind==="trip"){drawSG(x);drawAll(x);drawTargets(x);}
+    {const c=$("shCopy");if(c)c.addEventListener("click",()=>{RB_SHEET.close(sh);if(window.RB_TRAJ&&RB_TRAJ.copyShared)RB_TRAJ.copyShared(x.view,x.by);});}
+    RB_SHEET.open(sh);}
+  // is this yours, and can other people see it? (a profile also counts when one of its trips shares it)
+  function isShared(k,id){const s=get(k,id);if(s&&(s.everyone||s.users.length))return true;
+    return k==="profile"&&[...mine.values()].some(x=>x.kind==="trip"&&x.opts&&x.opts.profile&&(x.everyone||x.users.length)&&trips.some(t=>t.id===x.id&&t.trajId===id));}
+  const SHARE_ICO='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5.2 6-5.2s5.4 1.8 6 5.2"/><circle cx="17" cy="9" r="2.6"/><path d="M15.6 13.9c.5-.1.9-.1 1.4-.1 2.4 0 4.3 1.5 4.8 4.3"/></svg>';
+  function badge(k,id){return !window.GUEST&&isShared(k,id)?' <span class="ownshare" title="Other people on this Range Book can see this">'+SHARE_ICO+'Shared</span>':'';}
+  return {load,tile,listInto,sum,open,badge,isShared,shared:()=>withMe.slice()};
+})();
 window.RB_TRIPS={
   // opening a profile shows the profile, not its trips page; keep: leave the trips page as it was (2.45)
   show(keep){if(!keep){TRIPS_PAGE=false;tripOpen=null;tripPhotos=[];}renderTrips();},
@@ -13541,12 +13757,13 @@ function renderLog(){
       const tag=e.kind==="trip"?'<span class="ktag trip">Range trip</span>':'<span class="ktag dev">Load development</span>';
       const d1=[e.load,e.gunName&&!String(e.load).includes(e.gunName)?e.gunName:""].filter(Boolean).join(" · ");
       const m=[e.rounds?e.rounds+" round"+(e.rounds===1?"":"s"):"",e.dist?U.s("yd",e.dist,0):"",e.kind==="dev"&&e.groups?e.groups+" group"+(e.groups===1?"":"s")+(e.charges.length>1?" ("+Math.min(...e.charges)+"–"+Math.max(...e.charges)+" gr)":""):"",e.vel?U.s("fps",e.vel,0,true)+(e.sd!=null&&e.kind==="trip"?" · SD "+sdS(e.sd):""):""].filter(Boolean).join(" · ");
-      h+='<button class="loaditem withthumb" type="button" data-log="'+e.kind+':'+esc(e.id)+'"'+(e.kind==="dev"?' data-ld="'+esc(e.date)+'"':'')+'><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(e.date?fmtDate(e.date):"No date")+(e.title?' · '+esc(e.title):'')+' '+tag+'</span>'+
+      h+='<button class="loaditem withthumb" type="button" data-log="'+e.kind+':'+esc(e.id)+'"'+(e.kind==="dev"?' data-ld="'+esc(e.date)+'"':'')+'><span class="lthumb">'+thumb+'</span><span class="ltext"><span class="t">'+esc(e.date?fmtDate(e.date):"No date")+(e.title?' · '+esc(e.title):'')+' '+tag+(e.kind==="trip"?RB_SHARES.badge("trip",e.id):'')+'</span>'+
         (d1?'<span class="d">'+esc(d1)+'</span>':'')+(e.best&&e.best.moa!=null?'<span class="best">Best: <b>'+e.best.moa.toFixed(2)+' MOA</b>'+(e.best.size?' ('+U.s("in",e.best.size,2)+')':'')+(e.best.name?' at '+esc(e.best.name):'')+'</span>':'')+(m?'<span class="m">'+esc(m)+'</span>':'')+'</span></button>';});
     h+='</div>';
   }
   h+='</section>';
   root.innerHTML=h;
+  if(window.RB_SHARES)RB_SHARES.listInto(root,"trip");
   bindLogRanges();
   if(window.RB_FILTER)RB_FILTER(root.querySelector('[aria-label="Range trips"]'),"log",1);
   $("logNew").addEventListener("click",()=>{homePick=true;showTab("home");});
@@ -13780,6 +13997,7 @@ async function refresh(first){
       if(ch&&!window.GUEST&&!riflesDirty)queueRifles();} // 2.43.8: a gun lists its suppressors
     if(!brassDirty&&!brassEditing()){brass=B.data&&Array.isArray(B.data.rows)?B.data.rows:[];renderBrass();}
     people=U.users||[];
+    RB_SHARES.load();
     if(!$("panel-home").hidden)renderHome();
     if(!$("panel-log").hidden&&!logEditing())renderLog();
     if(openId){
@@ -14448,6 +14666,9 @@ document.querySelectorAll("#helpNav a").forEach(a=>a.addEventListener("click",e=
 document.querySelectorAll(".areatabs [data-area]").forEach(b=>b.addEventListener("click",()=>{if(b.getAttribute("aria-selected")!=="true")showTab(b.dataset.area);}));
 // Shooting › Ranges (2.47.13): your saved ranges, in Gear & Ranges, where each one shows the dial and wind for its targets
 document.querySelectorAll(".areatabs [data-gorg]").forEach(b=>b.addEventListener("click",()=>{if(window.RB_GEAR_RANGES)RB_GEAR_RANGES();}));
+// Shooting › Shared with me (2.52): the list of Shooting profiles, scrolled to what's shared with you
+document.querySelectorAll(".areatabs [data-goshared]").forEach(b=>b.addEventListener("click",()=>{showTab("traj");const bk=$("trajBack");if(bk&&!bk.hidden)bk.click();
+  setTimeout(()=>{const c=$("shWith_all");if(c){c.scrollIntoView({block:"start",behavior:"smooth"});flashEl(c);}},80);}));
 document.querySelector(".topbar .brand").addEventListener("click",()=>{if(started)showTab("home");});
 const THEMES=[["range", "Range (default)", "#e2dccf", "#ffffff", "#0e5a61", "#d9ebec"], ["olive", "Olive Drab", "#dcdfcd", "#fbfcf6", "#4b5d23", "#e2e8cf"], ["fde", "Flat Dark Earth", "#e3d9c8", "#fffdf9", "#8a5a2b", "#f0e2d0"], ["steel", "Blued Steel", "#d6dde6", "#ffffff", "#2a4d7a", "#dce6f2"], ["blaze", "Blaze Orange", "#e6dbd3", "#ffffff", "#c2410c", "#fbe2d4"], ["plum", "Plum", "#e2d8de", "#fffcfe", "#6b2a5c", "#f0dfea"], ["lavender", "Lavender", "#e6e2f0", "#ffffff", "#5b4b9a", "#e7e2f6"], ["night", "Red Night", "#070303", "#110707", "#ff3b30", "#3a0e0b"]];
 let THEME={palette:"range",mode:"auto",camo:"",fs:""};
