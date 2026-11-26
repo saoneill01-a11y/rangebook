@@ -3348,7 +3348,9 @@ window.RB_BTCHRONO=(function(){
         '<p class="note"><b>Sensor board turned</b> (how the compass board sits on its mount). Lift the front of the chronograph: Conditions should say <i>nose up</i>. If it says tipped left or right, or nose down, pick the next one.</p>'+
         '<div class="segtabs" role="radiogroup" aria-label="Sensor board turned">'+[0,90,180,270].map(d=>'<button type="button" role="radio" data-chrot="'+d+'" aria-selected="'+((num(c.hrot)||0)===d)+'">'+d+'\u00b0</button>').join("")+'</div>';}
     // bubble level on the chronograph's own screen
-    if(sens.includes("L"))h+='<h3>Level</h3><p class="note">For a minute after it\'s switched on, the chronograph\'s screen shows a bubble level: move it until the bubble sits in the middle circle and the screen says LEVEL. After each shot it checks it hasn\'t been knocked: if it\'s tilted more than 1\u00b0 or has turned more than 5\u00b0, the level comes back on its screen (it doesn\'t listen for shots until it says READY again).'+(sens.includes("C")?' The compass heading is updated at the same time.':'')+'</p><div class="row"><button class="btn" type="button" id="chsLvl">Re-level'+(sens.includes("C")?' and update the heading':'')+'</button></div>';
+    if(sens.includes("L"))h+='<h3>Level</h3><p class="note">For a minute after it\'s switched on, the chronograph\'s screen shows a bubble level: move it until the bubble sits in the middle circle and the screen says LEVEL. After each shot it checks it hasn\'t been knocked: if it\'s tilted more than 1\u00b0 or has turned more than 5\u00b0, the level comes back on its screen (it doesn\'t listen for shots until it says READY again).'+(sens.includes("C")?' The compass heading is updated at the same time.':'')+'</p>'+
+      '<label class="switch" for="chsLvlChk"><input id="chsLvlChk" type="checkbox" role="switch"'+(num(c.lvl)!==0?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Check the level</b><span class="note">Turn off to shoot at an angle (down a slope): no level at switch-on and no re-level after shots'+(sens.includes("C")?'; the heading still updates after each shot':'')+'.'+(c.lvl==null?' Needs Bluetooth board firmware 0.2.20.':'')+'</span></span></label>'+
+      '<div class="row"><button class="btn" type="button" id="chsLvl">Re-level'+(sens.includes("C")?' and update the heading':'')+'</button></div>';
     // the rest
     const br=num(c.bright);
     h+='<h3>Screen</h3><div class="segtabs" role="radiogroup" aria-label="Screen brightness">'+["Dim","Medium","Bright","Brightest"].map((t,i)=>'<button type="button" role="radio" data-chbr="'+(i+1)+'" aria-selected="'+((br==null?3:Math.max(1,br))===i+1)+'">'+t+'</button>').join("")+'</div>'+
@@ -3400,6 +3402,7 @@ window.RB_BTCHRONO=(function(){
     box.querySelectorAll("[data-chshow]").forEach(b=>b.addEventListener("click",()=>send("SHOW "+b.dataset.chshow)));
     on_("chsSave","change",e=>send("SET save="+(e.target.checked?1:0)));
     on_("chsAnim","change",e=>send("ANIM "+(e.target.checked?1:0)));
+    on_("chsLvlChk","change",e=>send("LEVELCHK "+(e.target.checked?1:0)));
     box.querySelectorAll("[data-chlook]").forEach(b=>b.addEventListener("click",()=>{box.querySelectorAll("[data-chlook]").forEach(x=>x.setAttribute("aria-checked",String(x===b)));send("THEME "+b.dataset.chlook);}));
     on_("chsInv","change",e=>send("INVERT "+(e.target.checked?1:0)));
     on_("chsFw","click",()=>{ota.msg="";updateEsp();});
