@@ -1,9 +1,9 @@
 {
   "note": "Firmware Range Book can install on Range Book BLIPR over Bluetooth. esp = the ESP32-C3 Bluetooth board (BliprBLE.ino.bin, the app image, not the merged file).",
   "esp": {
-    "version": "0.2.15",
-    "file": "BliprBLE-0.2.15.bin",
+    "version": "0.2.16",
+    "file": "BliprBLE-0.2.16.bin",
     "size": 779920,
-    "md5": "644b6e7427823c92abe1e2d9dc52f5b7"
+    "md5": "c6011e6bc4be7f980823e4b6a45f4c45"
   }
 }
