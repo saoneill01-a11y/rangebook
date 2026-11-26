@@ -3356,6 +3356,8 @@ window.RB_BTCHRONO=(function(){
         ["Classic","Big number","Stats","Retro"].map((t,i)=>'<button type="button" role="radio" class="chlook" data-chlook="'+i+'" aria-checked="'+((num(c.theme)||0)===i)+'"><img src="blipr/look-'+i+'.png" alt="" width="256" height="128"><span>'+t+'</span></button>').join("")+'</div>'+
       '<label class="switch" for="chsInv"><input id="chsInv" type="checkbox" role="switch"'+(num(c.inv)===1?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Invert the screen</b><span class="note">Dark text on a lit screen. Easier to read in bright sun; uses a little more battery.</span></span></label>'+
       '<label class="switch" for="chsAnim"><input id="chsAnim" type="checkbox" role="switch"'+(num(c.anim)===1?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Bullet animation after each shot</b><span class="note">A bullet flies across the chronograph\'s screen and writes the velocity behind it. Needs chronograph firmware 0.2.2.</span></span></label>'+
+      '<h3>Show each shot for</h3><p class="note">After each shot the chronograph\'s screen shows the reading, then goes dark while it waits for the next one.'+(c.show==null?' Needs Bluetooth board firmware 0.2.15.':'')+'</p>'+
+      '<div class="segtabs" role="radiogroup" aria-label="Show each shot for">'+[[3,"3 s"],[5,"5 s"],[10,"10 s"],[0,"Until the next shot"]].map(([v,t])=>'<button type="button" role="radio" data-chshow="'+v+'" aria-selected="'+((num(c.show)==null?3:num(c.show))===v)+'">'+t+'</button>').join("")+'</div>'+
       '<h3>More</h3>'+
       '<label class="switch" for="chsSave"><input id="chsSave" type="checkbox" role="switch"'+(num(c.save)!==0?' checked':'')+'><span class="swtrack" aria-hidden="true"></span><span class="swtxt"><b>Save raw radar recordings</b><span class="note">Each shot\'s recording goes on the SD card, to send to Claude if readings look wrong.</span></span></label>'+
       '<div class="grid chgrid"><div class="field"><label for="chsBat">Battery voltage from a multimeter</label><input id="chsBat" type="number" inputmode="decimal" step="0.01" placeholder="3.95"></div>'+
@@ -3395,6 +3397,7 @@ window.RB_BTCHRONO=(function(){
     on_("chsRev","change",e=>{note="Now tap Match my phone again.";send("COMPASS REVERSE "+(e.target.checked?1:0));});
     on_("chsLvl","click",()=>{send("LEVEL");note="The bubble level is on the chronograph's screen for a minute.";});
     box.querySelectorAll("[data-chbr]").forEach(b=>b.addEventListener("click",()=>send("BRIGHT "+b.dataset.chbr)));
+    box.querySelectorAll("[data-chshow]").forEach(b=>b.addEventListener("click",()=>send("SHOW "+b.dataset.chshow)));
     on_("chsSave","change",e=>send("SET save="+(e.target.checked?1:0)));
     on_("chsAnim","change",e=>send("ANIM "+(e.target.checked?1:0)));
     box.querySelectorAll("[data-chlook]").forEach(b=>b.addEventListener("click",()=>{box.querySelectorAll("[data-chlook]").forEach(x=>x.setAttribute("aria-checked",String(x===b)));send("THEME "+b.dataset.chlook);}));
