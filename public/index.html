@@ -2292,6 +2292,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
       <ul>
         <li><b>Range trip:</b> <b>Connect Athlon</b> starts a new string (named Athlon and the time) and each shot fills its next box. <b>Send shots here</b> on any string sends them there instead; <b>Disconnect Athlon</b> stops. The trip's average and SD update as you go, even with the trip closed. If the chronograph has the sensor kit and the trip's temperature or weather is empty, they fill in from it, and each string notes the ammo temperature.</li>
         <li><b>Ladder test:</b> <b>Connect Athlon</b> at the top of a ladder fills the first group still waiting for shots, then the next. Or <b>More</b> › <b>Connect chronograph</b> on a group fills that group's empty boxes, then moves on to the next group in the same ladder (the one with the outline). The ladder's temperature fills in from the sensors if it's empty.</li>
+        <li><b>Live target:</b> with <b>Chronograph finds each shot</b> on, each shot the chronograph measures starts the search for its hole, and its velocity goes on that hole.</li>
         <li><b>Tools › Chronographs:</b> works on its own, with no trip or ladder: the last velocity in big numbers, the string so far with its average, SD, spread, low and high, <b>New string</b>, <b>− Last shot</b>, <b>Copy</b>, <b>Save to a range trip</b> and <b>Save to testing</b>. Every shot also shows here wherever it went. These strings are kept until you close Range Book.</li>
         <li><b>Testing:</b> <b>Save to testing</b> keeps a string without a range trip, in a testing session: pick one you already have (today's is picked for you) or start a new one with what you're testing, the gun, the ammo or load and notes. The <b>Testing</b> card under Tools › Chronographs lists your testing sessions, newest first; tap one to see each string's shots, average, SD, ES, low and high (and all its strings together), change its details, copy the velocities, remove a string or delete the session.</li>
       </ul>
@@ -2934,8 +2935,7 @@ window.RB_WX=(()=>{
 })();
 </script>
 <script>
-/* RB_BLIPR (2.47): the BLIPR chronograph is only on the chrono branch until it's finished. Released Range Book has it off:
-   only the Athlon Rangecraft connects, and nothing mentions BLIPR. */
+/* RB_BLIPR: the Range Book BLIPR chronograph is on (released in 2.53.0); false hides it and only the Athlon Rangecraft connects. */
 window.RB_BLIPR=true;
 /* in the Range Book iPhone/iPad app (it sets window.RB_APP), help that's only for a web browser is hidden and the app's own wording shows (2.47.52) */
 if(window.RB_APP)document.documentElement.classList.add("inapp");
