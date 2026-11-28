@@ -293,8 +293,12 @@ module.exports = function makeBackup({ q, db, PHOTO_DIR, getDoc, putDoc, now, AP
     const alias = (id) => "i" + crypto.createHash("sha256").update(uid + ":" + id).digest("hex").slice(0, 31);
     const freeId = (table, id) => {
       if (!id) return { id: crypto.randomUUID(), skip: false };
+      // photos of every kind are looked up by id in one place, so an id used by any of them counts as taken (2.54)
+      const PH = ["photos", "trip_photos", "gun_photos", "box_photos"];
+      const elsewhere = (cand) => PH.includes(table) && PH.some((t) => t !== table && q(`SELECT 1 AS x FROM ${t} WHERE id=?`).get(cand));
       for (const cand of [id, alias(id)]) {
         const r = q(`SELECT owner_id FROM ${table} WHERE id=?`).get(cand);
+        if (!r && elsewhere(cand)) continue;
         if (!r) return { id: cand, skip: false };
         if (r.owner_id === uid) return { id: cand, skip: true };
       }

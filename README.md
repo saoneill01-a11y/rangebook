@@ -173,6 +173,8 @@ Weather and range addresses are looked up straight from the browser: the weather
 | `BACKUPS` | `true` | Set `false` to turn off the automatic backups |
 | `SOURCE_URL` | this project | Where people can get the source code of your copy, shown under **Help → License**. If you run a changed version for other people, set this to where your changes are published (see [License](#license)) |
 
+Running Range Book as a paid service for the public (sign-up, email and Stripe)? See [docs/hosted.md](docs/hosted.md). None of it is on unless you set `HOSTED=true`.
+
 ## Backups
 
 **Your own copy:** everyone can tap **Account → Download backup** for a .zip of everything in their account, photos included, and bring it back with **Account → Import** on this or any other Range Book. Import adds to the account and skips anything already there, so it never deletes or doubles anything. Excel exports can be imported too (without photos). To add guns, optics, lowers, uppers, barrels, magazines, factory ammo or components from your own spreadsheet, use **Account → Import from a spreadsheet** (there's a template to download). Admins can download any person's backup from the Admin page.

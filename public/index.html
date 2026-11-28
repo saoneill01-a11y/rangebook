@@ -477,6 +477,10 @@ a.goto:hover{text-decoration-thickness:2px}a.goto:focus-visible{outline:2px soli
 /* the update notice floats at the bottom of the screen (above the tab bar on a phone), so it's seen even when you're scrolled down in a load */
 .updbanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:65;width:min(560px,calc(100% - 24px));margin:0;background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.28)}
 .updbanner[hidden]{display:none}
+.chk{display:flex;gap:9px;align-items:flex-start;font-size:calc(14px*var(--fs));line-height:1.4}.chk input{margin-top:3px;width:18px;height:18px;flex:0 0 auto}
+.pill{display:inline-block;font-size:calc(12px*var(--fs));font-weight:600;padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}.pill.bad{background:var(--sunk);color:var(--warn)}
+#acctSub .acrow{min-height:0}
+.subbanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}.subbanner[hidden]{display:none}.subbanner .sp{flex:1 1 auto}
 @media (max-width:760px){.updbanner{bottom:calc(var(--tabh) + 14px + env(safe-area-inset-bottom,0px))}}
 .updbanner .sp{flex:1 1 auto}
 .morever{font-size:calc(12px*var(--fs));color:var(--muted);padding:10px 12px 4px;border-top:1px solid var(--line);margin-top:6px}
@@ -1705,6 +1709,7 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
     <div class="brand"><span class="mark" aria-hidden="true"></span><span class="bname">Range Book</span><span class="bloc" id="brandLoc"></span></div><span class="syncstate" id="syncState" hidden role="status"></span>
     <div class="who"><span id="whoName"></span><button class="btn" type="button" id="acctBtn">Account</button><button class="btn" type="button" id="signOut">Sign out</button></div>
   </div>
+  <div class="banner subbanner" id="subBanner" hidden></div>
   <div class="banner updbanner" id="updBanner" hidden><span id="updText"></span><span class="sp"></span><button class="btn small primary" type="button" id="updReload" hidden>Reload now</button><button class="btn small" type="button" id="updSee">See what's new</button><button class="btn small" type="button" id="updX" aria-label="Dismiss">✕</button></div>
   <div class="banner guestbanner" id="guestBanner" hidden><b>Guest mode.</b> Try anything you like. Nothing is saved: it's all gone when you close or reload this page.</div>
   <nav class="tabs" role="tablist" aria-label="Sections">
@@ -2547,12 +2552,14 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
     <section class="card" aria-label="Account" id="acctMain"><h2>Account</h2>
       <div class="acrow"><div class="aclbl"><b id="acName"></b><span class="note" id="acUser"></span></div><div class="row"><button class="btn" type="button" id="acPwBtn">Change password</button><button class="btn" type="button" id="acSignOut">Sign out</button></div></div>
       <div class="acrow" id="acNick"><div class="aclbl"><b>Nickname</b><span class="note">What everyone else here sees on things you share: factory ammo, box photos, reloading loads, Shooting profiles and range trips. Leave it blank to use your name.</span><span class="savestate" id="nickState"></span></div><div class="acq"><input id="nickIn" class="text" type="text" maxlength="30" placeholder="Optional" aria-label="Nickname" autocomplete="off" spellcheck="false"><button class="btn" type="button" id="nickSave">Save</button></div></div>
+      <div class="acrow" id="acEmail" hidden><div class="aclbl"><b>Email</b><span class="note" id="acEmailTxt"></span></div><button class="btn" type="button" id="acEmailBtn">Change email</button></div>
       <div class="acrow" id="acctAdmin" hidden><div class="aclbl"><b>Admin</b><span class="note">Add people, reset passwords, settings and backups.</span></div><button class="btn primary" type="button" id="acAdmin">Open Admin</button></div>
       <p class="note ok" id="acPwOk" hidden>Password changed. Your other devices will need to sign in again.</p>
       <div class="acblk" id="acUnits"><h3 class="acsub">Units</h3>
         <div class="unitrow"><button class="unitbtn" type="button" id="unitBtn"><span id="unitTxt">Imperial</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3.5-3.5"/><path d="M20 16H5l3.5 3.5"/></svg></button><p class="note" id="unitNote"></p></div></div>
       <div class="acblk" id="acctStorage" hidden><h3 class="acsub">Storage</h3><div id="acctStorageBody"></div></div>
     </section>
+    <section class="card" aria-label="Subscription" id="acctSub" hidden><h2>Subscription</h2><div id="acctSubBody"><p class="note">Loading…</p></div></section>
     <section class="card" aria-label="Look" id="acctLook"><h2>Look</h2>
       <h3 class="acsub acfirst">Theme</h3>
       <div class="themegrid" id="themeGrid"></div>
@@ -2591,6 +2598,17 @@ svg.akshpic{width:22px;height:16px;fill:none;stroke:currentColor;stroke-width:2;
       <p class="note">Found something wrong, or have an idea? This goes to the person who makes Range Book, not to whoever runs this server. Nothing is sent from Range Book itself: it opens your own email app (or GitHub) with the Range Book version filled in, and you write the rest.</p>
       <div class="row"><a class="btn primary" id="fbMail" hidden>Email feedback</a><a class="btn" id="fbGh" target="_blank" rel="noopener">Post it on GitHub</a></div>
       <p class="note" id="fbNote">GitHub needs a free account, and what you post there is public.</p></section>
+    <section class="card" aria-label="Delete my account" id="acDel" hidden><h2>Delete my account</h2>
+      <p class="note">Deletes your account and everything in it from this Range Book: loads, profiles, guns, range trips, photos and files. It stops your subscription too. It can't be undone, so <b>Download backup</b> first if you might want any of it.</p>
+      <div class="row"><button class="btn danger" type="button" id="acDelBtn">Delete my account…</button></div></section>
+    <div class="infowrap" id="emSheet" data-sheet hidden><div class="infoback" data-sclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="emT"><div class="infohead"><h2 id="emT">Change email</h2><button class="infox" type="button" data-sclose aria-label="Close">✕</button></div>
+      <form id="emForm" novalidate><div class="field"><label for="em_new">New email</label><input id="em_new" class="text" type="email" autocomplete="email" autocapitalize="none" spellcheck="false"></div>
+      <div class="field"><label for="em_pw">Your password</label><input id="em_pw" class="text" type="password" autocomplete="current-password"></div>
+      <p class="note">We'll send a link to the new address to confirm it.</p><p class="err" id="em_err" hidden></p><button class="btn primary" type="submit">Change email</button></form></div></div>
+    <div class="infowrap" id="delSheet" data-sheet hidden><div class="infoback" data-sclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="dlT"><div class="infohead"><h2 id="dlT">Delete my account</h2><button class="infox" type="button" data-sclose aria-label="Close">✕</button></div>
+      <form id="delForm" novalidate><p class="note">Everything in your account is deleted for good, and your subscription stops. This can't be undone.</p>
+      <div class="field"><label for="dl_pw">Type your password to confirm</label><input id="dl_pw" class="text" type="password" autocomplete="current-password"></div>
+      <p class="err" id="dl_err" hidden></p><button class="btn danger" type="submit" id="dl_go">Delete everything</button></form></div></div>
     <div class="infowrap" id="pwSheet" data-sheet hidden><div class="infoback" data-sclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="pwT"><div class="infohead"><h2 id="pwT">Change password</h2><button class="infox" type="button" data-sclose aria-label="Close">✕</button></div><form id="acctForm" novalidate></form></div></div>
   </div>
   <div class="panel" id="panel-sheetimp" role="tabpanel" hidden>
@@ -13442,7 +13460,7 @@ window.RB_SHARES=(function(){
     return '<div class="shyn"><div class="yes"><b>They\'ll see</b>'+li(yes)+'</div><div class="no"><b>Never shared</b>'+li(no)+'</div></div>'+
       '<p class="note">They can\'t open your gun or change anything.'+(k==="profile"?' They can make their own copy of the profile to change.':'')+' <b>Everyone</b> includes people added later.</p>';}
   /* the Sharing card (a profile) or tile body (a trip); opt.traj: the trip's profile */
-  function tile(el,k,id,opt){if(!el)return;if(window.GUEST){el.hidden=true;return;}opt=opt||{};el.hidden=false;
+  function tile(el,k,id,opt){if(!el)return;if(window.GUEST||window.RB_HOSTED){el.hidden=true;return;}opt=opt||{};el.hidden=false;
     const s=get(k,id)||{everyone:false,users:[],opts:{}},mode=s.everyone?"all":s.users.length?"some":"none",o=s.opts||{};
     // a profile shared from its range trips (Also share its Shooting profile ticked there)
     const via=k==="profile"?[...mine.values()].filter(x=>x.kind==="trip"&&x.opts&&x.opts.profile&&trips.some(t=>t.id===x.id&&t.trajId===id)).map(x=>({x,t:trips.find(t=>t.id===x.id)})):[];
@@ -14358,14 +14376,19 @@ function loginScreen(msg){
     '<button class="btn primary big" type="submit" id="li_go">Sign in</button>'+
     '<div id="guestBox" hidden><div class="ordiv"><span>or</span></div><button class="btn big" type="button" id="li_guest">Try it as a guest</button>'+
     '<p class="note">No account needed. Nothing you enter as a guest is saved; it\'s gone when you close or reload the page.</p></div>'+
-    '<p class="note">No account? Ask the person who runs this server to make one for you.</p></form>');
+    '<p class="note" id="li_noacct">No account? Ask the person who runs this server to make one for you.</p>'+
+    '<div id="li_hosted" class="col" hidden><p class="note"><a href="#forgot" id="li_forgot">Forgot your password?</a></p><div class="ordiv"><span>New to Range Book?</span></div><button class="btn big" type="button" id="li_signup">Create an account</button><p class="note" id="li_trial"></p></div></form>');
   $("li_user").focus();
-  API.get("/api/public/config").then(c=>{if(c&&c.setup){setupScreen(c.suggestedUser||"");return;}if(c&&c.guestEnabled&&$("guestBox")){$("guestBox").hidden=false;$("li_guest").addEventListener("click",startGuest);}},()=>{});
+  API.get("/api/public/config").then(c=>{if(c&&c.setup){setupScreen(c.suggestedUser||"");return;}if(c&&c.guestEnabled&&$("guestBox")){$("guestBox").hidden=false;$("li_guest").addEventListener("click",startGuest);}
+    // a hosted Range Book (2.54): sign in with your email, make your own account, reset a forgotten password
+    if(c&&c.hosted&&$("li_hosted")){HOSTED_CFG=c;$("li_hosted").hidden=false;$("li_noacct").hidden=true;$("li_user").previousElementSibling.textContent="Email";$("li_user").type="email";
+      $("li_trial").textContent=(c.trialDays||30)+" days free, no card needed. Then "+c.prices.year+" or "+c.prices.month+".";
+      $("li_signup").addEventListener("click",()=>signupScreen());$("li_forgot").addEventListener("click",e=>{e.preventDefault();forgotScreen($("li_user").value.trim());});}},()=>{});
   $("loginForm").addEventListener("submit",async e=>{
     e.preventDefault();
     const err=$("li_err"),btn=$("li_go");err.hidden=true;
     const username=$("li_user").value.trim(),password=$("li_pass").value;
-    if(!username||!password){err.hidden=false;err.textContent="Enter your username and password.";return;}
+    if(!username||!password){err.hidden=false;err.textContent=HOSTED_CFG?"Enter your email and password.":"Enter your username and password.";return;}
     btn.disabled=true;btn.textContent="Signing in…";
     try{const r=await API.post("/api/login",{username,password});route(r.user);}
     catch(x){err.hidden=false;err.textContent=x.message;btn.disabled=false;btn.textContent="Sign in";$("li_pass").select();}
@@ -14396,6 +14419,155 @@ function setupScreen(suggest){
     try{const r=await API.post("/api/setup",{name,username,password});route(r.user);}
     catch(x){btn.disabled=false;btn.textContent="Create account";if(/already set up/i.test(x.message||""))loginScreen(x.message);else fail(x.message);}
   });
+}
+/* ---------- a hosted Range Book (2.54): sign up, confirm your email, forgot password ---------- */
+let HOSTED_CFG=null;
+const authHead='<div class="brand"><span class="mark" aria-hidden="true"></span>Range Book</div>';
+function signupScreen(){
+  const c=HOSTED_CFG||{prices:{}};
+  showAuth('<form class="authcard card" id="snForm" novalidate>'+authHead+
+    '<h1>Create your Range Book</h1><p class="sub">'+esc((c.trialDays||30)+" days free, no card needed. Then "+(c.prices.year||"")+" or "+(c.prices.month||"")+".")+'</p>'+
+    '<div class="field"><label for="sn_name">Your name</label><input id="sn_name" class="text" autocomplete="name"></div>'+
+    '<div class="field"><label for="sn_email">Email</label><input id="sn_email" class="text" type="email" autocomplete="email" autocapitalize="none" spellcheck="false"></div>'+
+    '<div class="field"><label for="sn_pass">Password</label><input id="sn_pass" class="text" type="password" autocomplete="new-password" minlength="8"></div>'+
+    '<div class="field"><label for="sn_rep">Type the password again</label><input id="sn_rep" class="text" type="password" autocomplete="new-password"></div>'+
+    '<p class="note">At least 8 characters. A short phrase is easier to remember than random symbols.</p>'+
+    '<label class="chk"><input type="checkbox" id="sn_agree"> <span>I\'m 18 or older and agree to the <a href="https://rangebook.org/terms.html" target="_blank" rel="noopener">Terms</a> and the <a href="https://rangebook.org/privacy.html" target="_blank" rel="noopener">Privacy policy</a>.</span></label>'+
+    '<p class="err" id="sn_err" hidden></p>'+
+    '<button class="btn primary big" type="submit" id="sn_go">Create account</button>'+
+    '<p class="note">Already run your own Range Book? After you sign in, bring everything over with <b>More › Account › Import</b> and a backup from your server.</p>'+
+    '<p class="note">Have an account? <a href="#signin" id="sn_back">Sign in</a></p></form>');
+  $("sn_name").focus();
+  $("sn_back").addEventListener("click",e=>{e.preventDefault();loginScreen();});
+  $("snForm").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const err=$("sn_err"),btn=$("sn_go");err.hidden=true;
+    const fail=m=>{err.hidden=false;err.textContent=m;};
+    const name=$("sn_name").value.trim(),email=$("sn_email").value.trim(),password=$("sn_pass").value;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return fail("Enter your email address.");
+    if(password.length<8)return fail("The password needs at least 8 characters.");
+    if(password!==$("sn_rep").value)return fail("The two passwords don't match.");
+    if(!$("sn_agree").checked)return fail("Tick the box to agree to the Terms and Privacy policy.");
+    btn.disabled=true;btn.textContent="Creating your account…";
+    try{const r=await API.post("/api/signup",{name,email,password,agree:true});route(r.user);}
+    catch(x){btn.disabled=false;btn.textContent="Create account";fail(x.message);}
+  });
+}
+function verifyScreen(user,msg){
+  showAuth('<div class="authcard card">'+authHead+
+    '<h1>Check your email</h1><p class="sub">We sent a link to <b>'+esc(user.email||"your email")+'</b>. Open it to confirm your address, then come back here.</p>'+
+    '<p class="note">It can take a minute. Not there? Check your spam or junk folder.</p>'+
+    '<p class="err'+(msg?' ok':'')+'" id="vf_msg" '+(msg?'':'hidden')+'>'+esc(msg||"")+'</p>'+
+    '<button class="btn primary big" type="button" id="vf_done">I\'ve confirmed it</button>'+
+    '<div class="row"><button class="btn" type="button" id="vf_again">Send it again</button><button class="btn" type="button" id="vf_out">Sign out</button></div>'+
+    '<p class="note"><a href="#email" id="vf_wrong">Wrong address?</a></p>'+
+    '<div id="vf_fix" class="col" hidden><div class="field"><label for="vf_email">Your email</label><input id="vf_email" class="text" type="email" autocomplete="email" autocapitalize="none" spellcheck="false"></div>'+
+    '<div class="field"><label for="vf_pw">Your password</label><input id="vf_pw" class="text" type="password" autocomplete="current-password"></div>'+
+    '<button class="btn" type="button" id="vf_fixgo">Send the link there</button></div></div>');
+  const say=(m,ok)=>{const e=$("vf_msg");e.hidden=false;e.textContent=m;e.classList.toggle("ok",!!ok);};
+  $("vf_done").addEventListener("click",async()=>{try{const r=await API.get("/api/me");if(r.user.emailVerified)route(r.user);else say("It isn't confirmed yet. Open the link in the email (on any device), then tap here again.");}catch(x){say(x.message);}});
+  $("vf_again").addEventListener("click",async()=>{try{await API.post("/api/me/verify/resend");say("Sent. Check your email.",true);}catch(x){say(x.message);}});
+  $("vf_out").addEventListener("click",signOut);
+  $("vf_wrong").addEventListener("click",e=>{e.preventDefault();$("vf_fix").hidden=false;$("vf_email").focus();});
+  $("vf_fixgo").addEventListener("click",async()=>{try{const r=await API.put("/api/me/email",{email:$("vf_email").value.trim(),password:$("vf_pw").value});verifyScreen(r.user,"Sent. Check your email.");}catch(x){say(x.message);}});
+}
+function forgotScreen(email){
+  showAuth('<form class="authcard card" id="fgForm" novalidate>'+authHead+
+    '<h1>Forgot your password?</h1><p class="sub">Enter your email and we\'ll send you a link to choose a new one.</p>'+
+    '<div class="field"><label for="fg_email">Email</label><input id="fg_email" class="text" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" value="'+esc(email&&email.includes("@")?email:"")+'"></div>'+
+    '<p class="err" id="fg_err" hidden></p>'+
+    '<button class="btn primary big" type="submit" id="fg_go">Send the link</button>'+
+    '<p class="note"><a href="#signin" id="fg_back">Back to sign in</a></p></form>');
+  $("fg_email").focus();
+  $("fg_back").addEventListener("click",e=>{e.preventDefault();loginScreen();});
+  $("fgForm").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const err=$("fg_err"),btn=$("fg_go");err.hidden=true;err.classList.remove("ok");
+    const email=$("fg_email").value.trim();
+    if(!email){err.hidden=false;err.textContent="Enter your email address.";return;}
+    btn.disabled=true;
+    try{await API.post("/api/forgot",{email});err.hidden=false;err.classList.add("ok");err.textContent="If there's an account with that email, a link is on its way. It works for an hour.";btn.textContent="Sent";}
+    catch(x){btn.disabled=false;err.hidden=false;err.textContent=x.message;}
+  });
+}
+function resetScreen(token){
+  showAuth('<form class="authcard card" id="rsForm" novalidate>'+authHead+
+    '<h1>Choose a new password</h1>'+
+    '<div class="field"><label for="rs_new">New password</label><input id="rs_new" class="text" type="password" autocomplete="new-password" minlength="8"></div>'+
+    '<div class="field"><label for="rs_rep">Type it again</label><input id="rs_rep" class="text" type="password" autocomplete="new-password"></div>'+
+    '<p class="note">At least 8 characters. Your other devices will need to sign in again.</p>'+
+    '<p class="err" id="rs_err" hidden></p>'+
+    '<button class="btn primary big" type="submit" id="rs_go">Save password</button></form>');
+  $("rs_new").focus();
+  $("rsForm").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const err=$("rs_err"),btn=$("rs_go");err.hidden=true;
+    const fail=m=>{err.hidden=false;err.textContent=m;};
+    const password=$("rs_new").value;
+    if(password.length<8)return fail("The password needs at least 8 characters.");
+    if(password!==$("rs_rep").value)return fail("The two passwords don't match.");
+    btn.disabled=true;
+    try{await OFF.clear();const r=await API.post("/api/reset",{token,password});route(r.user);}
+    catch(x){btn.disabled=false;fail(x.message);}
+  });
+}
+/* ---- Account › Subscription, and the notice at the top when a trial is ending or the subscription has ended ---- */
+const fmtDay=t=>new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+function subNotice(a){
+  const el=$("subBanner");if(!el)return;
+  let h="";
+  if(a.state==="lapsed")h='<span><b>'+(a.trialOnly?'Your free trial has ended.':'Your Range Book subscription has ended.')+'</b> Your data is safe: you can still look at it and download it. To add or change anything, renew. If you don\'t, it\'s deleted on '+esc(fmtDay(a.deleteAt))+'.</span>';
+  else if(a.state==="grace")h='<span><b>Your last payment didn\'t go through.</b> Everything still works while the card is tried again. Update your card to keep your subscription.</span>';
+  else if(a.state==="trial"&&a.daysLeft<=5)h='<span><b>Your free trial ends '+(a.daysLeft<=1?'tomorrow':'in '+a.daysLeft+' days')+'.</b> Subscribe to keep adding to your Range Book.</span>';
+  if(!h){el.hidden=true;return;}
+  el.innerHTML=h+'<span class="sp"></span><button class="btn small primary" type="button" id="subGo">'+(a.state==="grace"?"Update card":a.state==="lapsed"?"Renew":"Subscribe")+'</button>';
+  el.classList.toggle("bad",a.state!=="trial");el.hidden=false;
+  $("subGo").addEventListener("click",()=>RB_GO("account"));
+}
+async function billingGo(path,body,btn){
+  if(btn)btn.disabled=true;
+  try{const r=await API.post(path,body||{});if(r&&r.url)location.href=r.url;}
+  catch(e){if(btn)btn.disabled=false;const n=$("subErr");if(n){n.hidden=false;n.textContent=e.message;}}
+}
+async function drawSubscription(){
+  const sec=$("acctSub"),b=$("acctSubBody");if(!sec||!b||!ME||!ME.hosted||ME.isAdmin)return;
+  sec.hidden=false;
+  let r;try{r=await API.get("/api/billing");}catch(e){b.innerHTML='<p class="err">'+esc(e.message)+'</p>';return;}
+  const a=r.account,P=r.prices,row=(k,v)=>'<div class="acrow"><div class="aclbl"><b>'+k+'</b></div><div>'+v+'</div></div>';
+  let h="";
+  if(a.state==="active"){
+    h+=row("Plan",(a.plan==="month"?"Monthly, "+esc(P.month):a.plan==="year"?"Yearly, "+esc(P.year):"Subscribed")+' <span class="pill ok">Active</span>');
+    h+=row(a.cancelAt?"Ends":"Renews",a.until?esc(fmtDay(a.cancelAt||a.until)):"");
+  }else if(a.state==="grace")h+=row("Plan",'<span class="pill bad">Payment failed</span>')+'<p class="note">Stripe is trying your card again. Update it to keep your subscription.</p>';
+  else if(a.state==="trial")h+=row("Free trial",a.daysLeft+(a.daysLeft===1?" day":" days")+" left (until "+esc(fmtDay(a.until))+")");
+  else h+=row("Plan",'<span class="pill bad">Ended</span>')+'<p class="note">You can still look at and download everything. It\'s deleted on '+esc(fmtDay(a.deleteAt))+' unless you renew.</p>';
+  const pay=a.state==="trial"||a.state==="lapsed";
+  if(pay&&r.canPay)h+='<div class="row"><button class="btn primary" type="button" id="subYear">'+esc(P.year)+'</button><button class="btn" type="button" id="subMonth">'+esc(P.month)+'</button></div>'+
+    '<p class="note">'+(a.state==="trial"?"Subscribing now doesn't cut your trial short: the first charge is when it ends. ":"")+'Payment is on Stripe\'s secure page. Range Book never sees your card.</p>';
+  else if(pay)h+='<p class="note">Payments aren\'t set up here yet.</p>';
+  if(r.hasPortal&&!pay)h+='<div class="row"><button class="btn" type="button" id="subPortal">Change card, plan or cancel</button></div><p class="note">Opens Stripe\'s secure page. Range Book never sees your card.</p>';
+  else if(r.hasPortal)h+='<div class="row"><button class="btn" type="button" id="subPortal">Past payments and receipts</button></div>';
+  h+='<p class="err" id="subErr" hidden></p>';
+  b.innerHTML=h;
+  if($("subYear"))$("subYear").addEventListener("click",e=>billingGo("/api/billing/checkout",{plan:"year"},e.currentTarget));
+  if($("subMonth"))$("subMonth").addEventListener("click",e=>billingGo("/api/billing/checkout",{plan:"month"},e.currentTarget));
+  if($("subPortal"))$("subPortal").addEventListener("click",e=>billingGo("/api/billing/portal",{},e.currentTarget));
+  ME.account=a;subNotice(a);
+}
+function setupHostedAccount(user){
+  if(!user.hosted)return;
+  const em=$("acEmail"),del=$("acDel");
+  if(em){em.hidden=false;$("acEmailTxt").textContent=user.email||"No email yet";}
+  if(del)del.hidden=!!user.isSuper;
+  if(user.account)subNotice(user.account);
+  $("acEmailBtn").addEventListener("click",()=>{const s=$("emSheet");$("em_new").value="";$("em_pw").value="";$("em_err").hidden=true;RB_SHEET.open(s);});
+  $("emForm").addEventListener("submit",async e=>{e.preventDefault();const err=$("em_err");err.hidden=true;
+    try{const r=await API.put("/api/me/email",{email:$("em_new").value.trim(),password:$("em_pw").value});ME=r.user;RB_SHEET.close($("emSheet"));if(!r.user.emailVerified)verifyScreen(r.user,"We sent a link to your new address.");else $("acEmailTxt").textContent=r.user.email;}
+    catch(x){err.hidden=false;err.textContent=x.message;}});
+  $("acDelBtn").addEventListener("click",()=>{$("dl_pw").value="";$("dl_err").hidden=true;RB_SHEET.open($("delSheet"));});
+  $("delForm").addEventListener("submit",async e=>{e.preventDefault();const err=$("dl_err"),btn=$("dl_go");err.hidden=true;btn.disabled=true;
+    try{await API.req("DELETE","/api/me",{password:$("dl_pw").value});await OFF.clear();location.href="/";}
+    catch(x){btn.disabled=false;err.hidden=false;err.textContent=x.message;}});
 }
 function passwordForm(prefix,forced){
   return '<div class="field"><label for="'+prefix+'_cur">'+(forced?'Temporary password':'Current password')+'</label><input id="'+prefix+'_cur" class="text" type="password" autocomplete="current-password"></div>'+
@@ -14457,7 +14629,7 @@ function showTab(t,remember){
   if(t==="home"&&REL)REL.onHome();
   if(t==="targets"&&window.RB_TARGETS)RB_TARGETS();
   if(t==="account"&&window.RB_VAULT_ACCT)RB_VAULT_ACCT();
-  if(t==="account"&&!window.GUEST)drawMyStorage();
+  if(t==="account"&&!window.GUEST){drawMyStorage();drawSubscription();}
   if((t==="tools"||t==="targets")&&window.RB_TOOLS)RB_TOOLS.shown(t,REL);
   if(t!=="tools"&&window.RB_TIMER)RB_TIMER.hide("tools");
   if(t!=="train"&&window.RB_TRAIN)RB_TRAIN.leave();
@@ -14920,7 +15092,7 @@ async function loadChangelog(){
 }
 async function startApp(user,api){
   const A=api||API;
-  ME=user;window.RB_UID=user&&user.id;$("authView").hidden=true;$("appView").hidden=false;
+  ME=user;window.RB_UID=user&&user.id;window.RB_HOSTED=!!(user&&user.hosted&&!user.isAdmin);$("authView").hidden=true;$("appView").hidden=false;
   $("whoName").textContent=user.name;
   $("tab-admin").hidden=true;{const c=$("acctAdmin");if(c)c.hidden=!user.isAdmin;}
   if(started)return;started=true;
@@ -14971,7 +15143,8 @@ async function startApp(user,api){
   $("acPwBtn").addEventListener("click",()=>{["ac_cur","ac_new","ac_rep"].forEach(i=>$(i).value="");$("ac_err").hidden=true;$("acPwOk").hidden=true;RB_SHEET.open($("pwSheet"),"#ac_cur");});
   $("acctForm").addEventListener("submit",async e=>{e.preventDefault();if(await submitPassword("ac")){["ac_cur","ac_new","ac_rep"].forEach(i=>$(i).value="");RB_SHEET.close($("pwSheet"));$("acPwOk").hidden=false;}});
   $("acctWho").textContent=user.name+" ("+user.username+")"+(user.isAdmin?" · admin":"");
-  $("acName").textContent=user.name||user.username;$("acUser").textContent="Signed in as "+user.username+(user.isAdmin?" · admin":"");
+  $("acName").textContent=user.name||user.username;$("acUser").textContent="Signed in as "+(user.hosted&&user.email?user.email:user.username)+(user.isAdmin?" · admin":"");
+  setupHostedAccount(user);
   // a nickname (2.51): what everyone else here sees on things you share
   if(GUEST)$("acNick").hidden=true;
   else{const ni=$("nickIn"),ns=$("nickState");ni.value=user.nickname||"";
@@ -15254,6 +15427,7 @@ function termsScreen(onAgree,onDecline,guest){
 function route(user){
   if(!user)return loginScreen();
   if(user.mustChange)return changePasswordScreen(user);
+  if(user.hosted&&!user.emailVerified)return verifyScreen(user);
   if(!user.acceptedTerms)return termsScreen(async()=>{const b=$("termsGo");b.disabled=true;b.textContent="One sec…";
     try{const r=await API.post("/api/me/accept-terms");OFF.put("/api/me",{user:r.user});window.RB_TOUR_NEXT=true;startApp(r.user);}catch(e){b.disabled=false;b.textContent="I agree, let me in";alertBox(e.message);}},signOut,false);
   startApp(user);
@@ -15507,7 +15681,16 @@ async function loadAdmin(){
 }
 
 /* ---------- boot ---------- */
-API.get("/api/me").then(r=>route(r.user),e=>{if(e.status===401||e.status===403)loginScreen();else loginScreen(e.message);});
+{
+  // links in emails (confirm your address, reset your password) and the way back from Stripe (2.54)
+  const sp=new URLSearchParams(location.search),vt=sp.get("verify"),rt=sp.get("reset"),bl=sp.get("billing");
+  if(vt||rt||bl)history.replaceState(null,"",location.pathname+location.hash);
+  if(rt)resetScreen(rt);
+  else (vt?API.post("/api/verify",{token:vt}).then(()=>null,e=>e.message):Promise.resolve(null)).then(vmsg=>
+    API.get("/api/me").then(r=>{route(r.user);if(vmsg&&r.user&&r.user.hosted&&!r.user.emailVerified)verifyScreen(r.user,vmsg);
+      if(bl==="done"&&r.user&&!r.user.mustChange&&r.user.emailVerified!==false){setTimeout(()=>{RB_GO("account");setTimeout(drawSubscription,2500);},300);}},
+      e=>{if(e.status===401||e.status===403)loginScreen(vt?(vmsg||"Your email is confirmed. Sign in to carry on."):undefined);else loginScreen(e.message);}));
+}
 })();
 </script>
 <script>

@@ -2,6 +2,18 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
+      "version": "2.54.0",
+      "date": "2026-11-27",
+      "title": "Ready for a hosted Range Book",
+      "items": [
+        "For people who run Range Book for others as a paid service (HOSTED=true): people can create their own account with their email, confirm it from an email, reset a forgotten password by email, subscribe through Stripe (a free trial first), and delete their own account. When a trial or subscription ends, the account turns read-only: everything can still be looked at and downloaded. None of this appears on a Range Book you run yourself.",
+        "Sign in with your email address as well as your username, once your account has one.",
+        "The Admin page's list of people opens much faster on a big server, and many people signing in at once no longer slows Range Book down for everyone else.",
+        "Fixed: importing a backup could, in rare cases, give a photo the same id as someone else's photo, hiding theirs.",
+        "Fixed: with community sharing on, a box photo could show for everyone when someone else shared ammo with the same id."
+      ]
+    },
+    {
       "version": "2.53.1",
       "date": "2026-11-27",
       "title": "Range Book BLIPR chronograph",

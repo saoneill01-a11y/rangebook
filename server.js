@@ -17,6 +17,7 @@ const { exportXlsx, exportPdf, targetPdf, tripReportPdf, gunsXlsx, gunsPdf, zip,
 const backupKit = require("./backup.js");
 const shareKit = require("./shares.js");
 const MERGE = require("./merge.js");
+const HOSTED_KIT = require("./hosted.js");
 
 /* ---------------- configuration ---------------- */
 const PORT = parseInt(process.env.PORT || "9090", 10);
@@ -39,6 +40,10 @@ const PHOTO_DIR = path.join(DATA_DIR, "photos");
 const BACKUP_DIR = path.join(DATA_DIR, "backups");
 const BACKUP_KEEP = Math.max(1, parseInt(process.env.BACKUP_KEEP || "14", 10));
 const BACKUP_HOUR = Math.min(23, Math.max(0, parseInt(process.env.BACKUP_HOUR || "3", 10)));
+// a hosted, paid Range Book (HOSTED=true, 2.54): sign-up, email, Stripe billing. Off for everyone who runs their own.
+const HCFG = HOSTED_KIT.config();
+const HOSTED = HCFG.hosted;
+const NO_HOSTED_SHARING = "Sharing with other people isn't available on hosted Range Book yet.";
 
 fs.mkdirSync(PHOTO_DIR, { recursive: true });
 
@@ -189,6 +194,23 @@ if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "accepted_terms"
 if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "quota_mb")) db.exec("ALTER TABLE users ADD COLUMN quota_mb INTEGER");
 // a nickname each person can choose (2.51): what everyone else here sees on things they share; blank uses their name
 if (!q("PRAGMA table_info(users)").all().some((c) => c.name === "nickname")) db.exec("ALTER TABLE users ADD COLUMN nickname TEXT");
+/* email and billing (2.54): an email address for sign-in and password resets (any Range Book can store one; a hosted one
+   needs it), and on a hosted Range Book the free trial and the Stripe subscription. Self-hosted accounts leave them empty. */
+{
+  const have = new Set(q("PRAGMA table_info(users)").all().map((c) => c.name));
+  for (const [c, t] of [["email", "TEXT"], ["email_verified", "INTEGER NOT NULL DEFAULT 0"], ["tos_at", "INTEGER"], ["trial_ends", "INTEGER"],
+    ["sub_status", "TEXT"], ["plan", "TEXT"], ["paid_until", "INTEGER"], ["cancel_at", "INTEGER"], ["stripe_customer", "TEXT"], ["stripe_sub", "TEXT"],
+    ["sub_event_at", "INTEGER"], ["lapsed_at", "INTEGER"], ["trial_warned", "INTEGER"], ["lapse_warned", "INTEGER"]])
+    if (!have.has(c)) db.exec(`ALTER TABLE users ADD COLUMN ${c} ${t}`);
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS users_email ON users(email COLLATE NOCASE) WHERE email IS NOT NULL;
+    CREATE INDEX IF NOT EXISTS users_stripe ON users(stripe_customer);
+    CREATE TABLE IF NOT EXISTS email_tokens(
+      token_hash TEXT PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      kind TEXT NOT NULL,
+      expires INTEGER NOT NULL
+    );`);
+}
 const ladderIdOf = (v) => (typeof v === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(v) ? v : null);
 const parseMeasure = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
 // sharing ammo with everyone (box photos of catalog ammo, loads people share, and their photos) is on unless the
@@ -213,15 +235,28 @@ const now = () => Date.now();
    profiles and other data) counts toward a limit the admin sets for everyone (setting quotaMB; 0 = none), which can be
    changed for one person on the Admin page. Only uploads are refused when it's full; typing and saving data never is. ---- */
 const MB = 1024 * 1024;
+/* Each photo file's size is looked up once and remembered (2.54): file names are never reused, so the Admin page's list
+   of everyone's storage doesn't have to check every file on disk each time it opens. */
+const SIZE_CACHE = new Map();
 function userUsage(uid) {
   let b = 0;
-  const st = (f) => { try { return fs.statSync(path.join(PHOTO_DIR, path.basename(f))).size; } catch { return 0; } };
+  const st = (f) => { const n = path.basename(f); let v = SIZE_CACHE.get(n); if (v === undefined) { try { v = fs.statSync(path.join(PHOTO_DIR, n)).size; SIZE_CACHE.set(n, v); } catch { v = 0; } } return v; };
   for (const t of ["photos", "trip_photos", "box_photos", "gun_photos"]) for (const r of q(`SELECT file FROM ${t} WHERE owner_id=?`).all(uid)) b += st(r.file);
   for (const t of ["vault_docs", "gear_files"]) b += q(`SELECT COALESCE(SUM(size),0) AS s FROM ${t} WHERE owner_id=?`).get(uid).s || 0;
-  b += q("SELECT COALESCE(SUM(LENGTH(data)),0) AS s FROM loads WHERE owner_id=?").get(uid).s || 0;
-  b += q("SELECT COALESCE(SUM(LENGTH(data)),0) AS s FROM user_docs WHERE user_id=?").get(uid).s || 0;
+  b += q("SELECT COALESCE(SUM(LENGTH(CAST(data AS BLOB))),0) AS s FROM loads WHERE owner_id=?").get(uid).s || 0;
+  b += q("SELECT COALESCE(SUM(LENGTH(CAST(data AS BLOB))),0) AS s FROM user_docs WHERE user_id=?").get(uid).s || 0;
   b += q("SELECT COALESCE(SUM(LENGTH(data)),0) AS s FROM shared_ammo WHERE owner_id=?").get(uid).s || 0;
   return b;
+}
+// everyone's storage at once, for the Admin page's list (2.54): one pass over each table instead of six lookups per person
+function allUsage() {
+  const out = new Map(), add = (uid, b) => { if (uid != null) out.set(uid, (out.get(uid) || 0) + (Number(b) || 0)); };
+  const st = (f) => { const n = path.basename(f); let v = SIZE_CACHE.get(n); if (v === undefined) { try { v = fs.statSync(path.join(PHOTO_DIR, n)).size; SIZE_CACHE.set(n, v); } catch { v = 0; } } return v; };
+  for (const t of ["photos", "trip_photos", "box_photos", "gun_photos"]) for (const r of q(`SELECT owner_id, file FROM ${t}`).all()) add(r.owner_id, st(r.file));
+  for (const t of ["vault_docs", "gear_files"]) for (const r of q(`SELECT owner_id, SUM(size) AS s FROM ${t} GROUP BY owner_id`).all()) add(r.owner_id, r.s);
+  for (const r of q("SELECT owner_id, SUM(LENGTH(CAST(data AS BLOB))) AS s FROM loads GROUP BY owner_id").all()) add(r.owner_id, r.s);
+  for (const r of q("SELECT user_id, SUM(LENGTH(CAST(data AS BLOB))) AS s FROM user_docs GROUP BY user_id").all()) add(r.user_id, r.s);
+  return out;
 }
 const serverQuotaMB = () => Math.max(0, Math.round(Number(getSetting("quotaMB", 0)) || 0));
 // bytes this person may keep, or null for no limit
@@ -262,6 +297,21 @@ function verifyPassword(pw, stored) {
     const got = crypto.scryptSync(pw, Buffer.from(salt, "base64"), want.length, { N: +N, r: +r, p: +p });
     return crypto.timingSafeEqual(want, got);
   } catch { return false; }
+}
+/* Checking a password at sign-in on a background thread (2.54): scrypt is deliberately slow, and done on the main thread
+   a burst of sign-ins held up everyone else's requests. Same result as verifyPassword. */
+function verifyPasswordAsync(pw, stored) {
+  return new Promise((resolve) => {
+    try {
+      const [alg, N, r, p, salt, key] = String(stored).split("$");
+      if (alg !== "scrypt") return resolve(false);
+      const want = Buffer.from(key, "base64");
+      crypto.scrypt(pw, Buffer.from(salt, "base64"), want.length, { N: +N, r: +r, p: +p, maxmem: 256 * 1024 * 1024 }, (err, got) => {
+        if (err) return resolve(false);
+        try { resolve(crypto.timingSafeEqual(want, got)); } catch { resolve(false); }
+      });
+    } catch { resolve(false); }
+  });
 }
 const DUMMY_HASH = hashPassword(crypto.randomBytes(12).toString("hex"));
 function passwordProblem(pw) {
@@ -310,8 +360,14 @@ function importSeed(uid, seed, uname) {
   let nl = 0, np = 0;
   db.exec("BEGIN");
   try {
+    /* the sample load keeps its own id for the first account; every later account gets its own copy with a new id
+       (2.54: before, a new account took over the earlier account's sample load, and its photos were deleted with it) */
+    const ids = {};
     for (const L of seed.loads || []) {
-      q("INSERT OR REPLACE INTO loads(id,owner_id,data,created_at,updated_at) VALUES(?,?,?,?,?)").run(L.id, uid, JSON.stringify(L.data), t, t); nl++;
+      const lid = q("SELECT 1 AS x FROM loads WHERE id=?").get(L.id) ? `${L.id}-${crypto.randomBytes(6).toString("hex")}` : L.id;
+      ids[L.id] = lid;
+      const data = L.data && typeof L.data === "object" && L.data.id === L.id ? { ...L.data, id: lid } : L.data;
+      q("INSERT INTO loads(id,owner_id,data,created_at,updated_at) VALUES(?,?,?,?,?)").run(lid, uid, JSON.stringify(data), t, t); nl++;
     }
     if (seed.brass) q("INSERT OR REPLACE INTO user_docs(user_id,key,data,updated_at) VALUES(?,?,?,?)").run(uid, "brass", JSON.stringify(seed.brass), t);
     for (const p of seed.photos || []) {
@@ -320,7 +376,7 @@ function importSeed(uid, seed, uname) {
       const id = crypto.randomUUID(), file = `${id}.${m[1] === "jpeg" ? "jpg" : m[1]}`;
       fs.writeFileSync(path.join(PHOTO_DIR, file), Buffer.from(m[2], "base64"));
       q("INSERT INTO photos(id,load_id,owner_id,caption,file,w,h,created_at) VALUES(?,?,?,?,?,?,?,?)")
-        .run(id, p.loadId, uid, p.caption || "", file, p.w || null, p.h || null, p.createdAt || t); np++;
+        .run(id, ids[p.loadId] || p.loadId, uid, p.caption || "", file, p.w || null, p.h || null, p.createdAt || t); np++;
     }
     db.exec("COMMIT");
   } catch (e) { db.exec("ROLLBACK"); throw e; }
@@ -416,7 +472,8 @@ const ID_RE = /^[A-Za-z0-9_-]{1,64}$/;
 // the name other people see: the nickname if there is one, else the display name, else the username
 const pubName = (r) => (r && ((r.nickname || "").trim() || r.display_name || r.username)) || "";
 const cleanNick = (v) => String(v == null ? "" : v).replace(/[\u0000-\u001f\u007f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 30);
-const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, nickname: (u.nickname || "").trim(), isAdmin: !!u.is_admin, isSuper: !!u.is_admin && isSuper(u), mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms });
+const publicUser = (u) => ({ id: u.id, username: u.username, name: u.display_name || u.username, nickname: (u.nickname || "").trim(), isAdmin: !!u.is_admin, isSuper: !!u.is_admin && isSuper(u), mustChange: !!u.must_change, acceptedTerms: !!u.accepted_terms,
+  email: u.email || "", ...(HOSTED ? { hosted: true, emailVerified: !!u.email_verified || !!u.is_admin, account: HOSTED_KIT.accountState(u, HCFG) } : {}) });
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -447,7 +504,7 @@ function canRead(user, loadId) {
   return s ? "shared" : null;
 }
 function deletePhotoFiles(rows) {
-  for (const r of rows) { try { fs.unlinkSync(path.join(PHOTO_DIR, path.basename(r.file))); } catch {} }
+  for (const r of rows) { try { SIZE_CACHE.delete(path.basename(r.file)); fs.unlinkSync(path.join(PHOTO_DIR, path.basename(r.file))); } catch {} }
 }
 function getDocRow(uid, key) {
   const r = q("SELECT data, updated_at FROM user_docs WHERE user_id=? AND key=?").get(uid, key);
@@ -610,6 +667,9 @@ async function api(req, res, url) {
   const method = req.method;
   const p = url.pathname;
 
+  // Stripe's webhook (hosted only): signed by Stripe instead of coming from our page, so it comes before the CSRF check
+  if (HOSTED && p === "/api/stripe/webhook" && method === "POST") return stripeWebhook(req, res);
+
   // CSRF: every state-changing call must come from our own page's fetch().
   if (method !== "GET" && method !== "HEAD" && req.headers["x-requested-with"] !== "rangebook")
     throw new HttpError(403, "Request blocked.");
@@ -617,7 +677,8 @@ async function api(req, res, url) {
   /* ---- public settings (for the sign-in page) ---- */
   if (p === "/api/public/config" && method === "GET") {
     const setup = needsSetup();
-    return send(res, 200, { version: APP_VERSION, sourceUrl: SOURCE_URL, guestEnabled: !!getSetting("guestEnabled", false), setup, ...(setup ? { suggestedUser: process.env.ADMIN_USERNAME ? ADMIN_USERNAME : "" } : {}) });
+    return send(res, 200, { version: APP_VERSION, sourceUrl: SOURCE_URL, guestEnabled: !!getSetting("guestEnabled", false), setup, ...(setup ? { suggestedUser: process.env.ADMIN_USERNAME ? ADMIN_USERNAME : "" } : {}),
+      ...(HOSTED ? { hosted: true, signup: true, reset: true, trialDays: HCFG.trialDays, prices: { month: HCFG.priceMonthLabel, year: HCFG.priceYearLabel } } : {}) });
   }
   /* ---- first-run setup: only while there are no accounts at all ---- */
   if (p === "/api/setup" && method === "POST") {
@@ -645,11 +706,12 @@ async function api(req, res, url) {
   /* ---- auth ---- */
   if (p === "/api/login" && method === "POST") {
     const { username, password } = await readJson(req);
-    const uname = String(username || "").trim().slice(0, 40); // usernames are at most 40; keeps the throttle key small
+    const uname = String(username || "").trim().slice(0, 120); // usernames are at most 40 and emails 120; keeps the throttle key small
     const key = clientIp(req) + "|" + uname.toLowerCase();
     if (throttled(key)) throw new HttpError(429, "Too many failed sign-ins. Wait 15 minutes and try again.");
-    const u = q("SELECT * FROM users WHERE username=?").get(uname);
-    const ok = verifyPassword(String(password || ""), u ? u.pass : DUMMY_HASH);
+    // a username, or (2.54) the account's email address
+    const u = q("SELECT * FROM users WHERE username=?").get(uname) || (uname.includes("@") ? q("SELECT * FROM users WHERE email=? COLLATE NOCASE").get(uname) : null);
+    const ok = await verifyPasswordAsync(String(password || ""), u ? u.pass : DUMMY_HASH);
     if (!u || !ok || u.disabled) { noteFail(key); throw new HttpError(401, u && ok && u.disabled ? "This account is turned off. Ask the admin to turn it back on." : "Wrong username or password."); }
     fails.delete(key);
     q("UPDATE users SET last_login=? WHERE id=?").run(now(), u.id);
@@ -660,6 +722,61 @@ async function api(req, res, url) {
     const token = parseCookies(req)[COOKIE];
     if (token) q("DELETE FROM sessions WHERE token_hash=?").run(sha(token));
     return send(res, 200, { ok: true }, { "Set-Cookie": cookieHeader(req, "", 0) });
+  }
+
+  /* ---- hosted (2.54): sign up, confirm your email, forgot password. Not there on a self-hosted Range Book. ---- */
+  if (HOSTED && p === "/api/signup" && method === "POST") {
+    const ip = clientIp(req), fk = "su:" + ip;
+    if (throttled(fk)) throw new HttpError(429, "Too many new accounts from here. Try again in 15 minutes.");
+    const b = await readJson(req);
+    const email = cleanEmail(b.email);
+    if (!email) throw new HttpError(400, "Enter your email address.");
+    const pw = String(b.password || "");
+    const prob = passwordProblem(pw); if (prob) throw new HttpError(400, prob);
+    if (!b.agree) throw new HttpError(400, "Tick the box to agree to the Terms and Privacy policy.");
+    const name = String(b.name || "").replace(/[\u0000-\u001f\u007f<>]/g, "").trim().slice(0, 80) || email.split("@")[0];
+    noteFail(fk); // counts sign-ups from this address: 10 in 15 minutes and it waits
+    if (q("SELECT 1 AS x FROM users WHERE email=? COLLATE NOCASE OR username=?").get(email, email)) throw new HttpError(409, "There's already an account with that email. Sign in, or use Forgot password.");
+    const username = /^[A-Za-z0-9._@-]{2,40}$/.test(email) ? email : "user-" + crypto.randomBytes(5).toString("hex");
+    const uid = Number(q(`INSERT INTO users(username,display_name,pass,is_admin,must_change,created_at,email,email_verified,tos_at,trial_ends)
+      VALUES(?,?,?,0,0,?,?,0,?,?)`).run(username, name, hashPassword(pw), now(), email, now(), now() + HCFG.trialDays * HOSTED_KIT.DAY).lastInsertRowid);
+    console.log(`Hosted sign-up: account ${uid} (${email}).`);
+    maybeImportSeed(uid, username);
+    await sendVerifyEmail(req, { id: uid, email, display_name: name });
+    createSession(req, res, uid);
+    return send(res, 200, { user: publicUser(q("SELECT * FROM users WHERE id=?").get(uid)) });
+  }
+  if (HOSTED && p === "/api/verify" && method === "POST") {
+    const u = useToken((await readJson(req)).token, "verify");
+    if (!u) throw new HttpError(400, "That link has expired or was already used. Sign in and tap Send it again.");
+    q("UPDATE users SET email_verified=1 WHERE id=?").run(u.id);
+    return send(res, 200, { ok: true });
+  }
+  if (HOSTED && p === "/api/forgot" && method === "POST") {
+    const ip = clientIp(req), fk = "fp:" + ip;
+    if (throttled(fk)) throw new HttpError(429, "Too many tries. Wait 15 minutes and try again.");
+    noteFail(fk);
+    const email = cleanEmail((await readJson(req)).email);
+    if (!email) throw new HttpError(400, "Enter your email address.");
+    const u = q("SELECT * FROM users WHERE email=? COLLATE NOCASE AND disabled=0").get(email);
+    // the same answer whether or not there's an account, so this can't be used to find out who has one
+    if (u) {
+      const tok = makeToken(u.id, "reset", 3600000);
+      // not waited for, so the answer takes as long whether or not there's an account
+      sendEmail(u.email, "Reset your Range Book password", `Hi ${u.display_name || ""},\n\nSomeone (hopefully you) asked to reset the password for your Range Book account. To choose a new one, open this link within an hour:\n\n${siteUrl(req)}/?reset=${tok}\n\nIf you didn't ask, you can ignore this email; your password stays the same.\n\nRange Book`).catch((e) => console.error("Reset email:", e.message));
+    }
+    return send(res, 200, { ok: true });
+  }
+  if (HOSTED && p === "/api/reset" && method === "POST") {
+    const b = await readJson(req);
+    const prob = passwordProblem(b.password); if (prob) throw new HttpError(400, prob);
+    const u = useToken(b.token, "reset");
+    if (!u) throw new HttpError(400, "That link has expired or was already used. Ask for a new one with Forgot password.");
+    q("UPDATE users SET pass=?, must_change=0, email_verified=1 WHERE id=?").run(hashPassword(String(b.password)), u.id);
+    q("DELETE FROM sessions WHERE user_id=?").run(u.id);
+    q("DELETE FROM email_tokens WHERE user_id=? AND kind='reset'").run(u.id);
+    createSession(req, res, u.id);
+    return send(res, 200, { user: publicUser(q("SELECT * FROM users WHERE id=?").get(u.id)) });
   }
 
   // a printable target (no personal data in it): signed-in people, and guests when guest mode is on (2.41.3)
@@ -709,7 +826,9 @@ async function api(req, res, url) {
     const nick = cleanNick((await readJson(req)).nickname);
     if (nick) {
       // nobody can take a name someone else here goes by
-      const clash = q("SELECT 1 AS x FROM users WHERE id<>? AND (lower(trim(coalesce(nickname,'')))=lower(?) OR lower(username)=lower(?) OR lower(trim(display_name))=lower(?))").get(user.id, nick, nick, nick);
+      // (on a hosted Range Book usernames are email addresses, so they aren't compared: that would tell you who has an account)
+      const clash = HOSTED ? q("SELECT 1 AS x FROM users WHERE id<>? AND (lower(trim(coalesce(nickname,'')))=lower(?) OR lower(trim(display_name))=lower(?))").get(user.id, nick, nick)
+        : q("SELECT 1 AS x FROM users WHERE id<>? AND (lower(trim(coalesce(nickname,'')))=lower(?) OR lower(username)=lower(?) OR lower(trim(display_name))=lower(?))").get(user.id, nick, nick, nick);
       if (clash) throw new HttpError(400, "Someone here already goes by that. Try another.");
     }
     q("UPDATE users SET nickname=? WHERE id=?").run(nick || null, user.id);
@@ -725,7 +844,59 @@ async function api(req, res, url) {
     q("DELETE FROM sessions WHERE user_id=? AND token_hash<>?").run(user.id, user.token_hash);
     return send(res, 200, { ok: true });
   }
+  /* ---- hosted (2.54): your subscription, and deleting your own account ---- */
+  if (HOSTED && p === "/api/me/verify/resend" && method === "POST") {
+    if (user.email_verified) return send(res, 200, { ok: true, already: true });
+    const fk = "vr:" + user.id;
+    if (throttled(fk)) throw new HttpError(429, "That's a lot of emails. Wait 15 minutes, and check your spam folder.");
+    noteFail(fk);
+    await sendVerifyEmail(req, user);
+    return send(res, 200, { ok: true });
+  }
+  if (HOSTED && p === "/api/me/email" && method === "PUT") {
+    const b = await readJson(req);
+    if (!verifyPassword(String(b.password || ""), user.pass)) throw new HttpError(400, "Your password isn't right.");
+    const email = cleanEmail(b.email);
+    if (!email) throw new HttpError(400, "That doesn't look like an email address.");
+    if (q("SELECT 1 AS x FROM users WHERE id<>? AND (email=? COLLATE NOCASE OR username=?)").get(user.id, email, email)) throw new HttpError(409, "Another account already uses that email.");
+    q("UPDATE users SET email=?, email_verified=? WHERE id=?").run(email, user.is_admin ? 1 : 0, user.id);
+    if (!user.is_admin) await sendVerifyEmail(req, { ...user, email });
+    return send(res, 200, { user: publicUser(q("SELECT * FROM users WHERE id=?").get(user.id)) });
+  }
+  if (HOSTED && p === "/api/billing" && method === "GET") {
+    return send(res, 200, { account: HOSTED_KIT.accountState(user, HCFG), canPay: STRIPE.configured(), hasPortal: !!user.stripe_customer, prices: { month: HCFG.priceMonthLabel, year: HCFG.priceYearLabel }, used: userUsage(user.id), limit: userLimit(user.id) });
+  }
+  if (HOSTED && p === "/api/billing/checkout" && method === "POST") {
+    const plan = (await readJson(req)).plan === "month" ? "month" : "year";
+    const st = HOSTED_KIT.accountState(user, HCFG);
+    if (st.state === "active" || st.state === "grace") throw new HttpError(409, "You're already subscribed. Use Change card or plan instead.");
+    const r = await STRIPE.checkout(user, plan, siteUrl(req));
+    return send(res, 200, { url: r.url });
+  }
+  if (HOSTED && p === "/api/billing/portal" && method === "POST") {
+    if (!user.stripe_customer) throw new HttpError(400, "You haven't subscribed yet.");
+    const r = await STRIPE.portal(user, siteUrl(req));
+    return send(res, 200, { url: r.url });
+  }
+  if (p === "/api/me" && method === "DELETE") {
+    if (!HOSTED) throw new HttpError(404, "Not found.");
+    const b = await readJson(req);
+    if (!verifyPassword(String(b.password || ""), user.pass)) throw new HttpError(400, "That password isn't right.");
+    if (isSuper(user)) throw new HttpError(400, "You're the super admin, so this account can't be deleted.");
+    if (user.is_admin && !q("SELECT COUNT(*) AS n FROM users WHERE is_admin=1 AND disabled=0 AND id<>?").get(user.id).n) throw new HttpError(400, "There has to be at least one admin.");
+    // stop the subscription first, so nobody is charged for an account that's gone
+    if (user.stripe_sub && ["active", "trialing", "past_due"].includes(user.sub_status || "")) await STRIPE.cancelNow(user.stripe_sub);
+    deleteAccount(user.id);
+    console.log(`Account ${user.id} deleted by its owner.`);
+    return send(res, 200, { ok: true }, { "Set-Cookie": cookieHeader(req, "", 0) });
+  }
   if (user.must_change) throw new HttpError(403, "Change your password to continue.");
+  if (HOSTED && !user.is_admin) {
+    if (!user.email_verified) throw new HttpError(403, "Confirm your email address first: open the link we emailed you.");
+    // a lapsed trial or subscription: everything can be looked at and downloaded, but nothing changed
+    if (method !== "GET" && method !== "HEAD" && !HOSTED_KIT.LAPSED_OK.test(p) && HOSTED_KIT.readOnly(HOSTED_KIT.accountState(user, HCFG)))
+      throw new HttpError(402, "Your Range Book trial or subscription has ended, so changes can't be saved. You can still look at and download everything. Subscribe in More › Account.");
+  }
 
   /* ---- export your own data ---- */
   const gx = /^\/api\/export\/guns\.(xlsx|pdf)$/.exec(p);
@@ -775,7 +946,9 @@ async function api(req, res, url) {
   /* ---- people directory (for sharing) ---- */
   if (p === "/api/users" && method === "GET") {
     const rows = q("SELECT id, username, display_name, nickname FROM users WHERE disabled=0 AND id<>?").all(user.id);
-    const list = rows.map((r) => ({ id: r.id, username: r.username, name: pubName(r) }));
+    // on a hosted Range Book usernames are email addresses, so other people only ever see the name (2.54)
+    // a hosted Range Book has no list of who else is on it (2.54): sharing between accounts is off there for now
+    const list = HOSTED ? [] : rows.map((r) => ({ id: r.id, username: r.username, name: pubName(r) }));
     list.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base", numeric: true }));
     return send(res, 200, { users: list });
   }
@@ -839,6 +1012,7 @@ async function api(req, res, url) {
     }
   }
   m = /^\/api\/loads\/([^/]+)\/shares$/.exec(p);
+  if (m && method !== "GET" && HOSTED && !user.is_admin) throw new HttpError(403, NO_HOSTED_SHARING);
   if (m && method === "PUT") {
     const id = m[1];
     const row = q("SELECT owner_id FROM loads WHERE id=?").get(id);
@@ -888,6 +1062,7 @@ async function api(req, res, url) {
   m = /^\/api\/shares\/(profile|trip)\/([A-Za-z0-9_.-]{1,80})$/.exec(p);
   if (m) {
     const [, kind, iid] = m;
+    if (method === "PUT" && HOSTED && !user.is_admin) throw new HttpError(403, NO_HOSTED_SHARING);
     if (method === "PUT") {
       const b = await readJson(req);
       const everyone = !!b.everyone, users = [...new Set((Array.isArray(b.users) ? b.users : []).map(Number).filter((x) => Number.isInteger(x) && x > 0 && x !== user.id))].slice(0, 500);
@@ -935,7 +1110,7 @@ async function api(req, res, url) {
   if (p === "/api/boxphotos" && method === "GET") {
     const sharing = shareBoxPhotos(), adminAll = user.is_admin && url.searchParams.get("all") === "1";
     const rows = sharing || adminAll
-      ? q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username, u.nickname FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.cat_item IS NOT NULL OR b.owner_id=? OR b.ammo_id IN (SELECT id FROM shared_ammo) ORDER BY b.created_at DESC").all(user.id)
+      ? q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username, u.nickname FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.cat_item IS NOT NULL OR b.owner_id=? OR EXISTS (SELECT 1 FROM shared_ammo s WHERE s.id=b.ammo_id AND s.owner_id IS b.owner_id) ORDER BY b.created_at DESC").all(user.id)
       : q("SELECT b.id, b.cat_item, b.ammo_id, b.owner_id, b.w, b.h, b.created_at, u.display_name, u.username, u.nickname FROM box_photos b LEFT JOIN users u ON u.id=b.owner_id WHERE b.owner_id=? ORDER BY b.created_at DESC").all(user.id);
     return send(res, 200, { shared: sharing, photos: rows.map((r) => ({ id: r.id, item: r.cat_item, ammo: r.cat_item ? null : r.ammo_id, w: r.w, h: r.h, at: r.created_at, by: pubName(r) || "a former member", mine: r.owner_id != null && r.owner_id === user.id, url: `/api/photos/${r.id}` })) });
   }
@@ -1241,7 +1416,7 @@ async function api(req, res, url) {
       if (tp && tp.trip_id) { const sr = q("SELECT s.* FROM item_shares s JOIN users u ON u.id=s.owner_id WHERE u.disabled=0 AND s.owner_id=? AND s.kind='trip' AND s.item_id=?").get(tp.owner_id, tp.trip_id);
         if (sr && shareSees(shareRow(sr), user.id)) { if (method !== "GET") throw new HttpError(403, "Only the owner can change this photo."); ph = tp; table = "trip_photos"; access = "shared"; } } }
     if (!ph) { const g = q("SELECT * FROM gun_photos WHERE id=? AND owner_id=?").get(m[1], user.id); if (g) { if (method !== "GET") throw new HttpError(400, "Use the gun photo controls for this one."); ph = g; table = "gun_photos"; access = "shared"; } }
-    if (!ph) { const b = q("SELECT * FROM box_photos WHERE id=?").get(m[1]); if (b && (b.owner_id === user.id || ((shareBoxPhotos() || user.is_admin) && (b.cat_item || (b.ammo_id && q("SELECT 1 AS ok FROM shared_ammo WHERE id=?").get(b.ammo_id)))))) { if (method !== "GET") throw new HttpError(400, "Use the box photo controls for this one."); ph = b; table = "box_photos"; access = "shared"; } }
+    if (!ph) { const b = q("SELECT * FROM box_photos WHERE id=?").get(m[1]); if (b && (b.owner_id === user.id || ((shareBoxPhotos() || user.is_admin) && (b.cat_item || (b.ammo_id && q("SELECT 1 AS ok FROM shared_ammo WHERE id=? AND owner_id IS ?").get(b.ammo_id, b.owner_id)))))) { if (method !== "GET") throw new HttpError(400, "Use the box photo controls for this one."); ph = b; table = "box_photos"; access = "shared"; } }
     if (!ph || !access) throw new HttpError(404, "Photo not found.");
     if (method === "GET") {
       const fp = path.join(PHOTO_DIR, path.basename(ph.file));
@@ -1346,10 +1521,11 @@ async function api(req, res, url) {
     }
     if (p === "/api/admin/users" && method === "GET") {
       const sid = superId();
-      const rows = q(`SELECT u.id, u.username, u.display_name, u.nickname, u.is_admin, u.must_change, u.disabled, u.created_at, u.last_login, u.quota_mb,
+      const rows = q(`SELECT u.*,
                         (SELECT COUNT(*) FROM loads l WHERE l.owner_id=u.id) AS loads
                       FROM users u ORDER BY u.username COLLATE NOCASE`).all();
-      return send(res, 200, { quotaMB: serverQuotaMB(), users: rows.map((r) => ({ used: userUsage(r.id), quota: r.quota_mb == null ? null : r.quota_mb, limit: userLimit(r.id), id: r.id, username: r.username, name: r.display_name, nickname: (r.nickname || "").trim(), isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
+      const usage = allUsage();
+      return send(res, 200, { quotaMB: serverQuotaMB(), users: rows.map((r) => ({ ...(HOSTED ? { email: r.email || "", emailVerified: !!r.email_verified, account: HOSTED_KIT.accountState(r, HCFG) } : {}), used: usage.get(r.id) || 0, quota: r.quota_mb == null ? null : r.quota_mb, limit: userLimit(r.id), id: r.id, username: r.username, name: r.display_name, nickname: (r.nickname || "").trim(), isAdmin: !!r.is_admin, mustChange: !!r.must_change, disabled: !!r.disabled, createdAt: r.created_at, lastLogin: r.last_login, loads: r.loads, isMe: r.id === user.id, isSuper: r.id === sid })), meSuper: user.id === sid });
     }
     if (p === "/api/admin/users" && method === "POST") {
       const b = await readJson(req);
@@ -1405,23 +1581,122 @@ async function api(req, res, url) {
       if (!m[2] && method === "DELETE") {
         if (id === user.id) throw new HttpError(400, "You can't delete your own account.");
         if (target.is_admin && !otherAdmins) throw new HttpError(400, "There has to be at least one admin.");
-        deletePhotoFiles(q("SELECT file FROM photos WHERE owner_id=?").all(id));
-        deletePhotoFiles(q("SELECT file FROM trip_photos WHERE owner_id=?").all(id));
-        deletePhotoFiles(q("SELECT file FROM gun_photos WHERE owner_id=?").all(id));
-        deletePhotoFiles(q("SELECT file FROM vault_docs WHERE owner_id=?").all(id));
-        deletePhotoFiles(q("SELECT file FROM gear_files WHERE owner_id=?").all(id));
-        // private box photos go with the account; photos of catalog loads and of loads they shared stay for everyone
-        const privBox = "owner_id=? AND cat_item IS NULL AND (ammo_id IS NULL OR ammo_id NOT IN (SELECT id FROM shared_ammo))";
-        deletePhotoFiles(q("SELECT file FROM box_photos WHERE " + privBox).all(id));
-        q("DELETE FROM box_photos WHERE " + privBox).run(id);
-        q("UPDATE box_photos SET owner_id=NULL WHERE owner_id=?").run(id);
-        q("UPDATE shared_ammo SET owner_id=NULL WHERE owner_id=?").run(id);
-        q("DELETE FROM users WHERE id=?").run(id);
+        deleteAccount(id);
         return send(res, 200, { ok: true });
       }
     }
   }
   throw new HttpError(404, "Not found.");
+}
+
+/* Delete an account with everything in it: its loads, profiles, photos, documents and files. */
+function deleteAccount(id) {
+  deletePhotoFiles(q("SELECT file FROM photos WHERE owner_id=?").all(id));
+  deletePhotoFiles(q("SELECT file FROM trip_photos WHERE owner_id=?").all(id));
+  deletePhotoFiles(q("SELECT file FROM gun_photos WHERE owner_id=?").all(id));
+  deletePhotoFiles(q("SELECT file FROM vault_docs WHERE owner_id=?").all(id));
+  deletePhotoFiles(q("SELECT file FROM gear_files WHERE owner_id=?").all(id));
+  // private box photos go with the account; photos of catalog loads and of loads they shared stay for everyone
+  const privBox = "owner_id=? AND cat_item IS NULL AND (ammo_id IS NULL OR ammo_id NOT IN (SELECT id FROM shared_ammo))";
+  deletePhotoFiles(q("SELECT file FROM box_photos WHERE " + privBox).all(id));
+  q("DELETE FROM box_photos WHERE " + privBox).run(id);
+  q("UPDATE box_photos SET owner_id=NULL WHERE owner_id=?").run(id);
+  q("UPDATE shared_ammo SET owner_id=NULL WHERE owner_id=?").run(id);
+  q("DELETE FROM users WHERE id=?").run(id);
+}
+
+/* ---------------- hosted Range Book (2.54) ---------------- */
+const sendEmail = HOSTED_KIT.mailer(HCFG, DATA_DIR);
+const STRIPE = HOSTED_KIT.stripe(HCFG);
+const cleanEmail = (v) => { const e = String(v || "").trim().toLowerCase(); return e.length <= 120 && /^[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[a-z]{2,}$/i.test(e) ? e : ""; };
+// the address emails link to: PUBLIC_URL, or else the address this request came in on
+function siteUrl(req) {
+  if (HCFG.publicUrl) return HCFG.publicUrl;
+  const host = String(req.headers.host || "localhost").replace(/[^A-Za-z0-9.:\[\]-]/g, "");
+  return (viaHttps(req) ? "https://" : "http://") + host;
+}
+// a one-time link for an email (confirm your address, reset your password): only its hash is kept
+function makeToken(uid, kind, ms) {
+  const tok = crypto.randomBytes(24).toString("base64url");
+  q("DELETE FROM email_tokens WHERE expires<?").run(now());
+  q("INSERT INTO email_tokens(token_hash,user_id,kind,expires) VALUES(?,?,?,?)").run(sha(tok), uid, kind, now() + ms);
+  return tok;
+}
+function useToken(tok, kind) {
+  if (typeof tok !== "string" || !/^[A-Za-z0-9_-]{20,64}$/.test(tok)) return null;
+  const h = sha(tok), r = q("SELECT user_id, expires FROM email_tokens WHERE token_hash=? AND kind=?").get(h, kind);
+  if (!r) return null;
+  q("DELETE FROM email_tokens WHERE token_hash=?").run(h);
+  if (r.expires < now()) return null;
+  return q("SELECT * FROM users WHERE id=? AND disabled=0").get(r.user_id) || null;
+}
+async function sendVerifyEmail(req, u) {
+  const tok = makeToken(u.id, "verify", 7 * HOSTED_KIT.DAY);
+  return sendEmail(u.email, "Confirm your email for Range Book", `Hi ${u.display_name || ""},\n\nWelcome to Range Book. To confirm this is your email address, open this link:\n\n${siteUrl(req)}/?verify=${tok}\n\nThe link works for 7 days. If you didn't sign up for Range Book, you can ignore this email.\n\nRange Book`);
+}
+/* Stripe tells us about subscriptions here. Each call is checked against STRIPE_WEBHOOK_SECRET; an older event never
+   overwrites a newer one. The account is found by the Range Book id put on the subscription at checkout, or by the
+   Stripe customer. */
+async function stripeWebhook(req, res) {
+  const raw = await readBody(req, 1024 * 1024);
+  if (!HOSTED_KIT.verifyWebhook(raw, req.headers["stripe-signature"], HCFG.stripe.webhookSecret)) throw new HttpError(400, "Bad signature.");
+  let ev; try { ev = JSON.parse(raw.toString("utf8")); } catch { throw new HttpError(400, "Bad JSON."); }
+  const o = (ev.data && ev.data.object) || {};
+  const byId = (v) => (/^\d+$/.test(String(v || "")) ? q("SELECT * FROM users WHERE id=?").get(+v) : null);
+  const byCust = (c) => (c ? q("SELECT * FROM users WHERE stripe_customer=?").get(String(c)) : null);
+  if (ev.type === "checkout.session.completed") {
+    const u = byId(o.client_reference_id) || byId(o.metadata && o.metadata.rangebook_user);
+    if (u && o.customer) q("UPDATE users SET stripe_customer=?, stripe_sub=COALESCE(?, stripe_sub) WHERE id=?").run(String(o.customer), o.subscription ? String(o.subscription) : null, u.id);
+  } else if (/^customer\.subscription\.(created|updated|deleted|paused|resumed)$/.test(ev.type)) {
+    const u = byId(o.metadata && o.metadata.rangebook_user) || byCust(o.customer);
+    if (!u) { console.warn(`Stripe ${ev.type} for a customer Range Book doesn't know (${o.customer}).`); return send(res, 200, { ok: true }); }
+    const at = (ev.created || 0) * 1000;
+    // a different subscription than the one on file only counts if it's live (an old cancelled one mustn't undo a new one)
+    const other = u.stripe_sub && o.id && u.stripe_sub !== o.id && !["active", "trialing", "past_due"].includes(o.status);
+    if (!other && !(u.sub_event_at && at && at < u.sub_event_at)) {
+      const status = ev.type === "customer.subscription.deleted" ? "canceled" : String(o.status || "");
+      const live = ["active", "trialing", "past_due"].includes(status);
+      const end = HOSTED_KIT.periodEnd(o);
+      q(`UPDATE users SET sub_status=?, plan=COALESCE(?, plan), paid_until=COALESCE(?, paid_until), cancel_at=?, stripe_customer=COALESCE(?, stripe_customer),
+          stripe_sub=?, sub_event_at=?, lapsed_at=?, lapse_warned=? WHERE id=?`)
+        .run(status, HOSTED_KIT.planOf(o, HCFG), end, o.cancel_at_period_end ? end : (o.cancel_at ? o.cancel_at * 1000 : null), o.customer ? String(o.customer) : null,
+          o.id ? String(o.id) : u.stripe_sub, at || now(), live ? null : (u.lapsed_at || now()), live ? null : u.lapse_warned, u.id);
+      console.log(`Stripe: account ${u.id} subscription is now ${status}.`);
+    }
+  }
+  return send(res, 200, { ok: true });
+}
+/* Once a day on a hosted Range Book: remind people 3 days before their free trial ends, warn a week before a lapsed
+   account is deleted, and (only with AUTO_DELETE_LAPSED=true) delete accounts that lapsed more than DELETE_DAYS ago. */
+async function hostedDaily() {
+  if (!HOSTED) return;
+  const t = now(), DAY = HOSTED_KIT.DAY;
+  for (const u of q("SELECT * FROM users WHERE is_admin=0").all()) {
+    try {
+      const st = HOSTED_KIT.accountState(u, HCFG, t);
+      if (st.state === "trial" && st.until - t < 3 * DAY && !u.trial_warned && u.email && u.email_verified) {
+        await sendEmail(u.email, "Your Range Book free trial ends soon", `Hi ${u.display_name || ""},\n\nYour free Range Book trial ends on ${new Date(st.until).toDateString()}. To keep adding to it, subscribe in More › Account › Subscription (${HCFG.priceYearLabel} or ${HCFG.priceMonthLabel}).\n\nIf you don't, nothing is lost straight away: you can still look at and download everything for ${HCFG.deleteDays} days.\n\nRange Book`);
+        q("UPDATE users SET trial_warned=1 WHERE id=?").run(u.id);
+      }
+      if (st.state !== "lapsed") continue;
+      if (st.deleteAt - t < 7 * DAY && !u.lapse_warned && u.email) {
+        await sendEmail(u.email, "Your Range Book account will be deleted soon", `Hi ${u.display_name || ""},\n\nYour Range Book subscription ended, and your account and everything in it will be deleted on ${new Date(st.deleteAt).toDateString()}.\n\nTo keep it, renew in More › Account › Subscription. To keep a copy instead, sign in and use More › Account › Download backup; it can be imported into any Range Book, including one you run yourself.\n\nRange Book`);
+        q("UPDATE users SET lapse_warned=1 WHERE id=?").run(u.id);
+      }
+      if (st.deleteAt < t) {
+        if (HCFG.autoDelete && u.lapse_warned) { deleteAccount(u.id); console.log(`Deleted lapsed account ${u.id} (lapsed ${new Date(st.since).toISOString()}).`); }
+        else console.log(`Lapsed account ${u.id} is past its delete date (AUTO_DELETE_LAPSED is off, so it's kept).`);
+      }
+    } catch (e) { console.error(`Hosted daily check, account ${u.id}: ${e.message}`); }
+  }
+}
+if (HOSTED) {
+  // a new hosted Range Book starts with the storage limit and without guest mode or community ammo sharing
+  if (getSetting("quotaMB", null) == null) setSetting("quotaMB", HCFG.quotaMB);
+  if (getSetting("hostedDefaults", null) == null) { setSetting("guestEnabled", false); setSetting("shareAmmo", false); setSetting("hostedDefaults", true); }
+  setTimeout(() => hostedDaily().catch(() => {}), 60000).unref();
+  setInterval(() => hostedDaily().catch(() => {}), 6 * 3600000).unref();
+  console.log(`Hosted mode: sign-up on, ${HCFG.trialDays}-day trial, ${HCFG.email.provider ? "email via " + HCFG.email.provider : "emails saved in the outbox folder"}, ${STRIPE.configured() ? "Stripe on" : "Stripe not set up"}.`);
 }
 
 /* ---------------- static files ---------------- */
@@ -1601,6 +1876,7 @@ function* tarEntries(buf) {
   }
 }
 function siteRestore(dir, user, pass) {
+  SIZE_CACHE.clear();
   const inf = siteInfo(); if (!inf.fresh) throw new HttpError(409, inf.why);
   let buf = fs.readFileSync(path.join(dir, "upload"));
   if (buf.length < 100) throw new HttpError(400, "That file is empty.");
