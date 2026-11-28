@@ -33,6 +33,25 @@ With `HOSTED=true`, Range Book adds:
 
 Also set `COOKIE_SECURE=true` and `TRUST_PROXY=true` (behind Fly's proxy, Cloudflare or a reverse proxy), and keep secrets out of files: on Fly, use `fly secrets set`.
 
+## The test server on Fly.io
+
+`fly.hosted.toml` (in this folder) runs hosted Range Book as its own Fly app, `rangebook-hosted`, built from this folder's code. Your own server and the demo aren't touched, and nothing has to be released first. It costs about $5–8 a month (a small machine that stays on, plus storage).
+
+Run these in this folder, once:
+
+1. Make the app: `fly apps create rangebook-hosted`
+2. Make its data storage (3 GB to start; it can grow later): `fly volumes create rangebook_hosted_data --size 3 --region ord -a rangebook-hosted`
+3. Set your admin account (use your own username and a strong password): `fly secrets set ADMIN_USERNAME=yourname ADMIN_PASSWORD=your-password -a rangebook-hosted`
+4. Put it online: `fly deploy -c fly.hosted.toml`
+
+Then open https://rangebook-hosted.fly.dev and sign in with that account. To update it later with the newest dev code, run `fly deploy -c fly.hosted.toml` again.
+
+Until an email service is set up, the emails it would send (confirm your address, password reset) are saved in `/data/outbox` on the server instead. To read them: `fly ssh console -a rangebook-hosted -C "sh -c 'tail -n 20 /data/outbox/*'"`.
+
+Stripe test mode: once Stripe is set up (below) with test keys, `fly secrets set STRIPE_SECRET_KEY=sk_test_… STRIPE_WEBHOOK_SECRET=whsec_… STRIPE_PRICE_MONTHLY=price_… STRIPE_PRICE_YEARLY=price_… -a rangebook-hosted`. Setting secrets restarts it.
+
+Later, for `app.rangebook.org`: `fly certs add app.rangebook.org -a rangebook-hosted`, add the DNS record it shows, and change `PUBLIC_URL` in `fly.hosted.toml`.
+
 ## Stripe, step by step
 
 1. In Stripe, make a product "Range Book" with two recurring prices (monthly and yearly). Put their ids in `STRIPE_PRICE_MONTHLY` and `STRIPE_PRICE_YEARLY`.

@@ -1,0 +1,46 @@
+# Hosted Range Book on Fly.io: the paid, sign-up-yourself Range Book (see docs/hosted.md).
+# First the private beta at https://rangebook-hosted.fly.dev, later app.rangebook.org.
+# Built from this folder's code (the dev branch), not from the published image, so it can be tried before a release.
+# Deploy from this folder:  fly deploy -c fly.hosted.toml
+# Secrets (passwords and keys) are never written here: they're set with  fly secrets set NAME=value -a rangebook-hosted
+
+app = "rangebook-hosted"
+primary_region = "ord"            # Chicago, like the demo
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  HOSTED = "true"
+  PUBLIC_URL = "https://rangebook-hosted.fly.dev"   # change to https://app.rangebook.org when that's set up
+  TZ = "America/Chicago"
+  COOKIE_SECURE = "true"          # sign-in cookie only over https
+  TRUST_PROXY = "true"            # Fly's proxy passes on each visitor's real address
+  IMPORT_SEED = "true"            # each new account starts with the made-up sample ladder
+  BACKUP_KEEP = "14"
+  # Set as Fly secrets instead:
+  #   ADMIN_USERNAME, ADMIN_PASSWORD          your own admin account (created on the first start)
+  #   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_MONTHLY, STRIPE_PRICE_YEARLY   (test mode first)
+  #   EMAIL_PROVIDER, EMAIL_KEY, EMAIL_FROM   once an email service is chosen (until then emails go to /data/outbox)
+
+[mounts]
+  source = "rangebook_hosted_data"  # the data folder: database, photos, files and nightly backups
+  destination = "/data"
+
+[http_service]
+  internal_port = 9090
+  force_https = true              # send http:// visitors to https://
+  auto_stop_machines = "off"      # paying people shouldn't wait for it to wake up
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "15s"
+    interval = "30s"
+    timeout = "5s"
+    method = "GET"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"
