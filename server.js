@@ -1778,6 +1778,8 @@ const server = http.createServer(async (req, res) => {
     return serveStatic(req, res, url);
   } catch (e) {
     if (e instanceof HttpError) return send(res, e.status, { error: e.message });
+    // the payment service's own errors (hosted.js) carry a status and a message meant for people (2.54)
+    if (e && e.public && e.status) return send(res, e.status, { error: e.message });
     console.error(e);
     if (!res.headersSent) send(res, 500, { error: "Something went wrong on the server." });
   }

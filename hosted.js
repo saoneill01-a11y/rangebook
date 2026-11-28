@@ -85,13 +85,13 @@ function form(obj, pre = "", out = new URLSearchParams()) {
 }
 function stripe(cfg) {
   const call = async (method, p, fields) => {
-    if (!cfg.stripe.key) { const e = new Error("Payments aren't set up on this Range Book yet."); e.status = 503; throw e; }
+    if (!cfg.stripe.key) { const e = new Error("Payments aren't set up on this Range Book yet."); e.status = 503; e.public = true; throw e; }
     const r = await fetch("https://api.stripe.com/v1/" + p, {
       method, headers: { Authorization: `Bearer ${cfg.stripe.key}`, ...(fields ? { "Content-Type": "application/x-www-form-urlencoded" } : {}) },
       body: fields ? form(fields).toString() : undefined,
     });
     const j = await r.json().catch(() => ({}));
-    if (!r.ok) { console.error(`Stripe ${method} ${p}: ${r.status} ${(j.error && j.error.message) || ""}`); const e = new Error("The payment service didn't answer properly. Try again in a minute."); e.status = 502; throw e; }
+    if (!r.ok) { console.error(`Stripe ${method} ${p}: ${r.status} ${(j.error && j.error.message) || ""}`); const e = new Error("The payment service didn't answer properly. Try again in a minute."); e.status = 502; e.public = true; throw e; }
     return j;
   };
   return {
