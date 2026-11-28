@@ -49,6 +49,17 @@ Free software under the [GNU AGPL-3.0](#license).
 - **Phone-friendly:** works offline (over https), pull to refresh, Light, Dark and Red Night themes (plus color themes and an optional faint camo background), three text sizes, imperial or metric. Changes made on several devices (including offline ones) are merged when they sync, keeping the newest edit to each item.
 - **Your data is yours:** a one-file backup with photos, Excel and PDF exports, and Import to bring a backup or Excel export back in (or move to another server). **Import from a spreadsheet** adds guns (including ones built from a lower and an upper), optics (scopes, red dots, holographic and prism sights), lowers, uppers, barrels, magazines, factory ammo and components from a downloadable template or your own .xlsx or .csv, asking about unrecognized columns or values and about duplicates before saving.
 
+## Range Book BLIPR
+
+**BLIPR** (Ballistic Launch Inspection Portable Radar) is a 24 GHz Doppler radar chronograph you build yourself, made to work with Range Book. It sits on the bench beside your rifle, measures each shot's muzzle velocity and sends it to Range Book over Bluetooth, straight into your range trip or ladder with the string's average, SD and extreme spread. Nothing goes downrange.
+
+- **Free and open source:** circuit board, 3D-printed case, firmware, parts list and a step-by-step build guide are on [GitHub](https://github.com/saoneill01-a11y/rangebook-blipr), with a narrated [assembly video](https://youtu.be/nRWELvyEKN8) on YouTube and the case on [MakerWorld](https://makerworld.com/en/models/3697742-blipr-doppler-radar-chronograph#profileId-4248561).
+- **Set up from Range Book:** its velocity window, where it sits beside the rifle, calibration, battery level and screen settings are in the chronograph settings, and Range Book updates BLIPR's Bluetooth firmware over the air.
+- **Sensor kit (optional):** air temperature, humidity and pressure for the trip, plus a bubble level and heading at power-up.
+- **Tested so far:** .22 LR and .38 Special. Beside an Athlon radar chronograph on the same 20 shots of .38 Special, BLIPR read 19 and matched the Athlon to within 0.3 fps overall, with a typical gap of 4 fps on any one shot. Supersonic rifle ammo is next.
+
+<p><a href="https://github.com/saoneill01-a11y/rangebook-blipr"><img src="https://raw.githubusercontent.com/saoneill01-a11y/rangebook-blipr/main/pictures/out/blipr_vs_athlon_2026-11-27.png" alt="BLIPR and an Athlon radar chronograph on the same 20 shots of .38 Special: BLIPR read 19 of 20, +0.3 fps overall versus the Athlon, a typical gap of 4.1 fps on any one shot" width="80%"></a></p>
+
 ---
 
 ## Install
