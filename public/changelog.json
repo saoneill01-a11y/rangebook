@@ -2,7 +2,7 @@
   "note": "Newest first, one entry per x.y series. The first entry's version is the exact version Range Book reports (for example 1.7.7); for a small change, bump that number and add to its items. Start a new entry for a new x.y series. Older entries use just x.y.",
   "releases": [
     {
-      "version": "2.53.0",
+      "version": "2.53.1",
       "date": "2026-11-27",
       "title": "Range Book BLIPR chronograph",
       "items": [
@@ -11,7 +11,8 @@
         "BLIPR settings (the pill or the Settings button): battery, SD card and firmware, Pause and Start listening, Test shot, the velocity window (with 75% to 125% of the load's velocity offered), where the radar sits for each gun, calibration against another chronograph, screen brightness and look, how long its screen shows each shot, raw recordings, the battery gauge and the clock. BLIPR's own settings win: connecting never changes them.",
         "With BLIPR's optional sensor kit: air temperature, humidity, pressure, density altitude, ammo temperature, heading and level. Empty trip and ladder temperatures fill in from it, Use this air in the profile and Use … for Coriolis set a Shooting profile from it, and a bubble level shows on BLIPR's screen after switch-on and again if it's knocked after a shot (Disable the level for shooting at an angle).",
         "Update BLIPR's Bluetooth board from its settings › Firmware, over Bluetooth. Range Book carries firmware 0.2.20; BLIPR checks the whole file and keeps its old firmware if anything goes wrong.",
-        "Works in Chrome or Edge on Android and computers (over https), and in the Range Book app or Bluefy on iPhone and iPad."
+        "Works in Chrome or Edge on Android and computers (over https), and in the Range Book app or Bluefy on iPhone and iPad.",
+        "News on Home: a tile under Start a range trip and + New load opens the latest news (now: BLIPR is released, with links to its build guide and files on GitHub, the case on MakerWorld and the assembly video). Its × hides it on all your devices until there's new news. The news is also at the top of Help › What's new."
       ]
     },
     {
