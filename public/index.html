@@ -1632,6 +1632,15 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .homeL>.half .cartgroup,.homeR .cartgroup{display:flex;flex-direction:column}
 @media (min-width:761px){.libtiles{grid-template-columns:repeat(6,minmax(0,1fr))}}
 .homeacts .btn{flex:1 1 auto}
+.newstile{display:flex;align-items:center;gap:12px;margin-top:10px;border:1.5px solid var(--accent);border-radius:10px;background:var(--accent-soft);padding:10px 12px}
+.newstile .nopen{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.newstile .nicon{flex:none;width:28px;height:28px;color:var(--accent)}
+.newstile .ntag,.newsbody .ntag{display:block;font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--accent)}
+.newstile .nt{display:block;font-weight:600}.newstile .nd{display:block;font-size:13px;color:var(--muted)}
+.newstile .nx{flex:none;background:none;border:0;color:var(--muted);font-size:16px;padding:6px;cursor:pointer;border-radius:6px}
+.newstile .nx:hover{color:var(--fg)}
+.newsbody ul{margin:6px 0 12px;padding-left:20px}.newsbody li{margin:4px 0}
+.newshelp{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 12px}
 .homealerts .loaditem .t{font-weight:500}
 .lifebar.mini{height:6px;margin-top:6px;width:100%}
 .topbar .brand{cursor:pointer}
@@ -13817,6 +13826,39 @@ function arrangeHome(){
     onReset:()=>{RB_ORDER.set("home",null);RB_ORDER.set("homeHide",null);renderHome();}});
 }
 RB_ORDER.on(()=>{try{if($("homeRoot")&&!$("homeRoot").querySelector(".note:only-child"))renderHome();}catch(e){}});
+/* ---------- News (2.53.1): one item at a time, a tile on Home under Start a range trip and + New load, and on Help › What's new.
+   The tile's × hides it on every device (saved with the account as newsHide). A new item needs a new id, so it shows again. ---------- */
+const NEWS=window.RB_BLIPR?{id:"blipr-2026-11-27",date:"2026-11-27",title:"Range Book BLIPR is released",tile:"BLIPR is here: build your own radar chronograph",
+  sub:"Range Book 2.53 connects it. Tap for the build guide, files and video.",
+  body:'<p>BLIPR (Ballistic Launch Inspection Portable Radar) is a do-it-yourself 24 GHz radar chronograph. It sits on the bench beside your gun, and nothing goes downrange. Each velocity comes to Range Book over Bluetooth, into a range trip, a ladder or Live target.</p>'+
+    '<p>Range Book 2.53 connects it in <b>Tools › Chronographs</b>, and updates its Bluetooth board for you.</p>'+
+    '<p style="margin-bottom:0"><b>Where to find everything</b></p><ul>'+
+    '<li><a href="https://github.com/saoneill01-a11y/rangebook-blipr" target="_blank" rel="noopener"><b>GitHub</b></a>: the build guide (PDF), parts list, firmware and circuit board files</li>'+
+    '<li><a href="https://makerworld.com/en/models/3697742-blipr-doppler-radar-chronograph" target="_blank" rel="noopener"><b>MakerWorld</b></a>: the case to 3D print</li>'+
+    '<li><a href="https://youtu.be/nRWELvyEKN8" target="_blank" rel="noopener"><b>YouTube</b></a>: the assembly video</li></ul>',
+  go:"tools:btchrono",goLabel:"Open Chronographs"}:null;
+const NEWS_SVG='<svg class="nicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 18a10 10 0 0 1 16 0"/><path d="M7.5 18a6 6 0 0 1 9 0"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/><path d="M12 18L18 7"/></svg>';
+const newsDate=()=>{try{return new Date(NEWS.date+"T12:00:00").toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}).toUpperCase();}catch(e){return NEWS.date;}};
+const newsHidden=()=>!NEWS||(RB_ORDER.get("newsHide")||[]).includes(NEWS.id);
+function openNews(){
+  if(!NEWS)return;let sh=$("newsSheet");
+  if(!sh){sh=document.createElement("div");sh.id="newsSheet";sh.className="infowrap usheet";sh.dataset.sheet="";sh.hidden=true;
+    sh.innerHTML='<div class="infoback" data-sclose></div><div class="infosheet" role="dialog" aria-modal="true" aria-labelledby="newsT"><div class="infohead"><h2 id="newsT"></h2><button class="infox" type="button" data-sclose aria-label="Close">✕</button></div>'+
+      '<div class="newsbody" id="newsB"></div><div class="row" style="justify-content:flex-end"><button class="btn" type="button" data-sclose>Close</button><button class="btn primary" type="button" id="newsGo"></button></div></div>';
+    document.body.appendChild(sh);
+    sh.querySelector("#newsGo").addEventListener("click",()=>{RB_SHEET.close(sh);if(window.RB_GO)RB_GO(NEWS.go);});}
+  $("newsT").textContent=NEWS.title;
+  $("newsB").innerHTML='<span class="ntag">NEWS · '+esc(newsDate())+'</span>'+NEWS.body;
+  $("newsGo").textContent=NEWS.goLabel;$("newsGo").hidden=!NEWS.go;
+  RB_SHEET.open(sh);
+}
+window.RB_NEWS={item:NEWS,open:openNews,date:newsDate};
+setTimeout(()=>document.dispatchEvent(new Event("rb-news")),0);// Help › What's new may have been drawn before this
+function newsTile(){
+  if(newsHidden())return "";
+  return '<div class="newstile" id="hNews"><button class="nopen" type="button" id="hNewsOpen">'+NEWS_SVG+'<span><span class="ntag">NEWS · '+esc(newsDate())+'</span><span class="nt">'+esc(NEWS.tile)+'</span><span class="nd">'+esc(NEWS.sub)+'</span></span></button>'+
+    '<button class="nx" type="button" id="hNewsHide" aria-label="Hide this news" title="Hide this news (it\'s still in Help › What\'s new)">✕</button></div>';
+}
 function renderHome(){
   const root=$("homeRoot");if(!root)return;
   const T=(window.RB_TRAJ&&RB_TRAJ.all())||[],tname=Object.fromEntries(T.map(t=>[t.id,t.name]));
@@ -13828,7 +13870,7 @@ function renderHome(){
   const tripsYear=live.filter(t=>String(t.date||"").startsWith(yr)).length;
   let loaded=0;loads.forEach((L,id)=>{if(!isMine(id))return;(L.batches||[]).forEach(b=>{if(String(b.date||"").startsWith(yr))loaded+=b.n||0;});});
   $("homeTitle").textContent=ME&&ME.name&&ME.username!=="guest"?"Hi, "+(ME.nickname||(n=>n.charAt(0).toUpperCase()+n.slice(1))(ME.name.split(" ")[0])):"Range Book";
-  let h='<section class="card" aria-label="Quick start" data-hsec="quick"><div class="row homeacts"><button class="btn primary" id="hNewTrip" type="button">Start a range trip</button><button class="btn" id="hNewLoad" type="button">+ New load</button></div>';
+  let h='<section class="card" aria-label="Quick start" data-hsec="quick"><div class="row homeacts"><button class="btn primary" id="hNewTrip" type="button">Start a range trip</button><button class="btn" id="hNewLoad" type="button">+ New load</button></div>'+(homePick?'':newsTile());
   if(homePick){
     // range day: pick the gun, then what you're shooting through it; makes the trip and fills in the weather
     const used={};live.forEach(t=>{used[t.trajId]=Math.max(used[t.trajId]||0,Date.parse(t.date||0)||0);});
@@ -13953,6 +13995,8 @@ function renderHome(){
       box.querySelectorAll("[data-hcat]").forEach(b=>b.addEventListener("click",()=>{const id=window.RB_ADD_CATALOG_AMMO&&RB_ADD_CATALOG_AMMO(b.dataset.hcat);pickAmmo(ammo.find(x=>x.id===id));}));};
     q.addEventListener("input",draw);draw();}}
   $("hNewLoad").addEventListener("click",()=>{showTab("rel");createLoad();});
+  {const no=$("hNewsOpen");if(no)no.addEventListener("click",openNews);
+   const nh=$("hNewsHide");if(nh)nh.addEventListener("click",()=>{RB_ORDER.set("newsHide",[NEWS.id]);const t=$("hNews");if(t)t.remove();});}
 
   {const sa=$("hSeeLog");if(sa)sa.addEventListener("click",()=>showTab("log"));}
   root.querySelectorAll("[data-hpick]").forEach(b=>b.addEventListener("click",()=>{const t0=((window.RB_TRAJ&&RB_TRAJ.all())||[]).find(x=>x.id===b.dataset.hpick);if(t0&&homePick&&t0.rifleId===homePick.gun)dayPart(t0.id);RB_TRAJ.open(b.dataset.hpick);startDay();}));
@@ -14791,10 +14835,14 @@ function renderRelNotes(){
   const sub=r=>'<h4 class="relsub">Version '+esc(ser(r.version))+'</h4>'+one(r,false);
   const old=R.slice(3),groups=[];old.forEach(r=>{const k=grp(r.version),g=groups[groups.length-1];if(g&&g.k===k)g.rs.push(r);else groups.push({k,rs:[r]});});
   const glab=g=>{const vs=g.rs.map(r=>ser(r.version));return g.rs.length===1?"Version "+vs[0]:/x$/.test(g.k)?"Versions "+vs[vs.length-1]+" to "+vs[0]:"Versions "+vs[vs.length-1]+" to "+vs[0];};
-  box.innerHTML='<p class="note">You\'re running Range Book <b>'+esc(R[0].version)+'</b>.</p>'+one(R[0],true)+
+  const NW=window.RB_NEWS&&RB_NEWS.item;
+  box.innerHTML=(NW?'<div class="newshelp"><span class="ntag" style="font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--accent)">NEWS · '+esc(RB_NEWS.date())+'</span><b style="display:block">'+esc(NW.title)+'</b><span class="note">'+esc(NW.sub)+'</span><div class="row" style="margin-top:6px"><button class="btn" type="button" id="relNews">Read the news</button></div></div>':'')+
+    '<p class="note">You\'re running Range Book <b>'+esc(R[0].version)+'</b>.</p>'+one(R[0],true)+
     R.slice(1,3).map(r=>'<details class="oldrel"><summary>Version '+esc(ser(r.version))+'</summary>'+one(r,false)+'</details>').join("")+
     groups.map(g=>'<details class="oldrel"><summary>'+esc(glab(g))+'</summary>'+g.rs.map(sub).join("")+'</details>').join("");
+  {const rn=$("relNews");if(rn)rn.addEventListener("click",()=>RB_NEWS.open());}
 }
+document.addEventListener("rb-news",()=>{try{renderRelNotes();}catch(e){}});
 function openHelpCard(id){const s=document.getElementById(id),b=s&&s.querySelector(":scope>.sechead");if(b&&b.getAttribute("aria-expanded")==="false")b.click();}
 function showWhatsNew(){
   closeMore();showTab("help");openHelpCard("hNew");
